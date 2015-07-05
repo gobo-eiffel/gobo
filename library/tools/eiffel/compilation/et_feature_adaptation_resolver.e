@@ -5,7 +5,7 @@ note
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,7 +68,7 @@ feature -- Feature adaptation resolving
 			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
-			a_parents: ET_PARENT_LIST
+			a_parents: detachable ET_PARENT_LIST
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
@@ -108,7 +108,7 @@ feature {NONE} -- Feature recording
 			l_procedures: ET_PROCEDURE_LIST
 			other_feature: ET_FLATTENED_FEATURE
 			a_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
 			i, nb, nb2, nb3: INTEGER
 		do
 			l_queries := current_class.queries
@@ -199,7 +199,7 @@ feature {NONE} -- Feature recording
 			a_name: ET_FEATURE_NAME
 			a_rename: ET_RENAME
 			i, nb, nb2, nb3: INTEGER
-			l_alias_name: ET_ALIAS_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
 		do
 			if a_parent.renames /= Void then
 				fill_rename_table (a_parent)
@@ -527,33 +527,33 @@ feature {NONE} -- Feature adaptation
 			renames_not_void: a_parent.renames /= Void
 		local
 			i, nb: INTEGER
-			a_renames: ET_RENAME_LIST
 			a_rename: ET_RENAME
 			a_name: ET_FEATURE_NAME
 		do
-			a_renames := a_parent.renames
-			nb := a_renames.count
-			if rename_table.capacity < nb then
-				rename_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_rename := a_renames.rename_pair (i)
-				a_name := a_rename.old_name
-				rename_table.search (a_name)
-				if not rename_table.found then
-					rename_table.put_new (a_rename, a_name)
-				else
-						-- Feature name `a_name' appears twice on the
-						-- left-hand-side of a Rename_pair in the Rename
-						-- clause.
-					if not rename_table.found_item.new_name.same_extended_feature_name (a_rename.new_name) then
-							-- The two Rename_pairs have a different `new_name'.
-							-- The flatten process will have to fail.
-						set_fatal_error
-					end
-					error_handler.report_vhrc2a_error (current_class, a_parent, rename_table.found_item, a_rename)
+			check precondition: attached a_parent.renames as l_renames then
+				nb := l_renames.count
+				if rename_table.capacity < nb then
+					rename_table.resize (nb)
 				end
-				i := i + 1
+				from i := 1 until i > nb loop
+					a_rename := l_renames.rename_pair (i)
+					a_name := a_rename.old_name
+					rename_table.search (a_name)
+					if not rename_table.found then
+						rename_table.put_new (a_rename, a_name)
+					else
+							-- Feature name `a_name' appears twice on the
+							-- left-hand-side of a Rename_pair in the Rename
+							-- clause.
+						if not rename_table.found_item.new_name.same_extended_feature_name (a_rename.new_name) then
+								-- The two Rename_pairs have a different `new_name'.
+								-- The flatten process will have to fail.
+							set_fatal_error
+						end
+						error_handler.report_vhrc2a_error (current_class, a_parent, rename_table.found_item, a_rename)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -564,45 +564,45 @@ feature {NONE} -- Feature adaptation
 			exports_not_void: a_parent.exports /= Void
 		local
 			i, nb: INTEGER
-			an_exports: ET_EXPORT_LIST
 			an_export: ET_EXPORT
-			other_all_export: ET_ALL_EXPORT
+			other_all_export: detachable ET_ALL_EXPORT
 			j, nb2: INTEGER
 			new_count: INTEGER
 			a_name: ET_FEATURE_NAME
 		do
-			an_exports := a_parent.exports
-			nb := an_exports.count
-			from i := 1 until i > nb loop
-				an_export := an_exports.item (i)
-				if attached {ET_ALL_EXPORT} an_export as an_all_export then
-					if other_all_export /= Void then
-							-- Two 'all' export clauses for this parent.
-							-- This is not considered as a fatal error by gelint.
-						error_handler.report_vlel1a_error (current_class, a_parent, other_all_export, an_all_export)
-					else
-						other_all_export := an_all_export
-					end
-				elseif attached {ET_FEATURE_EXPORT} an_export as a_feature_export then
-					nb2 := a_feature_export.count
-					new_count := new_count + nb2
-					if export_table.capacity < new_count then
-						 export_table.resize (new_count)
-					end
-					from j := 1 until j > nb2 loop
-						a_name := a_feature_export.feature_name (j)
-						export_table.search (a_name)
-						if not export_table.found then
-							export_table.put_new (a_name)
-						else
-								-- Feature name `a_name' appears twice in the Export clause.
+			check precondition: attached a_parent.exports as l_exports then
+				nb := l_exports.count
+				from i := 1 until i > nb loop
+					an_export := l_exports.item (i)
+					if attached {ET_ALL_EXPORT} an_export as an_all_export then
+						if other_all_export /= Void then
+								-- Two 'all' export clauses for this parent.
 								-- This is not considered as a fatal error by gelint.
-							error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item.feature_name, a_name)
+							error_handler.report_vlel1a_error (current_class, a_parent, other_all_export, an_all_export)
+						else
+							other_all_export := an_all_export
 						end
-						j := j + 1
+					elseif attached {ET_FEATURE_EXPORT} an_export as a_feature_export then
+						nb2 := a_feature_export.count
+						new_count := new_count + nb2
+						if export_table.capacity < new_count then
+							 export_table.resize (new_count)
+						end
+						from j := 1 until j > nb2 loop
+							a_name := a_feature_export.feature_name (j)
+							export_table.search (a_name)
+							if not export_table.found then
+								export_table.put_new (a_name)
+							else
+									-- Feature name `a_name' appears twice in the Export clause.
+									-- This is not considered as a fatal error by gelint.
+								error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item.feature_name, a_name)
+							end
+							j := j + 1
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -613,26 +613,26 @@ feature {NONE} -- Feature adaptation
 			undefines_not_void: a_parent.undefines /= Void
 		local
 			i, nb: INTEGER
-			a_undefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
-			a_undefines := a_parent.undefines
-			nb := a_undefines.count
-			if undefine_table.capacity < nb then
-				undefine_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_undefines.feature_name (i)
-				undefine_table.search (a_name)
-				if not undefine_table.found then
-					undefine_table.put_new (False, a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Undefine clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_key.feature_name, a_name)
+			check precondition: attached a_parent.undefines as l_undefines then
+				nb := l_undefines.count
+				if undefine_table.capacity < nb then
+					undefine_table.resize (nb)
 				end
-				i := i + 1
+				from i := 1 until i > nb loop
+					a_name := l_undefines.feature_name (i)
+					undefine_table.search (a_name)
+					if not undefine_table.found then
+						undefine_table.put_new (False, a_name)
+					else
+							-- Feature name `a_name' appears twice in the
+							-- Undefine clause. This is not considered as
+							-- a fatal error by gelint.
+						error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_key.feature_name, a_name)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -643,26 +643,26 @@ feature {NONE} -- Feature adaptation
 			redefines_not_void: a_parent.redefines /= Void
 		local
 			i, nb: INTEGER
-			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
-			a_redefines := a_parent.redefines
-			nb := a_redefines.count
-			if redefine_table.capacity < nb then
-				redefine_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_redefines.feature_name (i)
-				redefine_table.search (a_name)
-				if not redefine_table.found then
-					redefine_table.put_new (False, a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Redefine clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_key.feature_name, a_name)
+			check precondition: attached a_parent.redefines as l_redefines then
+				nb := l_redefines.count
+				if redefine_table.capacity < nb then
+					redefine_table.resize (nb)
 				end
-				i := i + 1
+				from i := 1 until i > nb loop
+					a_name := l_redefines.feature_name (i)
+					redefine_table.search (a_name)
+					if not redefine_table.found then
+						redefine_table.put_new (False, a_name)
+					else
+							-- Feature name `a_name' appears twice in the
+							-- Redefine clause. This is not considered as
+							-- a fatal error by gelint.
+						error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_key.feature_name, a_name)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -673,26 +673,26 @@ feature {NONE} -- Feature adaptation
 			selects_not_void: a_parent.selects /= Void
 		local
 			i, nb: INTEGER
-			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
 			a_name: ET_FEATURE_NAME
 		do
-			a_selects := a_parent.selects
-			nb := a_selects.count
-			if select_table.capacity < nb then
-				select_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_selects.feature_name (i)
-				select_table.search (a_name)
-				if not select_table.found then
-					select_table.put_new (False, a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Select clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_key.feature_name, a_name)
+			check precondition: attached a_parent.selects as l_selects then
+				nb := l_selects.count
+				if select_table.capacity < nb then
+					select_table.resize (nb)
 				end
-				i := i + 1
+				from i := 1 until i > nb loop
+					a_name := l_selects.feature_name (i)
+					select_table.search (a_name)
+					if not select_table.found then
+						select_table.put_new (False, a_name)
+					else
+							-- Feature name `a_name' appears twice in the
+							-- Select clause. This is not considered as
+							-- a fatal error by gelint.
+						error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_key.feature_name, a_name)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -718,7 +718,7 @@ feature {NONE} -- Replication
 			l_feature: ET_FLATTENED_FEATURE
 			l_adapted_feature: ET_ADAPTED_FEATURE
 			l_replicable_feature: ET_REPLICABLE_FEATURE
-			l_other_seeds: ET_FEATURE_IDS
+			l_other_seeds: detachable ET_FEATURE_IDS
 			l_seed: INTEGER
 			i, nb: INTEGER
 		do
@@ -790,7 +790,7 @@ feature {NONE} -- Replication
 		local
 			a_replicated_features: DS_LINKED_LIST [ET_ADAPTED_FEATURE]
 			a_parent_features: DS_ARRAYED_LIST [ET_PARENT_FEATURE]
-			a_parent_feature: ET_PARENT_FEATURE
+			a_parent_feature: detachable ET_PARENT_FEATURE
 			a_replicated_feature: ET_ADAPTED_FEATURE
 			a_selected_feature: ET_ADAPTED_FEATURE
 		do
@@ -808,6 +808,11 @@ feature {NONE} -- Replication
 				error_handler.report_vmrc2a_error (current_class, a_parent_features)
 			when 1 then
 					-- OK.
+					-- Make the compiler happy by initializing `a_selected_feature',
+					-- even if it's not necessarily the first one which has been
+					-- selected. The first loop below will find the feature which
+					-- has actually been selected.
+				a_selected_feature := a_feature.first_feature
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
 					if not a_replicated_feature.has_selected_feature then
@@ -838,10 +843,10 @@ feature {NONE} -- Replication
 				create a_parent_features.make (a_replicated_features.count)
 				from a_replicated_features.start until a_replicated_features.after loop
 					a_replicated_feature := a_replicated_features.item_for_iteration
-					if a_replicated_feature.has_selected_feature then
+					if attached a_replicated_feature.selected_feature as l_selected_feature then
+						check has_selected_feature: a_replicated_feature.has_selected_feature end
 						a_replicated_feature.set_selected
-						a_parent_feature := a_replicated_feature.selected_feature
-						a_parent_features.put_last (a_parent_feature)
+						a_parent_features.put_last (l_selected_feature)
 					end
 					a_replicated_features.forth
 				end
@@ -858,10 +863,10 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_parent_not_void: a_parent /= Void
 		do
-			if free_parent_feature /= Void then
-				Result := free_parent_feature
+			if attached free_parent_feature as l_free_parent_feature then
+				Result := l_free_parent_feature
 				Result.reset (a_feature, a_parent)
-				free_parent_feature := free_parent_feature.next
+				free_parent_feature := l_free_parent_feature.next
 			else
 				create Result.make (a_feature, a_parent)
 				Result.set_next (parent_feature_list)
@@ -876,10 +881,10 @@ feature {NONE} -- Implementation
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
 		do
-			if free_inherited_feature /= Void then
-				Result := free_inherited_feature
+			if attached free_inherited_feature as l_free_inherited_feature then
+				Result := l_free_inherited_feature
 				Result.reset (a_parent_feature)
-				free_inherited_feature := free_inherited_feature.next
+				free_inherited_feature := l_free_inherited_feature.next
 			else
 				create Result.make (a_parent_feature)
 				Result.set_next (inherited_feature_list)
@@ -895,10 +900,10 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_parent_feature_not_void: a_parent_feature /= Void
 		do
-			if free_redeclared_feature /= Void then
-				Result := free_redeclared_feature
+			if attached free_redeclared_feature as l_free_redeclared_feature then
+				Result := l_free_redeclared_feature
 				Result.reset (a_feature, a_parent_feature)
-				free_redeclared_feature := free_redeclared_feature.next
+				free_redeclared_feature := l_free_redeclared_feature.next
 			else
 				create Result.make (a_feature, a_parent_feature)
 				Result.set_next (redeclared_feature_list)
@@ -908,22 +913,22 @@ feature {NONE} -- Implementation
 			redeclared_feature_not_void: Result /= Void
 		end
 
-	parent_feature_list: ET_PARENT_FEATURE
+	parent_feature_list: detachable ET_PARENT_FEATURE
 			-- Parent feature free list
 
-	free_parent_feature: ET_PARENT_FEATURE
+	free_parent_feature: detachable ET_PARENT_FEATURE
 			-- First available parent feature in free list
 
-	inherited_feature_list: ET_INHERITED_FEATURE
+	inherited_feature_list: detachable ET_INHERITED_FEATURE
 			-- Inherited feature free list
 
-	free_inherited_feature: ET_INHERITED_FEATURE
+	free_inherited_feature: detachable ET_INHERITED_FEATURE
 			-- First available inherited feature in free list
 
-	redeclared_feature_list: ET_REDECLARED_FEATURE
+	redeclared_feature_list: detachable ET_REDECLARED_FEATURE
 			-- Redeclared feature free list
 
-	free_redeclared_feature: ET_REDECLARED_FEATURE
+	free_redeclared_feature: detachable ET_REDECLARED_FEATURE
 			-- First available redeclared feature in free list
 
 invariant

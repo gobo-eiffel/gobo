@@ -5,8 +5,8 @@ note
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -95,7 +95,6 @@ feature -- Access
 			-- or unmatched formal generic parameter.
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -105,8 +104,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.named_base_class (l_target_context)
 				else
@@ -118,12 +116,11 @@ feature -- Access
 			end
 		end
 
-	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
+	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -133,8 +130,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -146,12 +142,11 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -161,8 +156,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 						-- Here we have to use `base_type' and not `shallow_base_type'
 						-- because otherwise the actual generic parameters will not
@@ -182,7 +176,6 @@ feature -- Access
 			-- type when it appears in `a_context'
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -192,8 +185,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_actual (i, l_target_context)
 				else
@@ -210,7 +202,6 @@ feature -- Access
 			-- type when it appears in `a_context'
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -220,8 +211,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_actual_parameter (i, l_target_context)
 				else
@@ -239,7 +229,6 @@ feature -- Access
 			-- 0 if it does not exist
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -249,8 +238,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_index_of_label (a_label, l_target_context)
 				else
@@ -262,12 +250,11 @@ feature -- Access
 			end
 		end
 
-	named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
+	named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -277,8 +264,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -290,12 +276,11 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -305,8 +290,7 @@ feature -- Access
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 						-- Here we have to use `named_type' and not `shallow_named_type'
 						-- because otherwise the actual generic parameters will not
@@ -331,14 +315,13 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if type_mark /= Void and then not type_mark.is_implicit_mark then
-				Result := type_mark.position
-			end
-			if Result = Void or else Result.is_null then
+			if attached type_mark as l_type_mark and then not l_type_mark.is_implicit_mark and then not l_type_mark.position.is_null then
+				Result := l_type_mark.position
+			else
 				Result := like_keyword.position
-				if Result.is_null then
-					Result := target_type.position
-				end
+			end
+			if Result.is_null then
+				Result := target_type.position
 			end
 		end
 
@@ -348,19 +331,12 @@ feature -- Access
 			Result := qualified_name.last_leaf
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := qualified_name.break
-		end
-
 feature -- Measurement
 
 	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Number of actual generic parameters of the base type of current type
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -370,8 +346,7 @@ feature -- Measurement
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_actual_count (l_target_context)
 				else
@@ -385,12 +360,11 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -400,8 +374,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -413,12 +386,11 @@ feature -- Status report
 			end
 		end
 
-	is_type_reference_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_reference_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_reference' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -428,8 +400,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -441,12 +412,11 @@ feature -- Status report
 			end
 		end
 
-	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_attached_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_attached' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -456,8 +426,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -469,12 +438,11 @@ feature -- Status report
 			end
 		end
 
-	is_type_detachable_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_detachable_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_detachable' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -484,8 +452,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -517,7 +484,6 @@ feature -- Status report
 			-- a formal parameter when viewed from `a_context'?
 		local
 			l_base_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -529,8 +495,7 @@ feature -- Status report
 				Result := False
 			else
 				l_base_class := l_target_type.base_class (a_context)
-				l_query := l_base_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_base_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.named_type_is_formal_type (l_target_context)
 				else
@@ -547,7 +512,6 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		local
 			l_base_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -557,8 +521,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_base_class := l_target_type.base_class (a_context)
-				l_query := l_base_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_base_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.base_type_has_class (a_class, l_target_context)
 				else
@@ -575,7 +538,6 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		local
 			l_base_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -585,8 +547,7 @@ feature -- Status report
 			else
 				l_target_type := target_type
 				l_base_class := l_target_type.base_class (a_context)
-				l_query := l_base_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_base_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.named_type_has_class (a_class, l_target_context)
 				else
@@ -600,7 +561,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_syntactical_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
@@ -611,12 +572,11 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_named_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -628,8 +588,7 @@ feature -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -641,12 +600,11 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_base_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -658,8 +616,7 @@ feature -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -673,7 +630,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_qualified_like_identifier_with_type_marks (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_qualified_like_identifier_with_type_marks (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -684,7 +641,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
 			l_other_target_type: ET_TYPE
@@ -718,14 +675,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -735,8 +691,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -748,14 +703,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -765,8 +719,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -778,14 +731,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -795,8 +747,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -808,14 +759,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -825,8 +775,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -838,14 +787,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -855,8 +803,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -868,14 +815,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -885,8 +831,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -898,14 +843,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -915,8 +859,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -928,14 +871,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -945,8 +887,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -960,12 +901,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -977,8 +917,7 @@ feature -- Conformance
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -992,7 +931,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1001,7 +940,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -1011,8 +949,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -1024,7 +961,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1033,7 +970,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -1043,8 +979,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -1056,7 +991,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1065,7 +1000,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -1075,8 +1009,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else
@@ -1088,7 +1021,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1097,7 +1030,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_target_context: ET_TYPE_CONTEXT
 		do
@@ -1107,8 +1039,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			else
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached l_class.seeded_query (seed) as l_query then
 					l_target_context := a_context.new_type_context (l_target_type)
 					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
 				else

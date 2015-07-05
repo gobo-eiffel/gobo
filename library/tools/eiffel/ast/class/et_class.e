@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -37,7 +37,7 @@ inherit
 			formal_parameters,
 			is_expanded, is_separate,
 			first_leaf, last_leaf,
-			position, break, append_to_string,
+			position, append_to_string,
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal,
 			append_unaliased_to_string
@@ -135,20 +135,20 @@ feature -- Initialization
 			reset_ancestors_built
 			queries.reset
 			procedures.reset
-			if formal_parameters /= Void then
-				formal_parameters.reset
+			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset
 			end
-			if parent_clause /= Void then
-				parent_clause.reset
+			if attached parent_clause as l_parent_clause then
+				l_parent_clause.reset
 			end
-			if invariants /= Void then
-				invariants.reset
+			if attached invariants as l_invariants then
+				l_invariants.reset
 			end
-			if creators /= Void then
-				creators.reset
+			if attached creators as l_creators then
+				l_creators.reset
 			end
-			if convert_features /= Void then
-				convert_features.reset
+			if attached convert_features as l_convert_features then
+				l_convert_features.reset
 			end
 		ensure
 			same_name: name = old name
@@ -171,20 +171,20 @@ feature -- Initialization
 			reset_features_flattened
 			queries.reset
 			procedures.reset
-			if formal_parameters /= Void then
-				formal_parameters.reset
+			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset
 			end
-			if parent_clause /= Void then
-				parent_clause.reset
+			if attached parent_clause as l_parent_clause then
+				l_parent_clause.reset
 			end
-			if invariants /= Void then
-				invariants.reset
+			if attached invariants as l_invariants then
+				l_invariants.reset
 			end
-			if creators /= Void then
-				creators.reset
+			if attached creators as l_creators then
+				l_creators.reset
 			end
-			if convert_features /= Void then
-				convert_features.reset
+			if attached convert_features as l_convert_features then
+				l_convert_features.reset
 			end
 		ensure
 			same_name: name = old name
@@ -207,11 +207,11 @@ feature -- Initialization
 			reset_interface_checked
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
-			if formal_parameters /= Void then
-				formal_parameters.reset
+			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset
 			end
-			if invariants /= Void then
-				invariants.reset
+			if attached invariants as l_invariants then
+				l_invariants.reset
 			end
 		ensure
 			same_name: name = old name
@@ -234,8 +234,8 @@ feature -- Initialization
 			reset_implementation_checked
 			queries.reset_after_interface_checked
 			procedures.reset_after_interface_checked
-			if invariants /= Void then
-				invariants.reset
+			if attached invariants as l_invariants then
+				l_invariants.reset
 			end
 		ensure
 			same_name: name = old name
@@ -464,13 +464,13 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Name of class
 
-	obsolete_message: ET_OBSOLETE
+	obsolete_message: detachable ET_OBSOLETE
 			-- Obsolete message
 
-	first_indexing: ET_INDEXING_LIST
+	first_indexing: detachable ET_INDEXING_LIST
 			-- Note clause at the beginning of the class
 
-	second_indexing: ET_INDEXING_LIST
+	second_indexing: detachable ET_INDEXING_LIST
 			-- Note clause at the end of the class
 
 	class_keyword: ET_KEYWORD
@@ -496,26 +496,26 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if first_indexing /= Void then
-				Result := first_indexing.position
-			elseif class_mark /= Void then
-				Result := class_mark.position
+			if attached first_indexing as l_first_indexing then
+				Result := l_first_indexing.position
+			elseif attached class_mark as l_class_mark then
+				Result := l_class_mark.position
 			else
 				Result := class_keyword.position
 			end
 		end
 
-	leading_break: ET_BREAK
+	leading_break: detachable ET_BREAK
 			-- Break that appears at the top of the file, before
 			-- the class declaration
 
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if first_indexing /= Void then
-				Result := first_indexing.first_leaf
-			elseif class_mark /= Void then
-				Result := class_mark
+			if attached first_indexing as l_first_indexing then
+				Result := l_first_indexing.first_leaf
+			elseif attached class_mark as l_class_mark then
+				Result := l_class_mark
 			else
 				Result := class_keyword
 			end
@@ -527,13 +527,7 @@ feature -- Access
 			Result := end_keyword
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
-		end
-
-	data: ANY
+	data: detachable ANY
 			-- Arbitrary user data
 
 feature -- Setting
@@ -620,7 +614,7 @@ feature -- Setting
 
 feature -- Preparsing
 
-	filename: STRING
+	filename: detachable STRING
 			-- Filename
 
 	group: ET_PRIMARY_GROUP
@@ -652,7 +646,7 @@ feature -- Preparsing
 			master_class_in_universe: Result.universe = universe
 		end
 
-	master_class_in_system: ET_MASTER_CLASS
+	master_class_in_system: detachable ET_MASTER_CLASS
 			-- Class in `current_system' corresponding to `master_class_in_universe'
 			-- if any, Void otherwise
 			--
@@ -662,14 +656,14 @@ feature -- Preparsing
 		local
 			l_master_class_in_universe: ET_MASTER_CLASS
 			l_other_master_class: ET_MASTER_CLASS
-			l_cell: DS_CELL [ET_MASTER_CLASS]
+			l_cell: DS_CELL [detachable ET_MASTER_CLASS]
 		do
 			l_master_class_in_universe := universe.master_class (name)
 			if l_master_class_in_universe.universe = current_system then
 				Result := l_master_class_in_universe
 			else
 				create l_cell.make (Void)
-				l_master_class_in_universe.overriding_classes_do_if (agent l_cell.put, agent {ET_MASTER_CLASS}.is_in_universe (current_system))
+				l_master_class_in_universe.overriding_classes_do_if (agent l_cell.put ({ET_MASTER_CLASS}?), agent {ET_MASTER_CLASS}.is_in_universe (current_system))
 				if l_cell.item /= Void then
 					Result := l_cell.item
 				else
@@ -677,7 +671,7 @@ feature -- Preparsing
 					if l_other_master_class.has_imported_class (l_master_class_in_universe) then
 						Result := l_other_master_class
 					else
-						current_system.master_classes.do_if (agent l_cell.put, agent {ET_MASTER_CLASS}.has_imported_class (l_master_class_in_universe))
+						current_system.master_classes.do_if (agent l_cell.put ({ET_MASTER_CLASS}?), agent {ET_MASTER_CLASS}.has_imported_class (l_master_class_in_universe))
 						Result := l_cell.item
 					end
 				end
@@ -690,8 +684,9 @@ feature -- Preparsing
 			-- `master_class_in_system' if not Void,
 			-- `master_class_in_universe' otherwise
 		do
-			Result := master_class_in_system
-			if Result = Void then
+			if attached master_class_in_system as l_master_class_in_system then
+				Result := l_master_class_in_system
+			else
 				Result := master_class_in_universe
 			end
 		ensure
@@ -706,12 +701,11 @@ feature -- Preparsing
 			definition: Result = Current
 		end
 
-	first_non_override_overridden_class: ET_CLASS
+	first_non_override_overridden_class: detachable ET_CLASS
 			-- First overridden class that is not in an override group;
 			-- Void if no such class
 		local
 			l_master_class: ET_MASTER_CLASS
-			l_imported_class: ET_MASTER_CLASS
 		do
 			l_master_class := master_class_in_universe
 			if l_master_class.actual_class = Current then
@@ -720,8 +714,7 @@ feature -- Preparsing
 					Result := l_master_class.other_local_non_override_classes.first
 				end
 				if Result = Void then
-					l_imported_class := l_master_class.first_imported_class
-					if l_imported_class /= Void then
+					if attached l_master_class.first_imported_class as l_imported_class then
 						Result := l_imported_class.first_local_non_override_class
 					end
 				end
@@ -829,11 +822,10 @@ feature -- Preparsing status
 	is_in_cluster: BOOLEAN
 			-- Is current class in a cluster?
 		do
-			Result := (filename /= Void and then not filename.is_empty and then group.is_cluster)
+			Result := (attached filename as l_filename and then not l_filename.is_empty and then group.is_cluster)
 		ensure
 			is_cluster: Result implies group.is_cluster
-			filename_not_void: Result implies filename /= Void
-			filename_not_empty: Result implies not filename.is_empty
+			filename_not_empty: Result implies (attached filename as l_filename and then not l_filename.is_empty)
 		end
 
 	is_in_dotnet_assembly: BOOLEAN
@@ -905,7 +897,7 @@ feature -- Preparsing status
 	is_in_override_cluster: BOOLEAN
 			-- Is current class in an override cluster?
 		do
-			Result := filename /= Void and then not filename.is_empty and then group.is_cluster and then group.is_override
+			Result := attached filename as l_filename and then not l_filename.is_empty and then group.is_cluster and then group.is_override
 		ensure
 			is_cluster: Result implies is_in_cluster
 			is_override: Result implies is_in_override_group
@@ -1058,33 +1050,33 @@ feature -- Class header
 	has_deferred_mark: BOOLEAN
 			-- Has class been declared as deferred?
 		do
-			Result := (class_mark /= Void and then class_mark.is_deferred)
+			Result := (attached class_mark as l_class_mark and then l_class_mark.is_deferred)
 		ensure
-			definition: Result = (class_mark /= Void and then class_mark.is_deferred)
+			definition: Result = (attached class_mark as l_class_mark and then l_class_mark.is_deferred)
 		end
 
 	has_expanded_mark: BOOLEAN
 			-- Has class been declared as expanded?
 		do
-			Result := (class_mark /= Void and then class_mark.is_expanded)
+			Result := (attached class_mark as l_class_mark and then l_class_mark.is_expanded)
 		ensure
-			definition: Result = (class_mark /= Void and then class_mark.is_expanded)
+			definition: Result = (attached class_mark as l_class_mark and then l_class_mark.is_expanded)
 		end
 
 	has_reference_mark: BOOLEAN
 			-- Has class been declared as reference?
 		do
-			Result := (class_mark /= Void and then class_mark.is_reference)
+			Result := (attached class_mark as l_class_mark and then l_class_mark.is_reference)
 		ensure
-			definition: Result = (class_mark /= Void and then class_mark.is_reference)
+			definition: Result = (attached class_mark as l_class_mark and then l_class_mark.is_reference)
 		end
 
 	has_separate_mark: BOOLEAN
 			-- Has class been declared as separate?
 		do
-			Result := (class_mark /= Void and then class_mark.is_separate)
+			Result := (attached class_mark as l_class_mark and then l_class_mark.is_separate)
 		ensure
-			definition: Result = (class_mark /= Void and then class_mark.is_separate)
+			definition: Result = (attached class_mark as l_class_mark and then l_class_mark.is_separate)
 		end
 
 	has_frozen_mark: BOOLEAN
@@ -1103,7 +1095,7 @@ feature -- Class header
 			definition: Result = (external_keyword /= Void)
 		end
 
-	class_mark: ET_CLASS_MARK
+	class_mark: detachable ET_CLASS_MARK
 			-- 'attached', 'detachable', 'deferred', 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
@@ -1115,7 +1107,7 @@ feature -- Class header
 			class_mark_set: class_mark = a_mark
 		end
 
-	frozen_keyword: ET_KEYWORD
+	frozen_keyword: detachable ET_KEYWORD
 			-- 'frozen' keyword
 
 	set_frozen_keyword (a_frozen: like frozen_keyword)
@@ -1126,7 +1118,7 @@ feature -- Class header
 			frozen_keyword_set: frozen_keyword = a_frozen
 		end
 
-	external_keyword: ET_KEYWORD
+	external_keyword: detachable ET_KEYWORD
 			-- 'external' keyword
 
 	set_external_keyword (an_external: like external_keyword)
@@ -1139,7 +1131,7 @@ feature -- Class header
 
 feature -- Genericity
 
-	formal_parameters: ET_FORMAL_PARAMETER_LIST
+	formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			-- Formal generic parameters
 
 	set_formal_parameters (a_parameters: like formal_parameters)
@@ -1155,21 +1147,21 @@ feature -- Genericity
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if formal_parameters /= Void then
-				Result := formal_parameters.has_formal_parameter (a_name)
+			if attached formal_parameters as l_formal_parameters then
+				Result := l_formal_parameters.has_formal_parameter (a_name)
 			end
 		ensure
 			is_generic: Result implies is_generic
 		end
 
-	formal_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER
+	formal_parameter (a_name: ET_IDENTIFIER): detachable ET_FORMAL_PARAMETER
 			-- Formal generic parameter with name `a_name';
 			-- Void if no such formal generic parameter
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if formal_parameters /= Void then
-				Result := formal_parameters.formal_parameter_by_name (a_name)
+			if attached formal_parameters as l_formal_parameters then
+				Result := l_formal_parameters.formal_parameter_by_name (a_name)
 			end
 		ensure
 			has_formal_parameter: has_formal_parameter (a_name) = (Result /= Void)
@@ -1183,28 +1175,32 @@ feature -- Genericity
 		local
 			nb: INTEGER
 			l_name: ET_IDENTIFIER
+			l_formal_parameter_types: like formal_parameter_types
 		do
-			if formal_parameters /= Void and then i <= formal_parameters.count then
-				Result := formal_parameters.formal_parameter (i)
+			if attached formal_parameters as l_formal_parameters and then i <= l_formal_parameters.count then
+				Result := l_formal_parameters.formal_parameter (i)
 			else
-				if formal_parameter_types = Void then
-					create formal_parameter_types.make (10)
+				l_formal_parameter_types := formal_parameter_types
+				if l_formal_parameter_types = Void then
+					create l_formal_parameter_types.make (10)
+					formal_parameter_types := l_formal_parameter_types
 				end
-				nb := formal_parameter_types.count
+				nb := l_formal_parameter_types.count
 				if i > nb then
-					if i > formal_parameter_types.capacity then
-						formal_parameter_types.resize (i)
+					if i > l_formal_parameter_types.capacity then
+						l_formal_parameter_types.resize (i)
 					end
 					from until i = nb loop
-						formal_parameter_types.put_last (Void)
+						l_formal_parameter_types.put_last (Void)
 						nb := nb + 1
 					end
 				end
-				Result := formal_parameter_types.item (i)
-				if Result = Void then
+				if attached l_formal_parameter_types.item (i) as l_formal_parameter_type then
+					Result := l_formal_parameter_type
+				else
 					create l_name.make ("G" + i.out)
 					create Result.make (Void, l_name, i, Current)
-					formal_parameter_types.replace (Result, i)
+					l_formal_parameter_types.replace (Result, i)
 				end
 			end
 		ensure
@@ -1213,7 +1209,7 @@ feature -- Genericity
 
 feature {NONE} -- Genericity
 
-	formal_parameter_types: DS_ARRAYED_LIST [ET_FORMAL_PARAMETER_TYPE]
+	formal_parameter_types: detachable DS_ARRAYED_LIST [detachable ET_FORMAL_PARAMETER_TYPE]
 			-- Shared formal parameter types, indexed by index.
 			-- Note that some entries in the list may be Void if
 			-- the corresponding formal parameter type has not
@@ -1241,7 +1237,7 @@ feature -- Ancestors
 			end
 		end
 
-	ancestor (a_type: ET_BASE_TYPE): ET_BASE_TYPE
+	ancestor (a_type: ET_BASE_TYPE): detachable ET_BASE_TYPE
 			-- Ancestor of current class with same base class as `a_type';
 			-- Void if no such ancestor.
 			-- (Note: you have to make sure that the ancestors have correctly
@@ -1309,10 +1305,10 @@ feature -- Ancestors
 			no_void_descendants: not a_descendants.has_void
 		end
 
-	parent_clause: ET_PARENT_LIST
+	parent_clause: detachable ET_PARENT_LIST
 			-- Parents explicitly specified in the Parent clause
 
-	parents: ET_PARENT_LIST
+	parents: detachable ET_PARENT_LIST
 			-- Parents of current class, either declared explicitly in `parent_clause'
 			-- or the implicit parent when no parents have been specified
 			--
@@ -1413,8 +1409,8 @@ feature -- Creation
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
 		do
-			if creators /= Void then
-				Result := creators.is_exported_to (a_name, a_client)
+			if attached creators as l_creators then
+				Result := l_creators.is_exported_to (a_name, a_client)
 			end
 		end
 
@@ -1429,12 +1425,12 @@ feature -- Creation
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
 		do
-			if creators /= Void then
-				Result := creators.is_directly_exported_to (a_name, a_client)
+			if attached creators as l_creators then
+				Result := l_creators.is_directly_exported_to (a_name, a_client)
 			end
 		end
 
-	creators: ET_CREATOR_LIST
+	creators: detachable ET_CREATOR_LIST
 			-- Creation clauses
 
 	set_creators (a_creators: like creators)
@@ -1447,7 +1443,7 @@ feature -- Creation
 
 feature -- Conversion
 
-	convert_to_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE
+	convert_to_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): detachable ET_CONVERT_FEATURE
 			-- Conversion feature, if any, to convert `a_type' to `other'
 		require
 			other_not_void: other /= Void
@@ -1461,11 +1457,11 @@ feature -- Conversion
 			a_feature: ET_CONVERT_FEATURE
 			other_type: ET_TYPE
 		do
-			if convert_features /= Void then
+			if attached convert_features as l_convert_features then
 				other_type := tokens.identity_type
-				nb := convert_features.count
+				nb := l_convert_features.count
 				from i := 1 until i > nb loop
-					a_feature := convert_features.convert_feature (i)
+					a_feature := l_convert_features.convert_feature (i)
 					if a_feature.is_convert_to then
 							-- Do not take into account the attachment and
 							-- separateness status of the types involved.
@@ -1479,7 +1475,7 @@ feature -- Conversion
 			end
 		end
 
-	convert_from_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE
+	convert_from_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): detachable ET_CONVERT_FEATURE
 			-- Conversion feature, if any, to convert `a_type' from `other'
 		require
 			other_not_void: other /= Void
@@ -1493,11 +1489,11 @@ feature -- Conversion
 			a_feature: ET_CONVERT_FEATURE
 			other_type: ET_TYPE
 		do
-			if convert_features /= Void then
+			if attached convert_features as l_convert_features then
 				other_type := tokens.identity_type
-				nb := convert_features.count
+				nb := l_convert_features.count
 				from i := 1 until i > nb loop
-					a_feature := convert_features.convert_feature (i)
+					a_feature := l_convert_features.convert_feature (i)
 					if a_feature.is_convert_from then
 							-- Do not take into account the attachment and
 							-- separateness status of the types involved.
@@ -1511,7 +1507,7 @@ feature -- Conversion
 			end
 		end
 
-	convert_features: ET_CONVERT_FEATURE_LIST
+	convert_features: detachable ET_CONVERT_FEATURE_LIST
 			-- Conversion clauses
 
 	set_convert_features (a_convert_features: like convert_features)
@@ -1524,7 +1520,7 @@ feature -- Conversion
 
 feature -- Feature clauses
 
-	feature_clauses: ET_FEATURE_CLAUSE_LIST
+	feature_clauses: detachable ET_FEATURE_CLAUSE_LIST
 			-- Feature clauses
 
 	set_feature_clauses (a_feature_clauses: like feature_clauses)
@@ -1537,7 +1533,7 @@ feature -- Feature clauses
 
 feature -- Features
 
-	named_query (a_name: ET_CALL_NAME): ET_QUERY
+	named_query (a_name: ET_CALL_NAME): detachable ET_QUERY
 			-- Query named `a_name';
 			-- Void if no such query
 		require
@@ -1548,7 +1544,7 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	named_procedure (a_name: ET_CALL_NAME): ET_PROCEDURE
+	named_procedure (a_name: ET_CALL_NAME): detachable ET_PROCEDURE
 			-- Procedure named `a_name';
 			-- Void if no such procedure
 		require
@@ -1559,7 +1555,7 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	named_feature (a_name: ET_CALL_NAME): ET_FEATURE
+	named_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
@@ -1573,7 +1569,7 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	named_declared_feature (a_name: ET_CALL_NAME): ET_FEATURE
+	named_declared_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE
 			-- Feature named `a_name' declared in current class;
 			-- Void if no such feature
 		require
@@ -1587,7 +1583,7 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	seeded_query (a_seed: INTEGER): ET_QUERY
+	seeded_query (a_seed: INTEGER): detachable ET_QUERY
 			-- Query with seed `a_seed';
 			-- Void if no such query
 		do
@@ -1596,11 +1592,23 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	seeded_procedure (a_seed: INTEGER): ET_PROCEDURE
+	seeded_procedure (a_seed: INTEGER): detachable ET_PROCEDURE
 			-- Procedure with seed `a_seed';
 			-- Void if no such procedure
 		do
 			Result := procedures.seeded_feature (a_seed)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	seeded_feature (a_seed: INTEGER): detachable ET_FEATURE
+			-- Feature with seed `a_seed';
+			-- Void if no such feature
+		do
+			Result := queries.seeded_feature (a_seed)
+			if Result = Void then
+				Result := procedures.seeded_feature (a_seed)
+			end
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end
@@ -1667,7 +1675,7 @@ feature -- Features
 			procedures.features_do_all (an_action)
 		end
 
-	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature of current class.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
 			--
@@ -1693,7 +1701,7 @@ feature -- Features
 			procedures.features_do_declared (an_action)
 		end
 
-	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class).
@@ -1720,7 +1728,7 @@ feature -- Features
 			procedures.features_do_inherited (an_action)
 		end
 
-	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
@@ -1746,7 +1754,7 @@ feature -- Features
 			procedures.features_do_if (an_action, a_test)
 		end
 
-	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
 			--
@@ -1774,7 +1782,7 @@ feature -- Features
 			procedures.features_do_declared_if (an_action, a_test)
 		end
 
-	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class) that satisfies `a_test'.
@@ -1803,7 +1811,7 @@ feature -- Features
 			procedures.features_do_inherited_if (an_action, a_test)
 		end
 
-	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -1955,18 +1963,16 @@ feature -- Interface checking status
 
 feature -- Suppliers/Providers
 
-	suppliers: DS_HASH_SET [ET_NAMED_CLASS]
+	suppliers: detachable DS_HASH_SET [ET_NAMED_CLASS]
 			-- Named supplier classes of current class
 
-	supplier_classes: DS_HASH_SET [ET_CLASS]
+	supplier_classes: detachable DS_HASH_SET [ET_CLASS]
 			-- Supplier classes of current class
 		local
-			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			l_class: ET_CLASS
 		do
-			l_suppliers := suppliers
-			if l_suppliers /= Void then
+			if attached suppliers as l_suppliers then
 				create Result.make (l_suppliers.count)
 				l_cursor := l_suppliers.new_cursor
 				from l_cursor.start until l_cursor.after loop
@@ -1992,20 +1998,18 @@ feature -- Suppliers/Providers
 			suppliers_set: suppliers = a_suppliers
 		end
 
-	providers: DS_HASH_SET [ET_NAMED_CLASS]
+	providers: detachable DS_HASH_SET [ET_NAMED_CLASS]
 			-- Named provider classes of current class
 			-- (classes whose name appears in the text of current class)
 
-	provider_classes: DS_HASH_SET [ET_CLASS]
+	provider_classes: detachable DS_HASH_SET [ET_CLASS]
 			-- Provider classes of current class
 			-- (classes whose name appears in the text of current class)
 		local
-			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
 			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			l_class: ET_CLASS
 		do
-			l_providers := providers
-			if l_providers /= Void then
+			if attached providers as l_providers then
 				create Result.make (l_providers.count)
 				l_cursor := l_providers.new_cursor
 				from l_cursor.start until l_cursor.after loop
@@ -2081,7 +2085,7 @@ feature -- Implementation checking status
 
 feature -- Invariant
 
-	invariants: ET_INVARIANTS
+	invariants: detachable ET_INVARIANTS
 			-- Invariants
 
 	set_invariants (an_invariants: like invariants)
@@ -2123,6 +2127,8 @@ feature -- Duplication
 
 	copy_ast (other: like Current)
 			-- Copy from `other' everything but the name, filename, group, time_stamp and id.
+		require
+			other_not_void: other /= Void
 		local
 			l_name: like name
 			l_group: like group
@@ -2170,14 +2176,11 @@ feature -- Output
 	append_to_string (a_string: STRING)
 			-- Append textual representation of
 			-- current type to `a_string'.
-		local
-			a_parameters: like formal_parameters
 		do
 			a_string.append_string (upper_name)
-			a_parameters := formal_parameters
-			if a_parameters /= Void and then not a_parameters.is_empty then
+			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
 				a_string.append_character (' ')
-				a_parameters.append_to_string (a_string)
+				l_formal_parameters.append_to_string (a_string)
 			end
 		end
 
@@ -2186,14 +2189,11 @@ feature -- Output
 			-- version of current type to `a_string'.
 			-- An unaliased version if when aliased types such as INTEGER
 			-- are replaced by the associated types such as INTEGER_32.
-		local
-			a_parameters: like formal_parameters
 		do
 			a_string.append_string (upper_name)
-			a_parameters := formal_parameters
-			if a_parameters /= Void and then not a_parameters.is_empty then
+			if attached formal_parameters as l_formal_parameters and then not l_formal_parameters.is_empty then
 				a_string.append_character (' ')
-				a_parameters.append_unaliased_to_string (a_string)
+				l_formal_parameters.append_unaliased_to_string (a_string)
 			end
 		end
 
@@ -2251,7 +2251,7 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type
 	valid_context: is_valid_context
-	no_void_supplier: suppliers /= Void implies not suppliers.has_void
-	no_void_provider: providers /= Void implies not providers.has_void
+	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
+	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 
 end

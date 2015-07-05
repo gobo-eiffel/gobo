@@ -5,7 +5,7 @@ note
 		"Eiffel config file generators from Xace files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2007, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,12 +88,12 @@ feature -- Output
 			-- Generate a new Eiffel config file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: a_system.system_name /= Void
-			system_name_not_empty: a_system.system_name.count > 0
-			root_class_name_not_void: a_system.root_class_name /= Void
-			root_class_name_not_empty: a_system.root_class_name.count > 0
-			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
-			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
+			system_name_not_void: attached a_system.system_name as l_system_name
+			system_name_not_empty: l_system_name.count > 0
+			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
+			root_class_name_not_empty: l_root_class_name.count > 0
+			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name
+			creation_procedure_name_not_empty: l_creation_procedure_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		deferred
@@ -103,8 +103,8 @@ feature -- Output
 			-- Generate a new Eiffel config file from `a_library'.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: a_library.name /= Void
-			a_library_name_not_empty: a_library.name.count > 0
+			a_library_name_not_void: attached a_library.name as l_library_name
+			a_library_name_not_empty: l_library_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		deferred
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 		local
 			gobo_os_variable: STRING
 			gobo_os_value: STRING
-			a_value: STRING
+			a_value: detachable STRING
 		do
 			gobo_os_variable := "GOBO_OS"
 			gobo_os_value := "windows"

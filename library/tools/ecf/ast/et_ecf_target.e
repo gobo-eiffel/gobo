@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,19 +56,19 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	clusters: ET_ECF_CLUSTERS
+	clusters: detachable ET_ECF_CLUSTERS
 			-- Clusters
 
-	libraries: ET_ECF_ADAPTED_LIBRARIES
+	libraries: detachable ET_ECF_ADAPTED_LIBRARIES
 			-- Libraries
 
-	dotnet_assemblies: ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
+	dotnet_assemblies: detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
 			-- .NET assemblies
 
-	parent: ET_ECF_TARGET
+	parent: detachable ET_ECF_TARGET
 			-- Parent, if any
 
-	root: ET_ECF_ROOT
+	root: detachable ET_ECF_ROOT
 			-- Root class name, creation procedure name, etc.
 
 	variables: ET_ECF_VARIABLES
@@ -80,16 +80,16 @@ feature -- Access
 	options: ET_ECF_OPTIONS
 			-- Options
 
-	file_rules: ET_ECF_FILE_RULES
+	file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules
 
-	external_includes: ET_ECF_EXTERNAL_INCLUDES
+	external_includes: detachable ET_ECF_EXTERNAL_INCLUDES
 			-- External includes
 
-	external_objects: ET_ECF_EXTERNAL_OBJECTS
+	external_objects: detachable ET_ECF_EXTERNAL_OBJECTS
 			-- External objects
 
-	external_libraries: ET_ECF_EXTERNAL_LIBRARIES
+	external_libraries: detachable ET_ECF_EXTERNAL_LIBRARIES
 			-- External libraries
 
 feature -- Setting
@@ -124,10 +124,10 @@ feature -- Setting
 			-- no_cycle: no cycle introduced
 		do
 			parent := a_parent
-			if parent /= Void then
-				variables.set_secondary_variables (parent.variables)
-				settings.set_secondary_settings (parent.settings)
-				options.set_secondary_options (parent.options)
+			if a_parent /= Void then
+				variables.set_secondary_variables (a_parent.variables)
+				settings.set_secondary_settings (a_parent.settings)
+				options.set_secondary_options (a_parent.options)
 			else
 				variables.set_secondary_variables (Execution_environment)
 				settings.set_secondary_settings (Void)
@@ -186,10 +186,10 @@ feature -- Basic operations
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_value: STRING
+			l_value: detachable STRING
 		do
-			if parent /= Void then
-				parent.update_state (a_state)
+			if attached parent as l_parent then
+				l_parent.update_state (a_state)
 			end
 			l_value := settings.value (multithreaded_setting_name)
 			if l_value /= Void and then l_value.is_boolean then
@@ -220,25 +220,25 @@ feature -- Basic operations
 			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_universe_clusters: ET_CLUSTERS
-			l_universe_libraries: ET_ADAPTED_LIBRARIES
-			l_universe_dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
+			l_universe_clusters: detachable ET_CLUSTERS
+			l_universe_libraries: detachable ET_ADAPTED_LIBRARIES
+			l_universe_dotnet_assemblies: detachable ET_ADAPTED_DOTNET_ASSEMBLIES
 			l_cluster: ET_ECF_CLUSTER
 			l_library: ET_ECF_ADAPTED_LIBRARY
 			l_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY
-			l_ecf_library: ET_ECF_LIBRARY
+			l_is_ecf_library: BOOLEAN
 			i, nb: INTEGER
 		do
-			if parent /= Void then
-				parent.fill_universe (a_universe, a_state)
+			if attached parent as l_parent then
+				l_parent.fill_universe (a_universe, a_state)
 			end
-			if clusters /= Void then
-				l_ecf_library ?= a_universe
+			if attached clusters as l_clusters then
+				l_is_ecf_library := attached {ET_ECF_LIBRARY} a_universe
 				l_universe_clusters := a_universe.clusters
-				nb := clusters.count
+				nb := l_clusters.count
 				from i := 1 until i > nb loop
-					l_cluster := clusters.cluster (i)
-					if l_ecf_library /= Void and l_cluster.is_override then
+					l_cluster := l_clusters.cluster (i)
+					if l_is_ecf_library and l_cluster.is_override then
 						 -- Override clusters in ECF libraries are ignored.
 						 -- That's the way it works in ISE Eiffel.
 					elseif l_cluster.is_enabled (a_state) then
@@ -254,11 +254,11 @@ feature -- Basic operations
 					i := i + 1
 				end
 			end
-			if libraries /= Void then
+			if attached libraries as l_libraries then
 				l_universe_libraries := a_universe.libraries
-				nb := libraries.count
+				nb := l_libraries.count
 				from i := 1 until i > nb loop
-					l_library := libraries.library (i)
+					l_library := l_libraries.library (i)
 					if l_library.is_enabled (a_state) then
 						if l_universe_libraries = Void then
 							create l_universe_libraries.make (l_library)
@@ -270,11 +270,11 @@ feature -- Basic operations
 					i := i + 1
 				end
 			end
-			if a_state.is_dotnet and dotnet_assemblies /= Void then
+			if a_state.is_dotnet and then attached dotnet_assemblies as l_dotnet_assemblies then
 				l_universe_dotnet_assemblies := a_universe.dotnet_assemblies
-				nb := dotnet_assemblies.count
+				nb := l_dotnet_assemblies.count
 				from i := 1 until i > nb loop
-					l_dotnet_assembly := dotnet_assemblies.dotnet_assembly (i)
+					l_dotnet_assembly := l_dotnet_assemblies.dotnet_assembly (i)
 					if l_dotnet_assembly.is_enabled (a_state) then
 						if l_universe_dotnet_assemblies = Void then
 							create l_universe_dotnet_assemblies.make (l_dotnet_assembly)
@@ -286,14 +286,14 @@ feature -- Basic operations
 					i := i + 1
 				end
 			end
-			if external_includes /= Void then
-				external_includes.fill_external_includes (a_universe, a_state)
+			if attached external_includes as l_external_includes then
+				l_external_includes.fill_external_includes (a_universe, a_state)
 			end
-			if external_objects /= Void then
-				external_objects.fill_external_objects (a_universe, a_state)
+			if attached external_objects as l_external_objects then
+				l_external_objects.fill_external_objects (a_universe, a_state)
 			end
-			if external_libraries /= Void then
-				external_libraries.fill_external_libraries (a_universe, a_state)
+			if attached external_libraries as l_external_libraries then
+				l_external_libraries.fill_external_libraries (a_universe, a_state)
 			end
 		end
 
@@ -302,10 +302,10 @@ feature -- Basic operations
 		require
 			a_system_not_void: a_system /= Void
 		do
-			if root /= Void then
-				root.fill_root (a_system)
-			elseif parent /= Void then
-				parent.fill_root (a_system)
+			if attached root as l_root then
+				l_root.fill_root (a_system)
+			elseif attached parent as l_parent then
+				l_parent.fill_root (a_system)
 			end
 		end
 
@@ -316,11 +316,11 @@ feature -- Basic operations
 			a_file_rules_not_void: a_file_rules /= Void
 			a_state_not_void: a_state /= Void
 		do
-			if parent /= Void then
-				parent.fill_file_rules (a_file_rules, a_state)
+			if attached parent as l_parent then
+				l_parent.fill_file_rules (a_file_rules, a_state)
 			end
-			if file_rules /= Void then
-				file_rules.fill_file_rules (a_file_rules, a_state)
+			if attached file_rules as l_file_rules then
+				l_file_rules.fill_file_rules (a_file_rules, a_state)
 			end
 		end
 
@@ -329,7 +329,7 @@ feature -- Basic operations
 		require
 			a_system_not_void: a_system /= Void
 		local
-			l_value: STRING
+			l_value: detachable STRING
 		do
 				-- console_application.
 			l_value := settings.value (console_application_setting_name)
@@ -348,7 +348,7 @@ feature -- Basic operations
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: STRING
+			l_value: detachable STRING
 		do
 				-- void_safety.
 			l_value := options.value (xml_void_safety)

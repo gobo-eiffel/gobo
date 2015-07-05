@@ -5,7 +5,7 @@ note
 		"Eiffel Void entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,17 @@ inherit
 
 	ET_EXPRESSION
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		end
 
 	ET_KEYWORD
 		rename
 			make_void as make
 		undefine
-			is_current, is_false
+			is_current,
+			is_false
 		redefine
 			process
 		end

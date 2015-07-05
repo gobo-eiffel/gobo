@@ -6,7 +6,7 @@ note
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -276,7 +276,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 		-- from the beginning of line.
 	[ \t\r]*\}[^%\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
-					verbatim_marker := Void
+					verbatim_marker := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
 					more
@@ -366,7 +366,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 		-- from the beginning of line.
 	[ \t\r]*\][^%\n"]*\" {
 				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
-					verbatim_marker := Void
+					verbatim_marker := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
 					more

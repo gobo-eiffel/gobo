@@ -5,7 +5,7 @@ note
 		"Eiffel prefix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_PREFIX_EXPRESSION
 
 inherit
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			target as expression
 		undefine
@@ -62,7 +62,7 @@ feature -- Access
 	name: ET_OPERATOR
 			-- Feature name
 
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: detachable ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then

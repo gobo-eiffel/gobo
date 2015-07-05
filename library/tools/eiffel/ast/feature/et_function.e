@@ -5,7 +5,7 @@ note
 		"Eiffel functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,45 +70,40 @@ feature -- Status report
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
-			Result := arguments /= Void and then arguments.count = 1
+			Result := attached arguments as l_arguments and then l_arguments.count = 1
 		end
 
 	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
-			Result := arguments = Void or else arguments.count = 0
+			Result := not attached arguments as l_arguments or else l_arguments.count = 0
 		end
 
 	is_bracketable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'alias "[]"'?
 		do
-			Result := arguments /= Void and then arguments.count > 0
+			Result := attached arguments as l_arguments and then l_arguments.count > 0
 		end
 
 feature -- Access
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
-		local
-			l_break: ET_BREAK
 		do
-			if is_keyword /= Void then
-				l_break := is_keyword.break
-				if l_break /= Void and then l_break.has_comment then
+			if attached is_keyword as l_is_keyword then
+				if attached l_is_keyword.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
 			if Result = Void then
-				l_break := declared_type.break
-				if l_break /= Void and then l_break.has_comment then
+				if attached declared_type.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
-			if Result = Void and assigner /= Void then
-				l_break := assigner.break
-				if l_break /= Void and then l_break.has_comment then
+			if Result = Void and attached assigner as l_assigner then
+				if attached l_assigner.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end

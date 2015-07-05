@@ -5,7 +5,7 @@ note
 		"Eiffel creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,7 +63,7 @@ feature -- Access
 	clients: ET_CLIENT_LIST
 			-- Clients
 
-	clients_clause: ET_CLIENTS
+	clients_clause: detachable ET_CLIENTS
 			-- Clients clause
 		do
 			if attached {ET_CLIENTS} clients as l_result then
@@ -74,14 +74,11 @@ feature -- Access
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
-		local
-			a_clients_clause: ET_CLIENTS
 		do
 			Result := creation_keyword.position
 			if Result.is_null then
-				a_clients_clause := clients_clause
-				if a_clients_clause /= Void then
-					Result := a_clients_clause.position
+				if attached clients_clause as l_clients_clause then
+					Result := l_clients_clause.position
 				elseif not is_empty then
 					Result := first.position
 				end
@@ -96,35 +93,15 @@ feature -- Access
 
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
-		local
-			a_clients_clause: ET_CLIENTS
 		do
 			if is_empty then
-				a_clients_clause := clients_clause
-				if a_clients_clause /= Void then
-					Result := a_clients_clause.last_leaf
+				if attached clients_clause as l_clients_clause then
+					Result := l_clients_clause.last_leaf
 				else
 					Result := creation_keyword
 				end
 			else
 				Result := last.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		local
-			a_clients_clause: ET_CLIENTS
-		do
-			if is_empty then
-				a_clients_clause := clients_clause
-				if a_clients_clause /= Void then
-					Result := a_clients_clause.break
-				else
-					Result := creation_keyword.break
-				end
-			else
-				Result := last.break
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel conversion functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,17 +49,10 @@ feature -- Access
 	colon: ET_SYMBOL
 			-- Colon symbol
 
-
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
 			Result := types.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := types.break
 		end
 
 feature -- Setting

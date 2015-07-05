@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #4 $"
@@ -197,7 +197,7 @@ feature -- Processing
 			l_class: ET_CLASS
 			l_system: ET_SYSTEM
 			i, nb: INTEGER
-			l_other_precursors: ET_FEATURE_LIST
+			l_other_precursors: detachable ET_FEATURE_LIST
 			j, nb2: INTEGER
 			l_redeclared_features: DS_ARRAYED_LIST [ET_FEATURE]
 		do
@@ -227,7 +227,7 @@ feature -- Processing
 				from i := 1 until i > nb loop
 					l_feature := l_redeclared_features.item (i)
 					if not l_feature.implementation_feature.is_used then
-						if l_feature.first_precursor.implementation_feature.is_used then
+						if attached l_feature.first_precursor as l_first_precursor and then l_first_precursor.implementation_feature.is_used then
 							l_feature := l_feature.implementation_feature
 							l_feature.set_used (True)
 							used_features.force (l_feature)
@@ -377,9 +377,9 @@ feature -- Processing
 			l_class: ET_CLASS
 			l_system: ET_SYSTEM
 			i, nb: INTEGER
-			l_other_precursors: ET_FEATURE_LIST
+			l_other_precursors: detachable ET_FEATURE_LIST
 			j, nb2: INTEGER
-			l_redeclared_features: DS_ARRAYED_LIST [ET_FEATURE]
+			l_redeclared_features: detachable DS_ARRAYED_LIST [ET_FEATURE]
 		do
 			if not a_callee_feature.implementation_class.in_system then
 				Result := False
@@ -415,7 +415,7 @@ feature -- Processing
 						from i := 1 until i > nb or Result loop
 							l_feature := l_redeclared_features.item (i)
 							if not l_feature.implementation_feature.is_used then
-								if l_feature.first_precursor.implementation_feature.is_used then
+								if attached l_feature.first_precursor as l_first_precursor and then l_first_precursor.implementation_feature.is_used then
 									l_feature := l_feature.implementation_feature
 									l_feature.set_used (True)
 									used_features.force (l_feature)
@@ -479,7 +479,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS)
+		a_procedure: ET_PROCEDURE; an_actuals: detachable ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		do

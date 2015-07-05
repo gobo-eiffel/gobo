@@ -5,7 +5,7 @@ note
 		"Feature adaptation resolvers for .NET classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Feature adaptation resolving
 			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
-			a_parents: ET_PARENT_LIST
+			a_parents: detachable ET_PARENT_LIST
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
@@ -114,7 +114,6 @@ feature {NONE} -- Feature recording
 			l_queries: ET_QUERY_LIST
 			l_procedure: ET_PROCEDURE
 			l_procedures: ET_PROCEDURE_LIST
-			l_dotnet_feature: ET_DOTNET_FEATURE
 			i, nb, nb2, nb3: INTEGER
 		do
 			l_queries := current_class.queries
@@ -130,8 +129,7 @@ feature {NONE} -- Feature recording
 			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				l_dotnet_feature ?= l_query
-				if l_dotnet_feature /= Void then
+				if attached {ET_DOTNET_FEATURE} l_query as l_dotnet_feature then
 					add_current_feature (l_dotnet_feature, a_features)
 				else
 						-- Internal error: should be a .NET feature.
@@ -142,8 +140,7 @@ feature {NONE} -- Feature recording
 			end
 			from i := 1 until i > nb2 loop
 				l_procedure := l_procedures.item (i)
-				l_dotnet_feature ?= l_procedure
-				if l_dotnet_feature /= Void then
+				if attached {ET_DOTNET_FEATURE} l_procedure as l_dotnet_feature then
 					add_current_feature (l_dotnet_feature, a_features)
 				else
 						-- Internal error: should be a .NET feature.
@@ -211,7 +208,6 @@ feature {NONE} -- Feature recording
 			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
-			l_dotnet_feature: ET_DOTNET_FEATURE
 			l_feature_list: DS_LINKED_LIST [ET_DOTNET_FEATURE]
 			i, nb: INTEGER
 		do
@@ -221,8 +217,7 @@ feature {NONE} -- Feature recording
 			nb := l_queries.declared_count
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				l_dotnet_feature ?= l_query
-				if l_dotnet_feature /= Void then
+				if attached {ET_DOTNET_FEATURE} l_query as l_dotnet_feature then
 						-- Look for .NET feature with the same .NET name and the same signature.
 					dotnet_features.search (l_dotnet_feature)
 					if dotnet_features.found then
@@ -249,8 +244,7 @@ feature {NONE} -- Feature recording
 			nb := l_procedures.declared_count
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
-				l_dotnet_feature ?= l_procedure
-				if l_dotnet_feature /= Void then
+				if attached {ET_DOTNET_FEATURE} l_procedure as l_dotnet_feature then
 						-- Look for .NET feature with the same .NET name and the same signature.
 					dotnet_features.search (l_dotnet_feature)
 					if dotnet_features.found then
@@ -380,9 +374,8 @@ feature {NONE} -- Feature recording
 				if a_features.has (l_name) then
 					from
 						j := 1
-						l_identifier ?= l_name
-						if l_identifier /= Void then
-							l_base_name := "any_" + l_identifier.name
+						if attached {ET_IDENTIFIER} l_name as l_name_identifier then
+							l_base_name := "any_" + l_name_identifier.name
 						else
 							l_base_name := "any_query"
 						end
@@ -412,9 +405,8 @@ feature {NONE} -- Feature recording
 				if a_features.has (l_name) then
 					from
 						j := 1
-						l_identifier ?= l_name
-						if l_identifier /= Void then
-							l_base_name := "any_" + l_identifier.name
+						if attached {ET_IDENTIFIER} l_name as l_name_identifier then
+							l_base_name := "any_" + l_name_identifier.name
 						else
 							l_base_name := "any_procedure"
 						end
@@ -460,10 +452,10 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_parent_not_void: a_parent /= Void
 		do
-			if free_parent_feature /= Void then
-				Result := free_parent_feature
+			if attached free_parent_feature as l_free_parent_feature then
+				Result := l_free_parent_feature
 				Result.reset (a_feature, a_parent)
-				free_parent_feature := free_parent_feature.next
+				free_parent_feature := l_free_parent_feature.next
 			else
 				create Result.make (a_feature, a_parent)
 				Result.set_next (parent_feature_list)
@@ -478,10 +470,10 @@ feature {NONE} -- Implementation
 		require
 			a_parent_feature_not_void: a_parent_feature /= Void
 		do
-			if free_inherited_feature /= Void then
-				Result := free_inherited_feature
+			if attached free_inherited_feature as l_free_inherited_feature then
+				Result := l_free_inherited_feature
 				Result.reset (a_parent_feature)
-				free_inherited_feature := free_inherited_feature.next
+				free_inherited_feature := l_free_inherited_feature.next
 			else
 				create Result.make (a_parent_feature)
 				Result.set_next (inherited_feature_list)
@@ -497,10 +489,10 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_parent_feature_not_void: a_parent_feature /= Void
 		do
-			if free_redeclared_feature /= Void then
-				Result := free_redeclared_feature
+			if attached free_redeclared_feature as l_free_redeclared_feature then
+				Result := l_free_redeclared_feature
 				Result.reset (a_feature, a_parent_feature)
-				free_redeclared_feature := free_redeclared_feature.next
+				free_redeclared_feature := l_free_redeclared_feature.next
 			else
 				create Result.make (a_feature, a_parent_feature)
 				Result.set_next (redeclared_feature_list)
@@ -510,22 +502,22 @@ feature {NONE} -- Implementation
 			redeclared_feature_not_void: Result /= Void
 		end
 
-	parent_feature_list: ET_PARENT_FEATURE
+	parent_feature_list: detachable ET_PARENT_FEATURE
 			-- Parent feature free list
 
-	free_parent_feature: ET_PARENT_FEATURE
+	free_parent_feature: detachable ET_PARENT_FEATURE
 			-- First available parent feature in free list
 
-	inherited_feature_list: ET_INHERITED_FEATURE
+	inherited_feature_list: detachable ET_INHERITED_FEATURE
 			-- Inherited feature free list
 
-	free_inherited_feature: ET_INHERITED_FEATURE
+	free_inherited_feature: detachable ET_INHERITED_FEATURE
 			-- First available inherited feature in free list
 
-	redeclared_feature_list: ET_REDECLARED_FEATURE
+	redeclared_feature_list: detachable ET_REDECLARED_FEATURE
 			-- Redeclared feature free list
 
-	free_redeclared_feature: ET_REDECLARED_FEATURE
+	free_redeclared_feature: detachable ET_REDECLARED_FEATURE
 			-- First available redeclared feature in free list
 
 invariant

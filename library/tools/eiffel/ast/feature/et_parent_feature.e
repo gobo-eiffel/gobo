@@ -5,7 +5,7 @@ note
 		"Eiffel parent features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,8 +106,8 @@ feature -- Access
 	extended_name: ET_EXTENDED_FEATURE_NAME
 			-- Extended feature name
 		do
-			if new_name /= Void then
-				Result := new_name.new_name
+			if attached new_name as l_new_name then
+				Result := l_new_name.new_name
 			else
 				Result := precursor_feature.extended_name
 			end
@@ -118,8 +118,8 @@ feature -- Access
 	name: ET_FEATURE_NAME
 			-- Feature name
 		do
-			if new_name /= Void then
-				Result := new_name.new_name.feature_name
+			if attached new_name as l_new_name then
+				Result := l_new_name.new_name.feature_name
 			else
 				Result := precursor_feature.name
 			end
@@ -127,11 +127,11 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	alias_name: ET_ALIAS_NAME
+	alias_name: detachable ET_ALIAS_NAME
 			-- Alias name, if any
 		do
-			if new_name /= Void then
-				Result := new_name.new_name.alias_name
+			if attached new_name as l_new_name then
+				Result := l_new_name.new_name.alias_name
 			else
 				Result := precursor_feature.alias_name
 			end
@@ -143,26 +143,26 @@ feature -- Access
 	parent: ET_PARENT
 			-- Parent from which current feature is being inherited
 
-	new_name: ET_RENAME
+	new_name: detachable ET_RENAME
 			-- New name when feature is renamed
 
-	undefine_name: ET_FEATURE_NAME
+	undefine_name: detachable ET_FEATURE_NAME
 			-- Name listed in undefine clause
 			-- when feature is undefined
 
-	redefine_name: ET_FEATURE_NAME
+	redefine_name: detachable ET_FEATURE_NAME
 			-- Name listed in redefine clause
 			-- when feature is redefined
 
-	select_name: ET_FEATURE_NAME
+	select_name: detachable ET_FEATURE_NAME
 			-- Name listed in select clause
 			-- when feature is selected
 
-	merged_feature: ET_PARENT_FEATURE
+	merged_feature: detachable ET_PARENT_FEATURE
 			-- Other parent feature being merged or joined
 			-- with current Parent feature
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
@@ -171,7 +171,7 @@ feature -- Access
 			definition: Result = precursor_feature.type
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST
+	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		do
@@ -188,7 +188,7 @@ feature -- Access
 			definition: Result = precursor_feature.first_seed
 		end
 
-	other_seeds: ET_FEATURE_IDS
+	other_seeds: detachable ET_FEATURE_IDS
 			-- Other seeds (feature IDs of first declarations
 			-- of current feature); May be Void if there
 			-- is only one seed (which is then accessible
@@ -266,10 +266,10 @@ feature -- Setting
 
 feature -- Link
 
-	next: like Current
+	next: detachable like Current
 			-- Next linked feature if list of features
 
-	set_next (a_next: like Current)
+	set_next (a_next: like next)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

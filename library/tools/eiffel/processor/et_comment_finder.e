@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,8 +53,6 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_call_agent,
-			process_call_expression,
-			process_call_instruction,
 			process_check_instruction,
 			process_choice_comma,
 			process_choice_list,
@@ -176,6 +174,8 @@ inherit
 			process_prefix_expression,
 			process_prefix_name,
 			process_qualified_call,
+			process_qualified_call_expression,
+			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_regular_integer_constant,
@@ -198,6 +198,8 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
+			process_unqualified_call_expression,
+			process_unqualified_call_instruction,
 			process_variant,
 			process_verbatim_string,
 			process_when_part,
@@ -517,7 +519,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_break (a_break: ET_BREAK)
+	process_break (a_break: detachable ET_BREAK)
 			-- Process `a_break'.
 		do
 			if a_break /= Void and then a_break.has_comment then
@@ -557,22 +559,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
-			end
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		do
-			if not excluded_nodes.has (an_expression) then
-				precursor (an_expression)
-			end
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-		do
-			if not excluded_nodes.has (an_instruction) then
-				precursor (an_instruction)
 			end
 		end
 
@@ -1010,12 +996,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_features (a_class: ET_CLASS)
 			-- Process feature clauses of `a_class'.
-		local
-			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
 		do
-			a_feature_clauses := a_class.feature_clauses
-			if a_feature_clauses /= Void then
-				if not excluded_nodes.has (a_feature_clauses) then
+			if attached a_class.feature_clauses as l_feature_clauses then
+				if not excluded_nodes.has (l_feature_clauses) then
 					precursor (a_class)
 				end
 			end
@@ -1561,6 +1544,22 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if not excluded_nodes.has (an_instruction) then
+				precursor (an_instruction)
+			end
+		end
+
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
@@ -1736,6 +1735,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_feature) then
 				precursor (a_feature)
+			end
+		end
+
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if not excluded_nodes.has (an_instruction) then
+				precursor (an_instruction)
 			end
 		end
 

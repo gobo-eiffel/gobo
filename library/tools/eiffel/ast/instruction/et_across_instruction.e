@@ -62,39 +62,39 @@ feature -- Initialization
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			iterable_expression.reset
-			if from_compound /= Void then
-				from_compound.reset
+			if attached from_compound as l_from_compound then
+				l_from_compound.reset
 			end
-			if invariant_part /= Void then
-				invariant_part.reset
+			if attached invariant_part as l_invariant_part then
+				l_invariant_part.reset
 			end
-			if variant_part /= Void then
-				variant_part.reset
+			if attached variant_part as l_variant_part then
+				l_variant_part.reset
 			end
-			if until_conditional /= Void then
-				until_conditional.expression.reset
+			if attached until_conditional as l_until_conditional then
+				l_until_conditional.expression.reset
 			end
-			if loop_compound /= Void then
-				loop_compound.reset
+			if attached loop_compound as l_loop_compound then
+				l_loop_compound.reset
 			end
 			reset_unfolded_form
 		end
 
 feature -- Access
 
-	from_compound: ET_COMPOUND
+	from_compound: detachable ET_COMPOUND
 			-- From compound
 
-	invariant_part: ET_LOOP_INVARIANTS
+	invariant_part: detachable ET_LOOP_INVARIANTS
 			-- Invariant part
 
-	variant_part: ET_VARIANT
+	variant_part: detachable ET_VARIANT
 			-- Variant part
 
-	until_conditional: ET_CONDITIONAL
+	until_conditional: detachable ET_CONDITIONAL
 			-- Until conditional
 
-	loop_compound: ET_COMPOUND
+	loop_compound: detachable ET_COMPOUND
 			-- Loop compound
 
 	end_keyword: ET_KEYWORD
@@ -121,12 +121,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

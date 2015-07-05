@@ -5,7 +5,7 @@ note
 		"ECF custom conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,11 +72,8 @@ feature -- Status report
 
 	is_enabled (a_state: ET_ECF_STATE): BOOLEAN
 			-- Does `a_state' fulfill current condition?
-		local
-			l_variable: STRING
 		do
-			l_variable := a_state.target.variables.value (name)
-			if l_variable /= Void then
+			if attached a_state.target.variables.value (name) as l_variable then
 				Result := STRING_.same_case_insensitive (value, l_variable)
 			end
 			Result := (is_excluded /= Result)

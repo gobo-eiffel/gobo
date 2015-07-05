@@ -5,7 +5,7 @@ note
 		".NET assemblies of classes read from Ace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_system_not_void: a_system /= Void
 		local
-			l_pathname: STRING
+			l_pathname: detachable STRING
 		do
 			name_id := a_name
 			pathname_id := a_pathname
@@ -50,10 +50,10 @@ feature -- Access
 	name_id: ET_IDENTIFIER
 			-- Name identifier
 
-	pathname_id: ET_IDENTIFIER
+	pathname_id: detachable ET_IDENTIFIER
 			-- Assembly pathname identifier (may be Void)
 
-	classname_prefix_id: ET_IDENTIFIER
+	classname_prefix_id: detachable ET_IDENTIFIER
 			-- Classname prefix identifier (may be Void)
 
 feature -- Setting
@@ -61,7 +61,7 @@ feature -- Setting
 	set_classname_prefix_id (a_prefix: like classname_prefix_id)
 			-- Set `classname_prefix_id' to `a_prefix'.
 		local
-			l_classname_prefix: STRING
+			l_classname_prefix: detachable STRING
 		do
 			classname_prefix_id := a_prefix
 			if a_prefix /= Void then
@@ -78,7 +78,7 @@ invariant
 
 	name_id_not_void: name_id /= Void
 	name_definition: name = name_id.name
-	pathname_definition: pathname_id /= Void implies pathname = pathname_id.name
-	no_pathname_definition: pathname_id/= Void implies pathname = Void
+	pathname_definition: attached pathname_id as l_pathname_id implies pathname = l_pathname_id.name
+	no_pathname_definition: pathname_id /= Void implies pathname = Void
 
 end

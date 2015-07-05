@@ -5,7 +5,7 @@ note
 		"Eiffel check instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,8 +53,8 @@ feature -- Initialization
 			-- Reset check instruction as it was just after it was last parsed.
 		do
 			precursor {ET_ASSERTIONS}
-			if then_compound /= Void then
-				then_compound.reset
+			if attached then_compound as l_then_compound then
+				l_then_compound.reset
 			end
 		end
 
@@ -63,7 +63,7 @@ feature -- Access
 	check_keyword: ET_KEYWORD
 			-- 'check' keyword
 
-	then_compound: ET_COMPOUND
+	then_compound: detachable ET_COMPOUND
 			-- Then part
 
 	end_keyword: ET_KEYWORD
@@ -86,12 +86,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end
 
-	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_BASE_TYPE
+	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_BASE_TYPE
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -182,7 +182,7 @@ feature -- Access
 			end
 		end
 
-	named_type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_NAMED_TYPE
+	named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_NAMED_TYPE
 			-- Same as `named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -258,7 +258,7 @@ feature -- Status report
 			-- the actual parameters of these formal parameters are
 			-- themselves
 
-	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -277,7 +277,7 @@ feature -- Status report
 			end
 		end
 
-	is_type_reference_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+	is_type_reference_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_reference' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -296,7 +296,7 @@ feature -- Status report
 			end
 		end
 
-	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+	is_type_attached_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_attached' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -315,7 +315,7 @@ feature -- Status report
 			end
 		end
 
-	is_type_detachable_with_type_mark (a_type_mark: ET_TYPE_MARK): BOOLEAN
+	is_type_detachable_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_detachable' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -372,7 +372,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `same_named_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
@@ -399,7 +399,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `same_base_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
@@ -428,7 +428,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -457,7 +457,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -486,7 +486,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -515,7 +515,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -544,7 +544,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -573,7 +573,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -602,7 +602,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -631,7 +631,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
@@ -662,7 +662,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
@@ -691,7 +691,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
@@ -721,7 +721,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
@@ -751,7 +751,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
@@ -781,7 +781,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform to current context?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
@@ -831,7 +831,7 @@ feature -- Conversion
 
 feature -- Link
 
-	next: like Current
+	next: detachable like Current
 			-- Next linked context if list of contexts
 
 	set_next (a_next: like Current)

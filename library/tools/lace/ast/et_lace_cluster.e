@@ -5,7 +5,7 @@ note
 		"Lace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,18 +54,18 @@ feature -- Access
 			Result := name_id.name
 		end
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Directory pathname (may be Void)
 		do
-			if pathname_id /= Void then
-				Result := pathname_id.name
+			if attached pathname_id as l_pathname_id then
+				Result := l_pathname_id.name
 			end
 		end
 
 	name_id: ET_IDENTIFIER
 			-- Name identifier
 
-	pathname_id: ET_IDENTIFIER
+	pathname_id: detachable ET_IDENTIFIER
 			-- Directory pathname identifier (may be Void)
 
 feature -- Status report
@@ -76,9 +76,9 @@ feature -- Status report
 		do
 			if precursor (a_filename) then
 				if operating_system.is_windows then
-					Result := (exclude = Void or else not exclude.has_case_insensitive (a_filename))
+					Result := (not attached exclude as l_exclude or else not l_exclude.has_case_insensitive (a_filename))
 				else
-					Result := (exclude = Void or else not exclude.has (a_filename))
+					Result := (not attached exclude as l_exclude or else not l_exclude.has (a_filename))
 				end
 			end
 		end
@@ -89,24 +89,24 @@ feature -- Status report
 		do
 			if precursor (a_dirname) then
 				if operating_system.is_windows then
-					Result := (exclude = Void or else not exclude.has_case_insensitive (a_dirname))
+					Result := (not attached exclude as l_exclude or else not l_exclude.has_case_insensitive (a_dirname))
 				else
-					Result := (exclude = Void or else not exclude.has (a_dirname))
+					Result := (not attached exclude as l_exclude or else not l_exclude.has (a_dirname))
 				end
 			end
 		end
 
 feature -- Nested
 
-	parent: ET_LACE_CLUSTER
+	parent: detachable ET_LACE_CLUSTER
 			-- Parent cluster
 
-	subclusters: ET_LACE_CLUSTERS
+	subclusters: detachable ET_LACE_CLUSTERS
 			-- Subclusters
 
 feature -- Options
 
-	exclude: ET_LACE_EXCLUDE
+	exclude: detachable ET_LACE_EXCLUDE
 			-- Exclude clause
 
 feature -- Setting
@@ -134,8 +134,8 @@ feature -- Output
 				a_file.put_string (full_pathname)
 				a_file.put_string ("%"%N")
 			end
-			if subclusters /= Void then
-				subclusters.print_flat_clusters (a_file)
+			if attached subclusters as l_subclusters then
+				l_subclusters.print_flat_clusters (a_file)
 			end
 		end
 
@@ -146,8 +146,8 @@ feature -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			if parent /= Void then
-				parent.print_flat_name (a_file)
+			if attached parent as l_parent then
+				l_parent.print_flat_name (a_file)
 				a_file.put_character ('_')
 			end
 			a_file.put_string (name)

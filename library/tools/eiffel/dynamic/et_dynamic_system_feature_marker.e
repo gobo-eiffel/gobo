@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -203,15 +203,11 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 		local
 			i, nb: INTEGER
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			l_precursors: ET_DYNAMIC_PRECURSOR_LIST
 		do
 			a_feature.static_feature.implementation_feature.set_used (True)
-			l_precursor := a_feature.first_precursor
-			if l_precursor /= Void then
-				mark_feature (l_precursor)
-				l_precursors := a_feature.other_precursors
-				if l_precursors /= Void then
+			if attached a_feature.first_precursor as l_first_precursor then
+				mark_feature (l_first_precursor)
+				if attached a_feature.other_precursors as l_precursors then
 					nb := l_precursors.count
 					from i := 1 until i > nb loop
 						mark_feature (l_precursors.item (i))

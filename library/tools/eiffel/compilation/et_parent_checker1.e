@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity first pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -49,19 +49,19 @@ feature -- Validity checking
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 		local
-			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 			old_class: ET_CLASS
+			l_parent: ET_PARENT
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parent_clause
-			if a_parents /= Void then
-				nb := a_parents.count
+			if attached current_class.parent_clause as l_parents then
+				nb := l_parents.count
 				from i := 1 until i > nb loop
-					current_parent := a_parents.parent (i)
-					current_parent.type.process (Current)
+					l_parent := l_parents.parent (i)
+					current_parent := l_parent
+					l_parent.type.process (Current)
 					current_parent := Void
 					i := i + 1
 				end
@@ -120,8 +120,6 @@ feature {NONE} -- Parent validity
 			a_parent_not_void: a_parent /= Void
 		local
 			i, nb: INTEGER
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER
 			an_actual: ET_TYPE
 			a_class: ET_CLASS
@@ -140,30 +138,26 @@ feature {NONE} -- Parent validity
 					-- Error should already have been
 					-- reported somewhere else.
 				set_fatal_error
-			elseif not a_class.is_generic then
+			elseif not attached a_class.formal_parameters as l_formals or else l_formals.is_empty then
+				check class_not_generic: not a_class.is_generic end
 				if a_type.is_generic then
 					set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
-			elseif not a_type.is_generic then
+			elseif not attached a_type.actual_parameters as l_actuals or else l_actuals.is_empty then
+				check type_not_generic: not a_type.is_generic end
 				set_fatal_error
 				error_handler.report_vtug2a_error (current_class, a_type)
 			else
-				a_formals := a_class.formal_parameters
-				an_actuals := a_type.actual_parameters
-				check
-					a_class_generic: a_formals /= Void
-					a_type_generic: an_actuals /= Void
-				end
-				if an_actuals.count /= a_formals.count then
+				if l_actuals.count /= l_formals.count then
 					set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
-					nb := an_actuals.count
+					nb := l_actuals.count
 					from i := 1 until i > nb loop
-						an_actual := an_actuals.type (i)
+						an_actual := l_actuals.type (i)
 						an_actual.process (Current)
-						a_formal := a_formals.formal_parameter (i)
+						a_formal := l_formals.formal_parameter (i)
 						if a_formal.is_expanded then
 							if not an_actual.is_type_expanded (current_class) then
 								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, an_actual, a_formal)
@@ -209,21 +203,17 @@ feature {NONE} -- Parent validity
 			a_parent_not_void: a_parent /= Void
 		local
 			i, nb: INTEGER
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			if a_type = a_parent.type then
 					-- Cannot inherit from 'TUPLE'.
 					-- ISE allows that though!
 				set_fatal_error
 				error_handler.report_gvhpr5a_error (current_class, a_type)
-			else
-				a_parameters := a_type.actual_parameters
-				if a_parameters /= Void then
-					nb := a_parameters.count
-					from i := 1 until i > nb loop
-						a_parameters.type (i).process (Current)
-						i := i + 1
-					end
+			elseif attached a_type.actual_parameters as l_parameters then
+				nb := l_parameters.count
+				from i := 1 until i > nb loop
+					l_parameters.type (i).process (Current)
+					i := i + 1
 				end
 			end
 		end
@@ -233,16 +223,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
-			if current_parent /= Void then
-				check_bit_feature_validity (a_type, current_parent)
+			if attached current_parent as l_current_parent then
+				check_bit_feature_validity (a_type, l_current_parent)
 			end
 		end
 
 	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
-			if current_parent /= Void then
-				check_bit_n_validity (a_type, current_parent)
+			if attached current_parent as l_current_parent then
+				check_bit_n_validity (a_type, l_current_parent)
 			end
 		end
 
@@ -255,8 +245,8 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
-			if current_parent /= Void then
-				check_class_type_validity (a_type, current_parent)
+			if attached current_parent as l_current_parent then
+				check_class_type_validity (a_type, l_current_parent)
 			end
 		end
 
@@ -283,8 +273,8 @@ feature {ET_AST_NODE} -- Type dispatcher
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if current_parent /= Void then
-				check_like_type_validity (a_type, current_parent)
+			if attached current_parent as l_current_parent then
+				check_like_type_validity (a_type, l_current_parent)
 			end
 		end
 
@@ -303,14 +293,14 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
-			if current_parent /= Void then
-				check_tuple_type_validity (a_type, current_parent)
+			if attached current_parent as l_current_parent then
+				check_tuple_type_validity (a_type, l_current_parent)
 			end
 		end
 
 feature {NONE} -- Access
 
-	current_parent: ET_PARENT
+	current_parent: detachable ET_PARENT
 			-- Parent being processed
 
 end

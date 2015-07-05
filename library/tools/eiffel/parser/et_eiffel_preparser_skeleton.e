@@ -5,7 +5,7 @@ note
 		"Eiffel preparser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Access
 
-	last_classname: ET_CLASS_NAME
+	last_classname: detachable ET_CLASS_NAME
 			-- Last classname found
 
 feature -- Parsing
@@ -92,9 +92,8 @@ feature {NONE} -- Parsing
 			l_dir_name: STRING
 			l_dir: KL_DIRECTORY
 			l_entry: STRING
-			l_subclusters: ET_CLUSTERS
-			l_class: ET_CLASS
-			l_classes: DS_ARRAYED_LIST [ET_CLASS]
+			l_class: detachable ET_CLASS
+			l_classes: detachable DS_ARRAYED_LIST [ET_CLASS]
 			l_already_preparsed: BOOLEAN
 			i, nb: INTEGER
 			old_group: ET_PRIMARY_GROUP
@@ -125,7 +124,7 @@ feature {NONE} -- Parsing
 								nb := l_classes.count
 								from i := 1 until i > nb loop
 									l_class := l_classes.item (i)
-									if file_system.same_pathnames (l_class.filename, l_filename) then
+									if attached l_class.filename as l_class_filename and then file_system.same_pathnames (l_class_filename, l_filename) then
 										i := nb + 1
 									else
 										l_class := Void
@@ -152,8 +151,7 @@ feature {NONE} -- Parsing
 			end
 			build_provider_constraint (a_cluster)
 			build_dependant_constraint (a_cluster)
-			l_subclusters := a_cluster.subclusters
-			if l_subclusters /= Void then
+			if attached a_cluster.subclusters as l_subclusters then
 				preparse_clusters (l_subclusters)
 			end
 			group := old_group
@@ -205,8 +203,8 @@ feature {NONE} -- Parsing
 					eiffel_buffer.set_file (l_file)
 					yy_load_input_buffer
 					read_token
-					if last_classname /= Void then
-						l_class := current_universe.master_class (last_classname)
+					if attached last_classname as l_last_classname then
+						l_class := current_universe.master_class (l_last_classname)
 						preparse_class (l_class, a_filename, l_time_stamp)
 						if current_system.preparse_multiple_mode then
 							from
@@ -214,9 +212,9 @@ feature {NONE} -- Parsing
 								last_classname := Void
 								read_token
 							until
-								last_classname = Void
+								not attached last_classname as l_last_other_classname
 							loop
-								l_class := current_universe.master_class (last_classname)
+								l_class := current_universe.master_class (l_last_other_classname)
 								preparse_class (l_class, a_filename, l_time_stamp)
 								class_keyword_found := False
 								last_classname := Void

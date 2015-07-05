@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Access
 			library_not_void: Result /= Void
 		end
 
-	library_by_name (a_name: STRING): ET_ADAPTED_LIBRARY
+	library_by_name (a_name: STRING): detachable ET_ADAPTED_LIBRARY
 			-- Library with name `a_name';
 			-- Void if not such library
 		require
@@ -91,7 +91,7 @@ feature -- Access
 			end
 		end
 
-	adapted_library (a_library: ET_LIBRARY): ET_ADAPTED_LIBRARY
+	adapted_library (a_library: ET_LIBRARY): detachable ET_ADAPTED_LIBRARY
 			-- Adapted library corresponding to `a_library' in current list
 			--  if any, Void otherwise
 			--

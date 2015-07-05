@@ -5,7 +5,7 @@ note
 		"Eiffel bracket expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_BRACKET_EXPRESSION
 
 inherit
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		redefine
 			reset
 		end
@@ -47,8 +47,8 @@ feature -- Initialization
 		do
 			target.reset
 			name.reset
-			if arguments /= Void then
-				arguments.reset
+			if attached arguments as l_arguments then
+				l_arguments.reset
 			end
 		end
 
@@ -60,7 +60,7 @@ feature -- Access
 	name: ET_BRACKET_SYMBOL
 			-- Feature name
 
-	arguments: ET_BRACKET_ARGUMENT_LIST
+	arguments: detachable ET_BRACKET_ARGUMENT_LIST
 			-- Arguments
 
 	position: ET_POSITION
@@ -79,20 +79,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if arguments /= Void then
-				Result := arguments.last_leaf
+			if attached arguments as l_arguments then
+				Result := l_arguments.last_leaf
 			else
 				Result := name.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if arguments /= Void then
-				Result := arguments.break
-			else
-				Result := name.break
 			end
 		end
 

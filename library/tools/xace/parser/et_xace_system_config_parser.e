@@ -5,7 +5,7 @@ note
 		"Xace system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
+			a_position_table: detachable XM_POSITION_TABLE
 		do
 			last_system := Void
 			xml_parser.parse_from_stream (a_file)
@@ -56,7 +56,7 @@ feature -- Parsing
 
 feature -- Access
 
-	last_system: ET_XACE_SYSTEM_CONFIG
+	last_system: detachable ET_XACE_SYSTEM_CONFIG
 			-- Xace system being parsed
 
 end

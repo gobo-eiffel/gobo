@@ -5,7 +5,7 @@ note
 		"Eiffel loop instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 		end
 
 	ET_LOOP_COMPONENT
-	
+
 create
 
 	make
@@ -49,18 +49,18 @@ feature -- Initialization
 	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
-			if from_compound /= Void then
-				from_compound.reset
+			if attached from_compound as l_from_compound then
+				l_from_compound.reset
 			end
-			if invariant_part /= Void then
-				invariant_part.reset
+			if attached invariant_part as l_invariant_part then
+				l_invariant_part.reset
 			end
-			if variant_part /= Void then
-				variant_part.reset
+			if attached variant_part as l_variant_part then
+				l_variant_part.reset
 			end
 			until_expression.reset
-			if loop_compound /= Void then
-				loop_compound.reset
+			if attached loop_compound as l_loop_compound then
+				l_loop_compound.reset
 			end
 		end
 
@@ -72,13 +72,13 @@ feature -- Status report
 
 feature -- Access
 
-	from_compound: ET_COMPOUND
+	from_compound: detachable ET_COMPOUND
 			-- From compound
 
-	invariant_part: ET_LOOP_INVARIANTS
+	invariant_part: detachable ET_LOOP_INVARIANTS
 			-- Invariant part
 
-	variant_part: ET_VARIANT
+	variant_part: detachable ET_VARIANT
 			-- Variant part
 
 	until_conditional: ET_CONDITIONAL
@@ -92,7 +92,7 @@ feature -- Access
 			until_expression_not_void: Result /= Void
 		end
 
-	loop_compound: ET_COMPOUND
+	loop_compound: detachable ET_COMPOUND
 			-- Loop compound
 
 	end_keyword: ET_KEYWORD
@@ -102,12 +102,12 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if from_compound /= Void then
-				Result := from_compound.position
-			elseif invariant_part /= Void then
-				Result := invariant_part.position
-			elseif variant_part /= Void then
-				Result := variant_part.position
+			if attached from_compound as l_from_compound then
+				Result := l_from_compound.position
+			elseif attached invariant_part as l_invariant_part then
+				Result := l_invariant_part.position
+			elseif has_old_variant_syntax and then attached variant_part as l_variant_part then
+				Result := l_variant_part.position
 			else
 				Result := until_conditional.position
 			end
@@ -116,12 +116,12 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if from_compound /= Void then
-				Result := from_compound.first_leaf
-			elseif invariant_part /= Void then
-				Result := invariant_part.first_leaf
-			elseif variant_part /= Void then
-				Result := variant_part.first_leaf
+			if attached from_compound as l_from_compound then
+				Result := l_from_compound.first_leaf
+			elseif attached invariant_part as l_invariant_part then
+				Result := l_invariant_part.first_leaf
+			elseif has_old_variant_syntax and then attached variant_part as l_variant_part then
+				Result := l_variant_part.first_leaf
 			else
 				Result := until_conditional.first_leaf
 			end
@@ -131,12 +131,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Status setting

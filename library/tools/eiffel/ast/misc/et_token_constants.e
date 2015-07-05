@@ -2665,6 +2665,16 @@ feature -- Types
 			implicit_type_mark_not_void: Result /= Void
 		end
 
+feature -- Leaf nodes
+
+	null_leaf: ET_AST_NULL_LEAF
+		once
+			create Result.make
+		ensure
+			leaf_not_void: Result /= Void
+			leaf_is_null: Result.is_null
+		end
+
 feature -- Symbols
 
 	symbol: ET_SYMBOL
@@ -4249,7 +4259,15 @@ feature -- Built-in
 			-- Static built-in marker
 
 	builtin_static_marker: STRING = "built_in static"
-			-- Bbuilt-in static marker
+			-- Built-in static marker
+
+	unknown_convert_feature: ET_BUILTIN_CONVERT_FEATURE
+			-- Shared unknown convertion feature
+		once
+			create Result.make (unknown_class_type)
+		ensure
+			unknown_convert_feature_not_void: Result /= Void
+		end
 
 feature -- Position
 
@@ -4271,6 +4289,23 @@ feature -- Ancestors
 		ensure
 			ancestors_not_void: Result /= Void
 			ancestors_empty: Result.is_empty
+		end
+
+	unknown_parent: ET_PARENT
+			-- Shared parent based on `unknown_class_type'
+		once
+			create Result.make (unknown_class_type, Void, Void, Void, Void, Void)
+		ensure
+			unknown_parent_not_void: Result /= Void
+		end
+
+	unknown_parents: ET_PARENT_LIST
+			-- Shared parents only made up of `unknown_parent'
+		once
+			create Result.make_with_capacity (1)
+			Result.put_first (unknown_parent)
+		ensure
+			unknown_parents_not_void: Result /= Void
 		end
 
 feature -- Features
@@ -4326,6 +4361,33 @@ feature -- System
 			Result.set_implementation_error
 		ensure
 			unknown_class_not_void: Result /= Void
+		end
+
+	unknown_class_type: ET_CLASS_TYPE
+			-- Shared class type whose base class is unknown
+		once
+			create Result.make (implicit_attached_type_mark, unknown_class.name, unknown_class)
+		ensure
+			unknown_class_type_not_void: Result /= Void
+		end
+
+	unknown_generic_class_type: ET_GENERIC_CLASS_TYPE
+			-- Shared generic class type whose base class is unknown
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		once
+			create l_parameters.make
+			create Result.make (implicit_attached_type_mark, unknown_class.name, l_parameters, unknown_class)
+		ensure
+			unknown_generic_class_type_not_void: Result /= Void
+		end
+
+	unknown_tuple_type: ET_TUPLE_TYPE
+			-- Shared tuple type whose base class is unknown
+		once
+			create Result.make (implicit_attached_type_mark, Void, unknown_class)
+		ensure
+			unknown_tuple_type_not_void: Result /= Void
 		end
 
 	unknown_group: ET_UNKNOWN_GROUP

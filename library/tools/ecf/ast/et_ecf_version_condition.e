@@ -5,7 +5,7 @@ note
 		"ECF version conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_min, a_max: UT_VERSION)
+	make (a_min, a_max: detachable UT_VERSION)
 			-- Create a new version condition where version
 			-- has to be included within `a_min' and `a_max'.
 		do
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	min_value: UT_VERSION
+	min_value: detachable UT_VERSION
 			-- Minimum version value
 
-	max_value: UT_VERSION
+	max_value: detachable UT_VERSION
 			-- Maximum version value
 
 feature {NONE} -- Implementation
@@ -44,9 +44,9 @@ feature {NONE} -- Implementation
 		require
 			a_version_not_void: a_version /= Void
 		do
-			if min_value /= Void and then a_version < min_value then
+			if attached min_value as l_min_value and then a_version < l_min_value then
 				Result := False
-			elseif max_value /= Void and then max_value < a_version then
+			elseif attached max_value as l_max_value and then l_max_value < a_version then
 				Result := False
 			else
 				Result := True

@@ -76,8 +76,8 @@ feature -- Generation
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			l_precursor: detachable ET_DYNAMIC_PRECURSOR
+			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
@@ -189,7 +189,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 		do
 			l_result_type_set := an_item_feature.result_type_set
@@ -251,10 +251,10 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
-			l_expression_type_set: ET_DYNAMIC_TYPE_SET
+			l_expression_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
@@ -325,7 +325,7 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_expression: ET_EXPRESSION
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
@@ -369,10 +369,10 @@ feature {NONE} -- Implementation
 			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
 		local
 			l_operand: ET_OPERAND
-			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			l_arguments: detachable ET_AGENT_ARGUMENT_OPERANDS
 			i, nb_args: INTEGER
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			j, nb_items: INTEGER
@@ -380,22 +380,24 @@ feature {NONE} -- Implementation
 			l_arguments := an_agent.arguments
 			if l_arguments /= Void then
 				nb_args := l_arguments.count
-			end
-			create l_parameters.make_with_capacity (nb_args + 1)
-			from i := nb_args until i < 1 loop
-				l_operand := l_arguments.actual_argument (i)
-				if not l_operand.is_open_operand then
-					l_dynamic_type_set := dynamic_type_set (l_operand)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of the closed
-							-- operand should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+				create l_parameters.make_with_capacity (nb_args + 1)
+				from i := nb_args until i < 1 loop
+					l_operand := l_arguments.actual_argument (i)
+					if not l_operand.is_open_operand then
+						l_dynamic_type_set := dynamic_type_set (l_operand)
+						if l_dynamic_type_set = Void then
+								-- Internal error: the dynamic type set of the closed
+								-- operand should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+						end
 					end
+					i := i - 1
 				end
-				i := i - 1
+			else
+				create l_parameters.make_with_capacity (1)
 			end
 			l_operand := an_agent.target
 			if not l_operand.is_open_operand then
@@ -416,8 +418,12 @@ feature {NONE} -- Implementation
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
 						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
+				elseif not attached an_agent_type.queries.item (1).result_type_set as l_result_type_set then
+						-- Internal error: an attribute should have a result type set.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					l_dynamic_tuple_type.put_target (an_agent_type.queries.item (1).result_type_set, current_dynamic_system)
+					l_dynamic_tuple_type.put_target (l_result_type_set, current_dynamic_system)
 					l_item_type_sets := l_dynamic_tuple_type.item_type_sets
 					j := 1
 					nb_items := l_item_type_sets.count
@@ -439,26 +445,28 @@ feature {NONE} -- Implementation
 							j := j + 1
 						end
 					end
-					from i := 1 until i > nb_args loop
-						l_operand := l_arguments.actual_argument (i)
-						if not l_operand.is_open_operand then
-							l_dynamic_type_set := dynamic_type_set (l_operand)
-							if l_dynamic_type_set = Void then
-									-- Internal error: the dynamic type set of the closed
-									-- operand should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							elseif j > nb_items then
-									-- Internal error: there is a mismatch between the number of closed
-									-- operands and the size of the corresponding Tuple.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_dynamic_system)
-								j := j + 1
+					if l_arguments /= Void then
+						from i := 1 until i > nb_args loop
+							l_operand := l_arguments.actual_argument (i)
+							if not l_operand.is_open_operand then
+								l_dynamic_type_set := dynamic_type_set (l_operand)
+								if l_dynamic_type_set = Void then
+										-- Internal error: the dynamic type set of the closed
+										-- operand should be known at this stage.
+									set_fatal_error
+									error_handler.report_giaaa_error
+								elseif j > nb_items then
+										-- Internal error: there is a mismatch between the number of closed
+										-- operands and the size of the corresponding Tuple.
+									set_fatal_error
+									error_handler.report_giaaa_error
+								else
+									l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_dynamic_system)
+									j := j + 1
+								end
 							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
 			else
@@ -474,7 +482,7 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set `a_formal_type_set' of the
 			-- corresponding formal argument.
 		local
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_actual_type_set := dynamic_type_set (an_actual)
 			if l_actual_type_set = Void then
@@ -492,8 +500,8 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set of the corresponding formal
 			-- argument at index `a_formal' in `a_callee'.
 		local
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_actual_type_set := dynamic_type_set (an_actual)
 			l_formal_type_set := a_callee.argument_type_set (a_formal)
@@ -516,8 +524,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of `an_assignment'
 			-- to the dynamic type set of the target of `an_assignment'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_source_type_set := dynamic_type_set (an_assignment.source)
 			l_target_type_set := dynamic_type_set (an_assignment.target)
@@ -540,8 +548,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of `an_assignment_attempt'
 			-- to the dynamic type set of the target of `an_assignment_attempt'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_source_type_set := dynamic_type_set (an_assignment_attempt.source)
 			l_target_type_set := dynamic_type_set (an_assignment_attempt.target)
@@ -565,7 +573,7 @@ feature {NONE} -- Implementation
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
 		local
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_formal_type_set := a_callee.argument_type_set (a_formal)
 			if l_formal_type_set = Void then
@@ -583,7 +591,7 @@ feature {NONE} -- Implementation
 			-- at index `a_formal' in built-in feature `current_dynamic_feature'
 			-- to `a_target_type_set'.
 		local
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_formal_type_set := current_dynamic_feature.argument_type_set (a_formal)
 			if l_formal_type_set = Void then
@@ -600,7 +608,7 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the result of the built-in feature `a_query'.
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_result_type_set := a_query.result_type_set
 			if l_result_type_set = Void then
@@ -617,7 +625,7 @@ feature {NONE} -- Implementation
 			-- `a_result_type_set' of the result of type of `an_agent' (probably a FUNCTION
 			-- or a PREDICATE)
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_dynamic_type_set := a_query.result_type_set
 			if l_dynamic_type_set = Void then
@@ -633,7 +641,7 @@ feature {NONE} -- Implementation
 			-- Propagate the creation type `a_creation_type' of `a_creation'
 			-- to the dynamic type set of the target of `a_creation'.
 		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_target_type_set := dynamic_type_set (a_creation.target)
 			if l_target_type_set = Void then
@@ -651,8 +659,8 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set `a_result_type_set' of the result of type of `an_agent'
 			-- (probably a FUNCTION or a PREDICATE).
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_implicit_result: ET_RESULT
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_implicit_result: detachable ET_RESULT
 		do
 			l_implicit_result := an_agent.implicit_result
 			if l_implicit_result = Void then
@@ -694,8 +702,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_source_type_set := dynamic_type_set (a_object_test.expression)
 			l_target_type_set := dynamic_type_set (a_object_test.name)
@@ -736,7 +744,7 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
 			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_source_type_set := current_dynamic_feature.dynamic_type_set (a_assigner.source)
 			if l_source_type_set = Void then

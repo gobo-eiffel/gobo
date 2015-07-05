@@ -5,7 +5,7 @@ note
 		"Positions in Eiffel texts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ deferred class ET_POSITION
 inherit
 
 	ANY
-	KL_IMPORTED_STRING_ROUTINES
+	
 	KL_IMPORTED_INTEGER_ROUTINES
 
 feature -- Access
@@ -75,6 +75,8 @@ feature -- Output
 		do
 			create Result.make (50)
 			append_to_string (Result)
+		ensure
+			to_text_not_void: Result /= Void
 		end
 
 	append_to_string (a_string: STRING)

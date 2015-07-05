@@ -46,8 +46,6 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_call_agent,
-			process_call_expression,
-			process_call_instruction,
 			process_check_instruction,
 			process_choice_list,
 			process_choice_range,
@@ -141,8 +139,11 @@ inherit
 			process_prefix_expression,
 			process_prefix_name,
 			process_qualified_call,
+			process_qualified_call_expression,
+			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
+			process_qualified_regular_feature_call,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -165,6 +166,9 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
+			process_unqualified_call_expression,
+			process_unqualified_call_instruction,
+			process_unqualified_regular_feature_call,
 			process_variant,
 			process_verbatim_string,
 			process_void,
@@ -246,9 +250,7 @@ feature {ET_AST_NODE} -- Processing
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
 			-- Process `an_expression'.
 		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			l_conditional: ET_CONDITIONAL
+			l_iteration_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
 		do
 			an_expression.across_keyword.process (Current)
@@ -259,37 +261,34 @@ feature {ET_AST_NODE} -- Processing
 			print_space
 			an_expression.cursor_name.process (Current)
 			print_space
-			an_invariant_part := an_expression.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_expression.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 			end
-			l_conditional := an_expression.until_conditional
-			if l_conditional /= Void then
+			if attached an_expression.until_conditional as l_until_conditional then
 				tokens.until_keyword.process (Current)
 				print_space
-				l_expression := l_conditional.expression
+				l_expression := l_until_conditional.expression
 				l_expression.process (Current)
 				comment_finder.add_excluded_node (l_expression)
-				comment_finder.find_comments (l_conditional, comment_list)
+				comment_finder.find_comments (l_until_conditional, comment_list)
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_conditional := an_expression.iteration_conditional
+			l_iteration_conditional := an_expression.iteration_conditional
 			if an_expression.is_all then
 				tokens.all_keyword.process (Current)
 			else
 				tokens.some_keyword.process (Current)
 			end
 			print_space
-			l_expression := l_conditional.expression
+			l_expression := l_iteration_conditional.expression
 			l_expression.process (Current)
 			comment_finder.add_excluded_node (l_expression)
-			comment_finder.find_comments (l_conditional, comment_list)
+			comment_finder.find_comments (l_iteration_conditional, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			a_variant_part := an_expression.variant_part
-			if a_variant_part /= Void then
-				a_variant_part.process (Current)
+			if attached an_expression.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 				print_space
 			end
 			an_expression.end_keyword.process (Current)
@@ -298,10 +297,6 @@ feature {ET_AST_NODE} -- Processing
 	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
-			l_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
 		do
 			an_instruction.across_keyword.process (Current)
@@ -320,19 +315,16 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			process_comments
 			dedent
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.from_compound as l_from_compound then
+				l_from_compound.process (Current)
 				print_new_line
 				process_comments
 			end
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_instruction.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 				process_comments
 			end
-			l_conditional := an_instruction.until_conditional
-			if l_conditional /= Void then
+			if attached an_instruction.until_conditional as l_conditional then
 				tokens.until_keyword.process (Current)
 				print_new_line
 				indent
@@ -346,17 +338,15 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 				dedent
 			end
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				l_loop_compound.process (Current)
 			else
 				tokens.loop_keyword.process (Current)
 			end
 			print_new_line
 			process_comments
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
-				a_variant_part.process (Current)
+			if attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 				print_new_line
 				process_comments
 			end
@@ -397,7 +387,6 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_ACTUAL_PARAMETER_ITEM
 			l_unlabeled: BOOLEAN
 			l_type: ET_TYPE
-			l_label: ET_IDENTIFIER
 			l_comment: ET_COMMENT
 		do
 			a_list.left_bracket.process (Current)
@@ -415,18 +404,22 @@ feature {ET_AST_NODE} -- Processing
 				end
 				i := i + 1
 			end
-			if l_unlabeled then
-				from i := 1 until i > nb loop
-					l_item := a_list.item (i)
-					l_label := l_item.label
-					if l_label /= Void then
+			from i := 1 until i > nb loop
+				l_item := a_list.item (i)
+				if attached l_item.label as l_label then
+					if l_unlabeled then
 							-- This label cannot be printed here, otherwise the result would
 							-- not be syntactically correct (see comment above). The name of
 							-- the label is printed in a comment so that we don't lose any
 							-- valuable information in the pretty-printed text.
 						create l_comment.make ("-- label: " + l_label.name)
 						comment_list.force_last (l_comment)
+					else
+						l_label.process (Current)
+						comment_finder.add_excluded_node (l_label)
 					end
+				end
+				if l_unlabeled then
 					l_type := l_item.type
 					l_type.process (Current)
 					comment_finder.add_excluded_node (l_type)
@@ -438,40 +431,29 @@ feature {ET_AST_NODE} -- Processing
 						tokens.comma_symbol.process (Current)
 						print_space
 					end
-					i := i + 1
-				end
-			else
-					-- Labeled Tuple actual parameters.
-				from i := 1 until i > nb loop
-					l_item := a_list.item (i)
-					l_label := l_item.label
-					l_label.process (Current)
-					if l_item.is_last_entity or i = nb then
-						tokens.colon_symbol.process (Current)
-						print_space
-						l_type := l_item.type
-						l_type.process (Current)
-						comment_finder.add_excluded_node (l_label)
-						comment_finder.add_excluded_node (l_type)
-						comment_finder.find_comments (l_item, comment_list)
-						comment_finder.reset_excluded_nodes
-						if i /= nb then
-								-- The AST may or may not contain the semicolon.
-								-- So we have to print it explicitly here.
-							tokens.semicolon_symbol.process (Current)
-							print_space
-						end
-					else
-						comment_finder.add_excluded_node (l_label)
-						comment_finder.find_comments (l_item, comment_list)
-						comment_finder.reset_excluded_nodes
-							-- The AST may or may not contain the comma.
+				elseif l_item.is_last_entity or i = nb then
+					tokens.colon_symbol.process (Current)
+					print_space
+					l_type := l_item.type
+					l_type.process (Current)
+					comment_finder.add_excluded_node (l_type)
+					comment_finder.find_comments (l_item, comment_list)
+					comment_finder.reset_excluded_nodes
+					if i /= nb then
+							-- The AST may or may not contain the semicolon.
 							-- So we have to print it explicitly here.
-						tokens.comma_symbol.process (Current)
+						tokens.semicolon_symbol.process (Current)
 						print_space
 					end
-					i := i + 1
+				else
+					comment_finder.find_comments (l_item, comment_list)
+					comment_finder.reset_excluded_nodes
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+					print_space
 				end
+				i := i + 1
 			end
 			a_list.right_bracket.process (Current)
 		end
@@ -553,8 +535,6 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 			l_item: ET_ASSERTION_ITEM
 			l_assertion: ET_ASSERTION
-			l_identifier: ET_IDENTIFIER
-			l_symbol: ET_SYMBOL
 		do
 			nb := a_list.count
 			from i := 1 until i > nb loop
@@ -565,9 +545,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
 				if i /= nb then
-					l_identifier ?= l_assertion.last_leaf
-					l_symbol ?= a_list.item (i + 1).first_leaf
-					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+					if attached {ET_IDENTIFIER} l_assertion.last_leaf and attached {ET_SYMBOL} a_list.item (i + 1).first_leaf as l_symbol and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
 							-- Print a semicolon in order to avoid syntax ambiguity.
 							-- For example if we have:
 							--
@@ -648,13 +626,9 @@ feature {ET_AST_NODE} -- Processing
 	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
-			l_synonym: ET_FEATURE
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
@@ -663,16 +637,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -699,13 +671,11 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -717,18 +687,14 @@ feature {ET_AST_NODE} -- Processing
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
 		do
 				-- Use the keyword 'create' even if the original class text was using the old syntax with '!!'.
 				-- The following code will try to print the comments at the right place if any, even when
 				-- replacing '!!' with 'create'.
 			tokens.create_keyword.process (Current)
 			print_space
-			l_type := an_instruction.type
 			process_break (an_instruction.left_bang.break)
-			if l_type /= Void then
+			if attached an_instruction.type as l_type then
 				tokens.left_brace_symbol.process (Current)
 				l_type.process (Current)
 				tokens.right_brace_symbol.process (Current)
@@ -736,21 +702,17 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_break (an_instruction.right_bang.break)
 			an_instruction.target.process (Current)
-			l_call := an_instruction.creation_call
-			if l_call /= Void then
-				l_call.process (Current)
+			if attached an_instruction.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -762,8 +724,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -842,18 +803,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			l_arguments: ET_BRACKET_ARGUMENT_LIST
 		do
 			an_expression.target.process (Current)
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
+			if attached an_expression.arguments as l_arguments then
 				print_space
 				l_arguments.process (Current)
 			end
 		end
 
-	process_break (a_break: ET_BREAK)
+	process_break (a_break: detachable ET_BREAK)
 			-- Process `a_break'.
 		do
 			if a_break /= Void and then a_break.has_comment then
@@ -864,11 +822,9 @@ feature {ET_AST_NODE} -- Processing
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -889,11 +845,9 @@ feature {ET_AST_NODE} -- Processing
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -915,11 +869,9 @@ feature {ET_AST_NODE} -- Processing
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -943,7 +895,6 @@ feature {ET_AST_NODE} -- Processing
 	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
 		local
-			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
 		do
@@ -963,75 +914,8 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (l_qualified_feature_name, comment_list)
 			comment_finder.reset_excluded_nodes
-			l_arguments ?= an_expression.arguments
-			if l_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_arguments, comment_list)
-				else
-					print_space
-					l_arguments.process (Current)
-				end
-			end
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		local
-			l_target: ET_EXPRESSION
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
-			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
-			l_feature_name: ET_FEATURE_NAME
-		do
-			l_target := an_expression.target
-			if l_target /= Void then
-				l_target.process (Current)
-					-- The AST may or may not contain the dot.
-					-- So we have to print them explicitly here.
-				tokens.dot_symbol.process (Current)
-			end
-			l_qualified_feature_name := an_expression.qualified_name
-			l_feature_name := l_qualified_feature_name.feature_name
-			l_feature_name.process (Current)
-			comment_finder.add_excluded_node (l_feature_name)
-			comment_finder.find_comments (l_qualified_feature_name, comment_list)
-			comment_finder.reset_excluded_nodes
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
-				if l_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_arguments, comment_list)
-				else
-					print_space
-					l_arguments.process (Current)
-				end
-			end
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-		local
-			l_target: ET_EXPRESSION
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
-			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
-			l_feature_name: ET_FEATURE_NAME
-		do
-			l_target := an_instruction.target
-			if l_target /= Void then
-				l_target.process (Current)
-					-- The AST may or may not contain the dot.
-					-- So we have to print them explicitly here.
-				tokens.dot_symbol.process (Current)
-			end
-			l_qualified_feature_name := an_instruction.qualified_name
-			l_feature_name := l_qualified_feature_name.feature_name
-			l_feature_name.process (Current)
-			comment_finder.add_excluded_node (l_feature_name)
-			comment_finder.find_comments (l_qualified_feature_name, comment_list)
-			comment_finder.reset_excluded_nodes
-			l_arguments := an_instruction.arguments
-			if l_arguments /= Void then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -1044,8 +928,6 @@ feature {ET_AST_NODE} -- Processing
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			l_compound: ET_COMPOUND
 		do
 			an_instruction.check_keyword.process (Current)
 			print_new_line
@@ -1054,9 +936,8 @@ feature {ET_AST_NODE} -- Processing
 			process_assertions (an_instruction)
 			process_comments
 			dedent
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_instruction.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 				process_comments
 				print_new_line
 			end
@@ -1105,17 +986,7 @@ feature {ET_AST_NODE} -- Processing
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
-			an_indexing: ET_INDEXING_LIST
-			a_frozen: ET_KEYWORD
-			a_class_mark: ET_CLASS_MARK
-			an_external: ET_KEYWORD
-			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
-			l_obsolete_message: ET_OBSOLETE
 			l_obsolete_string: ET_MANIFEST_STRING
-			a_parents: ET_PARENT_LIST
-			a_creators: ET_CREATOR_LIST
-			a_convert_features: ET_CONVERT_FEATURE_LIST
-			an_invariants: ET_INVARIANTS
 		do
 			process_break (a_class.leading_break)
 			if not comment_list.is_empty then
@@ -1123,46 +994,40 @@ feature {ET_AST_NODE} -- Processing
 					-- Add an extra line after the comment.
 				print_new_line
 			end
-			an_indexing := a_class.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_class.first_indexing as l_indexing then
+				l_indexing.process (Current)
 				process_comments
 				print_new_line
 				print_new_line
 			end
-			a_frozen := a_class.frozen_keyword
-			if a_frozen /= Void then
-				a_frozen.process (Current)
+			if attached a_class.frozen_keyword as l_frozen_keyword then
+				l_frozen_keyword.process (Current)
 				print_space
 			end
-			a_class_mark := a_class.class_mark
-			if a_class_mark /= Void then
-				a_class_mark.process (Current)
+			if attached a_class.class_mark as l_class_mark then
+				l_class_mark.process (Current)
 				print_space
 			end
-			an_external := a_class.external_keyword
-			if an_external /= Void then
-				an_external.process (Current)
+			if attached a_class.external_keyword as l_external_keyword then
+				l_external_keyword.process (Current)
 				print_space
 			end
 			a_class.class_keyword.process (Current)
 			print_space
 			a_class.name.process (Current)
-			a_formal_parameters := a_class.formal_parameters
-			if a_formal_parameters /= Void then
-				if a_formal_parameters.is_empty then
+			if attached a_class.formal_parameters as l_formal_parameters then
+				if l_formal_parameters.is_empty then
 						-- Do not print empty brackets, but keep the comments if any.
-					comment_finder.find_comments (a_formal_parameters, comment_list)
+					comment_finder.find_comments (l_formal_parameters, comment_list)
 				else
 					print_space
-					a_formal_parameters.process (Current)
+					l_formal_parameters.process (Current)
 				end
 			end
 			process_comments
 			print_new_line
 			print_new_line
-			l_obsolete_message := a_class.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_class.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -1178,36 +1043,31 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				print_new_line
 			end
-			a_parents := a_class.parent_clause
-			if a_parents /= Void then
-				a_parents.process (Current)
+			if attached a_class.parent_clause as l_parents then
+				l_parents.process (Current)
 				process_comments
 				print_new_line
 				print_new_line
 			end
-			a_creators := a_class.creators
-			if a_creators /= Void then
-				a_creators.process (Current)
+			if attached a_class.creators as l_creators then
+				l_creators.process (Current)
 				process_comments
 				print_new_line
 				print_new_line
 			end
-			a_convert_features := a_class.convert_features
-			if a_convert_features /= Void then
-				a_convert_features.process (Current)
+			if attached a_class.convert_features as l_convert_features then
+				l_convert_features.process (Current)
 				process_comments
 				print_new_line
 				print_new_line
 			end
 			process_features (a_class)
-			an_invariants := a_class.invariants
-			if an_invariants /= Void then
-				an_invariants.process (Current)
+			if attached a_class.invariants as l_invariants then
+				l_invariants.process (Current)
 				process_comments
 			end
-			an_indexing := a_class.second_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_class.second_indexing as l_indexing then
+				l_indexing.process (Current)
 				process_comments
 				print_new_line
 				print_new_line
@@ -1219,11 +1079,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -1304,13 +1161,9 @@ feature {ET_AST_NODE} -- Processing
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
-			l_synonym: ET_FEATURE
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
@@ -1319,16 +1172,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -1356,8 +1207,7 @@ feature {ET_AST_NODE} -- Processing
 			print_space
 			l_type.process (Current)
 			print_space
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				l_assigner.process (Current)
 				print_space
 			end
@@ -1365,8 +1215,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_feature.is_keyword.break)
 			print_space
 			a_feature.constant.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -1378,13 +1227,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
-		local
-			a_creation_procedures: ET_CONSTRAINT_CREATOR
-			a_type_mark: ET_KEYWORD
 		do
-			a_type_mark := a_parameter.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
+			if attached a_parameter.type_mark as l_type_mark then
+				l_type_mark.process (Current)
 				print_space
 			end
 			a_parameter.name.process (Current)
@@ -1392,10 +1237,9 @@ feature {ET_AST_NODE} -- Processing
 			a_parameter.arrow_symbol.process (Current)
 			print_space
 			a_parameter.constraint.process (Current)
-			a_creation_procedures := a_parameter.creation_procedures
-			if a_creation_procedures /= Void then
+			if attached a_parameter.creation_procedures as l_creation_procedures then
 				print_space
-				a_creation_procedures.process (Current)
+				l_creation_procedures.process (Current)
 			end
 		end
 
@@ -1484,7 +1328,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_creation_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
 		do
 			an_expression.create_keyword.process (Current)
 			print_space
@@ -1496,23 +1339,19 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.add_excluded_node (l_type)
 			comment_finder.find_comments (l_creation_type, comment_list)
 			comment_finder.reset_excluded_nodes
-			l_call := an_expression.creation_call
-			if l_call /= Void then
-				l_call.process (Current)
+			if attached an_expression.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			l_creation_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
 		do
 			an_instruction.create_keyword.process (Current)
 			print_space
-			l_creation_type := an_instruction.creation_type
-			if l_creation_type /= Void then
+			if attached an_instruction.creation_type as l_creation_type then
 				l_type := l_creation_type.type
 				tokens.left_brace_symbol.process (Current)
 				l_type.process (Current)
@@ -1523,23 +1362,20 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 			end
 			an_instruction.target.process (Current)
-			l_call := an_instruction.creation_call
-			if l_call /= Void then
-				l_call.process (Current)
+			if attached an_instruction.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		local
-			l_clients: ET_CLIENTS
 			i, nb: INTEGER
 			l_item: ET_FEATURE_NAME_ITEM
 			l_feature_name: ET_FEATURE_NAME
 		do
 			a_list.creation_keyword.process (Current)
-			l_clients := a_list.clients_clause
-			if l_clients /= Void then
+			if attached a_list.clients_clause as l_clients then
 				print_space
 				l_clients.process (Current)
 			end
@@ -1589,13 +1425,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE)
 			-- Process `an_attribute'.
-		local
-			l_settings: ET_MANIFEST_TUPLE
 		do
 			an_attribute.creation_expression.process (Current)
 			print_space
-			l_settings := an_attribute.settings
-			if l_settings /= Void then
+			if attached an_attribute.settings as l_settings then
 				l_settings.process (Current)
 				print_space
 			end
@@ -1605,16 +1438,14 @@ feature {ET_AST_NODE} -- Processing
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			l_compound: ET_COMPOUND
-			l_keys: ET_MANIFEST_STRING_LIST
+			l_compound: detachable ET_COMPOUND
 		do
 			tokens.debug_keyword.process (Current)
 			l_compound := an_instruction.compound
 			if l_compound /= Void then
 				process_break (l_compound.keyword.break)
 			end
-			l_keys := an_instruction.keys
-			if l_keys /= Void then
+			if attached an_instruction.keys as l_keys then
 				if l_keys.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_keys, comment_list)
@@ -1637,21 +1468,11 @@ feature {ET_AST_NODE} -- Processing
 	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
 		do
 			from
@@ -1659,16 +1480,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -1685,8 +1504,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -1705,28 +1523,24 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -1740,22 +1554,19 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
 			a_feature.deferred_keyword.process (Current)
 			process_comments
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -1765,18 +1576,9 @@ feature {ET_AST_NODE} -- Processing
 	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
 		do
 			from
@@ -1784,16 +1586,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -1810,8 +1610,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -1822,21 +1621,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -1850,22 +1646,19 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
 			a_feature.deferred_keyword.process (Current)
 			process_comments
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -1875,40 +1668,26 @@ feature {ET_AST_NODE} -- Processing
 	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_compound: ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -1925,8 +1704,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -1945,28 +1723,24 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -1980,38 +1754,32 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
+			if attached a_feature.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.compound
-			if l_compound /= Void then
+			if attached a_feature.compound as l_compound then
 				l_compound.process (Current)
 			else
 				tokens.do_keyword.process (Current)
 			end
 			process_comments
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2021,19 +1789,12 @@ feature {ET_AST_NODE} -- Processing
 	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
 			an_expression.agent_keyword.process (Current)
 			print_space
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -2053,38 +1814,32 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := an_expression.locals
-			if l_locals /= Void then
+			if attached an_expression.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.compound
-			if l_compound /= Void then
+			if attached an_expression.compound as l_compound then
 				l_compound.process (Current)
 			else
 				tokens.do_keyword.process (Current)
 			end
 			process_comments
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -2099,37 +1854,24 @@ feature {ET_AST_NODE} -- Processing
 	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_compound: ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2146,8 +1888,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -2158,21 +1899,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -2186,38 +1924,32 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
+			if attached a_feature.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.compound
-			if l_compound /= Void then
+			if attached a_feature.compound as l_compound then
 				l_compound.process (Current)
 			else
 				tokens.do_keyword.process (Current)
 			end
 			process_comments
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2226,17 +1958,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
 		do
 			an_expression.agent_keyword.process (Current)
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -2247,38 +1971,32 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := an_expression.locals
-			if l_locals /= Void then
+			if attached an_expression.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.compound
-			if l_compound /= Void then
+			if attached an_expression.compound as l_compound then
 				l_compound.process (Current)
 			else
 				tokens.do_keyword.process (Current)
 			end
 			process_comments
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -2293,33 +2011,25 @@ feature {ET_AST_NODE} -- Processing
 	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2336,8 +2046,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -2356,15 +2065,13 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
@@ -2374,8 +2081,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2385,30 +2091,23 @@ feature {ET_AST_NODE} -- Processing
 	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
+			l_synonym: detachable ET_FEATURE
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2425,8 +2124,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -2437,8 +2135,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
@@ -2448,8 +2145,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2459,7 +2155,6 @@ feature {ET_AST_NODE} -- Processing
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 		local
-			l_compound: ET_COMPOUND
 			l_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
 		do
@@ -2472,9 +2167,8 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_conditional, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_compound := an_elseif_part.then_compound
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_elseif_part.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			else
 				tokens.then_keyword.process (Current)
 			end
@@ -2569,38 +2263,26 @@ feature {ET_AST_NODE} -- Processing
 	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_compound: ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2627,22 +2309,19 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -2656,38 +2335,32 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
+			if attached a_feature.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.compound
-			if l_compound /= Void then
+			if attached a_feature.compound as l_compound then
 				l_compound.process (Current)
 			else
 				tokens.do_keyword.process (Current)
 			end
 			process_comments
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2697,24 +2370,13 @@ feature {ET_AST_NODE} -- Processing
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
 			l_external_language: ET_EXTERNAL_LANGUAGE
-			l_external_alias: ET_EXTERNAL_ALIAS
 			l_manifest_string: ET_MANIFEST_STRING
 		do
 			from
@@ -2722,16 +2384,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2748,8 +2408,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -2768,28 +2427,24 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -2803,8 +2458,7 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 				print_new_line
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
@@ -2821,8 +2475,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			dedent
-			l_external_alias := a_feature.alias_clause
-			if l_external_alias /= Void then
+			if attached a_feature.alias_clause as l_external_alias then
 				tokens.alias_keyword.process (Current)
 				l_manifest_string := l_external_alias.manifest_string
 				comment_finder.add_excluded_node (l_manifest_string)
@@ -2836,14 +2489,12 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -2853,20 +2504,14 @@ feature {ET_AST_NODE} -- Processing
 	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 			l_external_language: ET_EXTERNAL_LANGUAGE
-			l_external_alias: ET_EXTERNAL_ALIAS
 			l_manifest_string: ET_MANIFEST_STRING
 		do
 			an_expression.agent_keyword.process (Current)
 			print_space
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -2886,8 +2531,7 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
@@ -2904,8 +2548,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			dedent
-			l_external_alias := an_expression.alias_clause
-			if l_external_alias /= Void then
+			if attached an_expression.alias_clause as l_external_alias then
 				tokens.alias_keyword.process (Current)
 				l_manifest_string := l_external_alias.manifest_string
 				comment_finder.add_excluded_node (l_manifest_string)
@@ -2921,14 +2564,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -2943,21 +2584,11 @@ feature {ET_AST_NODE} -- Processing
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
 			l_external_language: ET_EXTERNAL_LANGUAGE
-			l_external_alias: ET_EXTERNAL_ALIAS
 			l_manifest_string: ET_MANIFEST_STRING
 		do
 			from
@@ -2965,16 +2596,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -2991,8 +2620,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -3003,21 +2631,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -3031,8 +2656,7 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 				print_new_line
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
@@ -3049,8 +2673,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			dedent
-			l_external_alias := a_feature.alias_clause
-			if l_external_alias /= Void then
+			if attached a_feature.alias_clause as l_external_alias then
 				tokens.alias_keyword.process (Current)
 				l_manifest_string := l_external_alias.manifest_string
 				comment_finder.add_excluded_node (l_manifest_string)
@@ -3064,14 +2687,12 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -3081,18 +2702,12 @@ feature {ET_AST_NODE} -- Processing
 	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
 			l_external_language: ET_EXTERNAL_LANGUAGE
-			l_external_alias: ET_EXTERNAL_ALIAS
 			l_manifest_string: ET_MANIFEST_STRING
 		do
 			an_expression.agent_keyword.process (Current)
 			print_space
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -3102,8 +2717,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
@@ -3120,8 +2734,7 @@ feature {ET_AST_NODE} -- Processing
 			process_comments
 			print_new_line
 			dedent
-			l_external_alias := an_expression.alias_clause
-			if l_external_alias /= Void then
+			if attached an_expression.alias_clause as l_external_alias then
 				tokens.alias_keyword.process (Current)
 				l_manifest_string := l_external_alias.manifest_string
 				comment_finder.add_excluded_node (l_manifest_string)
@@ -3137,14 +2750,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -3158,12 +2769,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE)
 			-- Process `a_feature_clause'.
-		local
-			l_clients: ET_CLIENTS
 		do
 			a_feature_clause.feature_keyword.process (Current)
-			l_clients := a_feature_clause.clients_clause
-			if l_clients /= Void then
+			if attached a_feature_clause.clients_clause as l_clients then
 				print_space
 				l_clients.process (Current)
 			end
@@ -3221,30 +2829,23 @@ feature {ET_AST_NODE} -- Processing
 	process_features (a_class: ET_CLASS)
 			-- Process feature clauses of `a_class'.
 		local
-			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
 			a_feature_clause: ET_FEATURE_CLAUSE
 			l_queries: ET_QUERY_LIST
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
-			l_procedure: ET_PROCEDURE
+			l_procedure: detachable ET_PROCEDURE
 			i, nb: INTEGER
 			j, nb_queries: INTEGER
 			k, nb_procedures: INTEGER
 		do
-			a_feature_clauses := a_class.feature_clauses
-			if a_feature_clauses /= Void then
+			if attached a_class.feature_clauses as a_feature_clauses then
 				j := 1
 				l_queries := a_class.queries
 				nb_queries := l_queries.declared_count
-				if nb_queries > 0 then
-					l_query := l_queries.first
-				end
+
 				k := 1
 				l_procedures := a_class.procedures
 				nb_procedures := l_procedures.declared_count
-				if nb_procedures > 0 then
-					l_procedure := l_procedures.first
-				end
 				nb := a_feature_clauses.count
 				from i := 1 until i > nb loop
 					a_feature_clause := a_feature_clauses.item (i)
@@ -3253,65 +2854,28 @@ feature {ET_AST_NODE} -- Processing
 					print_new_line
 					print_new_line
 					from
+						if j <= nb_queries then
+							l_query := l_queries.item (j)
+							if l_query.feature_clause /= a_feature_clause then
+								l_query := Void
+							end
+						end
+						if k <= nb_procedures then
+							l_procedure := l_procedures.item (k)
+							if l_procedure.feature_clause /= a_feature_clause then
+								l_procedure := Void
+							end
+						end
 					until
-						(l_query = Void or else l_query.feature_clause /= a_feature_clause) and
-						(l_procedure = Void or else l_procedure.feature_clause /= a_feature_clause)
+						l_query = Void and l_procedure = Void
 					loop
 						indent
-						if l_query /= Void and then l_query.feature_clause = a_feature_clause then
-							if l_procedure /= Void and then l_procedure.feature_clause = a_feature_clause then
-								if l_query.name.position < l_procedure.name.position then
-									l_query.process (Current)
-									from
-									until
-										l_query = Void or else l_query.synonym = Void
-									loop
-										j := j + 1
-										if j <= nb_queries then
-											l_query := l_queries.item (j)
-										else
-											l_query := Void
-										end
-									end
-									j := j + 1
-									if j <= nb_queries then
-										l_query := l_queries.item (j)
-									else
-										l_query := Void
-									end
-								else
-									l_procedure.process (Current)
-									from
-									until
-										l_procedure = Void or else l_procedure.synonym = Void
-									loop
-										k := k + 1
-										if k <= nb_procedures then
-											l_procedure := l_procedures.item (k)
-										else
-											l_procedure := Void
-										end
-									end
-									k := k + 1
-									if k <= nb_procedures then
-										l_procedure := l_procedures.item (k)
-									else
-										l_procedure := Void
-									end
-								end
-							else
-								l_query.process (Current)
-								from
-								until
-									l_query = Void or else l_query.synonym = Void
-								loop
-									j := j + 1
-									if j <= nb_queries then
-										l_query := l_queries.item (j)
-									else
-										l_query := Void
-									end
-								end
+						if l_query /= Void and then (l_procedure = Void or else (l_query.name.position < l_procedure.name.position)) then
+							l_query.process (Current)
+							from
+							until
+								l_query = Void or else l_query.synonym = Void
+							loop
 								j := j + 1
 								if j <= nb_queries then
 									l_query := l_queries.item (j)
@@ -3319,7 +2883,16 @@ feature {ET_AST_NODE} -- Processing
 									l_query := Void
 								end
 							end
-						else
+							j := j + 1
+							if j <= nb_queries then
+								l_query := l_queries.item (j)
+								if l_query.feature_clause /= a_feature_clause then
+									l_query := Void
+								end
+							else
+								l_query := Void
+							end
+						elseif l_procedure /= Void then
 							l_procedure.process (Current)
 							from
 							until
@@ -3335,6 +2908,9 @@ feature {ET_AST_NODE} -- Processing
 							k := k + 1
 							if k <= nb_procedures then
 								l_procedure := l_procedures.item (k)
+								if l_procedure.feature_clause /= a_feature_clause then
+									l_procedure := Void
+								end
 							else
 								l_procedure := Void
 							end
@@ -3436,12 +3012,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
-		local
-			a_type_mark: ET_KEYWORD
 		do
-			a_type_mark := a_parameter.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
+			if attached a_parameter.type_mark as l_type_mark then
+				l_type_mark.process (Current)
 				print_space
 			end
 			a_parameter.name.process (Current)
@@ -3476,11 +3049,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -3508,12 +3078,9 @@ feature {ET_AST_NODE} -- Processing
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -3525,8 +3092,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -3536,10 +3102,8 @@ feature {ET_AST_NODE} -- Processing
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			l_compound: ET_COMPOUND
 			l_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
-			l_elseif_parts: ET_ELSEIF_PART_LIST
 		do
 			tokens.if_keyword.process (Current)
 			print_space
@@ -3550,23 +3114,20 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.find_comments (l_conditional, comment_list)
 			comment_finder.reset_excluded_nodes
 			print_space
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_instruction.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			else
 				tokens.then_keyword.process (Current)
 			end
-			l_elseif_parts := an_instruction.elseif_parts
-			if l_elseif_parts /= Void then
+			if attached an_instruction.elseif_parts as l_elseif_parts then
 				process_comments
 				print_new_line
 				l_elseif_parts.process (Current)
 			end
-			l_compound := an_instruction.else_compound
-			if l_compound /= Void then
+			if attached an_instruction.else_compound as l_else_compound then
 				process_comments
 				print_new_line
-				l_compound.process (Current)
+				l_else_compound.process (Current)
 			end
 			process_comments
 			print_new_line
@@ -3587,7 +3148,6 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 			l_item: ET_INDEXING_ITEM
 			l_indexing: ET_INDEXING
-			l_tagged_indexing: ET_TAGGED_INDEXING
 		do
 			if a_list.is_empty then
 					-- Do not print empty note clause, but keep the comments if any.
@@ -3605,8 +3165,7 @@ feature {ET_AST_NODE} -- Processing
 					print_new_line
 					l_item := a_list.item (i)
 					l_indexing := l_item.indexing_clause
-					l_tagged_indexing ?= l_indexing
-					if l_tagged_indexing /= Void and then STRING_.same_string (l_tagged_indexing.tag.identifier.lower_name, "description") then
+					if attached {ET_TAGGED_INDEXING} l_indexing as l_tagged_indexing and then STRING_.same_string (l_tagged_indexing.tag.identifier.lower_name, "description") then
 						process_tagged_indexing_indented (l_tagged_indexing)
 						print_new_line
 					else
@@ -3685,8 +3244,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
-			l_when_parts: ET_WHEN_PART_LIST
-			l_else_compound: ET_COMPOUND
 		do
 			tokens.inspect_keyword.process (Current)
 			print_space
@@ -3698,16 +3255,14 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			process_comments
 			print_new_line
-			l_when_parts := an_instruction.when_parts
-			if l_when_parts /= Void then
+			if attached an_instruction.when_parts as l_when_parts then
 				l_when_parts.process (Current)
 				process_comments
 				if not l_when_parts.is_empty then
 					print_new_line
 				end
 			end
-			l_else_compound := an_instruction.else_compound
-			if l_else_compound /= Void then
+			if attached an_instruction.else_compound as l_else_compound then
 				l_else_compound.process (Current)
 				process_comments
 				print_new_line
@@ -3723,8 +3278,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 			l_instruction: ET_INSTRUCTION
-			l_identifier: ET_IDENTIFIER
-			l_symbol: ET_SYMBOL
 		do
 			nb := a_list.count
 				-- Start to skip all leading null instructions.
@@ -3751,9 +3304,7 @@ feature {ET_AST_NODE} -- Processing
 					i := i + 1
 				end
 				if i <= nb then
-					l_identifier ?= l_instruction.last_leaf
-					l_symbol ?= a_list.item (i).first_leaf
-					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+					if attached {ET_IDENTIFIER} l_instruction.last_leaf and attached {ET_SYMBOL} a_list.item (i).first_leaf as l_symbol and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
 							-- Print a semicolon in order to avoid syntax ambiguity.
 							-- For example if we have:
 							--
@@ -3776,11 +3327,9 @@ feature {ET_AST_NODE} -- Processing
 	process_invariants (a_list: ET_INVARIANTS)
 			-- Process `a_list'.
 		local
-			l_break: ET_BREAK
 			l_has_comment_assertion: BOOLEAN
 		do
-			l_break := a_list.break
-			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
 			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty invariants, but keep the comments if any.
 					-- Note that a comment is considered as an assertion here,
@@ -3892,11 +3441,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -3909,11 +3455,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -3974,11 +3517,9 @@ feature {ET_AST_NODE} -- Processing
 			l_item: ET_LOCAL_VARIABLE_ITEM
 			l_name: ET_IDENTIFIER
 			l_type: ET_TYPE
-			l_break: ET_BREAK
 			l_has_comment_assertion: BOOLEAN
 		do
-			l_break := a_list.break
-			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
 			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty local variable clause, but keep the comments if any.
 					--
@@ -4025,28 +3566,22 @@ feature {ET_AST_NODE} -- Processing
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
 			l_conditional: ET_CONDITIONAL
 			l_expression: ET_EXPRESSION
 		do
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.from_compound as l_from_compound then
+				l_from_compound.process (Current)
 			else
 				tokens.from_keyword.process (Current)
 			end
 			print_new_line
 			process_comments
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_instruction.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 				process_comments
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void and an_instruction.has_old_variant_syntax then
-				a_variant_part.process (Current)
+			if an_instruction.has_old_variant_syntax and then attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 				print_new_line
 				process_comments
 			end
@@ -4063,16 +3598,15 @@ feature {ET_AST_NODE} -- Processing
 			print_new_line
 			process_comments
 			dedent
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				l_loop_compound.process (Current)
 			else
 				tokens.loop_keyword.process (Current)
 			end
 			print_new_line
 			process_comments
-			if a_variant_part /= Void and not an_instruction.has_old_variant_syntax then
-				a_variant_part.process (Current)
+			if not an_instruction.has_old_variant_syntax and then attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 				print_new_line
 				process_comments
 			end
@@ -4082,11 +3616,9 @@ feature {ET_AST_NODE} -- Processing
 	process_loop_invariants (a_list: ET_LOOP_INVARIANTS)
 			-- Process `a_list'.
 		local
-			l_break: ET_BREAK
 			l_has_comment_assertion: BOOLEAN
 		do
-			l_break := a_list.break
-			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
 			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty invariants, but keep the comments if any.
 					-- Note that a comment is considered as an assertion here,
@@ -4187,13 +3719,11 @@ feature {ET_AST_NODE} -- Processing
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		local
-			l_declared_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
 			an_expression.attached_keyword.process (Current)
 			print_space
-			l_declared_type := an_expression.declared_type
-			if l_declared_type /= Void then
+			if attached an_expression.declared_type as l_declared_type then
 				l_type := l_declared_type.type
 				tokens.left_brace_symbol.process (Current)
 				l_type.process (Current)
@@ -4223,13 +3753,11 @@ feature {ET_AST_NODE} -- Processing
 	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
 		local
-			l_declared_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
 			an_expression.attached_keyword.process (Current)
 			print_space
-			l_declared_type := an_expression.declared_type
-			if l_declared_type /= Void then
+			if attached an_expression.declared_type as l_declared_type then
 				l_type := l_declared_type.type
 				tokens.left_brace_symbol.process (Current)
 				l_type.process (Current)
@@ -4245,12 +3773,9 @@ feature {ET_AST_NODE} -- Processing
 	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -4262,8 +3787,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -4294,41 +3818,27 @@ feature {ET_AST_NODE} -- Processing
 	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_compound: ET_COMPOUND
-			l_keys: ET_MANIFEST_STRING_LIST
+			l_compound: detachable ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -4345,8 +3855,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -4365,28 +3874,24 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 			print_space
 			l_type.process (Current)
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				print_space
 				l_assigner.process (Current)
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -4400,13 +3905,11 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
+			if attached a_feature.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
@@ -4415,8 +3918,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_compound /= Void then
 				process_break (l_compound.keyword.break)
 			end
-			l_keys := a_feature.keys
-			if l_keys /= Void then
+			if attached a_feature.keys as l_keys then
 				if l_keys.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_keys, comment_list)
@@ -4433,20 +3935,17 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -4456,20 +3955,13 @@ feature {ET_AST_NODE} -- Processing
 	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
-			l_keys: ET_MANIFEST_STRING_LIST
+			l_compound: detachable ET_COMPOUND
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
 			an_expression.agent_keyword.process (Current)
 			print_space
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -4489,13 +3981,11 @@ feature {ET_AST_NODE} -- Processing
 			l_type.process (Current)
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := an_expression.locals
-			if l_locals /= Void then
+			if attached an_expression.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
@@ -4504,8 +3994,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_compound /= Void then
 				process_break (l_compound.keyword.break)
 			end
-			l_keys := an_expression.keys
-			if l_keys /= Void then
+			if attached an_expression.keys as l_keys then
 				if l_keys.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_keys, comment_list)
@@ -4522,20 +4011,17 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -4558,38 +4044,25 @@ feature {ET_AST_NODE} -- Processing
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
-			l_synonym: ET_FEATURE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_indexing: ET_INDEXING_LIST
-			l_obsolete_message: ET_OBSOLETE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_is_keyword: ET_KEYWORD
+			l_synonym: detachable ET_FEATURE
 			l_obsolete_string: ET_MANIFEST_STRING
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_compound: ET_COMPOUND
-			l_keys: ET_MANIFEST_STRING_LIST
+			l_compound: detachable ET_COMPOUND
 		do
 			from
 				l_synonym := a_feature
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -4606,8 +4079,7 @@ feature {ET_AST_NODE} -- Processing
 					print_space
 				end
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -4618,21 +4090,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_space
 			tokens.is_keyword.process (Current)
-			l_is_keyword := a_feature.is_keyword
-			if l_is_keyword /= Void then
+			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
 			indent
 			process_comments
 			print_new_line
-			l_indexing := a_feature.first_indexing
-			if l_indexing /= Void then
+			if attached a_feature.first_indexing as l_indexing then
 				process_indexing_clause (l_indexing, False)
 				process_comments
 				print_new_line
 			end
-			l_obsolete_message := a_feature.obsolete_message
-			if l_obsolete_message /= Void then
+			if attached a_feature.obsolete_message as l_obsolete_message then
 				tokens.obsolete_keyword.process (Current)
 				l_obsolete_string := l_obsolete_message.manifest_string
 				comment_finder.add_excluded_node (l_obsolete_string)
@@ -4646,13 +4115,11 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				dedent
 			end
-			l_preconditions := a_feature.preconditions
-			if l_preconditions /= Void then
+			if attached a_feature.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := a_feature.locals
-			if l_locals /= Void then
+			if attached a_feature.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
@@ -4661,8 +4128,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_compound /= Void then
 				process_break (l_compound.keyword.break)
 			end
-			l_keys := a_feature.keys
-			if l_keys /= Void then
+			if attached a_feature.keys as l_keys then
 				if l_keys.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_keys, comment_list)
@@ -4679,20 +4145,17 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			print_new_line
-			l_postconditions := a_feature.postconditions
-			if l_postconditions /= Void then
+			if attached a_feature.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -4702,17 +4165,10 @@ feature {ET_AST_NODE} -- Processing
 	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
-			l_keys: ET_MANIFEST_STRING_LIST
+			l_compound: detachable ET_COMPOUND
 		do
 			an_expression.agent_keyword.process (Current)
-			l_formal_arguments := an_expression.formal_arguments
-			if l_formal_arguments /= Void then
+			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_formal_arguments, comment_list)
@@ -4723,13 +4179,11 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			print_new_line
-			l_preconditions := an_expression.preconditions
-			if l_preconditions /= Void then
+			if attached an_expression.preconditions as l_preconditions then
 				l_preconditions.process (Current)
 				process_comments
 			end
-			l_locals := an_expression.locals
-			if l_locals /= Void then
+			if attached an_expression.locals as l_locals then
 				l_locals.process (Current)
 				process_comments
 			end
@@ -4738,8 +4192,7 @@ feature {ET_AST_NODE} -- Processing
 			if l_compound /= Void then
 				process_break (l_compound.keyword.break)
 			end
-			l_keys := an_expression.keys
-			if l_keys /= Void then
+			if attached an_expression.keys as l_keys then
 				if l_keys.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_keys, comment_list)
@@ -4756,20 +4209,17 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			print_new_line
-			l_postconditions := an_expression.postconditions
-			if l_postconditions /= Void then
+			if attached an_expression.postconditions as l_postconditions then
 				l_postconditions.process (Current)
 				process_comments
 			end
-			l_compound := an_expression.rescue_clause
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 				process_comments
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 					-- Do not print implicit argument operands (they were not in the original class text anyway).
 				if l_actual_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
@@ -4784,12 +4234,12 @@ feature {ET_AST_NODE} -- Processing
 	process_parent (a_parent: ET_PARENT)
 			-- Process `a_parent'.
 		local
-			a_renames: ET_RENAME_LIST
-			an_exports: ET_EXPORT_LIST
-			an_undefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
-			an_end_keyword: ET_TOKEN
+			a_renames: detachable ET_RENAME_LIST
+			an_exports: detachable ET_EXPORT_LIST
+			an_undefines: detachable ET_KEYWORD_FEATURE_NAME_LIST
+			a_redefines: detachable ET_KEYWORD_FEATURE_NAME_LIST
+			a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST
+			an_end_keyword: detachable ET_TOKEN
 		do
 			a_parent.type.process (Current)
 			indent
@@ -4894,12 +4344,9 @@ feature {ET_AST_NODE} -- Processing
 	process_postconditions (a_list: ET_POSTCONDITIONS)
 			-- Process `a_list'.
 		local
-			a_then_keyword: ET_TOKEN
-			l_break: ET_BREAK
 			l_has_comment_assertion: BOOLEAN
 		do
-			l_break := a_list.break
-			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
 			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty postconditions, but keep the comments if any.
 					-- Note that a comment is considered as an assertion here,
@@ -4907,10 +4354,9 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.ensure_keyword.process (Current)
-				a_then_keyword := a_list.then_keyword
-				if a_then_keyword /= Void then
+				if attached a_list.then_keyword as l_then_keyword then
 					print_space
-					a_then_keyword.process (Current)
+					l_then_keyword.process (Current)
 				end
 				print_new_line
 				indent
@@ -4924,12 +4370,9 @@ feature {ET_AST_NODE} -- Processing
 	process_preconditions (a_list: ET_PRECONDITIONS)
 			-- Process `a_list'.
 		local
-			an_else_keyword: ET_TOKEN
-			l_break: ET_BREAK
 			l_has_comment_assertion: BOOLEAN
 		do
-			l_break := a_list.break
-			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			l_has_comment_assertion := attached a_list.break as l_break and then l_break.has_comment
 			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty preconditions, but keep the comments if any.
 					-- Note that a comment is considered as an assertion here,
@@ -4937,10 +4380,9 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.require_keyword.process (Current)
-				an_else_keyword := a_list.else_keyword
-				if an_else_keyword /= Void then
+				if attached a_list.else_keyword as l_else_keyword then
 					print_space
-					an_else_keyword.process (Current)
+					l_else_keyword.process (Current)
 				end
 				print_new_line
 				indent
@@ -4954,13 +4396,10 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		local
-			l_parent_name: ET_PRECURSOR_CLASS_NAME
 			l_class_name: ET_CLASS_NAME
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			an_expression.precursor_keyword.process (Current)
-			l_parent_name := an_expression.parent_name
-			if l_parent_name /= Void then
+			if attached an_expression.parent_name as l_parent_name then
 				print_space
 				tokens.left_brace_symbol.process (Current)
 				l_class_name := l_parent_name.class_name
@@ -4970,8 +4409,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				tokens.right_brace_symbol.process (Current)
 			end
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
+			if attached an_expression.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -4985,13 +4423,10 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			l_parent_name: ET_PRECURSOR_CLASS_NAME
 			l_class_name: ET_CLASS_NAME
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			an_instruction.precursor_keyword.process (Current)
-			l_parent_name := an_instruction.parent_name
-			if l_parent_name /= Void then
+			if attached an_instruction.parent_name as l_parent_name then
 				print_space
 				tokens.left_brace_symbol.process (Current)
 				l_class_name := l_parent_name.class_name
@@ -5001,8 +4436,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				tokens.right_brace_symbol.process (Current)
 			end
-			l_arguments := an_instruction.arguments
-			if l_arguments /= Void then
+			if attached an_instruction.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -5043,7 +4477,6 @@ feature {ET_AST_NODE} -- Processing
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		local
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
 		do
@@ -5056,8 +4489,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (l_qualified_feature_name, comment_list)
 			comment_finder.reset_excluded_nodes
-			l_arguments := a_call.arguments
-			if l_arguments /= Void then
+			if attached a_call.arguments as l_arguments then
 				if l_arguments.is_empty then
 						-- Do not print empty parentheses, but keep the comments if any.
 					comment_finder.find_comments (l_arguments, comment_list)
@@ -5068,15 +4500,25 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_qualified_regular_feature_call (an_expression)
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_qualified_regular_feature_call (an_instruction)
+		end
+
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		local
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -5103,10 +4545,8 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -5124,15 +4564,39 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.reset_excluded_nodes
 		end
 
+	process_qualified_regular_feature_call (a_call: ET_QUALIFIED_REGULAR_FEATURE_CALL)
+			-- Process `a_call'.
+		local
+			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
+			l_feature_name: ET_FEATURE_NAME
+		do
+			a_call.target.process (Current)
+				-- The AST may or may not contain the dot.
+				-- So we have to print them explicitly here.
+			tokens.dot_symbol.process (Current)
+			l_qualified_feature_name := a_call.qualified_name
+			l_feature_name := l_qualified_feature_name.feature_name
+			l_feature_name.process (Current)
+			comment_finder.add_excluded_node (l_feature_name)
+			comment_finder.find_comments (l_qualified_feature_name, comment_list)
+			comment_finder.reset_excluded_nodes
+			if attached a_call.arguments as l_arguments then
+				if l_arguments.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_arguments, comment_list)
+				else
+					print_space
+					l_arguments.process (Current)
+				end
+			end
+		end
+
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5144,8 +4608,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -5155,11 +4618,9 @@ feature {ET_AST_NODE} -- Processing
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_string.cast_type
-			if l_cast_type /= Void then
+			if attached a_string.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5180,12 +4641,9 @@ feature {ET_AST_NODE} -- Processing
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5197,8 +4655,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -5278,11 +4735,9 @@ feature {ET_AST_NODE} -- Processing
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_string.cast_type
-			if l_cast_type /= Void then
+			if attached a_string.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5305,10 +4760,8 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_static_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
-			l_feature_keyword: ET_KEYWORD
 		do
-			l_feature_keyword := an_expression.feature_keyword
-			if l_feature_keyword /= Void then
+			if attached an_expression.feature_keyword as l_feature_keyword then
 				comment_finder.find_comments (l_feature_keyword, comment_list)
 			end
 			l_static_type := an_expression.static_type
@@ -5327,10 +4780,8 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_static_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
-			l_feature_keyword: ET_KEYWORD
 		do
-			l_feature_keyword := an_instruction.feature_keyword
-			if l_feature_keyword /= Void then
+			if attached an_instruction.feature_keyword as l_feature_keyword then
 				comment_finder.find_comments (l_feature_keyword, comment_list)
 			end
 			l_static_type := an_instruction.static_type
@@ -5385,7 +4836,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_tag: ET_TAG
 			l_identifier: ET_IDENTIFIER
-			l_expression: ET_EXPRESSION
 		do
 			l_tag := an_assertion.tag
 			l_identifier := l_tag.identifier
@@ -5396,8 +4846,7 @@ feature {ET_AST_NODE} -- Processing
 				-- The AST may or may not contain the colon.
 				-- So we have to print it explicitly here.
 			tokens.colon_symbol.process (Current)
-			l_expression := an_assertion.expression
-			if l_expression /= Void then
+			if attached an_assertion.expression as l_expression then
 				print_space
 				l_expression.process (Current)
 			end
@@ -5431,7 +4880,6 @@ feature {ET_AST_NODE} -- Processing
 			l_tag: ET_TAG
 			l_identifier: ET_IDENTIFIER
 			l_terms: ET_INDEXING_TERM_LIST
-			l_verbatim_string: ET_VERBATIM_STRING
 		do
 			l_tag := an_indexing.tag
 			l_identifier := l_tag.identifier
@@ -5443,10 +4891,7 @@ feature {ET_AST_NODE} -- Processing
 				-- So we have to print it explicitly here.
 			tokens.colon_symbol.process (Current)
 			l_terms := an_indexing.terms
-			if l_terms.count = 1 then
-				l_verbatim_string ?= l_terms.first.indexing_term
-			end
-			if l_verbatim_string /= Void then
+			if l_terms.count = 1 and then attached {ET_VERBATIM_STRING} l_terms.first.indexing_term as l_verbatim_string then
 				print_new_line
 				process_indexing (an_indexing)
 					-- We make as if a comment was printed so that
@@ -5478,12 +4923,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
-		local
-			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 				if not l_type_mark.is_implicit_mark then
 					print_space
@@ -5491,9 +4932,8 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_token (tokens.tuple_keyword)
 			comment_finder.find_comments (a_type.tuple_keyword, comment_list)
-			l_actual_parameters := a_type.actual_parameters
-			if l_actual_parameters = Void then
-				-- Do nothing/
+			if not attached a_type.actual_parameters as l_actual_parameters then
+				-- Do nothing.
 			elseif l_actual_parameters.is_empty then
 					-- Do not print empty brackets, but keep the comments if any.
 				comment_finder.find_comments (l_actual_parameters, comment_list)
@@ -5506,12 +4946,9 @@ feature {ET_AST_NODE} -- Processing
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5523,8 +4960,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -5534,12 +4970,9 @@ feature {ET_AST_NODE} -- Processing
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
 		local
-			l_cast_type: ET_TARGET_TYPE
-			l_sign: ET_SYMBOL
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
+			if attached a_constant.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5551,8 +4984,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.reset_excluded_nodes
 				print_space
 			end
-			l_sign := a_constant.sign
-			if l_sign /= Void then
+			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
 			print_string (a_constant.literal)
@@ -5562,13 +4994,9 @@ feature {ET_AST_NODE} -- Processing
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			l_frozen_keyword: ET_TOKEN
-			l_synonym: ET_FEATURE
-			l_semicolon: ET_SEMICOLON_SYMBOL
-			l_assigner: ET_ASSIGNER
+			l_synonym: detachable ET_FEATURE
 			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
 			l_feature_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
 		do
@@ -5577,16 +5005,14 @@ feature {ET_AST_NODE} -- Processing
 			until
 				l_synonym = Void
 			loop
-				l_frozen_keyword := l_synonym.frozen_keyword
-				if l_frozen_keyword /= Void then
+				if attached l_synonym.frozen_keyword as l_frozen_keyword then
 					l_frozen_keyword.process (Current)
 					print_space
 				end
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
-				l_alias_name := l_extended_feature_name.alias_name
 				l_feature_name.process (Current)
-				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+				if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
 						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
@@ -5614,8 +5040,7 @@ feature {ET_AST_NODE} -- Processing
 			print_space
 			l_type.process (Current)
 			print_space
-			l_assigner := a_feature.assigner
-			if l_assigner /= Void then
+			if attached a_feature.assigner as l_assigner then
 				l_assigner.process (Current)
 				print_space
 			end
@@ -5624,8 +5049,7 @@ feature {ET_AST_NODE} -- Processing
 			print_space
 			tokens.unique_keyword.process (Current)
 			process_break (a_feature.unique_keyword.break)
-			l_semicolon := a_feature.semicolon
-			if l_semicolon /= Void then
+			if attached a_feature.semicolon as l_semicolon then
 					-- Do not print the semicolon, but keep track of its comments if any.
 				process_break (l_semicolon.break)
 			end
@@ -5635,18 +5059,43 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_unqualified_regular_feature_call (an_expression)
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_unqualified_regular_feature_call (an_instruction)
+		end
+
+	process_unqualified_regular_feature_call (a_call: ET_UNQUALIFIED_REGULAR_FEATURE_CALL)
+			-- Process `a_call'.
+		do
+			a_call.name.process (Current)
+			if attached a_call.arguments as l_arguments then
+				if l_arguments.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_arguments, comment_list)
+				else
+					print_space
+					l_arguments.process (Current)
+				end
+			end
+		end
+
 	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
 		local
-			l_tag: ET_TAG
 			l_identifier: ET_IDENTIFIER
 		do
 			a_variant.variant_keyword.process (Current)
 			indent
 			print_new_line
 			process_comments
-			l_tag := a_variant.tag
-			if l_tag /= Void then
+			if attached a_variant.tag as l_tag then
 				l_identifier := l_tag.identifier
 				l_identifier.process (Current)
 				comment_finder.add_excluded_node (l_identifier)
@@ -5665,11 +5114,9 @@ feature {ET_AST_NODE} -- Processing
 	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		local
-			l_cast_type: ET_TARGET_TYPE
 			l_type: ET_TYPE
 		do
-			l_cast_type := a_string.cast_type
-			if l_cast_type /= Void then
+			if attached a_string.cast_type as l_cast_type then
 					-- The AST may or may not contain the braces.
 					-- So we have to print them explicitly here.
 				l_type := l_cast_type.type
@@ -5710,14 +5157,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
-		local
-			a_compound: ET_COMPOUND
 		do
 			a_when_part.choices.process (Current)
 			print_space
-			a_compound := a_when_part.then_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_when_part.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			else
 				tokens.then_keyword.process (Current)
 			end

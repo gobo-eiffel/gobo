@@ -5,7 +5,7 @@ note
 		"Eiffel attachment scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Access
 
-	scope: ET_ATTACHMENT_SCOPE
+	scope: detachable ET_ATTACHMENT_SCOPE
 			-- Scope being built
 
 feature -- Basic operations
@@ -94,22 +94,22 @@ feature {ET_AST_NODE} -- Processing
 				l_right := an_expression.right.unparenthesized_expression
 				if attached {ET_VOID} l_right then
 					if attached {ET_RESULT} l_left then
-						if scope /= Void then
-							scope.add_result
+						if attached scope as l_scope then
+							l_scope.add_result
 						end
 					elseif attached {ET_IDENTIFIER} l_left as l_identifier then
-						if scope /= Void then
-							scope.add_name (l_identifier)
+						if attached scope as l_scope then
+							l_scope.add_name (l_identifier)
 						end
 					end
 				elseif attached {ET_VOID} l_left then
 					if attached {ET_RESULT} l_right then
-						if scope /= Void then
-							scope.add_result
+						if attached scope as l_scope then
+							l_scope.add_result
 						end
 					elseif attached {ET_IDENTIFIER} l_right as l_identifier then
-						if scope /= Void then
-							scope.add_name (l_identifier)
+						if attached scope as l_scope then
+							l_scope.add_name (l_identifier)
 						end
 					end
 				end
@@ -157,12 +157,12 @@ feature {ET_AST_NODE} -- Processing
 			if not is_negated then
 				l_expression := an_expression.expression.unparenthesized_expression
 				if attached {ET_RESULT} l_expression then
-					if scope /= Void then
-						scope.add_result
+					if attached scope as l_scope then
+						l_scope.add_result
 					end
 				elseif attached {ET_IDENTIFIER} l_expression as l_identifier then
-					if scope /= Void then
-						scope.add_name (l_identifier)
+					if attached scope as l_scope then
+						l_scope.add_name (l_identifier)
 					end
 				end
 			end

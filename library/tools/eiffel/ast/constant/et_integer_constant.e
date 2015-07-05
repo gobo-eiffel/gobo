@@ -5,7 +5,7 @@ note
 		"Eiffel integer constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,28 +18,36 @@ inherit
 		rename
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
+		undefine
+			first_position
 		redefine
-			position, first_position, first_leaf
+			position,
+			first_leaf
 		end
 
 	ET_CONSTANT
 		undefine
-			first_position, last_position
+			last_position,
+			break
 		redefine
-			reset, is_integer_constant,
+			reset,
+			is_integer_constant,
 			manifest_constant_convert_feature
 		end
 
 	ET_CHOICE_CONSTANT
 		undefine
-			first_position, last_position,
-			reset, is_never_void,
-			manifest_constant_convert_feature
+			last_position,
+			reset,
+			is_never_void,
+			manifest_constant_convert_feature,
+			break
 		end
 
 	ET_INDEXING_TERM
 		undefine
-			first_position, last_position
+			last_position,
+			break
 		end
 
 feature -- Initialization
@@ -48,8 +56,8 @@ feature -- Initialization
 			-- Reset constant as it was just after it was last parsed.
 		do
 			type := Void
-			if cast_type /= Void then
-				cast_type.type.reset
+			if attached cast_type as l_cast_type then
+				l_cast_type.type.reset
 			end
 		end
 
@@ -159,13 +167,13 @@ feature -- Access
 			Result := value
 		end
 
-	sign: ET_SYMBOL_OPERATOR
+	sign: detachable ET_SYMBOL_OPERATOR
 			-- Sign; Void if none
 
-	cast_type: ET_TARGET_TYPE
+	cast_type: detachable ET_TARGET_TYPE
 			-- Cast type
 
-	type: ET_CLASS_TYPE
+	type: detachable ET_CLASS_TYPE
 			-- Type of integer constant;
 			-- Void if not determined yet
 
@@ -173,10 +181,10 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if cast_type /= Void then
-				Result := cast_type.position
-			elseif sign /= Void then
-				Result := sign.position
+			if attached cast_type as l_cast_type then
+				Result := l_cast_type.position
+			elseif attached sign as l_sign then
+				Result := l_sign.position
 			else
 				Result := Current
 			end
@@ -186,25 +194,13 @@ feature -- Access
 			-- Position of first character of current node in source code,
 			-- without taking into account the cast type
 		do
-			if sign /= Void then
-				Result := sign.position
+			if attached sign as l_sign then
+				Result := l_sign.position
 			else
 				Result := Current
 			end
 		ensure
 			value_position_not_void: Result /= Void
-		end
-
-	first_position: ET_POSITION
-			-- Position of first character of current node in source code
-		do
-			if cast_type /= Void then
-				Result := cast_type.first_position
-			elseif sign /= Void then
-				Result := sign.first_position
-			else
-				Result := Current
-			end
 		end
 
 	last_position: ET_POSITION
@@ -216,10 +212,10 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if cast_type /= Void then
-				Result := cast_type.first_leaf
-			elseif sign /= Void then
-				Result := sign
+			if attached cast_type as l_cast_type then
+				Result := l_cast_type.first_leaf
+			elseif attached sign as l_sign then
+				Result := l_sign
 			else
 				Result := Current
 			end
@@ -230,8 +226,8 @@ feature -- Status report
 	is_negative: BOOLEAN
 			-- Is integer value negative?
 		do
-			if sign /= Void then
-				Result := sign.is_minus
+			if attached sign as l_sign then
+				Result := l_sign.is_minus
 			end
 		end
 
@@ -377,7 +373,7 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): detachable ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when there is no explicit type cast and the value of the
 			-- constant can be represented in `a_target_type'.

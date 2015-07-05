@@ -5,7 +5,7 @@ note
 		"Xace Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,8 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
+			a_position_table: detachable XM_POSITION_TABLE
+			l_last_system: like last_system
 		do
 			last_system := Void
 			xml_parser.parse_from_stream (a_file)
@@ -52,8 +53,9 @@ feature -- Parsing
 						if not xml_validator.has_error then
 							xml_preprocessor.preprocess_element (a_root_element, a_position_table)
 							a_root_element.set_name (uc_system)
-							last_system := new_system (a_root_element, a_position_table)
-							last_system.set_root_class_name ("NONE")
+							l_last_system := new_system (a_root_element, a_position_table)
+							l_last_system.set_root_class_name ("NONE")
+							last_system := l_last_system
 							a_root_element.set_name (uc_library)
 							parsed_libraries.wipe_out
 						end
@@ -75,12 +77,12 @@ feature -- Parsing
 
 feature -- Access
 
-	last_system: ET_XACE_SYSTEM
+	last_system: detachable ET_XACE_SYSTEM
 			-- Eiffel system being parsed
 
 feature {NONE} -- Xace AST factory
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM
+	new_system (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_XACE_SYSTEM
 			-- New Eiffel system build from `an_element'
 		local
 			l_error_handler: ET_ERROR_HANDLER
@@ -90,8 +92,8 @@ feature {NONE} -- Xace AST factory
 			l_external_library_pathnames: DS_ARRAYED_LIST [STRING]
 			l_pathname: STRING
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			l_options: ET_XACE_OPTIONS
-			l_name_attribute: XM_ATTRIBUTE
+			l_options: detachable ET_XACE_OPTIONS
+			l_name_attribute: detachable XM_ATTRIBUTE
 		do
 			l_name_attribute := an_element.attribute_by_name (uc_name)
 			if l_name_attribute /= Void and then not l_name_attribute.value.is_empty then
@@ -151,8 +153,8 @@ feature {NONE} -- Eiffel AST factory
 	new_eiffel_ast_factory: ET_AST_FACTORY
 			-- New Eiffel AST factory
 		do
-			if eiffel_ast_factory /= Void then
-				Result := eiffel_ast_factory
+			if attached eiffel_ast_factory as l_eiffel_ast_factory then
+				Result := l_eiffel_ast_factory
 			else
 				create Result.make
 			end
@@ -163,8 +165,8 @@ feature {NONE} -- Eiffel AST factory
 	new_eiffel_error_handler: ET_ERROR_HANDLER
 			-- New Eiffel error handler for Eiffel parser
 		do
-			if eiffel_error_handler /= Void then
-				Result := eiffel_error_handler
+			if attached eiffel_error_handler as l_eiffel_error_handler then
+				Result := l_eiffel_error_handler
 			else
 				create Result.make_standard
 			end
@@ -174,11 +176,11 @@ feature {NONE} -- Eiffel AST factory
 
 feature -- Configuration
 
-	eiffel_ast_factory: ET_AST_FACTORY
+	eiffel_ast_factory: detachable ET_AST_FACTORY
 			-- Return this AST factory in `new_eiffel_ast_factory'
 			-- if not void
 
-	eiffel_error_handler: ET_ERROR_HANDLER
+	eiffel_error_handler: detachable ET_ERROR_HANDLER
 			-- Return this error handler in `new_eiffel_error handler'
 			-- if not void
 

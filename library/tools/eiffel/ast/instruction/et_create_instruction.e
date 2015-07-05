@@ -5,7 +5,7 @@ note
 		"Eiffel create instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,14 +42,14 @@ feature -- Access
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
-	creation_type: ET_TARGET_TYPE
+	creation_type: detachable ET_TARGET_TYPE
 			-- Creation type surrounded by braces
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Creation type
 		do
-			if creation_type /= Void then
-				Result := creation_type.type
+			if attached creation_type as l_creation_type then
+				Result := l_creation_type.type
 			end
 		end
 
@@ -59,8 +59,8 @@ feature -- Access
 		do
 			if not create_keyword.position.is_null then
 				Result := create_keyword.position
-			elseif creation_type /= Void then
-				Result := creation_type.position
+			elseif attached creation_type as l_creation_type then
+				Result := l_creation_type.position
 			else
 				Result := target.position
 			end
@@ -75,20 +75,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if creation_call /= Void then
-				Result := creation_call.last_leaf
+			if attached creation_call as l_creation_call then
+				Result := l_creation_call.last_leaf
 			else
 				Result := target.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if creation_call /= Void then
-				Result := creation_call.break
-			else
-				Result := target.break
 			end
 		end
 

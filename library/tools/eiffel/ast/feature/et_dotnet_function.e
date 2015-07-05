@@ -5,7 +5,7 @@ note
 		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new .NET function.
 		do
-			precursor (a_name, args, a_type, a_class)
-			dotnet_name := name.name
+			dotnet_name := a_name.feature_name.name
 			overloaded_extended_name := a_name
+			precursor (a_name, args, a_type, a_class)
 		ensure then
 			dotnet_name_set: dotnet_name.same_string (name.name)
 			overloaded_extended_name_set: overloaded_extended_name = a_name
@@ -67,14 +67,14 @@ feature -- status report
 			-- Can current feature have a name of
 			-- the form 'infix ...'?
 		do
-			Result := arguments /= Void and then (arguments.count = 1 or (is_static and arguments.count = 2))
+			Result := attached arguments as l_arguments and then (l_arguments.count = 1 or (is_static and l_arguments.count = 2))
 		end
 
 	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
 		do
-			Result := arguments = Void or else (arguments.count = 0 or (is_static and arguments.count = 1))
+			Result := not attached arguments as l_arguments or else (l_arguments.count = 0 or (is_static and l_arguments.count = 1))
 		end
 
 feature -- Duplication

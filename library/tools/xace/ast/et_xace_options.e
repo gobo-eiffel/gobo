@@ -5,7 +5,7 @@ note
 		"Xace option clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,33 +39,33 @@ feature -- Status report
 	is_abstract_declared: BOOLEAN
 			-- Has 'abstract' option been declared?
 		do
-			Result := declared_abstract /= Void and then not declared_abstract.is_undefined
+			Result := attached declared_abstract as l_declared_abstract and then not l_declared_abstract.is_undefined
 		ensure
-			definition: Result = (declared_abstract /= Void and then not declared_abstract.is_undefined)
+			definition: Result = (attached declared_abstract as l_declared_abstract and then not l_declared_abstract.is_undefined)
 		end
 
 	is_address_expression_declared: BOOLEAN
 			-- Has 'address_expression' option been declared?
 		do
-			Result := declared_address_expression /= Void and then not declared_address_expression.is_undefined
+			Result := attached declared_address_expression as l_declared_address_expression and then not l_declared_address_expression.is_undefined
 		ensure
-			definition: Result = (declared_address_expression /= Void and then not declared_address_expression.is_undefined)
+			definition: Result = (attached declared_address_expression as l_declared_address_expression and then not l_declared_address_expression.is_undefined)
 		end
 
 	is_arguments_declared: BOOLEAN
 			-- Has 'arguments' option been declared?
 		do
-			Result := declared_arguments /= Void and then not declared_arguments.is_empty
+			Result := attached declared_arguments as l_declared_arguments and then not l_declared_arguments.is_empty
 		ensure
-			definition: Result = (declared_arguments /= Void and then not declared_arguments.is_empty)
+			definition: Result = (attached declared_arguments as l_declared_arguments and then not l_declared_arguments.is_empty)
 		end
 
 	is_array_optimization_declared: BOOLEAN
 			-- Has 'array_optimization' option been declared?
 		do
-			Result := declared_array_optimization /= Void and then not declared_array_optimization.is_undefined
+			Result := attached declared_array_optimization as l_declared_array_optimization and then not l_declared_array_optimization.is_undefined
 		ensure
-			definition: Result = (declared_array_optimization /= Void and then not declared_array_optimization.is_undefined)
+			definition: Result = (attached declared_array_optimization as l_declared_array_optimization and then not l_declared_array_optimization.is_undefined)
 		end
 
 	is_assembly_declared: BOOLEAN
@@ -79,25 +79,25 @@ feature -- Status report
 	is_assertion_declared: BOOLEAN
 			-- Has 'assertion' option been declared?
 		do
-			Result := declared_assertion /= Void and then not declared_assertion.is_empty
+			Result := attached declared_assertion as l_declared_assertion and then not l_declared_assertion.is_empty
 		ensure
-			definition: Result = (declared_assertion /= Void and then not declared_assertion.is_empty)
+			definition: Result = (attached declared_assertion as l_declared_assertion and then not l_declared_assertion.is_empty)
 		end
 
 	is_attached_by_default_declared: BOOLEAN
 			-- Has 'assertion' option been declared?
 		do
-			Result := declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined
+			Result := attached declared_attached_by_default as l_declared_attached_by_default and then not l_declared_attached_by_default.is_undefined
 		ensure
-			definition: Result = (declared_attached_by_default /= Void and then not declared_attached_by_default.is_undefined)
+			definition: Result = (attached declared_attached_by_default as l_declared_attached_by_default and then not l_declared_attached_by_default.is_undefined)
 		end
 
 	is_automatic_backup_declared: BOOLEAN
 			-- Has 'automatic_backup' option been declared?
 		do
-			Result := declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined
+			Result := attached declared_automatic_backup as l_declared_automatic_backup and then not l_declared_automatic_backup.is_undefined
 		ensure
-			definition: Result = (declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined)
+			definition: Result = (attached declared_automatic_backup as l_declared_automatic_backup and then not l_declared_automatic_backup.is_undefined)
 		end
 
 	is_callback_declared: BOOLEAN
@@ -111,41 +111,41 @@ feature -- Status report
 	is_case_insensitive_declared: BOOLEAN
 			-- Has 'case_insensitive' option been declared?
 		do
-			Result := declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined
+			Result := attached declared_case_insensitive as l_declared_case_insensitive and then not l_declared_case_insensitive.is_undefined
 		ensure
-			definition: Result = (declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined)
+			definition: Result = (attached declared_case_insensitive as l_declared_case_insensitive and then not l_declared_case_insensitive.is_undefined)
 		end
 
 	is_check_generic_creation_constraint_declared: BOOLEAN
 			-- Has 'check_generic_creation_constraint' option been declared?
 		do
-			Result := declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined
+			Result := attached declared_check_generic_creation_constraint as l_declared_check_generic_creation_constraint and then not l_declared_check_generic_creation_constraint.is_undefined
 		ensure
-			definition: Result = (declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined)
+			definition: Result = (attached declared_check_generic_creation_constraint as l_declared_check_generic_creation_constraint and then not l_declared_check_generic_creation_constraint.is_undefined)
 		end
 
 	is_check_vape_declared: BOOLEAN
 			-- Has 'check_vape' option been declared?
 		do
-			Result := declared_check_vape /= Void and then not declared_check_vape.is_undefined
+			Result := attached declared_check_vape as l_declared_check_vape and then not l_declared_check_vape.is_undefined
 		ensure
-			definition: Result = (declared_check_vape /= Void and then not declared_check_vape.is_undefined)
+			definition: Result = (attached declared_check_vape as l_declared_check_vape and then not l_declared_check_vape.is_undefined)
 		end
 
 	is_clean_declared: BOOLEAN
 			-- Has 'clean' option been declared?
 		do
-			Result := declared_clean /= Void and then not declared_clean.is_undefined
+			Result := attached declared_clean as l_declared_clean and then not l_declared_clean.is_undefined
 		ensure
-			definition: Result = (declared_clean /= Void and then not declared_clean.is_undefined)
+			definition: Result = (attached declared_clean as l_declared_clean and then not l_declared_clean.is_undefined)
 		end
 
 	is_cls_compliant_declared: BOOLEAN
 			-- Has 'cls_compliant' option been declared?
 		do
-			Result := declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined
+			Result := attached declared_cls_compliant as l_declared_cls_compliant and then not l_declared_cls_compliant.is_undefined
 		ensure
-			definition: Result = (declared_cls_compliant /= Void and then not declared_cls_compliant.is_undefined)
+			definition: Result = (attached declared_cls_compliant as l_declared_cls_compliant and then not l_declared_cls_compliant.is_undefined)
 		end
 
 	is_component_declared: BOOLEAN
@@ -159,17 +159,17 @@ feature -- Status report
 	is_console_application_declared: BOOLEAN
 			-- Has 'console_application' option been declared?
 		do
-			Result := declared_console_application /= Void and then not declared_console_application.is_undefined
+			Result := attached declared_console_application as l_declared_console_application and then not l_declared_console_application.is_undefined
 		ensure
-			definition: Result = (declared_console_application /= Void and then not declared_console_application.is_undefined)
+			definition: Result = (attached declared_console_application as l_declared_console_application and then not l_declared_console_application.is_undefined)
 		end
 
 	is_create_keyword_extension_declared: BOOLEAN
 			-- Has 'create_keyword_extension' option been declared?
 		do
-			Result := declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined
+			Result := attached declared_create_keyword_extension as l_declared_create_keyword_extension and then not l_declared_create_keyword_extension.is_undefined
 		ensure
-			definition: Result = (declared_create_keyword_extension /= Void and then not declared_create_keyword_extension.is_undefined)
+			definition: Result = (attached declared_create_keyword_extension as l_declared_create_keyword_extension and then not l_declared_create_keyword_extension.is_undefined)
 		end
 
 	is_culture_declared: BOOLEAN
@@ -183,41 +183,41 @@ feature -- Status report
 	is_c_compiler_options_declared: BOOLEAN
 			-- Has 'c_compiler_options' option been declared?
 		do
-			Result := declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty
+			Result := attached declared_c_compiler_options as l_declared_c_compiler_options and then not l_declared_c_compiler_options.is_empty
 		ensure
-			definition: Result = (declared_c_compiler_options /= Void and then not declared_c_compiler_options.is_empty)
+			definition: Result = (attached declared_c_compiler_options as l_declared_c_compiler_options and then not l_declared_c_compiler_options.is_empty)
 		end
 
 	is_dead_code_removal_declared: BOOLEAN
 			-- Has 'dead_code_removal' option been declared?
 		do
-			Result := declared_dead_code_removal /= Void and then not declared_dead_code_removal.is_empty
+			Result := attached declared_dead_code_removal as l_declared_dead_code_removal and then not l_declared_dead_code_removal.is_empty
 		ensure
-			definition: Result = (declared_dead_code_removal /= Void and then not declared_dead_code_removal.is_empty)
+			definition: Result = (attached declared_dead_code_removal as l_declared_dead_code_removal and then not l_declared_dead_code_removal.is_empty)
 		end
 
 	is_debug_option_declared: BOOLEAN
 			-- Has 'debug' option been declared?
 		do
-			Result := declared_debug_option /= Void and then not declared_debug_option.is_undefined
+			Result := attached declared_debug_option as l_declared_debug_option and then not l_declared_debug_option.is_undefined
 		ensure
-			definition: Result = (declared_debug_option /= Void and then not declared_debug_option.is_undefined)
+			definition: Result = (attached declared_debug_option as l_declared_debug_option and then not l_declared_debug_option.is_undefined)
 		end
 
 	is_debug_tag_declared: BOOLEAN
 			-- Has 'debug_tag' option been declared?
 		do
-			Result := declared_debug_tag /= Void and then not declared_debug_tag.is_empty
+			Result := attached declared_debug_tag as l_declared_debug_tag and then not l_declared_debug_tag.is_empty
 		ensure
-			definition: Result = (declared_debug_tag /= Void and then not declared_debug_tag.is_empty)
+			definition: Result = (attached declared_debug_tag as l_declared_debug_tag and then not l_declared_debug_tag.is_empty)
 		end
 
 	is_debugger_declared: BOOLEAN
 			-- Has 'debugger' option been declared?
 		do
-			Result := declared_debugger /= Void and then not declared_debugger.is_undefined
+			Result := attached declared_debugger as l_declared_debugger and then not l_declared_debugger.is_undefined
 		ensure
-			definition: Result = (declared_debugger /= Void and then not declared_debugger.is_undefined)
+			definition: Result = (attached declared_debugger as l_declared_debugger and then not l_declared_debugger.is_undefined)
 		end
 
 	is_document_declared: BOOLEAN
@@ -231,17 +231,17 @@ feature -- Status report
 	is_dotnet_naming_convention_declared: BOOLEAN
 			-- Has 'dotnet_naming_convention' option been declared?
 		do
-			Result := declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined
+			Result := attached declared_dotnet_naming_convention as l_declared_dotnet_naming_convention and then not l_declared_dotnet_naming_convention.is_undefined
 		ensure
-			definition: Result = (declared_dotnet_naming_convention /= Void and then not declared_dotnet_naming_convention.is_undefined)
+			definition: Result = (attached declared_dotnet_naming_convention as l_declared_dotnet_naming_convention and then not l_declared_dotnet_naming_convention.is_undefined)
 		end
 
 	is_dynamic_runtime_declared: BOOLEAN
 			-- Has 'dynamic_runtime' option been declared?
 		do
-			Result := declared_dynamic_runtime /= Void and then not declared_dynamic_runtime.is_undefined
+			Result := attached declared_dynamic_runtime as l_declared_dynamic_runtime and then not l_declared_dynamic_runtime.is_undefined
 		ensure
-			definition: Result = (declared_dynamic_runtime /= Void and then not declared_dynamic_runtime.is_undefined)
+			definition: Result = (attached declared_dynamic_runtime as l_declared_dynamic_runtime and then not l_declared_dynamic_runtime.is_undefined)
 		end
 
 	is_ecf_library_declared: BOOLEAN
@@ -255,25 +255,25 @@ feature -- Status report
 	is_enforce_unique_class_names_declared: BOOLEAN
 			-- Has 'enforce_unique_class_names' option been declared?
 		do
-			Result := declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined
+			Result := attached declared_enforce_unique_class_names as l_declared_enforce_unique_class_names and then not l_declared_enforce_unique_class_names.is_undefined
 		ensure
-			definition: Result = (declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined)
+			definition: Result = (attached declared_enforce_unique_class_names as l_declared_enforce_unique_class_names and then not l_declared_enforce_unique_class_names.is_undefined)
 		end
 
 	is_exception_trace_declared: BOOLEAN
 			-- Has 'exception_trace' option been declared?
 		do
-			Result := declared_exception_trace /= Void and then not declared_exception_trace.is_undefined
+			Result := attached declared_exception_trace as l_declared_exception_trace and then not l_declared_exception_trace.is_undefined
 		ensure
-			definition: Result = (declared_exception_trace /= Void and then not declared_exception_trace.is_undefined)
+			definition: Result = (attached declared_exception_trace as l_declared_exception_trace and then not l_declared_exception_trace.is_undefined)
 		end
 
 	is_exclude_declared: BOOLEAN
 			-- Has 'exclude' option been declared?
 		do
-			Result := declared_exclude /= Void and then not declared_exclude.is_empty
+			Result := attached declared_exclude as l_declared_exclude and then not l_declared_exclude.is_empty
 		ensure
-			definition: Result = (declared_exclude /= Void and then not declared_exclude.is_empty)
+			definition: Result = (attached declared_exclude as l_declared_exclude and then not l_declared_exclude.is_empty)
 		end
 
 	is_export_option_declared: BOOLEAN
@@ -295,25 +295,25 @@ feature -- Status report
 	is_finalize_option_declared: BOOLEAN
 			-- Has 'finalize' option been declared?
 		do
-			Result := declared_finalize_option /= Void and then not declared_finalize_option.is_undefined
+			Result := attached declared_finalize_option as l_declared_finalize_option and then not l_declared_finalize_option.is_undefined
 		ensure
-			definition: Result = (declared_finalize_option /= Void and then not declared_finalize_option.is_undefined)
+			definition: Result = (attached declared_finalize_option as l_declared_finalize_option and then not l_declared_finalize_option.is_undefined)
 		end
 
 	is_flat_fst_optimization_declared: BOOLEAN
 			-- Has 'flat_fst_optimization' option been declared?
 		do
-			Result := declared_flat_fst_optimization /= Void and then not declared_flat_fst_optimization.is_undefined
+			Result := attached declared_flat_fst_optimization as l_declared_flat_fst_optimization and then not l_declared_flat_fst_optimization.is_undefined
 		ensure
-			definition: Result = (declared_flat_fst_optimization /= Void and then not declared_flat_fst_optimization.is_undefined)
+			definition: Result = (attached declared_flat_fst_optimization as l_declared_flat_fst_optimization and then not l_declared_flat_fst_optimization.is_undefined)
 		end
 
 	is_force_32bits_declared: BOOLEAN
 			-- Has 'force_32bits' option been declared?
 		do
-			Result := declared_force_32bits /= Void and then not declared_force_32bits.is_undefined
+			Result := attached declared_force_32bits as l_declared_force_32bits and then not l_declared_force_32bits.is_undefined
 		ensure
-			definition: Result = (declared_force_32bits /= Void and then not declared_force_32bits.is_undefined)
+			definition: Result = (attached declared_force_32bits as l_declared_force_32bits and then not l_declared_force_32bits.is_undefined)
 		end
 
 	is_fst_expansion_factor_declared: BOOLEAN
@@ -327,17 +327,17 @@ feature -- Status report
 	is_fst_optimization_declared: BOOLEAN
 			-- Has 'fst_optimization' option been declared?
 		do
-			Result := declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined
+			Result := attached declared_fst_optimization as l_declared_fst_optimization and then not l_declared_fst_optimization.is_undefined
 		ensure
-			definition: Result = (declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined)
+			definition: Result = (attached declared_fst_optimization as l_declared_fst_optimization and then not l_declared_fst_optimization.is_undefined)
 		end
 
 	is_full_class_checking_declared: BOOLEAN
 			-- Has 'full_class_checking' option been declared?
 		do
-			Result := declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined
+			Result := attached declared_full_class_checking as l_declared_full_class_checking and then not l_declared_full_class_checking.is_undefined
 		ensure
-			definition: Result = (declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined)
+			definition: Result = (attached declared_full_class_checking as l_declared_full_class_checking and then not l_declared_full_class_checking.is_undefined)
 		end
 
 	is_garbage_collector_declared: BOOLEAN
@@ -351,9 +351,9 @@ feature -- Status report
 	is_gc_info_declared: BOOLEAN
 			-- Has 'gc_info' option been declared?
 		do
-			Result := declared_gc_info /= Void and then not declared_gc_info.is_undefined
+			Result := attached declared_gc_info as l_declared_gc_info and then not l_declared_gc_info.is_undefined
 		ensure
-			definition: Result = (declared_gc_info /= Void and then not declared_gc_info.is_undefined)
+			definition: Result = (attached declared_gc_info as l_declared_gc_info and then not l_declared_gc_info.is_undefined)
 		end
 
 	is_heap_size_declared: BOOLEAN
@@ -367,41 +367,41 @@ feature -- Status report
 	is_header_declared: BOOLEAN
 			-- Has 'header' option been declared?
 		do
-			Result := declared_header /= Void and then not declared_header.is_empty
+			Result := attached declared_header as l_declared_header and then not l_declared_header.is_empty
 		ensure
-			definition: Result = (declared_header /= Void and then not declared_header.is_empty)
+			definition: Result = (attached declared_header as l_declared_header and then not l_declared_header.is_empty)
 		end
 
 	is_high_memory_compiler_declared: BOOLEAN
 			-- Has 'high_memory_compiler' option been declared?
 		do
-			Result := declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined
+			Result := attached declared_high_memory_compiler as l_declared_high_memory_compiler and then not l_declared_high_memory_compiler.is_undefined
 		ensure
-			definition: Result = (declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined)
+			definition: Result = (attached declared_high_memory_compiler as l_declared_high_memory_compiler and then not l_declared_high_memory_compiler.is_undefined)
 		end
 
 	is_il_verifiable_declared: BOOLEAN
 			-- Has 'il_verifiable' option been declared?
 		do
-			Result := declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined
+			Result := attached declared_il_verifiable as l_declared_il_verifiable and then not l_declared_il_verifiable.is_undefined
 		ensure
-			definition: Result = (declared_il_verifiable /= Void and then not declared_il_verifiable.is_undefined)
+			definition: Result = (attached declared_il_verifiable as l_declared_il_verifiable and then not l_declared_il_verifiable.is_undefined)
 		end
 
 	is_include_declared: BOOLEAN
 			-- Has 'include' option been declared?
 		do
-			Result := declared_include /= Void and then not declared_include.is_empty
+			Result := attached declared_include as l_declared_include and then not l_declared_include.is_empty
 		ensure
-			definition: Result = (declared_include /= Void and then not declared_include.is_empty)
+			definition: Result = (attached declared_include as l_declared_include and then not l_declared_include.is_empty)
 		end
 
 	is_inlining_declared: BOOLEAN
 			-- Has 'inlining' option been declared?
 		do
-			Result := declared_inlining /= Void and then not declared_inlining.is_empty
+			Result := attached declared_inlining as l_declared_inlining and then not l_declared_inlining.is_empty
 		ensure
-			definition: Result = (declared_inlining /= Void and then not declared_inlining.is_empty)
+			definition: Result = (attached declared_inlining as l_declared_inlining and then not l_declared_inlining.is_empty)
 		end
 
 	is_inlining_size_declared: BOOLEAN
@@ -415,49 +415,49 @@ feature -- Status report
 	is_jumps_optimization_declared: BOOLEAN
 			-- Has 'jumps_optimization' option been declared?
 		do
-			Result := declared_jumps_optimization /= Void and then not declared_jumps_optimization.is_undefined
+			Result := attached declared_jumps_optimization as l_declared_jumps_optimization and then not l_declared_jumps_optimization.is_undefined
 		ensure
-			definition: Result = (declared_jumps_optimization /= Void and then not declared_jumps_optimization.is_undefined)
+			definition: Result = (attached declared_jumps_optimization as l_declared_jumps_optimization and then not l_declared_jumps_optimization.is_undefined)
 		end
 
 	is_layout_declared: BOOLEAN
 			-- Has 'layout' option been declared?
 		do
-			Result := declared_layout /= Void and then not declared_layout.is_empty
+			Result := attached declared_layout as l_declared_layout and then not l_declared_layout.is_empty
 		ensure
-			definition: Result = (declared_layout /= Void and then not declared_layout.is_empty)
+			definition: Result = (attached declared_layout as l_declared_layout and then not l_declared_layout.is_empty)
 		end
 
 	is_layout_optimization_declared: BOOLEAN
 			-- Has 'layout_optimization' option been declared?
 		do
-			Result := declared_layout_optimization /= Void and then not declared_layout_optimization.is_undefined
+			Result := attached declared_layout_optimization as l_declared_layout_optimization and then not l_declared_layout_optimization.is_undefined
 		ensure
-			definition: Result = (declared_layout_optimization /= Void and then not declared_layout_optimization.is_undefined)
+			definition: Result = (attached declared_layout_optimization as l_declared_layout_optimization and then not l_declared_layout_optimization.is_undefined)
 		end
 
 	is_leaves_optimization_declared: BOOLEAN
 			-- Has 'leaves_optimization' option been declared?
 		do
-			Result := declared_leaves_optimization /= Void and then not declared_leaves_optimization.is_undefined
+			Result := attached declared_leaves_optimization as l_declared_leaves_optimization and then not l_declared_leaves_optimization.is_undefined
 		ensure
-			definition: Result = (declared_leaves_optimization /= Void and then not declared_leaves_optimization.is_undefined)
+			definition: Result = (attached declared_leaves_optimization as l_declared_leaves_optimization and then not l_declared_leaves_optimization.is_undefined)
 		end
 
 	is_line_generation_declared: BOOLEAN
 			-- Has 'line_generation' option been declared?
 		do
-			Result := declared_line_generation /= Void and then not declared_line_generation.is_undefined
+			Result := attached declared_line_generation as l_declared_line_generation and then not l_declared_line_generation.is_undefined
 		ensure
-			definition: Result = (declared_line_generation /= Void and then not declared_line_generation.is_undefined)
+			definition: Result = (attached declared_line_generation as l_declared_line_generation and then not l_declared_line_generation.is_undefined)
 		end
 
 	is_link_declared: BOOLEAN
 			-- Has 'link' option been declared?
 		do
-			Result := declared_link /= Void and then not declared_link.is_empty
+			Result := attached declared_link as l_declared_link and then not l_declared_link.is_empty
 		ensure
-			definition: Result = (declared_link /= Void and then not declared_link.is_empty)
+			definition: Result = (attached declared_link as l_declared_link and then not l_declared_link.is_empty)
 		end
 
 	is_linker_declared: BOOLEAN
@@ -471,25 +471,25 @@ feature -- Status report
 	is_linux_fpu_double_precision_declared: BOOLEAN
 			-- Has 'linux_fpu_double_precision' option been declared?
 		do
-			Result := declared_linux_fpu_double_precision /= Void and then not declared_linux_fpu_double_precision.is_undefined
+			Result := attached declared_linux_fpu_double_precision as l_declared_linux_fpu_double_precision and then not l_declared_linux_fpu_double_precision.is_undefined
 		ensure
-			definition: Result = (declared_linux_fpu_double_precision /= Void and then not declared_linux_fpu_double_precision.is_undefined)
+			definition: Result = (attached declared_linux_fpu_double_precision as l_declared_linux_fpu_double_precision and then not l_declared_linux_fpu_double_precision.is_undefined)
 		end
 
 	is_manifest_string_trace_declared: BOOLEAN
 			-- Has 'manifest_string_trace' option been declared?
 		do
-			Result := declared_manifest_string_trace /= Void and then not declared_manifest_string_trace.is_undefined
+			Result := attached declared_manifest_string_trace as l_declared_manifest_string_trace and then not l_declared_manifest_string_trace.is_undefined
 		ensure
-			definition: Result = (declared_manifest_string_trace /= Void and then not declared_manifest_string_trace.is_undefined)
+			definition: Result = (attached declared_manifest_string_trace as l_declared_manifest_string_trace and then not l_declared_manifest_string_trace.is_undefined)
 		end
 
 	is_map_declared: BOOLEAN
 			-- Has 'map' option been declared?
 		do
-			Result := declared_map /= Void and then not declared_map.is_undefined
+			Result := attached declared_map as l_declared_map and then not l_declared_map.is_undefined
 		ensure
-			definition: Result = (declared_map /= Void and then not declared_map.is_undefined)
+			definition: Result = (attached declared_map as l_declared_map and then not l_declared_map.is_undefined)
 		end
 
 	is_metadata_cache_path_declared: BOOLEAN
@@ -535,9 +535,9 @@ feature -- Status report
 	is_msil_generation_declared: BOOLEAN
 			-- Has 'msil_generation' option been declared?
 		do
-			Result := declared_msil_generation /= Void and then not declared_msil_generation.is_undefined
+			Result := attached declared_msil_generation as l_declared_msil_generation and then not l_declared_msil_generation.is_undefined
 		ensure
-			definition: Result = (declared_msil_generation /= Void and then not declared_msil_generation.is_undefined)
+			definition: Result = (attached declared_msil_generation as l_declared_msil_generation and then not l_declared_msil_generation.is_undefined)
 		end
 
 	is_msil_generation_version_declared: BOOLEAN
@@ -559,17 +559,17 @@ feature -- Status report
 	is_msil_use_optimized_precompile_declared: BOOLEAN
 			-- Has 'msil_use_optimized_precompile' option been declared?
 		do
-			Result := declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined
+			Result := attached declared_msil_use_optimized_precompile as l_declared_msil_use_optimized_precompile and then not l_declared_msil_use_optimized_precompile.is_undefined
 		ensure
-			definition: Result = (declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined)
+			definition: Result = (attached declared_msil_use_optimized_precompile as l_declared_msil_use_optimized_precompile and then not l_declared_msil_use_optimized_precompile.is_undefined)
 		end
 
 	is_multithreaded_declared: BOOLEAN
 			-- Has 'multithreaded' option been declared?
 		do
-			Result := declared_multithreaded /= Void and then not declared_multithreaded.is_undefined
+			Result := attached declared_multithreaded as l_declared_multithreaded and then not l_declared_multithreaded.is_undefined
 		ensure
-			definition: Result = (declared_multithreaded /= Void and then not declared_multithreaded.is_undefined)
+			definition: Result = (attached declared_multithreaded as l_declared_multithreaded and then not l_declared_multithreaded.is_undefined)
 		end
 
 	is_namespace_declared: BOOLEAN
@@ -583,33 +583,33 @@ feature -- Status report
 	is_no_default_lib_declared: BOOLEAN
 			-- Has 'no_default_lib' option been declared?
 		do
-			Result := declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined
+			Result := attached declared_no_default_lib as l_declared_no_default_lib and then not l_declared_no_default_lib.is_undefined
 		ensure
-			definition: Result = (declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined)
+			definition: Result = (attached declared_no_default_lib as l_declared_no_default_lib and then not l_declared_no_default_lib.is_undefined)
 		end
 
 	is_old_verbatim_strings_declared: BOOLEAN
 			-- Has 'old_verbatim_strings' option been declared?
 		do
-			Result := declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined
+			Result := attached declared_old_verbatim_strings as l_declared_old_verbatim_strings and then not l_declared_old_verbatim_strings.is_undefined
 		ensure
-			definition: Result = (declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined)
+			definition: Result = (attached declared_old_verbatim_strings as l_declared_old_verbatim_strings and then not l_declared_old_verbatim_strings.is_undefined)
 		end
 
 	is_override_cluster_declared: BOOLEAN
 			-- Has 'override_cluster' option been declared?
 		do
-			Result := declared_override_cluster /= Void and then not declared_override_cluster.is_empty
+			Result := attached declared_override_cluster as l_declared_override_cluster and then not l_declared_override_cluster.is_empty
 		ensure
-			definition: Result = (declared_override_cluster /= Void and then not declared_override_cluster.is_empty)
+			definition: Result = (attached declared_override_cluster as l_declared_override_cluster and then not l_declared_override_cluster.is_empty)
 		end
 
 	is_portable_code_generation_declared: BOOLEAN
 			-- Has 'portable_code_generation' option been declared?
 		do
-			Result := declared_portable_code_generation /= Void and then not declared_portable_code_generation.is_undefined
+			Result := attached declared_portable_code_generation as l_declared_portable_code_generation and then not l_declared_portable_code_generation.is_undefined
 		ensure
-			definition: Result = (declared_portable_code_generation /= Void and then not declared_portable_code_generation.is_undefined)
+			definition: Result = (attached declared_portable_code_generation as l_declared_portable_code_generation and then not l_declared_portable_code_generation.is_undefined)
 		end
 
 	is_precompiled_declared: BOOLEAN
@@ -631,9 +631,9 @@ feature -- Status report
 	is_profile_declared: BOOLEAN
 			-- Has 'profile' option been declared?
 		do
-			Result := declared_profile /= Void and then not declared_profile.is_undefined
+			Result := attached declared_profile as l_declared_profile and then not l_declared_profile.is_undefined
 		ensure
-			definition: Result = (declared_profile /= Void and then not declared_profile.is_undefined)
+			definition: Result = (attached declared_profile as l_declared_profile and then not l_declared_profile.is_undefined)
 		end
 
 	is_public_key_token_declared: BOOLEAN
@@ -647,25 +647,25 @@ feature -- Status report
 	is_reloads_optimization_declared: BOOLEAN
 			-- Has 'reloads_optimization' option been declared?
 		do
-			Result := declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined
+			Result := attached declared_reloads_optimization as l_declared_reloads_optimization and then not l_declared_reloads_optimization.is_undefined
 		ensure
-			definition: Result = (declared_reloads_optimization /= Void and then not declared_reloads_optimization.is_undefined)
+			definition: Result = (attached declared_reloads_optimization as l_declared_reloads_optimization and then not l_declared_reloads_optimization.is_undefined)
 		end
 
 	is_read_only_declared: BOOLEAN
 			-- Has 'read_only' option been declared?
 		do
-			Result := declared_read_only /= Void and then not declared_read_only.is_undefined
+			Result := attached declared_read_only as l_declared_read_only and then not l_declared_read_only.is_undefined
 		ensure
-			definition: Result = (declared_read_only /= Void and then not declared_read_only.is_undefined)
+			definition: Result = (attached declared_read_only as l_declared_read_only and then not l_declared_read_only.is_undefined)
 		end
 
 	is_recursive_declared: BOOLEAN
 			-- Has 'recursive' option been declared?
 		do
-			Result := declared_recursive /= Void and then not declared_recursive.is_undefined
+			Result := attached declared_recursive as l_declared_recursive and then not l_declared_recursive.is_undefined
 		ensure
-			definition: Result = (declared_recursive /= Void and then not declared_recursive.is_undefined)
+			definition: Result = (attached declared_recursive as l_declared_recursive and then not l_declared_recursive.is_undefined)
 		end
 
 	is_shared_library_definition_declared: BOOLEAN
@@ -679,9 +679,9 @@ feature -- Status report
 	is_split_declared: BOOLEAN
 			-- Has 'split' option been declared?
 		do
-			Result := declared_split /= Void and then not declared_split.is_undefined
+			Result := attached declared_split as l_declared_split and then not l_declared_split.is_undefined
 		ensure
-			definition: Result = (declared_split /= Void and then not declared_split.is_undefined)
+			definition: Result = (attached declared_split as l_declared_split and then not l_declared_split.is_undefined)
 		end
 
 	is_stack_size_declared: BOOLEAN
@@ -695,9 +695,9 @@ feature -- Status report
 	is_storable_declared: BOOLEAN
 			-- Has 'storable' option been declared?
 		do
-			Result := declared_storable /= Void and then not declared_storable.is_undefined
+			Result := attached declared_storable as l_declared_storable and then not l_declared_storable.is_undefined
 		ensure
-			definition: Result = (declared_storable /= Void and then not declared_storable.is_undefined)
+			definition: Result = (attached declared_storable as l_declared_storable and then not l_declared_storable.is_undefined)
 		end
 
 	is_storable_filename_declared: BOOLEAN
@@ -711,9 +711,9 @@ feature -- Status report
 	is_strip_option_declared: BOOLEAN
 			-- Has 'strip' option been declared?
 		do
-			Result := declared_strip_option /= Void and then not declared_strip_option.is_undefined
+			Result := attached declared_strip_option as l_declared_strip_option and then not l_declared_strip_option.is_undefined
 		ensure
-			definition: Result = (declared_strip_option /= Void and then not declared_strip_option.is_undefined)
+			definition: Result = (attached declared_strip_option as l_declared_strip_option and then not l_declared_strip_option.is_undefined)
 		end
 
 	is_syntax_declared: BOOLEAN
@@ -735,33 +735,33 @@ feature -- Status report
 	is_trace_declared: BOOLEAN
 			-- Has 'trace' option been declared?
 		do
-			Result := declared_trace /= Void and then not declared_trace.is_undefined
+			Result := attached declared_trace as l_declared_trace and then not l_declared_trace.is_undefined
 		ensure
-			definition: Result = (declared_trace /= Void and then not declared_trace.is_undefined)
+			definition: Result = (attached declared_trace as l_declared_trace and then not l_declared_trace.is_undefined)
 		end
 
 	is_use_cluster_name_as_namespace_declared: BOOLEAN
 			-- Has 'use_cluster_name_as_namespace' option been declared?
 		do
-			Result := declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined
+			Result := attached declared_use_cluster_name_as_namespace as l_declared_use_cluster_name_as_namespace and then not l_declared_use_cluster_name_as_namespace.is_undefined
 		ensure
-			definition: Result = (declared_use_cluster_name_as_namespace /= Void and then not declared_use_cluster_name_as_namespace.is_undefined)
+			definition: Result = (attached declared_use_cluster_name_as_namespace as l_declared_use_cluster_name_as_namespace and then not l_declared_use_cluster_name_as_namespace.is_undefined)
 		end
 
 	is_use_full_cluster_name_as_namespace_declared: BOOLEAN
 			-- Has 'use_full_cluster_name_as_namespace' option been declared?
 		do
-			Result := declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined
+			Result := attached declared_use_full_cluster_name_as_namespace as l_declared_use_full_cluster_name_as_namespace and then not l_declared_use_full_cluster_name_as_namespace.is_undefined
 		ensure
-			definition: Result = (declared_use_full_cluster_name_as_namespace /= Void and then not declared_use_full_cluster_name_as_namespace.is_undefined)
+			definition: Result = (attached declared_use_full_cluster_name_as_namespace as l_declared_use_full_cluster_name_as_namespace and then not l_declared_use_full_cluster_name_as_namespace.is_undefined)
 		end
 
 	is_verbose_declared: BOOLEAN
 			-- Has 'verbose' option been declared?
 		do
-			Result := declared_verbose /= Void and then not declared_verbose.is_undefined
+			Result := attached declared_verbose as l_declared_verbose and then not l_declared_verbose.is_undefined
 		ensure
-			definition: Result = (declared_verbose /= Void and then not declared_verbose.is_undefined)
+			definition: Result = (attached declared_verbose as l_declared_verbose and then not l_declared_verbose.is_undefined)
 		end
 
 	is_version_declared: BOOLEAN
@@ -799,9 +799,9 @@ feature -- Status report
 	is_wedit_declared: BOOLEAN
 			-- Has 'wedit' option been declared?
 		do
-			Result := declared_wedit /= Void and then not declared_wedit.is_undefined
+			Result := attached declared_wedit as l_declared_wedit and then not l_declared_wedit.is_undefined
 		ensure
-			definition: Result = (declared_wedit /= Void and then not declared_wedit.is_undefined)
+			definition: Result = (attached declared_wedit as l_declared_wedit and then not l_declared_wedit.is_undefined)
 		end
 
 feature -- Option values
@@ -809,8 +809,8 @@ feature -- Option values
 	abstract: BOOLEAN
 			-- 'abstract' option
 		do
-			if is_abstract_declared then
-				Result := declared_abstract.is_true
+			if is_abstract_declared and then attached declared_abstract as l_declared_abstract then
+				Result := l_declared_abstract.is_true
 			else
 				Result := default_abstract
 			end
@@ -819,8 +819,8 @@ feature -- Option values
 	address_expression: BOOLEAN
 			-- 'address_expression' option
 		do
-			if is_address_expression_declared then
-				Result := declared_address_expression.is_true
+			if is_address_expression_declared and then attached declared_address_expression as l_declared_address_expression then
+				Result := l_declared_address_expression.is_true
 			else
 				Result := default_address_expression
 			end
@@ -829,8 +829,8 @@ feature -- Option values
 	array_optimization: BOOLEAN
 			-- Is 'array_optimization' option enabled?
 		do
-			if is_array_optimization_declared then
-				Result := declared_array_optimization.is_true
+			if is_array_optimization_declared and then attached declared_array_optimization as l_declared_array_optimization then
+				Result := l_declared_array_optimization.is_true
 			else
 				Result := default_array_optimization
 			end
@@ -839,8 +839,8 @@ feature -- Option values
 	arguments: DS_HASH_SET [STRING]
 			-- 'arguments' option
 		do
-			if is_arguments_declared then
-				Result := declared_arguments
+			if is_arguments_declared and then attached declared_arguments as l_declared_arguments then
+				Result := l_declared_arguments
 			else
 				Result := default_arguments
 			end
@@ -849,7 +849,7 @@ feature -- Option values
 			no_void_argument: not Result.has_void
 		end
 
-	assembly: STRING
+	assembly: detachable STRING
 			-- Is 'assembly' option enabled?
 		do
 			if is_assembly_declared then
@@ -862,8 +862,8 @@ feature -- Option values
 	assertion: DS_HASH_SET [STRING]
 			-- 'assertion' option
 		do
-			if is_assertion_declared then
-				Result := declared_assertion
+			if is_assertion_declared and then attached declared_assertion as l_declared_assertion then
+				Result := l_declared_assertion
 			else
 				Result := default_assertion
 			end
@@ -875,23 +875,24 @@ feature -- Option values
 	attached_by_default: BOOLEAN
 			-- 'attached_by_default' option
 		do
-			if is_attached_by_default_declared then
-				Result := declared_attached_by_default.is_true
+			if is_attached_by_default_declared and then attached declared_attached_by_default as l_declared_attached_by_default then
+				Result := l_declared_attached_by_default.is_true
 			else
 				Result := default_attached_by_default
 			end
 		end
+
 	automatic_backup: BOOLEAN
 			-- Is 'automatic_backup' option enabled?
 		do
-			if is_automatic_backup_declared then
-				Result := declared_automatic_backup.is_true
+			if is_automatic_backup_declared and then attached declared_automatic_backup as l_declared_automatic_backup then
+				Result := l_declared_automatic_backup.is_true
 			else
 				Result := default_automatic_backup
 			end
 		end
 
-	callback: STRING
+	callback: detachable STRING
 			-- 'callback' option
 		do
 			if is_callback_declared then
@@ -906,8 +907,8 @@ feature -- Option values
 	case_insensitive: BOOLEAN
 			-- 'case_insensitive' option
 		do
-			if is_case_insensitive_declared then
-				Result := declared_case_insensitive.is_true
+			if is_case_insensitive_declared and then attached declared_case_insensitive as l_declared_case_insensitive then
+				Result := l_declared_case_insensitive.is_true
 			else
 				Result := default_case_insensitive
 			end
@@ -916,8 +917,8 @@ feature -- Option values
 	check_generic_creation_constraint: BOOLEAN
 			-- 'check_generic_creation_constraint' option
 		do
-			if is_check_generic_creation_constraint_declared then
-				Result := declared_check_generic_creation_constraint.is_true
+			if is_check_generic_creation_constraint_declared and then attached declared_check_generic_creation_constraint as l_declared_check_generic_creation_constraint then
+				Result := l_declared_check_generic_creation_constraint.is_true
 			else
 				Result := default_check_generic_creation_constraint
 			end
@@ -926,8 +927,8 @@ feature -- Option values
 	check_vape: BOOLEAN
 			-- 'check_vape' option
 		do
-			if is_check_vape_declared then
-				Result := declared_check_vape.is_true
+			if is_check_vape_declared and then attached declared_check_vape as l_declared_check_vape then
+				Result := l_declared_check_vape.is_true
 			else
 				Result := default_check_vape
 			end
@@ -936,8 +937,8 @@ feature -- Option values
 	clean: BOOLEAN
 			-- 'clean' option
 		do
-			if is_clean_declared then
-				Result := declared_clean.is_true
+			if is_clean_declared and then attached declared_clean as l_declared_clean then
+				Result := l_declared_clean.is_true
 			else
 				Result := default_clean
 			end
@@ -946,14 +947,14 @@ feature -- Option values
 	cls_compliant: BOOLEAN
 			-- 'cls_compliant' option
 		do
-			if is_cls_compliant_declared then
-				Result := declared_cls_compliant.is_true
+			if is_cls_compliant_declared and then attached declared_cls_compliant as l_declared_cls_compliant then
+				Result := l_declared_cls_compliant.is_true
 			else
 				Result := default_cls_compliant
 			end
 		end
 
-	component: STRING
+	component: detachable STRING
 			-- 'component' option
 		do
 			if is_component_declared then
@@ -966,8 +967,8 @@ feature -- Option values
 	console_application: BOOLEAN
 			-- 'console_application' option
 		do
-			if is_console_application_declared then
-				Result := declared_console_application.is_true
+			if is_console_application_declared and then attached declared_console_application as l_declared_console_application then
+				Result := l_declared_console_application.is_true
 			else
 				Result := default_console_application
 			end
@@ -976,8 +977,8 @@ feature -- Option values
 	create_keyword_extension: BOOLEAN
 			-- 'create_keyword_extension' option
 		do
-			if is_create_keyword_extension_declared then
-				Result := declared_create_keyword_extension.is_true
+			if is_create_keyword_extension_declared and then attached declared_create_keyword_extension as l_declared_create_keyword_extension then
+				Result := l_declared_create_keyword_extension.is_true
 			else
 				Result := default_create_keyword_extension
 			end
@@ -986,18 +987,21 @@ feature -- Option values
 	culture: STRING
 			-- 'culture' option
 		do
-			if is_culture_declared then
-				Result := declared_culture
+			if attached declared_culture as l_declared_culture then
+				check is_culture_declared: is_culture_declared end
+				Result := l_declared_culture
 			else
 				Result := default_culture
 			end
+		ensure
+			culture_not_void: Result /= Void
 		end
 
 	c_compiler_options: DS_HASH_SET [STRING]
 			-- 'c_compiler_options' option
 		do
-			if is_c_compiler_options_declared then
-				Result := declared_c_compiler_options
+			if is_c_compiler_options_declared and then attached declared_c_compiler_options as l_declared_c_compiler_options then
+				Result := l_declared_c_compiler_options
 			else
 				Result := default_c_compiler_options
 			end
@@ -1009,8 +1013,8 @@ feature -- Option values
 	dead_code_removal: DS_HASH_SET [STRING]
 			-- 'dead_code_removal' option
 		do
-			if is_dead_code_removal_declared then
-				Result := declared_dead_code_removal
+			if is_dead_code_removal_declared and then attached declared_dead_code_removal as l_declared_dead_code_removal then
+				Result := l_declared_dead_code_removal
 			else
 				Result := default_dead_code_removal
 			end
@@ -1022,8 +1026,8 @@ feature -- Option values
 	debug_option: BOOLEAN
 			-- 'debug' option
 		do
-			if is_debug_option_declared then
-				Result := declared_debug_option.is_true
+			if is_debug_option_declared and then attached declared_debug_option as l_declared_debug_option then
+				Result := l_declared_debug_option.is_true
 			else
 				Result := default_debug_option
 			end
@@ -1032,8 +1036,8 @@ feature -- Option values
 	debug_tag: DS_HASH_SET [STRING]
 			-- 'debug_tag' option
 		do
-			if is_debug_tag_declared then
-				Result := declared_debug_tag
+			if is_debug_tag_declared and then attached declared_debug_tag as l_declared_debug_tag then
+				Result := l_declared_debug_tag
 			else
 				Result := default_debug_tag
 			end
@@ -1045,14 +1049,14 @@ feature -- Option values
 	debugger: BOOLEAN
 			-- 'debugger' option
 		do
-			if is_debugger_declared then
-				Result := declared_debugger.is_true
+			if is_debugger_declared and then attached declared_debugger as l_declared_debugger then
+				Result := l_declared_debugger.is_true
 			else
 				Result := default_debugger
 			end
 		end
 
-	document: STRING
+	document: detachable STRING
 			-- 'document' option
 		do
 			if is_document_declared then
@@ -1065,8 +1069,8 @@ feature -- Option values
 	dotnet_naming_convention: BOOLEAN
 			-- 'dotnet_naming_convention' option
 		do
-			if is_dotnet_naming_convention_declared then
-				Result := declared_dotnet_naming_convention.is_true
+			if is_dotnet_naming_convention_declared and then attached declared_dotnet_naming_convention as l_declared_dotnet_naming_convention then
+				Result := l_declared_dotnet_naming_convention.is_true
 			else
 				Result := default_dotnet_naming_convention
 			end
@@ -1075,14 +1079,14 @@ feature -- Option values
 	dynamic_runtime: BOOLEAN
 			-- 'dynamic_runtime' option
 		do
-			if is_dynamic_runtime_declared then
-				Result := declared_dynamic_runtime.is_true
+			if is_dynamic_runtime_declared and then attached declared_dynamic_runtime as l_declared_dynamic_runtime then
+				Result := l_declared_dynamic_runtime.is_true
 			else
 				Result := default_dynamic_runtime
 			end
 		end
 
-	ecf_library: STRING
+	ecf_library: detachable STRING
 			-- 'ecf_library' option
 		do
 			if is_ecf_library_declared then
@@ -1095,8 +1099,8 @@ feature -- Option values
 	enforce_unique_class_names: BOOLEAN
 			-- 'enforce_unique_class_names' option
 		do
-			if is_enforce_unique_class_names_declared then
-				Result := declared_enforce_unique_class_names.is_true
+			if is_enforce_unique_class_names_declared and then attached declared_enforce_unique_class_names as l_declared_enforce_unique_class_names then
+				Result := l_declared_enforce_unique_class_names.is_true
 			else
 				Result := default_enforce_unique_class_names
 			end
@@ -1105,8 +1109,8 @@ feature -- Option values
 	exception_trace: BOOLEAN
 			-- 'exception_trace' option
 		do
-			if is_exception_trace_declared then
-				Result := declared_exception_trace.is_true
+			if is_exception_trace_declared and then attached declared_exception_trace as l_declared_exception_trace then
+				Result := l_declared_exception_trace.is_true
 			else
 				Result := default_exception_trace
 			end
@@ -1115,8 +1119,8 @@ feature -- Option values
 	exclude: DS_HASH_SET [STRING]
 			-- 'exclude' option
 		do
-			if is_exclude_declared then
-				Result := declared_exclude
+			if is_exclude_declared and then attached declared_exclude as l_declared_exclude then
+				Result := l_declared_exclude
 			else
 				Result := default_exclude
 			end
@@ -1125,7 +1129,7 @@ feature -- Option values
 			no_void_exclude: not Result.has_void
 		end
 
-	export_option: STRING
+	export_option: detachable STRING
 			-- 'export' option
 		do
 			if is_export_option_declared then
@@ -1135,7 +1139,7 @@ feature -- Option values
 			end
 		end
 
-	external_runtime: STRING
+	external_runtime: detachable STRING
 			-- 'external_runtime' option
 		do
 			if is_external_runtime_declared then
@@ -1148,8 +1152,8 @@ feature -- Option values
 	finalize_option: BOOLEAN
 			-- 'finalize' option
 		do
-			if is_finalize_option_declared then
-				Result := declared_finalize_option.is_true
+			if is_finalize_option_declared and then attached declared_finalize_option as l_declared_finalize_option then
+				Result := l_declared_finalize_option.is_true
 			else
 				Result := default_finalize_option
 			end
@@ -1158,8 +1162,8 @@ feature -- Option values
 	flat_fst_optimization: BOOLEAN
 			-- 'flat_fst_optimization' option
 		do
-			if is_flat_fst_optimization_declared then
-				Result := declared_flat_fst_optimization.is_true
+			if is_flat_fst_optimization_declared and then attached declared_flat_fst_optimization as l_declared_flat_fst_optimization then
+				Result := l_declared_flat_fst_optimization.is_true
 			else
 				Result := default_flat_fst_optimization
 			end
@@ -1168,8 +1172,8 @@ feature -- Option values
 	force_32bits: BOOLEAN
 			-- 'force_32bits' option
 		do
-			if is_force_32bits_declared then
-				Result := declared_force_32bits.is_true
+			if is_force_32bits_declared and then attached declared_force_32bits as l_declared_force_32bits then
+				Result := l_declared_force_32bits.is_true
 			else
 				Result := default_force_32bits
 			end
@@ -1190,8 +1194,8 @@ feature -- Option values
 	fst_optimization: BOOLEAN
 			-- 'fst_optimization' option
 		do
-			if is_fst_optimization_declared then
-				Result := declared_fst_optimization.is_true
+			if is_fst_optimization_declared and then attached declared_fst_optimization as l_declared_fst_optimization then
+				Result := l_declared_fst_optimization.is_true
 			else
 				Result := default_fst_optimization
 			end
@@ -1200,8 +1204,8 @@ feature -- Option values
 	full_class_checking: BOOLEAN
 			-- 'full_class_checking' option
 		do
-			if is_full_class_checking_declared then
-				Result := declared_full_class_checking.is_true
+			if is_full_class_checking_declared and then attached declared_full_class_checking as l_declared_full_class_checking then
+				Result := l_declared_full_class_checking.is_true
 			else
 				Result := default_full_class_checking
 			end
@@ -1210,20 +1214,22 @@ feature -- Option values
 	garbage_collector: STRING
 			-- 'garbage_collector' option
 		do
-			if is_garbage_collector_declared then
-				Result := declared_garbage_collector
+			if attached declared_garbage_collector as l_declared_garbage_collector then
+				check is_garbage_collector_declared: is_garbage_collector_declared end
+				Result := l_declared_garbage_collector
 			else
 				Result := default_garbage_collector
 			end
 		ensure
+			garbage_collector_not_void: Result /= Void
 			valid_garbage_collector: valid_garbage_collector.has (Result)
 		end
 
 	gc_info: BOOLEAN
 			-- 'gc_info' option
 		do
-			if is_gc_info_declared then
-				Result := declared_gc_info.is_true
+			if is_gc_info_declared and then attached declared_gc_info as l_declared_gc_info then
+				Result := l_declared_gc_info.is_true
 			else
 				Result := default_gc_info
 			end
@@ -1242,8 +1248,8 @@ feature -- Option values
 	header: DS_HASH_SET [STRING]
 			-- 'header' option
 		do
-			if is_header_declared then
-				Result := declared_header
+			if is_header_declared and then attached declared_header as l_declared_header then
+				Result := l_declared_header
 			else
 				Result := default_header
 			end
@@ -1255,8 +1261,8 @@ feature -- Option values
 	high_memory_compiler: BOOLEAN
 			-- 'high_memory_compiler' option
 		do
-			if is_high_memory_compiler_declared then
-				Result := declared_high_memory_compiler.is_true
+			if is_high_memory_compiler_declared and then attached declared_high_memory_compiler as l_declared_high_memory_compiler then
+				Result := l_declared_high_memory_compiler.is_true
 			else
 				Result := default_high_memory_compiler
 			end
@@ -1265,8 +1271,8 @@ feature -- Option values
 	il_verifiable: BOOLEAN
 			-- 'il_verifiable' option
 		do
-			if is_il_verifiable_declared then
-				Result := declared_il_verifiable.is_true
+			if is_il_verifiable_declared and then attached declared_il_verifiable as l_declared_il_verifiable then
+				Result := l_declared_il_verifiable.is_true
 			else
 				Result := default_il_verifiable
 			end
@@ -1275,8 +1281,8 @@ feature -- Option values
 	include: DS_HASH_SET [STRING]
 			-- 'include' option
 		do
-			if is_include_declared then
-				Result := declared_include
+			if is_include_declared and then attached declared_include as l_declared_include then
+				Result := l_declared_include
 			else
 				Result := default_include
 			end
@@ -1288,8 +1294,8 @@ feature -- Option values
 	inlining: DS_HASH_SET [STRING]
 			-- 'inlining' option
 		do
-			if is_inlining_declared then
-				Result := declared_inlining
+			if is_inlining_declared and then attached declared_inlining as l_declared_inlining then
+				Result := l_declared_inlining
 			else
 				Result := default_inlining
 			end
@@ -1313,8 +1319,8 @@ feature -- Option values
 	jumps_optimization: BOOLEAN
 			-- 'jumps_optimization' option
 		do
-			if is_jumps_optimization_declared then
-				Result := declared_jumps_optimization.is_true
+			if is_jumps_optimization_declared and then attached declared_jumps_optimization as l_declared_jumps_optimization then
+				Result := l_declared_jumps_optimization.is_true
 			else
 				Result := default_jumps_optimization
 			end
@@ -1323,8 +1329,8 @@ feature -- Option values
 	layout: STRING
 			-- 'layout' option
 		do
-			if is_layout_declared then
-				Result := declared_layout
+			if is_layout_declared and then attached declared_layout as l_declared_layout then
+				Result := l_declared_layout
 			else
 				Result := default_layout
 			end
@@ -1336,8 +1342,8 @@ feature -- Option values
 	layout_optimization: BOOLEAN
 			-- 'layout_optimization' option
 		do
-			if is_layout_optimization_declared then
-				Result := declared_layout_optimization.is_true
+			if is_layout_optimization_declared and then attached declared_layout_optimization as l_declared_layout_optimization then
+				Result := l_declared_layout_optimization.is_true
 			else
 				Result := default_layout_optimization
 			end
@@ -1346,8 +1352,8 @@ feature -- Option values
 	leaves_optimization: BOOLEAN
 			-- 'leaves_optimization' option
 		do
-			if is_leaves_optimization_declared then
-				Result := declared_leaves_optimization.is_true
+			if is_leaves_optimization_declared and then attached declared_leaves_optimization as l_declared_leaves_optimization then
+				Result := l_declared_leaves_optimization.is_true
 			else
 				Result := default_leaves_optimization
 			end
@@ -1356,8 +1362,8 @@ feature -- Option values
 	line_generation: BOOLEAN
 			-- 'line_generation' option
 		do
-			if is_line_generation_declared then
-				Result := declared_line_generation.is_true
+			if is_line_generation_declared and then attached declared_line_generation as l_declared_line_generation then
+				Result := l_declared_line_generation.is_true
 			else
 				Result := default_line_generation
 			end
@@ -1366,8 +1372,8 @@ feature -- Option values
 	link: DS_ARRAYED_LIST [STRING]
 			-- 'link' option
 		do
-			if is_link_declared then
-				Result := declared_link
+			if is_link_declared and then attached declared_link as l_declared_link then
+				Result := l_declared_link
 			else
 				Result := default_link
 			end
@@ -1379,20 +1385,22 @@ feature -- Option values
 	linker: STRING
 			-- 'linker' option
 		do
-			if is_linker_declared then
-				Result := declared_linker
+			if attached declared_linker as l_declared_linker then
+				check is_linker_declared: is_linker_declared end
+				Result := l_declared_linker
 			else
 				Result := default_linker
 			end
 		ensure
+			linker_not_void: Result /= Void
 			valid_linker: valid_linker.has (Result)
 		end
 
 	linux_fpu_double_precision: BOOLEAN
 			-- 'linux_fpu_double_precision' option
 		do
-			if is_linux_fpu_double_precision_declared then
-				Result := declared_linux_fpu_double_precision.is_true
+			if is_linux_fpu_double_precision_declared and then attached declared_linux_fpu_double_precision as l_declared_linux_fpu_double_precision then
+				Result := l_declared_linux_fpu_double_precision.is_true
 			else
 				Result := default_linux_fpu_double_precision
 			end
@@ -1401,8 +1409,8 @@ feature -- Option values
 	manifest_string_trace: BOOLEAN
 			-- 'manifest_string_trace' option
 		do
-			if is_manifest_string_trace_declared then
-				Result := declared_manifest_string_trace.is_true
+			if is_manifest_string_trace_declared and then attached declared_manifest_string_trace as l_declared_manifest_string_trace then
+				Result := l_declared_manifest_string_trace.is_true
 			else
 				Result := default_manifest_string_trace
 			end
@@ -1411,14 +1419,14 @@ feature -- Option values
 	map: BOOLEAN
 			-- 'map' option
 		do
-			if is_map_declared then
-				Result := declared_map.is_true
+			if is_map_declared and then attached declared_map as l_declared_map then
+				Result := l_declared_map.is_true
 			else
 				Result := default_map
 			end
 		end
 
-	metadata_cache_path: STRING
+	metadata_cache_path: detachable STRING
 			-- 'metadata_cache_path' option
 		do
 			if is_metadata_cache_path_declared then
@@ -1428,7 +1436,7 @@ feature -- Option values
 			end
 		end
 
-	msil_assembly_compatibility: STRING
+	msil_assembly_compatibility: detachable STRING
 			-- 'msil_assembly_compatibility' option
 		do
 			if is_msil_assembly_compatibility_declared then
@@ -1450,7 +1458,7 @@ feature -- Option values
 			msil_classes_per_module_positive: Result > 0
 		end
 
-	msil_clr_version: STRING
+	msil_clr_version: detachable STRING
 			-- 'msil_clr_version' option
 		do
 			if is_msil_clr_version_declared then
@@ -1460,7 +1468,7 @@ feature -- Option values
 			end
 		end
 
-	msil_culture: STRING
+	msil_culture: detachable STRING
 			-- 'msil_culture' option
 		do
 			if is_msil_culture_declared then
@@ -1473,14 +1481,14 @@ feature -- Option values
 	msil_generation: BOOLEAN
 			-- 'msil_generation' option
 		do
-			if is_msil_generation_declared then
-				Result := declared_msil_generation.is_true
+			if is_msil_generation_declared and then attached declared_msil_generation as l_declared_msil_generation then
+				Result := l_declared_msil_generation.is_true
 			else
 				Result := default_msil_generation
 			end
 		end
 
-	msil_generation_version: STRING
+	msil_generation_version: detachable STRING
 			-- 'msil_generation_version' option
 		do
 			if is_msil_generation_version_declared then
@@ -1490,7 +1498,7 @@ feature -- Option values
 			end
 		end
 
-	msil_key_file_name: STRING
+	msil_key_file_name: detachable STRING
 			-- 'msil_key_file_name' option
 		do
 			if is_msil_key_file_name_declared then
@@ -1503,8 +1511,8 @@ feature -- Option values
 	msil_use_optimized_precompile: BOOLEAN
 			-- 'msil_use_optimized_precompile' option
 		do
-			if is_msil_use_optimized_precompile_declared then
-				Result := declared_msil_use_optimized_precompile.is_true
+			if is_msil_use_optimized_precompile_declared and then attached declared_msil_use_optimized_precompile as l_declared_msil_use_optimized_precompile then
+				Result := l_declared_msil_use_optimized_precompile.is_true
 			else
 				Result := default_msil_use_optimized_precompile
 			end
@@ -1513,14 +1521,14 @@ feature -- Option values
 	multithreaded: BOOLEAN
 			-- 'multithreaded' option
 		do
-			if is_multithreaded_declared then
-				Result := declared_multithreaded.is_true
+			if is_multithreaded_declared and then attached declared_multithreaded as l_declared_multithreaded then
+				Result := l_declared_multithreaded.is_true
 			else
 				Result := default_multithreaded
 			end
 		end
 
-	namespace: STRING
+	namespace: detachable STRING
 			-- 'namespace' option
 		do
 			if is_namespace_declared then
@@ -1533,8 +1541,8 @@ feature -- Option values
 	no_default_lib: BOOLEAN
 			-- 'no_default_lib' option
 		do
-			if is_no_default_lib_declared then
-				Result := declared_no_default_lib.is_true
+			if is_no_default_lib_declared and then attached declared_no_default_lib as l_declared_no_default_lib then
+				Result := l_declared_no_default_lib.is_true
 			else
 				Result := default_no_default_lib
 			end
@@ -1543,8 +1551,8 @@ feature -- Option values
 	old_verbatim_strings: BOOLEAN
 			-- 'old_verbatim_strings' option
 		do
-			if is_old_verbatim_strings_declared then
-				Result := declared_old_verbatim_strings.is_true
+			if is_old_verbatim_strings_declared and then attached declared_old_verbatim_strings as l_declared_old_verbatim_strings then
+				Result := l_declared_old_verbatim_strings.is_true
 			else
 				Result := default_old_verbatim_strings
 			end
@@ -1553,8 +1561,8 @@ feature -- Option values
 	override_cluster: DS_HASH_SET [STRING]
 			-- 'override_cluster' option
 		do
-			if is_override_cluster_declared then
-				Result := declared_override_cluster
+			if is_override_cluster_declared and then attached declared_override_cluster as l_declared_override_cluster then
+				Result := l_declared_override_cluster
 			else
 				Result := default_override_cluster
 			end
@@ -1566,14 +1574,14 @@ feature -- Option values
 	portable_code_generation: BOOLEAN
 			-- 'portable_code_generation' option
 		do
-			if is_portable_code_generation_declared then
-				Result := declared_portable_code_generation.is_true
+			if is_portable_code_generation_declared and then attached declared_portable_code_generation as l_declared_portable_code_generation then
+				Result := l_declared_portable_code_generation.is_true
 			else
 				Result := default_portable_code_generation
 			end
 		end
 
-	precompiled: STRING
+	precompiled: detachable STRING
 			-- 'precompiled' option
 		do
 			if is_precompiled_declared then
@@ -1583,7 +1591,7 @@ feature -- Option values
 			end
 		end
 
-	prefix_option: STRING
+	prefix_option: detachable STRING
 			-- 'prefix' option
 		do
 			if is_prefix_option_declared then
@@ -1596,8 +1604,8 @@ feature -- Option values
 	profile: BOOLEAN
 			-- 'profile' option
 		do
-			if is_profile_declared then
-				Result := declared_profile.is_true
+			if is_profile_declared and then attached declared_profile as l_declared_profile then
+				Result := l_declared_profile.is_true
 			else
 				Result := default_profile
 			end
@@ -1606,18 +1614,21 @@ feature -- Option values
 	public_key_token: STRING
 			-- 'public_key_token' option
 		do
-			if is_public_key_token_declared then
-				Result := declared_public_key_token
+			if attached declared_public_key_token as l_declared_public_key_token then
+				check is_public_key_token_declared: is_public_key_token_declared end
+				Result := l_declared_public_key_token
 			else
 				Result := default_public_key_token
 			end
+		ensure
+			public_key_token_not_void: Result /= Void
 		end
 
 	read_only: BOOLEAN
 			-- 'read_only' option
 		do
-			if is_read_only_declared then
-				Result := declared_read_only.is_true
+			if is_read_only_declared and then attached declared_read_only as l_declared_read_only then
+				Result := l_declared_read_only.is_true
 			else
 				Result := default_read_only
 			end
@@ -1626,8 +1637,8 @@ feature -- Option values
 	recursive: BOOLEAN
 			-- 'recursive' option
 		do
-			if is_recursive_declared then
-				Result := declared_recursive.is_true
+			if is_recursive_declared and then attached declared_recursive as l_declared_recursive then
+				Result := l_declared_recursive.is_true
 			else
 				Result := default_recursive
 			end
@@ -1636,14 +1647,14 @@ feature -- Option values
 	reloads_optimization: BOOLEAN
 			-- 'reloads_optimization' option
 		do
-			if is_reloads_optimization_declared then
-				Result := declared_reloads_optimization.is_true
+			if is_reloads_optimization_declared and then attached declared_reloads_optimization as l_declared_reloads_optimization then
+				Result := l_declared_reloads_optimization.is_true
 			else
 				Result := default_reloads_optimization
 			end
 		end
 
-	shared_library_definition: STRING
+	shared_library_definition: detachable STRING
 			-- 'shared_library_definition' option
 		do
 			if is_shared_library_definition_declared then
@@ -1656,8 +1667,8 @@ feature -- Option values
 	split: BOOLEAN
 			-- 'split' option
 		do
-			if is_split_declared then
-				Result := declared_split.is_true
+			if is_split_declared and then attached declared_split as l_declared_split then
+				Result := l_declared_split.is_true
 			else
 				Result := default_split
 			end
@@ -1676,14 +1687,14 @@ feature -- Option values
 	storable: BOOLEAN
 			-- 'storable' option
 		do
-			if is_storable_declared then
-				Result := declared_storable.is_true
+			if is_storable_declared and then attached declared_storable as l_declared_storable then
+				Result := l_declared_storable.is_true
 			else
 				Result := default_storable
 			end
 		end
 
-	storable_filename: STRING
+	storable_filename: detachable STRING
 			-- 'storable_filename' option
 		do
 			if is_storable_filename_declared then
@@ -1696,8 +1707,8 @@ feature -- Option values
 	strip_option: BOOLEAN
 			-- 'strip' option
 		do
-			if is_strip_option_declared then
-				Result := declared_strip_option.is_true
+			if is_strip_option_declared and then attached declared_strip_option as l_declared_strip_option then
+				Result := l_declared_strip_option.is_true
 			else
 				Result := default_strip_option
 			end
@@ -1706,32 +1717,36 @@ feature -- Option values
 	syntax: STRING
 			-- 'syntax' option
 		do
-			if is_syntax_declared then
-				Result := declared_syntax
+			if attached declared_syntax as l_declared_syntax then
+				check is_syntax_declared: is_syntax_declared end
+				Result := l_declared_syntax
 			else
 				Result := default_syntax
 			end
 		ensure
+			syntax_not_void: Result /= Void
 			valid_syntax: valid_syntax.has (Result)
 		end
 
 	target: STRING
 			-- 'target' option
 		do
-			if is_target_declared then
-				Result := declared_target
+			if attached declared_target as l_declared_target then
+				check is_target_declared: is_target_declared end
+				Result := l_declared_target
 			else
 				Result := default_target
 			end
 		ensure
+			target_not_void: Result /= Void
 			valid_target: valid_target.has (Result)
 		end
 
 	trace: BOOLEAN
 			-- 'trace' option
 		do
-			if is_trace_declared then
-				Result := declared_trace.is_true
+			if is_trace_declared and then attached declared_trace as l_declared_trace then
+				Result := l_declared_trace.is_true
 			else
 				Result := default_trace
 			end
@@ -1740,8 +1755,8 @@ feature -- Option values
 	use_cluster_name_as_namespace: BOOLEAN
 			-- 'use_cluster_name_as_namespace' option
 		do
-			if is_use_cluster_name_as_namespace_declared then
-				Result := declared_use_cluster_name_as_namespace.is_true
+			if is_use_cluster_name_as_namespace_declared and then attached declared_use_cluster_name_as_namespace as l_declared_use_cluster_name_as_namespace then
+				Result := l_declared_use_cluster_name_as_namespace.is_true
 			else
 				Result := default_use_cluster_name_as_namespace
 			end
@@ -1750,8 +1765,8 @@ feature -- Option values
 	use_full_cluster_name_as_namespace: BOOLEAN
 			-- 'use_full_cluster_name_as_namespace' option
 		do
-			if is_use_full_cluster_name_as_namespace_declared then
-				Result := declared_use_full_cluster_name_as_namespace.is_true
+			if is_use_full_cluster_name_as_namespace_declared and then attached declared_use_full_cluster_name_as_namespace as l_declared_use_full_cluster_name_as_namespace then
+				Result := l_declared_use_full_cluster_name_as_namespace.is_true
 			else
 				Result := default_use_full_cluster_name_as_namespace
 			end
@@ -1760,8 +1775,8 @@ feature -- Option values
 	verbose: BOOLEAN
 			-- 'verbose' option
 		do
-			if is_verbose_declared then
-				Result := declared_verbose.is_true
+			if is_verbose_declared and then attached declared_verbose as l_declared_verbose then
+				Result := l_declared_verbose.is_true
 			else
 				Result := default_verbose
 			end
@@ -1770,14 +1785,17 @@ feature -- Option values
 	version: STRING
 			-- 'version' option
 		do
-			if is_version_declared then
-				Result := declared_version
+			if attached declared_version as l_declared_version then
+				check is_version_declared: is_version_declared end
+				Result := l_declared_version
 			else
 				Result := default_version
 			end
+		ensure
+			version_not_void: Result /= Void
 		end
 
-	visible_filename: STRING
+	visible_filename: detachable STRING
 			-- 'visible_filename' option
 		do
 			if is_visible_filename_declared then
@@ -1790,30 +1808,35 @@ feature -- Option values
 	void_safety: STRING
 			-- 'void_safety' option
 		do
-			if is_void_safety_declared then
-				Result := declared_void_safety
+			if attached declared_void_safety as l_declared_void_safety then
+				check is_void_safety_declared: is_void_safety_declared end
+				Result := l_declared_void_safety
 			else
 				Result := default_void_safety
 			end
+		ensure
+			void_safety_not_void: Result /= Void
 		end
 
 	warning: STRING
 			-- 'warning' option
 		do
-			if is_warning_declared then
-				Result := declared_warning
+			if attached declared_warning as l_declared_warning then
+				check is_warning_declared: is_warning_declared end
+				Result := l_declared_warning
 			else
 				Result := default_warning
 			end
 		ensure
+			warning_not_void: Result /= Void
 			valid_warning: valid_warning.has (Result)
 		end
 
 	wedit: BOOLEAN
 			-- 'wedit' option
 		do
-			if is_wedit_declared then
-				Result := declared_wedit.is_true
+			if is_wedit_declared and then attached declared_wedit as l_declared_wedit then
+				Result := l_declared_wedit.is_true
 			else
 				Result := default_wedit
 			end
@@ -1823,14 +1846,18 @@ feature -- Modification
 
 	set_abstract (b: BOOLEAN)
 			-- Set `abstract' to `b'.
+		local
+			l_declared_abstract: like declared_abstract
 		do
-			if declared_abstract = Void then
-				create declared_abstract.make_undefined
+			l_declared_abstract := declared_abstract
+			if l_declared_abstract = Void then
+				create l_declared_abstract.make_undefined
+				declared_abstract := l_declared_abstract
 			end
 			if b then
-				declared_abstract.set_true
+				l_declared_abstract.set_true
 			else
-				declared_abstract.set_false
+				l_declared_abstract.set_false
 			end
 		ensure
 			abstract_declared: is_abstract_declared
@@ -1839,14 +1866,18 @@ feature -- Modification
 
 	set_address_expression (b: BOOLEAN)
 			-- Set `address_expression' to `b'.
+		local
+			l_declared_address_expression: like declared_address_expression
 		do
-			if declared_address_expression = Void then
-				create declared_address_expression.make_undefined
+			l_declared_address_expression := declared_address_expression
+			if l_declared_address_expression = Void then
+				create l_declared_address_expression.make_undefined
+				declared_address_expression := l_declared_address_expression
 			end
 			if b then
-				declared_address_expression.set_true
+				l_declared_address_expression.set_true
 			else
-				declared_address_expression.set_false
+				l_declared_address_expression.set_false
 			end
 		ensure
 			address_expression_declared: is_address_expression_declared
@@ -1857,12 +1888,16 @@ feature -- Modification
 			-- Set `arguments' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_arguments: like declared_arguments
 		do
-			if declared_arguments = Void then
-				create declared_arguments.make (10)
-				declared_arguments.set_equality_tester (string_equality_tester)
+			l_declared_arguments := declared_arguments
+			if l_declared_arguments = Void then
+				create l_declared_arguments.make (10)
+				l_declared_arguments.set_equality_tester (string_equality_tester)
+				declared_arguments := l_declared_arguments
 			end
-			declared_arguments.force_last (a_value)
+			l_declared_arguments.force_last (a_value)
 		ensure
 			arguments_declared: is_arguments_declared
 			arguments_set: arguments.has (a_value)
@@ -1870,14 +1905,18 @@ feature -- Modification
 
 	set_array_optimization (b: BOOLEAN)
 			-- Set `array_optimization' to `b'.
+		local
+			l_declared_array_optimization: like declared_array_optimization
 		do
-			if declared_array_optimization = Void then
-				create declared_array_optimization.make_undefined
+			l_declared_array_optimization := declared_array_optimization
+			if l_declared_array_optimization = Void then
+				create l_declared_array_optimization.make_undefined
+				declared_array_optimization := l_declared_array_optimization
 			end
 			if b then
-				declared_array_optimization.set_true
+				l_declared_array_optimization.set_true
 			else
-				declared_array_optimization.set_false
+				l_declared_array_optimization.set_false
 			end
 		ensure
 			array_optimization_declared: is_array_optimization_declared
@@ -1899,12 +1938,16 @@ feature -- Modification
 			-- Set `assertion' to `a_value'.
 		require
 			a_value_valid: valid_assertion.has (a_value)
+		local
+			l_declared_assertion: like declared_assertion
 		do
-			if declared_assertion = Void then
-				create declared_assertion.make (valid_assertion.count)
-				declared_assertion.set_equality_tester (string_equality_tester)
+			l_declared_assertion := declared_assertion
+			if l_declared_assertion = Void then
+				create l_declared_assertion.make (valid_assertion.count)
+				l_declared_assertion.set_equality_tester (string_equality_tester)
+				declared_assertion := l_declared_assertion
 			end
-			declared_assertion.force_last (a_value)
+			l_declared_assertion.force_last (a_value)
 		ensure
 			assertion_declared: is_assertion_declared
 			assertion_set: assertion.has (a_value)
@@ -1912,14 +1955,18 @@ feature -- Modification
 
 	set_attached_by_default (b: BOOLEAN)
 			-- Set `attached_by_default' to `b'.
+		local
+			l_declared_attached_by_default: like declared_attached_by_default
 		do
-			if declared_attached_by_default = Void then
-				create declared_attached_by_default.make_undefined
+			l_declared_attached_by_default := declared_attached_by_default
+			if l_declared_attached_by_default = Void then
+				create l_declared_attached_by_default.make_undefined
+				declared_attached_by_default := l_declared_attached_by_default
 			end
 			if b then
-				declared_attached_by_default.set_true
+				l_declared_attached_by_default.set_true
 			else
-				declared_attached_by_default.set_false
+				l_declared_attached_by_default.set_false
 			end
 		ensure
 			abstract_declared: is_abstract_declared
@@ -1928,14 +1975,18 @@ feature -- Modification
 
 	set_automatic_backup (b: BOOLEAN)
 			-- Set `automatic_backup' to `b'.
+		local
+			l_declared_automatic_backup: like declared_automatic_backup
 		do
-			if declared_automatic_backup = Void then
-				create declared_automatic_backup.make_undefined
+			l_declared_automatic_backup := declared_automatic_backup
+			if l_declared_automatic_backup = Void then
+				create l_declared_automatic_backup.make_undefined
+				declared_automatic_backup := l_declared_automatic_backup
 			end
 			if b then
-				declared_automatic_backup.set_true
+				l_declared_automatic_backup.set_true
 			else
-				declared_automatic_backup.set_false
+				l_declared_automatic_backup.set_false
 			end
 		ensure
 			automatic_backup_declared: is_automatic_backup_declared
@@ -1956,14 +2007,18 @@ feature -- Modification
 
 	set_case_insensitive (b: BOOLEAN)
 			-- Set `case_insensitive' to `b'.
+		local
+			l_declared_case_insensitive: like declared_case_insensitive
 		do
-			if declared_case_insensitive = Void then
-				create declared_case_insensitive.make_undefined
+			l_declared_case_insensitive := declared_case_insensitive
+			if l_declared_case_insensitive = Void then
+				create l_declared_case_insensitive.make_undefined
+				declared_case_insensitive := l_declared_case_insensitive
 			end
 			if b then
-				declared_case_insensitive.set_true
+				l_declared_case_insensitive.set_true
 			else
-				declared_case_insensitive.set_false
+				l_declared_case_insensitive.set_false
 			end
 		ensure
 			case_insensitive_declared: is_case_insensitive_declared
@@ -1972,14 +2027,18 @@ feature -- Modification
 
 	set_check_generic_creation_constraint (b: BOOLEAN)
 			-- Set `check_generic_creation_constraint' to `b'.
+		local
+			l_declared_check_generic_creation_constraint: like declared_check_generic_creation_constraint
 		do
-			if declared_check_generic_creation_constraint = Void then
-				create declared_check_generic_creation_constraint.make_undefined
+			l_declared_check_generic_creation_constraint := declared_check_generic_creation_constraint
+			if l_declared_check_generic_creation_constraint = Void then
+				create l_declared_check_generic_creation_constraint.make_undefined
+				declared_check_generic_creation_constraint := l_declared_check_generic_creation_constraint
 			end
 			if b then
-				declared_check_generic_creation_constraint.set_true
+				l_declared_check_generic_creation_constraint.set_true
 			else
-				declared_check_generic_creation_constraint.set_false
+				l_declared_check_generic_creation_constraint.set_false
 			end
 		ensure
 			check_generic_creation_constraint_declared: is_check_generic_creation_constraint_declared
@@ -1988,14 +2047,18 @@ feature -- Modification
 
 	set_check_vape (b: BOOLEAN)
 			-- Set `check_vape' to `b'.
+		local
+			l_declared_check_vape: like declared_check_vape
 		do
-			if declared_check_vape = Void then
-				create declared_check_vape.make_undefined
+			l_declared_check_vape := declared_check_vape
+			if l_declared_check_vape = Void then
+				create l_declared_check_vape.make_undefined
+				declared_check_vape := l_declared_check_vape
 			end
 			if b then
-				declared_check_vape.set_true
+				l_declared_check_vape.set_true
 			else
-				declared_check_vape.set_false
+				l_declared_check_vape.set_false
 			end
 		ensure
 			check_vape_declared: is_check_vape_declared
@@ -2004,14 +2067,18 @@ feature -- Modification
 
 	set_clean (b: BOOLEAN)
 			-- Set `clean' to `b'.
+		local
+			l_declared_clean: like declared_clean
 		do
-			if declared_clean = Void then
-				create declared_clean.make_undefined
+			l_declared_clean := declared_clean
+			if l_declared_clean = Void then
+				create l_declared_clean.make_undefined
+				declared_clean := l_declared_clean
 			end
 			if b then
-				declared_clean.set_true
+				l_declared_clean.set_true
 			else
-				declared_clean.set_false
+				l_declared_clean.set_false
 			end
 		ensure
 			clean_declared: is_clean_declared
@@ -2020,14 +2087,18 @@ feature -- Modification
 
 	set_cls_compliant (b: BOOLEAN)
 			-- Set `cls_compliant' to `b'.
+		local
+			l_declared_cls_compliant: like declared_cls_compliant
 		do
-			if declared_cls_compliant = Void then
-				create declared_cls_compliant.make_undefined
+			l_declared_cls_compliant := declared_cls_compliant
+			if l_declared_cls_compliant = Void then
+				create l_declared_cls_compliant.make_undefined
+				declared_cls_compliant := l_declared_cls_compliant
 			end
 			if b then
-				declared_cls_compliant.set_true
+				l_declared_cls_compliant.set_true
 			else
-				declared_cls_compliant.set_false
+				l_declared_cls_compliant.set_false
 			end
 		ensure
 			cls_compliant_declared: is_cls_compliant_declared
@@ -2047,14 +2118,18 @@ feature -- Modification
 
 	set_console_application (b: BOOLEAN)
 			-- Set `console_application' to `b'.
+		local
+			l_declared_console_application: like declared_console_application
 		do
-			if declared_console_application = Void then
-				create declared_console_application.make_undefined
+			l_declared_console_application := declared_console_application
+			if l_declared_console_application = Void then
+				create l_declared_console_application.make_undefined
+				declared_console_application := l_declared_console_application
 			end
 			if b then
-				declared_console_application.set_true
+				l_declared_console_application.set_true
 			else
-				declared_console_application.set_false
+				l_declared_console_application.set_false
 			end
 		ensure
 			console_application_declared: is_console_application_declared
@@ -2063,14 +2138,18 @@ feature -- Modification
 
 	set_create_keyword_extension (b: BOOLEAN)
 			-- Set `create_keyword_extension' to `b'.
+		local
+			l_declared_create_keyword_extension: like declared_create_keyword_extension
 		do
-			if declared_create_keyword_extension = Void then
-				create declared_create_keyword_extension.make_undefined
+			l_declared_create_keyword_extension := declared_create_keyword_extension
+			if l_declared_create_keyword_extension = Void then
+				create l_declared_create_keyword_extension.make_undefined
+				declared_create_keyword_extension := l_declared_create_keyword_extension
 			end
 			if b then
-				declared_create_keyword_extension.set_true
+				l_declared_create_keyword_extension.set_true
 			else
-				declared_create_keyword_extension.set_false
+				l_declared_create_keyword_extension.set_false
 			end
 		ensure
 			create_keyword_extension_declared: is_create_keyword_extension_declared
@@ -2092,12 +2171,16 @@ feature -- Modification
 			-- Set `c_compiler_options' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_c_compiler_options: like declared_c_compiler_options
 		do
-			if declared_c_compiler_options = Void then
-				create declared_c_compiler_options.make (10)
-				declared_c_compiler_options.set_equality_tester (string_equality_tester)
+			l_declared_c_compiler_options := declared_c_compiler_options
+			if l_declared_c_compiler_options = Void then
+				create l_declared_c_compiler_options.make (10)
+				l_declared_c_compiler_options.set_equality_tester (string_equality_tester)
+				declared_c_compiler_options := l_declared_c_compiler_options
 			end
-			declared_c_compiler_options.force_last (a_value)
+			l_declared_c_compiler_options.force_last (a_value)
 		ensure
 			c_compiler_options_declared: is_c_compiler_options_declared
 			c_compiler_options_set: c_compiler_options.has (a_value)
@@ -2108,12 +2191,16 @@ feature -- Modification
 		require
 			a_value_not_void: a_value /= Void
 			a_value_valid: valid_dead_code_removal.has (a_value)
+		local
+			l_declared_dead_code_removal: like declared_dead_code_removal
 		do
-			if declared_dead_code_removal = Void then
-				create declared_dead_code_removal.make (valid_dead_code_removal.count)
-				declared_dead_code_removal.set_equality_tester (string_equality_tester)
+			l_declared_dead_code_removal := declared_dead_code_removal
+			if l_declared_dead_code_removal = Void then
+				create l_declared_dead_code_removal.make (valid_dead_code_removal.count)
+				l_declared_dead_code_removal.set_equality_tester (string_equality_tester)
+				declared_dead_code_removal := l_declared_dead_code_removal
 			end
-			declared_dead_code_removal.force_last (a_value)
+			l_declared_dead_code_removal.force_last (a_value)
 		ensure
 			dead_code_removal_declared: is_dead_code_removal_declared
 			dead_code_removal_set: dead_code_removal.has (a_value)
@@ -2121,14 +2208,18 @@ feature -- Modification
 
 	set_debug_option (b: BOOLEAN)
 			-- Set `debug_option' to `b'.
+		local
+			l_declared_debug_option: like declared_debug_option
 		do
-			if declared_debug_option = Void then
-				create declared_debug_option.make_undefined
+			l_declared_debug_option := declared_debug_option
+			if l_declared_debug_option = Void then
+				create l_declared_debug_option.make_undefined
+				declared_debug_option := l_declared_debug_option
 			end
 			if b then
-				declared_debug_option.set_true
+				l_declared_debug_option.set_true
 			else
-				declared_debug_option.set_false
+				l_declared_debug_option.set_false
 			end
 		ensure
 			debug_option_declared: is_debug_option_declared
@@ -2139,12 +2230,16 @@ feature -- Modification
 			-- Set `debug_tag' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_debug_tag: like declared_debug_tag
 		do
-			if declared_debug_tag = Void then
-				create declared_debug_tag.make (10)
-				declared_debug_tag.set_equality_tester (string_equality_tester)
+			l_declared_debug_tag := declared_debug_tag
+			if l_declared_debug_tag = Void then
+				create l_declared_debug_tag.make (10)
+				l_declared_debug_tag.set_equality_tester (string_equality_tester)
+				declared_debug_tag := l_declared_debug_tag
 			end
-			declared_debug_tag.force_last (a_value)
+			l_declared_debug_tag.force_last (a_value)
 		ensure
 			debug_tag_declared: is_debug_tag_declared
 			debug_tag_set: debug_tag.has (a_value)
@@ -2152,14 +2247,18 @@ feature -- Modification
 
 	set_debugger (b: BOOLEAN)
 			-- Set `debugger' to `b'.
+		local
+			l_declared_debugger: like declared_debugger
 		do
-			if declared_debugger = Void then
-				create declared_debugger.make_undefined
+			l_declared_debugger := declared_debugger
+			if l_declared_debugger = Void then
+				create l_declared_debugger.make_undefined
+				declared_debugger := l_declared_debugger
 			end
 			if b then
-				declared_debugger.set_true
+				l_declared_debugger.set_true
 			else
-				declared_debugger.set_false
+				l_declared_debugger.set_false
 			end
 		ensure
 			debugger_declared: is_debugger_declared
@@ -2179,14 +2278,18 @@ feature -- Modification
 
 	set_dotnet_naming_convention (b: BOOLEAN)
 			-- Set `dotnet_naming_convention' to `b'.
+		local
+			l_declared_dotnet_naming_convention: like declared_dotnet_naming_convention
 		do
-			if declared_dotnet_naming_convention = Void then
-				create declared_dotnet_naming_convention.make_undefined
+			l_declared_dotnet_naming_convention := declared_dotnet_naming_convention
+			if l_declared_dotnet_naming_convention = Void then
+				create l_declared_dotnet_naming_convention.make_undefined
+				declared_dotnet_naming_convention := l_declared_dotnet_naming_convention
 			end
 			if b then
-				declared_dotnet_naming_convention.set_true
+				l_declared_dotnet_naming_convention.set_true
 			else
-				declared_dotnet_naming_convention.set_false
+				l_declared_dotnet_naming_convention.set_false
 			end
 		ensure
 			dotnet_naming_convention_declared: is_dotnet_naming_convention_declared
@@ -2195,14 +2298,18 @@ feature -- Modification
 
 	set_dynamic_runtime (b: BOOLEAN)
 			-- Set `dynamic_runtime' to `b'.
+		local
+			l_declared_dynamic_runtime: like declared_dynamic_runtime
 		do
-			if declared_dynamic_runtime = Void then
-				create declared_dynamic_runtime.make_undefined
+			l_declared_dynamic_runtime := declared_dynamic_runtime
+			if l_declared_dynamic_runtime = Void then
+				create l_declared_dynamic_runtime.make_undefined
+				declared_dynamic_runtime := l_declared_dynamic_runtime
 			end
 			if b then
-				declared_dynamic_runtime.set_true
+				l_declared_dynamic_runtime.set_true
 			else
-				declared_dynamic_runtime.set_false
+				l_declared_dynamic_runtime.set_false
 			end
 		ensure
 			dynamic_runtime_declared: is_dynamic_runtime_declared
@@ -2222,14 +2329,18 @@ feature -- Modification
 
 	set_enforce_unique_class_names (b: BOOLEAN)
 			-- Set `enforce_unique_class_names' to `b'.
+		local
+			l_declared_enforce_unique_class_names: like declared_enforce_unique_class_names
 		do
-			if declared_enforce_unique_class_names = Void then
-				create declared_enforce_unique_class_names.make_undefined
+			l_declared_enforce_unique_class_names := declared_enforce_unique_class_names
+			if l_declared_enforce_unique_class_names = Void then
+				create l_declared_enforce_unique_class_names.make_undefined
+				declared_enforce_unique_class_names := l_declared_enforce_unique_class_names
 			end
 			if b then
-				declared_enforce_unique_class_names.set_true
+				l_declared_enforce_unique_class_names.set_true
 			else
-				declared_enforce_unique_class_names.set_false
+				l_declared_enforce_unique_class_names.set_false
 			end
 		ensure
 			enforce_unique_class_names_declared: is_enforce_unique_class_names_declared
@@ -2238,14 +2349,18 @@ feature -- Modification
 
 	set_exception_trace (b: BOOLEAN)
 			-- Set `exception_trace' to `b'.
+		local
+			l_declared_exception_trace: like declared_exception_trace
 		do
-			if declared_exception_trace = Void then
-				create declared_exception_trace.make_undefined
+			l_declared_exception_trace := declared_exception_trace
+			if l_declared_exception_trace = Void then
+				create l_declared_exception_trace.make_undefined
+				declared_exception_trace := l_declared_exception_trace
 			end
 			if b then
-				declared_exception_trace.set_true
+				l_declared_exception_trace.set_true
 			else
-				declared_exception_trace.set_false
+				l_declared_exception_trace.set_false
 			end
 		ensure
 			exception_trace_declared: is_exception_trace_declared
@@ -2256,12 +2371,16 @@ feature -- Modification
 			-- Set `exclude' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_exclude: like declared_exclude
 		do
-			if declared_exclude = Void then
-				create declared_exclude.make (10)
-				declared_exclude.set_equality_tester (string_equality_tester)
+			l_declared_exclude := declared_exclude
+			if l_declared_exclude = Void then
+				create l_declared_exclude.make (10)
+				l_declared_exclude.set_equality_tester (string_equality_tester)
+				declared_exclude := l_declared_exclude
 			end
-			declared_exclude.force_last (a_value)
+			l_declared_exclude.force_last (a_value)
 		ensure
 			exclude_declared: is_exclude_declared
 			exclude_set: exclude.has (a_value)
@@ -2291,14 +2410,18 @@ feature -- Modification
 
 	set_finalize_option (b: BOOLEAN)
 			-- Set `finalize_option' to `b'.
+		local
+			l_declared_finalize_option: like declared_finalize_option
 		do
-			if declared_finalize_option = Void then
-				create declared_finalize_option.make_undefined
+			l_declared_finalize_option := declared_finalize_option
+			if l_declared_finalize_option = Void then
+				create l_declared_finalize_option.make_undefined
+				declared_finalize_option := l_declared_finalize_option
 			end
 			if b then
-				declared_finalize_option.set_true
+				l_declared_finalize_option.set_true
 			else
-				declared_finalize_option.set_false
+				l_declared_finalize_option.set_false
 			end
 		ensure
 			finalize_option_declared: is_finalize_option_declared
@@ -2307,14 +2430,18 @@ feature -- Modification
 
 	set_flat_fst_optimization (b: BOOLEAN)
 			-- Set `flat_fst_optimization' to `b'.
+		local
+			l_declared_flat_fst_optimization: like declared_flat_fst_optimization
 		do
-			if declared_flat_fst_optimization = Void then
-				create declared_flat_fst_optimization.make_undefined
+			l_declared_flat_fst_optimization := declared_flat_fst_optimization
+			if l_declared_flat_fst_optimization = Void then
+				create l_declared_flat_fst_optimization.make_undefined
+				declared_flat_fst_optimization := l_declared_flat_fst_optimization
 			end
 			if b then
-				declared_flat_fst_optimization.set_true
+				l_declared_flat_fst_optimization.set_true
 			else
-				declared_flat_fst_optimization.set_false
+				l_declared_flat_fst_optimization.set_false
 			end
 		ensure
 			flat_fst_optimization_declared: is_flat_fst_optimization_declared
@@ -2323,14 +2450,18 @@ feature -- Modification
 
 	set_force_32bits (b: BOOLEAN)
 			-- Set `force_32bits' to `b'.
+		local
+			l_declared_force_32bits: like declared_force_32bits
 		do
-			if declared_force_32bits = Void then
-				create declared_force_32bits.make_undefined
+			l_declared_force_32bits := declared_force_32bits
+			if l_declared_force_32bits = Void then
+				create l_declared_force_32bits.make_undefined
+				declared_force_32bits := l_declared_force_32bits
 			end
 			if b then
-				declared_force_32bits.set_true
+				l_declared_force_32bits.set_true
 			else
-				declared_force_32bits.set_false
+				l_declared_force_32bits.set_false
 			end
 		ensure
 			force_32bits_declared: is_force_32bits_declared
@@ -2350,14 +2481,18 @@ feature -- Modification
 
 	set_fst_optimization (b: BOOLEAN)
 			-- Set `fst_optimization' to `b'.
+		local
+			l_declared_fst_optimization: like declared_fst_optimization
 		do
-			if declared_fst_optimization = Void then
-				create declared_fst_optimization.make_undefined
+			l_declared_fst_optimization := declared_fst_optimization
+			if l_declared_fst_optimization = Void then
+				create l_declared_fst_optimization.make_undefined
+				declared_fst_optimization := l_declared_fst_optimization
 			end
 			if b then
-				declared_fst_optimization.set_true
+				l_declared_fst_optimization.set_true
 			else
-				declared_fst_optimization.set_false
+				l_declared_fst_optimization.set_false
 			end
 		ensure
 			fst_optimization_declared: is_fst_optimization_declared
@@ -2366,14 +2501,18 @@ feature -- Modification
 
 	set_full_class_checking (b: BOOLEAN)
 			-- Set `full_class_checking' to `b'.
+		local
+			l_declared_full_class_checking: like declared_full_class_checking
 		do
-			if declared_full_class_checking = Void then
-				create declared_full_class_checking.make_undefined
+			l_declared_full_class_checking := declared_full_class_checking
+			if l_declared_full_class_checking = Void then
+				create l_declared_full_class_checking.make_undefined
+				declared_full_class_checking := l_declared_full_class_checking
 			end
 			if b then
-				declared_full_class_checking.set_true
+				l_declared_full_class_checking.set_true
 			else
-				declared_full_class_checking.set_false
+				l_declared_full_class_checking.set_false
 			end
 		ensure
 			full_class_checking_declared: is_full_class_checking_declared
@@ -2393,14 +2532,18 @@ feature -- Modification
 
 	set_gc_info (b: BOOLEAN)
 			-- Set `gc_info' to `b'.
+		local
+			l_declared_gc_info: like declared_gc_info
 		do
-			if declared_gc_info = Void then
-				create declared_gc_info.make_undefined
+			l_declared_gc_info := declared_gc_info
+			if l_declared_gc_info = Void then
+				create l_declared_gc_info.make_undefined
+				declared_gc_info := l_declared_gc_info
 			end
 			if b then
-				declared_gc_info.set_true
+				l_declared_gc_info.set_true
 			else
-				declared_gc_info.set_false
+				l_declared_gc_info.set_false
 			end
 		ensure
 			gc_info_declared: is_gc_info_declared
@@ -2422,12 +2565,16 @@ feature -- Modification
 			-- Set `header' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_header: like declared_header
 		do
-			if declared_header = Void then
-				create declared_header.make (10)
-				declared_header.set_equality_tester (string_equality_tester)
+			l_declared_header := declared_header
+			if l_declared_header = Void then
+				create l_declared_header.make (10)
+				l_declared_header.set_equality_tester (string_equality_tester)
+				declared_header := l_declared_header
 			end
-			declared_header.force_last (a_value)
+			l_declared_header.force_last (a_value)
 		ensure
 			header_declared: is_header_declared
 			header_set: header.has (a_value)
@@ -2435,14 +2582,18 @@ feature -- Modification
 
 	set_high_memory_compiler (b: BOOLEAN)
 			-- Set `high_memory_compiler' to `b'.
+		local
+			l_declared_high_memory_compiler: like declared_high_memory_compiler
 		do
-			if declared_high_memory_compiler = Void then
-				create declared_high_memory_compiler.make_undefined
+			l_declared_high_memory_compiler := declared_high_memory_compiler
+			if l_declared_high_memory_compiler = Void then
+				create l_declared_high_memory_compiler.make_undefined
+				declared_high_memory_compiler := l_declared_high_memory_compiler
 			end
 			if b then
-				declared_high_memory_compiler.set_true
+				l_declared_high_memory_compiler.set_true
 			else
-				declared_high_memory_compiler.set_false
+				l_declared_high_memory_compiler.set_false
 			end
 		ensure
 			high_memory_compiler_declared: is_high_memory_compiler_declared
@@ -2451,14 +2602,18 @@ feature -- Modification
 
 	set_il_verifiable (b: BOOLEAN)
 			-- Set `il_verifiable' to `b'.
+		local
+			l_declared_il_verifiable: like declared_il_verifiable
 		do
-			if declared_il_verifiable = Void then
-				create declared_il_verifiable.make_undefined
+			l_declared_il_verifiable := declared_il_verifiable
+			if l_declared_il_verifiable = Void then
+				create l_declared_il_verifiable.make_undefined
+				declared_il_verifiable := l_declared_il_verifiable
 			end
 			if b then
-				declared_il_verifiable.set_true
+				l_declared_il_verifiable.set_true
 			else
-				declared_il_verifiable.set_false
+				l_declared_il_verifiable.set_false
 			end
 		ensure
 			il_verifiable_declared: is_il_verifiable_declared
@@ -2469,12 +2624,16 @@ feature -- Modification
 			-- Set `include' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_include: like declared_include
 		do
-			if declared_include = Void then
-				create declared_include.make (10)
-				declared_include.set_equality_tester (string_equality_tester)
+			l_declared_include := declared_include
+			if l_declared_include = Void then
+				create l_declared_include.make (10)
+				l_declared_include.set_equality_tester (string_equality_tester)
+				declared_include := l_declared_include
 			end
-			declared_include.force_last (a_value)
+			l_declared_include.force_last (a_value)
 		ensure
 			include_declared: is_include_declared
 			include_set: include.has (a_value)
@@ -2484,12 +2643,16 @@ feature -- Modification
 			-- Set `inlining' to `a_value'.
 		require
 			a_value_valid: valid_inlining.has (a_value)
+		local
+			l_declared_inlining: like declared_inlining
 		do
-			if declared_inlining = Void then
-				create declared_inlining.make (valid_inlining.count)
-				declared_inlining.set_equality_tester (string_equality_tester)
+			l_declared_inlining := declared_inlining
+			if l_declared_inlining = Void then
+				create l_declared_inlining.make (valid_inlining.count)
+				l_declared_inlining.set_equality_tester (string_equality_tester)
+				declared_inlining := l_declared_inlining
 			end
-			declared_inlining.force_last (a_value)
+			l_declared_inlining.force_last (a_value)
 		ensure
 			inlining_declared: is_inlining_declared
 			inlining_set: inlining.has (a_value)
@@ -2508,14 +2671,18 @@ feature -- Modification
 
 	set_jumps_optimization (b: BOOLEAN)
 			-- Set `jumps_optimization' to `b'.
+		local
+			l_declared_jumps_optimization: like declared_jumps_optimization
 		do
-			if declared_jumps_optimization = Void then
-				create declared_jumps_optimization.make_undefined
+			l_declared_jumps_optimization := declared_jumps_optimization
+			if l_declared_jumps_optimization = Void then
+				create l_declared_jumps_optimization.make_undefined
+				declared_jumps_optimization := l_declared_jumps_optimization
 			end
 			if b then
-				declared_jumps_optimization.set_true
+				l_declared_jumps_optimization.set_true
 			else
-				declared_jumps_optimization.set_false
+				l_declared_jumps_optimization.set_false
 			end
 		ensure
 			jumps_optimization_declared: is_jumps_optimization_declared
@@ -2535,14 +2702,18 @@ feature -- Modification
 
 	set_layout_optimization (b: BOOLEAN)
 			-- Set `layout_optimization' to `b'.
+		local
+			l_declared_layout_optimization: like declared_layout_optimization
 		do
-			if declared_layout_optimization = Void then
-				create declared_layout_optimization.make_undefined
+			l_declared_layout_optimization := declared_layout_optimization
+			if l_declared_layout_optimization = Void then
+				create l_declared_layout_optimization.make_undefined
+				declared_layout_optimization := l_declared_layout_optimization
 			end
 			if b then
-				declared_layout_optimization.set_true
+				l_declared_layout_optimization.set_true
 			else
-				declared_layout_optimization.set_false
+				l_declared_layout_optimization.set_false
 			end
 		ensure
 			layout_optimization_declared: is_layout_optimization_declared
@@ -2551,14 +2722,18 @@ feature -- Modification
 
 	set_leaves_optimization (b: BOOLEAN)
 			-- Set `leaves_optimization' to `b'.
+		local
+			l_declared_leaves_optimization: like declared_leaves_optimization
 		do
-			if declared_leaves_optimization = Void then
-				create declared_leaves_optimization.make_undefined
+			l_declared_leaves_optimization := declared_leaves_optimization
+			if l_declared_leaves_optimization = Void then
+				create l_declared_leaves_optimization.make_undefined
+				declared_leaves_optimization := l_declared_leaves_optimization
 			end
 			if b then
-				declared_leaves_optimization.set_true
+				l_declared_leaves_optimization.set_true
 			else
-				declared_leaves_optimization.set_false
+				l_declared_leaves_optimization.set_false
 			end
 		ensure
 			leaves_optimization_declared: is_leaves_optimization_declared
@@ -2567,14 +2742,18 @@ feature -- Modification
 
 	set_line_generation (b: BOOLEAN)
 			-- Set `line_generation' to `b'.
+		local
+			l_declared_line_generation: like declared_line_generation
 		do
-			if declared_line_generation = Void then
-				create declared_line_generation.make_undefined
+			l_declared_line_generation := declared_line_generation
+			if l_declared_line_generation = Void then
+				create l_declared_line_generation.make_undefined
+				declared_line_generation := l_declared_line_generation
 			end
 			if b then
-				declared_line_generation.set_true
+				l_declared_line_generation.set_true
 			else
-				declared_line_generation.set_false
+				l_declared_line_generation.set_false
 			end
 		ensure
 			line_generation_declared: is_line_generation_declared
@@ -2585,12 +2764,16 @@ feature -- Modification
 			-- Set `link' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_link: like declared_link
 		do
-			if declared_link = Void then
-				create declared_link.make (10)
-				declared_link.set_equality_tester (string_equality_tester)
+			l_declared_link := declared_link
+			if l_declared_link = Void then
+				create l_declared_link.make (10)
+				l_declared_link.set_equality_tester (string_equality_tester)
+				declared_link := l_declared_link
 			end
-			declared_link.force_last (a_value)
+			l_declared_link.force_last (a_value)
 		ensure
 			link_declared: is_link_declared
 			link_set: link.has (a_value)
@@ -2609,14 +2792,18 @@ feature -- Modification
 
 	set_linux_fpu_double_precision (b: BOOLEAN)
 			-- Set `linux_fpu_double_precision' to `b'.
+		local
+			l_declared_linux_fpu_double_precision: like declared_linux_fpu_double_precision
 		do
-			if declared_linux_fpu_double_precision = Void then
-				create declared_linux_fpu_double_precision.make_undefined
+			l_declared_linux_fpu_double_precision := declared_linux_fpu_double_precision
+			if l_declared_linux_fpu_double_precision = Void then
+				create l_declared_linux_fpu_double_precision.make_undefined
+				declared_linux_fpu_double_precision := l_declared_linux_fpu_double_precision
 			end
 			if b then
-				declared_linux_fpu_double_precision.set_true
+				l_declared_linux_fpu_double_precision.set_true
 			else
-				declared_linux_fpu_double_precision.set_false
+				l_declared_linux_fpu_double_precision.set_false
 			end
 		ensure
 			linux_fpu_double_precision_declared: is_linux_fpu_double_precision_declared
@@ -2625,14 +2812,18 @@ feature -- Modification
 
 	set_manifest_string_trace (b: BOOLEAN)
 			-- Set `manifest_string_trace' to `b'.
+		local
+			l_declared_manifest_string_trace: like declared_manifest_string_trace
 		do
-			if declared_manifest_string_trace = Void then
-				create declared_manifest_string_trace.make_undefined
+			l_declared_manifest_string_trace := declared_manifest_string_trace
+			if l_declared_manifest_string_trace = Void then
+				create l_declared_manifest_string_trace.make_undefined
+				declared_manifest_string_trace := l_declared_manifest_string_trace
 			end
 			if b then
-				declared_manifest_string_trace.set_true
+				l_declared_manifest_string_trace.set_true
 			else
-				declared_manifest_string_trace.set_false
+				l_declared_manifest_string_trace.set_false
 			end
 		ensure
 			manifest_string_trace_declared: is_manifest_string_trace_declared
@@ -2641,14 +2832,18 @@ feature -- Modification
 
 	set_map (b: BOOLEAN)
 			-- Set `map' to `b'.
+		local
+			l_declared_map: like declared_map
 		do
-			if declared_map = Void then
-				create declared_map.make_undefined
+			l_declared_map := declared_map
+			if l_declared_map = Void then
+				create l_declared_map.make_undefined
+				declared_map := l_declared_map
 			end
 			if b then
-				declared_map.set_true
+				l_declared_map.set_true
 			else
-				declared_map.set_false
+				l_declared_map.set_false
 			end
 		ensure
 			map_declared: is_map_declared
@@ -2712,14 +2907,18 @@ feature -- Modification
 
 	set_msil_generation (b: BOOLEAN)
 			-- Set `msil_generation' to `b'.
+		local
+			l_declared_msil_generation: like declared_msil_generation
 		do
-			if declared_msil_generation = Void then
-				create declared_msil_generation.make_undefined
+			l_declared_msil_generation := declared_msil_generation
+			if l_declared_msil_generation = Void then
+				create l_declared_msil_generation.make_undefined
+				declared_msil_generation := l_declared_msil_generation
 			end
 			if b then
-				declared_msil_generation.set_true
+				l_declared_msil_generation.set_true
 			else
-				declared_msil_generation.set_false
+				l_declared_msil_generation.set_false
 			end
 		ensure
 			msil_generation_declared: is_msil_generation_declared
@@ -2750,14 +2949,18 @@ feature -- Modification
 
 	set_msil_use_optimized_precompile (b: BOOLEAN)
 			-- Set `msil_use_optimized_precompile' to `b'.
+		local
+			l_declared_msil_use_optimized_precompile: like declared_msil_use_optimized_precompile
 		do
-			if declared_msil_use_optimized_precompile = Void then
-				create declared_msil_use_optimized_precompile.make_undefined
+			l_declared_msil_use_optimized_precompile := declared_msil_use_optimized_precompile
+			if l_declared_msil_use_optimized_precompile = Void then
+				create l_declared_msil_use_optimized_precompile.make_undefined
+				declared_msil_use_optimized_precompile := l_declared_msil_use_optimized_precompile
 			end
 			if b then
-				declared_msil_use_optimized_precompile.set_true
+				l_declared_msil_use_optimized_precompile.set_true
 			else
-				declared_msil_use_optimized_precompile.set_false
+				l_declared_msil_use_optimized_precompile.set_false
 			end
 		ensure
 			msil_use_optimized_precompile_declared: is_msil_use_optimized_precompile_declared
@@ -2766,14 +2969,18 @@ feature -- Modification
 
 	set_multithreaded (b: BOOLEAN)
 			-- Set `multithreaded' to `b'.
+		local
+			l_declared_multithreaded: like declared_multithreaded
 		do
-			if declared_multithreaded = Void then
-				create declared_multithreaded.make_undefined
+			l_declared_multithreaded := declared_multithreaded
+			if l_declared_multithreaded = Void then
+				create l_declared_multithreaded.make_undefined
+				declared_multithreaded := l_declared_multithreaded
 			end
 			if b then
-				declared_multithreaded.set_true
+				l_declared_multithreaded.set_true
 			else
-				declared_multithreaded.set_false
+				l_declared_multithreaded.set_false
 			end
 		ensure
 			multithreaded_declared: is_multithreaded_declared
@@ -2793,14 +3000,18 @@ feature -- Modification
 
 	set_no_default_lib (b: BOOLEAN)
 			-- Set `no_default_lib' to `b'.
+		local
+			l_declared_no_default_lib: like declared_no_default_lib
 		do
-			if declared_no_default_lib = Void then
-				create declared_no_default_lib.make_undefined
+			l_declared_no_default_lib := declared_no_default_lib
+			if l_declared_no_default_lib = Void then
+				create l_declared_no_default_lib.make_undefined
+				declared_no_default_lib := l_declared_no_default_lib
 			end
 			if b then
-				declared_no_default_lib.set_true
+				l_declared_no_default_lib.set_true
 			else
-				declared_no_default_lib.set_false
+				l_declared_no_default_lib.set_false
 			end
 		ensure
 			no_default_lib_declared: is_no_default_lib_declared
@@ -2809,14 +3020,18 @@ feature -- Modification
 
 	set_old_verbatim_strings (b: BOOLEAN)
 			-- Set `old_verbatim_strings' to `b'.
+		local
+			l_declared_old_verbatim_strings: like declared_old_verbatim_strings
 		do
-			if declared_old_verbatim_strings = Void then
-				create declared_old_verbatim_strings.make_undefined
+			l_declared_old_verbatim_strings := declared_old_verbatim_strings
+			if l_declared_old_verbatim_strings = Void then
+				create l_declared_old_verbatim_strings.make_undefined
+				declared_old_verbatim_strings := l_declared_old_verbatim_strings
 			end
 			if b then
-				declared_old_verbatim_strings.set_true
+				l_declared_old_verbatim_strings.set_true
 			else
-				declared_old_verbatim_strings.set_false
+				l_declared_old_verbatim_strings.set_false
 			end
 		ensure
 			old_verbatim_strings_declared: is_old_verbatim_strings_declared
@@ -2827,28 +3042,35 @@ feature -- Modification
 			-- Set `override_cluster' to `a_value'.
 		require
 			a_value_not_void: a_value /= Void
+		local
+			l_declared_override_cluster: like declared_override_cluster
 		do
-			if declared_override_cluster = Void then
-				create declared_override_cluster.make (10)
-				declared_override_cluster.set_equality_tester (string_equality_tester)
+			l_declared_override_cluster := declared_override_cluster
+			if l_declared_override_cluster = Void then
+				create l_declared_override_cluster.make (10)
+				l_declared_override_cluster.set_equality_tester (string_equality_tester)
+				declared_override_cluster := l_declared_override_cluster
 			end
-			declared_override_cluster.force_last (a_value)
+			l_declared_override_cluster.force_last (a_value)
 		ensure
 			override_cluster_declared: is_override_cluster_declared
 			override_cluster_set: override_cluster.has (a_value)
-
 		end
 
 	set_portable_code_generation (b: BOOLEAN)
 			-- Set `portable_code_generation' to `b'.
+		local
+			l_declared_portable_code_generation: like declared_portable_code_generation
 		do
-			if declared_portable_code_generation = Void then
-				create declared_portable_code_generation.make_undefined
+			l_declared_portable_code_generation := declared_portable_code_generation
+			if l_declared_portable_code_generation = Void then
+				create l_declared_portable_code_generation.make_undefined
+				declared_portable_code_generation := l_declared_portable_code_generation
 			end
 			if b then
-				declared_portable_code_generation.set_true
+				l_declared_portable_code_generation.set_true
 			else
-				declared_portable_code_generation.set_false
+				l_declared_portable_code_generation.set_false
 			end
 		ensure
 			portable_code_generation_declared: is_portable_code_generation_declared
@@ -2879,14 +3101,18 @@ feature -- Modification
 
 	set_profile (b: BOOLEAN)
 			-- Set `profile' to `b'.
+		local
+			l_declared_profile: like declared_profile
 		do
-			if declared_profile = Void then
-				create declared_profile.make_undefined
+			l_declared_profile := declared_profile
+			if l_declared_profile = Void then
+				create l_declared_profile.make_undefined
+				declared_profile := l_declared_profile
 			end
 			if b then
-				declared_profile.set_true
+				l_declared_profile.set_true
 			else
-				declared_profile.set_false
+				l_declared_profile.set_false
 			end
 		ensure
 			profile_declared: is_profile_declared
@@ -2906,14 +3132,18 @@ feature -- Modification
 
 	set_read_only (b: BOOLEAN)
 			-- Set `read_only' to `b'.
+		local
+			l_declared_read_only: like declared_read_only
 		do
-			if declared_read_only = Void then
-				create declared_read_only.make_undefined
+			l_declared_read_only := declared_read_only
+			if l_declared_read_only = Void then
+				create l_declared_read_only.make_undefined
+				declared_read_only := l_declared_read_only
 			end
 			if b then
-				declared_read_only.set_true
+				l_declared_read_only.set_true
 			else
-				declared_read_only.set_false
+				l_declared_read_only.set_false
 			end
 		ensure
 			read_only_declared: is_read_only_declared
@@ -2922,14 +3152,18 @@ feature -- Modification
 
 	set_recursive (b: BOOLEAN)
 			-- Set `recursive' to `b'.
+		local
+			l_declared_recursive: like declared_recursive
 		do
-			if declared_recursive = Void then
-				create declared_recursive.make_undefined
+			l_declared_recursive := declared_recursive
+			if l_declared_recursive = Void then
+				create l_declared_recursive.make_undefined
+				declared_recursive := l_declared_recursive
 			end
 			if b then
-				declared_recursive.set_true
+				l_declared_recursive.set_true
 			else
-				declared_recursive.set_false
+				l_declared_recursive.set_false
 			end
 		ensure
 			recursive_declared: is_recursive_declared
@@ -2938,14 +3172,18 @@ feature -- Modification
 
 	set_reloads_optimization (b: BOOLEAN)
 			-- Set `reloads_optimization' to `b'.
+		local
+			l_declared_reloads_optimization: like declared_reloads_optimization
 		do
-			if declared_reloads_optimization = Void then
-				create declared_reloads_optimization.make_undefined
+			l_declared_reloads_optimization := declared_reloads_optimization
+			if l_declared_reloads_optimization = Void then
+				create l_declared_reloads_optimization.make_undefined
+				declared_reloads_optimization := l_declared_reloads_optimization
 			end
 			if b then
-				declared_reloads_optimization.set_true
+				l_declared_reloads_optimization.set_true
 			else
-				declared_reloads_optimization.set_false
+				l_declared_reloads_optimization.set_false
 			end
 		ensure
 			reloads_optimization_declared: is_reloads_optimization_declared
@@ -2965,14 +3203,18 @@ feature -- Modification
 
 	set_split (b: BOOLEAN)
 			-- Set `split' to `b'.
+		local
+			l_declared_split: like declared_split
 		do
-			if declared_split = Void then
-				create declared_split.make_undefined
+			l_declared_split := declared_split
+			if l_declared_split = Void then
+				create l_declared_split.make_undefined
+				declared_split := l_declared_split
 			end
 			if b then
-				declared_split.set_true
+				l_declared_split.set_true
 			else
-				declared_split.set_false
+				l_declared_split.set_false
 			end
 		ensure
 			split_declared: is_split_declared
@@ -2992,14 +3234,18 @@ feature -- Modification
 
 	set_storable (b: BOOLEAN)
 			-- Set `storable' to `b'.
+		local
+			l_declared_storable: like declared_storable
 		do
-			if declared_storable = Void then
-				create declared_storable.make_undefined
+			l_declared_storable := declared_storable
+			if l_declared_storable = Void then
+				create l_declared_storable.make_undefined
+				declared_storable := l_declared_storable
 			end
 			if b then
-				declared_storable.set_true
+				l_declared_storable.set_true
 			else
-				declared_storable.set_false
+				l_declared_storable.set_false
 			end
 		ensure
 			storable_declared: is_storable_declared
@@ -3019,14 +3265,18 @@ feature -- Modification
 
 	set_strip_option (b: BOOLEAN)
 			-- Set `strip_option' to `b'.
+		local
+			l_declared_strip_option: like declared_strip_option
 		do
-			if declared_strip_option = Void then
-				create declared_strip_option.make_undefined
+			l_declared_strip_option := declared_strip_option
+			if l_declared_strip_option = Void then
+				create l_declared_strip_option.make_undefined
+				declared_strip_option := l_declared_strip_option
 			end
 			if b then
-				declared_strip_option.set_true
+				l_declared_strip_option.set_true
 			else
-				declared_strip_option.set_false
+				l_declared_strip_option.set_false
 			end
 		ensure
 			strip_option_declared: is_strip_option_declared
@@ -3057,14 +3307,18 @@ feature -- Modification
 
 	set_trace (b: BOOLEAN)
 			-- Set `trace' to `b'.
+		local
+			l_declared_trace: like declared_trace
 		do
-			if declared_trace = Void then
-				create declared_trace.make_undefined
+			l_declared_trace := declared_trace
+			if l_declared_trace = Void then
+				create l_declared_trace.make_undefined
+				declared_trace := l_declared_trace
 			end
 			if b then
-				declared_trace.set_true
+				l_declared_trace.set_true
 			else
-				declared_trace.set_false
+				l_declared_trace.set_false
 			end
 		ensure
 			trace_declared: is_trace_declared
@@ -3073,14 +3327,18 @@ feature -- Modification
 
 	set_use_cluster_name_as_namespace (b: BOOLEAN)
 			-- Set `use_cluster_name_as_namespace' to `b'.
+		local
+			l_declared_use_cluster_name_as_namespace: like declared_use_cluster_name_as_namespace
 		do
-			if declared_use_cluster_name_as_namespace = Void then
-				create declared_use_cluster_name_as_namespace.make_undefined
+			l_declared_use_cluster_name_as_namespace := declared_use_cluster_name_as_namespace
+			if l_declared_use_cluster_name_as_namespace = Void then
+				create l_declared_use_cluster_name_as_namespace.make_undefined
+				declared_use_cluster_name_as_namespace := l_declared_use_cluster_name_as_namespace
 			end
 			if b then
-				declared_use_cluster_name_as_namespace.set_true
+				l_declared_use_cluster_name_as_namespace.set_true
 			else
-				declared_use_cluster_name_as_namespace.set_false
+				l_declared_use_cluster_name_as_namespace.set_false
 			end
 		ensure
 			use_cluster_name_as_namespace_declared: is_use_cluster_name_as_namespace_declared
@@ -3089,14 +3347,18 @@ feature -- Modification
 
 	set_use_full_cluster_name_as_namespace (b: BOOLEAN)
 			-- Set `use_full_cluster_name_as_namespace' to `b'.
+		local
+			l_declared_use_full_cluster_name_as_namespace: like declared_use_full_cluster_name_as_namespace
 		do
-			if declared_use_full_cluster_name_as_namespace = Void then
-				create declared_use_full_cluster_name_as_namespace.make_undefined
+			l_declared_use_full_cluster_name_as_namespace := declared_use_full_cluster_name_as_namespace
+			if l_declared_use_full_cluster_name_as_namespace = Void then
+				create l_declared_use_full_cluster_name_as_namespace.make_undefined
+				declared_use_full_cluster_name_as_namespace := l_declared_use_full_cluster_name_as_namespace
 			end
 			if b then
-				declared_use_full_cluster_name_as_namespace.set_true
+				l_declared_use_full_cluster_name_as_namespace.set_true
 			else
-				declared_use_full_cluster_name_as_namespace.set_false
+				l_declared_use_full_cluster_name_as_namespace.set_false
 			end
 		ensure
 			use_full_cluster_name_as_namespace_declared: is_use_full_cluster_name_as_namespace_declared
@@ -3105,14 +3367,18 @@ feature -- Modification
 
 	set_verbose (b: BOOLEAN)
 			-- Set `verbose' to `b'.
+		local
+			l_declared_verbose: like declared_verbose
 		do
-			if declared_verbose = Void then
-				create declared_verbose.make_undefined
+			l_declared_verbose := declared_verbose
+			if l_declared_verbose = Void then
+				create l_declared_verbose.make_undefined
+				declared_verbose := l_declared_verbose
 			end
 			if b then
-				declared_verbose.set_true
+				l_declared_verbose.set_true
 			else
-				declared_verbose.set_false
+				l_declared_verbose.set_false
 			end
 		ensure
 			verbose_declared: is_verbose_declared
@@ -3156,6 +3422,7 @@ feature -- Modification
 	set_warning (a_value: STRING)
 			-- Set `warning' to `a_value'.
 		require
+			a_value_not_void: a_value /= Void
 			a_value_valid: valid_warning.has (a_value)
 		do
 			declared_warning := a_value
@@ -3166,14 +3433,18 @@ feature -- Modification
 
 	set_wedit (b: BOOLEAN)
 			-- Set `wedit' to `b'.
+		local
+			l_declared_wedit: like declared_wedit
 		do
-			if declared_wedit = Void then
-				create declared_wedit.make_undefined
+			l_declared_wedit := declared_wedit
+			if l_declared_wedit = Void then
+				create l_declared_wedit.make_undefined
+				declared_wedit := l_declared_wedit
 			end
 			if b then
-				declared_wedit.set_true
+				l_declared_wedit.set_true
 			else
-				declared_wedit.set_false
+				l_declared_wedit.set_false
 			end
 		ensure
 			wedit_declared: is_wedit_declared
@@ -3237,7 +3508,7 @@ feature -- Status setting
 		ensure
 			attached_by_default_not_declared: not is_attached_by_default_declared
 		end
-		
+
 	unset_automatic_backup
 			-- Unset `automatic_backup'.
 		do
@@ -4141,292 +4412,292 @@ feature -- Valid values
 
 feature -- Declared values
 
-	declared_abstract: UT_TRISTATE
+	declared_abstract: detachable UT_TRISTATE
 			-- Declared value for 'abstract' option
 
-	declared_address_expression: UT_TRISTATE
+	declared_address_expression: detachable UT_TRISTATE
 			-- Declared value for 'address_expression' option
 
-	declared_arguments: DS_HASH_SET [STRING]
+	declared_arguments: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'arguments' option
 
-	declared_array_optimization: UT_TRISTATE
+	declared_array_optimization: detachable UT_TRISTATE
 			-- Declared value for 'array_optimization' option
 
-	declared_assembly: STRING
+	declared_assembly: detachable STRING
 			-- Declared value for 'assembly' option
 
-	declared_assertion: DS_HASH_SET [STRING]
+	declared_assertion: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
 
-	declared_attached_by_default: UT_TRISTATE
+	declared_attached_by_default: detachable UT_TRISTATE
 			-- Declared value for 'attached_by_default' option
 
-	declared_automatic_backup: UT_TRISTATE
+	declared_automatic_backup: detachable UT_TRISTATE
 			-- Declared value for 'automatic_backup' option
 
-	declared_callback: STRING
+	declared_callback: detachable STRING
 			-- Declared value for 'callback' option
 
-	declared_case_insensitive: UT_TRISTATE
+	declared_case_insensitive: detachable UT_TRISTATE
 			-- Declared value for 'case_insensitive' option
 
-	declared_check_generic_creation_constraint: UT_TRISTATE
+	declared_check_generic_creation_constraint: detachable UT_TRISTATE
 			-- Declared value for 'check_generic_creation_constraint' option
 
-	declared_check_vape: UT_TRISTATE
+	declared_check_vape: detachable UT_TRISTATE
 			-- Declared value for 'check_vape' option
 
-	declared_clean: UT_TRISTATE
+	declared_clean: detachable UT_TRISTATE
 			-- Declared value for 'clean' option
 
-	declared_cls_compliant: UT_TRISTATE
+	declared_cls_compliant: detachable UT_TRISTATE
 			-- Declared value for 'cls_compliant' option
 
-	declared_component: STRING
+	declared_component: detachable STRING
 			-- Declared value for 'component' option
 
-	declared_console_application: UT_TRISTATE
+	declared_console_application: detachable UT_TRISTATE
 			-- Declared value for 'console_application' option
 
-	declared_create_keyword_extension: UT_TRISTATE
+	declared_create_keyword_extension: detachable UT_TRISTATE
 			-- Declared value for 'create_keyword_extension' option
 
-	declared_culture: STRING
+	declared_culture: detachable STRING
 			-- Declared value for 'culture' option
 
-	declared_c_compiler_options: DS_HASH_SET [STRING]
+	declared_c_compiler_options: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'c_compiler_options' option
 
-	declared_dead_code_removal: DS_HASH_SET [STRING]
+	declared_dead_code_removal: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'dead_code_removal' option
 
-	declared_debug_option: UT_TRISTATE
+	declared_debug_option: detachable UT_TRISTATE
 			-- Declared value for 'debug' option
 
-	declared_debug_tag: DS_HASH_SET [STRING]
+	declared_debug_tag: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'debug_tag' option
 
-	declared_debugger: UT_TRISTATE
+	declared_debugger: detachable UT_TRISTATE
 			-- Declared value for 'debugger' option
 
-	declared_document: STRING
+	declared_document: detachable STRING
 			-- Declared value for 'document' option
 
-	declared_dotnet_naming_convention: UT_TRISTATE
+	declared_dotnet_naming_convention: detachable UT_TRISTATE
 			-- Declared value for 'dotnet_naming_convention' option
 
-	declared_dynamic_runtime: UT_TRISTATE
+	declared_dynamic_runtime: detachable UT_TRISTATE
 			-- Declared value for 'dynamic_runtime' option
 
-	declared_ecf_library: STRING
+	declared_ecf_library: detachable STRING
 			-- Declared value for 'ecf_library' option
 
-	declared_enforce_unique_class_names: UT_TRISTATE
+	declared_enforce_unique_class_names: detachable UT_TRISTATE
 			-- Declared value for 'enforce_unique_class_names' option
 
-	declared_exception_trace: UT_TRISTATE
+	declared_exception_trace: detachable UT_TRISTATE
 			-- Declared value for 'exception_trace' option
 
-	declared_exclude: DS_HASH_SET [STRING]
+	declared_exclude: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'exclude' option
 
-	declared_export_option: STRING
+	declared_export_option: detachable STRING
 			-- Declared value for 'export' option
 
-	declared_external_runtime: STRING
+	declared_external_runtime: detachable STRING
 			-- Declared value for 'external_runtime' option
 
-	declared_finalize_option: UT_TRISTATE
+	declared_finalize_option: detachable UT_TRISTATE
 			-- Declared value for 'finalize' option
 
-	declared_flat_fst_optimization: UT_TRISTATE
+	declared_flat_fst_optimization: detachable UT_TRISTATE
 			-- Declared value for 'flat_fst_optimization' option
 
-	declared_force_32bits: UT_TRISTATE
+	declared_force_32bits: detachable UT_TRISTATE
 			-- Declared value for 'force_32bits' option
 
-	declared_fst_expansion_factor: INTEGER
+	declared_fst_expansion_factor: detachable INTEGER
 			-- Declared value for 'fst_expansion_factor' option
 
-	declared_fst_optimization: UT_TRISTATE
+	declared_fst_optimization: detachable UT_TRISTATE
 			-- Declared value for 'fst_optimization' option
 
-	declared_full_class_checking: UT_TRISTATE
+	declared_full_class_checking: detachable UT_TRISTATE
 			-- Declared value for 'full_class_checking' option
 
-	declared_garbage_collector: STRING
+	declared_garbage_collector: detachable STRING
 			-- Declared value for 'garbage_collector' option
 
-	declared_gc_info: UT_TRISTATE
+	declared_gc_info: detachable UT_TRISTATE
 			-- Declared value for 'gc_info' option
 
-	declared_heap_size: INTEGER
+	declared_heap_size: detachable INTEGER
 			-- Declared value for 'heap_size' option
 
-	declared_header: DS_HASH_SET [STRING]
+	declared_header: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'header' option
 
-	declared_high_memory_compiler: UT_TRISTATE
+	declared_high_memory_compiler: detachable UT_TRISTATE
 			-- Declared value for 'high_memory_compiler' option
 
-	declared_il_verifiable: UT_TRISTATE
+	declared_il_verifiable: detachable UT_TRISTATE
 			-- Declared value for 'il_verifiable' option
 
-	declared_include: DS_HASH_SET [STRING]
+	declared_include: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'include' option
 
-	declared_inlining: DS_HASH_SET [STRING]
+	declared_inlining: detachable DS_HASH_SET [STRING]
 			-- Declared values for 'inlining' option
 
 	declared_inlining_size: INTEGER
 			-- Declared value for 'inlining_size' option
 
-	declared_jumps_optimization: UT_TRISTATE
+	declared_jumps_optimization: detachable UT_TRISTATE
 			-- Declared value for 'jumps_optimization' option
 
-	declared_layout: STRING
+	declared_layout: detachable STRING
 			-- Declared value for 'layout' option
 
-	declared_layout_optimization: UT_TRISTATE
+	declared_layout_optimization: detachable UT_TRISTATE
 			-- Declared value for 'layout_optimization' option
 
-	declared_leaves_optimization: UT_TRISTATE
+	declared_leaves_optimization: detachable UT_TRISTATE
 			-- Declared value for 'leaves_optimization' option
 
-	declared_line_generation: UT_TRISTATE
+	declared_line_generation: detachable UT_TRISTATE
 			-- Declared value for 'line_generation' option
 
-	declared_link: DS_ARRAYED_LIST [STRING]
+	declared_link: detachable DS_ARRAYED_LIST [STRING]
 			-- Declared values for 'link' option
 
-	declared_linker: STRING
+	declared_linker: detachable STRING
 			-- Declared value for 'linker' option
 
-	declared_linux_fpu_double_precision: UT_TRISTATE
+	declared_linux_fpu_double_precision: detachable UT_TRISTATE
 			-- Declared value for 'linux_fpu_double_precision' option
 
-	declared_manifest_string_trace: UT_TRISTATE
+	declared_manifest_string_trace: detachable UT_TRISTATE
 			-- Declared value for 'manifest_string_trace' option
 
-	declared_map: UT_TRISTATE
+	declared_map: detachable UT_TRISTATE
 			-- Declared value for 'map' option
 
-	declared_metadata_cache_path: STRING
+	declared_metadata_cache_path: detachable STRING
 			-- Declared value for 'metadata_cache_path' option
 
-	declared_msil_assembly_compatibility: STRING
+	declared_msil_assembly_compatibility: detachable STRING
 			-- Declared value for 'msil_assembly_compatibility' option
 
 	declared_msil_classes_per_module: INTEGER
 			-- Declared value for 'msil_classes_per_module' option
 
-	declared_msil_clr_version: STRING
+	declared_msil_clr_version: detachable STRING
 			-- Declared value for 'msil_clr_version' option
 
-	declared_msil_culture: STRING
+	declared_msil_culture: detachable STRING
 			-- Declared value for 'msil_culture' option
 
-	declared_msil_generation: UT_TRISTATE
+	declared_msil_generation: detachable UT_TRISTATE
 			-- Declared value for 'msil_generation' option
 
-	declared_msil_generation_version: STRING
+	declared_msil_generation_version: detachable STRING
 			-- Declared value for 'msil_generation_version' option
 
-	declared_msil_key_file_name: STRING
+	declared_msil_key_file_name: detachable STRING
 			-- Declared value for 'msil_key_file_name' option
 
-	declared_msil_use_optimized_precompile: UT_TRISTATE
+	declared_msil_use_optimized_precompile: detachable UT_TRISTATE
 			-- Declared value for 'msil_use_optimized_precompile' option
 
-	declared_multithreaded: UT_TRISTATE
+	declared_multithreaded: detachable UT_TRISTATE
 			-- Declared value for 'multithreaded' option
 
-	declared_namespace: STRING
+	declared_namespace: detachable STRING
 			-- Declared value for 'namespace' option
 
-	declared_no_default_lib: UT_TRISTATE
+	declared_no_default_lib: detachable UT_TRISTATE
 			-- Declared value for 'no_default_lib' option
 
-	declared_old_verbatim_strings: UT_TRISTATE
+	declared_old_verbatim_strings: detachable UT_TRISTATE
 			-- Declared value for 'old_verbatim_strings' option
 
-	declared_override_cluster: DS_HASH_SET [STRING]
+	declared_override_cluster: detachable DS_HASH_SET [STRING]
 			-- Declared value for 'override_cluster' option
 
-	declared_portable_code_generation: UT_TRISTATE
+	declared_portable_code_generation: detachable UT_TRISTATE
 			-- Declared value for 'portable_code_generation' option
 
-	declared_precompiled: STRING
+	declared_precompiled: detachable STRING
 			-- Declared value for 'precompiled' option
 
-	declared_prefix_option: STRING
+	declared_prefix_option: detachable STRING
 			-- Declared value for 'prefix' option
 
-	declared_profile: UT_TRISTATE
+	declared_profile: detachable UT_TRISTATE
 			-- Declared value for 'profile' option
 
-	declared_public_key_token: STRING
+	declared_public_key_token: detachable STRING
 			-- Declared value for 'public_key_token' option
 
-	declared_read_only: UT_TRISTATE
+	declared_read_only: detachable UT_TRISTATE
 			-- Declared value for 'read_only' option
 
-	declared_recursive: UT_TRISTATE
+	declared_recursive: detachable UT_TRISTATE
 			-- Declared value for 'recursive' option
 
-	declared_reloads_optimization: UT_TRISTATE
+	declared_reloads_optimization: detachable UT_TRISTATE
 			-- Declared value for 'reloads_optimization' option
 
-	declared_shared_library_definition: STRING
+	declared_shared_library_definition: detachable STRING
 			-- Declared value for 'shared_library_definition' option
 
-	declared_split: UT_TRISTATE
+	declared_split: detachable UT_TRISTATE
 			-- Declared value for 'split' option
 
 	declared_stack_size: INTEGER
 			-- Declared value for 'stack_size' option
 
-	declared_storable: UT_TRISTATE
+	declared_storable: detachable UT_TRISTATE
 			-- Declared value for 'storable' option
 
-	declared_storable_filename: STRING
+	declared_storable_filename: detachable STRING
 			-- Declared value for 'storable_filename' option
 
-	declared_strip_option: UT_TRISTATE
+	declared_strip_option: detachable UT_TRISTATE
 			-- Declared value for 'strip' option
 
-	declared_syntax: STRING
+	declared_syntax: detachable STRING
 			-- Declared value for 'syntax' option
 
-	declared_target: STRING
+	declared_target: detachable STRING
 			-- Declared value for 'target' option
 
-	declared_trace: UT_TRISTATE
+	declared_trace: detachable UT_TRISTATE
 			-- Declared value for 'trace' option
 
-	declared_use_cluster_name_as_namespace: UT_TRISTATE
+	declared_use_cluster_name_as_namespace: detachable UT_TRISTATE
 			-- Declared value for 'use_cluster_name_as_namespace' option
 
-	declared_use_full_cluster_name_as_namespace: UT_TRISTATE
+	declared_use_full_cluster_name_as_namespace: detachable UT_TRISTATE
 			-- Declared value for 'use_full_cluster_name_as_namespace' option
 
-	declared_verbose: UT_TRISTATE
+	declared_verbose: detachable UT_TRISTATE
 			-- Declared value for 'verbose' option
 
-	declared_version: STRING
+	declared_version: detachable STRING
 			-- Declared value for 'version' option
 
-	declared_visible_filename: STRING
+	declared_visible_filename: detachable STRING
 			-- Declared value for 'visible_filename' option
 
-	declared_void_safety: STRING
+	declared_void_safety: detachable STRING
 			-- Declared value for 'void_safety' option
 
-	declared_warning: STRING
+	declared_warning: detachable STRING
 			-- Declared value for 'warning' option
 
-	declared_wedit: UT_TRISTATE
+	declared_wedit: detachable UT_TRISTATE
 			-- Declared value for 'wedit' option
 
 feature -- Default values
@@ -4450,7 +4721,7 @@ feature -- Default values
 	default_array_optimization: BOOLEAN = False
 			-- Default value for 'array_optimization' option
 
-	default_assembly: STRING
+	default_assembly: detachable STRING
 			-- Default value for 'assembly' option
 		once
 			Result := Void
@@ -4473,7 +4744,7 @@ feature -- Default values
 	default_automatic_backup: BOOLEAN = False
 			-- Default value for 'automatic_backup' option
 
-	default_callback: STRING
+	default_callback: detachable STRING
 			-- Default value for 'callback' option
 		once
 			Result := Void
@@ -4496,7 +4767,7 @@ feature -- Default values
 	default_cls_compliant: BOOLEAN = True
 			-- Default value for 'cls_compliant' option
 
-	default_component: STRING
+	default_component: detachable STRING
 			-- Default value for 'component' option
 		once
 			Result := Void
@@ -4551,7 +4822,7 @@ feature -- Default values
 	default_debugger: BOOLEAN = False
 			-- Default value for 'debugger' option
 
-	default_document: STRING
+	default_document: detachable STRING
 			-- Default value for 'document' option
 		once
 			Result := Void
@@ -4563,7 +4834,7 @@ feature -- Default values
 	default_dynamic_runtime: BOOLEAN = False
 			-- Default value for 'dynamic_runtime' option
 
-	default_ecf_library: STRING
+	default_ecf_library: detachable STRING
 			-- Default value for 'ecf_library' option
 		once
 			Result := Void
@@ -4585,13 +4856,13 @@ feature -- Default values
 			no_void_exclude: not Result.has_void
 		end
 
-	default_export_option: STRING
+	default_export_option: detachable STRING
 			-- Default value for 'export' option
 		once
 			Result := Void
 		end
 
-	default_external_runtime: STRING
+	default_external_runtime: detachable STRING
 			-- Default value for 'external_runtime' option
 		once
 			Result := Void
@@ -4716,13 +4987,13 @@ feature -- Default values
 	default_map: BOOLEAN = False
 			-- Default value for 'map' option
 
-	default_metadata_cache_path: STRING
+	default_metadata_cache_path: detachable STRING
 			-- Default value for 'metadata_cache_path' option
 		once
 			Result := Void
 		end
 
-	default_msil_assembly_compatibility: STRING
+	default_msil_assembly_compatibility: detachable STRING
 			-- Default value for 'msil_assembly_compatibility' option
 		once
 			Result := Void
@@ -4731,13 +5002,13 @@ feature -- Default values
 	default_msil_classes_per_module: INTEGER = 5
 			-- Default value for 'msil_classes_per_module' option
 
-	default_msil_clr_version: STRING
+	default_msil_clr_version: detachable STRING
 			-- Default value for 'msil_clr_version' option
 		once
 			Result := Void
 		end
 
-	default_msil_culture: STRING
+	default_msil_culture: detachable STRING
 			-- Default value for 'msil_culture' option
 		once
 			Result := Void
@@ -4746,13 +5017,13 @@ feature -- Default values
 	default_msil_generation: BOOLEAN = False
 			-- Default value for 'msil_generation' option
 
-	default_msil_generation_version: STRING
+	default_msil_generation_version: detachable STRING
 			-- Default value for 'msil_generation_version' option
 		once
 			Result := Void
 		end
 
-	default_msil_key_file_name: STRING
+	default_msil_key_file_name: detachable STRING
 			-- Default value for 'msil_key_file_name' option
 		once
 			Result := Void
@@ -4764,7 +5035,7 @@ feature -- Default values
 	default_multithreaded: BOOLEAN = False
 			-- Default value for 'multithreaded' option
 
-	default_namespace: STRING
+	default_namespace: detachable STRING
 			-- Default value for 'namespace' option
 		once
 			Result := Void
@@ -4789,13 +5060,13 @@ feature -- Default values
 	default_portable_code_generation: BOOLEAN = False
 			-- Default value for 'portable_code_generation' option
 
-	default_precompiled: STRING
+	default_precompiled: detachable STRING
 			-- Default value for 'precompiled' option
 		once
 			Result := Void
 		end
 
-	default_prefix_option: STRING
+	default_prefix_option: detachable STRING
 			-- Default value for 'prefix' option
 		once
 			Result := Void
@@ -4819,7 +5090,7 @@ feature -- Default values
 	default_reloads_optimization: BOOLEAN = False
 			-- Default value for 'reloads_optimization' option
 
-	default_shared_library_definition: STRING
+	default_shared_library_definition: detachable STRING
 			-- Default value for 'shared_library_definition' option
 		once
 			Result := Void
@@ -4834,7 +5105,7 @@ feature -- Default values
 	default_storable: BOOLEAN = False
 			-- Default value for 'storable' option
 
-	default_storable_filename: STRING
+	default_storable_filename: detachable STRING
 			-- Default value for 'storable_filename' option
 		once
 			Result := Void
@@ -4859,13 +5130,13 @@ feature -- Default values
 			valid_default_target: valid_target.has (Result)
 		end
 
-	default_target_architecture: STRING
+	default_target_architecture: detachable STRING
 			-- Default value for 'target_architecture' option
 		once
 			Result := Void
 		end
 
-	default_target_os: STRING
+	default_target_os: detachable STRING
 			-- Default value for 'target_os' option
 		once
 			Result := Void
@@ -4897,7 +5168,7 @@ feature -- Default values
 			Result := "1.0.5000.0"
 		end
 
-	default_visible_filename: STRING
+	default_visible_filename: detachable STRING
 			-- Default value for 'visible_filename' option
 		once
 			Result := Void

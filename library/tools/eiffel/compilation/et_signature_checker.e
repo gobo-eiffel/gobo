@@ -5,7 +5,7 @@ note
 		"Eiffel feature signature checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,8 +58,7 @@ feature -- Signature validity
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			l_type, l_previous_type: ET_TYPE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_type, l_previous_type: detachable ET_TYPE
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
@@ -69,8 +68,7 @@ feature -- Signature validity
 			if l_type /= Void then
 				l_type.process (Current)
 			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
+			if attached a_feature.arguments as l_arguments then
 				nb := l_arguments.count
 				from i := 1 until i > nb loop
 					l_type := l_arguments.formal_argument (i).type
@@ -97,9 +95,8 @@ feature -- Signature validity
 			a_flattened_feature: ET_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			an_inherited_feature: ET_INHERITED_FEATURE
-			a_parent_feature: ET_PARENT_FEATURE
+			a_parent_feature: detachable ET_PARENT_FEATURE
 			an_adapted_feature: ET_ADAPTED_FEATURE
-			a_replicated_features: DS_LINKED_LIST [ET_PARENT_FEATURE]
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_PARENT_FEATURE]
 			old_class: ET_CLASS
 		do
@@ -153,8 +150,7 @@ feature -- Signature validity
 			if a_feature.is_adapted then
 				an_adapted_feature := a_feature.adapted_feature
 				if an_adapted_feature.is_selected then
-					a_replicated_features := an_adapted_feature.replicated_features
-					if a_replicated_features /= Void then
+					if attached an_adapted_feature.replicated_features as a_replicated_features then
 						a_cursor := a_replicated_features.new_cursor
 						from a_cursor.start until a_cursor.after loop
 							check_selected_signature_validity (an_adapted_feature, a_cursor.item, a_report)
@@ -181,13 +177,13 @@ feature {NONE} -- Signature validity
 			other_not_void: other /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
-			a_type: ET_TYPE
-			other_type: ET_TYPE
+			a_type: detachable ET_TYPE
+			other_type: detachable ET_TYPE
 			other_precursor: ET_FEATURE
 			a_flattened_feature: ET_FEATURE
 			a_parent_feature: ET_PARENT_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			other_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 		do
 			a_flattened_feature := a_feature.flattened_feature
@@ -353,13 +349,13 @@ feature {NONE} -- Signature validity
 			other_not_void: other /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
-			a_type: ET_TYPE
-			other_type: ET_TYPE
+			a_type: detachable ET_TYPE
+			other_type: detachable ET_TYPE
 			other_precursor: ET_FEATURE
 			a_flattened_feature: ET_FEATURE
 			a_parent_feature: ET_PARENT_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			other_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 		do
 			a_flattened_feature := a_feature.flattened_feature
@@ -496,8 +492,8 @@ feature {NONE} -- Signature validity
 		local
 			a_joined_feature: ET_FEATURE
 			other_precursor: ET_FEATURE
-			an_arguments, other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_type, other_type: ET_TYPE
+			an_arguments, other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			a_type, other_type: detachable ET_TYPE
 			i, nb: INTEGER
 		do
 			a_joined_feature := a_feature.flattened_feature
@@ -577,7 +573,6 @@ feature {NONE} -- VTCT Validity checking
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
 			a_class: ET_CLASS
 		do
@@ -586,9 +581,7 @@ feature {NONE} -- VTCT Validity checking
 				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
 			end
-			if a_type.is_generic then
-				an_actuals := a_type.actual_parameters
-				check a_type_generic: an_actuals /= Void end
+			if a_type.is_generic and then attached a_type.actual_parameters as an_actuals then
 				nb := an_actuals.count
 				from i := 1 until i > nb loop
 					an_actual := an_actuals.type (i)
@@ -612,11 +605,9 @@ feature {NONE} -- VTCT Validity checking
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 -- TODO: should we check whether class TUPLE is in the universe or not?
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
 					a_parameters.type (i).process (Current)

@@ -5,7 +5,7 @@ note
 		"Xace file generators from Xace files. Useful to strip if/unless clauses."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,29 +57,44 @@ feature {NONE} -- Output
 			-- Print Xace version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: a_system.system_name /= Void
-			system_name_not_empty: a_system.system_name.count > 0
-			root_class_name_not_void: a_system.root_class_name /= Void
-			root_class_name_not_empty: a_system.root_class_name.count > 0
-			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
-			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
+			system_name_not_void: attached a_system.system_name as l_system_name
+			system_name_not_empty: l_system_name.count > 0
+			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
+			root_class_name_not_empty: l_root_class_name.count > 0
+			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name
+			creation_procedure_name_not_empty: l_creation_procedure_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_clusters: ET_XACE_CLUSTERS
-			a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES
-			an_option: ET_XACE_OPTIONS
+			a_clusters: detachable ET_XACE_CLUSTERS
+			a_mounted_libraries: detachable ET_XACE_MOUNTED_LIBRARIES
+			an_option: detachable ET_XACE_OPTIONS
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
 			a_file.put_string ("<system name=%"")
-			print_quote_escaped_string (a_system.system_name, a_file)
+			if attached a_system.system_name as l_system_name then
+				print_quote_escaped_string (l_system_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check False end
+			end
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			a_file.put_string ("<root class=%"")
-			print_quote_escaped_string (a_system.root_class_name, a_file)
+			if attached a_system.root_class_name as l_root_class_name then
+				print_quote_escaped_string (l_root_class_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check False end
+			end
 			a_file.put_string ("%" creation=%"")
-			print_quote_escaped_string (a_system.creation_procedure_name, a_file)
+			if attached a_system.creation_procedure_name as l_creation_procedure_name then
+				print_quote_escaped_string (l_creation_procedure_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check False end
+			end
 			a_file.put_line ("%"/>")
 			an_option := a_system.options
 			if an_option /= Void then
@@ -101,20 +116,25 @@ feature {NONE} -- Output
 			-- Print Xace version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: a_library.name /= Void
-			a_library_name_not_empty: a_library.name.count > 0
+			a_library_name_not_void: attached a_library.name as l_library_name
+			a_library_name_not_empty: l_library_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_clusters: ET_XACE_CLUSTERS
-			a_mounted_libraries: ET_XACE_MOUNTED_LIBRARIES
-			an_option: ET_XACE_OPTIONS
+			a_clusters: detachable ET_XACE_CLUSTERS
+			a_mounted_libraries: detachable ET_XACE_MOUNTED_LIBRARIES
+			an_option: detachable ET_XACE_OPTIONS
 			a_prefix: STRING
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
 			a_file.put_string ("<library name=%"")
-			print_quote_escaped_string (a_library.name, a_file)
+			if attached a_library.name as l_library_name then
+				print_quote_escaped_string (l_library_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check False end
+			end
 			if is_shallow then
 				a_prefix := a_library.library_prefix
 				if a_prefix.count > 0 then
@@ -184,10 +204,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"array_optimization%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_assembly_declared then
+			if an_option.is_assembly_declared and then attached an_option.assembly as l_assembly then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"assembly%" value=%"")
-				print_quote_escaped_string (an_option.assembly, a_file)
+				print_quote_escaped_string (l_assembly, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_assertion_declared then
@@ -200,10 +220,10 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_callback_declared then
+			if an_option.is_callback_declared and then attached an_option.callback as l_callback then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"callback%" value=%"")
-				print_quote_escaped_string (an_option.callback, a_file)
+				print_quote_escaped_string (l_callback, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_case_insensitive_declared then
@@ -238,10 +258,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"cls_compliant%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_component_declared then
+			if an_option.is_component_declared and then attached an_option.component as l_component then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"component%" value=%"")
-				print_quote_escaped_string (an_option.component, a_file)
+				print_quote_escaped_string (l_component, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_console_application_declared then
@@ -312,10 +332,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"debugger%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_document_declared then
+			if an_option.is_document_declared and then attached an_option.document as l_document then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"document%" value=%"")
-				print_quote_escaped_string (an_option.document, a_file)
+				print_quote_escaped_string (l_document, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_dotnet_naming_convention_declared then
@@ -352,10 +372,10 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_export_option_declared then
+			if an_option.is_export_option_declared and then attached an_option.export_option as l_export_option then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"export%" value=%"")
-				print_quote_escaped_string (an_option.export_option, a_file)
+				print_quote_escaped_string (l_export_option, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_finalize_option_declared then
@@ -538,22 +558,22 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"map%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_metadata_cache_path_declared then
+			if an_option.is_metadata_cache_path_declared and then attached an_option.metadata_cache_path as l_metadata_cache_path then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"metadata_cache_path%" value=%"")
-				print_quote_escaped_string (an_option.metadata_cache_path, a_file)
+				print_quote_escaped_string (l_metadata_cache_path, a_file)
 				a_file.put_line ("%"/>")
 			end
-			if an_option.is_msil_assembly_compatibility_declared then
+			if an_option.is_msil_assembly_compatibility_declared and then attached an_option.msil_assembly_compatibility as l_msil_assembly_compatibility then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"msil_assembly_compatibility%" value=%"")
-				print_quote_escaped_string (an_option.msil_assembly_compatibility, a_file)
+				print_quote_escaped_string (l_msil_assembly_compatibility, a_file)
 				a_file.put_line ("%"/>")
 			end
-			if an_option.is_msil_clr_version_declared then
+			if an_option.is_msil_clr_version_declared and then attached an_option.msil_clr_version as l_msil_clr_version then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"msil_clr_version%" value=%"")
-				print_quote_escaped_string (an_option.msil_clr_version, a_file)
+				print_quote_escaped_string (l_msil_clr_version, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_msil_generation_declared then
@@ -564,10 +584,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"msil_generation%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_msil_generation_version_declared then
+			if an_option.is_msil_generation_version_declared and then attached an_option.msil_generation_version as l_msil_generation_version then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"msil_generation_version%" value=%"")
-				print_quote_escaped_string (an_option.msil_generation_version, a_file)
+				print_quote_escaped_string (l_msil_generation_version, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_multithreaded_declared then
@@ -578,10 +598,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"multithreaded%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_namespace_declared then
+			if an_option.is_namespace_declared and then attached an_option.namespace as l_namespace then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"namespace%" value=%"")
-				print_quote_escaped_string (an_option.namespace, a_file)
+				print_quote_escaped_string (l_namespace, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_no_default_lib_declared then
@@ -610,16 +630,16 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"portable_code_generation%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_precompiled_declared then
+			if an_option.is_precompiled_declared and then attached an_option.precompiled as l_precompiled then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"precompiled%" value=%"")
-				print_quote_escaped_string (an_option.precompiled, a_file)
+				print_quote_escaped_string (l_precompiled, a_file)
 				a_file.put_line ("%"/>")
 			end
-			if an_option.is_prefix_option_declared then
+			if an_option.is_prefix_option_declared and then attached an_option.prefix_option as l_prefix_option then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"prefix%" value=%"")
-				print_quote_escaped_string (an_option.prefix_option, a_file)
+				print_quote_escaped_string (l_prefix_option, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_profile_declared then
@@ -660,10 +680,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"reloads_optimization%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_shared_library_definition_declared then
+			if an_option.is_shared_library_definition_declared and then attached an_option.shared_library_definition as l_shared_library_definition then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"shared_library_definition%" value=%"")
-				print_quote_escaped_string (an_option.shared_library_definition, a_file)
+				print_quote_escaped_string (l_shared_library_definition, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_split_declared then
@@ -688,10 +708,10 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"storable%" value=%"false%"/>")
 				end
 			end
-			if an_option.is_storable_filename_declared then
+			if an_option.is_storable_filename_declared and then attached an_option.storable_filename as l_storable_filename then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"storable_filename%" value=%"")
-				print_quote_escaped_string (an_option.storable_filename, a_file)
+				print_quote_escaped_string (l_storable_filename, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_strip_option_declared then
@@ -744,10 +764,10 @@ feature {NONE} -- Output
 				print_quote_escaped_string (an_option.version, a_file)
 				a_file.put_line ("%"/>")
 			end
-			if an_option.is_visible_filename_declared then
+			if an_option.is_visible_filename_declared and then attached an_option.visible_filename as l_visible_filename then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"visible_filename%" value=%"")
-				print_quote_escaped_string (an_option.visible_filename, a_file)
+				print_quote_escaped_string (l_visible_filename, a_file)
 				a_file.put_line ("%"/>")
 			end
 			if an_option.is_warning_declared then
@@ -808,11 +828,11 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			an_option: ET_XACE_OPTIONS
-			subclusters: ET_XACE_CLUSTERS
-			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
-			a_location: STRING
-			a_parent: ET_XACE_CLUSTER
+			an_option: detachable ET_XACE_OPTIONS
+			subclusters: detachable ET_XACE_CLUSTERS
+			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			a_location: detachable STRING
+			a_parent: detachable ET_XACE_CLUSTER
 			a_cluster_prefix: STRING
 			a_library_prefix: STRING
 		do
@@ -878,7 +898,7 @@ feature {NONE} -- Output
 		local
 			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
 			a_class_options: ET_XACE_CLASS_OPTIONS
-			a_feature_options: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+			a_feature_options: detachable DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
 		do
 			a_class_cursor := an_option_list.new_cursor
 			from a_class_cursor.start until a_class_cursor.after loop

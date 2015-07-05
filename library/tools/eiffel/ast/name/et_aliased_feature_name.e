@@ -71,12 +71,6 @@ feature -- Access
 			Result := alias_name.last_leaf
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := alias_name.break
-		end
-
 feature -- Comparison
 
 	same_call_name (a_call_name: ET_CALL_NAME): BOOLEAN

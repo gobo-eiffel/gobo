@@ -5,7 +5,7 @@ note
 		"Eiffel call components (either feature calls or agents)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	target: ET_TARGET_OPERAND
+	target: detachable ET_TARGET_OPERAND
 			-- Target
 		deferred
 		end
@@ -30,7 +30,7 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	arguments: ET_ARGUMENT_OPERANDS
+	arguments: detachable ET_ARGUMENT_OPERANDS
 			-- Arguments
 		deferred
 		end

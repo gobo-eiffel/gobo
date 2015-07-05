@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic FUNCTION types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			Result := precursor (a_query, a_system)
 			if Result.builtin_code = tokens.builtin_function_feature (tokens.builtin_function_item) then

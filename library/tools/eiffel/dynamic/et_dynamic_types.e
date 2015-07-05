@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Access
 			dynamic_type_not_void: Result /= Void
 		end
 
-	special_type: ET_DYNAMIC_TYPE
+	special_type: detachable ET_DYNAMIC_TYPE
 			-- One of the SPECIAL types contained in current dynamic types
 			-- if any, Void otherwise
 		local

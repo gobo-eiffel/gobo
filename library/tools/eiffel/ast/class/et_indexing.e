@@ -5,7 +5,7 @@ note
 		"Eiffel note clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tag: ET_TAG
+	tag: detachable ET_TAG
 			-- Tag
 		do
 		end
@@ -52,8 +52,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if tag /= Void then
-				Result := tag.position
+			if attached tag as l_tag then
+				Result := l_tag.position
 			else
 				Result := terms.position
 			end
@@ -62,8 +62,8 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if tag /= Void then
-				Result := tag.first_leaf
+			if attached tag as l_tag then
+				Result := l_tag.first_leaf
 			else
 				Result := terms.first_leaf
 			end
@@ -73,12 +73,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := terms.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := terms.break
 		end
 
 feature -- Processing

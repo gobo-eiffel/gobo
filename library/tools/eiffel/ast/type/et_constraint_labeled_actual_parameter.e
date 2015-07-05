@@ -7,7 +7,7 @@ note
 		%they may be names of classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Access
 			-- Label of actual parameter
 			-- Useful when part of a labeled tuple, Void if no label
 
-	colon: ET_SYMBOL
+	colon: detachable ET_SYMBOL
 			-- Colon
 
 	type: ET_CONSTRAINT_TYPE
@@ -63,8 +63,8 @@ feature -- Access
 
 feature -- Conversion
 
-	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_LABELED_ACTUAL_PARAMETER
+	resolved_syntactical_constraint_with_type (a_type: detachable ET_TYPE;
+		a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_LABELED_ACTUAL_PARAMETER
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

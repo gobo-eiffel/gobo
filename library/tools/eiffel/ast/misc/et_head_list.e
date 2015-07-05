@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the head are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #10 $"
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Create a new empty list.
 		do
 			count := 0
-			storage := Void
+			storage := fixed_array.make (0)
 		ensure
 			is_empty: is_empty
 			capacity_set: capacity = 0
@@ -30,11 +30,7 @@ feature {NONE} -- Initialization
 			nb_not_negative: nb >= 0
 		do
 			count := 0
-			if nb > 0 then
-				storage := fixed_array.make (nb)
-			else
-				storage := Void
-			end
+			storage := fixed_array.make (nb)
 		ensure
 			is_empty: is_empty
 			capacity_set: capacity = nb
@@ -83,9 +79,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Maximum number of items in list
 		do
-			if storage /= Void then
-				Result := storage.capacity
-			end
+			Result := storage.capacity
 		end
 
 feature -- Status report
@@ -221,11 +215,7 @@ feature -- Resizing
 			nb_not_negative: nb >= 0
 		do
 			if nb > capacity then
-				if storage = Void then
-					storage := fixed_array.make (nb)
-				else
-					storage := fixed_array.resize (storage, nb)
-				end
+				storage := fixed_array.aliased_resized_area (storage, nb)
 			end
 		ensure
 			resized: capacity >= nb
@@ -251,7 +241,7 @@ feature -- Iteration
 			end
 		end
 
-	do_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 			--
@@ -304,7 +294,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 			--
@@ -411,6 +401,6 @@ invariant
 
 	count_not_negative: count >= 0
 	consistent_count: count <= capacity
-	storage_not_void: capacity > 0 implies storage /= Void
+	storage_not_void: storage /= Void
 
 end

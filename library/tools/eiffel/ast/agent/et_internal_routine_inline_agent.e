@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with a internal (do or once) routine as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,14 +32,14 @@ feature -- Initialization
 			-- Reset inline agent as it was just after it was last parsed.
 		do
 			precursor
-			if locals /= Void then
-				locals.reset
+			if attached locals as l_locals then
+				l_locals.reset
 			end
-			if compound /= Void then
-				compound.reset
+			if attached compound as l_compound then
+				l_compound.reset
 			end
-			if rescue_clause /= Void then
-				rescue_clause.reset
+			if attached rescue_clause as l_rescue_clause then
+				l_rescue_clause.reset
 			end
 		end
 

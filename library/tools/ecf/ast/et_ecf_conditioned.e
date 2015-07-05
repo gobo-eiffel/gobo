@@ -5,7 +5,7 @@ note
 		"ECF objects which are taken into account only in some conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,12 +19,12 @@ feature -- Status report
 		require
 			a_state_not_void: a_state /= Void
 		do
-			Result := condition = Void or else condition.is_enabled (a_state)
+			Result := not attached condition as l_condition or else l_condition.is_enabled (a_state)
 		end
 
 feature -- Access
 
-	condition: ET_ECF_CONDITION
+	condition: detachable ET_ECF_CONDITION
 			-- Condition, if any
 
 feature -- Setting

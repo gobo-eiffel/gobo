@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ feature -- Access
 	static_call: ET_CALL_COMPONENT
 			-- Static call
 
-	static_feature: ET_FEATURE
+	static_feature: detachable ET_FEATURE
 			-- Static feature of the call;
 			-- Void if no such feature found
 		deferred
@@ -158,7 +158,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time feature in `a_type' corresponding to current call;
 			-- Void if no such feature
 		require
@@ -170,7 +170,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -179,18 +179,16 @@ feature {NONE} -- Implementation
 			a_system_not_void: a_system /= Void
 		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
-			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_argument_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_argument_type_set: detachable ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple_type: ET_DYNAMIC_TYPE
-			l_actual_manifest_tuple: ET_MANIFEST_TUPLE
+			l_actual_manifest_tuple: detachable ET_MANIFEST_TUPLE
 		do
 			a_feature.set_regular (True)
-			l_actuals := static_call.arguments
-			if l_actuals /= Void then
+			if attached static_call.arguments as l_actuals then
 				nb := l_actuals.count
 				if nb > 0 then
 					if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
@@ -287,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -295,16 +293,16 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_builder_not_void: a_builder /= Void
 		local
-			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actuals: ET_ARGUMENT_OPERANDS
+			l_source_argument_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_argument_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_actuals: detachable ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
 			i, nb: INTEGER
 			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple_type: ET_DYNAMIC_TYPE
 			l_system: ET_DYNAMIC_SYSTEM
-			l_actual_manifest_tuple: ET_MANIFEST_TUPLE
+			l_actual_manifest_tuple: detachable ET_MANIFEST_TUPLE
 		do
 			l_system := a_builder.current_dynamic_system
 			a_feature.set_regular (True)
@@ -425,10 +423,10 @@ feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
 
 feature -- Link
 
-	next: like Current
+	next: detachable like Current
 			-- Next call with the same target static type
 
-	set_next (a_next: like Current)
+	set_next (a_next: like next)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

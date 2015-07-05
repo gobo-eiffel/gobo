@@ -8,7 +8,7 @@ note
 		%of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_TYPE
 			-- Version of current type, appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -48,8 +48,8 @@ feature -- Conversion
 		deferred
 		end
 
-	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
+	resolved_syntactical_constraint_with_type (a_type: detachable ET_TYPE;
+		a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_TYPE
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

@@ -5,7 +5,7 @@ note
 		"Eiffel keyword 'attached' or 'detachable' followed by keyword 'separate'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 	separateness_keyword: ET_KEYWORD
 			-- Separateness keyword
 			-- ('separate')
-	
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -73,24 +73,18 @@ feature -- Access
 			Result := separateness_keyword
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := separateness_keyword.break
-		end
-
 feature -- Status report
 
 	is_separate_mark: BOOLEAN = True
 			-- Is current type mark a mark to indicate that
 			-- the type should be separate?
-		
+
 	is_attached_mark: BOOLEAN
 			-- Is current type mark an attached mark?
 		do
 			Result := attachment_keyword.is_attached
 		end
-		
+
 	is_detachable_mark: BOOLEAN
 			-- Is current type mark a detachable mark?
 		do
@@ -110,5 +104,5 @@ invariant
 	attachment_keyword_not_void: attachment_keyword /= Void
 	attachment_keyword_consistency: attachment_keyword.is_attached or attachment_keyword.is_detachable
 	separateness_keyword_not_void: separateness_keyword /= Void
-	
+
 end

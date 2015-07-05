@@ -5,7 +5,7 @@ note
 		"Eiffel bit constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,18 @@ inherit
 
 	ET_CONSTANT
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
 			is_bit_constant
 		end
 
 	ET_INDEXING_TERM
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		end
 
 	ET_AST_LEAF

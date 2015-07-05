@@ -5,7 +5,7 @@ note
 		"Eiffel procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008/12/01 $"
 	revision: "$Revision: #10 $"
@@ -63,22 +63,17 @@ feature -- Conversion
 
 feature -- Access
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
-		local
-			l_synonym: ET_FEATURE
 		do
-			if is_keyword /= Void then
-				Result := is_keyword.break
-			elseif arguments /= Void then
-				Result := arguments.break
+			if attached is_keyword as l_is_keyword then
+				Result := l_is_keyword.break
+			elseif attached arguments as l_arguments then
+				Result := l_arguments.break
+			elseif attached implementation_feature.synonym as l_synonym then
+				Result := l_synonym.header_break
 			else
-				l_synonym := implementation_feature.synonym
-				if l_synonym /= Void then
-					Result := l_synonym.header_break
-				else
-					Result := extended_name.break
-				end
+				Result := extended_name.break
 			end
 		end
 

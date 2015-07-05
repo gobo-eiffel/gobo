@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Directory pathname (may be Void)
 		do
 		end
@@ -65,7 +65,7 @@ feature -- Conversion
 
 feature -- Nested
 
-	parent: ET_GROUP
+	parent: detachable ET_GROUP
 			-- Parent group
 		do
 			-- Result := Void

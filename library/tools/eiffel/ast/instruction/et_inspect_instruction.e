@@ -5,7 +5,7 @@ note
 		"Eiffel inspect instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_conditional: like conditional; a_when_parts: ET_WHEN_PART_LIST)
+	make (a_conditional: like conditional; a_when_parts: like when_parts)
 			-- Create a new inspect instruction.
 		require
 			a_conditional_not_void: a_conditional /= Void
@@ -44,11 +44,11 @@ feature -- Initialization
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			expression.reset
-			if when_parts /= Void then
-				when_parts.reset
+			if attached when_parts as l_when_parts then
+				l_when_parts.reset
 			end
-			if else_compound /= Void then
-				else_compound.reset
+			if attached else_compound as l_else_compound then
+				l_else_compound.reset
 			end
 		end
 
@@ -65,10 +65,10 @@ feature -- Access
 			expression_not_void: Result /= Void
 		end
 
-	when_parts: ET_WHEN_PART_LIST
+	when_parts: detachable ET_WHEN_PART_LIST
 			-- When parts
 
-	else_compound: ET_COMPOUND
+	else_compound: detachable ET_COMPOUND
 			-- Else part
 
 	end_keyword: ET_KEYWORD
@@ -91,12 +91,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

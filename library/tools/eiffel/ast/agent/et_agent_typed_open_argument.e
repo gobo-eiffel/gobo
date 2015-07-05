@@ -5,7 +5,7 @@ note
 		"Eiffel agent open arguments for the form '{TYPE} ?'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ inherit
 
 	ET_BRACED_TYPE
 		redefine
-			make, process, last_leaf, break
+			make, process, last_leaf
 		end
 
 create
@@ -55,12 +55,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := question_mark
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := question_mark.break
 		end
 
 feature -- Setting

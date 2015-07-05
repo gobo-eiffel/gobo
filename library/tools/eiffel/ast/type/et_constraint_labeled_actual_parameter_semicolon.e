@@ -8,7 +8,7 @@ note
 		%classes or of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,8 +55,8 @@ feature -- Access
 
 feature -- Conversion
 
-	resolved_syntactical_constraint_with_type (a_type: ET_TYPE;
-		a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_ITEM
+	resolved_syntactical_constraint_with_type (a_type: detachable ET_TYPE;
+		a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- Version of current actual parameter, where its type has
 			-- been replaced by `a_type'
 		do

@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters in comma-separated list of parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ feature -- Access
 	formal_parameter: ET_FORMAL_PARAMETER
 			-- Formal generic parameter in comma-separated list
 		deferred
+		ensure
+			formal_parameter_not_void: Result /= Void
 		end
 
 	actual_parameter: ET_ACTUAL_PARAMETER
@@ -40,7 +42,7 @@ feature -- Access
 			definition: Result = formal_parameter
 		end
 
-	label: ET_IDENTIFIER
+	label: detachable ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		do

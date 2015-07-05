@@ -5,7 +5,7 @@ note
 		"Eiffel local variables whose names are followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 	ET_LOCAL_VARIABLE
 		redefine
 			is_last_entity,
-			break, last_leaf, process
+			last_leaf, process
 		end
 
 create
@@ -39,12 +39,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := name_item.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := name_item.break
 		end
 
 feature -- Processing

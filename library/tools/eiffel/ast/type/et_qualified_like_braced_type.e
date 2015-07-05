@@ -5,8 +5,8 @@ note
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,11 +58,11 @@ feature -- Access
 	right_brace: ET_SYMBOL
 			-- '}' symbol
 
-	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_QUALIFIED_LIKE_BRACED_TYPE
+	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- Current type whose type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark = type_mark then
@@ -108,13 +108,13 @@ feature -- Setting
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_target_type: like target_type
 			l_resolved_target_type: like target_type
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_target_type := target_type
 			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
@@ -134,12 +134,12 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			if type_mark /= Void then
-				if type_mark.is_implicit_mark then
+			if attached type_mark as l_type_mark then
+				if l_type_mark.is_implicit_mark then
 					a_string.append_character ('[')
 				end
-				a_string.append_string (type_mark.text)
-				if type_mark.is_implicit_mark then
+				a_string.append_string (l_type_mark.text)
+				if l_type_mark.is_implicit_mark then
 					a_string.append_character (']')
 				end
 				a_string.append_character (' ')

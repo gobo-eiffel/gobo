@@ -5,7 +5,7 @@ note
 		"Eiffel conversion-to expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 			process
 		end
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			target as expression
 		end
@@ -53,7 +53,7 @@ feature -- Access
 			definition: Result = convert_feature.name
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: detachable ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then

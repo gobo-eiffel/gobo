@@ -5,7 +5,7 @@ note
 		"Eiffel labeled actual generic parameters whose label is followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 	ET_LABELED_ACTUAL_PARAMETER
 		redefine
 			is_last_entity,
-			break, last_leaf, process
+			last_leaf, process
 		end
 
 create
@@ -39,12 +39,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := label_item.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := label_item.break
 		end
 
 feature -- Processing

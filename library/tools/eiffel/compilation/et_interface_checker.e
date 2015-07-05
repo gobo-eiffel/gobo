@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,7 +113,6 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 			i, nb: INTEGER
 			l_other_class: ET_CLASS
@@ -126,8 +125,7 @@ feature {NONE} -- Processing
 				if current_class.features_flattened and then not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
-					a_parents := current_class.parents
-					if a_parents /= Void then
+					if attached current_class.parents as a_parents then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
 							a_parent_class := a_parents.parent (i).type.base_class
@@ -271,9 +269,8 @@ feature {NONE} -- Feature adaptation
 		local
 			l_feature: ET_FEATURE
 			i, nb: INTEGER
-			l_inherited_feature: ET_INHERITED_FEATURE
-			l_parent_feature: ET_PARENT_FEATURE
-			l_first_precursor: ET_FEATURE
+			l_parent_feature: detachable ET_PARENT_FEATURE
+			l_first_precursor: detachable ET_FEATURE
 		do
 			from
 					-- Non-redeclared inherited features are listed from
@@ -286,8 +283,7 @@ feature {NONE} -- Feature adaptation
 				l_feature := a_feature_list.item (i)
 				named_features.search (l_feature.name)
 				if named_features.found then
-					l_inherited_feature ?= named_features.found_item
-					if l_inherited_feature /= Void then
+					if attached {ET_INHERITED_FEATURE} named_features.found_item as l_inherited_feature then
 						l_inherited_feature.set_flattened_feature (l_feature)
 						l_parent_feature := l_inherited_feature.parent_feature
 						if l_parent_feature.merged_feature = Void then
@@ -318,11 +314,9 @@ feature {NONE} -- Constraint creation validity
 			-- Check validity of the constraint creations
 			-- of `current_class' if any.
 		local
-			a_formals: ET_FORMAL_PARAMETER_LIST
 			i, nb: INTEGER
 		do
-			a_formals := current_class.formal_parameters
-			if a_formals /= Void then
+			if attached current_class.formal_parameters as a_formals then
 				nb := a_formals.count
 				from i := 1 until i > nb loop
 					check_constraint_creation_validity (a_formals.formal_parameter (i))
@@ -337,18 +331,12 @@ feature {NONE} -- Constraint creation validity
 		require
 			a_formal_not_void: a_formal /= Void
 		local
-			a_creator: ET_CONSTRAINT_CREATOR
 			a_name, other_name: ET_FEATURE_NAME
-			a_base_type: ET_BASE_TYPE
-			a_procedure: ET_PROCEDURE
-			a_query: ET_QUERY
 			a_class: ET_CLASS
 			i, j, nb: INTEGER
 		do
-			a_creator := a_formal.creation_procedures
-			if a_creator /= Void then
-				a_base_type := a_formal.constraint_base_type
-				if a_base_type /= Void then
+			if attached a_formal.creation_procedures as a_creator then
+				if attached a_formal.constraint_base_type as a_base_type then
 					a_class := a_base_type.base_class
 				else
 						-- We know that the constraint is not
@@ -376,23 +364,19 @@ feature {NONE} -- Constraint creation validity
 							end
 							j := j + 1
 						end
-						a_procedure := a_class.named_procedure (a_name)
-						if a_procedure /= Void then
+						if attached a_class.named_procedure (a_name) as a_procedure then
 								-- We finally got a valid creation
 								-- procedure. Record its seed.
 							a_name.set_seed (a_procedure.first_seed)
+						elseif attached a_class.named_query (a_name) as a_query then
+								-- This feature is not a procedure.
+							set_fatal_error (current_class)
+							error_handler.report_vtgc0b_error (current_class, a_name, a_query, a_class)
 						else
-							a_query := a_class.named_query (a_name)
-							if a_query /= Void then
-									-- This feature is not a procedure.
-								set_fatal_error (current_class)
-								error_handler.report_vtgc0b_error (current_class, a_name, a_query, a_class)
-							else
-									-- This name is not the final name of
-									-- a feature on `current_class'.
-								set_fatal_error (current_class)
-								error_handler.report_vtgc0a_error (current_class, a_name, a_class)
-							end
+								-- This name is not the final name of
+								-- a feature on `current_class'.
+							set_fatal_error (current_class)
+							error_handler.report_vtgc0a_error (current_class, a_name, a_class)
 						end
 						i := i + 1
 					end

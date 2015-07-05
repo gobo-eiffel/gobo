@@ -5,7 +5,7 @@ note
 		"ECF systems or libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,25 +40,25 @@ feature -- Access
 	filename: STRING
 			-- ECF filename
 
-	uuid: STRING
+	uuid: detachable STRING
 			-- UUID;
 			-- May be Void when the ECF file described a system
 
-	ecf_namespace: STRING
+	ecf_namespace: detachable STRING
 			-- ECF namespace
 			--
 			-- May be void if not explicitly specified in ECF file
 
-	ecf_version: UT_VERSION
+	ecf_version: detachable UT_VERSION
 			-- ECF version
 			--
 			-- May be void if the ECF namespace has not been explicitly specified
 			-- in the ECF file or if it was not recognized
 
-	targets: ET_ECF_TARGETS
+	targets: detachable ET_ECF_TARGETS
 			-- Targets that appear in the ECF file
 
-	library_target: ET_ECF_TARGET
+	library_target: detachable ET_ECF_TARGET
 			-- Library target, if any
 
 feature -- Setting

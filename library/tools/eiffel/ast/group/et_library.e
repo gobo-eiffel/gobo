@@ -5,7 +5,7 @@ note
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
+			a_system_not_void: a_system /= Void
 		do
 			make_from_system (a_name, a_system)
 		ensure
@@ -105,7 +106,7 @@ feature -- Status report
 
 feature -- Access
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Library pathname (may be Void)
 		do
 		end
@@ -143,7 +144,7 @@ feature -- Measurement
 
 feature -- Nested
 
-	parent: ET_LIBRARY
+	parent: detachable ET_LIBRARY
 			-- Parent group
 		do
 			-- Result := Void

@@ -5,7 +5,7 @@ note
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,7 +127,7 @@ feature -- Measurement
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): detachable ET_CONVERT_FEATURE
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when `Current' is a manifest constant with no explicit
 			-- type cast and the value of the constant can be represented in `a_target_type'.

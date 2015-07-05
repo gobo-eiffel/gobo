@@ -191,20 +191,15 @@ feature -- Comparison
 	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN
 			-- Are `Current' and `other' the same alias name?
 			-- Do not take "infix" and "prefix" properties into account.
-		local
-			op: ET_FREE_NAME
 		do
 			if other = Current then
 				Result := True
-			else
-				op ?= ANY_.to_any (other)
-				if op /= Void then
-					if hash_code = op.hash_code then
-						if op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
-						end
+			elseif attached {ET_FREE_NAME} other as op then
+				if hash_code = op.hash_code then
+					if op.free_operator_name = free_operator_name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
 					end
 				end
 			end

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets pulling types from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	sources: ET_DYNAMIC_ATTACHMENT
+	sources: detachable ET_DYNAMIC_ATTACHMENT
 			-- Sub-sets of current set
 
 feature -- Element change
@@ -53,10 +53,10 @@ feature -- Element change
 		local
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			if sources = Void then
+			if attached sources as l_sources then
+				a_source.set_next_attachment (l_sources)
 				sources := a_source
 			else
-				a_source.set_next_attachment (sources)
 				sources := a_source
 			end
 			a_source.propagate_types (Current, a_system)

@@ -5,7 +5,7 @@ note
 		"Eiffel lists of formal arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,7 +62,8 @@ feature -- Initialization
 			-- formal arguments as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
-			l_type, l_previous_type: ET_TYPE
+			l_type: ET_TYPE
+			l_previous_type: detachable ET_TYPE
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
@@ -86,7 +87,8 @@ feature -- Status report
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
-			l_type, l_previous_type: ET_TYPE
+			l_type: ET_TYPE
+			l_previous_type: detachable ET_TYPE
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
@@ -163,12 +165,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := right_parenthesis.break
 		end
 
 feature -- Setting

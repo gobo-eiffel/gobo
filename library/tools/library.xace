@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Tools Library"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -57,4 +57,17 @@
 		</cluster>
 		<cluster name="support"/>
 	</cluster>
+
+
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library_skl.xace"/>
+	<mount location="${GOBO}/library/parse/library_skl.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/xml/library.xace"/>
 </library>

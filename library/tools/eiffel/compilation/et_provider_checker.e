@@ -5,7 +5,7 @@ note
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -94,16 +94,12 @@ feature {NONE} -- Cluster dependence constraints
 		local
 			l_group: ET_GROUP
 			l_cluster: ET_CLUSTER
-			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
 			l_providers_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			l_named_provider: ET_NAMED_CLASS
 			l_provider: ET_CLASS
 			l_provider_group: ET_GROUP
-			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
-			l_overridden_class: ET_CLASS
-			l_scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
-			l_mapped_cluster: ET_CLUSTER
+			l_dependant_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT
+			l_provider_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT
 		do
 			if current_class.is_preparsed then
 				l_group := current_class.group
@@ -111,10 +107,8 @@ feature {NONE} -- Cluster dependence constraints
 					l_cluster := l_group.cluster
 					l_provider_constraint := l_cluster.provider_constraint
 					if l_cluster.scm_mapping_constraint_enabled then
-						l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
-						if l_scm_write_mapping /= Void then
-							l_mapped_cluster := scm_mapped_cluster (l_cluster)
-							if l_mapped_cluster /= Void then
+						if attached l_cluster.scm_write_mapping_recursive as l_scm_write_mapping then
+							if attached scm_mapped_cluster (l_cluster) as l_mapped_cluster then
 								l_group := l_mapped_cluster
 								l_provider_constraint := l_mapped_cluster.provider_constraint
 							else
@@ -122,8 +116,7 @@ feature {NONE} -- Cluster dependence constraints
 							end
 						end
 					elseif l_cluster.overridden_constraint_enabled then
-						l_overridden_class := current_class.first_non_override_overridden_class
-						if l_overridden_class /= Void then
+						if attached current_class.first_non_override_overridden_class as l_overridden_class then
 							l_group := l_overridden_class.group
 							if l_group.is_cluster then
 								l_provider_constraint := l_group.cluster.provider_constraint
@@ -133,8 +126,7 @@ feature {NONE} -- Cluster dependence constraints
 						end
 					end
 				end
-				l_providers := current_class.providers
-				if l_providers /= Void then
+				if attached current_class.providers as l_providers then
 					l_providers_cursor := l_providers.new_cursor
 					from l_providers_cursor.start until l_providers_cursor.after loop
 						l_named_provider := l_providers_cursor.item
@@ -148,10 +140,8 @@ feature {NONE} -- Cluster dependence constraints
 								l_cluster := l_provider_group.cluster
 								l_dependant_constraint := l_cluster.dependant_constraint
 								if l_cluster.scm_mapping_constraint_enabled then
-									l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
-									if l_scm_write_mapping /= Void then
-										l_mapped_cluster := scm_mapped_cluster (l_cluster)
-										if l_mapped_cluster /= Void then
+									if attached l_cluster.scm_write_mapping_recursive as l_scm_write_mapping then
+										if attached scm_mapped_cluster (l_cluster) as l_mapped_cluster then
 											l_provider_group := l_mapped_cluster
 											l_dependant_constraint := l_mapped_cluster.dependant_constraint
 										else
@@ -159,8 +149,7 @@ feature {NONE} -- Cluster dependence constraints
 										end
 									end
 								elseif l_cluster.overridden_constraint_enabled then
-									l_overridden_class := l_provider.first_non_override_overridden_class
-									if l_overridden_class /= Void then
+									if attached l_provider.first_non_override_overridden_class as l_overridden_class then
 										l_provider_group := l_overridden_class.group
 										if l_provider_group.is_cluster then
 											l_dependant_constraint := l_provider_group.cluster.dependant_constraint
@@ -189,11 +178,10 @@ feature {NONE} -- Cluster dependence constraints
 			-- Cluster where classes from `a_cluster' will be checked-in to, if any
 		require
 			a_cluster_not_void: a_cluster /= Void
-		local
-			l_scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
 		do
-			l_scm_write_mapping := a_cluster.scm_write_mapping_recursive
-			Result := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (a_cluster, l_scm_write_mapping.current_cluster)
+			if attached a_cluster.scm_write_mapping_recursive as l_scm_write_mapping then
+				Result := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (a_cluster, l_scm_write_mapping.current_cluster)
+			end
 		end
 
 end

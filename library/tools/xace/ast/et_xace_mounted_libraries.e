@@ -5,7 +5,7 @@ note
 		"Xace mounted library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (a_pathname: STRING): ET_XACE_MOUNTED_LIBRARY
+	item (a_pathname: STRING): detachable ET_XACE_MOUNTED_LIBRARY
 			-- Mounted library in `libraries' with pathname
 			-- `a_pathname'; Void if not found
 		require
@@ -112,9 +112,9 @@ feature -- Basic operations
 		local
 			i, nb: INTEGER
 			a_mounted_library: ET_XACE_MOUNTED_LIBRARY
-			a_mounted_clusters: ET_XACE_CLUSTERS
+			a_mounted_clusters: detachable ET_XACE_CLUSTERS
 			a_library: ET_XACE_LIBRARY_CONFIG
-			a_prefix: STRING
+			a_prefix: detachable STRING
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop
@@ -141,7 +141,8 @@ feature -- Basic operations
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			i, nb: INTEGER
-			a_library, other_library: ET_XACE_MOUNTED_LIBRARY
+			a_library: ET_XACE_MOUNTED_LIBRARY
+			other_library: detachable ET_XACE_MOUNTED_LIBRARY
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop
@@ -172,7 +173,7 @@ feature -- Basic operations
 			i, nb: INTEGER
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
 			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
-			an_options: ET_XACE_OPTIONS
+			an_options: detachable ET_XACE_OPTIONS
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop

@@ -5,7 +5,7 @@ note
 		"Eiffel class parents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,20 +52,20 @@ feature -- Initialization
 			-- Reset parent as it was when it was last parsed.
 		do
 			type.reset
-			if renames /= Void then
-				renames.reset
+			if attached renames as l_renames then
+				l_renames.reset
 			end
-			if exports /= Void then
-				exports.reset
+			if attached exports as l_exports then
+				l_exports.reset
 			end
-			if undefines /= Void then
-				undefines.reset
+			if attached undefines as l_undefines then
+				l_undefines.reset
 			end
-			if redefines /= Void then
-				redefines.reset
+			if attached redefines as l_redefines then
+				l_redefines.reset
 			end
-			if selects /= Void then
-				selects.reset
+			if attached selects as l_selects then
+				l_selects.reset
 			end
 		end
 
@@ -74,22 +74,22 @@ feature -- Access
 	type: ET_BASE_TYPE
 			-- Parent type
 
-	renames: ET_RENAME_LIST
+	renames: detachable ET_RENAME_LIST
 			-- Rename clause
 
-	exports: ET_EXPORT_LIST
+	exports: detachable ET_EXPORT_LIST
 			-- Export clause
 
-	undefines: ET_KEYWORD_FEATURE_NAME_LIST
+	undefines: detachable ET_KEYWORD_FEATURE_NAME_LIST
 			-- Undefine clause
 
-	redefines: ET_KEYWORD_FEATURE_NAME_LIST
+	redefines: detachable ET_KEYWORD_FEATURE_NAME_LIST
 			-- Redefine clause
 
-	selects: ET_KEYWORD_FEATURE_NAME_LIST
+	selects: detachable ET_KEYWORD_FEATURE_NAME_LIST
 			-- Select clause
 
-	end_keyword: ET_KEYWORD
+	end_keyword: detachable ET_KEYWORD
 			-- 'end' keyword
 
 	parent: ET_PARENT
@@ -114,20 +114,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if end_keyword /= Void then
-				Result := end_keyword
+			if attached end_keyword as l_end_keyword then
+				Result := l_end_keyword
 			else
 				Result := type.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if end_keyword /= Void then
-				Result := end_keyword.break
-			else
-				Result := type.break
 			end
 		end
 

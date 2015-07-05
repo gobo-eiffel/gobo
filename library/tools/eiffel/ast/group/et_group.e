@@ -5,7 +5,7 @@ note
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #9 $"
@@ -113,7 +113,7 @@ feature -- Status report
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_parent: ET_GROUP
+			l_parent: detachable ET_GROUP
 		do
 			from
 				l_parent := a_group.parent
@@ -167,7 +167,7 @@ feature -- Access
 			prefixed_name_not_empty: Result.count > 0
 		end
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Directory pathname (may be Void)
 		deferred
 		end
@@ -254,12 +254,9 @@ feature -- Access
 
 	full_pathname: STRING
 			-- Full directory pathname
-		local
-			a_pathname: STRING
 		do
-			a_pathname := pathname
-			if a_pathname /= Void and then a_pathname.count > 0 then
-				Result := a_pathname
+			if attached pathname as l_pathname and then l_pathname.count > 0 then
+				Result := l_pathname
 			else
 				Result := name
 			end
@@ -270,12 +267,9 @@ feature -- Access
 
 	full_unix_pathname: STRING
 			-- Full Unix directory pathname
-		local
-			a_pathname: STRING
 		do
-			a_pathname := pathname
-			if a_pathname /= Void and then a_pathname.count > 0 then
-				Result := a_pathname
+			if attached pathname as l_pathname and then l_pathname.count > 0 then
+				Result := l_pathname
 			else
 				Result := name
 			end
@@ -295,8 +289,9 @@ feature -- Access
 			-- environment variables have changed and when the cluster
 			-- hierarchy has changed.
 		do
-			Result := cached_absolute_pathname
-			if Result = Void then
+			if attached cached_absolute_pathname as l_cached_absolute_pathname then
+				Result := l_cached_absolute_pathname
+			else
 				Result := Execution_environment.interpreted_string (full_pathname)
 				if Result.is_empty then
 					Result := name
@@ -438,7 +433,7 @@ feature -- Access
 			Result := name.hash_code
 		end
 
-	data: ANY
+	data: detachable ANY
 			-- Arbitrary user data
 
 	group: ET_GROUP
@@ -474,7 +469,7 @@ feature -- Conversion
 		require
 			is_primary: is_primary
 		do
-			check is_primary: is_primary end
+			check is_primary: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -484,7 +479,7 @@ feature -- Conversion
 		require
 			is_secondary: is_secondary
 		do
-			check is_secondary: is_secondary end
+			check is_secondary: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -494,7 +489,7 @@ feature -- Conversion
 		require
 			is_cluster: is_cluster
 		do
-			check is_cluster: is_cluster end
+			check is_cluster: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -504,7 +499,7 @@ feature -- Conversion
 		require
 			is_library: is_library
 		do
-			check is_library: is_library end
+			check is_library: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -514,26 +509,26 @@ feature -- Conversion
 		require
 			is_dotnet_assembly: is_dotnet_assembly
 		do
-			check is_dotnet_assembly: is_dotnet_assembly end
+			check is_dotnet_assembly: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
 
 feature -- Nested
 
-	parent: ET_GROUP
+	parent: detachable ET_GROUP
 			-- Parent group
 		deferred
 		end
 
-	root: like parent
+	root: attached like parent
 			-- Either current group if it has no parent, or the
 			-- ancestor of current group which has no parent
 		do
-			if parent = Void then
-				Result := Current
+			if attached parent as l_parent then
+				Result := l_parent.root
 			else
-				Result := parent.root
+				Result := Current
 			end
 		ensure
 			root_not_void: Result /= Void
@@ -608,7 +603,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	cached_absolute_pathname: STRING
+	cached_absolute_pathname: detachable STRING
 			-- Cached value of `absolute_pathname'
 
 end

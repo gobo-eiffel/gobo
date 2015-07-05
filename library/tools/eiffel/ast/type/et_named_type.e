@@ -6,7 +6,7 @@ note
 		%the name of a formal generic parameter)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_lower)
 		end
 
-	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_NAMED_TYPE
+	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_NAMED_TYPE
 			-- Current type whose type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do

@@ -5,7 +5,7 @@ note
 		"Eiffel loop invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,16 +67,6 @@ feature -- Access
 				Result := last.last_leaf
 			else
 				Result := invariant_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if not is_empty then
-				Result := last.break
-			else
-				Result := invariant_keyword.break
 			end
 		end
 

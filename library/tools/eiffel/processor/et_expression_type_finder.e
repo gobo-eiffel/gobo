@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -31,7 +31,6 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_call_agent,
-			process_call_expression,
 			process_convert_builtin_expression,
 			process_convert_from_expression,
 			process_convert_to_expression,
@@ -65,6 +64,7 @@ inherit
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_prefix_expression,
+			process_qualified_call_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -76,6 +76,7 @@ inherit
 			process_true_constant,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
+			process_unqualified_call_expression,
 			process_verbatim_string,
 			process_void
 		end
@@ -433,7 +434,7 @@ feature {NONE} -- Expression processing
 		local
 			l_seed: INTEGER
 			l_across_component: ET_ACROSS_COMPONENT
-			l_across_components: ET_ACROSS_COMPONENT_LIST
+			l_across_components: detachable ET_ACROSS_COMPONENT_LIST
 		do
 			reset_fatal_error (False)
 			l_seed := a_name.seed
@@ -544,21 +545,6 @@ feature {NONE} -- Expression processing
 			find_character_constant_type (a_constant, a_context)
 		end
 
-	find_call_expression_type (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- `a_context' represents the type in which `an_expression' appears.
-			-- It will be altered on exit to represent the type of `an_expression'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			an_expression_not_void: an_expression /= Void
-			a_context_not_void: a_context /= Void
-		do
-			if an_expression.is_qualified_call then
-				find_qualified_call_expression_type (an_expression, a_context)
-			else
-				find_unqualified_call_expression_type (an_expression, a_context)
-			end
-		end
-
 	find_character_constant_type (a_constant: ET_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
@@ -567,7 +553,7 @@ feature {NONE} -- Expression processing
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_CLASS_TYPE
+			l_type: detachable ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
 			l_type := a_constant.type
@@ -752,23 +738,22 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_procedure: ET_PROCEDURE
-			l_query: ET_QUERY
+			l_procedure: detachable ET_PROCEDURE
+			l_query: detachable ET_QUERY
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
-			l_identifier: ET_IDENTIFIER
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_argument: ET_FORMAL_ARGUMENT
-			l_type: ET_TYPE
-			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_type: detachable ET_TYPE
+			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_object_test: ET_NAMED_OBJECT_TEST
-			l_object_tests: ET_OBJECT_TEST_LIST
+			l_object_tests: detachable ET_OBJECT_TEST_LIST
 			l_across_component: ET_ACROSS_COMPONENT
-			l_across_components: ET_ACROSS_COMPONENT_LIST
+			l_across_components: detachable ET_ACROSS_COMPONENT_LIST
 			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
@@ -783,8 +768,8 @@ feature {NONE} -- Expression processing
 				end
 			elseif l_name.is_argument then
 					-- This is of the form '$argument'.
-				if current_inline_agent /= Void then
-					l_arguments := current_inline_agent.formal_arguments
+				if attached current_inline_agent as l_current_inline_agent then
+					l_arguments := l_current_inline_agent.formal_arguments
 					l_class_impl := current_class_impl
 				else
 						-- Use arguments of `current_feature' instead of `current_feature_impl'
@@ -904,8 +889,7 @@ feature {NONE} -- Expression processing
 					end
 				else
 					l_object_test := l_object_tests.object_test (l_seed)
-					l_identifier ?= l_name
-					check is_object_test_local: l_identifier /= Void end
+					check is_object_test_local: attached {ET_IDENTIFIER} l_name end
 					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
 					if l_typed_pointer_class.actual_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
@@ -951,8 +935,7 @@ feature {NONE} -- Expression processing
 					end
 				else
 					l_across_component := l_across_components.across_component (l_seed)
-					l_identifier ?= l_name
-					check is_across_cursor: l_identifier /= Void end
+					check is_across_cursor: attached {ET_IDENTIFIER} l_name end
 					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
 					if l_typed_pointer_class.actual_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
@@ -1022,13 +1005,13 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			if current_inline_agent /= Void then
-				l_arguments := current_inline_agent.formal_arguments
+			if attached current_inline_agent as l_current_inline_agent then
+				l_arguments := l_current_inline_agent.formal_arguments
 			else
 					-- Use arguments of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -1115,13 +1098,10 @@ feature {NONE} -- Expression processing
 			l_name: ET_CALL_NAME
 			l_target: ET_EXPRESSION
 			l_class: ET_CLASS
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			l_actual: ET_EXPRESSION
-			l_like: ET_LIKE_FEATURE
-			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_builtin: ET_BUILTIN_CONVERT_FEATURE
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 		do
 			reset_fatal_error (False)
@@ -1154,20 +1134,17 @@ feature {NONE} -- Expression processing
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
 					l_type := l_query.type
-					l_like ?= l_type
-					if l_like /= Void and then l_like.is_like_argument and l_query.arguments_count = 1 then
+					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
 						l_formal_context := new_context (current_type)
 						l_formal_context.copy_type_context (a_context)
-						l_formal_context.force_last (l_query.arguments.formal_argument (1).type)
+						l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
 						a_context.wipe_out
 						l_actual := an_expression.right
 						find_expression_type (l_actual, a_context, l_formal_context)
 						free_context (l_formal_context)
 						if not has_fatal_error then
-							l_convert_expression ?= l_actual
-							if l_convert_expression /= Void then
-								l_builtin ?= l_convert_expression.convert_feature
-								if l_builtin /= Void then
+							if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
+								if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
 										-- Needed for compatibility with ISE 5.6.0610:
 										-- a formal generic parameter either conforms or converts to its constraint,
 										-- then the converted version can still be chained with a conformance to
@@ -1192,7 +1169,7 @@ feature {NONE} -- Expression processing
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_CLASS_TYPE
+			l_type: detachable ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
 			l_type := a_constant.type
@@ -1212,7 +1189,7 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
 			l_type: ET_TYPE
 		do
@@ -1252,14 +1229,14 @@ feature {NONE} -- Expression processing
 		local
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			l_item_type: ET_TYPE
+			l_item_type: detachable ET_TYPE
 			hybrid_type: BOOLEAN
 			l_is_item_type_attached: BOOLEAN
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			array_class: ET_NAMED_CLASS
-			l_array_type: ET_CLASS_TYPE
-			l_array_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_array_parameter: ET_TYPE
+			l_array_type: detachable ET_CLASS_TYPE
+			l_array_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_array_parameter: detachable ET_TYPE
 			l_generic_class_type: ET_GENERIC_CLASS_TYPE
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
@@ -1270,7 +1247,9 @@ feature {NONE} -- Expression processing
 				-- Try to find out whether the expected type (i.e. `current_target_type')
 				-- for the manifest array is 'ARRAY [...]'. If this is the case then the
 				-- manifest array will be created of that type.
-			l_array_type ?= current_target_type.named_type
+			if attached {ET_CLASS_TYPE} current_target_type.named_type as l_class_type then
+				l_array_type := l_class_type
+			end
 			if l_array_type /= Void and then l_array_type.base_class.is_array_class then
 				l_array_parameters := l_array_type.actual_parameters
 				if l_array_parameters /= Void and then l_array_parameters.count = 1 then
@@ -1419,7 +1398,7 @@ feature {NONE} -- Expression processing
 			a_string_not_void: a_string /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_CLASS_TYPE
+			l_type: detachable ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
 			l_type := a_string.type
@@ -1441,7 +1420,7 @@ feature {NONE} -- Expression processing
 			had_error: BOOLEAN
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_tuple_type: ET_TUPLE_TYPE
-			l_tuple_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_tuple_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
 			l_detachable_any_type: ET_CLASS_TYPE
@@ -1456,9 +1435,8 @@ feature {NONE} -- Expression processing
 				-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
 				-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
 				-- if it were analyzed out of context).
-			l_tuple_type ?= current_target_type.named_type
-			if l_tuple_type /= Void then
-				l_tuple_parameters := l_tuple_type.actual_parameters
+			if attached {ET_TUPLE_TYPE} current_target_type.named_type as l_target_tuple_type then
+				l_tuple_parameters := l_target_tuple_type.actual_parameters
 				if l_tuple_parameters /= Void then
 					nb2 := l_tuple_parameters.count
 				end
@@ -1478,28 +1456,30 @@ feature {NONE} -- Expression processing
 				l_expression_context.wipe_out
 				i := i - 1
 			end
-			l_parameter_context := new_context (current_type)
-			from until i < 1 loop
-					-- The expected type for the manifest tuple is 'TUPLE [...]'.
-					-- Use these item types as expected types for the corresponding items
-					-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
-					-- and we have '[3]' then '3' will be considered as a '{INTEGER_64} 3'.
-					-- Likewise, if we expect a 'TUPLE [ARRAY [HASHABLE]]' and we have
-					-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
-					-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
-					-- if it were analyzed out of context).
-				l_parameter_context.force_last (l_tuple_parameters.type (i))
-				find_expression_type (an_expression.expression (i), l_expression_context, l_parameter_context)
-				if has_fatal_error then
-					had_error := True
-				else
-					l_actuals.put_first (l_expression_context.named_type)
+			if l_tuple_parameters /= Void then
+				l_parameter_context := new_context (current_type)
+				from until i < 1 loop
+						-- The expected type for the manifest tuple is 'TUPLE [...]'.
+						-- Use these item types as expected types for the corresponding items
+						-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
+						-- and we have '[3]' then '3' will be considered as a '{INTEGER_64} 3'.
+						-- Likewise, if we expect a 'TUPLE [ARRAY [HASHABLE]]' and we have
+						-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
+						-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
+						-- if it were analyzed out of context).
+					l_parameter_context.force_last (l_tuple_parameters.type (i))
+					find_expression_type (an_expression.expression (i), l_expression_context, l_parameter_context)
+					if has_fatal_error then
+						had_error := True
+					else
+						l_actuals.put_first (l_expression_context.named_type)
+					end
+					l_expression_context.wipe_out
+					l_parameter_context.wipe_out
+					i := i - 1
 				end
-				l_expression_context.wipe_out
-				l_parameter_context.wipe_out
-				i := i - 1
+				free_context (l_parameter_context)
 			end
-			free_context (l_parameter_context)
 			free_context (l_expression_context)
 			if had_error then
 				set_fatal_error
@@ -1567,9 +1547,9 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_type: ET_TYPE
+			l_type: detachable ET_TYPE
 			l_object_test: ET_NAMED_OBJECT_TEST
-			l_object_tests: ET_OBJECT_TEST_LIST
+			l_object_tests: detachable ET_OBJECT_TEST_LIST
 		do
 			reset_fatal_error (False)
 			l_seed := a_name.seed
@@ -1663,8 +1643,8 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_precursor_keyword: ET_PRECURSOR_KEYWORD
-			l_query: ET_QUERY
-			l_parent_type: ET_BASE_TYPE
+			l_query: detachable ET_QUERY
+			l_parent_type: detachable ET_BASE_TYPE
 			l_class: ET_CLASS
 			l_type: ET_TYPE
 		do
@@ -1711,26 +1691,22 @@ feature {NONE} -- Expression processing
 			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
-	find_qualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+	find_qualified_call_expression_type (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			qualified_call: a_call.is_qualified_call
 			a_context_not_void: a_context /= Void
 		local
 			l_target: ET_EXPRESSION
 			l_name: ET_CALL_NAME
-			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_class: ET_CLASS
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
-			l_like: ET_LIKE_FEATURE
 			l_actual: ET_EXPRESSION
-			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_builtin: ET_BUILTIN_CONVERT_FEATURE
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 		do
 			reset_fatal_error (False)
@@ -1781,21 +1757,18 @@ feature {NONE} -- Expression processing
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
-					l_like ?= l_type
-					if l_like /= Void and then l_like.is_like_argument and l_query.arguments_count = 1 then
+					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
 						if l_actuals /= Void and then l_actuals.count = 1 then
 							l_formal_context := new_context (current_type)
 							l_formal_context.copy_type_context (a_context)
-							l_formal_context.force_last (l_query.arguments.formal_argument (1).type)
+							l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
 							a_context.wipe_out
 							l_actual := l_actuals.actual_argument (1)
 							find_expression_type (l_actual, a_context, l_formal_context)
 							free_context (l_formal_context)
 							if not has_fatal_error then
-								l_convert_expression ?= l_actual
-								if l_convert_expression /= Void then
-									l_builtin ?= l_convert_expression.convert_feature
-									if l_builtin /= Void then
+								if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
+									if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
 											-- Needed for compatibility with ISE 5.6.0610:
 											-- a formal generic parameter either conforms or converts to its constraint,
 											-- then the converted version can still be chained with a conformance to
@@ -1823,7 +1796,7 @@ feature {NONE} -- Expression processing
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_CLASS_TYPE
+			l_type: detachable ET_CLASS_TYPE
 		do
 			reset_fatal_error (False)
 			l_type := a_constant.type
@@ -1874,11 +1847,11 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_TYPE
+			l_type: detachable ET_TYPE
 		do
 			reset_fatal_error (False)
-			if current_inline_agent /= Void then
-				l_type := current_inline_agent.type
+			if attached current_inline_agent as l_current_inline_agent then
+				l_type := l_current_inline_agent.type
 			else
 					-- Use type of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -1925,14 +1898,14 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_TYPE
+			l_type: detachable ET_TYPE
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			reset_fatal_error (False)
-			if current_inline_agent /= Void then
-				l_type := current_inline_agent.type
+			if attached current_inline_agent as l_current_inline_agent then
+				l_type := l_current_inline_agent.type
 			else
 					-- Use type of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -2002,7 +1975,7 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_class: ET_CLASS
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_result_type: ET_TYPE
 			l_name: ET_FEATURE_NAME
@@ -2086,24 +2059,20 @@ feature {NONE} -- Expression processing
 			find_real_constant_type (a_constant, a_context)
 		end
 
-	find_unqualified_call_expression_type (a_call: ET_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
+	find_unqualified_call_expression_type (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
 			-- `a_context' represents the type in which `a_call' appears.
 			-- It will be altered on exit to represent the type of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			unqualified_call: not a_call.is_qualified_call
 			a_context_not_void: a_context /= Void
 		local
 			l_name: ET_CALL_NAME
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_query: ET_QUERY
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_query: detachable ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
-			l_like: ET_LIKE_FEATURE
 			l_actual: ET_EXPRESSION
-			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_builtin: ET_BUILTIN_CONVERT_FEATURE
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 		do
 			reset_fatal_error (False)
@@ -2132,20 +2101,17 @@ feature {NONE} -- Expression processing
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
-					l_like ?= l_type
-					if l_like /= Void and then l_like.is_like_argument and l_query.arguments_count = 1 then
+					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument and then attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count = 1 then
 						if l_actuals /= Void and then l_actuals.count = 1 then
 							l_formal_context := new_context (current_type)
-							l_formal_context.force_last (l_query.arguments.formal_argument (1).type)
+							l_formal_context.force_last (l_formal_arguments.formal_argument (1).type)
 							a_context.wipe_out
 							l_actual := l_actuals.actual_argument (1)
 							find_expression_type (l_actual, a_context, l_formal_context)
 							free_context (l_formal_context)
 							if not has_fatal_error then
-								l_convert_expression ?= l_actual
-								if l_convert_expression /= Void then
-									l_builtin ?= l_convert_expression.convert_feature
-									if l_builtin /= Void then
+								if attached {ET_CONVERT_EXPRESSION} l_actual as l_convert_expression then
+									if attached {ET_BUILTIN_CONVERT_FEATURE} l_convert_expression.convert_feature as l_builtin then
 											-- Needed for compatibility with ISE 5.6.0610:
 											-- a formal generic parameter either conforms or converts to its constraint,
 											-- then the converted version can still be chained with a conformance to
@@ -2223,28 +2189,22 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_target: ET_AGENT_TARGET
-			an_expression_target: ET_EXPRESSION
-			a_type_target: ET_AGENT_OPEN_TARGET
 		do
 			if not an_expression.is_qualified_call then
 				find_unqualified_call_agent_type (an_expression, a_context)
 			else
 				a_target := an_expression.target
-				an_expression_target ?= a_target
-				if an_expression_target /= Void then
+				if attached {ET_EXPRESSION} a_target as an_expression_target then
 					find_qualified_call_agent_type (an_expression, an_expression_target, a_context)
+				elseif attached {ET_AGENT_OPEN_TARGET} a_target as a_type_target then
+					find_typed_call_agent_type (an_expression, a_type_target, a_context)
 				else
-					a_type_target ?= a_target
-					if a_type_target /= Void then
-						find_typed_call_agent_type (an_expression, a_type_target, a_context)
-					else
-							-- Internal error: no other kind of targets.
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
+						-- Internal error: no other kind of targets.
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
 					end
 				end
 			end
@@ -2260,8 +2220,8 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
+			l_query: detachable ET_QUERY
+			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 		do
 			reset_fatal_error (False)
@@ -2318,8 +2278,8 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2367,8 +2327,8 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2405,8 +2365,8 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_class: ET_CLASS
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
+			l_query: detachable ET_QUERY
+			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 		do
 			reset_fatal_error (False)
@@ -2479,8 +2439,8 @@ feature {NONE} -- Agent validity
 			a_type: ET_TYPE
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2534,8 +2494,8 @@ feature {NONE} -- Agent validity
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2618,8 +2578,8 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_class: ET_CLASS
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
+			l_query: detachable ET_QUERY
+			l_procedure: detachable ET_PROCEDURE
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
 		do
@@ -2689,7 +2649,7 @@ feature {NONE} -- Agent validity
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
 			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2748,7 +2708,7 @@ feature {NONE} -- Agent validity
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
 			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2902,8 +2862,8 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2945,8 +2905,8 @@ feature {NONE} -- Agent validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
@@ -2982,24 +2942,19 @@ feature {NONE} -- Agent validity
 			an_open_operands_not_void: an_open_operands /= Void
 			an_open_operands_empty: an_open_operands.is_empty
 		local
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			l_actual_list: ET_AGENT_ARGUMENT_OPERAND_LIST
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
 			l_formal_type: ET_TYPE
 			i, nb: INTEGER
 			l_agent_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual: ET_EXPRESSION
 			l_formal: ET_FORMAL_ARGUMENT
 			had_error: BOOLEAN
-			l_agent_type: ET_AGENT_TYPED_OPEN_ARGUMENT
 			l_actual_type: ET_TYPE
-			l_question_mark: ET_QUESTION_MARK_SYMBOL
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 			reset_fatal_error (False)
 			l_formals := a_closure.arguments
 			l_actuals := an_agent.arguments
-			l_actual_list ?= l_actuals
-			if l_actual_list = Void then
+			if not attached {ET_AGENT_ARGUMENT_OPERAND_LIST} l_actuals as l_actual_list then
 				if l_formals /= Void then
 					nb := l_formals.count
 					from i := nb until i < 1 loop
@@ -3033,26 +2988,19 @@ feature {NONE} -- Agent validity
 						had_error := had_error or has_fatal_error
 						l_formal := l_formals.formal_argument (i)
 						l_agent_actual := l_actual_list.actual_argument (i)
-						l_actual ?= l_agent_actual
-						if l_actual /= Void then
+						if attached {ET_EXPRESSION} l_agent_actual then
 							-- Closed operands.
+						elseif attached {ET_AGENT_TYPED_OPEN_ARGUMENT} l_agent_actual as l_agent_type then
+							l_actual_type := l_agent_type.type
+							an_open_operands.force_first (l_actual_type)
+						elseif attached {ET_QUESTION_MARK_SYMBOL} l_agent_actual then
+							l_formal_type := l_formal.type
+							an_open_operands.force_first (l_formal_type)
 						else
-							l_agent_type ?= l_agent_actual
-							if l_agent_type /= Void then
-								l_actual_type := l_agent_type.type
-								an_open_operands.force_first (l_actual_type)
-							else
-								l_question_mark ?= l_agent_actual
-								if l_question_mark /= Void then
-									l_formal_type := l_formal.type
-									an_open_operands.force_first (l_formal_type)
-								else
-										-- Internal error: no other kind of agent actual arguments.
-										-- This error should have already been reported when checking
-										-- `current_feature' (using ET_FEATURE_CHECKER for example).
-									set_fatal_error
-								end
-							end
+								-- Internal error: no other kind of agent actual arguments.
+								-- This error should have already been reported when checking
+								-- `current_feature' (using ET_FEATURE_CHECKER for example).
+							set_fatal_error
 						end
 						i := i - 1
 					end
@@ -3109,12 +3057,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_call_agent_type (an_expression, current_context)
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		do
-			find_call_expression_type (an_expression, current_context)
 		end
 
 	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION)
@@ -3325,6 +3267,12 @@ feature {ET_AST_NODE} -- Processing
 			find_prefix_expression_type (an_expression, current_context)
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_qualified_call_expression_type (an_expression, current_context)
+		end
+
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -3391,6 +3339,12 @@ feature {ET_AST_NODE} -- Processing
 			find_underscored_real_constant_type (a_constant, current_context)
 		end
 
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_unqualified_call_expression_type (an_expression, current_context)
+		end
+
 	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
 		do
@@ -3435,14 +3389,14 @@ feature {NONE} -- Access
 			-- `current_feature' is B.f and `current_feature_impl' is A.f
 			-- (where the inherited precondition has been written).
 
-	current_inline_agent: ET_INLINE_AGENT
+	current_inline_agent: detachable ET_INLINE_AGENT
 			-- Inline agent being processed if any, Void otherwise
 
 	current_closure: ET_CLOSURE
 			-- Inner closure being processed
 		do
-			if current_inline_agent /= Void then
-				Result := current_inline_agent
+			if attached current_inline_agent as l_current_inline_agent then
+				Result := l_current_inline_agent
 			else
 				Result := current_feature
 			end
@@ -3455,8 +3409,8 @@ feature {NONE} -- Access
 	current_closure_impl: ET_CLOSURE
 			-- Inner closure where the code being processed has been written
 		do
-			if current_inline_agent /= Void then
-				Result := current_inline_agent
+			if attached current_inline_agent as l_current_inline_agent then
+				Result := l_current_inline_agent
 			else
 				Result := current_feature_impl
 			end

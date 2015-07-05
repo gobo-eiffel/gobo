@@ -5,7 +5,7 @@ note
 		"Eiffel for .NET custom attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Access
 	creation_expression: ET_CREATE_EXPRESSION
 			-- Creation of custom attribute
 
-	settings: ET_MANIFEST_TUPLE
+	settings: detachable ET_MANIFEST_TUPLE
 			-- Additional custom attribute settings
 
 	end_keyword: ET_KEYWORD
@@ -63,12 +63,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

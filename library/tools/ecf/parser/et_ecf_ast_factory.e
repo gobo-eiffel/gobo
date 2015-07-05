@@ -5,7 +5,7 @@ note
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -236,7 +236,7 @@ feature -- AST factory
 			external_objects_not_void: Result /= Void
 		end
 
-	new_file_rule (a_exclude, a_include: DS_HASH_SET [STRING]): ET_ECF_FILE_RULE
+	new_file_rule (a_exclude, a_include: detachable DS_HASH_SET [STRING]): ET_ECF_FILE_RULE
 			-- New file rule
 		require
 			no_void_exclude: a_exclude /= Void implies not a_exclude.has_void

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets with no sources nor targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,8 +62,8 @@ feature -- Initialization
 			is_never_void := False
 			static_type := a_static_type
 			count := 0
-			if dynamic_types /= Void then
-				dynamic_types.wipe_out
+			if attached dynamic_types as l_dynamic_types then
+				l_dynamic_types.wipe_out
 			end
 		ensure
 			static_type_set: static_type = a_static_type
@@ -109,13 +109,17 @@ feature -- Element change
 	put_type (a_type: ET_DYNAMIC_TYPE)
 			-- Add `a_type' to current set.
 			-- Do not check for type conformance with `static_type' and do not propagate to targets.
+		local
+			l_dynamic_types: like dynamic_types
 		do
-			if dynamic_types = Void then
-				create dynamic_types.make_with_capacity (15)
-				dynamic_types.put_last (a_type)
+			l_dynamic_types := dynamic_types
+			if l_dynamic_types = Void then
+				create l_dynamic_types.make_with_capacity (15)
+				l_dynamic_types.put_last (a_type)
+				dynamic_types := l_dynamic_types
 				count := 1
-			elseif not dynamic_types.has_type (a_type) then
-				dynamic_types.force_last (a_type)
+			elseif not l_dynamic_types.has_type (a_type) then
+				l_dynamic_types.force_last (a_type)
 				count := count + 1
 			end
 		end
@@ -130,14 +134,14 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: ET_DYNAMIC_TYPE_HASH_LIST
+	dynamic_types: detachable ET_DYNAMIC_TYPE_HASH_LIST
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 
 invariant
 
 	dynamic_types_not_readonly: not is_dynamic_types_readonly
-	consistent_count: dynamic_types /= Void implies count = dynamic_types.count
+	consistent_count: attached dynamic_types as l_dynamic_types implies count = l_dynamic_types.count
 	empty: dynamic_types = Void implies count = 0
 
 end

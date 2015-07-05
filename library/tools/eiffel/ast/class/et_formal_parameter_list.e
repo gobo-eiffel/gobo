@@ -5,7 +5,7 @@ note
 		"Eiffel lists of formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Access
 			formal_parameter_not_void: Result /= Void
 		end
 
-	formal_parameter_by_name (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER
+	formal_parameter_by_name (a_name: ET_IDENTIFIER): detachable ET_FORMAL_PARAMETER
 			-- Formal generic parameter with name `a_name';
 			-- Void if no such generic parameter
 		require

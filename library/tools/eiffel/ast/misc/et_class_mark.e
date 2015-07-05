@@ -5,7 +5,7 @@ note
 		"Eiffel type marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', 'deferred', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	ET_TYPE_MARK
 		undefine
 			first_position,
-			last_position
+			last_position,
+			break
 		end
 
 	ET_AST_LEAF

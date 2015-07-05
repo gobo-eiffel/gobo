@@ -5,7 +5,7 @@ note
 		"Eiffel ';' symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,14 +23,19 @@ inherit
 
 	ET_NULL_EXPORT
 		undefine
-			first_position, last_position,
-			reset, is_semicolon
+			first_position,
+			last_position,
+			reset,
+			is_semicolon,
+			break
 		end
 
 	ET_NULL_INSTRUCTION
 		undefine
-			first_position, last_position,
-			is_semicolon
+			first_position,
+			last_position,
+			is_semicolon,
+			break
 		end
 
 create

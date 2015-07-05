@@ -5,7 +5,7 @@ note
 		"Eiffel features being processed through the Feature_adaptation clause"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Access
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
@@ -90,7 +90,7 @@ feature -- Access
 			definition: Result = flattened_feature.type
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST
+	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		do
@@ -116,24 +116,23 @@ feature -- Access
 			from
 				a_feature := parent_feature
 			until
-				Result /= Void
+				a_feature.has_seed (a_seed)
 			loop
-				if a_feature.has_seed (a_seed) then
-					Result := a_feature
-				else
-					a_feature := a_feature.merged_feature
+				check has_seed: attached a_feature.merged_feature as l_merged_feature then
+					a_feature := l_merged_feature
 				end
 			end
+			Result := a_feature
 		ensure
 			seeded_feature_not_void: Result /= Void
 			has_seed: Result.has_seed (a_seed)
 		end
 
-	selected_feature: ET_PARENT_FEATURE
+	selected_feature: detachable ET_PARENT_FEATURE
 			-- Either current parent feature or one of its merged or
 			-- joined features that appears in a Select clause?
 		local
-			a_feature: ET_PARENT_FEATURE
+			a_feature: detachable ET_PARENT_FEATURE
 		do
 			from
 				a_feature := parent_feature
@@ -174,10 +173,10 @@ feature -- Access
 			end
 		end
 
-	replicated_seeds: ET_FEATURE_IDS
+	replicated_seeds: detachable ET_FEATURE_IDS
 			-- Seeds involved when current feature has been replicated
 
-	replicated_features: DS_LINKED_LIST [ET_PARENT_FEATURE]
+	replicated_features: detachable DS_LINKED_LIST [ET_PARENT_FEATURE]
 			-- Features which had the same seed as current feature
 			-- in their parents but which have been replicated in
 			-- current class
@@ -212,10 +211,10 @@ feature -- Status setting
 		require
 			has_seed: has_seed (a_seed)
 		do
-			if replicated_seeds = Void then
+			if not attached replicated_seeds as l_replicated_seeds then
 				create replicated_seeds.make (a_seed)
-			elseif not replicated_seeds.has (a_seed) then
-				replicated_seeds.put (a_seed)
+			elseif not l_replicated_seeds.has (a_seed) then
+				l_replicated_seeds.put (a_seed)
 			end
 		ensure
 			is_replicated: is_replicated
@@ -238,42 +237,45 @@ feature -- Element change
 			a_feature_not_merged: a_feature.merged_feature = Void
 			same_name: (not is_dotnet and not a_feature.precursor_feature.implementation_class.current_system.alias_transition_mode) implies a_feature.name.same_feature_name (name)
 		local
-			a_seeds: like other_seeds
 			a_seed: INTEGER
 			i, nb: INTEGER
 			need_twin: BOOLEAN
+			l_other_seeds: like other_seeds
 		do
 			a_feature.set_merged_feature (parent_feature.merged_feature)
 			parent_feature.set_merged_feature (a_feature)
 			need_twin := is_other_seeds_shared
 			a_seed := a_feature.first_seed
 			if not has_seed (a_seed) then
-				if other_seeds = Void then
-					create other_seeds.make (a_seed)
-					need_twin := False
-				else
+				if attached other_seeds as l_seeds then
+					l_other_seeds := l_seeds
 					if need_twin then
-						other_seeds := other_seeds.cloned_object
+						l_other_seeds := l_other_seeds.cloned_object
+						other_seeds := l_other_seeds
 						need_twin := False
 					end
-					other_seeds.put (a_seed)
+					l_other_seeds.put (a_seed)
+				else
+					create other_seeds.make (a_seed)
+					need_twin := False
 				end
 			end
-			a_seeds := a_feature.other_seeds
-			if a_seeds /= Void then
+			if attached a_feature.other_seeds as a_seeds then
 				nb := a_seeds.count
 				from i := 1 until i > nb loop
 					a_seed := a_seeds.item (i)
 					if not has_seed (a_seed) then
-						if other_seeds = Void then
-							create other_seeds.make (a_seed)
-							need_twin := False
-						else
+						if attached other_seeds as l_seeds then
+							l_other_seeds := l_seeds
 							if need_twin then
-								other_seeds := other_seeds.cloned_object
+								l_other_seeds := l_other_seeds.cloned_object
+								other_seeds := l_other_seeds
 								need_twin := False
 							end
-							other_seeds.put (a_seed)
+							l_other_seeds.put (a_seed)
+						else
+							create other_seeds.make (a_seed)
+							need_twin := False
 						end
 					end
 					i := i + 1
@@ -286,19 +288,24 @@ feature -- Element change
 		require
 			is_selected: is_selected
 			a_feature_not_void: a_feature /= Void
+		local
+			l_replicated_features: like replicated_features
 		do
-			if replicated_features = Void then
-				create replicated_features.make
+			if attached replicated_features as l_features then
+				l_replicated_features := l_features
+			else
+				create l_replicated_features.make
+				replicated_features := l_replicated_features
 			end
-			replicated_features.force_last (a_feature)
+			l_replicated_features.force_last (a_feature)
 		end
 
 feature -- Link
 
-	next: like Current
+	next: detachable like Current
 			-- Next linked feature if list of features
 
-	set_next (a_next: like Current)
+	set_next (a_next: like next)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next
@@ -311,6 +318,6 @@ invariant
 	parent_feature_not_void: parent_feature /= Void
 	is_adapted: is_adapted
 	-- valid_replicated_seeds: replicated_seeds /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
-	no_void_replicated_features: replicated_features /= Void implies not replicated_features.has_void
+	no_void_replicated_features: attached replicated_features as l_replicated_features implies not l_replicated_features.has_void
 
 end

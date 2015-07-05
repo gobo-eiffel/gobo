@@ -5,7 +5,7 @@ note
 		"Eiffel lists of agent actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,19 +54,15 @@ feature -- Initialization
 		local
 			l_actual: ET_AGENT_ARGUMENT_OPERAND_ITEM
 			l_operand: ET_AGENT_ARGUMENT_OPERAND
-			l_operand_comma: ET_AGENT_ARGUMENT_OPERAND_COMMA
-			l_convert: ET_CONVERT_EXPRESSION
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
 				l_actual := storage.item (i)
 				l_operand := l_actual.agent_actual_argument
-				l_convert ?= l_operand
-				if l_convert /= Void then
+				if attached {ET_CONVERT_EXPRESSION} l_operand as l_convert then
 					l_operand := l_convert.expression
-					l_operand_comma ?= l_actual
-					if l_operand_comma /= Void then
+					if attached {ET_AGENT_ARGUMENT_OPERAND_COMMA} l_actual as l_operand_comma then
 						l_operand_comma.set_agent_actual_argument (l_operand)
 					else
 						storage.put (l_operand, i)
@@ -111,12 +107,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := right_parenthesis
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := right_parenthesis.break
 		end
 
 feature -- Setting

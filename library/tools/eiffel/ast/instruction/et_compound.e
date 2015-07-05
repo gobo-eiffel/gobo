@@ -5,7 +5,7 @@ note
 		"Eiffel instruction compounds"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,16 +101,6 @@ feature -- Access
 				Result := keyword
 			else
 				Result := last.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if is_empty then
-				Result := keyword.break
-			else
-				Result := last.break
 			end
 		end
 

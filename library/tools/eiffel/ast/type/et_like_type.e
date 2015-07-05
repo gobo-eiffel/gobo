@@ -5,7 +5,7 @@ note
 		"Eiffel anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	type_mark: ET_TYPE_MARK
+	type_mark: detachable ET_TYPE_MARK
 			-- 'attached' or 'detachable' keyword,
 			-- or '!' or '?' symbol
 
@@ -36,7 +36,7 @@ feature -- Access
 		deferred
 		end
 
-	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_LIKE_TYPE
+	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_LIKE_TYPE
 			-- Current type whose type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do
@@ -46,10 +46,9 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if type_mark /= Void and then not type_mark.is_implicit_mark then
-				Result := type_mark.first_leaf
-			end
-			if Result = Void then
+			if attached type_mark as l_type_mark and then not l_type_mark.is_implicit_mark then
+				Result := l_type_mark.first_leaf
+			else
 				Result := like_keyword
 			end
 		end
@@ -72,7 +71,7 @@ feature -- Type processing
 			Result := resolved_formal_parameters_with_type_mark (Void, a_parameters)
 		end
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_LIKE_TYPE
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_LIKE_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do

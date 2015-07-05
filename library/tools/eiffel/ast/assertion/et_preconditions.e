@@ -5,7 +5,7 @@ note
 		"Eiffel precondition lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Access
 	require_keyword: ET_KEYWORD
 			-- 'require' keyword
 
-	else_keyword: ET_KEYWORD
+	else_keyword: detachable ET_KEYWORD
 			-- 'else' keyword
 
 	position: ET_POSITION
@@ -81,22 +81,10 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := last.last_leaf
-			elseif else_keyword /= Void then
-				Result := else_keyword
+			elseif attached else_keyword as l_else_keyword then
+				Result := l_else_keyword
 			else
 				Result := require_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if not is_empty then
-				Result := last.break
-			elseif else_keyword /= Void then
-				Result := else_keyword.break
-			else
-				Result := require_keyword.break
 			end
 		end
 

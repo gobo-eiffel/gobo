@@ -5,7 +5,7 @@ note
 		"Eiffel queries (functions or attributes)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,12 +24,9 @@ feature -- Initialization
 
 	reset
 			-- Reset current feature as it was just after it was last parsed.
-		local
-			l_assigner: ET_ASSIGNER
 		do
 			precursor
-			l_assigner := assigner
-			if l_assigner /= Void then
+			if attached assigner as l_assigner then
 				l_assigner.reset
 			end
 		end
@@ -47,7 +44,7 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	assigner: ET_ASSIGNER
+	assigner: detachable ET_ASSIGNER
 			-- Assigner procedure
 
 feature -- Setting

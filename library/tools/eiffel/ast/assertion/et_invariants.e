@@ -5,7 +5,7 @@ note
 		"Eiffel class invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,7 +83,7 @@ feature -- Access
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword
 
-	first_precursor: ET_INVARIANTS
+	first_precursor: detachable ET_INVARIANTS
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -109,7 +109,7 @@ feature -- Access
 			Result := 1
 		end
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
 		do
 			-- Result := Void
@@ -138,16 +138,6 @@ feature -- Access
 				Result := last.last_leaf
 			else
 				Result := invariant_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if not is_empty then
-				Result := last.break
-			else
-				Result := invariant_keyword.break
 			end
 		end
 

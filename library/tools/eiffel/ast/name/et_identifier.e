@@ -16,12 +16,18 @@ inherit
 
 	ET_FEATURE_NAME
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
-			reset, is_tuple_label,
-			is_local, is_argument,
-			is_identifier, is_equal,
-			local_name, argument_name,
+			reset,
+			is_tuple_label,
+			is_local,
+			is_argument,
+			is_identifier,
+			is_equal,
+			local_name,
+			argument_name,
 			object_test_local_name,
 			is_object_test_local,
 			across_cursor_name,
@@ -30,60 +36,87 @@ inherit
 
 	ET_CLASS_NAME
 		undefine
-			first_position, last_position,
-			is_identifier, is_equal
+			first_position,
+			last_position,
+			is_identifier,
+			is_equal,
+			break
 		end
 
 	ET_LOCAL_NAME
 		undefine
-			first_position, last_position,
-			reset, is_equal
+			first_position,
+			last_position,
+			reset,
+			is_equal,
+			break
 		redefine
 			is_never_void
 		end
 
 	ET_OBJECT_TEST_LOCAL_NAME
 		undefine
-			first_position, last_position,
-			reset, is_equal
+			first_position,
+			last_position,
+			reset,
+			is_equal,
+			break
 		redefine
 			is_never_void
 		end
 
 	ET_ARGUMENT_NAME
 		undefine
-			first_position, last_position,
-			reset, is_equal, is_never_void
+			first_position,
+			last_position,
+			reset,
+			is_equal,
+			is_never_void,
+			break
 		end
 
 	ET_LABEL
 		undefine
-			first_position, last_position,
-			is_equal
+			first_position,
+			last_position,
+			is_equal,
+			break
 		end
 
 	ET_TAG
 		undefine
-			first_position, last_position,
-			is_equal
+			first_position,
+			last_position,
+			is_equal,
+			break
 		end
 
 	ET_WRITABLE
 		undefine
-			first_position, last_position,
-			reset, is_equal, is_never_void
+			first_position,
+			last_position,
+			reset,
+			is_equal,
+			is_never_void,
+			break
 		end
 
 	ET_CHOICE_CONSTANT
 		undefine
-			first_position, last_position,
-			reset, is_equal, is_never_void
+			first_position,
+			last_position,
+			reset,
+			is_equal,
+			is_never_void,
+			break
 		end
 
 	ET_INDEXING_TERM
 		undefine
-			first_position, last_position,
-			is_equal
+			first_position,
+			last_position,
+			is_equal,
+			break
 		end
 
 	ET_TOKEN
@@ -95,22 +128,30 @@ inherit
 			make
 		end
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			name as identifier
 		undefine
-			first_position, last_position,
-			is_tuple_label, reset, is_equal,
-			is_never_void
+			first_position,
+			last_position,
+			is_tuple_label,
+			reset,
+			is_equal,
+			is_never_void,
+			break
 		end
 
-	ET_FEATURE_CALL_INSTRUCTION
+	ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION
 		rename
 			name as identifier
 		undefine
 			parenthesis_call,
-			first_position, last_position,
-			is_tuple_label, reset, is_equal
+			first_position,
+			last_position,
+			is_tuple_label,
+			reset,
+			is_equal,
+			break
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -213,14 +254,7 @@ feature -- Access
 			end
 		end
 
-	target: ET_EXPRESSION
-			-- Target
-		do
-		ensure then
-			no_target: Result = Void
-		end
-
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: detachable ET_ACTUAL_ARGUMENTS
 			-- Arguments
 		do
 		ensure then

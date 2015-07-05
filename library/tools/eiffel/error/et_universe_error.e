@@ -5,7 +5,7 @@ note
 		"Eiffel universe errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: 5877 $"
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			a_class2_not_void: a_class2 /= Void
 		local
 			l_actual_class: ET_CLASS
-			l_filename: STRING
+			l_filename: detachable STRING
 		do
 			code := vscn0a_template_code
 			etl_code := vscn_etl_code
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			a_override_class_not_void: a_override_class /= Void
 		local
 			l_actual_class: ET_CLASS
-			l_filename: STRING
+			l_filename: detachable STRING
 		do
 			code := vscn0b_template_code
 			etl_code := vscn_etl_code
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			a_class2_not_void: a_class2 /= Void
 		local
 			l_actual_class: ET_CLASS
-			l_filename: STRING
+			l_filename: detachable STRING
 		do
 			code := vscn0c_template_code
 			etl_code := vscn_etl_code

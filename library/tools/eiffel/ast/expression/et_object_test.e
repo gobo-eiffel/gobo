@@ -5,7 +5,7 @@ note
 		"Eiffel object-test expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,11 +42,8 @@ feature -- Initialization
 
 	reset
 			-- Reset expression as it was just after it was last parsed.
-		local
-			l_type: ET_TYPE
 		do
-			l_type := type
-			if l_type /= Void then
+			if attached type as l_type then
 				l_type.reset
 			end
 			expression.reset
@@ -57,21 +54,21 @@ feature -- Access
 	attached_keyword: ET_KEYWORD
 			-- 'attached' keyword
 
-	declared_type: ET_TARGET_TYPE
+	declared_type: detachable ET_TARGET_TYPE
 			-- Type declared in the object test, surrounded by braces
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Type expected for the expression
 		do
-			if declared_type /= Void then
-				Result := declared_type.type
+			if attached declared_type as l_declared_type then
+				Result := l_declared_type.type
 			end
 		end
 
 	expression: ET_EXPRESSION
 			-- Expression being tested
 
-	name: ET_IDENTIFIER
+	name: detachable ET_IDENTIFIER
 			-- Name of object-test local, if any
 		do
 			-- Result := Void
@@ -83,8 +80,8 @@ feature -- Access
 		do
 			Result := attached_keyword.position
 			if Result.is_null then
-				if declared_type /= Void then
-					Result := declared_type.position
+				if attached declared_type as l_declared_type then
+					Result := l_declared_type.position
 				end
 				if Result.is_null then
 					Result := expression.position
@@ -102,12 +99,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := expression.break
 		end
 
 feature -- Setting

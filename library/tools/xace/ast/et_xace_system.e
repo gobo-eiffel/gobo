@@ -5,7 +5,7 @@ note
 		"Xace Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Access
 	clusters: ET_XACE_CLUSTERS
 			-- Clusters
 
-	system_name: STRING
+	system_name: detachable STRING
 			-- Name of system
 
 feature -- Setting

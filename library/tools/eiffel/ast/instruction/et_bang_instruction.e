@@ -5,7 +5,7 @@ note
 		"Eiffel bang creation instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Access
 	left_bang: ET_SYMBOL
 			-- Left '!' symbol
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Creation type
 
 	right_bang: ET_SYMBOL
@@ -55,8 +55,8 @@ feature -- Access
 		do
 			if not left_bang.position.is_null then
 				Result := left_bang.position
-			elseif type /= Void then
-				Result := type.position
+			elseif attached type as l_type then
+				Result := l_type.position
 			else
 				Result := target.position
 			end
@@ -71,20 +71,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if creation_call /= Void then
-				Result := creation_call.last_leaf
+			if attached creation_call as l_creation_call then
+				Result := l_creation_call.last_leaf
 			else
 				Result := target.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if creation_call /= Void then
-				Result := creation_call.break
-			else
-				Result := target.break
 			end
 		end
 

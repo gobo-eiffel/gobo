@@ -301,7 +301,7 @@ feature -- Conversion
 		require
 			is_precursor: is_precursor
 		do
-			check is_precursor: is_precursor end
+			check is_precursor: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -311,7 +311,7 @@ feature -- Conversion
 		require
 			is_local: is_local
 		do
-			check is_local: is_local end
+			check is_local: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -321,7 +321,7 @@ feature -- Conversion
 		require
 			is_argument: is_argument
 		do
-			check is_argument: is_argument end
+			check is_argument: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -331,7 +331,7 @@ feature -- Conversion
 		require
 			is_object_test_local: is_object_test_local
 		do
-			check is_object_test_local: is_object_test_local end
+			check is_object_test_local: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -341,7 +341,7 @@ feature -- Conversion
 		require
 			is_across_cursor: is_across_cursor
 		do
-			check is_across_cursor: is_across_cursor end
+			check is_across_cursor: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -351,7 +351,7 @@ feature -- Conversion
 		require
 			is_feature_name: is_feature_name
 		do
-			check is_feature_name: is_feature_name end
+			check is_feature_name: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

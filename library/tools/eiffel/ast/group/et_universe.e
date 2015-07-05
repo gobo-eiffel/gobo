@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -57,9 +57,17 @@ feature {NONE} -- Initialization
 		do
 			current_system := a_system
 			initialize
-			set_default_class_mapping
-			set_kernel_types
+				-- First set the kernel types to some dummy types so that the attached attributes
+				-- get properly set before using `Current'. Otherwise the compiler will complain.
+			set_unknown_kernel_types
+				-- Set `universe' and `name' outside of `make_adapted', otherwise the compiler
+				-- will complain about these attributes not properly set when passing `Current'
+				-- as argument.
+			universe := Current
+			name := a_name
 			make_adapted (a_name, Current)
+			set_kernel_types
+			set_default_class_mapping
 		ensure
 			name_set: name = a_name
 			current_system_set: current_system = a_system
@@ -283,7 +291,8 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		deferred
 		end
@@ -320,7 +329,7 @@ feature -- Access
 			master_class_not_void: Result /= Void
 		end
 
-	master_class_by_name (a_name: STRING): ET_MASTER_CLASS
+	master_class_by_name (a_name: STRING): detachable ET_MASTER_CLASS
 			-- Class named `a_name' when viewed from current universe.
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -355,7 +364,7 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
-	class_by_name (a_name: STRING): ET_CLASS
+	class_by_name (a_name: STRING): detachable ET_CLASS
 			-- Class named `a_name' declared locally in current universe.
 			-- Do not take into account overridden classes.
 			-- Void if not such class
@@ -363,11 +372,9 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		local
-			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
-			l_master_class := master_class_by_name (a_name)
-			if l_master_class /= Void and then not l_master_class.is_mapped then
+			if attached master_class_by_name (a_name) as l_master_class and then not l_master_class.is_mapped then
 				l_class := l_master_class.actual_class
 				if l_class.universe = Current then
 					Result := l_class
@@ -451,7 +458,7 @@ feature -- Access
 			no_void_class: not Result.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has_void)
 		end
 
-	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+	group_by_name (a_names: ARRAY [STRING]): detachable ET_GROUP
 			-- Group named `a_names' starting from within current universe
 			-- and recursively traversing dependent universes if needed
 			--
@@ -459,7 +466,8 @@ feature -- Access
 			-- Void if not such group.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		deferred
 		ensure
@@ -469,7 +477,7 @@ feature -- Access
 	current_system: ET_SYSTEM
 			-- Surrounding Eiffel system
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
+	adapted_universe (a_universe: ET_UNIVERSE): detachable ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
@@ -492,7 +500,6 @@ feature -- Access
 			l_depths: DS_HASH_TABLE [INTEGER, ET_UNIVERSE]
 			l_cursor: DS_HASH_TABLE_CURSOR [INTEGER, ET_UNIVERSE]
 			l_universe: ET_UNIVERSE
-			l_adapted_universe: ET_ADAPTED_UNIVERSE
 			l_count: INTEGER
 			l_found: BOOLEAN
 		do
@@ -534,8 +541,7 @@ feature -- Access
 						l_cursor.before
 					loop
 						if l_cursor.item /= l_count then
-							l_adapted_universe := l_cursor.key.adapted_universe (l_universe)
-							if l_adapted_universe /= Void then
+							if attached l_cursor.key.adapted_universe (l_universe) as l_adapted_universe then
 								Result.force_first (l_adapted_universe)
 								l_universe := l_cursor.key
 								l_count := l_cursor.item
@@ -547,7 +553,7 @@ feature -- Access
 			end
 		ensure
 			path_not_void: Result /= Void
-			no_void_object: not Result.has (Void)
+			no_void_object: not Result.has_void
 			last: not Result.is_empty implies Result.last.universe = a_other
 		end
 
@@ -560,15 +566,13 @@ feature -- Access
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			l_adapted_universe: ET_ADAPTED_UNIVERSE
 			l_shortest_path: DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE]
 			i, nb: INTEGER
 		do
 			if a_universe = Current then
 				Result := name
 			else
-				l_adapted_universe := a_universe.adapted_universe (Current)
-				if l_adapted_universe /= Void then
+				if attached a_universe.adapted_universe (Current) as l_adapted_universe then
 					Result := l_adapted_universe.name
 				else
 					l_shortest_path := a_universe.shortest_path (Current)
@@ -601,15 +605,13 @@ feature -- Access
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			l_adapted_universe: ET_ADAPTED_UNIVERSE
 			l_shortest_path: DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE]
 			i, nb: INTEGER
 		do
 			if a_universe = Current then
 				Result := lower_name
 			else
-				l_adapted_universe := a_universe.adapted_universe (Current)
-				if l_adapted_universe /= Void then
+				if attached a_universe.adapted_universe (Current) as l_adapted_universe then
 					Result := l_adapted_universe.lower_name
 				else
 					l_shortest_path := a_universe.shortest_path (Current)
@@ -1475,6 +1477,78 @@ feature -- Kernel types
 			create wide_character_type.make (Void, l_name, l_master_class)
 		end
 
+	set_unknown_kernel_types
+			-- Set unknown kernel types.
+			--
+			-- This is to make the compiler happy at creation time,
+			-- setting all attached attributes before computing their
+			-- actual values (so that `Current' can be passed as
+			-- argument in `master_class').
+		do
+			any_type := tokens.unknown_class_type
+			detachable_any_type := tokens.unknown_class_type
+			any_parent := tokens.unknown_parent
+			any_parents := tokens.unknown_parents
+			any_clients := tokens.empty_clients
+			tuple_type := tokens.unknown_tuple_type
+			detachable_tuple_type := tokens.unknown_tuple_type
+			array_any_type := tokens.unknown_generic_class_type
+			array_detachable_any_type := tokens.unknown_generic_class_type
+			boolean_type := tokens.unknown_class_type
+			character_type := tokens.unknown_class_type
+			character_8_type := tokens.unknown_class_type
+			character_8_convert_feature := tokens.unknown_convert_feature
+			character_32_type := tokens.unknown_class_type
+			character_32_convert_feature := tokens.unknown_convert_feature
+			double_type := tokens.unknown_class_type
+			function_type := tokens.unknown_generic_class_type
+			integer_type := tokens.unknown_class_type
+			integer_8_type := tokens.unknown_class_type
+			integer_8_convert_feature := tokens.unknown_convert_feature
+			integer_16_type := tokens.unknown_class_type
+			integer_16_convert_feature := tokens.unknown_convert_feature
+			integer_32_type := tokens.unknown_class_type
+			integer_32_convert_feature := tokens.unknown_convert_feature
+			integer_64_type := tokens.unknown_class_type
+			integer_64_convert_feature := tokens.unknown_convert_feature
+			iterable_detachable_any_type := tokens.unknown_generic_class_type
+			natural_type := tokens.unknown_class_type
+			natural_8_type := tokens.unknown_class_type
+			natural_8_convert_feature := tokens.unknown_convert_feature
+			natural_16_type := tokens.unknown_class_type
+			natural_16_convert_feature := tokens.unknown_convert_feature
+			natural_32_type := tokens.unknown_class_type
+			natural_32_convert_feature := tokens.unknown_convert_feature
+			natural_64_type := tokens.unknown_class_type
+			natural_64_convert_feature := tokens.unknown_convert_feature
+			none_type := tokens.unknown_class_type
+			detachable_none_type := tokens.unknown_class_type
+			pointer_type := tokens.unknown_class_type
+			predicate_type := tokens.unknown_generic_class_type
+			procedure_type := tokens.unknown_generic_class_type
+			real_type := tokens.unknown_class_type
+			real_32_type := tokens.unknown_class_type
+			real_32_convert_feature := tokens.unknown_convert_feature
+			real_64_type := tokens.unknown_class_type
+			real_64_convert_feature := tokens.unknown_convert_feature
+			routine_type := tokens.unknown_generic_class_type
+			special_any_type := tokens.unknown_generic_class_type
+			special_detachable_any_type := tokens.unknown_generic_class_type
+			string_type := tokens.unknown_class_type
+			string_8_type := tokens.unknown_class_type
+			string_8_convert_feature := tokens.unknown_convert_feature
+			string_32_type := tokens.unknown_class_type
+			string_32_convert_feature := tokens.unknown_convert_feature
+			system_object_type := tokens.unknown_class_type
+			system_object_parents := tokens.unknown_parents
+			system_string_type := tokens.unknown_class_type
+			type_any_type := tokens.unknown_generic_class_type
+			type_detachable_any_type := tokens.unknown_generic_class_type
+			detachable_type_detachable_any_type := tokens.unknown_generic_class_type
+			typed_pointer_any_type := tokens.unknown_generic_class_type
+			wide_character_type := tokens.unknown_class_type
+		end
+
 feature -- Class mapping
 
 	set_default_class_mapping
@@ -1635,7 +1709,7 @@ feature -- Compilation options
 			-- Should attachment status be taken into account when checking
 			-- conformance of types in current universe?
 
-	implicit_attachment_type_mark: ET_TYPE_MARK
+	implicit_attachment_type_mark: detachable ET_TYPE_MARK
 			-- Implicit attachment type mark when a type in a class of the
 			-- current universe is declared with no explicit attachment type mark
 
@@ -1738,7 +1812,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe.
 			-- Do not take into account overridden classes.
 			--
@@ -1800,7 +1874,7 @@ feature -- Iteration
 			end
 		end
 
-	classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
 			-- Do not take into account overridden classes.
@@ -1850,7 +1924,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_all (an_action))
 		end
 
-	classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
@@ -1881,7 +1955,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if (an_action, a_test))
 		end
 
-	classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test', declared
 			-- locally in current universe as well as on the classes that are
 			-- declared in the universes it depends on recursively.
@@ -1909,7 +1983,7 @@ feature -- Iteration
 			master_classes.do_all (an_action)
 		end
 
-	master_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	master_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes'.
 			--
 			-- The iteration will be interrupted if a stop request is received
@@ -1945,7 +2019,7 @@ feature -- Iteration
 			master_classes.do_if (an_action, a_test)
 		end
 
-	master_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	master_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes'
 			-- that satisfy `a_test'.
 			--
@@ -1986,7 +2060,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_all (an_action))
 		end
 
-	master_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	master_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes in `master_classes' as well as on the classes
 			-- of the universes it depends on recursively.
 			--
@@ -2013,7 +2087,7 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_if (an_action, a_test))
 		end
 
-	master_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	master_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on all classes that satisfy `a_test' in `master_classes'
 			-- as well as in the classes of the universes it depends on recursively.
 			--
@@ -2074,7 +2148,7 @@ feature -- Iteration
 			l_visited.do_if (an_action, a_test)
 		end
 
-	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on.
 			--
@@ -2102,7 +2176,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	universes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on which satisfies `a_test'.
 			--
@@ -2159,12 +2233,9 @@ feature -- Actions
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_action_not_void: a_action /= Void
-		local
-			l_class: ET_MASTER_CLASS
 		do
-			l_class := master_class_by_name (a_name)
-			if l_class /= Void then
-				a_action.call ([l_class])
+			if attached master_class_by_name (a_name) as l_master_class then
+				a_action.call ([l_master_class])
 			end
 		end
 
@@ -2176,11 +2247,8 @@ feature -- Actions
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_action_not_void: a_action /= Void
-		local
-			l_class: ET_CLASS
 		do
-			l_class := class_by_name (a_name)
-			if l_class /= Void then
+			if attached class_by_name (a_name) as l_class then
 				a_action.call ([l_class])
 			end
 		end

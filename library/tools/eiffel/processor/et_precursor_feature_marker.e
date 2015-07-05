@@ -5,7 +5,7 @@ note
 		"Markers of features which are the precursors of at least one feature."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -95,15 +95,10 @@ feature {NONE} -- Implementation
 			-- `precursors'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			l_precursor: ET_FEATURE
-			l_other_precursors: ET_FEATURE_LIST
 		do
-			l_precursor := a_feature.first_precursor
-			if l_precursor /= Void then
-				add_to_precursors (l_precursor)
-				l_other_precursors := a_feature.other_precursors
-				if l_other_precursors /= Void then
+			if attached a_feature.first_precursor as l_first_precursor then
+				add_to_precursors (l_first_precursor)
+				if attached a_feature.other_precursors as l_other_precursors then
 					l_other_precursors.do_all (agent add_to_precursors)
 				end
 			end
@@ -125,6 +120,6 @@ feature {NONE} -- Implementation
 invariant
 
 	precursors_not_void: precursors /= Void
-	no_void_precursor: not precursors.has (Void)
+	no_void_precursor: not precursors.has_void
 
 end

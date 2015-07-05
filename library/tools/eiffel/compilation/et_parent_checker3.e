@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,15 +51,13 @@ feature -- Validity checking
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 		local
-			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 			old_class: ET_CLASS
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parent_clause
-			if a_parents /= Void then
+			if attached current_class.parent_clause as a_parents then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
 					a_parents.parent (i).type.process (Current)
@@ -82,32 +80,27 @@ feature {NONE} -- Parent validity
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actuals: detachable ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
-			a_creator: ET_CONSTRAINT_CREATOR
+			a_creator: detachable ET_CONSTRAINT_CREATOR
 			a_class: ET_CLASS
 			an_actual_class: ET_CLASS
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
 			an_index: INTEGER
-			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
-			a_formal_parameter: ET_FORMAL_PARAMETER
-			a_formal_creator: ET_CONSTRAINT_CREATOR
+			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
+			a_formal_parameter: detachable ET_FORMAL_PARAMETER
+			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
 			has_formal_type_error: BOOLEAN
 			j, nb2: INTEGER
-			a_class_type: ET_CLASS_TYPE
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_procedure: ET_PROCEDURE
+			a_creation_procedure: detachable ET_PROCEDURE
 			a_constraint_class: ET_CLASS
-			a_constraint_base_type: ET_BASE_TYPE
 			a_constraint_error: BOOLEAN
 		do
 			a_class := a_type.base_class
-			if a_class.is_generic then
-				a_formals := a_class.formal_parameters
-				check a_class_generic: a_formals /= Void end
+			if a_class.is_generic and then attached a_class.formal_parameters as a_formals then
 				an_actuals := a_type.actual_parameters
 				if an_actuals = Void or else an_actuals.count /= a_formals.count then
 						-- Error already reported during first pass of
@@ -122,8 +115,8 @@ feature {NONE} -- Parent validity
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
 							an_actual_class := an_actual.base_class (current_class)
-							a_formal_type ?= an_actual
-							if a_formal_type /= Void then
+							if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as a_formal_type2 then
+								a_formal_type := a_formal_type2
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed
@@ -155,8 +148,7 @@ feature {NONE} -- Parent validity
 												-- Do not report error, that will be done when `a_class' will be
 												-- processed (it will be put in `classes_to_be_processed' when
 												-- there is an error).
-											a_constraint_base_type := a_formal.constraint_base_type
-											if a_constraint_base_type /= Void then
+											if attached a_formal.constraint_base_type as a_constraint_base_type then
 												a_constraint_class := a_constraint_base_type.base_class
 											else
 													-- We know that the constraint is not
@@ -197,7 +189,7 @@ feature {NONE} -- Parent validity
 												set_fatal_error
 												error_handler.report_giaaa_error
 											elseif a_formal_type /= Void then
-												if not has_formal_type_error then
+												if not has_formal_type_error and a_formal_parameter /= Void then
 													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 														set_fatal_error
 														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
@@ -226,8 +218,7 @@ feature {NONE} -- Parent validity
 								-- In that case the creation of an instance of that
 								-- type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							a_class_type ?= an_actual
-							if a_class_type /= Void and then a_class_type.is_expanded then
+							if attached {ET_CLASS_TYPE} an_actual as a_class_type and then a_class_type.is_expanded then
 								an_actual.process (Current)
 							end
 						end

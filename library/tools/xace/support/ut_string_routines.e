@@ -5,7 +5,7 @@ note
 		"String routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,14 +54,15 @@ feature -- Basic operations
 			result_items_not_void: not Result.has_void
 		end
 
-	split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, STRING]
+	split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, detachable STRING]
 			-- Similar to `split' but return a pair consisting of the first item
 			-- and the rest; if `c' does not occur `Result.second' is Void.
 		require
 			s_not_void: s /= Void
 		local
 			i, nb, mark: INTEGER
-			first, second: STRING
+			first: detachable STRING
+			second: STRING
 		do
 			from
 				i := 1

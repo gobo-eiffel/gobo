@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,19 +54,15 @@ feature -- Initialization
 		local
 			l_actual: ET_EXPRESSION_ITEM
 			l_expression: ET_EXPRESSION
-			l_expression_comma: ET_EXPRESSION_COMMA
-			l_convert: ET_CONVERT_EXPRESSION
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
 				l_actual := storage.item (i)
 				l_expression := l_actual.expression
-				l_convert ?= l_expression
-				if l_convert /= Void then
+				if attached {ET_CONVERT_EXPRESSION} l_expression as l_convert then
 					l_expression := l_convert.expression
-					l_expression_comma ?= l_actual
-					if l_expression_comma /= Void then
+					if attached {ET_EXPRESSION_COMMA} l_actual as l_expression_comma then
 						l_expression_comma.set_expression (l_expression)
 					else
 						storage.put (l_expression, i)

@@ -24,62 +24,45 @@ feature {ET_AST_NODE} -- Processing
 
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_conditional: ET_CONDITIONAL
 		do
 			an_expression.across_keyword.process (Current)
 			an_expression.iterable_expression.process (Current)
 			an_expression.as_keyword.process (Current)
 			an_expression.cursor_name.process (Current)
-			an_invariant_part := an_expression.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_expression.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 			end
-			a_conditional := an_expression.until_conditional
-			if a_conditional /= Void then
-				a_conditional.process (Current)
+			if attached an_expression.until_conditional as l_until_conditional then
+				l_until_conditional.process (Current)
 			end
 			an_expression.iteration_conditional.process (Current)
-			a_variant_part := an_expression.variant_part
-			if a_variant_part /= Void  then
-				a_variant_part.process (Current)
+			if attached an_expression.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
 		end
 
 	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
-			a_conditional: ET_CONDITIONAL
 		do
 			an_instruction.across_keyword.process (Current)
 			an_instruction.iterable_expression.process (Current)
 			an_instruction.as_keyword.process (Current)
 			an_instruction.cursor_name.process (Current)
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.from_compound as l_from_compound then
+				l_from_compound.process (Current)
 			end
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_instruction.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 			end
-			a_conditional := an_instruction.until_conditional
-			if a_conditional /= Void then
-				a_conditional.process (Current)
+			if attached an_instruction.until_conditional as l_until_conditional then
+				l_until_conditional.process (Current)
 			end
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				l_loop_compound.process (Current)
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
-				a_variant_part.process (Current)
+			if attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -241,6 +224,11 @@ feature {ET_AST_NODE} -- Processing
 			an_instruction.source.process (Current)
 		end
 
+	process_ast_null_leaf (a_leaf: ET_AST_NULL_LEAF)
+			-- Process `a_leaf'.
+		do
+		end
+
 	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
 			-- Process `a_keywords'.
 		do
@@ -258,66 +246,50 @@ feature {ET_AST_NODE} -- Processing
 	process_attribute (a_feature: ET_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_type: ET_TYPE
-			a_call: ET_QUALIFIED_CALL
 		do
 			an_instruction.left_bang.process (Current)
-			a_type := an_instruction.type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached an_instruction.type as l_type then
+				l_type.process (Current)
 			end
 			an_instruction.right_bang.process (Current)
 			an_instruction.target.process (Current)
-			a_call := an_instruction.creation_call
-			if a_call /= Void then
-				a_call.process (Current)
+			if attached an_instruction.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
@@ -386,12 +358,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			l_arguments: ET_BRACKET_ARGUMENT_LIST
 		do
 			an_expression.target.process (Current)
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
+			if attached an_expression.arguments as l_arguments then
 				l_arguments.process (Current)
 			end
 		end
@@ -402,91 +371,43 @@ feature {ET_AST_NODE} -- Processing
 			process_symbol (a_symbol)
 		end
 
-	process_break (a_break: ET_BREAK)
+	process_break (a_break: detachable ET_BREAK)
 			-- Process `a_break'.
 		do
 		end
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
 	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
-		local
-			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			a_target := an_expression.target
 			an_expression.agent_keyword.process (Current)
-			a_target.process (Current)
+			an_expression.target.process (Current)
 			an_expression.qualified_name.process (Current)
-			an_arguments ?= an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		local
-			a_target: ET_EXPRESSION
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
-		do
-			a_target := an_expression.target
-			if a_target /= Void then
-				a_target.process (Current)
-			end
-			an_expression.qualified_name.process (Current)
-			an_arguments := an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
-			end
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-		local
-			a_target: ET_EXPRESSION
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
-		do
-			a_target := an_instruction.target
-			if a_target /= Void then
-				a_target.process (Current)
-			end
-			an_instruction.qualified_name.process (Current)
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
@@ -494,7 +415,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		local
 			i, nb: INTEGER
-			l_compound: ET_COMPOUND
 		do
 			an_instruction.check_keyword.process (Current)
 			nb := an_instruction.count
@@ -502,9 +422,8 @@ feature {ET_AST_NODE} -- Processing
 				an_instruction.item (i).process (Current)
 				i := i + 1
 			end
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
-				l_compound.process (Current)
+			if attached an_instruction.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -539,77 +458,52 @@ feature {ET_AST_NODE} -- Processing
 
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
-		local
-			an_indexing: ET_INDEXING_LIST
-			a_frozen: ET_KEYWORD
-			a_class_mark: ET_CLASS_MARK
-			an_external: ET_KEYWORD
-			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_parents: ET_PARENT_LIST
-			a_creators: ET_CREATOR_LIST
-			a_convert_features: ET_CONVERT_FEATURE_LIST
-			an_invariants: ET_INVARIANTS
 		do
 			process_break (a_class.leading_break)
-			an_indexing := a_class.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_class.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			a_frozen := a_class.frozen_keyword
-			if a_frozen /= Void then
-				a_frozen.process (Current)
+			if attached a_class.frozen_keyword as l_frozen_keyword then
+				l_frozen_keyword.process (Current)
 			end
-			a_class_mark := a_class.class_mark
-			if a_class_mark /= Void then
-				a_class_mark.process (Current)
+			if attached a_class.class_mark as l_class_mark then
+				l_class_mark.process (Current)
 			end
-			an_external := a_class.external_keyword
-			if an_external /= Void then
-				an_external.process (Current)
+			if attached a_class.external_keyword as l_external_keyword then
+				l_external_keyword.process (Current)
 			end
 			a_class.class_keyword.process (Current)
 			a_class.name.process (Current)
-			a_formal_parameters := a_class.formal_parameters
-			if a_formal_parameters /= Void then
-				a_formal_parameters.process (Current)
+			if attached a_class.formal_parameters as l_formal_parameters then
+				l_formal_parameters.process (Current)
 			end
-			an_obsolete_message := a_class.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_class.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_parents := a_class.parent_clause
-			if a_parents /= Void then
-				a_parents.process (Current)
+			if attached a_class.parent_clause as l_parent_clause then
+				l_parent_clause.process (Current)
 			end
-			a_creators := a_class.creators
-			if a_creators /= Void then
-				a_creators.process (Current)
+			if attached a_class.creators as l_creators then
+				l_creators.process (Current)
 			end
-			a_convert_features := a_class.convert_features
-			if a_convert_features /= Void then
-				a_convert_features.process (Current)
+			if attached a_class.convert_features as l_convert_features then
+				l_convert_features.process (Current)
 			end
 			process_features (a_class)
-			an_invariants := a_class.invariants
-			if an_invariants /= Void then
-				an_invariants.process (Current)
+			if attached a_class.invariants as l_invariants then
+				l_invariants.process (Current)
 			end
-			an_indexing := a_class.second_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_class.second_indexing as l_second_indexing then
+				l_second_indexing.process (Current)
 			end
 			a_class.end_keyword.process (Current)
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
-		local
-			a_type_mark: ET_TYPE_MARK
 		do
-			a_type_mark := a_type.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
+			if attached a_type.type_mark as l_type_mark then
+				l_type_mark.process (Current)
 			end
 			a_type.name.process (Current)
 		end
@@ -664,52 +558,41 @@ feature {ET_AST_NODE} -- Processing
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
 			a_feature.constant.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_constrained_formal_parameter (a_parameter: ET_CONSTRAINED_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
-		local
-			a_creation_procedures: ET_CONSTRAINT_CREATOR
-			a_type_mark: ET_KEYWORD
 		do
-			a_type_mark := a_parameter.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
+			if attached a_parameter.type_mark as l_type_mark then
+				l_type_mark.process (Current)
 			end
 			a_parameter.name.process (Current)
 			a_parameter.arrow_symbol.process (Current)
 			a_parameter.constraint.process (Current)
-			a_creation_procedures := a_parameter.creation_procedures
-			if a_creation_procedures /= Void then
-				a_creation_procedures.process (Current)
+			if attached a_parameter.creation_procedures as l_creation_procedures then
+				l_creation_procedures.process (Current)
 			end
 		end
 
@@ -784,45 +667,35 @@ feature {ET_AST_NODE} -- Processing
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			a_call: ET_QUALIFIED_CALL
 		do
 			an_expression.create_keyword.process (Current)
 			an_expression.creation_type.process (Current)
-			a_call := an_expression.creation_call
-			if a_call /= Void then
-				a_call.process (Current)
+			if attached an_expression.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_call: ET_QUALIFIED_CALL
 		do
 			an_instruction.create_keyword.process (Current)
-			a_type := an_instruction.creation_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached an_instruction.creation_type as l_creation_type then
+				l_creation_type.process (Current)
 			end
 			an_instruction.target.process (Current)
-			a_call := an_instruction.creation_call
-			if a_call /= Void then
-				a_call.process (Current)
+			if attached an_instruction.creation_call as l_creation_call then
+				l_creation_call.process (Current)
 			end
 		end
 
 	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		local
-			a_clients: ET_CLIENTS
 			i, nb: INTEGER
 		do
 			a_list.creation_keyword.process (Current)
-			a_clients := a_list.clients_clause
-			if a_clients /= Void then
-				a_clients.process (Current)
+			if attached a_list.clients_clause as l_clients_clause then
+				l_clients_clause.process (Current)
 			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
@@ -858,12 +731,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE)
 			-- Process `an_attribute'.
-		local
-			l_settings: ET_MANIFEST_TUPLE
 		do
 			an_attribute.creation_expression.process (Current)
-			l_settings := an_attribute.settings
-			if l_settings /= Void then
+			if attached an_attribute.settings as l_settings then
 				l_settings.process (Current)
 			end
 			an_attribute.end_keyword.process (Current)
@@ -872,24 +742,20 @@ feature {ET_AST_NODE} -- Processing
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 		local
-			a_compound: ET_COMPOUND
-			a_keys: ET_MANIFEST_STRING_LIST
 			i, nb: INTEGER
 		do
-			a_compound := an_instruction.compound
-			if a_compound /= Void then
-				a_compound.keyword.process (Current)
-			end
-			a_keys := an_instruction.keys
-			if a_keys /= Void then
-				a_keys.process (Current)
-			end
-			if a_compound /= Void then
-				nb := a_compound.count
+			if attached an_instruction.compound as l_compound then
+				l_compound.keyword.process (Current)
+				if attached an_instruction.keys as l_keys then
+					l_keys.process (Current)
+				end
+				nb := l_compound.count
 				from i := 1 until i > nb loop
-					a_compound.item (i).process (Current)
+					l_compound.item (i).process (Current)
 					i := i + 1
 				end
+			elseif attached an_instruction.keys as l_keys then
+				l_keys.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -897,351 +763,245 @@ feature {ET_AST_NODE} -- Processing
 	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			a_feature.deferred_keyword.process (Current)
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			a_feature.deferred_keyword.process (Current)
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_do_function (a_feature: ET_DO_FUNCTION)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached a_feature.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.compound as l_compound then
+				l_compound.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
 			an_expression.declared_type.process (Current)
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := an_expression.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached an_expression.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := an_expression.compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.compound as l_compound then
+				l_compound.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := an_expression.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_do_procedure (a_feature: ET_DO_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached a_feature.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.compound as l_compound then
+				l_compound.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := an_expression.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached an_expression.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := an_expression.compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.compound as l_compound then
+				l_compound.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := an_expression.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
@@ -1267,90 +1027,69 @@ feature {ET_AST_NODE} -- Processing
 	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
-		local
-			a_compound: ET_COMPOUND
 		do
 			an_elseif_part.conditional.process (Current)
-			a_compound := an_elseif_part.then_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_elseif_part.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			end
 		end
 
@@ -1404,66 +1143,47 @@ feature {ET_AST_NODE} -- Processing
 	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			an_assigner: ET_ASSIGNER
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_compound: ET_COMPOUND
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached a_feature.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.compound as l_compound then
+				l_compound.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
@@ -1477,199 +1197,139 @@ feature {ET_AST_NODE} -- Processing
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
-			a_postconditions: ET_POSTCONDITIONS
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			a_feature.language.process (Current)
-			an_alias_clause := a_feature.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+			if attached a_feature.alias_clause as l_alias_clause then
+				l_alias_clause.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
 			an_expression.declared_type.process (Current)
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			an_expression.language.process (Current)
-			an_alias_clause := an_expression.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+			if attached an_expression.alias_clause as l_alias_clause then
+				l_alias_clause.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
-			a_postconditions: ET_POSTCONDITIONS
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			a_feature.language.process (Current)
-			an_alias_clause := a_feature.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+			if attached a_feature.alias_clause as l_alias_clause then
+				l_alias_clause.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
-		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			an_alias_clause: ET_EXTERNAL_ALIAS
-			a_postconditions: ET_POSTCONDITIONS
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
 			an_expression.language.process (Current)
-			an_alias_clause := an_expression.alias_clause
-			if an_alias_clause /= Void then
-				an_alias_clause.process (Current)
+			if attached an_expression.alias_clause as l_alias_clause then
+				l_alias_clause.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
@@ -1688,13 +1348,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE)
 			-- Process `a_feature_clause'.
-		local
-			a_clients: ET_CLIENTS
 		do
 			a_feature_clause.feature_keyword.process (Current)
-			a_clients := a_feature_clause.clients_clause
-			if a_clients /= Void then
-				a_clients.process (Current)
+			if attached a_feature_clause.clients_clause as l_clients_clause then
+				l_clients_clause.process (Current)
 			end
 		end
 
@@ -1735,18 +1392,17 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_class_not_void: a_class /= Void
 		local
-			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
 			a_feature_clause: ET_FEATURE_CLAUSE
 			l_queries: ET_QUERY_LIST
-			l_query: ET_QUERY
+			l_query: detachable ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
-			l_procedure: ET_PROCEDURE
+			l_procedure: detachable ET_PROCEDURE
 			i, nb: INTEGER
 			j, nb_queries: INTEGER
 			k, nb_procedures: INTEGER
+			l_process_query: BOOLEAN
 		do
-			a_feature_clauses := a_class.feature_clauses
-			if a_feature_clauses /= Void then
+			if attached a_class.feature_clauses as l_feature_clauses then
 				j := 1
 				l_queries := a_class.queries
 				nb_queries := l_queries.count
@@ -1759,9 +1415,9 @@ feature {ET_AST_NODE} -- Processing
 				if nb_procedures > 0 then
 					l_procedure := l_procedures.first
 				end
-				nb := a_feature_clauses.count
+				nb := l_feature_clauses.count
 				from i := 1 until i > nb loop
-					a_feature_clause := a_feature_clauses.item (i)
+					a_feature_clause := l_feature_clauses.item (i)
 					a_feature_clause.process (Current)
 					from
 					until
@@ -1770,58 +1426,20 @@ feature {ET_AST_NODE} -- Processing
 					loop
 						if l_query /= Void and then l_query.feature_clause = a_feature_clause then
 							if l_procedure /= Void and then l_procedure.feature_clause = a_feature_clause then
-								if l_query.name.position < l_procedure.name.position then
-									l_query.process (Current)
-									from
-									until
-										l_query = Void or else l_query.synonym = Void
-									loop
-										j := j + 1
-										if j <= nb_queries then
-											l_query := l_queries.item (j)
-										else
-											l_query := Void
-										end
-									end
-									j := j + 1
-									if j <= nb_queries then
-										l_query := l_queries.item (j)
-									else
-										l_query := Void
-									end
-								else
-									l_procedure.process (Current)
-									from
-									until
-										l_procedure = Void or else l_procedure.synonym = Void
-									loop
-										k := k + 1
-										if k <= nb_procedures then
-											l_procedure := l_procedures.item (k)
-										else
-											l_procedure := Void
-										end
-									end
-									k := k + 1
-									if k <= nb_procedures then
-										l_procedure := l_procedures.item (k)
-									else
-										l_procedure := Void
-									end
-								end
+								l_process_query := l_query.name.position < l_procedure.name.position
 							else
-								l_query.process (Current)
-								from
-								until
-									l_query = Void or else l_query.synonym = Void
-								loop
-									j := j + 1
-									if j <= nb_queries then
-										l_query := l_queries.item (j)
-									else
-										l_query := Void
-									end
-								end
+								l_process_query := True
+							end
+						else
+							l_process_query := False
+						end
+						if l_process_query and l_query /= Void then
+							l_query.process (Current)
+								-- Next query.
+							from
+							until
+								l_query = Void or else l_query.synonym = Void
+							loop
 								j := j + 1
 								if j <= nb_queries then
 									l_query := l_queries.item (j)
@@ -1829,8 +1447,15 @@ feature {ET_AST_NODE} -- Processing
 									l_query := Void
 								end
 							end
-						else
+							j := j + 1
+							if j <= nb_queries then
+								l_query := l_queries.item (j)
+							else
+								l_query := Void
+							end
+						elseif l_procedure /= Void then
 							l_procedure.process (Current)
+								-- Next procedure.
 							from
 							until
 								l_procedure = Void or else l_procedure.synonym = Void
@@ -1891,12 +1516,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter (a_parameter: ET_FORMAL_PARAMETER)
 			-- Process `a_parameter'.
-		local
-			a_type_mark: ET_KEYWORD
 		do
-			a_type_mark := a_parameter.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
+			if attached a_parameter.type_mark as l_type_mark then
+				l_type_mark.process (Current)
 			end
 			a_parameter.name.process (Current)
 		end
@@ -1924,11 +1546,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.name.process (Current)
@@ -1949,17 +1568,12 @@ feature {ET_AST_NODE} -- Processing
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
@@ -1985,22 +1599,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_elseif_parts: ET_ELSEIF_PART_LIST
-			a_compound: ET_COMPOUND
 		do
 			an_instruction.conditional.process (Current)
-			a_compound := an_instruction.then_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.then_compound as l_then_compound then
+				l_then_compound.process (Current)
 			end
-			an_elseif_parts := an_instruction.elseif_parts
-			if an_elseif_parts /= Void then
-				an_elseif_parts.process (Current)
+			if attached an_instruction.elseif_parts as l_elseif_parts then
+				l_elseif_parts.process (Current)
 			end
-			a_compound := an_instruction.else_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.else_compound as l_else_compound then
+				l_else_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -2099,18 +1707,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_when_parts: ET_WHEN_PART_LIST
-			an_else_compound: ET_COMPOUND
 		do
 			an_instruction.conditional.process (Current)
-			a_when_parts := an_instruction.when_parts
-			if a_when_parts /= Void then
-				a_when_parts.process (Current)
+			if attached an_instruction.when_parts as l_when_parts then
+				l_when_parts.process (Current)
 			end
-			an_else_compound := an_instruction.else_compound
-			if an_else_compound /= Void then
-				an_else_compound.process (Current)
+			if attached an_instruction.else_compound as l_else_compound then
+				l_else_compound.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -2189,11 +1792,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_current (a_type: ET_LIKE_CURRENT)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.like_keyword.process (Current)
@@ -2202,11 +1802,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.like_keyword.process (Current)
@@ -2248,30 +1845,22 @@ feature {ET_AST_NODE} -- Processing
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
 		do
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.from_compound as l_from_compound then
+				l_from_compound.process (Current)
 			end
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
-				an_invariant_part.process (Current)
+			if attached an_instruction.invariant_part as l_invariant_part then
+				l_invariant_part.process (Current)
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void and an_instruction.has_old_variant_syntax then
-				a_variant_part.process (Current)
+			if an_instruction.has_old_variant_syntax and then attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 			end
 			an_instruction.until_conditional.process (Current)
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				l_loop_compound.process (Current)
 			end
-			if a_variant_part /= Void and not an_instruction.has_old_variant_syntax then
-				a_variant_part.process (Current)
+			if not an_instruction.has_old_variant_syntax and then attached an_instruction.variant_part as l_variant_part then
+				l_variant_part.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end
@@ -2348,12 +1937,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
-		local
-			l_declared_type: ET_TARGET_TYPE
 		do
 			an_expression.attached_keyword.process (Current)
-			l_declared_type := an_expression.declared_type
-			if l_declared_type /= Void then
+			if attached an_expression.declared_type as l_declared_type then
 				l_declared_type.process (Current)
 			end
 			an_expression.expression.process (Current)
@@ -2371,12 +1957,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
-		local
-			l_declared_type: ET_TARGET_TYPE
 		do
 			an_expression.attached_keyword.process (Current)
-			l_declared_type := an_expression.declared_type
-			if l_declared_type /= Void then
+			if attached an_expression.declared_type as l_declared_type then
 				l_declared_type.process (Current)
 			end
 			an_expression.expression.process (Current)
@@ -2384,17 +1967,12 @@ feature {ET_AST_NODE} -- Processing
 
 	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
@@ -2419,19 +1997,7 @@ feature {ET_AST_NODE} -- Processing
 	process_once_function (a_feature: ET_ONCE_FUNCTION)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			an_assigner: ET_ASSIGNER
-			a_keys: ET_MANIFEST_STRING_LIST
+			a_synonym: detachable ET_FEATURE
 			i, nb: INTEGER
 		do
 			from
@@ -2439,125 +2005,97 @@ feature {ET_AST_NODE} -- Processing
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached a_feature.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				a_compound.keyword.process (Current)
-			end
-			a_keys := a_feature.keys
-			if a_keys /= Void then
-				a_keys.process (Current)
-			end
-			if a_compound /= Void then
-				nb := a_compound.count
+			if attached a_feature.compound as l_compound then
+				l_compound.keyword.process (Current)
+				if attached a_feature.keys as l_keys then
+					l_keys.process (Current)
+				end
+				nb := l_compound.count
 				from i := 1 until i > nb loop
-					a_compound.item (i).process (Current)
+					l_compound.item (i).process (Current)
 					i := i + 1
 				end
+			elseif attached a_feature.keys as l_keys then
+				l_keys.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_keys: ET_MANIFEST_STRING_LIST
 			i, nb: INTEGER
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
 			an_expression.declared_type.process (Current)
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := an_expression.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached an_expression.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := an_expression.compound
-			if a_compound /= Void then
-				a_compound.keyword.process (Current)
-			end
-			a_keys := an_expression.keys
-			if a_keys /= Void then
-				a_keys.process (Current)
-			end
-			if a_compound /= Void then
-				nb := a_compound.count
+			if attached an_expression.compound as l_compound then
+				l_compound.keyword.process (Current)
+				if attached an_expression.keys as l_keys then
+					l_keys.process (Current)
+				end
+				nb := l_compound.count
 				from i := 1 until i > nb loop
-					a_compound.item (i).process (Current)
+					l_compound.item (i).process (Current)
 					i := i + 1
 				end
+			elseif attached an_expression.keys as l_keys then
+				l_keys.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := an_expression.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
@@ -2571,18 +2109,7 @@ feature {ET_AST_NODE} -- Processing
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_indexing: ET_INDEXING_LIST
-			an_obsolete_message: ET_OBSOLETE
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			a_is_keyword: ET_KEYWORD
-			a_keys: ET_MANIFEST_STRING_LIST
+			a_synonym: detachable ET_FEATURE
 			i, nb: INTEGER
 		do
 			from
@@ -2590,156 +2117,116 @@ feature {ET_AST_NODE} -- Processing
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_feature.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
-			a_is_keyword := a_feature.is_keyword
-			if a_is_keyword /= Void then
-				a_is_keyword.process (Current)
+			if attached a_feature.is_keyword as l_is_keyword then
+				l_is_keyword.process (Current)
 			end
-			an_indexing := a_feature.first_indexing
-			if an_indexing /= Void then
-				an_indexing.process (Current)
+			if attached a_feature.first_indexing as l_first_indexing then
+				l_first_indexing.process (Current)
 			end
-			an_obsolete_message := a_feature.obsolete_message
-			if an_obsolete_message /= Void then
-				an_obsolete_message.process (Current)
+			if attached a_feature.obsolete_message as l_obsolete_message then
+				l_obsolete_message.process (Current)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached a_feature.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached a_feature.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				a_compound.keyword.process (Current)
-			end
-			a_keys := a_feature.keys
-			if a_keys /= Void then
-				a_keys.process (Current)
-			end
-			if a_compound /= Void then
-				nb := a_compound.count
+			if attached a_feature.compound as l_compound then
+				l_compound.keyword.process (Current)
+				if attached a_feature.keys as l_keys then
+					l_keys.process (Current)
+				end
+				nb := l_compound.count
 				from i := 1 until i > nb loop
-					a_compound.item (i).process (Current)
+					l_compound.item (i).process (Current)
 					i := i + 1
 				end
+			elseif attached a_feature.keys as l_keys then
+				l_keys.process (Current)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached a_feature.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			a_feature.end_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
 			end
 		end
 
 	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		local
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_keys: ET_MANIFEST_STRING_LIST
 			i, nb: INTEGER
 		do
 			an_expression.agent_keyword.process (Current)
-			a_formal_arguments := an_expression.formal_arguments
-			if a_formal_arguments /= Void then
-				a_formal_arguments.process (Current)
+			if attached an_expression.formal_arguments as l_formal_arguments then
+				l_formal_arguments.process (Current)
 			end
-			a_preconditions := an_expression.preconditions
-			if a_preconditions /= Void then
-				a_preconditions.process (Current)
+			if attached an_expression.preconditions as l_preconditions then
+				l_preconditions.process (Current)
 			end
-			a_locals := an_expression.locals
-			if a_locals /= Void then
-				a_locals.process (Current)
+			if attached an_expression.locals as l_locals then
+				l_locals.process (Current)
 			end
-			a_compound := an_expression.compound
-			if a_compound /= Void then
-				a_compound.keyword.process (Current)
-			end
-			a_keys := an_expression.keys
-			if a_keys /= Void then
-				a_keys.process (Current)
-			end
-			if a_compound /= Void then
-				nb := a_compound.count
+			if attached an_expression.compound as l_compound then
+				l_compound.keyword.process (Current)
+				if attached an_expression.keys as l_keys then
+					l_keys.process (Current)
+				end
+				nb := l_compound.count
 				from i := 1 until i > nb loop
-					a_compound.item (i).process (Current)
+					l_compound.item (i).process (Current)
 					i := i + 1
 				end
+			elseif attached an_expression.keys as l_keys then
+				l_keys.process (Current)
 			end
-			a_postconditions := an_expression.postconditions
-			if a_postconditions /= Void then
-				a_postconditions.process (Current)
+			if attached an_expression.postconditions as l_postconditions then
+				l_postconditions.process (Current)
 			end
-			a_compound := an_expression.rescue_clause
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached an_expression.rescue_clause as l_rescue_clause then
+				l_rescue_clause.process (Current)
 			end
 			an_expression.end_keyword.process (Current)
-			an_actual_arguments ?= an_expression.actual_arguments
-			if an_actual_arguments /= Void then
-				an_actual_arguments.process (Current)
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
 			end
 		end
 
 	process_parent (a_parent: ET_PARENT)
 			-- Process `a_parent'.
-		local
-			a_renames: ET_RENAME_LIST
-			an_exports: ET_EXPORT_LIST
-			an_undefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
-			an_end_keyword: ET_TOKEN
 		do
 			a_parent.type.process (Current)
-			a_renames := a_parent.renames
-			if a_renames /= Void then
-				a_renames.process (Current)
+			if attached a_parent.renames as l_renames then
+				l_renames.process (Current)
 			end
-			an_exports := a_parent.exports
-			if an_exports /= Void then
-				an_exports.process (Current)
+			if attached a_parent.exports as l_exports then
+				l_exports.process (Current)
 			end
-			an_undefines := a_parent.undefines
-			if an_undefines /= Void then
-				an_undefines.process (Current)
+			if attached a_parent.undefines as l_undefines then
+				l_undefines.process (Current)
 			end
-			a_redefines := a_parent.redefines
-			if a_redefines /= Void then
-				a_redefines.process (Current)
+			if attached a_parent.redefines as l_redefines then
+				l_redefines.process (Current)
 			end
-			a_selects := a_parent.selects
-			if a_selects /= Void then
-				a_selects.process (Current)
+			if attached a_parent.selects as l_selects then
+				l_selects.process (Current)
 			end
-			an_end_keyword := a_parent.end_keyword
-			if an_end_keyword /= Void then
-				an_end_keyword.process (Current)
+			if attached a_parent.end_keyword as l_end_keyword then
+				l_end_keyword.process (Current)
 			end
 		end
 
@@ -2781,12 +2268,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
-			a_then_keyword: ET_TOKEN
 		do
 			a_list.ensure_keyword.process (Current)
-			a_then_keyword := a_list.then_keyword
-			if a_then_keyword /= Void then
-				a_then_keyword.process (Current)
+			if attached a_list.then_keyword as l_then_keyword then
+				l_then_keyword.process (Current)
 			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
@@ -2799,12 +2284,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
-			an_else_keyword: ET_TOKEN
 		do
 			a_list.require_keyword.process (Current)
-			an_else_keyword := a_list.else_keyword
-			if an_else_keyword /= Void then
-				an_else_keyword.process (Current)
+			if attached a_list.else_keyword as l_else_keyword then
+				l_else_keyword.process (Current)
 			end
 			nb := a_list.count
 			from i := 1 until i > nb loop
@@ -2815,45 +2298,35 @@ feature {ET_AST_NODE} -- Processing
 
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			a_parent_name: ET_PRECURSOR_CLASS_NAME
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			if not an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)
 			end
-			a_parent_name := an_expression.parent_name
-			if a_parent_name /= Void then
-				a_parent_name.process (Current)
+			if attached an_expression.parent_name as l_parent_name then
+				l_parent_name.process (Current)
 			end
 			if an_expression.is_parent_prefixed then
 				an_expression.precursor_keyword.process (Current)
 			end
-			an_arguments := an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached an_expression.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_parent_name: ET_PRECURSOR_CLASS_NAME
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			if not an_instruction.is_parent_prefixed then
 				an_instruction.precursor_keyword.process (Current)
 			end
-			a_parent_name := an_instruction.parent_name
-			if a_parent_name /= Void then
-				a_parent_name.process (Current)
+			if attached an_instruction.parent_name as l_parent_name then
+				l_parent_name.process (Current)
 			end
 			if an_instruction.is_parent_prefixed then
 				an_instruction.precursor_keyword.process (Current)
 			end
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached an_instruction.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
@@ -2885,23 +2358,29 @@ feature {ET_AST_NODE} -- Processing
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			a_call.qualified_name.process (Current)
-			an_arguments := a_call.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached a_call.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
+		end
+
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_qualified_regular_feature_call (an_expression)
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_qualified_regular_feature_call (an_instruction)
 		end
 
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.like_keyword.process (Current)
@@ -2913,15 +2392,24 @@ feature {ET_AST_NODE} -- Processing
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
-		local
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.target_type.process (Current)
 			a_type.qualified_name.process (Current)
+		end
+
+	process_qualified_regular_feature_call (a_call: ET_QUALIFIED_REGULAR_FEATURE_CALL)
+			-- Process `a_call'.
+		require
+			a_call_not_void: a_call /= Void
+		do
+			a_call.target.process (Current)
+			a_call.qualified_name.process (Current)
+			if attached a_call.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
 		end
 
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL)
@@ -2932,44 +2420,31 @@ feature {ET_AST_NODE} -- Processing
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_string.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_string.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
@@ -3028,48 +2503,35 @@ feature {ET_AST_NODE} -- Processing
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_string.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_string.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
-			a_feature_keyword: ET_KEYWORD
 		do
-			a_feature_keyword := an_expression.feature_keyword
-			if a_feature_keyword /= Void then
-				a_feature_keyword.process (Current)
+			if attached an_expression.feature_keyword as l_feature_keyword then
+				l_feature_keyword.process (Current)
 			end
 			an_expression.static_type.process (Current)
 			an_expression.qualified_name.process (Current)
-			an_arguments := an_expression.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached an_expression.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
 	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
-			a_feature_keyword: ET_KEYWORD
 		do
-			a_feature_keyword := an_instruction.feature_keyword
-			if a_feature_keyword /= Void then
-				a_feature_keyword.process (Current)
+			if attached an_instruction.feature_keyword as l_feature_keyword then
+				l_feature_keyword.process (Current)
 			end
 			an_instruction.static_type.process (Current)
 			an_instruction.qualified_name.process (Current)
-			an_arguments := an_instruction.arguments
-			if an_arguments /= Void then
-				an_arguments.process (Current)
+			if attached an_instruction.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
@@ -3101,13 +2563,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
-		local
-			an_expression: ET_EXPRESSION
 		do
 			an_assertion.tag.process (Current)
-			an_expression := an_assertion.expression
-			if an_expression /= Void then
-				an_expression.process (Current)
+			if attached an_assertion.expression as l_expression then
+				l_expression.process (Current)
 			end
 		end
 
@@ -3133,18 +2592,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_type_mark: ET_TYPE_MARK
 		do
-			l_type_mark := a_type.type_mark
-			if l_type_mark /= Void then
+			if attached a_type.type_mark as l_type_mark then
 				l_type_mark.process (Current)
 			end
 			a_type.tuple_keyword.process (Current)
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
-				a_parameters.process (Current)
+			if attached a_type.actual_parameters as l_parameters then
+				l_parameters.process (Current)
 			end
 		end
 
@@ -3157,90 +2611,91 @@ feature {ET_AST_NODE} -- Processing
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
-			a_sign: ET_SYMBOL_OPERATOR
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_constant.cast_type as l_type then
+				l_type.process (Current)
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			if attached a_constant.sign as l_sign then
+				l_sign.process (Current)
 			end
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		local
-			a_frozen_keyword: ET_TOKEN
-			a_synonym: ET_FEATURE
-			a_semicolon: ET_SEMICOLON_SYMBOL
-			an_assigner: ET_ASSIGNER
+			a_synonym: detachable ET_FEATURE
 		do
 			from
 				a_synonym := a_feature
 			until
 				a_synonym = Void
 			loop
-				a_frozen_keyword := a_synonym.frozen_keyword
-				if a_frozen_keyword /= Void then
-					a_frozen_keyword.process (Current)
+				if attached a_synonym.frozen_keyword as l_frozen_keyword then
+					l_frozen_keyword.process (Current)
 				end
 				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
-			an_assigner := a_feature.assigner
-			if an_assigner /= Void then
-				an_assigner.process (Current)
+			if attached a_feature.assigner as l_assigner then
+				l_assigner.process (Current)
 			end
 			a_feature.is_keyword.process (Current)
 			a_feature.unique_keyword.process (Current)
-			a_semicolon := a_feature.semicolon
-			if a_semicolon /= Void then
-				a_semicolon.process (Current)
+			if attached a_feature.semicolon as l_semicolon then
+				l_semicolon.process (Current)
+			end
+		end
+
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_unqualified_regular_feature_call (an_expression)
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_unqualified_regular_feature_call (an_instruction)
+		end
+
+	process_unqualified_regular_feature_call (a_call: ET_UNQUALIFIED_REGULAR_FEATURE_CALL)
+			-- Process `a_call'.
+		require
+			a_call_not_void: a_call /= Void
+		do
+			a_call.name.process (Current)
+			if attached a_call.arguments as l_arguments then
+				l_arguments.process (Current)
 			end
 		end
 
 	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
-		local
-			a_tag: ET_TAG
 		do
 			a_variant.variant_keyword.process (Current)
-			a_tag := a_variant.tag
-			if a_tag /= Void then
-				a_tag.process (Current)
+			if attached a_variant.tag as l_tag then
+				l_tag.process (Current)
 			end
 			a_variant.expression.process (Current)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_string.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			if attached a_string.cast_type as l_type then
+				l_type.process (Current)
 			end
 		end
 
@@ -3252,13 +2707,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
-		local
-			a_compound: ET_COMPOUND
 		do
 			a_when_part.choices.process (Current)
-			a_compound := a_when_part.then_compound
-			if a_compound /= Void then
-				a_compound.process (Current)
+			if attached a_when_part.then_compound as l_compound then
+				l_compound.process (Current)
 			end
 		end
 

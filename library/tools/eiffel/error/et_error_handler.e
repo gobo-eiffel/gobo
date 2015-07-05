@@ -1434,10 +1434,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as f2_alias_name
+			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -1973,10 +1973,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as f2_alias_name
+			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2720,8 +2720,8 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_infix: a_feature.alias_name.is_infix
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_infix: l_alias_name.is_infix
 			a_feature_not_infixable: not a_feature.is_infixable
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -2741,8 +2741,8 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_prefix: a_feature.alias_name.is_prefix
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_prefix: l_alias_name.is_prefix
 			a_feature_not_prefixable: not a_feature.is_prefixable
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -2762,11 +2762,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2785,11 +2785,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2808,11 +2808,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2831,11 +2831,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_infix: l_feature1_alias_name.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_infix: l_feature2_alias_name.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2854,11 +2854,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_infix: l_feature1_alias_name.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_infix: l_feature2_alias_name.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2877,11 +2877,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_infix: l_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_infix: l_alias_name2.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2900,8 +2900,8 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_bracket: a_feature.alias_name.is_bracket
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_bracket: l_alias_name.is_bracket
 			a_feature_not_bracketable: not a_feature.is_bracketable
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -2921,11 +2921,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2944,11 +2944,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2967,11 +2967,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2990,8 +2990,8 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_parenthesis: a_feature.alias_name.is_parenthesis
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_parenthesis: l_alias_name.is_parenthesis
 			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -3011,11 +3011,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -3034,11 +3034,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -3057,11 +3057,11 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -3083,8 +3083,8 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_parenthesis: a_rename.new_name.alias_name.is_parenthesis
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
 			f_not_void: f /= Void
 			f_not_parenthesisable: not f.is_parenthesisable
 		local
@@ -3776,8 +3776,8 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_bracket: l_new_alias_name.is_bracket
 			f_not_void: f /= Void
 			f_not_bracketable: not f.is_bracketable
 		local
@@ -3801,8 +3801,8 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_infix: a_rename.new_name.alias_name.is_infix
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_infix: l_new_alias_name.is_infix
 			f_not_void: f /= Void
 			f_not_infixable: not f.is_infixable
 		local
@@ -3826,8 +3826,8 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_prefix: a_rename.new_name.alias_name.is_prefix
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
 			f_not_void: f /= Void
 			f_not_prefixable: not f.is_prefixable
 		local
@@ -4203,10 +4203,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as l_f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as l_f2_alias_name
+			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -6549,7 +6549,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvkbs0a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: ARRAY [ET_TYPE]; a_expected_type: ET_TYPE)
+	report_gvkbs0a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: detachable ARRAY [ET_TYPE]; a_expected_type: detachable ET_TYPE)
 			-- Report GVKBS error: wrong signature for built-in
 			-- routine `a_feature' in class `a_class'.
 			--

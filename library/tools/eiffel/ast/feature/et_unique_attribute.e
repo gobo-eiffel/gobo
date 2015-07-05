@@ -5,7 +5,7 @@ note
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,26 +65,21 @@ feature -- Access
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
-		local
-			l_break: ET_BREAK
 		do
-			if semicolon /= Void then
-				l_break := semicolon.break
-				if l_break /= Void and then l_break.has_comment then
+			if attached semicolon as l_semicolon then
+				if attached l_semicolon.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
 			if Result = Void then
-				l_break := unique_keyword.break
-				if l_break /= Void and then l_break.has_comment then
+				if attached unique_keyword.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
 			if Result = Void then
-				l_break := is_keyword.break
-				if l_break /= Void and then l_break.has_comment then
+				if attached is_keyword.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
@@ -96,20 +91,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if semicolon /= Void then
-				Result := semicolon
+			if attached semicolon as l_semicolon then
+				Result := l_semicolon
 			else
 				Result := unique_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if semicolon /= Void then
-				Result := semicolon.break
-			else
-				Result := unique_keyword.break
 			end
 		end
 

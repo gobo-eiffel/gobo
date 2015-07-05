@@ -5,7 +5,7 @@ note
 		"Attributes implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,9 +38,9 @@ feature {NONE} -- Initialization
 	make (a_name: like extended_name; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new .NET attribute.
 		do
-			precursor (a_name, a_type, a_class)
-			dotnet_name := name.name
+			dotnet_name := a_name.feature_name.name
 			overloaded_extended_name := a_name
+			precursor (a_name, a_type, a_class)
 		ensure then
 			dotnet_name_set: dotnet_name.same_string (name.name)
 			overloaded_extended_name_set: overloaded_extended_name = a_name

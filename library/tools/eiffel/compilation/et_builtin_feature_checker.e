@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -197,7 +197,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.twin_feature_name) then
@@ -378,7 +378,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_type_type_any: ET_GENERIC_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
@@ -1022,7 +1022,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List function names first, then procedure names.
@@ -1147,7 +1147,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_character_type_not_void: a_character_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
@@ -1184,7 +1184,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.code_feature_name) then
@@ -1251,7 +1251,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
@@ -1287,7 +1287,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.conjuncted_feature_name) or a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
@@ -1298,7 +1298,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'conjuncted (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1316,7 +1316,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'conjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1334,7 +1334,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'disjuncted (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1352,7 +1352,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'disjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1370,7 +1370,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_1_latest and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_1_latest) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'negated: BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
@@ -1384,7 +1384,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'implication (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1402,7 +1402,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'disjuncted_exclusive (other: BOOLEAN): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
@@ -1428,7 +1428,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
@@ -1464,7 +1464,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.plus_feature_name) or a_feature.name.same_feature_name (tokens.infix_plus_feature_name) then
@@ -1491,7 +1491,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
 							-- The signature should be 'to_integer_32: INTEGER_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
@@ -1549,7 +1549,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
@@ -1596,7 +1596,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.find_referers_feature_name) then
@@ -1639,7 +1639,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.eif_id_object_feature_name) then
@@ -1695,7 +1695,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.type_of_type_feature_name) then
@@ -1742,7 +1742,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
@@ -1966,7 +1966,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 			l_result_type: ET_FORMAL_PARAMETER_TYPE
 		do
@@ -2005,7 +2005,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.boolean_item_feature_name) then
@@ -2112,7 +2112,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
 							-- The signature should be 'integer_32_item (i: INTEGER): INTEGER_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_32_type)
@@ -2254,7 +2254,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.real_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
 							-- The signature should be 'real_32_item (i: INTEGER): REAL_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.real_32_type)
@@ -2272,7 +2272,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.real_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'real_64_item (i: INTEGER): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.real_64_type)
@@ -2392,7 +2392,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_integer_type_not_void: a_integer_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
@@ -2429,7 +2429,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_integer_type: ET_CLASS_TYPE
 		do
 				-- List function names first, then procedure names.
@@ -2442,13 +2442,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'plus (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'plus (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2462,13 +2462,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'minus (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'minus (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2482,13 +2482,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'product (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'product (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2502,13 +2502,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, current_universe.real_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'quotient (other: INTEGER_xx): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, current_universe.real_64_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'quotient (other: INTEGER_xx): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, current_universe.real_64_type)
@@ -2522,13 +2522,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'integer_quotient (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'integer_quotient (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2542,13 +2542,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'integer_remainder (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'integer_remainder (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2562,13 +2562,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'power (other: REAL_64): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'power (other: REAL_64): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
@@ -2582,7 +2582,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'opposite: INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
@@ -2596,7 +2596,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'is_less (other: INTEGER_xx): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, current_universe.boolean_type)
@@ -2638,7 +2638,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
 							-- The signature should be 'to_real: REAL_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_32_type)
@@ -2652,7 +2652,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
 							-- The signature should be 'to_real_32: REAL_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_32_type)
@@ -2666,7 +2666,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'to_real_64: REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
@@ -2680,7 +2680,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'to_double: REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
@@ -2766,7 +2766,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
 							-- The signature should be 'as_integer_32: INTEGER_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
@@ -2792,13 +2792,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_or (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_or (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2812,13 +2812,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_and (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_and (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2836,7 +2836,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_integer_type)
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_shift_left (other: INTEGER): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_integer_type)
@@ -2854,7 +2854,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_integer_type)
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_shift_right (other: INTEGER): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_integer_type)
@@ -2868,13 +2868,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_xor (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_xor (other: INTEGER_xx): INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_integer_type.type>>, l_integer_type)
@@ -2888,7 +2888,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'bit_not: INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
@@ -2902,7 +2902,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
 				elseif not a_feature.type.same_syntactical_type (l_integer_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'identity: INTEGER_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_integer_type)
@@ -2926,7 +2926,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
@@ -2999,7 +2999,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_real_type: ET_CLASS_TYPE
 		do
 				-- List function names first, then procedure names.
@@ -3012,13 +3012,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'plus (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'plus (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
@@ -3032,13 +3032,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'minus (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'minus (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
@@ -3052,13 +3052,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'product (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'product (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
@@ -3072,13 +3072,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'quotient (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'quotient (other: REAL_xx): REAL_xx'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, l_real_type)
@@ -3092,13 +3092,13 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'power (other: REAL_64): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
 					end
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'power (other: REAL_64): REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type>>, current_universe.real_64_type)
@@ -3140,7 +3140,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_real_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
 							-- The signature should be 'is_less (other: REAL_xx): BOOLEAN'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_real_type.type>>, current_universe.boolean_type)
@@ -3194,7 +3194,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
 							-- The signature should be 'truncated_to_integer: INTEGER_32'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
@@ -3232,7 +3232,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then a_feature.type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'to_double: REAL_64'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.real_64_type)
@@ -3411,7 +3411,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
@@ -3511,7 +3511,7 @@ feature {NONE} -- Built-in validity
 		local
 			l_type_type_any: ET_GENERIC_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List procedure names first, then function names.
@@ -4016,7 +4016,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List procedure names first, then function names.
@@ -4123,7 +4123,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_character_type_not_void: a_character_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
@@ -4197,7 +4197,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
@@ -4285,7 +4285,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
@@ -4390,7 +4390,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.free_feature_name) then
@@ -4426,7 +4426,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.eif_object_id_free_feature_name) then
@@ -4586,7 +4586,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List procedure names first, then function names.
@@ -4647,7 +4647,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.put_boolean_feature_name) then
@@ -4738,7 +4738,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_32_type.type, current_universe.integer_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class)) then
 							-- The signature should be 'put_integer_32 (v: INTEGER_32; i: INTEGER)'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_32_type.type, current_universe.integer_type.type>>, Void)
@@ -4852,7 +4852,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_32_type.type, current_universe.integer_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_type, current_class, current_class)) then
 							-- The signature should be 'put_real_32 (v: REAL_32; i: INTEGER)'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_32_type.type, current_universe.integer_type.type>>, Void)
@@ -4870,7 +4870,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type, current_universe.integer_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
-					if not (current_system.is_ise and then current_system.ise_version <= ise_6_2_7_2906 and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
+					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (current_universe.double_type, current_class, current_class)) then
 							-- The signature should be 'put_real_64 (v: REAL_64; i: INTEGER)'.
 						set_fatal_error
 						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.real_64_type.type, current_universe.integer_type.type>>, Void)
@@ -5016,7 +5016,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_integer_type_not_void: a_integer_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
@@ -5222,7 +5222,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
 		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then

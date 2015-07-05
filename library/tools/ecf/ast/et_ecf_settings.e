@@ -5,7 +5,7 @@ note
 		"ECF settings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_name: STRING): STRING
+	value (a_name: STRING): detachable STRING
 			-- Value of setting `a_name';
 			-- Void if setting is not defined in `primary_settings' nor in `secondary_settings'
 		do
 			primary_settings.search (a_name)
 			if primary_settings.found then
 				Result := primary_settings.found_item
-			elseif secondary_settings /= Void then
-				Result := secondary_settings.value (a_name)
+			elseif attached secondary_settings as l_secondary_settings then
+				Result := l_secondary_settings.value (a_name)
 			end
 		end
 
-	primary_value (a_name: STRING): STRING
+	primary_value (a_name: STRING): detachable STRING
 			-- Value of setting `a_name';
 			-- Void if setting is not defined in `primary_settings'
 		require
@@ -65,7 +65,7 @@ feature -- Access
 	primary_settings: DS_HASH_TABLE [STRING, STRING]
 			-- Settings explicitly defined in the target
 
-	secondary_settings: KL_STRING_VALUES
+	secondary_settings: detachable KL_STRING_VALUES
 			-- Settings to be taken into account when not
 			-- explicitly defined in `primary_settings'
 

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-09-08 13:38:07 +0200 (Mon, 08 Sep 2008) $"
 	revision: "$Revision: 6501 $"
@@ -113,7 +113,6 @@ feature {NONE} -- Processing
 			old_class: ET_CLASS
 			i, nb: INTEGER
 			l_reset_needed: BOOLEAN
-			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 		do
 			old_class := current_class
@@ -127,8 +126,7 @@ feature {NONE} -- Processing
 					-- be reset to the previous processing step.
 				current_class.unset_interface_error
 					-- Process parents first.
-				a_parents := current_class.parents
-				if a_parents /= Void then
+				if attached current_class.parents as a_parents then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
 						a_parent_class := a_parents.parent (i).type.base_class
@@ -183,16 +181,12 @@ feature {NONE} -- Formal parameters and parents validity
 			-- has been modified.
 		local
 			i, nb: INTEGER
-			l_parameters: ET_FORMAL_PARAMETER_LIST
-			l_constraint: ET_TYPE
 		do
 			if current_class.interface_checked then
-				l_parameters := current_class.formal_parameters
-				if l_parameters /= Void then
+				if attached current_class.formal_parameters as l_parameters then
 					nb := l_parameters.count
 					from i := 1 until i > nb loop
-						l_constraint := l_parameters.formal_parameter (i).constraint
-						if l_constraint /= Void then
+						if attached l_parameters.formal_parameter (i).constraint as l_constraint then
 								-- This check is probably too strong in many cases. What we
 								-- really need to check is whether the creation clause of
 								-- of the constraint if any is still valid. But that would
@@ -214,12 +208,10 @@ feature {NONE} -- Formal parameters and parents validity
 			-- Check whether none of the classes appearing in the
 			-- parent types of `current_class' has been modified.
 		local
-			l_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 		do
 			if current_class.interface_checked then
-				l_parents := current_class.parents
-				if l_parents /= Void then
+				if attached current_class.parents as l_parents then
 					nb := l_parents.count
 					from i := 1 until i > nb loop
 							-- This check is probably too strong in many cases. What we

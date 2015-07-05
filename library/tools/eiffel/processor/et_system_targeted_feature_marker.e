@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #5 $"
@@ -397,7 +397,7 @@ feature {NONE} -- Event handling
 			a_base_class_not_void: a_base_class /= Void
 			a_descendant_not_void: a_descendant /= Void
 		local
-			l_other_feature: ET_FEATURE
+			l_other_feature: detachable ET_FEATURE
 			l_targeted_feature: ET_TARGETED_FEATURE
 		do
 			if a_descendant = a_base_class then
@@ -440,7 +440,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS)
+		a_procedure: ET_PROCEDURE; an_actuals: detachable ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		local

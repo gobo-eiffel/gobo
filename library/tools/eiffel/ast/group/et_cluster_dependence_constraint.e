@@ -5,7 +5,7 @@ note
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2013/09/19 $"
 	revision: "$Revision: #1 $"
@@ -108,7 +108,6 @@ feature -- Status report
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_parent: ET_GROUP
 			l_library_name: STRING
 		do
 				-- Note that we check first whether `group_pathnames' and `group_names' are
@@ -122,15 +121,12 @@ feature -- Status report
 				Result := True
 			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('.'))) then
 				Result := True
-			else
-				l_parent := a_group.parent
-				if l_parent /= Void then
-					Result := has_group (l_parent)
-				elseif not group_names.is_empty then
-					if attached {ET_LIBRARY} a_group.universe as l_library then
-						l_library_name := l_library.full_name ('/')
-						Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))
-					end
+			elseif attached a_group.parent as l_parent then
+				Result := has_group (l_parent)
+			elseif not group_names.is_empty then
+				if attached {ET_LIBRARY} a_group.universe as l_library then
+					l_library_name := l_library.full_name ('/')
+					Result := group_names.there_exists (agent STRING_.same_case_insensitive (?, l_library_name))
 				end
 			end
 		end
@@ -163,14 +159,12 @@ feature {NONE} -- Implementation
 			a_pathname_not_void: a_pathname /= Void
 			a_wildcard_not_void: a_wildcard /= Void
 		local
-			l_pattern: STRING
 			l_pathname: STRING
 			l_slash_added: BOOLEAN
 		do
 			if a_wildcard.is_compiled then
 				l_pathname := a_pathname
-				l_pattern := a_wildcard.pattern
-				if l_pattern /= Void and then not l_pattern.is_empty and then l_pattern.item (l_pattern.count) = '/' then
+				if attached a_wildcard.pattern as l_pattern and then not l_pattern.is_empty and then l_pattern.item (l_pattern.count) = '/' then
 					if not l_pathname.is_empty and then l_pathname.item (l_pathname.count) /= '/' then
 						if a_group.is_cluster then
 							if l_pathname = pathname_buffer then

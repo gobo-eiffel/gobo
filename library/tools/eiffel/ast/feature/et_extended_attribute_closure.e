@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to extended attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,19 +15,28 @@ deferred class ET_EXTENDED_ATTRIBUTE_CLOSURE
 inherit
 
 	ET_FEATURE_CLOSURE
+		undefine
+			type
 		redefine
-			locals
+			type, locals
 		end
 
 feature -- Access
 
-	compound: ET_COMPOUND
+	type: ET_TYPE
+			-- Return type
+		deferred
+		ensure then
+			type_not_void: Result /= Void
+		end
+
+	compound: detachable ET_COMPOUND
 			-- Routine body
 
-	locals: ET_LOCAL_VARIABLE_LIST
+	locals: detachable ET_LOCAL_VARIABLE_LIST
 			-- Local variables
 
-	rescue_clause: ET_COMPOUND
+	rescue_clause: detachable ET_COMPOUND
 			-- Rescue clause
 
 feature -- Setting

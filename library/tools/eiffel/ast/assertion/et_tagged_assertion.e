@@ -5,7 +5,7 @@ note
 		"Eiffel tagged assertions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,8 +40,8 @@ feature -- Initialization
 	reset
 			-- Reset assertion as it was when it was last parsed.
 		do
-			if expression /= Void then
-				expression.reset
+			if attached expression as l_expression then
+				l_expression.reset
 			end
 		end
 
@@ -50,7 +50,7 @@ feature -- Access
 	tag: ET_TAG
 			-- Tag
 
-	expression: ET_EXPRESSION
+	expression: detachable ET_EXPRESSION
 			-- Expression
 
 	position: ET_POSITION
@@ -69,20 +69,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if expression /= Void then
-				Result := expression.last_leaf
+			if attached expression as l_expression then
+				Result := l_expression.last_leaf
 			else
 				Result := tag.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if expression /= Void then
-				Result := expression.break
-			else
-				Result := tag.break
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Xace XML preprocessor"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2012, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,13 +56,12 @@ feature -- Access
 
 feature -- Preprocessing
 
-	preprocess_element (a_composite: XM_ELEMENT; a_position_table: XM_POSITION_TABLE)
+	preprocess_element (a_composite: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE)
 			-- Expand variables in all attributes from `a_composite' and strip
 			-- elements if they have "if" or "unless" attributes which do not
 			-- evaluate to `True'.
 		require
 			a_composite_not_void: a_composite /= Void
-			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			should_remove: BOOLEAN
@@ -80,7 +79,7 @@ feature -- Preprocessing
 					end
 				end
 				if should_remove then
-					a_composite.remove_at_cursor (a_cursor)
+					a_cursor.remove
 				else
 					a_cursor.forth
 				end
@@ -89,21 +88,20 @@ feature -- Preprocessing
 
 feature {NONE} -- Implementation
 
-	should_strip_element (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): BOOLEAN
+	should_strip_element (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): BOOLEAN
 			-- Does `an_element' contain an "if" attribute which evaluates
 			-- to false or an "unless" attribute which evaluates to true?
 		require
 			an_element_not_void: an_element /= Void
-			a_position_table_not_void: a_position_table /= Void
 		local
-			an_expression: STRING
+			an_expression: detachable STRING
 			is_if: BOOLEAN
 		do
-			if an_element.has_attribute_by_name (uc_if) then
-				an_expression := an_element.attribute_by_name (uc_if).value
+			if attached an_element.attribute_by_name (uc_if) as l_if_attribute then
+				an_expression := l_if_attribute.value
 				is_if := True
-			elseif an_element.has_attribute_by_name (uc_unless) then
-				an_expression := an_element.attribute_by_name (uc_unless).value
+			elseif attached an_element.attribute_by_name (uc_unless) as l_unless_attribute then
+				an_expression := l_unless_attribute.value
 			end
 
 			if an_expression /= Void then
@@ -113,7 +111,7 @@ feature {NONE} -- Implementation
 						Result := not Result
 					end
 				else
-					error_handler.report_invalid_expression_error (an_expression, a_position_table.item (an_element))
+					error_handler.report_invalid_expression_error (an_expression, an_element.position (a_position_table))
 				end
 			end
 		end
@@ -183,16 +181,14 @@ feature {NONE} -- Implementation
 						if a_string.count > 3 and then a_string.item (a_string.count) = '}' then
 							-- variable is of the form: ${FOO}
 							a_variable_name := a_string.substring (3, a_string.count - 1)
+							Result := variables.value (a_variable_name) /= Void
 						end
 					else
 						-- variable is of the form: $FOO
 						a_variable_name := a_string.substring (2, a_string.count)
+						Result := variables.value (a_variable_name) /= Void
 					end
 				end
-				check
-					a_variable_name_not_void: a_variable_name /= Void
-				end
-				Result := variables.value (a_variable_name) /= Void
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Xace libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,16 +28,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name of library
 
-	options: ET_XACE_OPTIONS
+	options: detachable ET_XACE_OPTIONS
 			-- Options
 
-	clusters: ET_XACE_CLUSTERS
+	clusters: detachable ET_XACE_CLUSTERS
 			-- Clusters
 
-	libraries: ET_XACE_MOUNTED_LIBRARIES
+	libraries: detachable ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries
 
 	library_prefix: STRING
@@ -66,8 +66,8 @@ feature -- Setting
 			-- Set `a_clusters' to `clusters'.
 		do
 			clusters := a_clusters
-			if clusters /= Void then
-				clusters.set_library_prefix (library_prefix)
+			if a_clusters /= Void then
+				a_clusters.set_library_prefix (library_prefix)
 			end
 		ensure
 			clusters_set: clusters = a_clusters
@@ -87,8 +87,8 @@ feature -- Setting
 			a_prefix_not_void: a_prefix /= Void
 		do
 			library_prefix := a_prefix
-			if clusters /= Void then
-				clusters.set_library_prefix (library_prefix)
+			if attached clusters as l_clusters then
+				l_clusters.set_library_prefix (library_prefix)
 			end
 		ensure
 			library_prefix_set: library_prefix = a_prefix
@@ -99,12 +99,16 @@ feature -- Basic operations
 	mount_libraries
 			-- Add clusters `libraries' to `clusters'.
 			-- Mark these clusters as mounted.
+		local
+			l_clusters: like clusters
 		do
-			if libraries /= Void then
-				if clusters = Void then
-					create clusters.make_empty
+			if attached libraries as l_libraries then
+				l_clusters := clusters
+				if l_clusters = Void then
+					create l_clusters.make_empty
+					clusters := l_clusters
 				end
-				libraries.mount_libraries (clusters)
+				l_libraries.mount_libraries (l_clusters)
 			end
 		end
 
@@ -115,8 +119,8 @@ feature -- Basic operations
 			a_libraries_not_void: a_libraries /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			if libraries /= Void then
-				libraries.merge_libraries (a_libraries, an_error_handler)
+			if attached libraries as l_libraries then
+				l_libraries.merge_libraries (a_libraries, an_error_handler)
 			end
 		end
 
@@ -129,28 +133,28 @@ feature -- Basic operations
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
 			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
-			if options /= Void then
-				a_cursor := options.c_compiler_options.new_cursor
+			if attached options as l_options then
+				a_cursor := l_options.c_compiler_options.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					an_externals.put_c_compiler_options (a_cursor.item)
 					a_cursor.forth
 				end
-				a_cursor := options.header.new_cursor
+				a_cursor := l_options.header.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					an_externals.put_include_directory (a_cursor.item)
 					a_cursor.forth
 				end
-				a_link_cursor := options.link.new_cursor
+				a_link_cursor := l_options.link.new_cursor
 				from a_link_cursor.start until a_link_cursor.after loop
 					an_externals.put_link_library (a_link_cursor.item)
 					a_link_cursor.forth
 				end
 			end
-			if clusters /= Void then
-				clusters.merge_externals (an_externals)
+			if attached clusters as l_clusters then
+				l_clusters.merge_externals (an_externals)
 			end
-			if libraries /= Void then
-				libraries.merge_externals (an_externals)
+			if attached libraries as l_libraries then
+				l_libraries.merge_externals (an_externals)
 			end
 		end
 
@@ -161,8 +165,8 @@ feature -- Basic operations
 			an_export_not_void: an_export /= Void
 			no_void_export: not an_export.has_void
 		do
-			if clusters /= Void then
-				clusters.merge_exported_features (an_export)
+			if attached clusters as l_clusters then
+				l_clusters.merge_exported_features (an_export)
 			end
 		ensure
 			no_void_export: not an_export.has_void

@@ -5,7 +5,7 @@ note
 		"Eiffel boolean constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,19 +16,25 @@ inherit
 
 	ET_CONSTANT
 		undefine
-			first_position, last_position, is_false
+			first_position,
+			last_position,
+			is_false,
+			break
 		redefine
 			is_boolean_constant
 		end
 
 	ET_INDEXING_TERM
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		end
 
 	ET_KEYWORD
 		undefine
-			process, is_current
+			process,
+			is_current
 		end
 
 feature -- Status report

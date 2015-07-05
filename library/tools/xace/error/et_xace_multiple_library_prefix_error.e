@@ -5,7 +5,7 @@ note
 		"Error: Library mounted several times with different prefixes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_mount1_not_void: a_mount1 /= Void
 			a_mount2_not_void: a_mount2 /= Void
 		local
-			a_prefix: STRING
+			a_prefix: detachable STRING
 		do
 			create parameters.make_filled (empty_string, 1, 5)
 			parameters.put (a_mount1.pathname, 1)

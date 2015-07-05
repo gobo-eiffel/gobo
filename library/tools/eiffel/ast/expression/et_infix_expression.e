@@ -5,7 +5,7 @@ note
 		"Eiffel infix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_INFIX_EXPRESSION
 
 inherit
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			target as left,
 			arguments as right
@@ -53,23 +53,17 @@ feature -- Initialization
 
 	reset
 			-- Reset expression as it was just after it was last parsed.
-		local
-			l_cast: ET_INFIX_CAST_EXPRESSION
-			l_convert: ET_CONVERT_EXPRESSION
 		do
 			name.reset
 			is_boolean_operator := False
-			l_cast ?= left
-			if l_cast /= Void then
+			if attached {ET_INFIX_CAST_EXPRESSION} left as l_cast then
 				left := l_cast.expression
-				l_convert ?= left
-				if l_convert /= Void then
+				if attached {ET_CONVERT_EXPRESSION} left as l_convert then
 					left := l_convert.expression
 				end
 			end
 			left.reset
-			l_convert ?= right
-			if l_convert /= Void then
+			if attached {ET_CONVERT_EXPRESSION} right as l_convert then
 				right := l_convert.expression
 			end
 			right.reset

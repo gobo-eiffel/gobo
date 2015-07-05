@@ -5,7 +5,7 @@ note
 		"GAC .NET assemblies of classes read from Ace file"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,13 +51,13 @@ feature -- Access
 	assembly_name_id: ET_IDENTIFIER
 			-- Name of current assembly identifier
 
-	assembly_version_id: ET_IDENTIFIER
+	assembly_version_id: detachable ET_IDENTIFIER
 			-- Version of current assembly identifier (may be Void)
 
-	assembly_culture_id: ET_IDENTIFIER
+	assembly_culture_id: detachable ET_IDENTIFIER
 			-- Culture of current assembly identifier (may be Void)
 
-	assembly_public_key_token_id: ET_IDENTIFIER
+	assembly_public_key_token_id: detachable ET_IDENTIFIER
 			-- Public key of current assembly identifier (may be Void)
 
 feature -- Setting
@@ -65,7 +65,7 @@ feature -- Setting
 	set_assembly_version_id (a_version: like assembly_version_id)
 			-- Set `assembly_version_id' to `a_version'.
 		local
-			l_assembly_version: STRING
+			l_assembly_version: detachable STRING
 		do
 			assembly_version_id := a_version
 			if a_version /= Void then
@@ -81,7 +81,7 @@ feature -- Setting
 	set_assembly_culture_id (a_culture: like assembly_culture_id)
 			-- Set `assembly_culture_id' to `a_culture'.
 		local
-			l_assembly_culture: STRING
+			l_assembly_culture: detachable STRING
 		do
 			assembly_culture_id := a_culture
 			if a_culture /= Void then
@@ -97,7 +97,7 @@ feature -- Setting
 	set_assembly_public_key_token_id (a_public_key_token: like assembly_public_key_token_id)
 			-- Set `assembly_public_key_token_id' to `a_public_key_token'.
 		local
-			l_assembly_public_key_token: STRING
+			l_assembly_public_key_token: detachable STRING
 		do
 			assembly_public_key_token_id := a_public_key_token
 			if a_public_key_token /= Void then

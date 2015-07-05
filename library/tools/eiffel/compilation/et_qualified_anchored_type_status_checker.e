@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,10 +70,9 @@ feature {NONE} -- Type validity
 		require
 			a_features_not_void: a_features /= Void
 		local
-			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
-			l_type, l_previous_type: ET_TYPE
+			l_type, l_previous_type: detachable ET_TYPE
 			l_feature: ET_FEATURE
 		do
 			nb := a_features.count
@@ -86,8 +85,7 @@ feature {NONE} -- Type validity
 				if has_fatal_error then
 					i := nb + 1 -- Jump out of the loop.
 				else
-					args := l_feature.arguments
-					if args /= Void then
+					if attached l_feature.arguments as args then
 						nb2 := args.count
 						from j := 1 until j > nb2 loop
 							l_type := args.formal_argument (j).type
@@ -161,11 +159,8 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
 		end
@@ -190,11 +185,8 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
 		end

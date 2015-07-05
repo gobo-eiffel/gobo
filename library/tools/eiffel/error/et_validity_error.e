@@ -16,8 +16,12 @@ inherit
 
 	ET_EIFFEL_ERROR
 		redefine
+			current_class,
 			class_impl
 		end
+
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 create
 
@@ -700,7 +704,7 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			if f.parent_feature.has_undefine then
-				position := f.parent_feature.undefine_name.position
+				position := ast_position (f.parent_feature.undefine_name)
 			else
 				position := f.parent_feature.parent.type.name.position
 			end
@@ -745,7 +749,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_class.class_mark.position
+			position := ast_position (a_class.class_mark)
 			code := template_code (vcch2a_template_code)
 			etl_code := vcch2_etl_code
 			default_template := default_message_template (vcch2a_default_template)
@@ -1382,9 +1386,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name /= Void
+			f1_alias_not_void: f1.alias_name /= Void
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name = Void
+			f2_no_alias: f2.alias_name = Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -1400,7 +1404,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
@@ -1431,10 +1435,10 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as l_f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as l_f2_alias_name
+			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -1450,9 +1454,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
-			parameters.put (f2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (f2.alias_name), 10)
 			parameters.put (f2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -1561,7 +1565,13 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			a_class_name := a_precursor.parent_name.class_name
+			if attached a_precursor.parent_name as l_parent_name then
+				a_class_name := l_parent_name.class_name
+			else
+					-- Should never happen according to the precondition.
+				check precondition_a_precursor_qualified: False end
+				a_class_name := tokens.unknown_class_name
+			end
 			position := a_class_name.position
 			code := template_code (vdpr2a_template_code)
 			etl_code := vdpr2_etl_code
@@ -1698,7 +1708,13 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			a_class_name := a_precursor.parent_name.class_name
+			if attached a_precursor.parent_name as l_parent_name then
+				a_class_name := l_parent_name.class_name
+			else
+					-- Should never happen according to the precondition.
+				check precondition_a_precursor_qualified: False end
+				a_class_name := tokens.unknown_class_name
+			end
 			position := a_class_name.position
 			code := template_code (vdpr3b_template_code)
 			etl_code := vdpr3_etl_code
@@ -2356,7 +2372,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := f1.redefine_name.position
+			position := ast_position (f1.redefine_name)
 			code := template_code (vdrd5a_template_code)
 			etl_code := vdrd5_etl_code
 			default_template := default_message_template (vdrd5a_default_template)
@@ -2495,7 +2511,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := f2.alias_name.position
+			position := ast_position (f2.alias_name)
 			code := template_code (vdrd7a_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7a_default_template)
@@ -2509,7 +2525,7 @@ feature {NONE} -- Initialization
 			parameters.put (f1.name.lower_name, 7)
 			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.lower_name, 9)
-			parameters.put (f2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (f2.alias_name), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2556,7 +2572,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.lower_name, 10)
 			set_compilers (True)
@@ -2587,14 +2603,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as f2_alias_name
+			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := f2.alias_name.position
+			position := ast_position (f2.alias_name)
 			code := template_code (vdrd7c_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7c_default_template)
@@ -2606,10 +2622,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.lower_name, 10)
-			parameters.put (f2.alias_name.alias_lower_name, 11)
+			parameters.put (alias_lower_name (f2.alias_name), 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2825,7 +2841,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.redefine_name.position
+			position := ast_position (a_feature.redefine_name)
 			code := template_code (vdrs4a_template_code)
 			etl_code := vdrs4_etl_code
 			default_template := default_message_template (vdrs4a_default_template)
@@ -2836,7 +2852,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.redefine_name.lower_name, 7)
+			parameters.put (feature_lower_name (a_feature.redefine_name), 7)
 			parameters.put (a_feature.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
@@ -2873,7 +2889,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_deferred.redefine_name.position
+			position := ast_position (a_deferred.redefine_name)
 			code := template_code (vdrs4b_template_code)
 			etl_code := vdrs4_etl_code
 			default_template := default_message_template (vdrs4b_default_template)
@@ -2884,7 +2900,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_deferred.redefine_name.lower_name, 7)
+			parameters.put (feature_lower_name (a_deferred.redefine_name), 7)
 			parameters.put (a_deferred.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
@@ -4161,13 +4177,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_infix: a_feature.alias_name.is_infix
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_infix: l_alias_name.is_infix
 			a_feature_not_infixable: not a_feature.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.alias_name.position
+			position := ast_position (a_feature.alias_name)
 			code := template_code (vfav1a_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1a_default_template)
@@ -4179,7 +4195,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (a_feature.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature.alias_name), 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4206,13 +4222,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_prefix: a_feature.alias_name.is_prefix
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_prefix: l_alias_name.is_prefix
 			a_feature_not_prefixable: not a_feature.is_prefixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.alias_name.position
+			position := ast_position (a_feature.alias_name)
 			code := template_code (vfav1b_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1b_default_template)
@@ -4224,7 +4240,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (a_feature.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature.alias_name), 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4251,15 +4267,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav1c_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1c_default_template)
@@ -4271,9 +4287,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4302,15 +4318,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav1d_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1d_default_template)
@@ -4322,9 +4338,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4355,11 +4371,11 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4375,10 +4391,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 11)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4410,15 +4426,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_infix: l_feature1_alias_name.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_infix: l_feature2_alias_name.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav1f_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1f_default_template)
@@ -4430,9 +4446,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4461,15 +4477,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
+			a_feature1_alias_infix: l_feature1_alias_name.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
+			a_feature2_alias_infix: l_feature2_alias_name.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav1g_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1g_default_template)
@@ -4481,9 +4497,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4514,11 +4530,11 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_infix: l_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_infix: l_alias_name2.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4534,10 +4550,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 11)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4569,13 +4585,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_bracket: a_feature.alias_name.is_bracket
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_bracket: l_alias_name.is_bracket
 			a_feature_not_bracketable: not a_feature.is_bracketable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.alias_name.position
+			position := ast_position (a_feature.alias_name)
 			code := template_code (vfav2a_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2a_default_template)
@@ -4587,7 +4603,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (a_feature.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature.alias_name), 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4614,15 +4630,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav2b_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2b_default_template)
@@ -4634,9 +4650,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4665,15 +4681,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav2c_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2c_default_template)
@@ -4685,9 +4701,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4718,11 +4734,11 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_bracket: l_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_bracket: l_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4738,10 +4754,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 11)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4773,13 +4789,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: a_feature.alias_name /= Void
-			a_feature_alias_parenthesis: a_feature.alias_name.is_parenthesis
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_parenthesis: l_alias_name.is_parenthesis
 			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.alias_name.position
+			position := ast_position (a_feature.alias_name)
 			code := template_code (vfav4a_template_code)
 			etl_code := vfav4_etl_code
 			default_template := default_message_template (vfav4a_default_template)
@@ -4791,7 +4807,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (a_feature.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature.alias_name), 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4818,15 +4834,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav4b_template_code)
 			etl_code := vfav4_etl_code
 			default_template := default_message_template (vfav4b_default_template)
@@ -4838,9 +4854,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4869,15 +4885,15 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature1.alias_name.position
+			position := ast_position (a_feature1.alias_name)
 			code := template_code (vfav4c_template_code)
 			etl_code := vfav4_etl_code
 			default_template := default_message_template (vfav4c_default_template)
@@ -4889,9 +4905,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4922,11 +4938,11 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: a_feature1.alias_name /= Void
-			a_feature1_alias_parenthesis: a_feature1.alias_name.is_parenthesis
+			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
+			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: a_feature2.alias_name /= Void
-			a_feature2_alias_parenthesis: a_feature2.alias_name.is_parenthesis
+			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
+			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4942,10 +4958,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (a_feature1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (a_feature2.alias_name.alias_lower_name, 11)
+			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4980,14 +4996,14 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_parenthesis: a_rename.new_name.alias_name.is_parenthesis
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
 			f_not_void: f /= Void
 			f_not_parenthesisable: not f.is_parenthesisable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_rename.new_name.alias_name.position
+			position := ast_position (a_rename.new_name.alias_name)
 			code := template_code (vfav4e_template_code)
 			etl_code := vfav4_etl_code
 			default_template := default_message_template (vfav4e_default_template)
@@ -4999,7 +5015,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (a_rename.new_name.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_parent.type.upper_name, 10)
 			set_compilers (True)
@@ -5340,7 +5356,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_creation.type.position
+			position := ast_position (a_creation.type)
 			code := template_code (vgcc3a_template_code)
 			etl_code := vgcc3_etl_code
 			default_template := default_message_template (vgcc3a_default_template)
@@ -6452,14 +6468,14 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_bracket: l_new_alias_name.is_bracket
 			f_not_void: f /= Void
 			f_not_bracketable: not f.is_bracketable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_rename.new_name.alias_name.position
+			position := ast_position (a_rename.new_name.alias_name)
 			code := template_code (vhrc4b_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4b_default_template)
@@ -6471,7 +6487,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (a_rename.new_name.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_parent.type.upper_name, 10)
 			set_compilers (True)
@@ -6505,14 +6521,14 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_infix: a_rename.new_name.alias_name.is_infix
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_infix: l_new_alias_name.is_infix
 			f_not_void: f /= Void
 			f_not_infixable: not f.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_rename.new_name.alias_name.position
+			position := ast_position (a_rename.new_name.alias_name)
 			code := template_code (vhrc4c_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4c_default_template)
@@ -6524,7 +6540,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (a_rename.new_name.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_parent.type.upper_name, 10)
 			set_compilers (True)
@@ -6558,14 +6574,14 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_parent_not_void: a_parent /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: a_rename.new_name.alias_name /= Void
-			a_rename_alias_prefix: a_rename.new_name.alias_name.is_prefix
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
 			f_not_void: f /= Void
 			f_not_prefixable: not f.is_prefixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_rename.new_name.alias_name.position
+			position := ast_position (a_rename.new_name.alias_name)
 			code := template_code (vhrc4d_template_code)
 			etl_code := vhrc4_etl_code
 			default_template := default_message_template (vhrc4d_default_template)
@@ -6577,7 +6593,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (a_rename.new_name.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_parent.type.upper_name, 10)
 			set_compilers (True)
@@ -7347,7 +7363,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
@@ -7378,10 +7394,10 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_name as l_f1_alias_name
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
-			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+			f2_alias: attached f2.alias_name as l_f2_alias_name
+			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -7397,9 +7413,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (f1.alias_name.alias_lower_name, 8)
+			parameters.put (alias_lower_name (f1.alias_name), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
-			parameters.put (f2.alias_name.alias_lower_name, 10)
+			parameters.put (alias_lower_name (f2.alias_name), 10)
 			parameters.put (f2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -7511,7 +7527,7 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			a_feature := replicated_features.first
-			position := a_feature.select_name.position
+			position := ast_position (a_feature.select_name)
 			code := template_code (vmrc2b_template_code)
 			etl_code := vmrc2_etl_code
 			default_template := default_message_template (vmrc2b_default_template)
@@ -7663,7 +7679,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_feature.select_name.position
+			position := ast_position (a_feature.select_name)
 			code := template_code (vmss3a_template_code)
 			etl_code := vmss3_etl_code
 			default_template := default_message_template (vmss3a_default_template)
@@ -7674,7 +7690,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.select_name.lower_name, 7)
+			parameters.put (feature_lower_name (a_feature.select_name), 7)
 			parameters.put (a_feature.parent.type.upper_name, 8)
 			set_compilers (True)
 		ensure
@@ -9118,9 +9134,9 @@ feature {NONE} -- Initialization
 			code := template_code (vqmc3b_template_code)
 			etl_code := vqmc3_etl_code
 			default_template := default_message_template (vqmc3b_default_template)
-			if a_constant.sign = Void then
+			if not attached a_constant.sign as l_constant_sign then
 				l_literal := a_constant.literal
-			elseif a_constant.sign.is_minus then
+			elseif l_constant_sign.is_minus then
 				l_literal := "-" + a_constant.literal
 			else
 				l_literal := "+" + a_constant.literal
@@ -10095,8 +10111,6 @@ feature {NONE} -- Initialization
 		local
 			a_cursor: DS_LIST_CURSOR [ET_LIKE_FEATURE]
 			a_like: ET_LIKE_FEATURE
-			a_feature: ET_FEATURE
-			a_query: ET_QUERY
 			a_string: STRING
 		do
 			current_class := a_class
@@ -10137,12 +10151,7 @@ feature {NONE} -- Initialization
 			a_cursor := a_cycle.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_like := a_cursor.item
-				if a_like.is_procedure then
-					a_feature := a_class.seeded_procedure (a_like.seed)
-				else
-					a_feature := a_class.seeded_query (a_like.seed)
-				end
-				if a_feature /= Void and then a_feature.implementation_class = current_class then
+				if attached a_class.seeded_feature (a_like.seed) as a_feature and then a_feature.implementation_class = current_class then
 					if a_like.is_like_argument then
 						position := a_like.name.position
 						a_cursor.go_after
@@ -10168,8 +10177,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.lower_name)
 				else
 						-- Take care of possible renaming.
-					a_query := a_class.seeded_query (a_like.seed)
-					if a_query /= Void then
+					if attached a_class.seeded_query (a_like.seed) as a_query then
 						a_string.append_string (a_query.lower_name)
 					else
 						a_string.append_string (a_like.name.lower_name)
@@ -10185,8 +10193,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.lower_name)
 				else
 						-- Take care of possible renaming.
-					a_query := a_class.seeded_query (a_like.seed)
-					if a_query /= Void then
+					if attached a_class.seeded_query (a_like.seed) as a_query then
 						a_string.append_string (a_query.lower_name)
 					else
 						a_string.append_string (a_like.name.lower_name)
@@ -12011,7 +12018,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_constant.cast_type.position
+			position := ast_position (a_constant.cast_type)
 			code := template_code (vwmq0a_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0a_default_template)
@@ -12022,7 +12029,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_constant.cast_type.type.to_text, 7)
+			parameters.put (type_name (a_constant.cast_type), 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12054,7 +12061,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_constant.cast_type.position
+			position := ast_position (a_constant.cast_type)
 			code := template_code (vwmq0b_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0b_default_template)
@@ -12065,7 +12072,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_constant.cast_type.type.to_text, 7)
+			parameters.put (type_name (a_constant.cast_type), 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12097,7 +12104,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_constant.cast_type.position
+			position := ast_position (a_constant.cast_type)
 			code := template_code (vwmq0c_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0c_default_template)
@@ -12108,7 +12115,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_constant.cast_type.type.to_text, 7)
+			parameters.put (type_name (a_constant.cast_type), 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12140,7 +12147,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_constant.cast_type.position
+			position := ast_position (a_constant.cast_type)
 			code := template_code (vwmq0d_template_code)
 			etl_code := vwmq_etl_code
 			default_template := default_message_template (vwmq0d_default_template)
@@ -12151,7 +12158,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_constant.cast_type.type.to_text, 7)
+			parameters.put (type_name (a_constant.cast_type), 7)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -12533,7 +12540,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_gvkbs0a (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: ARRAY [ET_TYPE]; a_expected_type: ET_TYPE)
+	make_gvkbs0a (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: detachable ARRAY [ET_TYPE]; a_expected_type: detachable ET_TYPE)
 			-- Create a new GVKBS error: wrong signature for built-in
 			-- routine `a_feature' in class `a_class'.
 			--
@@ -12898,7 +12905,12 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
+			if attached a_class.filename as l_filename then
+				parameters.put (l_filename, 8)
+			else
+					-- Should never happen according to the precondition.
+				check a_class_preparsed: False end
+			end
 			parameters.put (a_name.upper_name, 9)
 			set_compilers (True)
 		ensure
@@ -12942,7 +12954,12 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
+			if attached a_class.filename as l_filename then
+				parameters.put (l_filename, 8)
+			else
+					-- Should never happen according to the precondition.
+				check a_class_preparsed: False end
+			end
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -13941,9 +13958,9 @@ feature {NONE} -- Initialization
 			code := template_code (gvwmc2a_template_code)
 			etl_code := gvwmc2_etl_code
 			default_template := default_message_template (gvwmc2a_default_template)
-			if a_constant.sign = Void then
+			if not attached a_constant.sign as l_sign then
 				l_literal := a_constant.literal
-			elseif a_constant.sign.is_minus then
+			elseif l_sign.is_minus then
 				l_literal := "-" + a_constant.literal
 			else
 				l_literal := "+" + a_constant.literal
@@ -13976,14 +13993,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	current_class: ET_CLASS
+			-- Class where current error occurred
+
 	class_impl: ET_CLASS
 			-- Class where current error was written
 
 	filename: STRING
 			-- Name of file where current error occurred
 		do
-			if class_impl.is_in_cluster then
-				Result := class_impl.filename
+			if class_impl.is_in_cluster and then attached class_impl.filename as l_filename then
+				Result := l_filename
 			else
 				Result := "not in a cluster"
 			end
@@ -14813,6 +14833,70 @@ feature {NONE} -- Implementation
 	gvwmc2a_template_code: STRING = "gvwmc2a"
 	gvzzz0a_template_code: STRING = "gvzzz0a"
 			-- Template error codes
+
+feature {NONE} -- Implementation
+
+	ast_position (a_node: detachable ET_AST_NODE): ET_POSITION
+			-- Position of `a_node'
+			--
+			-- This routine is used to work around void-safety limitations.
+		require
+			a_node_not_void: a_node /= Void
+		do
+			if a_node /= Void then
+				Result := a_node.position
+			else
+				Result := null_position
+			end
+		ensure
+			position_not_void: Result /= Void
+		end
+
+	feature_lower_name (a_feature_name: detachable ET_FEATURE_NAME): STRING
+			-- Lower-name of `a_feature_name'
+			--
+			-- This routine is used to work around void-safety limitations.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+		do
+			if a_feature_name /= Void then
+				Result := a_feature_name.lower_name
+			else
+				Result := "**unknown**"
+			end
+		ensure
+			feature_lower_name_not_void: Result /= Void
+		end
+
+	alias_lower_name (a_alias_name: detachable ET_ALIAS_NAME): STRING
+			-- Lower-name of `a_alias_name'
+			--
+			-- This routine is used to work around void-safety limitations.
+		require
+			a_alias_name_not_void: a_alias_name /= Void
+		do
+			if a_alias_name /= Void then
+				Result := a_alias_name.alias_lower_name
+			else
+				Result := "**unknown**"
+			end
+		ensure
+			alias_lower_name_not_void: Result /= Void
+		end
+
+	type_name (a_type: detachable ET_TARGET_TYPE): STRING
+			-- Textual representation of `a_type'
+			--
+			-- This routine is used to work around void-safety limitations.
+		do
+			if a_type /= Void then
+				Result := a_type.type.to_text
+			else
+				Result := "**UNKNOWN**"
+			end
+		ensure
+			type_name_not_void: Result /= Void
+		end
 
 invariant
 

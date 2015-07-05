@@ -5,7 +5,7 @@ note
 		"ECF file rules"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,32 +47,32 @@ feature -- Status report
 			-- That means it is either not excluded or it is included.
 		do
 			Result := True
-			if exclude_regexp /= Void and then exclude_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname)) then
+			if attached exclude_regexp as l_exclude_regexp and then l_exclude_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname)) then
 				Result := False
-				if include_regexp /= Void then
+				if attached include_regexp as l_include_regexp then
 						-- It's excluded, check if there is an include that matches.
-					Result := include_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname))
+					Result := l_include_regexp.there_exists (agent {RX_PCRE_REGULAR_EXPRESSION}.matches (a_pathname))
 				end
 			end
 		end
 
 feature -- Access
 
-	exclude: DS_HASH_SET [STRING]
+	exclude: detachable DS_HASH_SET [STRING]
 			-- Exclude patterns
 
-	include: DS_HASH_SET [STRING]
+	include: detachable DS_HASH_SET [STRING]
 			-- Include patterns
 
 feature {NONE} -- Implementation
 
-	exclude_regexp: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+	exclude_regexp: detachable DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Exclude regular expressions
 
-	include_regexp: DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+	include_regexp: detachable DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Include regular expressions
 
-	compiled_regexp (a_patterns: DS_HASH_SET [STRING]): DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
+	compiled_regexp (a_patterns: detachable DS_HASH_SET [STRING]): detachable DS_ARRAYED_LIST [RX_PCRE_REGULAR_EXPRESSION]
 			-- Compile `a_patterns' into a regular expression.
 		local
 			l_cursor: DS_HASH_SET_CURSOR [STRING]
@@ -97,11 +97,11 @@ feature {NONE} -- Implementation
 
 invariant
 
-	no_void_exclude: exclude /= Void implies not exclude.has_void
-	no_void_include: include /= Void implies not include.has_void
-	no_void_exclude_regexp: exclude_regexp /= Void implies not exclude_regexp.has_void
-	exclude_regexp_compiled: exclude_regexp /= Void implies exclude_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
-	no_void_include_regexp: include_regexp /= Void implies not include_regexp.has_void
-	include_regexp_compiled: include_regexp /= Void implies include_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
+	no_void_exclude: attached exclude as l_exclude implies not l_exclude.has_void
+	no_void_include: attached include as l_include implies not l_include.has_void
+	no_void_exclude_regexp: attached exclude_regexp as l_exclude_regexp implies not l_exclude_regexp.has_void
+	exclude_regexp_compiled: attached exclude_regexp as l_exclude_regexp implies l_exclude_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
+	no_void_include_regexp: attached include_regexp as l_include_regexp implies not l_include_regexp.has_void
+	include_regexp_compiled: attached include_regexp as l_include_regexp implies l_include_regexp.for_all (agent {RX_PCRE_REGULAR_EXPRESSION}.is_compiled)
 
 end

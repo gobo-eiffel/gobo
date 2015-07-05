@@ -5,7 +5,7 @@ note
 		"Eiffel cluster lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,7 +76,8 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := has_subcluster_by_name_at_index (a_names, a_names.lower)
@@ -112,13 +113,14 @@ feature {ET_INTERNAL_UNIVERSE} -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			l_name: STRING
 			i, nb: INTEGER
-			l_clusters: ET_CLUSTERS
-			l_cluster: ET_CLUSTER
+			l_clusters: detachable ET_CLUSTERS
+			l_cluster: detachable ET_CLUSTER
 		do
 			Result := True
 			l_clusters := Current
@@ -154,7 +156,7 @@ feature -- Access
 			cluster_not_void: Result /= Void
 		end
 
-	cluster_by_name (a_name: STRING): ET_CLUSTER
+	cluster_by_name (a_name: STRING): detachable ET_CLUSTER
 			-- Cluster with name `a_name';
 			-- Void if not such cluster
 		require
@@ -176,14 +178,15 @@ feature -- Access
 			end
 		end
 
-	subcluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
+	subcluster_by_name (a_names: ARRAY [STRING]): detachable ET_CLUSTER
 			-- Subcluster (recursively) named `a_names' in current clusters
 			--
 			-- Add missing implicit subclusters if needed.
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := subcluster_by_name_with_parent (a_names, Void)
@@ -191,7 +194,7 @@ feature -- Access
 			not_void_if_has: has_subcluster_by_name (a_names) implies Result /= Void
 		end
 
-	subcluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
+	subcluster_with_absolute_pathname (a_pathname: STRING): detachable ET_CLUSTER
 			-- Subcluster (recursively) with absolute pathname `a_pathname' in current clusters
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
@@ -220,7 +223,7 @@ feature -- Access
 
 feature {ET_INTERNAL_UNIVERSE} -- Access
 
-	subcluster_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_CLUSTER
+	subcluster_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): detachable ET_CLUSTER
 			-- Subcluster (recursively) named `a_names', ignoring the entries before `a_index',
 			-- in current clusters
 			--
@@ -228,7 +231,8 @@ feature {ET_INTERNAL_UNIVERSE} -- Access
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := subcluster_by_name_at_index_with_parent (a_names, a_index, Void)
@@ -238,7 +242,7 @@ feature {ET_INTERNAL_UNIVERSE} -- Access
 
 feature {ET_CLUSTER} -- Access
 
-	subcluster_by_name_with_parent (a_names: ARRAY [STRING]; a_parent_cluster: ET_CLUSTER): ET_CLUSTER
+	subcluster_by_name_with_parent (a_names: ARRAY [STRING]; a_parent_cluster: detachable ET_CLUSTER): detachable ET_CLUSTER
 			-- Subcluster (recursively) named `a_names' in current clusters
 			--
 			-- If `a_parent_cluster' is not Void, then it is considered to be
@@ -247,7 +251,8 @@ feature {ET_CLUSTER} -- Access
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := subcluster_by_name_at_index_with_parent (a_names, a_names.lower, a_parent_cluster)
@@ -257,7 +262,7 @@ feature {ET_CLUSTER} -- Access
 
 feature {NONE} -- Access
 
-	subcluster_by_name_at_index_with_parent (a_names: ARRAY [STRING]; a_index: INTEGER; a_parent_cluster: ET_CLUSTER): ET_CLUSTER
+	subcluster_by_name_at_index_with_parent (a_names: ARRAY [STRING]; a_index: INTEGER; a_parent_cluster: detachable ET_CLUSTER): detachable ET_CLUSTER
 			-- Subcluster (recursively) named `a_names', ignoring the entries before `a_index',
 			-- in current clusters
 			--
@@ -267,13 +272,14 @@ feature {NONE} -- Access
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			l_name: STRING
 			i, nb: INTEGER
-			l_clusters: ET_CLUSTERS
-			l_parent_cluster: ET_CLUSTER
+			l_clusters: detachable ET_CLUSTERS
+			l_parent_cluster: detachable ET_CLUSTER
 		do
 			l_clusters := Current
 			l_parent_cluster := a_parent_cluster
@@ -356,7 +362,7 @@ feature -- Iterators
 			end
 		end
 
-	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -393,21 +399,19 @@ feature -- Iterators
 		local
 			i, nb: INTEGER
 			l_cluster: like cluster
-			l_subclusters: ET_CLUSTERS
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := clusters.item (i)
 				an_action.call ([l_cluster])
-				l_subclusters := l_cluster.subclusters
-				if l_subclusters /= Void then
+				if attached l_cluster.subclusters as l_subclusters then
 					l_subclusters.do_recursive (an_action)
 				end
 				i := i + 1
 			end
 		end
 
-	do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -419,7 +423,6 @@ feature -- Iterators
 		local
 			i, nb: INTEGER
 			l_cluster: like cluster
-			l_subclusters: ET_CLUSTERS
 		do
 			if a_stop_request = Void then
 				do_recursive (an_action)
@@ -431,8 +434,7 @@ feature -- Iterators
 					else
 						l_cluster := clusters.item (i)
 						an_action.call ([l_cluster])
-						l_subclusters := l_cluster.subclusters
-						if l_subclusters /= Void then
+						if attached l_cluster.subclusters as l_subclusters then
 							l_subclusters.do_recursive_until (an_action, a_stop_request)
 						end
 						i := i + 1
@@ -449,15 +451,13 @@ feature -- Iterators
 		local
 			i, nb: INTEGER
 			l_cluster: like cluster
-			l_subclusters: ET_CLUSTERS
 		do
 			nb := clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := clusters.item (i)
 				if not l_cluster.is_implicit then
 					an_action.call ([l_cluster])
-					l_subclusters := l_cluster.subclusters
-					if l_subclusters /= Void then
+					if attached l_cluster.subclusters as l_subclusters then
 						l_subclusters.do_recursive (an_action)
 					end
 				end
@@ -465,7 +465,7 @@ feature -- Iterators
 			end
 		end
 
-	do_explicit_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_explicit_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every non-implicit cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -477,7 +477,6 @@ feature -- Iterators
 		local
 			i, nb: INTEGER
 			l_cluster: like cluster
-			l_subclusters: ET_CLUSTERS
 		do
 			if a_stop_request = Void then
 				do_explicit (an_action)
@@ -490,8 +489,7 @@ feature -- Iterators
 						l_cluster := clusters.item (i)
 						if not l_cluster.is_implicit then
 							an_action.call ([l_cluster])
-							l_subclusters := l_cluster.subclusters
-							if l_subclusters /= Void then
+							if attached l_cluster.subclusters as l_subclusters then
 								l_subclusters.do_explicit_until (an_action, a_stop_request)
 							end
 						end
@@ -581,7 +579,7 @@ feature -- Status setting
 
 feature -- Setting
 
-	set_provider_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
+	set_provider_constraint (a_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Set provider constraint of all clusters to `a_constraint'.
 		local
 			i, nb: INTEGER
@@ -593,7 +591,7 @@ feature -- Setting
 			end
 		end
 
-	set_dependant_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT)
+	set_dependant_constraint (a_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT)
 			-- Set dependant constraint of all clusters to `a_constraint'.
 		local
 			i, nb: INTEGER
@@ -607,7 +605,7 @@ feature -- Setting
 
 feature {ET_CLUSTER} -- Setting
 
-	set_parent (a_parent: like cluster)
+	set_parent (a_parent: detachable like cluster)
 			-- Set parent of all clusters to `a_parent'.
 		local
 			i, nb: INTEGER

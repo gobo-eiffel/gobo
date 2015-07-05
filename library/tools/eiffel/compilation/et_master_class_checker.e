@@ -6,7 +6,7 @@ note
 		Look for invalid class name clashes and invalid class overriding.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -62,9 +62,8 @@ feature {NONE} -- Validity checking
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			l_override_class: ET_CLASS
-			l_non_override_class: ET_CLASS
-			l_imported_class: ET_MASTER_CLASS
+			l_override_class: detachable ET_CLASS
+			l_non_override_class: detachable ET_CLASS
 			l_imported_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			i, nb: INTEGER
 		do
@@ -96,8 +95,7 @@ feature {NONE} -- Validity checking
 					i := i + 1
 				end
 			end
-			l_imported_class := current_class.first_imported_class
-			if l_imported_class /= Void then
+			if attached current_class.first_imported_class as l_imported_class then
 				if l_override_class /= Void then
 					check_overridden_class_validity (l_imported_class, l_override_class)
 				end
@@ -145,12 +143,10 @@ feature {NONE} -- Validity checking
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_other_overriding_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
-			l_overriding_class: ET_MASTER_CLASS
 			i, nb: INTEGER
 		do
 			l_other_overriding_classes := current_class.other_overriding_classes
-			if not l_other_overriding_classes.is_empty then
-				l_overriding_class := current_class.first_overriding_class
+			if not l_other_overriding_classes.is_empty and then attached current_class.first_overriding_class as l_overriding_class then
 				nb := l_other_overriding_classes.count
 				from i := 1 until i > nb loop
 						-- Error: a class cannot be overridden by more than one class.

@@ -5,7 +5,7 @@ note
 		"Eiffel replicable features: features with the same seed"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature -- Access
 		require
 			has_replication: has_replication
 		do
-			check not_replicated: not has_replication end
+			check not_replicated: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

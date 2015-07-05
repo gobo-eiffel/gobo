@@ -639,12 +639,6 @@ feature -- Access
 			Result := alias_string
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := alias_string.break
-		end
-
 feature -- Setting
 
 	set_alias_keyword (an_alias: like alias_keyword)

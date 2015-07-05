@@ -5,7 +5,7 @@ note
 		"Eiffel features being flattened"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,11 +79,11 @@ feature -- Status report
 		do
 			if first_seed = a_seed then
 				Result := True
-			elseif other_seeds /= Void then
-				Result := other_seeds.has (a_seed)
+			elseif attached other_seeds as l_other_seeds then
+				Result := l_other_seeds.has (a_seed)
 			end
 		ensure
-			definition: Result = (first_seed = a_seed or (other_seeds /= Void and then other_seeds.has (a_seed)))
+			definition: Result = (first_seed = a_seed or (attached other_seeds as l_other_seeds and then l_other_seeds.has (a_seed)))
 		end
 
 	has_common_seed (other: ET_FLATTENED_FEATURE): BOOLEAN
@@ -96,13 +96,13 @@ feature -- Status report
 			if first_seed /= 0 then
 				if other.has_seed (first_seed) then
 					Result := True
-				elseif other_seeds /= Void then
-					if other_seeds = other.other_seeds then
+				elseif attached other_seeds as l_other_seeds then
+					if l_other_seeds = other.other_seeds then
 						Result := True
 					else
-						nb := other_seeds.count
+						nb := l_other_seeds.count
 						from i := 1 until i > nb loop
-							if other.has_seed (other_seeds.item (i)) then
+							if other.has_seed (l_other_seeds.item (i)) then
 								Result := True
 								i := nb + 1
 							else
@@ -123,13 +123,13 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		deferred
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST
+	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if not a routine or a routine with no arguments
 		deferred
@@ -138,7 +138,7 @@ feature -- Access
 	first_seed: INTEGER
 			-- First seed
 
-	other_seeds: ET_FEATURE_IDS
+	other_seeds: detachable ET_FEATURE_IDS
 			-- Other seeds (feature IDs of first declarations
 			-- of current feature); May be Void if there
 			-- is only one seed (which is then accessible
@@ -158,7 +158,7 @@ feature -- Conversion
 		require
 			is_immediate: is_immediate
 		do
-			check is_immediate: is_immediate end
+			check is_immediate: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -168,7 +168,7 @@ feature -- Conversion
 		require
 			is_inherited: is_inherited
 		do
-			check is_inherited: is_inherited end
+			check is_inherited: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -178,7 +178,7 @@ feature -- Conversion
 		require
 			is_redeclared: is_redeclared
 		do
-			check is_redeclared: is_redeclared end
+			check is_redeclared: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -188,7 +188,7 @@ feature -- Conversion
 		require
 			is_adapted: is_adapted
 		do
-			check is_adapted: is_adapted end
+			check is_adapted: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

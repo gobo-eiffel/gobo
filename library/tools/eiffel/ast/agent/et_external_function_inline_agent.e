@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with an external function as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 			a_language_not_void: a_language /= Void
 		do
-			make_function (a_formal_args, a_type, an_actual_args)
 			language := a_language
+			make_function (a_formal_args, a_type, an_actual_args)
 		ensure
 			formal_arguments_set: formal_arguments = a_formal_args
 			declared_type_set: declared_type = a_type

@@ -5,7 +5,7 @@ note
 		"Eiffel constrained formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_unconstrained
 		redefine
-			constraint, creation_procedures, break, last_leaf, process,
+			constraint, creation_procedures, last_leaf, process,
 			constraint_base_type, set_constraint_base_type, reset
 		end
 
@@ -52,8 +52,8 @@ feature -- Initialization
 			-- Reset type as it was just after it was last parsed.
 		do
 			constraint.reset
-			if creation_procedures /= Void then
-				creation_procedures.reset
+			if attached creation_procedures as l_creation_procedures then
+				l_creation_procedures.reset
 			end
 		end
 
@@ -65,10 +65,10 @@ feature -- Access
 	constraint: ET_TYPE
 			-- Generic constraint
 
-	creation_procedures: ET_CONSTRAINT_CREATOR
+	creation_procedures: detachable ET_CONSTRAINT_CREATOR
 			-- Creation procedures expected in `constraint'
 
-	constraint_base_type: ET_BASE_TYPE
+	constraint_base_type: detachable ET_BASE_TYPE
 			-- Base type of constraint;
 			-- Void means that there is no explicit constraint
 			-- (i.e. the implicit constraint is "ANY"), or there
@@ -79,20 +79,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if creation_procedures /= Void then
-				Result := creation_procedures.last_leaf
+			if attached creation_procedures as l_creation_procedures then
+				Result := l_creation_procedures.last_leaf
 			else
 				Result := constraint.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if creation_procedures /= Void then
-				Result := creation_procedures.break
-			else
-				Result := constraint.break
 			end
 		end
 

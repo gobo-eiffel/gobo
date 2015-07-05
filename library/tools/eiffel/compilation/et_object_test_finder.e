@@ -5,7 +5,7 @@ note
 		"Eiffel object-test finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature -- Access
 
-	object_tests: ET_OBJECT_TEST_SCOPE
+	object_tests: detachable ET_OBJECT_TEST_SCOPE
 			-- Object-tests found so far
 
 feature -- Basic operations
@@ -46,7 +46,7 @@ feature -- Basic operations
 			a_ast_node_not_void: a_ast_node /= Void
 			a_object_tests_not_void: a_object_tests /= Void
 		local
-			old_object_tests: ET_OBJECT_TEST_SCOPE
+			old_object_tests: like object_tests
 		do
 			old_object_tests := object_tests
 			object_tests := a_object_tests
@@ -59,8 +59,8 @@ feature {ET_AST_NODE} -- Processing
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
 		do
-			if object_tests /= Void then
-				object_tests.add_object_test (an_expression)
+			if attached object_tests as l_object_tests then
+				l_object_tests.add_object_test (an_expression)
 			end
 			an_expression.expression.process (Current)
 		end

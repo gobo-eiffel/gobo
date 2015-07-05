@@ -108,7 +108,7 @@ feature {ET_AST_NODE} -- Processing
 			process_break (a_constant.break)
 		end
 
-	process_break (a_break: ET_BREAK)
+	process_break (a_break: detachable ET_BREAK)
 			-- Process `a_break'.
 		do
 			if a_break /= Void then

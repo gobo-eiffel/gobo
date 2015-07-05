@@ -23,7 +23,10 @@ inherit
 
 	ET_FEATURE_NAME
 		undefine
-			first_position, last_position, is_equal
+			first_position,
+			last_position,
+			is_equal,
+			break
 		redefine
 			is_parenthesis
 		end

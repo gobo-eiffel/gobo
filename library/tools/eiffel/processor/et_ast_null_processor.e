@@ -127,6 +127,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_ast_null_leaf (a_leaf: ET_AST_NULL_LEAF)
+			-- Process `a_leaf'.
+		do
+		end
+
 	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
 			-- Process `a_keywords'.
 		do
@@ -214,16 +219,6 @@ feature {ET_AST_NODE} -- Processing
 
 	process_call_agent (an_expression: ET_CALL_AGENT)
 			-- Process `an_expression'.
-		do
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		do
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
 		do
 		end
 
@@ -891,6 +886,16 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+		end
+
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
@@ -1023,6 +1028,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
+		do
+		end
+
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
 		do
 		end
 

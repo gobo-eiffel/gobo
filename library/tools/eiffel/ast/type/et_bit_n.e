@@ -5,7 +5,7 @@ note
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_BIT_N
 inherit
 
 	ET_BIT_TYPE
+		redefine
+			constant
+		end
 
 create
 
@@ -39,6 +42,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	constant: ET_INTEGER_CONSTANT
+			-- Integer constant
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -59,12 +65,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := constant
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := constant.break
 		end
 
 feature -- Output

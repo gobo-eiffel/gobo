@@ -5,7 +5,7 @@ note
 		"Eiffel postcondition lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,7 @@ feature -- Access
 	ensure_keyword: ET_KEYWORD
 			-- 'ensure' keyword
 
-	then_keyword: ET_KEYWORD
+	then_keyword: detachable ET_KEYWORD
 			-- 'then' keyword
 
 	position: ET_POSITION
@@ -81,22 +81,10 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := last.last_leaf
-			elseif then_keyword /= Void then
-				Result := then_keyword
+			elseif attached then_keyword as l_then_keyword then
+				Result := l_then_keyword
 			else
 				Result := ensure_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if not is_empty then
-				Result := last.break
-			elseif then_keyword /= Void then
-				Result := then_keyword.break
-			else
-				Result := ensure_keyword.break
 			end
 		end
 

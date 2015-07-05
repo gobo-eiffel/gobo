@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,24 +79,20 @@ feature {NONE} -- Type validity
 		local
 			l_class: ET_NAMED_CLASS
 			i, nb: INTEGER
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_class := a_type.named_base_class
 			if not l_class.is_preparsed then
 				set_fatal_error
 			elseif not l_class.is_parsed or else l_class.has_syntax_error then
 				set_fatal_error
-			else
-				l_actuals := a_type.actual_parameters
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						l_actuals.type (i).process (Current)
-						if has_fatal_error then
-							i := nb + 1 -- Jump out of the loop.
-						end
-						i := i + 1
+			elseif attached a_type.actual_parameters as l_actuals then
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					l_actuals.type (i).process (Current)
+					if has_fatal_error then
+						i := nb + 1 -- Jump out of the loop.
 					end
+					i := i + 1
 				end
 			end
 		end
@@ -120,24 +116,20 @@ feature {NONE} -- Type validity
 		local
 			l_class: ET_NAMED_CLASS
 			i, nb: INTEGER
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_class := a_type.named_base_class
 			if not l_class.is_preparsed then
 				set_fatal_error
 			elseif not l_class.is_parsed or else l_class.has_syntax_error then
 				set_fatal_error
-			else
-				l_parameters := a_type.actual_parameters
-				if l_parameters /= Void then
-					nb := l_parameters.count
-					from i := 1 until i > nb loop
-						l_parameters.type (i).process (Current)
-						if has_fatal_error then
-							i := nb + 1 -- Jump out of the loop.
-						end
-						i := i + 1
+			elseif attached a_type.actual_parameters as l_parameters then
+				nb := l_parameters.count
+				from i := 1 until i > nb loop
+					l_parameters.type (i).process (Current)
+					if has_fatal_error then
+						i := nb + 1 -- Jump out of the loop.
 					end
+					i := i + 1
 				end
 			end
 		end

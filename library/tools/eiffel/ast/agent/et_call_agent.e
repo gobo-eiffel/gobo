@@ -5,7 +5,7 @@ note
 		"Eiffel call agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,14 +68,11 @@ feature -- Initialization
 
 	reset
 			-- Reset expression as it was just after it was last parsed.
-		local
-			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			name.reset
 			implicit_result := Void
 			target.reset
-			l_actuals ?= arguments
-			if l_actuals /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} arguments as l_actuals then
 				l_actuals.reset
 			else
 				arguments := Void
@@ -95,7 +92,7 @@ feature -- Access
 			definition: Result = qualified_name.feature_name
 		end
 
-	implicit_result: ET_RESULT
+	implicit_result: detachable ET_RESULT
 			-- Fictitious node corresponding to the result of the
 			-- associated feature when it's a query
 
@@ -120,27 +117,11 @@ feature -- Access
 
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
-		local
-			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_arguments ?= arguments
-			if l_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} arguments as l_arguments then
 				Result := l_arguments.last_leaf
 			else
 				Result := qualified_name.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		local
-			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-		do
-			l_arguments ?= arguments
-			if l_arguments /= Void then
-				Result := l_arguments.break
-			else
-				Result := qualified_name.break
 			end
 		end
 
@@ -148,11 +129,8 @@ feature -- Status report
 
 	is_qualified_call: BOOLEAN
 			-- Is current call qualified?
-		local
-			l_implicit_target: ET_AGENT_IMPLICIT_CURRENT_TARGET
 		do
-			l_implicit_target ?= target
-			Result := (l_implicit_target = Void)
+			Result := not attached {ET_AGENT_IMPLICIT_CURRENT_TARGET} target
 		end
 
 	is_procedure: BOOLEAN

@@ -5,7 +5,7 @@ note
 		"Xace mounted libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,9 +54,9 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			if other.library_prefix /= Void then
-				if library_prefix /= Void then
-					Result := STRING_.same_string (other.library_prefix, library_prefix)
+			if attached other.library_prefix as l_other_library_prefix then
+				if attached library_prefix as l_library_prefix then
+					Result := STRING_.same_string (l_other_library_prefix, l_library_prefix)
 				end
 			else
 				Result := (library_prefix = Void)
@@ -82,7 +82,7 @@ feature -- Access
 	library: ET_XACE_LIBRARY_CONFIG
 			-- Mounted library
 
-	library_prefix: STRING
+	library_prefix: detachable STRING
 			-- Prefix to be applied to the names of the
 			-- clusters of the current mounted library
 

@@ -5,7 +5,7 @@ note
 		"Eiffel qualified query calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	static_feature: ET_QUERY
+	static_feature: detachable ET_QUERY
 			-- Static feature of the call;
 			-- Void if no such feature found
 		local
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time query in `a_type' corresponding to current call;
 			-- Void if no such query
 		do
@@ -76,12 +76,12 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM)
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			precursor (a_type, a_feature, a_system)
 			l_result_type_set := a_feature.result_type_set
@@ -96,11 +96,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
+	propagate_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER)
 			-- Propagate `a_type' from `target_type_set' using `a_builder'.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_attachment: ET_DYNAMIC_NULL_ATTACHMENT
 		do
 			precursor (a_type, a_feature, a_builder)

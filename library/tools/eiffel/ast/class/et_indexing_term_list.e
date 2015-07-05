@@ -5,7 +5,7 @@ note
 		"Eiffel lists of indexing terms"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,8 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := first.first_leaf
+			else
+				Result := tokens.null_leaf
 			end
 		end
 
@@ -48,14 +50,8 @@ feature -- Access
 		do
 			if not is_empty then
 				Result := last.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if not is_empty then
-				Result := last.break
+			else
+				Result := tokens.null_leaf
 			end
 		end
 

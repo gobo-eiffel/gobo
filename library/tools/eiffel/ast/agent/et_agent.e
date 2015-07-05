@@ -5,7 +5,7 @@ note
 		"Eiffel agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,10 +27,10 @@ feature -- Access
 	target: ET_AGENT_TARGET
 			-- Target
 
-	arguments: ET_AGENT_ARGUMENT_OPERANDS
+	arguments: detachable ET_AGENT_ARGUMENT_OPERANDS
 			-- Arguments
 
-	implicit_result: ET_RESULT
+	implicit_result: detachable ET_RESULT
 			-- Fictitious node corresponding to the result of the
 			-- associated feature when it's a query
 		do

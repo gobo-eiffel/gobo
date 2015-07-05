@@ -5,7 +5,7 @@ note
 		"Eiffel comma-separated lists of types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +61,7 @@ feature -- Status report
 			Result := has_named_type_with_type_marks (other, Void, other_context, Void, a_context)
 		end
 
-	has_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	has_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `has_named_type' except that the type mark status of current types
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
@@ -131,6 +131,8 @@ feature -- Iteration
 	there_exists_type (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one type?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
+		require
+			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 		do
@@ -152,6 +154,8 @@ feature -- Iteration
 	for_all_types (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all types?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
+		require
+			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 		do

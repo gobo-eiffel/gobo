@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -115,7 +115,6 @@ feature -- Generation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_feature: ET_DYNAMIC_FEATURE
 			l_seed: INTEGER
 		do
 			if not a_type.is_alive then
@@ -124,8 +123,7 @@ feature -- Generation
 				if not a_type.is_expanded then
 					l_seed := current_system.dispose_seed
 					if l_seed > 0 then
-						l_feature := a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-						if l_feature /= Void then
+						if attached a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system) as l_feature then
 							l_feature.set_regular (True)
 						end
 					end
@@ -141,7 +139,7 @@ feature -- Generation
 		require
 			a_string_type_not_void: a_string_type /= Void
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			mark_type_alive (a_string_type)
 			if a_string_type.attribute_count < 2 then

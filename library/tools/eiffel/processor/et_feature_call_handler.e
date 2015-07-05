@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -41,8 +41,6 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_call_agent,
-			process_call_expression,
-			process_call_instruction,
 			process_check_instruction,
 			process_choice_list,
 			process_choice_range,
@@ -109,6 +107,8 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
+			process_qualified_call_expression,
+			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_regular_integer_constant,
@@ -123,6 +123,8 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
+			process_unqualified_call_expression,
+			process_unqualified_call_instruction,
 			process_variant,
 			process_verbatim_string,
 			process_when_part,
@@ -336,7 +338,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS)
+		a_procedure: ET_PROCEDURE; an_actuals: detachable ET_ACTUAL_ARGUMENTS)
 			-- Report that a creation expression `an_expression' has been processed,
 			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		require
@@ -626,31 +628,25 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_invariant_part: ET_LOOP_INVARIANTS
-			l_variant_part: ET_VARIANT
-			l_conditional: ET_CONDITIONAL
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			process_expression (an_expression.iterable_expression)
 			had_error := has_fatal_error
 			if assertions_enabled then
-				l_invariant_part := an_expression.invariant_part
-				if l_invariant_part /= Void then
+				if attached an_expression.invariant_part as l_invariant_part then
 					process_loop_invariants (l_invariant_part)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_conditional := an_expression.until_conditional
-			if l_conditional /= Void then
+			if attached an_expression.until_conditional as l_conditional then
 				process_expression (l_conditional.expression)
 			end
 			had_error := had_error or has_fatal_error
 			process_expression (an_expression.iteration_conditional.expression)
 			had_error := had_error or has_fatal_error
 			if assertions_enabled then
-				l_variant_part := an_expression.variant_part
-				if l_variant_part /= Void then
+				if attached an_expression.variant_part as l_variant_part then
 					process_variant (l_variant_part)
 					had_error := had_error or has_fatal_error
 				end
@@ -668,40 +664,31 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_compound: ET_COMPOUND
-			l_invariant_part: ET_LOOP_INVARIANTS
-			l_variant_part: ET_VARIANT
-			l_conditional: ET_CONDITIONAL
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			process_expression (an_instruction.iterable_expression)
 			had_error := has_fatal_error
-			l_compound := an_instruction.from_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.from_compound as l_from_compound then
+				process_compound (l_from_compound)
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_invariant_part := an_instruction.invariant_part
-				if l_invariant_part /= Void then
+				if attached an_instruction.invariant_part as l_invariant_part then
 					process_loop_invariants (l_invariant_part)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_conditional := an_instruction.until_conditional
-			if l_conditional /= Void then
+			if attached an_instruction.until_conditional as l_conditional then
 				process_expression (l_conditional.expression)
 			end
 			had_error := had_error or has_fatal_error
-			l_compound := an_instruction.loop_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_variant_part := an_instruction.variant_part
-				if l_variant_part /= Void then
+				if attached an_instruction.variant_part as l_variant_part then
 					process_variant (l_variant_part)
 					had_error := had_error or has_fatal_error
 				end
@@ -827,7 +814,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_instruction (an_instruction)
+			process_qualified_feature_call_instruction (an_instruction)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT)
@@ -883,21 +870,18 @@ feature {ET_AST_NODE} -- Processing
 	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_query: ET_QUERY
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_query := current_class_impl.named_query (a_type.name)
-				if l_query = Void then
+				if attached current_class_impl.named_query (a_type.name) as l_query then
+					report_bit_feature_type (a_type, l_query)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_bit_feature_type (a_type, l_query)
 				end
 			end
 		end
@@ -906,7 +890,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_expression (an_expression)
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT)
@@ -935,50 +919,22 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_target: ET_AGENT_TARGET
-			l_expression_target: ET_EXPRESSION
-			l_type_target: ET_AGENT_OPEN_TARGET
 		do
 			if not an_expression.is_qualified_call then
 				process_unqualified_call_agent (an_expression)
 			else
 				l_target := an_expression.target
-				l_expression_target ?= l_target
-				if l_expression_target /= Void then
+				if attached {ET_EXPRESSION} l_target as l_expression_target then
 					process_qualified_call_agent (an_expression, l_expression_target)
+				elseif attached {ET_AGENT_OPEN_TARGET} l_target as l_type_target then
+					process_typed_call_agent (an_expression, l_type_target)
 				else
-					l_type_target ?= l_target
-					if l_type_target /= Void then
-						process_typed_call_agent (an_expression, l_type_target)
-					else
-							-- Internal error: no other kind of targets.
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
+						-- Internal error: no other kind of targets.
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
 					end
 				end
-			end
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		do
-			if an_expression.is_qualified_call then
-				process_qualified_call_expression (an_expression)
-			else
-				process_unqualified_call_expression (an_expression)
-			end
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		do
-			if an_instruction.is_qualified_call then
-				process_qualified_call_instruction (an_instruction)
-			else
-				process_unqualified_call_instruction (an_instruction)
 			end
 		end
 
@@ -987,13 +943,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			l_type: ET_TARGET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_type := a_constant.cast_type
-				if l_type /= Void then
+				if attached a_constant.cast_type as l_type then
 					process_type (l_type.type)
 				end
 			end
@@ -1003,13 +956,11 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.then_compound as l_then_compound then
+				process_compound (l_then_compound)
 				had_error := has_fatal_error
 				process_assertions (an_instruction)
 				had_error := had_error or has_fatal_error
@@ -1100,7 +1051,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_expression (an_expression)
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
@@ -1117,10 +1068,7 @@ feature {ET_AST_NODE} -- Processing
 			an_expression_not_void: an_expression /= Void
 		local
 			l_type: ET_TYPE
-			l_name: ET_FEATURE_NAME
-			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
-			l_procedure: ET_PROCEDURE
 			l_context: ET_NESTED_TYPE_CONTEXT
 			l_class: ET_CLASS
 			had_error: BOOLEAN
@@ -1131,10 +1079,8 @@ feature {ET_AST_NODE} -- Processing
 				process_type (l_type)
 				had_error := has_fatal_error
 			end
-			l_name := an_expression.name
-			if l_name /= Void then
-				l_arguments := an_expression.arguments
-				if l_arguments /= Void then
+			if attached an_expression.name as l_name then
+				if attached an_expression.arguments as l_arguments then
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end
@@ -1147,16 +1093,15 @@ feature {ET_AST_NODE} -- Processing
 			l_context.force_last (l_type)
 			if not has_fatal_error then
 				l_class := l_context.base_class
-				l_procedure := l_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
+				if attached l_class.seeded_procedure (l_seed) as l_procedure then
+					report_creation_expression (an_expression, l_context, l_procedure, an_expression.arguments)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_creation_expression (an_expression, l_context, l_procedure, l_arguments)
 				end
 				reset_fatal_error (had_error)
 			end
@@ -1175,11 +1120,8 @@ feature {ET_AST_NODE} -- Processing
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
+			l_type: detachable ET_TYPE
 			l_seed: INTEGER
-			l_procedure: ET_PROCEDURE
 			l_context: ET_NESTED_TYPE_CONTEXT
 			l_class: ET_CLASS
 			l_target: ET_WRITABLE
@@ -1196,10 +1138,8 @@ feature {ET_AST_NODE} -- Processing
 			l_target := an_instruction.target
 			process_writable (l_target)
 			had_error := had_error or has_fatal_error
-			l_call := an_instruction.creation_call
-			if l_call /= Void then
-				l_arguments := l_call.arguments
-				if l_arguments /= Void then
+			if attached an_instruction.creation_call as l_call then
+				if attached l_call.arguments as l_arguments then
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end
@@ -1217,16 +1157,15 @@ feature {ET_AST_NODE} -- Processing
 			end
 			if not has_fatal_error then
 				l_class := l_context.base_class
-				l_procedure := l_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
+				if attached l_class.seeded_procedure (l_seed) as l_procedure then
+					report_creation_instruction (an_instruction, l_context, l_procedure)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_creation_instruction (an_instruction, l_context, l_procedure)
 				end
 				reset_fatal_error (had_error)
 			end
@@ -1235,13 +1174,10 @@ feature {ET_AST_NODE} -- Processing
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_compound: ET_COMPOUND
 		do
 			reset_fatal_error (False)
 			if debug_instructions_enabled then
-				l_compound := an_instruction.compound
-				if l_compound /= Void then
+				if attached an_instruction.compound as l_compound then
 					process_compound (l_compound)
 				end
 			end
@@ -1267,33 +1203,25 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_type: ET_TYPE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
+				if attached a_feature.arguments as l_arguments then
 					process_formal_argument_list (l_arguments)
 					had_error := has_fatal_error
 				end
-				l_type := a_feature.type
-				if l_type /= Void then
+				if attached a_feature.type as l_type then
 					process_type (l_type)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			if assertions_enabled then
-				l_preconditions := a_feature.preconditions
-				if l_preconditions /= Void then
+				if attached a_feature.preconditions as l_preconditions then
 					process_preconditions (l_preconditions)
 					had_error := had_error or has_fatal_error
 				end
-				l_postconditions := a_feature.postconditions
-				if l_postconditions /= Void then
+				if attached a_feature.postconditions as l_postconditions then
 					process_postconditions (l_postconditions)
 					had_error := had_error or has_fatal_error
 				end
@@ -1347,13 +1275,11 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
+				if attached a_feature.arguments as l_arguments then
 					process_formal_argument_list (l_arguments)
 					had_error := has_fatal_error
 				end
@@ -1365,13 +1291,10 @@ feature {ET_AST_NODE} -- Processing
 	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
+				if attached a_feature.arguments as l_arguments then
 					process_formal_argument_list (l_arguments)
 				end
 			end
@@ -1382,14 +1305,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			had_error: BOOLEAN
-			l_compound: ET_COMPOUND
 		do
 			reset_fatal_error (False)
 			process_expression (an_elseif_part.expression)
-			l_compound := an_elseif_part.then_compound
-			if l_compound /= Void then
+			if attached an_elseif_part.then_compound as l_then_compound then
 				had_error := has_fatal_error
-				process_compound (l_compound)
+				process_compound (l_then_compound)
 				reset_fatal_error (had_error or has_fatal_error)
 			end
 		end
@@ -1473,10 +1394,6 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -1485,34 +1402,29 @@ feature {ET_AST_NODE} -- Processing
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_preconditions := a_feature.preconditions
-				if l_preconditions /= Void then
+				if attached a_feature.preconditions as l_preconditions then
 					process_preconditions (l_preconditions)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			if anchored_types_enabled then
-				l_locals := a_feature.locals
-				if l_locals /= Void then
+				if attached a_feature.locals as l_locals then
 					process_local_variable_list (l_locals)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_compound := a_feature.compound
-			if l_compound /= Void then
+			if attached a_feature.compound as l_compound then
 				process_compound (l_compound)
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_postconditions := a_feature.postconditions
-				if l_postconditions /= Void then
+				if attached a_feature.postconditions as l_postconditions then
 					process_postconditions (l_postconditions)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				process_compound (l_rescue_clause)
 				had_error := had_error or has_fatal_error
 			end
 			reset_fatal_error (had_error)
@@ -1561,33 +1473,25 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_type: ET_TYPE
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
+				if attached a_feature.arguments as l_arguments then
 					process_formal_argument_list (l_arguments)
 					had_error := has_fatal_error
 				end
-				l_type := a_feature.type
-				if l_type /= Void then
+				if attached a_feature.type as l_type then
 					process_type (l_type)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			if assertions_enabled then
-				l_preconditions := a_feature.preconditions
-				if l_preconditions /= Void then
+				if attached a_feature.preconditions as l_preconditions then
 					process_preconditions (l_preconditions)
 					had_error := had_error or has_fatal_error
 				end
-				l_postconditions := a_feature.postconditions
-				if l_postconditions /= Void then
+				if attached a_feature.postconditions as l_postconditions then
 					process_postconditions (l_postconditions)
 					had_error := had_error or has_fatal_error
 				end
@@ -1601,13 +1505,12 @@ feature {ET_AST_NODE} -- Processing
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 				-- Manage enclosing inline agents stack.
-			if current_inline_agent /= Void then
-				enclosing_inline_agents.force_last (current_inline_agent)
+			if attached current_inline_agent as l_current_inline_agent then
+				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
 			process_external_routine_closure (an_expression)
@@ -1619,8 +1522,7 @@ feature {ET_AST_NODE} -- Processing
 			else
 				current_inline_agent := Void
 			end
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 				had_error := had_error or has_fatal_error
 			end
@@ -1631,8 +1533,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_procedure: ET_PROCEDURE
-			l_query: ET_QUERY
 			l_name: ET_FEATURE_NAME
 			l_seed: INTEGER
 		do
@@ -1647,27 +1547,22 @@ feature {ET_AST_NODE} -- Processing
 				-- Do nothing
 			elseif l_name.is_across_cursor then
 				-- Do nothing
-			else
-					-- This is of the form '$feature_name'.
-				l_procedure := current_class.seeded_procedure (l_seed)
-				if l_procedure /= Void then
-					report_procedure_address (an_expression, l_procedure)
+			elseif attached current_class.seeded_procedure (l_seed) as l_procedure then
+					-- This is of the form '$procedure_name'.
+				report_procedure_address (an_expression, l_procedure)
+			elseif attached current_class.seeded_query (l_seed) as l_query then
+					-- This is of the form '$query_name'.
+				if l_query.is_attribute then
+					report_attribute_address (an_expression, l_query)
 				else
-					l_query := current_class.seeded_query (l_seed)
-					if l_query /= Void then
-						if l_query.is_attribute then
-							report_attribute_address (an_expression, l_query)
-						else
-							report_function_address (an_expression, l_query)
-						end
-					else
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
-					end
+					report_function_address (an_expression, l_query)
+				end
+			else
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
 				end
 			end
 		end
@@ -1734,9 +1629,9 @@ feature {ET_AST_NODE} -- Processing
 			elseif an_identifier.is_across_cursor then
 				-- Do nothing
 			elseif an_identifier.is_instruction then
-				process_unqualified_call_instruction (an_identifier)
+				process_unqualified_feature_call_instruction (an_identifier)
 			else
-				process_unqualified_call_expression (an_identifier)
+				process_unqualified_feature_call_expression (an_identifier)
 			end
 		end
 
@@ -1744,26 +1639,21 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_elseif_parts: ET_ELSEIF_PART_LIST
-			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			process_expression (an_instruction.expression)
 			had_error := has_fatal_error
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.then_compound as l_then_compound then
+				process_compound (l_then_compound)
 				had_error := had_error or has_fatal_error
 			end
-			l_elseif_parts := an_instruction.elseif_parts
-			if l_elseif_parts /= Void then
+			if attached an_instruction.elseif_parts as l_elseif_parts then
 				process_elseif_part_list (l_elseif_parts)
 				had_error := had_error or has_fatal_error
 			end
-			l_compound := an_instruction.else_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.else_compound as l_else_compound then
+				process_compound (l_else_compound)
 				had_error := had_error or has_fatal_error
 			end
 			reset_fatal_error (had_error)
@@ -1780,27 +1670,23 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_expression (an_expression)
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_when_parts: ET_WHEN_PART_LIST
-			l_else_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			process_expression (an_instruction.expression)
 			had_error := has_fatal_error
-			l_when_parts := an_instruction.when_parts
-			if l_when_parts /= Void then
+			if attached an_instruction.when_parts as l_when_parts then
 				process_when_part_list (l_when_parts)
 				had_error := had_error or has_fatal_error
 			end
-			l_else_compound := an_instruction.else_compound
-			if l_else_compound /= Void then
+			if attached an_instruction.else_compound as l_else_compound then
 				process_compound (l_else_compound)
 				had_error := had_error or has_fatal_error
 			end
@@ -1812,13 +1698,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			l_type: ET_TARGET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_type := a_constant.cast_type
-				if l_type /= Void then
+				if attached a_constant.cast_type as l_type then
 					process_type (l_type.type)
 				end
 			end
@@ -1839,56 +1722,43 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_type: ET_TYPE
-			l_preconditions: ET_PRECONDITIONS
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_postconditions: ET_POSTCONDITIONS
-			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_arguments := a_feature.arguments
-				if l_arguments /= Void then
+				if attached a_feature.arguments as l_arguments then
 					process_formal_argument_list (l_arguments)
 					had_error := has_fatal_error
 				end
-				l_type := a_feature.type
-				if l_type /= Void then
+				if attached a_feature.type as l_type then
 					process_type (l_type)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			if assertions_enabled then
-				l_preconditions := a_feature.preconditions
-				if l_preconditions /= Void then
+				if attached a_feature.preconditions as l_preconditions then
 					process_preconditions (l_preconditions)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			if anchored_types_enabled then
-				l_locals := a_feature.locals
-				if l_locals /= Void then
+				if attached a_feature.locals as l_locals then
 					process_local_variable_list (l_locals)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_compound := a_feature.compound
-			if l_compound /= Void then
+			if attached a_feature.compound as l_compound then
 				process_compound (l_compound)
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_postconditions := a_feature.postconditions
-				if l_postconditions /= Void then
+				if attached a_feature.postconditions as l_postconditions then
 					process_postconditions (l_postconditions)
 					had_error := had_error or has_fatal_error
 				end
 			end
-			l_compound := a_feature.rescue_clause
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				process_compound (l_rescue_clause)
 				had_error := had_error or has_fatal_error
 			end
 			reset_fatal_error (had_error)
@@ -1900,13 +1770,12 @@ feature {ET_AST_NODE} -- Processing
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 				-- Manage enclosing inline agents stack.
-			if current_inline_agent /= Void then
-				enclosing_inline_agents.force_last (current_inline_agent)
+			if attached current_inline_agent as l_current_inline_agent then
+				enclosing_inline_agents.force_last (l_current_inline_agent)
 			end
 			current_inline_agent := an_expression
 			process_internal_routine_closure (an_expression)
@@ -1918,8 +1787,7 @@ feature {ET_AST_NODE} -- Processing
 			else
 				current_inline_agent := Void
 			end
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 				had_error := had_error or has_fatal_error
 			end
@@ -1938,22 +1806,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			l_seed: INTEGER
-			l_query: ET_QUERY
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
 				if not a_type.is_like_argument then
 					l_seed := a_type.seed
-					l_query := current_class.seeded_query (l_seed)
-					if l_query = Void then
+					if attached current_class.seeded_query (l_seed) as l_query then
+						report_anchored_type (a_type, l_query)
+					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
 							error_handler.report_giaaa_error
 						end
-					else
-						report_anchored_type (a_type, l_query)
 					end
 				end
 			end
@@ -1994,34 +1860,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_invariant_part: ET_LOOP_INVARIANTS
-			l_variant_part: ET_VARIANT
-			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_compound := an_instruction.from_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.from_compound as l_from_compound then
+				process_compound (l_from_compound)
 				had_error := has_fatal_error
 			end
 			if assertions_enabled then
-				l_invariant_part := an_instruction.invariant_part
-				if l_invariant_part /= Void then
+				if attached an_instruction.invariant_part as l_invariant_part then
 					process_loop_invariants (l_invariant_part)
 					had_error := had_error or has_fatal_error
 				end
 			end
 			process_expression (an_instruction.until_expression)
 			had_error := had_error or has_fatal_error
-			l_compound := an_instruction.loop_compound
-			if l_compound /= Void then
-				process_compound (l_compound)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
 				had_error := had_error or has_fatal_error
 			end
 			if assertions_enabled then
-				l_variant_part := an_instruction.variant_part
-				if l_variant_part /= Void then
+				if attached an_instruction.variant_part as l_variant_part then
 					process_variant (l_variant_part)
 					had_error := had_error or has_fatal_error
 				end
@@ -2051,13 +1910,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			l_type: ET_TARGET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_type := a_string.cast_type
-				if l_type /= Void then
+				if attached a_string.cast_type as l_type then
 					process_type (l_type.type)
 				end
 			end
@@ -2091,7 +1947,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_expression (an_expression)
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST)
@@ -2099,12 +1955,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			had_error: BOOLEAN
-			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_type := an_expression.type
-				if l_type /= Void then
+				if attached an_expression.type as l_type then
 					process_type (l_type)
 					had_error := has_fatal_error
 				end
@@ -2200,16 +2054,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 			l_precursor_keyword: ET_PRECURSOR_KEYWORD
-			l_query: ET_QUERY
-			l_parent_type, l_ancestor: ET_BASE_TYPE
+			l_parent_type: detachable ET_BASE_TYPE
 			l_class: ET_CLASS
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
+			if attached an_expression.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := has_fatal_error
 			end
@@ -2226,8 +2077,7 @@ feature {ET_AST_NODE} -- Processing
 			else
 				l_precursor_keyword := an_expression.precursor_keyword
 				l_class := l_parent_type.base_class
-				l_query := l_class.seeded_query (l_precursor_keyword.seed)
-				if l_query = Void then
+				if not attached l_class.seeded_query (l_precursor_keyword.seed) as l_query then
 						-- Internal error: the Precursor construct should
 						-- already have been resolved when flattening the
 						-- features of `current_class_impl'.
@@ -2239,16 +2089,15 @@ feature {ET_AST_NODE} -- Processing
 					if current_class /= current_class_impl and l_parent_type.is_generic then
 							-- Resolve generic parameters in the
 							-- context of `current_type'.
-						l_ancestor := current_class.ancestor (l_parent_type)
-						if l_ancestor = Void then
+						if attached current_class.ancestor (l_parent_type) as l_ancestor then
+							l_parent_type := l_ancestor
+						else
 								-- Internal error: `l_parent_type' is an ancestor
 								-- of `current_class_impl', and hence of `current_class'.
 							set_fatal_error
 							if internal_error_enabled or not current_class.has_implementation_error then
 								error_handler.report_giaaa_error
 							end
-						else
-							l_parent_type := l_ancestor
 						end
 					end
 					if not has_fatal_error then
@@ -2263,16 +2112,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 			l_precursor_keyword: ET_PRECURSOR_KEYWORD
-			l_procedure: ET_PROCEDURE
-			l_parent_type, l_ancestor: ET_BASE_TYPE
+			l_parent_type: detachable ET_BASE_TYPE
 			l_class: ET_CLASS
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_arguments := an_instruction.arguments
-			if l_arguments /= Void then
+			if attached an_instruction.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := has_fatal_error
 			end
@@ -2289,8 +2135,7 @@ feature {ET_AST_NODE} -- Processing
 			else
 				l_precursor_keyword := an_instruction.precursor_keyword
 				l_class := l_parent_type.base_class
-				l_procedure := l_class.seeded_procedure (l_precursor_keyword.seed)
-				if l_procedure = Void then
+				if not attached l_class.seeded_procedure (l_precursor_keyword.seed) as l_procedure then
 						-- Internal error: the Precursor construct should
 						-- already have been resolved when flattening the
 						-- features of `current_class_impl'.
@@ -2301,16 +2146,15 @@ feature {ET_AST_NODE} -- Processing
 				else
 					if current_class /= current_class_impl and l_parent_type.is_generic then
 							-- Resolve generic parameters in the context of `current_type'.
-						l_ancestor := current_class.ancestor (l_parent_type)
-						if l_ancestor = Void then
+						if attached current_class.ancestor (l_parent_type) as l_ancestor then
+							l_parent_type := l_ancestor
+						else
 								-- Internal error: `l_parent_type' is an ancestor
 								-- of `current_class_impl', and hence of `current_class'.
 							set_fatal_error
 							if internal_error_enabled or not current_class.has_implementation_error then
 								error_handler.report_giaaa_error
 							end
-						else
-							l_parent_type := l_ancestor
 						end
 					end
 					if not has_fatal_error then
@@ -2325,7 +2169,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_call_expression (an_expression)
+			process_qualified_feature_call_expression (an_expression)
 		end
 
 	process_qualified_call_agent (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION)
@@ -2339,11 +2183,8 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_name: ET_FEATURE_NAME
 			l_class: ET_CLASS
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
 			l_context: ET_NESTED_TYPE_CONTEXT
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -2357,16 +2198,15 @@ feature {ET_AST_NODE} -- Processing
 				find_expression_type (a_target, l_context)
 				if not has_fatal_error then
 					l_class := l_context.base_class
-					l_procedure := l_class.seeded_procedure (l_seed)
-					if l_procedure = Void then
+					if attached l_class.seeded_procedure (l_seed) as l_procedure then
+						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
+					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
 							error_handler.report_giaaa_error
 						end
-					else
-						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 					end
 				end
 			else
@@ -2375,39 +2215,48 @@ feature {ET_AST_NODE} -- Processing
 				find_expression_type (a_target, l_context)
 				if not has_fatal_error then
 					l_class := l_context.base_class
-					l_query := l_class.seeded_query (l_seed)
-					if l_query = Void then
+					if attached l_class.seeded_query (l_seed) as l_query then
+						report_qualified_query_call_agent (an_expression, l_context, l_query)
+					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-					else
-						report_qualified_query_call_agent (an_expression, l_context, l_query)
 					end
 				end
 			end
 			had_error := has_fatal_error
 			process_expression (a_target)
 			had_error := had_error or has_fatal_error
-			l_actual_arguments ?= an_expression.arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 				had_error := had_error or has_fatal_error
 			end
 			reset_fatal_error (had_error)
 		end
 
-	process_qualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_expression (an_expression)
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_instruction (an_instruction)
+		end
+
+	process_qualified_feature_call_expression (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			qualified_call: a_call.is_qualified_call
 		local
 			l_target: ET_EXPRESSION
-			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_context: ET_NESTED_TYPE_CONTEXT
 			l_name: ET_CALL_NAME
 			had_error: BOOLEAN
@@ -2416,8 +2265,7 @@ feature {ET_AST_NODE} -- Processing
 			l_target := a_call.target
 			process_expression (l_target)
 			had_error := has_fatal_error
-			l_arguments := a_call.arguments
-			if l_arguments /= Void then
+			if attached a_call.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
@@ -2429,34 +2277,30 @@ feature {ET_AST_NODE} -- Processing
 				if not has_fatal_error then
 					l_class := l_context.base_class
 					l_seed := l_name.seed
-					l_query := l_class.seeded_query (l_seed)
-					if l_query = Void then
+					if attached l_class.seeded_query (l_seed) as l_query then
+						report_qualified_call_expression (a_call, l_context, l_query)
+					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
 							error_handler.report_giaaa_error
 						end
-					else
-						report_qualified_call_expression (a_call, l_context, l_query)
 					end
 				end
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-	process_qualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
+	process_qualified_feature_call_instruction (a_call: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			qualified_call: a_call.is_qualified_call
 		local
 			l_target: ET_EXPRESSION
-			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
 			l_class: ET_CLASS
-			l_procedure: ET_PROCEDURE
 			l_context: ET_NESTED_TYPE_CONTEXT
 			l_name: ET_CALL_NAME
 			had_error: BOOLEAN
@@ -2465,8 +2309,7 @@ feature {ET_AST_NODE} -- Processing
 			l_target := a_call.target
 			process_expression (l_target)
 			had_error := has_fatal_error
-			l_arguments := a_call.arguments
-			if l_arguments /= Void then
+			if attached a_call.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
@@ -2478,16 +2321,15 @@ feature {ET_AST_NODE} -- Processing
 				if not has_fatal_error then
 					l_class := l_context.base_class
 					l_seed := a_call.name.seed
-					l_procedure := l_class.seeded_procedure (l_seed)
-					if l_procedure = Void then
+					if attached l_class.seeded_procedure (l_seed) as l_procedure then
+						report_qualified_call_instruction (a_call, l_context, l_procedure)
+					else
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
 						if internal_error_enabled or not current_class.has_implementation_error then
 							error_handler.report_giaaa_error
 						end
-					else
-						report_qualified_call_instruction (a_call, l_context, l_procedure)
 					end
 				end
 			end
@@ -2510,7 +2352,6 @@ feature {ET_AST_NODE} -- Processing
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
 			l_context: ET_NESTED_TYPE_CONTEXT
-			l_query: ET_QUERY
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
@@ -2522,16 +2363,15 @@ feature {ET_AST_NODE} -- Processing
 					l_context.force_last (l_target_type)
 					if not has_fatal_error then
 						l_class := l_context.base_class
-						l_query := l_class.seeded_query (a_type.seed)
-						if l_query = Void then
+						if attached l_class.seeded_query (a_type.seed) as l_query then
+							report_qualified_anchored_type (a_type, l_context, l_query)
+						else
 								-- This error should have already been reported when checking
 								-- `current_feature' (using ET_FEATURE_CHECKER for example).
 							set_fatal_error
 							if internal_error_enabled or not current_class.has_implementation_error then
 								error_handler.report_giaaa_error
 							end
-						else
-							report_qualified_anchored_type (a_type, l_context, l_query)
 						end
 					end
 				end
@@ -2549,13 +2389,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			l_type: ET_TARGET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_type := a_constant.cast_type
-				if l_type /= Void then
+				if attached a_constant.cast_type as l_type then
 					process_type (l_type.type)
 				end
 			end
@@ -2593,9 +2430,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 			l_class: ET_CLASS
-			l_query: ET_QUERY
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			had_error: BOOLEAN
@@ -2606,23 +2441,21 @@ feature {ET_AST_NODE} -- Processing
 				process_type (l_type)
 				had_error := has_fatal_error
 			end
-			l_arguments := an_expression.arguments
-			if l_arguments /= Void then
+			if attached an_expression.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
 			l_class := l_type.base_class (current_type)
 			l_seed := an_expression.name.seed
-			l_query := l_class.seeded_query (l_seed)
-			if l_query = Void then
+			if attached l_class.seeded_query (l_seed) as l_query then
+				report_static_call_expression (an_expression, l_type, l_query)
+			else
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaaa_error
 				end
-			else
-				report_static_call_expression (an_expression, l_type, l_query)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 		end
@@ -2631,9 +2464,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
 			l_class: ET_CLASS
-			l_procedure: ET_PROCEDURE
 			l_type: ET_TYPE
 			l_seed: INTEGER
 			had_error: BOOLEAN
@@ -2644,23 +2475,21 @@ feature {ET_AST_NODE} -- Processing
 				process_type (l_type)
 				had_error := has_fatal_error
 			end
-			l_arguments := an_instruction.arguments
-			if l_arguments /= Void then
+			if attached an_instruction.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
 			l_class := l_type.base_class (current_type)
 			l_seed := an_instruction.name.seed
-			l_procedure := l_class.seeded_procedure (l_seed)
-			if l_procedure = Void then
+			if attached l_class.seeded_procedure (l_seed) as l_procedure then
+				report_static_call_instruction (an_instruction, l_type, l_procedure)
+			else
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaaa_error
 				end
-			else
-				report_static_call_instruction (an_instruction, l_type, l_procedure)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 		end
@@ -2702,14 +2531,11 @@ feature {ET_AST_NODE} -- Processing
 	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			an_expression: ET_EXPRESSION
 		do
 			reset_fatal_error (False)
 			if assertions_enabled then
-				an_expression := an_assertion.expression
-				if an_expression /= Void then
-					process_expression (an_expression)
+				if attached an_assertion.expression as l_expression then
+					process_expression (l_expression)
 				end
 			end
 		end
@@ -2717,13 +2543,10 @@ feature {ET_AST_NODE} -- Processing
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				l_parameters := a_type.actual_parameters
-				if l_parameters /= Void then
+				if attached a_type.actual_parameters as l_parameters then
 					process_actual_parameter_list (l_parameters)
 				end
 			end
@@ -2752,12 +2575,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_name: ET_FEATURE_NAME
 			l_class: ET_CLASS
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
 			l_target_type: ET_TYPE
 			l_context: ET_NESTED_TYPE_CONTEXT
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -2771,32 +2591,30 @@ feature {ET_AST_NODE} -- Processing
 				l_context.reset (current_type)
 				l_context.force_last (l_target_type)
 				l_class := l_context.base_class
-				l_procedure := l_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
+				if attached l_class.seeded_procedure (l_seed) as l_procedure then
+					report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 				end
 			else
 				l_context := current_context
 				l_context.reset (current_type)
 				l_context.force_last (l_target_type)
 				l_class := l_context.base_class
-				l_query := l_class.seeded_query (l_seed)
-				if l_query = Void then
+				if attached l_class.seeded_query (l_seed) as l_query then
+					report_qualified_query_call_agent (an_expression, l_context, l_query)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_qualified_query_call_agent (an_expression, l_context, l_query)
 				end
 			end
 			had_error := has_fatal_error
@@ -2804,8 +2622,7 @@ feature {ET_AST_NODE} -- Processing
 				process_type (a_target.type)
 				had_error := had_error or has_fatal_error
 			end
-			l_actual_arguments ?= an_expression.arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 				had_error := had_error or has_fatal_error
 			end
@@ -2844,112 +2661,110 @@ feature {ET_AST_NODE} -- Processing
 			unqualified_call_agent: not an_expression.is_qualified_call
 		local
 			l_name: ET_FEATURE_NAME
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			l_name := an_expression.name
 			l_seed := l_name.seed
 			if an_expression.is_procedure then
-				l_procedure := current_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
+				if attached current_class.seeded_procedure (l_seed) as l_procedure then
+					report_unqualified_procedure_call_agent (an_expression, l_procedure)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_unqualified_procedure_call_agent (an_expression, l_procedure)
 				end
 			else
-				l_query := current_class.seeded_query (l_seed)
-				if l_query = Void then
+				if attached current_class.seeded_query (l_seed) as l_query then
+					report_unqualified_query_call_agent (an_expression, l_query)
+				else
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
-				else
-					report_unqualified_query_call_agent (an_expression, l_query)
 				end
 			end
-			l_actual_arguments ?= an_expression.arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_actual_arguments then
 				had_error := has_fatal_error
 				process_agent_argument_operand_list (l_actual_arguments)
 				reset_fatal_error (had_error or has_fatal_error)
 			end
 		end
 
-	process_unqualified_call_expression (a_call: ET_FEATURE_CALL_EXPRESSION)
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_unqualified_feature_call_expression (an_expression)
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_unqualified_feature_call_instruction (an_instruction)
+		end
+
+	process_unqualified_feature_call_expression (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			unqualified_call: not a_call.is_qualified_call
 		local
-			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
-			l_query: ET_QUERY
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_arguments := a_call.arguments
-			if l_arguments /= Void then
+			if attached a_call.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 				had_error := has_fatal_error
 			end
 			reset_fatal_error (False)
 			l_seed := a_call.name.seed
-			l_query := current_class.seeded_query (l_seed)
-			if l_query = Void then
+			if attached current_class.seeded_query (l_seed) as l_query then
+				report_unqualified_call_expression (a_call, l_query)
+				reset_fatal_error (had_error)
+			else
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaaa_error
 				end
-			else
-				report_unqualified_call_expression (a_call, l_query)
-				reset_fatal_error (had_error)
 			end
 		end
 
-	process_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION)
+	process_unqualified_feature_call_instruction (a_call: ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION)
 			-- Process `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			unqualified_call: not a_call.is_qualified_call
 		local
-			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
-			l_procedure: ET_PROCEDURE
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
-			l_arguments := a_call.arguments
-			if l_arguments /= Void then
+			if attached a_call.arguments as l_arguments then
 				process_actual_arguments (l_arguments)
 			end
 			reset_fatal_error (False)
 			l_seed := a_call.name.seed
-			l_procedure := current_class.seeded_procedure (l_seed)
-			if l_procedure = Void then
+			if attached current_class.seeded_procedure (l_seed) as l_procedure then
+				report_unqualified_call_instruction (a_call, l_procedure)
+				reset_fatal_error (had_error)
+			else
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
 				if internal_error_enabled or not current_class.has_implementation_error then
 					error_handler.report_giaaa_error
 				end
-			else
-				report_unqualified_call_instruction (a_call, l_procedure)
-				reset_fatal_error (had_error)
 			end
 		end
 
@@ -2972,15 +2787,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_when_part'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			a_compound: ET_COMPOUND
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
 			process_choice_list (a_when_part.choices)
 			had_error := has_fatal_error
-			a_compound := a_when_part.then_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached a_when_part.then_compound as l_then_compound then
+				process_compound (l_then_compound)
 				reset_fatal_error (had_error or has_fatal_error)
 			end
 		end
@@ -3008,17 +2821,13 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_writable_not_void: a_writable /= Void
 		local
-			l_identifier: ET_IDENTIFIER
 			l_seed: INTEGER
-			l_attribute: ET_QUERY
 		do
 			reset_fatal_error (False)
-			l_identifier ?= a_writable
-			if l_identifier /= Void and then not l_identifier.is_local then
+			if attached {ET_IDENTIFIER} a_writable as l_identifier and then not l_identifier.is_local then
 				l_seed := l_identifier.seed
 				if l_seed /= 0 then
-					l_attribute := current_class.seeded_query (l_seed)
-					if l_attribute = Void then
+					if not attached current_class.seeded_query (l_seed) as l_attribute then
 							-- Internal error: if we got a seed, `l_attribute' should not be void.
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
@@ -3070,7 +2879,7 @@ feature {NONE} -- Access
 			-- `current_feature' is B.f and `current_feature_impl' is A.f
 			-- (where the inherited precondition has been written).
 
-	current_inline_agent: ET_INLINE_AGENT
+	current_inline_agent: detachable ET_INLINE_AGENT
 			-- Inline agent being processed if any, Void otherwise
 
 	enclosing_inline_agents: DS_ARRAYED_LIST [ET_INLINE_AGENT]
@@ -3079,8 +2888,8 @@ feature {NONE} -- Access
 	current_closure: ET_CLOSURE
 			-- Inner closure being processed
 		do
-			if current_inline_agent /= Void then
-				Result := current_inline_agent
+			if attached current_inline_agent as l_current_inline_agent then
+				Result := l_current_inline_agent
 			else
 				Result := current_feature
 			end
@@ -3093,8 +2902,8 @@ feature {NONE} -- Access
 	current_closure_impl: ET_CLOSURE
 			-- Inner closure where the code being processed has been written
 		do
-			if current_inline_agent /= Void then
-				Result := current_inline_agent
+			if attached current_inline_agent as l_current_inline_agent then
+				Result := l_current_inline_agent
 			else
 				Result := current_feature_impl
 			end
@@ -3131,8 +2940,8 @@ feature {NONE} -- Expression types
 			a_current_class_preparsed: a_context.root_context.base_class.is_preparsed
 		do
 			reset_fatal_error (False)
-			if current_inline_agent /= Void then
-				expression_type_finder.find_expression_type_in_agent (a_expression, current_inline_agent, current_feature, a_context, current_system.detachable_any_type)
+			if attached current_inline_agent as l_current_inline_agent then
+				expression_type_finder.find_expression_type_in_agent (a_expression, l_current_inline_agent, current_feature, a_context, current_system.detachable_any_type)
 			elseif current_feature.is_feature then
 				expression_type_finder.find_expression_type_in_feature (a_expression, current_feature.as_feature, a_context, current_system.detachable_any_type)
 			else

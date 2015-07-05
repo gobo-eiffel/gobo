@@ -5,7 +5,7 @@ note
 		".NET name and signature equality testers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,8 +36,8 @@ feature -- Status report
 			-- Are `v' and `u' considered equal?
 			-- Do they have the same .NET name and the same signature?
 		local
-			l_arguments, other_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_type, other_type: ET_TYPE
+			l_arguments, other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			l_type, other_type: detachable ET_TYPE
 			l_class_impl, other_class_impl: ET_CLASS
 			i, nb: INTEGER
 		do

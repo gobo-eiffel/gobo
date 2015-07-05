@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -169,16 +169,16 @@ feature -- Generation
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			l_precursor: detachable ET_DYNAMIC_PRECURSOR
+			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_call: ET_DYNAMIC_QUALIFIED_CALL
+			l_call: detachable ET_DYNAMIC_QUALIFIED_CALL
 			l_count: INTEGER
 			old_nb: INTEGER
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
-			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
+			l_equality: detachable ET_DYNAMIC_EQUALITY_EXPRESSION
+			l_object_equality: detachable ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
@@ -381,7 +381,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			-- Propagate `a_type' from target type set `a_call'.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			if not a_call.is_tuple_label then
 				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
@@ -409,7 +409,6 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			-- Propagate dynamic types of the label in tuple `a_type' to
 			-- the dynamic type set of the result type of `a_call'.
 		local
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_label_type_set: ET_DYNAMIC_TYPE_SET
@@ -421,8 +420,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			current_dynamic_feature := a_call.current_feature
 			old_type := current_dynamic_type
 			current_dynamic_type := a_call.current_type
-			l_tuple_type ?= a_type
-			if l_tuple_type = Void then
+			if not attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					-- Internal error: the target of a label expression
 					-- should be a Tuple.
 				set_fatal_error
@@ -448,11 +446,9 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			-- Propagate dynamic types of the source of tuple label setter `a_call'
 			-- to the dynamic type set of the corresponding tuple label in `a_type'.
 		local
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_label_type_set: ET_DYNAMIC_TYPE_SET
-			l_assigner: ET_ASSIGNER_INSTRUCTION
 			old_feature: ET_DYNAMIC_FEATURE
 			old_type: ET_DYNAMIC_TYPE
 		do
@@ -460,14 +456,12 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			current_dynamic_feature := a_call.current_feature
 			old_type := current_dynamic_type
 			current_dynamic_type := a_call.current_type
-			l_tuple_type ?= a_type
-			l_assigner ?= a_call.static_call
-			if l_tuple_type = Void then
+			if not attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					-- Internal error: the target of a label expression
 					-- should be a Tuple.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_assigner = Void then
+			elseif not attached {ET_ASSIGNER_INSTRUCTION} a_call.static_call as l_assigner then
 					-- Internal error: the call should be a tuple label assigner.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -494,7 +488,7 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
 		local
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_formal_type_set := a_feature.argument_type_set (1)
 			if l_formal_type_set /= Void and then a_type.conforms_to_type (l_formal_type_set.static_type) then
@@ -554,7 +548,7 @@ feature {NONE} -- Generation
 			old_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			had_error: BOOLEAN
 		do
@@ -613,7 +607,7 @@ feature {NONE} -- CAT-calls
 			-- Check CAT-call validity.
 		local
 			i, nb: INTEGER
-			l_call: ET_DYNAMIC_QUALIFIED_CALL
+			l_call: detachable ET_DYNAMIC_QUALIFIED_CALL
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
 		do
@@ -665,16 +659,15 @@ feature {NONE} -- CAT-calls
 			a_type_not_void: a_type /= Void
 			a_call_not_void: a_call /= Void
 		local
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_actuals: ET_ARGUMENT_OPERANDS
+			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
+			l_actuals: detachable ET_ARGUMENT_OPERANDS
 			l_current_feature: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			j, nb2: INTEGER
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
-			l_tuple_dynamic_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_seed: INTEGER
 		do
@@ -687,8 +680,7 @@ feature {NONE} -- CAT-calls
 				l_actuals := a_call.static_call.arguments
 				if l_actuals /= Void and then l_actuals.count = 1 then
 					l_current_feature := a_call.current_feature
-					l_tuple_dynamic_type ?= a_type
-					if l_tuple_dynamic_type = Void then
+					if not attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_dynamic_type then
 							-- Internal error: the target of the call is a Tuple.
 						set_fatal_error
 						error_handler.report_giaaa_error
@@ -770,7 +762,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
 		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
@@ -787,7 +779,7 @@ feature {NONE} -- CAT-calls
 			a_formal_type_set_not_void: a_formal_type_set /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			an_actual_type_set_not_void: an_actual_type_set /= Void
-			valid_arg: a_call.static_call.arguments /= Void and then a_call.static_call.arguments.valid_index (arg)
+			valid_arg: attached a_call.static_call.arguments as l_static_arguments and then l_static_arguments.valid_index (arg)
 		local
 			l_message: STRING
 		do
@@ -803,7 +795,7 @@ feature {NONE} -- CAT-calls
 			STRING_.wipe_out (l_message)
 		end
 
-	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
 		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
@@ -822,7 +814,7 @@ feature {NONE} -- CAT-calls
 			a_formal_type_set_not_void: a_formal_type_set /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			an_actual_type_set_not_void: an_actual_type_set /= Void
-			valid_arg: a_call.static_call.arguments /= Void and then a_call.static_call.arguments.valid_index (arg)
+			valid_arg: attached a_call.static_call.arguments as l_static_arguments and then l_static_arguments.valid_index (arg)
 		local
 			l_class_impl: ET_CLASS
 			l_position: ET_POSITION
@@ -1122,7 +1114,7 @@ feature {NONE} -- Event handling
 			-- Report that attribute `a_writable' has been processed
 			-- as target of an assignment (attempt).
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type_set := current_dynamic_type.dynamic_query (an_attribute, current_dynamic_system).result_type_set
@@ -1174,7 +1166,7 @@ feature {NONE} -- Event handling
 			-- where `a_target_type' in  the context of `current_type' is
 			-- the type of the expression after the conversion occurred.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 		do
@@ -1231,7 +1223,6 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
-			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1239,8 +1230,7 @@ feature {NONE} -- Event handling
 				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_type)
-				l_actuals := an_expression.arguments
-				if l_actuals /= Void then
+				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -1260,7 +1250,6 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1268,8 +1257,7 @@ feature {NONE} -- Event handling
 				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_type)
-				l_actuals := an_instruction.arguments
-				if l_actuals /= Void then
+				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -1308,7 +1296,7 @@ feature {NONE} -- Event handling
 			-- Report that an equality expression has been processed.
 		local
 			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				report_constant_expression (an_expression, current_universe_impl.boolean_type)
@@ -1367,15 +1355,13 @@ feature {NONE} -- Event handling
 			a_context_valid: a_context.is_valid_context
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_formals: ET_FORMAL_ARGUMENT_LIST
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
 			l_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual_expression: ET_EXPRESSION
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_target: ET_AGENT_TARGET
@@ -1383,8 +1369,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			l_agent_type ?= l_dynamic_type
-			if l_agent_type = Void then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -1426,8 +1411,7 @@ feature {NONE} -- Event handling
 									error_handler.report_giaaa_error
 								else
 									l_actual := l_actuals.actual_argument (i)
-									l_actual_expression ?= l_actual
-									if l_actual_expression /= Void then
+									if attached {ET_EXPRESSION} l_actual as l_actual_expression then
 										propagate_argument_dynamic_types (l_actual_expression, l_formal_type_set)
 									else
 											-- Open operand.
@@ -1496,15 +1480,20 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				if current_inline_agent = Void then
+				if not attached current_inline_agent as l_current_inline_agent then
 						-- Internal error: the declaration of the "Result" entity
 						-- of an inline agent should occur in an inline agent.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_current_inline_agent.implicit_result as l_implicit_result then
+						-- Internal error: the declaration of the "Result" entity
+						-- of an inline agent should occur in a query inline agent.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
 					l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-					set_dynamic_type_set (l_dynamic_type_set, current_inline_agent.implicit_result)
+					set_dynamic_type_set (l_dynamic_type_set, l_implicit_result)
 				end
 			end
 		end
@@ -1574,7 +1563,7 @@ feature {NONE} -- Event handling
 		local
 			l_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
@@ -1699,7 +1688,7 @@ feature {NONE} -- Event handling
 			-- internally invoked by the object equality expression.
 		local
 			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				report_constant_expression (an_expression, current_universe_impl.boolean_type)
@@ -1744,17 +1733,15 @@ feature {NONE} -- Event handling
 			-- and `a_query' is the precursor feature.
 		local
 			i, nb: INTEGER
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_precursor: ET_DYNAMIC_FEATURE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
 				l_precursor := current_dynamic_feature.dynamic_precursor (a_query, l_parent_type, current_dynamic_system)
-				l_actuals := an_expression.arguments
-				if l_actuals /= Void then
+				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -1779,7 +1766,6 @@ feature {NONE} -- Event handling
 			-- and `a_procedure' is the precursor feature.
 		local
 			i, nb: INTEGER
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_precursor: ET_DYNAMIC_FEATURE
 			l_actual: ET_EXPRESSION
@@ -1787,8 +1773,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
 				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_dynamic_system)
-				l_actuals := an_instruction.arguments
-				if l_actuals /= Void then
+				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -1821,18 +1806,17 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
+	report_qualified_call_expression (an_expression: ET_QUALIFIED_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY)
 			-- Report that a qualified call expression has been processed.
 		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
-			l_like: ET_LIKE_FEATURE
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: detachable ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_target := an_expression.target
@@ -1847,8 +1831,7 @@ feature {NONE} -- Event handling
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
-					l_like ?= l_type
-					if l_like /= Void and then l_like.is_like_argument then
+					if attached {ET_LIKE_FEATURE} l_type as l_like and then l_like.is_like_argument then
 						l_actuals := an_expression.arguments
 						if l_actuals /= Void and then l_actuals.count = 1 then
 							l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
@@ -1877,10 +1860,10 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
+	report_qualified_call_instruction (an_instruction: ET_QUALIFIED_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE)
 			-- Report that a qualified call instruction has been processed.
 		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_target: ET_EXPRESSION
 		do
@@ -1923,25 +1906,21 @@ feature {NONE} -- Event handling
 			-- of type `an_agent_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
-			l_target_expression: ET_EXPRESSION
 			i, nb: INTEGER
 			j, nb2: INTEGER
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
 			l_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			l_dynamic_agent_type ?= l_dynamic_type
-			if l_dynamic_agent_type = Void then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_dynamic_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -1949,8 +1928,7 @@ feature {NONE} -- Event handling
 				l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 				nb2 := l_open_operand_type_sets.count
 				l_target := an_expression.target
-				l_target_expression ?= l_target
-				if l_target_expression /= Void then
+				if attached {ET_EXPRESSION} l_target as l_target_expression then
 					l_target_type_set := dynamic_type_set (l_target_expression)
 				else
 						-- The agent is of the form:   agent {TYPE}.f
@@ -1976,8 +1954,7 @@ feature {NONE} -- Event handling
 						else
 							from i := 1 until i > nb loop
 								l_actual := l_actuals.actual_argument (i)
-								l_actual_expression ?= l_actual
-								if l_actual_expression /= Void then
+								if attached {ET_EXPRESSION} l_actual then
 									-- Do nothing.
 								else
 										-- Open operand.
@@ -2002,8 +1979,15 @@ feature {NONE} -- Event handling
 					end
 					l_result_type_set := l_dynamic_agent_type.result_type_set
 					if l_result_type_set /= Void then
-						set_dynamic_type_set (l_result_type_set, an_expression.implicit_result)
-						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
+						if not attached an_expression.implicit_result as l_implicit_result then
+								-- Internal error: if the type of the agent has a result type set,
+								-- then the agent has to be a query agent.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							set_dynamic_type_set (l_result_type_set, l_implicit_result)
+							report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
+						end
 					else
 						create l_dynamic_procedure_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 						l_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
@@ -2056,17 +2040,20 @@ feature {NONE} -- Event handling
 	report_result (an_expression: ET_RESULT)
 			-- Report that the result entity has been processed.
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_implicit_result: ET_RESULT
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_implicit_result: detachable ET_RESULT
+			l_result_index: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				if current_inline_agent /= Void then
-					l_implicit_result := current_inline_agent.implicit_result
+				if attached current_inline_agent as l_current_inline_agent then
+					l_implicit_result := l_current_inline_agent.implicit_result
 					if l_implicit_result /= Void then
 						l_dynamic_type_set := dynamic_type_set (l_implicit_result)
+						l_result_index := l_implicit_result.index
 					end
 				else
 					l_dynamic_type_set := current_dynamic_feature.result_type_set
+					l_result_index := result_index.item
 				end
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
@@ -2074,11 +2061,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					if an_expression.index = 0 then
-						if current_inline_agent /= Void then
-							an_expression.set_index (l_implicit_result.index)
-						else
-							an_expression.set_index (result_index.item)
-						end
+						an_expression.set_index (l_result_index)
 					end
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
 					if current_inline_agent = Void then
@@ -2094,17 +2077,20 @@ feature {NONE} -- Event handling
 			-- Report that the result entity has been processed
 			-- as target of an assignment (attempt).
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_implicit_result: ET_RESULT
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_implicit_result: detachable ET_RESULT
+			l_result_index: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				if current_inline_agent /= Void then
-					l_implicit_result := current_inline_agent.implicit_result
+				if attached current_inline_agent as l_current_inline_agent then
+					l_implicit_result := l_current_inline_agent.implicit_result
 					if l_implicit_result /= Void then
 						l_dynamic_type_set := dynamic_type_set (l_implicit_result)
+						l_result_index := l_implicit_result.index
 					end
 				else
 					l_dynamic_type_set := current_dynamic_feature.result_type_set
+					l_result_index := result_index.item
 				end
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a function cannot be void.
@@ -2112,11 +2098,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					if a_result.index = 0 then
-						if current_inline_agent /= Void then
-							a_result.set_index (l_implicit_result.index)
-						else
-							a_result.set_index (result_index.item)
-						end
+						a_result.set_index (l_result_index)
 					end
 					set_dynamic_type_set (l_dynamic_type_set, a_result)
 					if current_inline_agent = Void then
@@ -2132,10 +2114,9 @@ feature {NONE} -- Event handling
 			-- Report that a static call expression has been processed.
 		local
 			i, nb: INTEGER
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_query: ET_DYNAMIC_FEATURE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2143,8 +2124,7 @@ feature {NONE} -- Event handling
 				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_query.set_static (True)
 				l_dynamic_type.set_static (True)
-				l_actuals := an_expression.arguments
-				if l_actuals /= Void then
+				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -2167,7 +2147,6 @@ feature {NONE} -- Event handling
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_actual: ET_EXPRESSION
@@ -2177,8 +2156,7 @@ feature {NONE} -- Event handling
 				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_static (True)
 				l_dynamic_type.set_static (True)
-				l_actuals := an_instruction.arguments
-				if l_actuals /= Void then
+				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
 					from i := 1 until i > nb loop
 						l_actual := l_actuals.actual_argument (i)
@@ -2198,7 +2176,7 @@ feature {NONE} -- Event handling
 			a_type_not_void: a_type /= Void
 		local
 			l_string_type: ET_DYNAMIC_TYPE
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_area_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_area_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2266,27 +2244,23 @@ feature {NONE} -- Event handling
 			-- in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
-			l_target_expression: ET_EXPRESSION
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
 				mark_type_alive (l_dynamic_type)
 				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_dynamic_agent_type ?= l_dynamic_type
-				if l_dynamic_agent_type = Void then
+				if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_dynamic_agent_type then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
 					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
 					l_target := an_expression.target
-					l_target_expression ?= l_target
-					if l_target_expression /= Void then
+					if attached {ET_EXPRESSION} l_target as l_target_expression then
 						l_target_type_set := dynamic_type_set (l_target_expression)
 					else
 							-- The agent is of the form:   agent {TYPE}.f
@@ -2307,20 +2281,24 @@ feature {NONE} -- Event handling
 							-- then the result type set should not be Void.
 						set_fatal_error
 						error_handler.report_giaaa_error
+					elseif not attached an_expression.implicit_result as l_implicit_result then
+							-- Internal error: a tuple call agent should have an implicit result.
+							-- See precondition 'query_call' and the postcondition of ET_CALL_AGENT.is_procedure.
+						set_fatal_error
+						error_handler.report_giaaa_error
 					else
-						set_dynamic_type_set (l_result_type_set, an_expression.implicit_result)
+						set_dynamic_type_set (l_result_type_set, l_implicit_result)
 						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
 					end
 				end
 			end
 		end
 
-	report_tuple_label_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
+	report_tuple_label_expression (an_expression: ET_QUALIFIED_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT)
 			-- Report that a call to a tuple label has been processed.
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -2336,8 +2314,7 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_tuple_type ?= l_target_type_set.static_type
-					if l_tuple_type = Void then
+					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_target_type_set.static_type as l_tuple_type then
 							-- Internal error: the target of a label expression
 							-- should be a Tuple.
 						set_fatal_error
@@ -2370,8 +2347,8 @@ feature {NONE} -- Event handling
 		local
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_call: ET_FEATURE_CALL_EXPRESSION
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_call := an_assigner.call
@@ -2408,16 +2385,13 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_dynamic_query: ET_DYNAMIC_FEATURE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
-			l_manifest_tuple: ET_MANIFEST_TUPLE
-			l_like: ET_LIKE_FEATURE
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
@@ -2431,14 +2405,12 @@ feature {NONE} -- Event handling
 								-- This is something of the form:  'item ([...])'
 								-- Try to get the open operand type sets directly from the
 								-- argument if it is a manifest tuple.
-							l_agent_type ?= current_dynamic_type
-							if l_agent_type = Void then
+							if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
 									-- Internal error: it has to be an agent type.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								l_manifest_tuple ?= l_actual
-								if l_manifest_tuple /= Void then
+								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
 									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 									nb := l_open_operand_type_sets.count
 									if l_manifest_tuple.count < nb then
@@ -2475,8 +2447,7 @@ feature {NONE} -- Event handling
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
 -- for ANY.clone).
-				l_like ?= a_query.type
-				if l_like /= Void and then l_like.is_like_argument then
+				if attached {ET_LIKE_FEATURE} a_query.type as l_like and then l_like.is_like_argument then
 					if l_actuals /= Void and then l_actuals.count = 1 then
 						l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
 						if l_actual_type_set = Void then
@@ -2507,18 +2478,14 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
-			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
-			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_regular (True)
-				l_actuals := an_instruction.arguments
-				if l_actuals /= Void then
+				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
 					if nb = 1 then
 						l_actual := l_actuals.actual_argument (1)
@@ -2526,14 +2493,12 @@ feature {NONE} -- Event handling
 								-- This is something of the form:  'call ([...])'
 								-- Try to get the open operand type sets directly from the
 								-- argument if it is a manifest tuple.
-							l_agent_type ?= current_dynamic_type
-							if l_agent_type = Void then
+							if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_agent_type then
 									-- Internal error: it has to be an agent type.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								l_manifest_tuple ?= l_actual
-								if l_manifest_tuple /= Void then
+								if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
 									l_open_operand_type_sets := l_agent_type.open_operand_type_sets
 									nb := l_open_operand_type_sets.count
 									if l_manifest_tuple.count < nb then
@@ -2588,8 +2553,19 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
-				set_dynamic_type_set (l_dynamic_feature.result_type_set, an_expression.implicit_result)
-				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
+				if not attached l_dynamic_feature.result_type_set as l_result_type_set then
+						-- Internal error: a query should have a result type set.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached an_expression.implicit_result as l_implicit_result then
+						-- Internal error: a query call agent should have an implicit result.
+						-- See precondition 'query_call' and the postcondition of ET_CALL_AGENT.is_procedure.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					set_dynamic_type_set (l_result_type_set, l_implicit_result)
+					report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
+				end
 			end
 		end
 
@@ -2606,17 +2582,14 @@ feature {NONE} -- Event handling
 			a_context_valid: a_context.is_valid_context
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_actuals: detachable ET_AGENT_ARGUMENT_OPERANDS
 			l_actual: ET_AGENT_ARGUMENT_OPERAND
 			l_actual_expression: ET_EXPRESSION
 			i, nb: INTEGER
 			j, nb2: INTEGER
-			l_routine_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_not_done: BOOLEAN
 			l_target: ET_AGENT_TARGET
 		do
@@ -2624,8 +2597,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			l_agent_type ?= l_dynamic_type
-			if l_agent_type = Void then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -2652,15 +2624,13 @@ feature {NONE} -- Event handling
 							-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
-						l_routine_type ?= current_dynamic_type
-						if l_routine_type = Void then
+						if not attached {ET_DYNAMIC_ROUTINE_TYPE} current_dynamic_type as l_routine_type then
 								-- Internal error: it has to be an agent type.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
 							l_actual := l_actuals.actual_argument (1)
-							l_manifest_tuple ?= l_actual
-							if l_manifest_tuple /= Void then
+							if attached {ET_MANIFEST_TUPLE} l_actual as l_manifest_tuple then
 								l_open_operand_type_sets := l_routine_type.open_operand_type_sets
 								nb := l_open_operand_type_sets.count
 								if l_manifest_tuple.count < nb then
@@ -2689,9 +2659,8 @@ feature {NONE} -- Event handling
 						nb2 := l_open_operand_type_sets.count
 						from i := 1 until i > nb loop
 							l_actual := l_actuals.actual_argument (i)
-							l_actual_expression ?= l_actual
-							if l_actual_expression /= Void then
-								propagate_argument_operand_dynamic_types (l_actual_expression, i, a_feature)
+							if attached {ET_EXPRESSION} l_actual as l_actual_expression2 then
+								propagate_argument_operand_dynamic_types (l_actual_expression2, i, a_feature)
 							else
 									-- Open operand.
 								j := j + 1
@@ -2776,7 +2745,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_copy_feature: ET_DYNAMIC_FEATURE
+			l_copy_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
 				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
@@ -2801,7 +2770,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2851,7 +2820,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_result_type_set := current_dynamic_feature.result_type_set
@@ -2872,14 +2841,12 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_tuple_type ?= current_dynamic_type
-				if l_tuple_type = Void then
+				if not attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_type as l_tuple_type then
 						-- Internal error: this was already reported during parsing.
 						-- This built-in feature can only be in class TUPLE (and
 						-- its descendants).
@@ -2905,14 +2872,12 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_tuple_type ?= current_dynamic_type
-				if l_tuple_type = Void then
+				if not attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_type as l_tuple_type then
 						-- Internal error: this was already reported during parsing.
 						-- This built-in feature can only be in class TUPLE (and
 						-- its descendants).
@@ -2957,7 +2922,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type: ET_DYNAMIC_TYPE
 		do
@@ -2984,9 +2949,9 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			i, nb: INTEGER
 		do
@@ -3023,9 +2988,9 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
 			l_meta_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -3068,7 +3033,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		local
 			l_base_type: ET_BASE_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type: ET_DYNAMIC_TYPE
@@ -3132,7 +3097,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -3163,9 +3128,9 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			i, nb: INTEGER
 		do
@@ -3417,7 +3382,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET
+	dynamic_type_set (an_operand: ET_OPERAND): detachable ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with `an_operand';
 			-- Void if unknown yet
 		require
@@ -3434,11 +3399,8 @@ feature {NONE} -- Implementation
 	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with result of feature being processed;
 			-- Report a fatal error if not known
-		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			l_result_type_set := current_dynamic_feature.result_type_set
-			if l_result_type_set /= Void then
+			if attached current_dynamic_feature.result_type_set as l_result_type_set then
 				Result := l_result_type_set
 			else
 					-- Internal error: dynamic type set not known.

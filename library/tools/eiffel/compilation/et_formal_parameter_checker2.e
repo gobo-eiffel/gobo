@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,15 +55,13 @@ feature -- Validity checking
 			a_class_preparsed: a_class.is_preparsed
 		local
 			i, nb: INTEGER
-			a_parameters: ET_FORMAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER
 			old_class: ET_CLASS
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parameters := current_class.formal_parameters
-			if a_parameters /= Void then
+			if attached current_class.formal_parameters as a_parameters then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
 					a_formal := a_parameters.formal_parameter (i)
@@ -87,11 +85,8 @@ feature {NONE} -- Constraint validity
 			-- if an error occurred.
 		require
 			a_formal_not_void: a_formal /= Void
-		local
-			a_constraint: ET_TYPE
 		do
-			a_constraint := a_formal.constraint
-			if a_constraint /= Void then
+			if attached a_formal.constraint as a_constraint then
 				a_constraint.process (Current)
 			end
 		end
@@ -109,19 +104,14 @@ feature {NONE} -- Constraint validity
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: ET_TYPE
+			a_constraint: detachable ET_TYPE
 			a_class: ET_CLASS
 		do
 			a_class := a_type.base_class
-			if a_class.is_generic then
-				a_formals := a_class.formal_parameters
-				check a_class_generic: a_formals /= Void end
-				an_actuals := a_type.actual_parameters
-				if an_actuals = Void or else an_actuals.count /= a_formals.count then
+			if a_class.is_generic and then attached a_class.formal_parameters as a_formals then
+				if not attached a_type.actual_parameters as an_actuals or else an_actuals.count /= a_formals.count then
 						-- Error already reported during first pass of
 						-- formal generic parameters validity checking.
 					set_fatal_error
@@ -166,11 +156,9 @@ feature {NONE} -- Constraint validity
 		require
 			a_type_not_void: a_type /= Void
 		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			i, nb: INTEGER
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
 					a_parameters.type (i).process (Current)

@@ -5,7 +5,7 @@ note
 		"Xace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,14 +95,6 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			create parsed_libraries.make_map (10)
 			parsed_libraries.set_key_equality_tester (string_equality_tester)
-				-- We must not create a new ET_XACE_LIBRARY_CONFIG_PARSER
-				-- object if `Current' is one already, or we will
-				-- recurse in this routine forever.
-			library_parser ?= Current
-			if library_parser = Void then
-				create library_parser.make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
-				library_parser.set_parsed_libraries (parsed_libraries)
-			end
 			create xml_preprocessor.make (a_variables, error_handler)
 			create xml_validator.make (an_error_handler)
 				-- Use an Expat parser if available,
@@ -118,9 +110,26 @@ feature {NONE} -- Initialization
 			create tree_pipe.make
 			xml_parser.set_callbacks (tree_pipe.start)
 			tree_pipe.tree.enable_position_table (xml_parser)
+			create_library_parser (a_variables, a_factory, an_error_handler)
 		ensure
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
+		end
+
+	create_library_parser (a_variables: KL_VALUES [STRING, STRING];
+		a_factory: like ast_factory; an_error_handler: like error_handler)
+			-- Create `library_parser', or set it to `Current' in descendant class
+			-- ET_XACE_LIBRARY_CONFIG_PARSER (otherwise we would recurse in
+			-- `make_with_variables_and_factory' forever).
+		require
+			a_variables_not_void: a_variables /= Void
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			create library_parser.make_with_variables_and_factory (a_variables, a_factory, an_error_handler)
+			library_parser.set_parsed_libraries (parsed_libraries)
+		ensure
+			library_parser_created: library_parser /= Void
 		end
 
 feature -- Parsing
@@ -136,7 +145,7 @@ feature -- Parsing
 			a_library: ET_XACE_LIBRARY_CONFIG
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
+			a_position_table: detachable XM_POSITION_TABLE
 		do
 			xml_parser.parse_from_stream (a_file)
 			if xml_parser.is_correct then

@@ -90,7 +90,7 @@ feature -- Setting
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_ACTUAL_PARAMETER_LIST
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_ACTUAL_PARAMETER_LIST
 			-- Version of current types, appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been

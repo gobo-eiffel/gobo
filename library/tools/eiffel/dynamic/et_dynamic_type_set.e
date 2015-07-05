@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,7 +83,7 @@ feature -- Access
 			static_type_not_void: Result /= Void
 		end
 
-	sources: ET_DYNAMIC_ATTACHMENT
+	sources: detachable ET_DYNAMIC_ATTACHMENT
 			-- Subsets of current set
 		do
 			-- The current kind of type set is not pulling
@@ -119,7 +119,7 @@ feature -- Element change
 		require
 			a_system_not_void: a_system /= Void
 		local
-			l_source: ET_DYNAMIC_ATTACHMENT
+			l_source: detachable ET_DYNAMIC_ATTACHMENT
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			from
@@ -138,7 +138,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: ET_DYNAMIC_TYPES
+	dynamic_types: detachable ET_DYNAMIC_TYPES
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 		deferred

@@ -5,7 +5,7 @@ note
 		"Eiffel 'elseif' parts"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,8 +40,8 @@ feature -- Initialization
 			-- Reset elseif part as it was when it was last parsed.
 		do
 			expression.reset
-			if then_compound /= Void then
-				then_compound.reset
+			if attached then_compound as l_then_compound then
+				l_then_compound.reset
 			end
 		end
 
@@ -58,7 +58,7 @@ feature -- Access
 			expression_not_void: Result /= Void
 		end
 
-	then_compound: ET_COMPOUND
+	then_compound: detachable ET_COMPOUND
 			-- Then part
 
 	position: ET_POSITION
@@ -77,18 +77,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if then_compound /= Void then
-				Result := then_compound.last_leaf
+			if attached then_compound as l_then_compound then
+				Result := l_then_compound.last_leaf
 			else
 				Result := conditional.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if then_compound /= Void then
-				Result := then_compound.break
 			end
 		end
 

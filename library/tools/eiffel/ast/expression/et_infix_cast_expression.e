@@ -5,7 +5,7 @@ note
 		"Eiffel expressions changing the target type of infix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,12 +60,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := expression.break
 		end
 
 feature -- Processing

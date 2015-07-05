@@ -5,7 +5,7 @@ note
 		"Eiffel keyword operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,9 @@ inherit
 
 	ET_OPERATOR
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
 			is_infix,
 			is_prefix,

@@ -30,6 +30,7 @@ feature -- Status report
 		do
 			-- Result := False
 		end
+
 feature -- Access
 
 	lower: ET_CHOICE_CONSTANT

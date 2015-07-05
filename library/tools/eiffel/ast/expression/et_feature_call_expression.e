@@ -23,8 +23,9 @@ inherit
 
 feature -- Access
 
-	parenthesis_call: detachable ET_CALL_EXPRESSION
+	parenthesis_call: detachable ET_QUALIFIED_CALL_EXPRESSION
 			-- <Precursor>
 		do
 		end
+
 end

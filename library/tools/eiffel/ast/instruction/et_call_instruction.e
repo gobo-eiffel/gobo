@@ -10,21 +10,38 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_CALL_INSTRUCTION
+deferred class ET_CALL_INSTRUCTION
 
 inherit
 
 	ET_REGULAR_FEATURE_CALL
-
-	ET_FEATURE_CALL_INSTRUCTION
-		undefine
-			parenthesis_call,
-			reset
+		redefine
+			name,
+			arguments,
+			parenthesis_call
 		end
 
-create
+	ET_FEATURE_CALL_INSTRUCTION
+		redefine
+			name,
+			arguments,
+			parenthesis_call
+		end
 
-	make
+feature -- Access
+
+	name: ET_FEATURE_NAME
+			-- Feature name
+		deferred
+		end
+
+	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
+			-- Arguments
+		deferred
+		end
+
+	parenthesis_call: detachable ET_QUALIFIED_CALL_INSTRUCTION
+			-- <Precursor>
 
 feature -- Setting
 
@@ -32,14 +49,6 @@ feature -- Setting
 			-- Set `parenthesis_call' with `a_target', `a_name' and `a_arguments'.
 		do
 			create parenthesis_call.make (a_target, a_name, a_arguments)
-		end
-		
-feature -- Processing
-
-	process (a_processor: ET_AST_PROCESSOR)
-			-- Process current node.
-		do
-			a_processor.process_call_instruction (Current)
 		end
 
 end

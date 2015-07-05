@@ -5,7 +5,7 @@ note
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,9 +103,6 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			sorted_ancestors: DS_ARRAYED_LIST [ET_CLASS]
-			a_parents: ET_PARENT_LIST
-			a_cycle: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
 		do
 			old_class := current_class
@@ -117,46 +114,45 @@ feature {NONE} -- Processing
 				else
 					add_class_to_sorter (current_class)
 					class_sorter.sort
-					sorted_ancestors := class_sorter.sorted_items
-					nb := sorted_ancestors.count
-					from i := 1 until i > nb loop
-						current_class := sorted_ancestors.item (i)
-						if not current_class.is_parsed or else current_class.has_syntax_error then
+					check postcondition_of_sort: attached class_sorter.sorted_items as l_sorted_ancestors then
+						nb := l_sorted_ancestors.count
+						from i := 1 until i > nb loop
+							current_class := l_sorted_ancestors.item (i)
+							if not current_class.is_parsed or else current_class.has_syntax_error then
+								set_fatal_error (current_class)
+							else
+								current_class.set_ancestors_built
+								error_handler.report_compilation_status (Current, current_class)
+								if attached current_class.parents as a_parents then
+									set_ancestors (a_parents)
+								end
+								if not current_class.is_dotnet then
+										-- No need to check validity of .NET classes.
+									check_formal_parameters_validity
+									check_parents_validity
+								end
+							end
+							i := i + 1
+						end
+						if attached class_sorter.cycle as a_cycle and then not a_cycle.is_empty then
+							check has_cycle: class_sorter.has_cycle end
+								-- There is a cycle in the inheritance graph.
+							class_sorter.wipe_out
+								-- Make sure that all classes involved in the
+								-- cycle and their descendants are marked
+								-- with `has_inheritance_error'.
+							current_class := a_class
 							set_fatal_error (current_class)
-						else
-							current_class.set_ancestors_built
+							if attached current_class.parents as a_parents then
+								set_parents_inheritance_error (a_parents)
+							end
+								-- Report the validity error VHPR-1.
+							current_class := a_cycle.first
 							error_handler.report_compilation_status (Current, current_class)
-							a_parents := current_class.parents
-							if a_parents /= Void then
-								set_ancestors (a_parents)
-							end
-							if not current_class.is_dotnet then
-									-- No need to check validity of .NET classes.
-								check_formal_parameters_validity
-								check_parents_validity
-							end
+							error_handler.report_vhpr1a_error (current_class, a_cycle)
+						else
+							class_sorter.wipe_out
 						end
-						i := i + 1
-					end
-					if class_sorter.has_cycle then
-							-- There is a cycle in the inheritance graph.
-						a_cycle := class_sorter.cycle
-						class_sorter.wipe_out
-							-- Make sure that all classes involved in the
-							-- cycle and their descendants are marked
-							-- with `has_inheritance_error'.
-						current_class := a_class
-						set_fatal_error (current_class)
-						a_parents := current_class.parents
-						if a_parents /= Void then
-							set_parents_inheritance_error (a_parents)
-						end
-							-- Report the validity error VHPR-1.
-						current_class := a_cycle.first
-						error_handler.report_compilation_status (Current, current_class)
-						error_handler.report_vhpr1a_error (current_class, a_cycle)
-					else
-						class_sorter.wipe_out
 					end
 				end
 			end
@@ -179,7 +175,6 @@ feature {NONE} -- Topological sort
 		local
 			l_any_class: ET_CLASS
 			l_system_object_class: ET_CLASS
-			l_parent_clause: ET_PARENT_LIST
 			old_class: ET_CLASS
 		do
 			if a_class.is_none then
@@ -193,12 +188,11 @@ feature {NONE} -- Topological sort
 				current_class := a_class
 				if not current_class.ancestors_built then
 					current_class.process (current_system.eiffel_parser)
-					l_parent_clause := current_class.parent_clause
 					if not current_class.is_parsed or else current_class.has_syntax_error then
 							-- This error has already been reported
 							-- somewhere else (during the parsing).
 						set_fatal_error (current_class)
-					elseif l_parent_clause = Void or else l_parent_clause.is_empty then
+					elseif not attached current_class.parent_clause as l_parent_clause or else l_parent_clause.is_empty then
 						if current_class.is_any_class then
 								-- "ANY" has no implicit parents.
 							current_class.set_ancestors_built
@@ -356,7 +350,7 @@ feature {NONE} -- Ancestors
 			a_parent_not_void: a_parent /= Void
 		local
 			a_class: ET_CLASS
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			a_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			a_parent_type: ET_BASE_TYPE
 			a_type, l_ancestor_type: ET_BASE_TYPE
 			i, nb: INTEGER
@@ -429,16 +423,14 @@ feature {NONE} -- Error handling
 		local
 			i, nb: INTEGER
 			a_class: ET_CLASS
-			grand_parents: ET_PARENT_LIST
 		do
 			nb := a_parents.count
 			from i := 1 until i > nb loop
 				a_class := a_parents.parent (i).type.base_class
 				if not a_class.ancestors_built then
 					set_fatal_error (a_class)
-					grand_parents := a_class.parents
-					if grand_parents /= Void then
-						set_parents_inheritance_error (grand_parents)
+					if attached a_class.parents as l_grand_parents then
+						set_parents_inheritance_error (l_grand_parents)
 					end
 				end
 				i := i + 1

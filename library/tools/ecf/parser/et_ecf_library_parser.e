@@ -5,7 +5,7 @@ note
 		"ECF Eiffel library parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_ECF_PARSER
 		redefine
 			make_with_factory,
+			create_library_parser,
 			parse_file
 		end
 
@@ -36,9 +37,17 @@ feature {NONE} -- Initialization
 			precursor (a_factory, an_error_handler)
 		end
 
+	create_library_parser (a_factory: like ast_factory; an_error_handler: like error_handler)
+			-- Create `library_parser', or set it to `Current' in descendant class
+			-- ET_ECF_LIBRARY_PARSER (otherwise we would recurse in
+			-- `make_with_factory' forever).
+		do
+			library_parser := Current
+		end
+
 feature -- Access
 
-	last_library: ET_ECF_LIBRARY
+	last_library: detachable ET_ECF_LIBRARY
 			-- Eiffel library being parsed
 
 feature -- Parsing
@@ -76,13 +85,10 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
+	build_system_config (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
-		local
-			l_library: ET_ECF_LIBRARY
 		do
-			l_library := new_library (an_element, a_position_table, a_filename, adapted_library)
-			last_library := l_library
+			last_library := new_library (an_element, a_position_table, a_filename, adapted_library)
 		end
 
 invariant

@@ -5,7 +5,7 @@ note
 		"Xace ISE .NET assemblies"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,7 @@ feature -- Access
 	assembly_name: STRING
 			-- Assembly name
 
-	assembly_pathname: STRING
+	assembly_pathname: detachable STRING
 			-- Assembly pathname
 			-- (overrides other information when specified)
 
@@ -66,7 +66,7 @@ feature -- Access
 	public_key_token: STRING
 			-- Public key token
 
-	class_prefix: STRING
+	class_prefix: detachable STRING
 			-- Class prefix
 
 feature -- Setting

@@ -5,7 +5,7 @@ note
 		"Xace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- AST factory
 
-	new_cluster (a_name, a_pathname: STRING; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER
+	new_cluster (a_name: STRING; a_pathname: detachable STRING; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void

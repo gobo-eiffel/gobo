@@ -5,7 +5,7 @@ note
 		"Eiffel variable attributes with extended syntax"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #5 $"
@@ -27,7 +27,6 @@ inherit
 			obsolete_message,
 			header_break,
 			last_leaf,
-			break,
 			new_synonym,
 			renamed_feature,
 			process
@@ -37,7 +36,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
-			arguments, type,
+			arguments,
 			implementation_feature
 		end
 
@@ -50,8 +49,8 @@ feature {NONE} -- Initialization
 	make (a_name: like extended_name; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new attribute.
 		do
-			precursor (a_name, a_type, a_class)
 			end_keyword := tokens.end_keyword
+			precursor (a_name, a_type, a_class)
 		end
 
 feature -- Initialization
@@ -60,14 +59,14 @@ feature -- Initialization
 			-- Reset current attribute as it was just after its interface was last checked.
 		do
 			if validity_checked then
-				if locals /= Void then
-					locals.reset
+				if attached locals as l_locals then
+					l_locals.reset
 				end
-				if compound /= Void then
-					compound.reset
+				if attached compound as l_compound then
+					l_compound.reset
 				end
-				if rescue_clause /= Void then
-					rescue_clause.reset
+				if attached rescue_clause as l_rescue_clause then
+					l_rescue_clause.reset
 				end
 			end
 			precursor
@@ -75,21 +74,17 @@ feature -- Initialization
 
 feature -- Access
 
-	obsolete_message: ET_OBSOLETE
+	obsolete_message: detachable ET_OBSOLETE
 			-- Obsolete message
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
-		local
-			l_break: ET_BREAK
 		do
-			l_break := declared_type.break
-			if l_break /= Void and then l_break.has_comment then
+			if attached declared_type.break as l_break and then l_break.has_comment then
 				Result := l_break
 			end
-			if Result = Void and assigner /= Void then
-				l_break := assigner.break
-				if l_break /= Void and then l_break.has_comment then
+			if Result = Void and attached assigner as l_assigner then
+				if attached l_assigner.break as l_break and then l_break.has_comment then
 					Result := l_break
 				end
 			end
@@ -101,20 +96,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if semicolon /= Void then
-				Result := semicolon
+			if attached semicolon as l_semicolon then
+				Result := l_semicolon
 			else
 				Result := end_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if semicolon /= Void then
-				Result := semicolon.break
-			else
-				Result := end_keyword.break
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel console-mode signature viewers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,7 +68,6 @@ feature -- Execution
 			a_name: STRING
 			stop: BOOLEAN
 			a_class: ET_CLASS
-			a_base_type: ET_BASE_TYPE
 		do
 			from until stop loop
 				output_file.put_string ("Enter class name: ")
@@ -77,13 +76,10 @@ feature -- Execution
 					create a_name.make_from_string (input_file.last_string)
 					if a_name.is_empty then
 						stop := True
-					else
-						a_base_type := base_type (a_name)
-						if a_base_type /= Void then
-							current_context := a_base_type
-							a_class := a_base_type.base_class
-							process_class (a_class)
-						end
+					elseif attached base_type (a_name) as a_base_type then
+						current_context := a_base_type
+						a_class := a_base_type.base_class
+						process_class (a_class)
 					end
 				else
 					stop := True
@@ -100,9 +96,7 @@ feature {ET_AST_NODE} -- Processing
 			a_name: STRING
 			an_identifier: ET_IDENTIFIER
 			l_queries: ET_QUERY_LIST
-			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
-			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
 			stop: BOOLEAN
 		do
@@ -131,23 +125,19 @@ feature {ET_AST_NODE} -- Processing
 						stop := True
 					else
 						create an_identifier.make (a_name)
-						l_query := a_class.named_query (an_identifier)
-						if l_query /= Void then
+						if attached a_class.named_query (an_identifier) as l_query then
 							process_query (l_query)
 							output_file.put_new_line
+						elseif attached a_class.named_procedure (an_identifier) as l_procedure then
+							process_procedure (l_procedure)
+							output_file.put_new_line
 						else
-							l_procedure := a_class.named_procedure (an_identifier)
-							if l_procedure /= Void then
-								process_procedure (l_procedure)
-								output_file.put_new_line
-							else
-								output_file.put_string ("No feature `")
-								output_file.put_string (a_name)
-								output_file.put_string ("' in class ")
-								output_file.put_string (a_class.upper_name)
-								output_file.put_character ('.')
-								output_file.put_new_line
-							end
+							output_file.put_string ("No feature `")
+							output_file.put_string (a_name)
+							output_file.put_string ("' in class ")
+							output_file.put_string (a_class.upper_name)
+							output_file.put_character ('.')
+							output_file.put_new_line
 						end
 					end
 				else
@@ -161,13 +151,11 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_query_not_void: a_query /= Void
 		local
-			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 		do
 			output_file.put_string (a_query.name.name)
-			args := a_query.arguments
-			if args /= Void then
+			if attached a_query.arguments as args then
 				output_file.put_string (" (")
 				nb := args.count
 				from i := 1 until i > nb loop
@@ -191,13 +179,11 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_procedure_not_void: a_procedure /= Void
 		local
-			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 		do
 			output_file.put_string (a_procedure.name.name)
-			args := a_procedure.arguments
-			if args /= Void then
+			if attached a_procedure.arguments as args then
 				output_file.put_string (" (")
 				nb := args.count
 				from i := 1 until i > nb loop
@@ -216,7 +202,7 @@ feature {ET_AST_NODE} -- Processing
 
 feature {NONE} -- Implementation
 
-	base_type (a_name: STRING): ET_BASE_TYPE
+	base_type (a_name: STRING): detachable ET_BASE_TYPE
 			-- Build a class type or tuple type from `a_name',
 			-- or report error to `output_file'.
 		require
@@ -302,7 +288,7 @@ feature {NONE} -- Implementation
 			valid_position: Result > a_position
 		end
 
-	last_class: ET_CLASS
+	last_class: detachable ET_CLASS
 			-- Last class parsed by `parse_class';
 			-- Void if an error was found when parsing
 
@@ -314,14 +300,12 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			stop: BOOLEAN
-			a_class: ET_CLASS
 			an_actuals, tmp_actuals: ET_ACTUAL_PARAMETER_LIST
 			close_brackets_parsed: BOOLEAN
 		do
 			last_base_type := Void
 			Result := parse_class (str, a_position)
-			a_class := last_class
-			if a_class /= Void then
+			if attached last_class as a_class then
 				if a_class.is_preparsed and then a_class.is_tuple_class then
 						-- Tuples have a variable number of arguments.
 					i := parse_open_bracket (str, Result)
@@ -335,8 +319,8 @@ feature {NONE} -- Implementation
 							close_brackets_parsed or stop
 						loop
 							Result := parse_base_type (str, Result)
-							if last_base_type /= Void then
-								tmp_actuals.force_first (last_base_type)
+							if attached last_base_type as l_last_base_type then
+								tmp_actuals.force_first (l_last_base_type)
 								i := parse_comma (str, Result)
 								if i > str.count + 1 then
 									Result := parse_close_bracket (str, Result)
@@ -370,7 +354,7 @@ feature {NONE} -- Implementation
 					if Result > str.count + 1 then
 						stop := True
 					end
-					nb := a_class.formal_parameters.count
+					nb := a_class.formal_parameter_count
 					create tmp_actuals.make_with_capacity (nb)
 					from
 						i := 1
@@ -378,8 +362,8 @@ feature {NONE} -- Implementation
 						i > nb or stop
 					loop
 						Result := parse_base_type (str, Result)
-						if last_base_type /= Void then
-							tmp_actuals.put_first (last_base_type)
+						if attached last_base_type as l_last_base_type then
+							tmp_actuals.put_first (l_last_base_type)
 							if i /= nb then
 								Result := parse_comma (str, Result)
 								if Result > str.count + 1 then
@@ -410,10 +394,10 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_position: Result > a_position
-			valid_context: last_base_type /= Void implies last_base_type.is_valid_context
+			valid_context: attached last_base_type as l_last_base_type implies l_last_base_type.is_valid_context
 		end
 
-	last_base_type: ET_BASE_TYPE
+	last_base_type: detachable ET_BASE_TYPE
 			-- Last class type or tuple type parsed by `parse_base_type';
 			-- Void if an error was found when parsing
 

@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,22 +38,19 @@ feature {NONE} -- Initialization
 			a_system_not_void: a_system /= Void
 		local
 			l_dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_type: ET_TYPE
+			l_type: detachable ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
-			l_external_routine: ET_EXTERNAL_ROUTINE
 			l_name: ET_FEATURE_NAME
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
 			target_type := a_target_type
 			dynamic_type_sets := empty_dynamic_type_sets
-			l_external_routine ?= a_feature
-			if l_external_routine /= Void then
+			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
 				builtin_code := l_external_routine.builtin_code
 			elseif a_target_type.base_class.is_procedure_class then
 				if a_feature.name.same_feature_name (tokens.call_feature_name) then
@@ -95,26 +92,27 @@ feature {NONE} -- Initialization
 						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				elseif builtin_code = builtin_internal_feature (builtin_internal_type_of_type) then
-					if a_system.type_of_type_feature /= Void then
-						result_type_set := a_system.type_of_type_feature.result_type_set
+					if attached a_system.type_of_type_feature as l_type_of_type_feature then
+						result_type_set := l_type_of_type_feature.result_type_set
 					else
 						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-						result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+						l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 							-- Unless proven otherwise after possible attachments,
 							-- the result is assumed to be never Void.
-						result_type_set.set_never_void
+						l_dynamic_type_set.set_never_void
+						result_type_set := l_dynamic_type_set
 						a_system.set_type_of_type_feature (Current)
 					end
 				else
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+					l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 						-- Unless proven otherwise after possible attachments,
 						-- the result is assumed to be never Void.
-					result_type_set.set_never_void
+					l_dynamic_type_set.set_never_void
+					result_type_set := l_dynamic_type_set
 				end
 			end
-			args := a_feature.arguments
-			if args /= Void then
+			if attached a_feature.arguments as args then
 				nb := args.count
 				if nb > 0 then
 					create l_dynamic_type_sets.make_with_capacity (nb)
@@ -144,13 +142,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	result_type_set: ET_DYNAMIC_TYPE_SET
+	result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			-- Type set of result, if any
 
 	target_type: ET_DYNAMIC_TYPE
 			-- Type of target
 
-	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET
+	argument_type_set (i: INTEGER): detachable ET_DYNAMIC_TYPE_SET
 			-- Type set of `i'-th argument;
 			-- Void if unknown yet
 		do
@@ -163,7 +161,7 @@ feature -- Access
 			-- Dynamic type sets of expressions within current feature;
 			-- Dynamic type sets for arguments are stored first
 
-	dynamic_type_set (an_operand: ET_OPERAND): ET_DYNAMIC_TYPE_SET
+	dynamic_type_set (an_operand: ET_OPERAND): detachable ET_DYNAMIC_TYPE_SET
 			-- Dynamic type set associated with `an_operand';
 			-- Void if unknown yet
 		require
@@ -177,11 +175,11 @@ feature -- Access
 			end
 		end
 
-	first_precursor: ET_DYNAMIC_PRECURSOR
+	first_precursor: detachable ET_DYNAMIC_PRECURSOR
 			-- First precursor called from current feature;
 			-- May be void if no precursor called
 
-	other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+	other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			-- Other precursors called from current feature;
 			-- May be void if zero or one precursor called
 
@@ -194,38 +192,44 @@ feature -- Access
 			a_system_not_void: a_system /= Void
 		local
 			l_precursor: ET_DYNAMIC_PRECURSOR
+			l_result: detachable ET_DYNAMIC_PRECURSOR
+			l_other_precursors: like other_precursors
 			i, nb: INTEGER
 		do
-			if first_precursor = Void then
+			if not attached first_precursor as l_first_precursor then
 				create Result.make (a_feature, a_parent_type, Current, a_system)
 				Result.set_regular (is_regular or is_creation)
 				Result.set_static (is_static)
 				first_precursor := Result
-			elseif first_precursor.parent_type = a_parent_type and first_precursor.static_feature = a_feature then
-				Result := first_precursor
+			elseif l_first_precursor.parent_type = a_parent_type and l_first_precursor.static_feature = a_feature then
+				Result := l_first_precursor
 			else
-				if other_precursors = Void then
-					create other_precursors.make_with_capacity (1)
+				l_other_precursors := other_precursors
+				if l_other_precursors = Void then
 					create Result.make (a_feature, a_parent_type, Current, a_system)
 					Result.set_regular (is_regular or is_creation)
 					Result.set_static (is_static)
-					other_precursors.put_last (Result)
+					create l_other_precursors.make_with_capacity (1)
+					l_other_precursors.put_last (Result)
+					other_precursors := l_other_precursors
 				else
-					nb := other_precursors.count
+					nb := l_other_precursors.count
 					from i := 1 until i > nb loop
-						l_precursor := other_precursors.item (i)
+						l_precursor := l_other_precursors.item (i)
 						if l_precursor.parent_type = a_parent_type and l_precursor.static_feature = a_feature then
-							Result := l_precursor
+							l_result := l_precursor
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
 					end
-					if Result = Void then
+					if l_result /= Void then
+						Result := l_result
+					else
 						create Result.make (a_feature, a_parent_type, Current, a_system)
 						Result.set_regular (is_regular or is_creation)
 						Result.set_static (is_static)
-						other_precursors.force_last (Result)
+						l_other_precursors.force_last (Result)
 					end
 				end
 			end
@@ -444,13 +448,13 @@ feature -- Status setting
 			i, nb: INTEGER
 		do
 			is_creation := b
-			if first_precursor /= Void then
+			if attached first_precursor as l_first_precursor then
 				l_regular := b or is_regular
-				first_precursor.set_regular (l_regular)
-				if other_precursors /= Void then
-					nb := other_precursors.count
+				l_first_precursor.set_regular (l_regular)
+				if attached other_precursors as l_other_precursors then
+					nb := l_other_precursors.count
 					from i := 1 until i > nb loop
-						other_precursors.item (i).set_regular (l_regular)
+						l_other_precursors.item (i).set_regular (l_regular)
 						i := i + 1
 					end
 				end
@@ -466,13 +470,13 @@ feature -- Status setting
 			i, nb: INTEGER
 		do
 			is_regular := b
-			if first_precursor /= Void then
+			if attached first_precursor as l_first_precursor then
 				l_regular := b or is_creation
-				first_precursor.set_regular (l_regular)
-				if other_precursors /= Void then
-					nb := other_precursors.count
+				l_first_precursor.set_regular (l_regular)
+				if attached other_precursors as l_other_precursors then
+					nb := l_other_precursors.count
 					from i := 1 until i > nb loop
-						other_precursors.item (i).set_regular (l_regular)
+						l_other_precursors.item (i).set_regular (l_regular)
 						i := i + 1
 					end
 				end
@@ -487,12 +491,12 @@ feature -- Status setting
 			i, nb: INTEGER
 		do
 			is_static := b
-			if first_precursor /= Void then
-				first_precursor.set_static (b)
-				if other_precursors /= Void then
-					nb := other_precursors.count
+			if attached first_precursor as l_first_precursor then
+				l_first_precursor.set_static (b)
+				if attached other_precursors as l_other_precursors then
+					nb := l_other_precursors.count
 					from i := 1 until i > nb loop
-						other_precursors.item (i).set_static (b)
+						l_other_precursors.item (i).set_static (b)
 						i := i + 1
 					end
 				end

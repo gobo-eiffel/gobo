@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers followed by a colon"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,12 +60,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := colon
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := colon.break
 		end
 
 feature -- Processing

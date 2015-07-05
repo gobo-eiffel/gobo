@@ -5,7 +5,7 @@ note
 		"Xace library parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,13 +16,25 @@ inherit
 
 	ET_XACE_PARSER
 		redefine
-			parse_file
+			parse_file,
+			create_library_parser
 		end
 
 create
 
 	make, make_with_factory, make_with_variables,
 	make_with_variables_and_factory, make_standard
+
+feature {NONE} -- Initialization
+
+	create_library_parser (a_variables: KL_VALUES [STRING, STRING];
+		a_factory: like ast_factory; an_error_handler: like error_handler)
+			-- Create `library_parser', or set it to `Current' in descendant class
+			-- ET_XACE_LIBRARY_CONFIG_PARSER (otherwise we would recurse in
+			-- `make_with_variables_and_factory' forever).
+		do
+			library_parser := Current
+		end
 
 feature -- Parsing
 
@@ -31,7 +43,7 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
+			a_position_table: detachable XM_POSITION_TABLE
 		do
 			last_library := Void
 			xml_parser.parse_from_stream (a_file)
@@ -64,7 +76,7 @@ feature -- Parsing
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
-			a_position_table: XM_POSITION_TABLE
+			a_position_table: detachable XM_POSITION_TABLE
 		do
 			last_library := Void
 			xml_parser.parse_from_stream (a_file)
@@ -88,7 +100,7 @@ feature -- Parsing
 
 feature -- Access
 
-	last_library: ET_XACE_LIBRARY_CONFIG
+	last_library: detachable ET_XACE_LIBRARY_CONFIG
 			-- Library being parsed
 
 end

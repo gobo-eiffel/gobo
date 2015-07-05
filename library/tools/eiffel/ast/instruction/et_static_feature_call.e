@@ -23,9 +23,6 @@ inherit
 			reset, position, first_leaf
 		end
 
-	KL_IMPORTED_ANY_ROUTINES
-		export {NONE} all end
-
 feature {NONE} -- Initialization
 
 	make (a_type: like static_type; a_name: like qualified_name; args: like arguments)
@@ -48,29 +45,13 @@ feature -- Initialization
 			-- Reset call as it was when it was last parsed.
 		do
 			Precursor
-			if type /= Void then
-				type.reset
-			end
+			type.reset
 			parenthesis_call := Void
-		end
-
-feature -- Status report
-
-	is_expression: BOOLEAN
-			-- Is current call an expression?
-		do
-			-- Result := False
-		end
-
-	is_instruction: BOOLEAN
-			-- Is current call an instruction?
-		do
-			-- Result := False
 		end
 
 feature -- Access
 
-	feature_keyword: ET_KEYWORD
+	feature_keyword: detachable ET_KEYWORD
 			-- 'feature' keyword
 
 	static_type: ET_TARGET_TYPE
@@ -84,7 +65,7 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	parenthesis_call: detachable ET_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
 			-- Unfolded form when the current static call is of the parenthesis alias form;
 			-- For example, if the current static call is '{T}.f (args)', its parenthesis call
 			-- will be '{T].f.g (args)' where 'g' is declared as 'g alias "()"'.
@@ -93,8 +74,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if feature_keyword /= Void and then not feature_keyword.position.is_null then
-				Result := feature_keyword.position
+			if attached feature_keyword as l_feature_keyword and then not l_feature_keyword.position.is_null then
+				Result := l_feature_keyword.position
 			else
 				Result := static_type.position
 			end
@@ -103,8 +84,8 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if feature_keyword /= Void then
-				Result := feature_keyword
+			if attached feature_keyword as l_feature_keyword then
+				Result := l_feature_keyword
 			else
 				Result := static_type.first_leaf
 			end
@@ -133,26 +114,6 @@ feature -- Setting
 			target_set: l_parenthesis_call.target = a_target
 			name_set: l_parenthesis_call.name = a_name
 			arguments_set: l_parenthesis_call.arguments = a_arguments
-		end
-
-feature -- Conversion
-
-	as_expression: ET_STATIC_CALL_EXPRESSION
-			-- `Current' viewed as an expression
-		require
-			is_expression: is_expression
-		deferred
-		ensure
-			definition: ANY_.same_objects (Result, Current)
-		end
-
-	as_instruction: ET_STATIC_CALL_INSTRUCTION
-			-- `Current' viewed as an instruction
-		require
-			is_instruction: is_instruction
-		deferred
-		ensure
-			definition: ANY_.same_objects (Result, Current)
 		end
 
 invariant

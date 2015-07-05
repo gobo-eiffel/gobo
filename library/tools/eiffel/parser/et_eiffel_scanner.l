@@ -6,7 +6,7 @@ note
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,7 +124,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := 4
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_keyword_value := ast_factory.new_once_keyword (Current)
+				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 [oO][nN][cC][eE][ \t\r\n]+/["{]	{
 				last_token := E_ONCE_STRING
@@ -133,7 +133,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_text_count := 4
 				last_break_end := text_count
 				last_comment_end := 0
-				last_et_keyword_value := ast_factory.new_once_keyword (Current)
+				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 [oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/["{]	{
 				last_token := E_ONCE_STRING
@@ -142,7 +142,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_text_count := 4
 				last_break_end := 0
 				last_comment_end := text_count
-				last_et_keyword_value := ast_factory.new_once_keyword (Current)
+				last_detachable_et_keyword_value := ast_factory.new_once_keyword (Current)
 			}
 
 
@@ -178,7 +178,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_free_operator_value := ast_factory.new_free_operator (Current)
+				last_detachable_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
 --[@#|&][^%" \t\r\n]*/[ \t\r\n]	{
 -- Hack to make it work with SmartEiffel 1.1.
@@ -239,7 +239,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count - 2
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
+				last_detachable_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
 			}
 \'%\/{CHAR_CODE}\/\'/[ \t\r\n]	{
 				last_text_count := text_count
@@ -256,7 +256,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column + text_count
 				set_syntax_error
 				error_handler.report_SCAO_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
 			}
@@ -266,7 +266,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column + text_count
 				set_syntax_error
 				error_handler.report_SCAS_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
 			}
@@ -276,7 +276,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column + 3
 				set_syntax_error
 				error_handler.report_SCAC_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := column - 3
 				last_token := E_CHARERR
 			}
@@ -285,7 +285,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column + 1
 				set_syntax_error
 				error_handler.report_SCQQ_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := column - 1
 				last_token := E_CHARERR
 			}
@@ -295,7 +295,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				column := column + text_count
 				set_syntax_error
 				error_handler.report_SCEQ_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := column - text_count
 				last_token := E_CHARERR
 			}
@@ -309,7 +309,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
+				last_detachable_et_manifest_string_value := ast_factory.new_regular_manifest_string (Current)
 			}
 \"[@#|&][^%" \t\r\n]*\"/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -351,14 +351,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	.		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -371,10 +371,10 @@ UTF8_BOM (\xEF\xBB\xBF)
 					last_token := E_STRING
 					last_break_end := 0
 					last_comment_end := 0
-					last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
+					last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
 						text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2), False, Current)
-					verbatim_marker := Void
-					verbatim_open_white_characters := Void
+					verbatim_marker := no_verbatim_marker
+					verbatim_open_white_characters := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
 					more
@@ -408,14 +408,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	[^"\n]* {
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -436,14 +436,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	.*		{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final brace-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -466,14 +466,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	.		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -486,10 +486,10 @@ UTF8_BOM (\xEF\xBB\xBF)
 					last_token := E_STRING
 					last_break_end := 0
 					last_comment_end := 0
-					last_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
+					last_detachable_et_manifest_string_value := ast_factory.new_verbatim_string (verbatim_marker, verbatim_open_white_characters,
 						text_substring (last_literal_end + 1, text_count - verbatim_marker.count - 2), True, Current)
-					verbatim_marker := Void
-					verbatim_open_white_characters := Void
+					verbatim_marker := no_verbatim_marker
+					verbatim_open_white_characters := no_verbatim_marker
 					set_start_condition (INITIAL)
 				else
 					more
@@ -523,14 +523,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	[^"\n]* {
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -551,14 +551,14 @@ UTF8_BOM (\xEF\xBB\xBF)
 	.*		{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
 	<<EOF>>	{
 					-- No final bracket-double-quote.
 				last_token := E_STRERR
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				report_syntax_error (current_position)
 				set_start_condition (INITIAL)
 			}
@@ -571,7 +571,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
+				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
 \"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
 					-- Manifest string with special characters.
@@ -608,7 +608,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSAO_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -621,7 +621,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSAS_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -634,7 +634,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSAC_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -661,7 +661,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count - 1
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
+				last_detachable_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 				set_start_condition (INITIAL)
 			}
 	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
@@ -690,7 +690,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSSC_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -702,7 +702,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSNL_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -715,7 +715,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSEQ_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -746,7 +746,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSNP_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -759,7 +759,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				line := yy_line
 				set_syntax_error
 				error_handler.report_SSNP_error (filename, current_position)
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 				column := ms_column
 				line := ms_line
 				last_token := E_STRERR
@@ -776,7 +776,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_bit_constant_value := ast_factory.new_bit_constant (Current)
+				last_detachable_et_bit_constant_value := ast_factory.new_bit_constant (Current)
 			}
 [0-1]+[bB]/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -796,7 +796,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_regular_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_regular_integer_constant (Current)
 			}
 [0-9]+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -812,7 +812,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 [0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -832,7 +832,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 (_+[0-9]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -856,7 +856,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
 ([0-9]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -876,7 +876,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
 0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -896,7 +896,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
 0[xX](_+[0-9a-fA-F]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -920,7 +920,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
 0[xX]([0-9a-fA-F]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -940,7 +940,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
 0[cC][0-7]+(_+[0-7]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -960,7 +960,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
 0[cC](_+[0-7]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -984,7 +984,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
 0[cC]([0-7]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -1004,7 +1004,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
 0[bB][0-1]+(_+[0-1]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
@@ -1024,7 +1024,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
 0[bB](_+[0-1]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -1048,7 +1048,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
+				last_detachable_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
 0[bB]([0-1]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
@@ -1087,7 +1087,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
+				last_detachable_et_real_constant_value := ast_factory.new_regular_real_constant (Current)
 			}
 [0-9]+(_+[0-9]+)+\./([ \t\r\n]|"--")	|
 [0-9]+(_+[0-9]+)*\.([0-9]+(_+[0-9]+)*)?[eE][+-]?[0-9]+(_+[0-9]+)*/([ \t\r\n]|"--")	|
@@ -1110,7 +1110,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_literal_end := text_count
 				last_break_end := 0
 				last_comment_end := 0
-				last_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
+				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
 			}
 
 
@@ -1122,7 +1122,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_text_count := 0
 				last_break_end := text_count
 				last_comment_end := 0
-				last_et_break_value := ast_factory.new_break (Current)
+				last_detachable_et_break_value := ast_factory.new_break (Current)
 				last_token := E_BREAK
 			}
 
@@ -1132,7 +1132,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 				last_text_count := 0
 				last_break_end := 0
 				last_comment_end := text_count
-				last_et_break_value := ast_factory.new_comment (Current)
+				last_detachable_et_break_value := ast_factory.new_comment (Current)
 				last_token := E_BREAK
 			}
 
@@ -1172,7 +1172,7 @@ UTF8_BOM (\xEF\xBB\xBF)
 <<EOF>>			terminate
 .			{
 				last_token := E_UNKNOWN
-				last_et_position_value := current_position
+				last_detachable_et_position_value := current_position
 			}
 
 --------------------------------------------------------------------------------
@@ -1239,14 +1239,14 @@ feature -- Scanning
 						-- character of the current token.
 					yy_bp := yy_cp
 						-- Find the start state.
-					-- START INLINING 'yy_at_beginning_of_line'
-					-- yy_current_state := yy_start_state + yy_at_beginning_of_line
+--	START INLINING 'yy_at_beginning_of_line'
+--					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if input_buffer.beginning_of_line then
 						yy_current_state := yy_start_state + 1
 					else
 						yy_current_state := yy_start_state
 					end
-					-- END INLINING 'yy_at_beginning_of_line'
+--	END INLINING 'yy_at_beginning_of_line'
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
 						SPECIAL_INTEGER_.force (yy_state_stack, yy_current_state, 0)
@@ -1254,18 +1254,18 @@ feature -- Scanning
 					end
 					yy_goto := yyMatch
 				when yyMatch then
-					l_content_area := yy_content_area
 						-- Find the next match.
+					l_content_area := yy_content_area
 					from
 						yy_done := False
 					until
 						yy_done
 					loop
-						if yy_ec /= Void then
+						if attached yy_ec as l_yy_ec then
 							if l_content_area /= Void then
-								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+								yy_c := l_yy_ec.item (l_content_area.item (yy_cp).code)
 							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+								yy_c := l_yy_ec.item (yy_content.item (yy_cp).code)
 							end
 						else
 							if l_content_area /= Void then
@@ -1274,10 +1274,7 @@ feature -- Scanning
 								yy_c := yy_content.item (yy_cp).code
 							end
 						end
-						if
-							not yyReject_or_variable_trail_context and then
-							yy_accept.item (yy_current_state) /= 0
-						then
+						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
 								-- the next state because we always compute one
 								-- more state than needed - we always proceed
@@ -1285,14 +1282,12 @@ feature -- Scanning
 							yy_last_accepting_state := yy_current_state
 							yy_last_accepting_cpos := yy_cp
 						end
-						from until
+						from
+						until
 							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
-							if
-								yy_meta /= Void and then
-								yy_current_state >= yyTemplate_mark
-							then
+							if attached yy_meta as l_yy_meta and then yy_current_state >= yyTemplate_mark then
 									-- We've arranged it so that templates are
 									-- never chained to one another. This means
 									-- we can afford to make a very simple test
@@ -1300,7 +1295,7 @@ feature -- Scanning
 									-- meta-equivalence class without worrying
 									-- about erroneously looking up the meta
 									-- equivalence class twice.
-								yy_c := yy_meta.item (yy_c)
+								yy_c := l_yy_meta.item (yy_c)
 							end
 						end
 						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
@@ -1331,56 +1326,58 @@ feature -- Scanning
 					end
 				when yyFind_rule then
 						-- We branch here when backing up.
-					check reject_used: yyReject_or_variable_trail_context end
-					from yy_found := False until yy_found loop
-						if
-							yy_lp /= 0 and
-							yy_lp < yy_accept.item (yy_current_state + 1)
-						then
-							yy_act := yy_acclist.item (yy_lp)
-							if yyVariable_trail_context then
-								if
-									yy_act < - yyNb_rules or
-									yy_looking_for_trail_begin /= 0
-								then
-									if yy_act = yy_looking_for_trail_begin then
-										yy_looking_for_trail_begin := 0
-										yy_act := - yy_act - yyNb_rules
-										yy_found := True
-									else
+					check
+						reject_used: yyReject_or_variable_trail_context
+						yy_acclist_not_void: attached yy_acclist as l_yy_acclist
+					then
+						from
+							yy_found := False
+						until
+							yy_found
+						loop
+							if yy_lp /= 0 and yy_lp < yy_accept.item (yy_current_state + 1) then
+								yy_act := l_yy_acclist.item (yy_lp)
+								if yyVariable_trail_context then
+									if yy_act < -yyNb_rules or yy_looking_for_trail_begin /= 0 then
+										if yy_act = yy_looking_for_trail_begin then
+											yy_looking_for_trail_begin := 0
+											yy_act := -yy_act - yyNb_rules
+											yy_found := True
+										else
+											yy_lp := yy_lp + 1
+										end
+									elseif yy_act < 0 then
+										yy_looking_for_trail_begin := yy_act - yyNb_rules
+										if yyReject_used then
+												-- Remember matched text in case
+												-- we back up due to `reject'.
+											yy_full_match := yy_cp
+											yy_full_state := yy_state_count
+											yy_full_lp := yy_lp
+										end
 										yy_lp := yy_lp + 1
-									end
-								elseif yy_act < 0 then
-									yy_looking_for_trail_begin := yy_act - yyNb_rules
-									if yyReject_used then
-											-- Remember matched text in case
-											-- we back up due to `reject'.
+									else
 										yy_full_match := yy_cp
 										yy_full_state := yy_state_count
 										yy_full_lp := yy_lp
+										yy_found := True
 									end
-									yy_lp := yy_lp + 1
 								else
 									yy_full_match := yy_cp
-									yy_full_state := yy_state_count
-									yy_full_lp := yy_lp
 									yy_found := True
 								end
 							else
-								yy_full_match := yy_cp
-								yy_found := True
+								yy_cp := yy_cp - 1
+								yy_state_count := yy_state_count - 1
+								yy_current_state := yy_state_stack.item (yy_state_count)
+								yy_lp := yy_accept.item (yy_current_state)
 							end
-						else
-							yy_cp := yy_cp - 1
-							yy_state_count := yy_state_count - 1
-							yy_current_state := yy_state_stack.item (yy_state_count)
-							yy_lp := yy_accept.item (yy_current_state)
 						end
+						yy_rejected_line := yy_line
+						yy_rejected_column := yy_column
+						yy_rejected_position := yy_position
+						yy_goto := yyDo_action
 					end
-					yy_rejected_line := yy_line
-					yy_rejected_column := yy_column
-					yy_rejected_position := yy_position
-					yy_goto := yyDo_action
 				when yyDo_action then
 						-- Set up `text' before action.
 					yy_bp := yy_bp - yy_more_len
@@ -1410,9 +1407,9 @@ feature -- Scanning
 						yy_matched_count := yy_cp - yy_bp - 1
 							-- Note that here we test for `yy_end' "<="
 							-- to the position of the first EOB in the buffer,
-							-- since `yy_end' will already have been 
+							-- since `yy_end' will already have been
 							-- incremented past the NULL character (since all
-							-- states make transitions on EOB to the 
+							-- states make transitions on EOB to the
 							-- end-of-buffer state). Contrast this with the
 							-- test in `read_character'.
 						if yy_end <= input_buffer.count + 1 then
@@ -1462,9 +1459,7 @@ feature -- Scanning
 								yy_cp := yy_end
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyMatch
-							elseif
-								yy_end - yy_start - yy_more_len /= 0
-							then
+							elseif yy_end - yy_start - yy_more_len /= 0 then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
 								yy_current_state := yy_previous_state
@@ -1472,7 +1467,7 @@ feature -- Scanning
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyFind_action
 							else
-									-- Only the EOB character has been matched, 
+									-- Only the EOB character has been matched,
 									-- so treat this as a final EOF.
 								if wrap then
 									yy_bp := yy_start

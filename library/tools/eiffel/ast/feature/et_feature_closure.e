@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to routines and extended attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,10 +22,10 @@ inherit
 
 feature -- Access
 
-	preconditions: ET_PRECONDITIONS
+	preconditions: detachable ET_PRECONDITIONS
 			-- Preconditions
 
-	postconditions: ET_POSTCONDITIONS
+	postconditions: detachable ET_POSTCONDITIONS
 			-- Postconditions
 
 	end_keyword: ET_KEYWORD

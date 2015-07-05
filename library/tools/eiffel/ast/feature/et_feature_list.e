@@ -5,7 +5,7 @@ note
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/08/02 $"
 	revision: "$Revision: #15 $"
@@ -66,7 +66,7 @@ feature -- Initialization
 
 feature -- Access
 
-	named_feature (a_name: ET_CALL_NAME): like item
+	named_feature (a_name: ET_CALL_NAME): detachable like item
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
@@ -74,9 +74,7 @@ feature -- Access
 		local
 			i: INTEGER
 			a_feature: like item
-			an_id: ET_IDENTIFIER
 			a_hash_code: INTEGER
-			an_alias_name: ET_ALIAS_NAME
 		do
 				-- Benchmarks showed that it is more efficient to traverse the
 				-- declared features first and then the inherited features.
@@ -86,13 +84,12 @@ feature -- Access
 				--
 				-- This assignment attempt is to avoid too many polymorphic
 				-- calls to `same_feature_name'.
-			an_id ?= a_name
-			if an_id /= Void then
-				a_hash_code := an_id.hash_code
+			if attached {ET_IDENTIFIER} a_name as l_id then
+				a_hash_code := l_id.hash_code
 				from i := count - 1 until i < 0 loop
 					a_feature := storage.item (i)
 					if a_hash_code = a_feature.hash_code then
-						if an_id.same_feature_name (a_feature.name) then
+						if l_id.same_feature_name (a_feature.name) then
 							Result := a_feature
 							i := -1 -- Jump out of the loop
 						else
@@ -105,8 +102,7 @@ feature -- Access
 			else
 				from i := count - 1 until i < 0 loop
 					a_feature := storage.item (i)
-					an_alias_name := a_feature.alias_name
-					if an_alias_name /= Void and then an_alias_name.same_call_name (a_name) then
+					if attached a_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
 						Result := a_feature
 						i := -1 -- Jump out of the loop
 					else
@@ -116,7 +112,7 @@ feature -- Access
 			end
 		end
 
-	named_declared_feature (a_name: ET_CALL_NAME): like item
+	named_declared_feature (a_name: ET_CALL_NAME): detachable like item
 			-- Feature named `a_name' declared in the underlying class;
 			-- Void if no such feature
 		require
@@ -124,21 +120,18 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			a_feature: like item
-			an_id: ET_IDENTIFIER
 			a_hash_code: INTEGER
-			an_alias_name: ET_ALIAS_NAME
 		do
 				-- This assignment attempt is to avoid too many polymorphic
 				-- calls to `same_feature_name'.
-			an_id ?= a_name
-			if an_id /= Void then
-				a_hash_code := an_id.hash_code
+			if attached {ET_IDENTIFIER} a_name as l_id then
+				a_hash_code := l_id.hash_code
 				nb := count - 1
 				i := count - declared_count
 				from until i > nb loop
 					a_feature := storage.item (i)
 					if a_hash_code = a_feature.hash_code then
-						if an_id.same_feature_name (a_feature.name) then
+						if l_id.same_feature_name (a_feature.name) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -153,8 +146,7 @@ feature -- Access
 				i := count - declared_count
 				from until i > nb loop
 					a_feature := storage.item (i)
-					an_alias_name := a_feature.alias_name
-					if an_alias_name /= Void and then an_alias_name.same_call_name (a_name) then
+					if attached a_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
 						Result := a_feature
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -164,7 +156,7 @@ feature -- Access
 			end
 		end
 
-	seeded_feature (a_seed: INTEGER): like item
+	seeded_feature (a_seed: INTEGER): detachable like item
 			-- Feature with seed `a_seed';
 			-- Void if no such feature
 		local
@@ -310,10 +302,7 @@ feature -- Basic operations
 		local
 			i: INTEGER
 			l_feature: like item
-			l_id: ET_IDENTIFIER
 			l_hash_code: INTEGER
-			l_alias_name: ET_ALIAS_NAME
-			l_overloaded_alias_name: ET_ALIAS_NAME
 			l_found: BOOLEAN
 		do
 				-- The code below takes advantage of the fact that the features
@@ -321,8 +310,7 @@ feature -- Basic operations
 				--
 				-- This assignment attempt is to avoid too many polymorphic
 				-- calls to `same_feature_name'.
-			l_id ?= a_name
-			if l_id /= Void then
+			if attached {ET_IDENTIFIER} a_name as l_id then
 				l_hash_code := l_id.hash_code
 				from i := count - 1 until i < 0 loop
 					l_feature := storage.item (i)
@@ -337,12 +325,10 @@ feature -- Basic operations
 			else
 				from i := count - 1 until i < 0 loop
 					l_feature := storage.item (i)
-					l_alias_name := l_feature.alias_name
-					l_overloaded_alias_name := l_feature.overloaded_alias_name
-					if not l_found and then l_alias_name /= Void and then l_alias_name.same_call_name (a_name) then
+					if not l_found and then attached l_feature.alias_name as l_alias_name and then l_alias_name.same_call_name (a_name) then
 						a_list.force_last (l_feature)
 						l_found := True
-					elseif l_overloaded_alias_name /= Void and then l_overloaded_alias_name.same_call_name (a_name) then
+					elseif attached l_feature.overloaded_alias_name as l_overloaded_alias_name and then l_overloaded_alias_name.same_call_name (a_name) then
 						a_list.force_last (l_feature)
 					end
 					i := i - 1
@@ -374,7 +360,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_declared_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -431,7 +417,7 @@ feature -- Iteration
 			end
 		end
 
-	do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -488,7 +474,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -545,7 +531,7 @@ feature -- Iteration
 			end
 		end
 
-	do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -600,7 +586,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 			--
@@ -653,7 +639,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 			--
@@ -708,7 +694,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the
 			-- corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -765,7 +751,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in the corresponding
 			-- class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
@@ -822,7 +808,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -879,7 +865,7 @@ feature -- Iteration
 			end
 		end
 
-	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)

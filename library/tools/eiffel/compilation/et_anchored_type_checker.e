@@ -5,7 +5,7 @@ note
 		"Eiffel anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,8 +62,8 @@ feature -- Type checking
 			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
-			l_type, l_previous_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
+			l_type: detachable ET_TYPE
+			l_previous_type: detachable ET_TYPE
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			old_class: ET_CLASS
@@ -76,8 +76,7 @@ feature -- Type checking
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
 				l_query.type.process (Current)
-				args := l_query.arguments
-				if args /= Void then
+				if attached l_query.arguments as args then
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
 						l_type := args.formal_argument (j).type
@@ -95,8 +94,7 @@ feature -- Type checking
 			nb := l_procedures.count
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
-				args := l_procedure.arguments
-				if args /= Void then
+				if attached l_procedure.arguments as args then
 					l_previous_type := Void
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
@@ -111,9 +109,10 @@ feature -- Type checking
 				i := i + 1
 			end
 			anchored_type_sorter.sort
-			if anchored_type_sorter.has_cycle then
+			if attached anchored_type_sorter.cycle as l_cycle and then not l_cycle.is_empty then
+				check has_cycle: anchored_type_sorter.has_cycle end
 				set_fatal_error
-				error_handler.report_vtat2a_error (current_class, anchored_type_sorter.cycle)
+				error_handler.report_vtat2a_error (current_class, l_cycle)
 			end
 			anchored_type_sorter.wipe_out
 			current_class := old_class
@@ -126,25 +125,18 @@ feature {NONE} -- Type checking
 			-- anchors' types are (or contain) also anchored types.
 		local
 			a_seed: INTEGER
-			a_feature: ET_FEATURE
-			l_query: ET_QUERY
 			l_query_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
+			args: detachable ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
 			a_seed := a_type.seed
 			if a_seed /= 0 then
 					-- Anchored type already resolved.
-				if current_anchored_type /= Void then
-					anchored_type_sorter.force_relation (a_type, current_anchored_type)
+				if attached current_anchored_type as l_current_anchored_type then
+					anchored_type_sorter.force_relation (a_type, l_current_anchored_type)
 				elseif a_type.is_like_argument then
-					if a_type.is_procedure then
-						a_feature := current_class.seeded_procedure (a_seed)
-					else
-						a_feature := current_class.seeded_query (a_seed)
-					end
-					if a_feature /= Void then
-						args := a_feature.arguments
+					if attached current_class.seeded_feature (a_seed) as l_feature then
+						args := l_feature.arguments
 						an_index := a_type.index
 						if args /= Void and then an_index <= args.count then
 							current_anchored_type := a_type
@@ -152,14 +144,11 @@ feature {NONE} -- Type checking
 							current_anchored_type := Void
 						end
 					end
-				else
-					l_query := current_class.seeded_query (a_seed)
-					if l_query /= Void then
-						l_query_type := l_query.type
-						current_anchored_type := a_type
-						l_query_type.process (Current)
-						current_anchored_type := Void
-					end
+				elseif attached current_class.seeded_query (a_seed) as l_query then
+					l_query_type := l_query.type
+					current_anchored_type := a_type
+					l_query_type.process (Current)
+					current_anchored_type := Void
 				end
 			end
 		end
@@ -191,7 +180,7 @@ feature {NONE} -- Type checking
 	anchored_type_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_FEATURE]
 			-- Anchored type sorter
 
-	current_anchored_type: ET_LIKE_FEATURE
+	current_anchored_type: detachable ET_LIKE_FEATURE
 			-- Anchored type (if any) whose anchor is the
 			-- type being processed
 
@@ -205,12 +194,9 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
-				add_actual_parameters_to_sorter (a_parameters)
+			if attached a_type.actual_parameters as l_parameters then
+				add_actual_parameters_to_sorter (l_parameters)
 			end
 		end
 
@@ -240,12 +226,9 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
-				add_actual_parameters_to_sorter (a_parameters)
+			if attached a_type.actual_parameters as l_parameters then
+				add_actual_parameters_to_sorter (l_parameters)
 			end
 		end
 

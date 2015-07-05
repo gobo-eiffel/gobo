@@ -5,7 +5,7 @@ note
 		"ECF target lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,7 +95,7 @@ feature -- Access
 			target_not_void: Result /= Void
 		end
 
-	target_by_name (a_name: STRING): like target
+	target_by_name (a_name: STRING): detachable like target
 			-- Target with name `a_name' if any, Void otherwise
 		require
 			a_name_not_void: a_name /= Void

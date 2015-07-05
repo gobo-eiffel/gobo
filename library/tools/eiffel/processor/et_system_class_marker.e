@@ -36,8 +36,6 @@ inherit
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_call_agent,
-			process_call_expression,
-			process_call_instruction,
 			process_check_instruction,
 			process_choice_list,
 			process_choice_range,
@@ -110,6 +108,8 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
+			process_qualified_call_expression,
+			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_regular_integer_constant,
@@ -123,6 +123,8 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
+			process_unqualified_call_expression,
+			process_unqualified_call_instruction,
 			process_variant,
 			process_verbatim_string,
 			process_when_part,
@@ -208,54 +210,37 @@ feature {ET_AST_NODE} -- Processing
 
 	process_across_expression (an_expression: ET_ACROSS_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_conditional: ET_CONDITIONAL
 		do
 			process_expression (an_expression.iterable_expression)
-			an_invariant_part := an_expression.invariant_part
-			if an_invariant_part /= Void then
+			if attached an_expression.invariant_part as an_invariant_part then
 				process_loop_invariants (an_invariant_part)
 			end
-			a_conditional := an_expression.until_conditional
-			if a_conditional /= Void then
+			if attached an_expression.until_conditional as a_conditional then
 				process_expression (a_conditional.expression)
 			end
 			process_expression (an_expression.iteration_conditional.expression)
-			a_variant_part := an_expression.variant_part
-			if a_variant_part /= Void then
+			if attached an_expression.variant_part as a_variant_part then
 				process_variant (a_variant_part)
 			end
 		end
 
 	process_across_instruction (an_instruction: ET_ACROSS_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
-			a_conditional: ET_CONDITIONAL
 		do
 			process_expression (an_instruction.iterable_expression)
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.from_compound as l_from_compound then
+				process_compound (l_from_compound)
 			end
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
+			if attached an_instruction.invariant_part as an_invariant_part then
 				process_loop_invariants (an_invariant_part)
 			end
-			a_conditional := an_instruction.until_conditional
-			if a_conditional /= Void then
+			if attached an_instruction.until_conditional as a_conditional then
 				process_expression (a_conditional.expression)
 			end
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
+			if attached an_instruction.variant_part as a_variant_part then
 				process_variant (a_variant_part)
 			end
 		end
@@ -409,49 +394,29 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		local
 			a_target: ET_AGENT_TARGET
-			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
 			a_target.process (Current)
-			an_arguments ?= an_expression.arguments
-			if an_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as an_arguments then
 				process_agent_argument_operand_list (an_arguments)
 			end
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		do
-			process_feature_call (an_expression)
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-		do
-			process_feature_call (an_instruction)
 		end
 
 	process_character_constant (a_constant: ET_CHARACTER_CONSTANT)
 			-- Process `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
+			if attached a_constant.cast_type as a_type then
 				process_type (a_type.type)
 			end
 		end
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			l_compound: ET_COMPOUND
 		do
 			process_assertions (an_instruction)
-			l_compound := an_instruction.then_compound
-			if l_compound /= Void then
+			if attached an_instruction.then_compound as l_compound then
 				process_compound (l_compound)
 			end
 		end
@@ -478,16 +443,10 @@ feature {ET_AST_NODE} -- Processing
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.
 		local
-			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
-			a_parents: ET_PARENT_LIST
-			a_convert_features: ET_CONVERT_FEATURE_LIST
-			an_invariants: ET_INVARIANTS
-			a_providers: DS_HASH_SET [ET_NAMED_CLASS]
 			a_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			a_provider: ET_CLASS
 		do
-			a_providers := a_class.providers
-			if a_providers /= Void then
+			if attached a_class.providers as a_providers then
 				a_cursor := a_providers.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_provider := a_cursor.item.actual_class
@@ -500,21 +459,17 @@ feature {ET_AST_NODE} -- Processing
 					a_cursor.forth
 				end
 			else
-				a_formal_parameters := a_class.formal_parameters
-				if a_formal_parameters /= Void then
+				if attached a_class.formal_parameters as a_formal_parameters then
 					process_formal_parameter_list (a_formal_parameters)
 				end
-				a_parents := a_class.parent_clause
-				if a_parents /= Void then
+				if attached a_class.parent_clause as a_parents then
 					process_parent_list (a_parents)
 				end
-				a_convert_features := a_class.convert_features
-				if a_convert_features /= Void then
+				if attached a_class.convert_features as a_convert_features then
 					process_convert_feature_list (a_convert_features)
 				end
 				process_features (a_class)
-				an_invariants := a_class.invariants
-				if an_invariants /= Void then
+				if attached a_class.invariants as an_invariants then
 					process_invariants (an_invariants)
 				end
 			end
@@ -604,15 +559,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION)
 			-- Process `an_expression'.
-		local
-			a_call: ET_QUALIFIED_CALL
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			process_type (an_expression.type)
-			a_call := an_expression.creation_call
-			if a_call /= Void then
-				an_arguments := a_call.arguments
-				if an_arguments /= Void then
+			if attached an_expression.creation_call as a_call then
+				if attached a_call.arguments as an_arguments then
 					process_actual_arguments (an_arguments)
 				end
 			end
@@ -628,19 +578,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
-		local
-			a_type: ET_TYPE
-			a_call: ET_QUALIFIED_CALL
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			a_type := an_instruction.type
-			if a_type /= Void then
+			if attached an_instruction.type as a_type then
 				process_type (a_type)
 			end
-			a_call := an_instruction.creation_call
-			if a_call /= Void then
-				an_arguments := a_call.arguments
-				if an_arguments /= Void then
+			if attached an_instruction.creation_call as a_call then
+				if attached a_call.arguments as an_arguments then
 					process_actual_arguments (an_arguments)
 				end
 			end
@@ -648,11 +591,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_compound: ET_COMPOUND
 		do
-			a_compound := an_instruction.compound
-			if a_compound /= Void then
+			if attached an_instruction.compound as a_compound then
 				process_compound (a_compound)
 			end
 		end
@@ -673,26 +613,17 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
-			a_type: ET_TYPE
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
+			if attached a_feature.arguments as an_arguments then
 				process_formal_argument_list (an_arguments)
 			end
-			a_type := a_feature.type
-			if a_type /= Void then
+			if attached a_feature.type as a_type then
 				process_type (a_type)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
+			if attached a_feature.preconditions as a_preconditions then
 				process_preconditions (a_preconditions)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
+			if attached a_feature.postconditions as a_postconditions then
 				process_postconditions (a_postconditions)
 			end
 		end
@@ -735,11 +666,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
 			-- Process `a_feature'.
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
+			if attached a_feature.arguments as an_arguments then
 				process_formal_argument_list (an_arguments)
 			end
 			process_type (a_feature.type)
@@ -747,23 +675,17 @@ feature {ET_AST_NODE} -- Processing
 
 	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
+			if attached a_feature.arguments as an_arguments then
 				process_formal_argument_list (an_arguments)
 			end
 		end
 
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
-		local
-			a_compound: ET_COMPOUND
 		do
 			process_expression (an_elseif_part.expression)
-			a_compound := an_elseif_part.then_compound
-			if a_compound /= Void then
+			if attached an_elseif_part.then_compound as a_compound then
 				process_compound (a_compound)
 			end
 		end
@@ -825,32 +747,22 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
 		do
 			process_type (a_feature.type)
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
+			if attached a_feature.preconditions as a_preconditions then
 				process_preconditions (a_preconditions)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
+			if attached a_feature.locals as a_locals then
 				process_local_variable_list (a_locals)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
+			if attached a_feature.compound as a_compound then
 				process_compound (a_compound)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
+			if attached a_feature.postconditions as a_postconditions then
 				process_postconditions (a_postconditions)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				process_compound (l_rescue_clause)
 			end
 		end
 
@@ -890,27 +802,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_postconditions: ET_POSTCONDITIONS
-			a_type: ET_TYPE
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				process_formal_argument_list (an_arguments)
+			if attached a_feature.arguments as l_arguments then
+				process_formal_argument_list (l_arguments)
 			end
-			a_type := a_feature.type
-			if a_type /= Void then
-				process_type (a_type)
+			if attached a_feature.type as l_type then
+				process_type (l_type)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				process_preconditions (a_preconditions)
+			if attached a_feature.preconditions as l_preconditions then
+				process_preconditions (l_preconditions)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				process_postconditions (a_postconditions)
+			if attached a_feature.postconditions as l_postconditions then
+				process_postconditions (l_postconditions)
 			end
 		end
 
@@ -918,29 +821,21 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			process_external_routine_closure (an_expression)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 			end
 		end
 
 	process_feature_call (a_call: ET_FEATURE_CALL)
 			-- Process `a_call'.
-		local
-			a_target: ET_EXPRESSION
-			an_arguments: ET_ACTUAL_ARGUMENTS
 		do
-			a_target := a_call.target
-			if a_target /= Void then
-				process_expression (a_target)
+			if attached a_call.target as l_target then
+				process_expression (l_target)
 			end
-			an_arguments := a_call.arguments
-			if an_arguments /= Void then
-				process_actual_arguments (an_arguments)
+			if attached a_call.arguments as l_arguments then
+				process_actual_arguments (l_arguments)
 			end
 		end
 
@@ -1014,22 +909,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_elseif_parts: ET_ELSEIF_PART_LIST
-			a_compound: ET_COMPOUND
 		do
 			process_expression (an_instruction.expression)
-			a_compound := an_instruction.then_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.then_compound as l_then_compound then
+				process_compound (l_then_compound)
 			end
-			an_elseif_parts := an_instruction.elseif_parts
-			if an_elseif_parts /= Void then
-				process_elseif_part_list (an_elseif_parts)
+			if attached an_instruction.elseif_parts as l_elseif_parts then
+				process_elseif_part_list (l_elseif_parts)
 			end
-			a_compound := an_instruction.else_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.else_compound as l_else_compound then
+				process_compound (l_else_compound)
 			end
 		end
 
@@ -1048,18 +937,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			a_when_parts: ET_WHEN_PART_LIST
-			an_else_compound: ET_COMPOUND
 		do
 			process_expression (an_instruction.expression)
-			a_when_parts := an_instruction.when_parts
-			if a_when_parts /= Void then
-				process_when_part_list (a_when_parts)
+			if attached an_instruction.when_parts as l_when_parts then
+				process_when_part_list (l_when_parts)
 			end
-			an_else_compound := an_instruction.else_compound
-			if an_else_compound /= Void then
-				process_compound (an_else_compound)
+			if attached an_instruction.else_compound as l_else_compound then
+				process_compound (l_else_compound)
 			end
 		end
 
@@ -1067,12 +951,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				process_type (a_type.type)
+			if attached a_constant.cast_type as l_type then
+				process_type (l_type.type)
 			end
 		end
 
@@ -1088,41 +969,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_preconditions: ET_PRECONDITIONS
-			a_locals: ET_LOCAL_VARIABLE_LIST
-			a_postconditions: ET_POSTCONDITIONS
-			a_compound: ET_COMPOUND
-			a_type: ET_TYPE
 		do
-			an_arguments := a_feature.arguments
-			if an_arguments /= Void then
-				process_formal_argument_list (an_arguments)
+			if attached a_feature.arguments as l_arguments then
+				process_formal_argument_list (l_arguments)
 			end
-			a_type := a_feature.type
-			if a_type /= Void then
-				process_type (a_type)
+			if attached a_feature.type as l_type then
+				process_type (l_type)
 			end
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				process_preconditions (a_preconditions)
+			if attached a_feature.preconditions as l_preconditions then
+				process_preconditions (l_preconditions)
 			end
-			a_locals := a_feature.locals
-			if a_locals /= Void then
-				process_local_variable_list (a_locals)
+			if attached a_feature.locals as l_locals then
+				process_local_variable_list (l_locals)
 			end
-			a_compound := a_feature.compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached a_feature.compound as l_compound then
+				process_compound (l_compound)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				process_postconditions (a_postconditions)
+			if attached a_feature.postconditions as l_postconditions then
+				process_postconditions (l_postconditions)
 			end
-			a_compound := a_feature.rescue_clause
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached a_feature.rescue_clause as l_rescue_clause then
+				process_compound (l_rescue_clause)
 			end
 		end
 
@@ -1130,12 +997,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			l_actual_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			process_internal_routine_closure (an_expression)
-			l_actual_arguments ?= an_expression.actual_arguments
-			if l_actual_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
 				process_agent_argument_operand_list (l_actual_arguments)
 			end
 		end
@@ -1168,27 +1032,19 @@ feature {ET_AST_NODE} -- Processing
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION)
 			-- Process `an_instruction'.
-		local
-			an_invariant_part: ET_LOOP_INVARIANTS
-			a_variant_part: ET_VARIANT
-			a_compound: ET_COMPOUND
 		do
-			a_compound := an_instruction.from_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.from_compound as l_from_compound then
+				process_compound (l_from_compound)
 			end
-			an_invariant_part := an_instruction.invariant_part
-			if an_invariant_part /= Void then
-				process_loop_invariants (an_invariant_part)
+			if attached an_instruction.invariant_part as l_invariant_part then
+				process_loop_invariants (l_invariant_part)
 			end
 			process_expression (an_instruction.until_expression)
-			a_compound := an_instruction.loop_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached an_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
-				process_variant (a_variant_part)
+			if attached an_instruction.variant_part as l_variant_part then
+				process_variant (l_variant_part)
 			end
 		end
 
@@ -1208,12 +1064,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_string'.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_string.cast_type
-			if a_type /= Void then
-				process_type (a_type.type)
+			if attached a_string.cast_type as l_type then
+				process_type (l_type.type)
 			end
 		end
 
@@ -1244,11 +1097,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_object_test (an_expression: ET_OBJECT_TEST)
 			-- Process `an_expression'.
-		local
-			l_type: ET_TYPE
 		do
-			l_type := an_expression.type
-			if l_type /= Void then
+			if attached an_expression.type as l_type then
 				process_type (l_type)
 			end
 			process_expression (an_expression.expression)
@@ -1342,14 +1192,11 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
-		local
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 				-- The parent class name should already appear
 				-- in the inheritance clause.
-			an_arguments := a_call.arguments
-			if an_arguments /= Void then
-				process_actual_arguments (an_arguments)
+			if attached a_call.arguments as l_arguments then
+				process_actual_arguments (l_arguments)
 			end
 		end
 
@@ -1371,6 +1218,18 @@ feature {ET_AST_NODE} -- Processing
 			process_expression (an_expression.expression)
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_feature_call (an_expression)
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_feature_call (an_instruction)
+		end
+
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
@@ -1385,12 +1244,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
-		local
-			a_type: ET_TARGET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				process_type (a_type.type)
+			if attached a_constant.cast_type as l_type then
+				process_type (l_type.type)
 			end
 		end
 
@@ -1422,13 +1278,10 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
-		local
-			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
 			process_type (a_call.type)
-			an_arguments := a_call.arguments
-			if an_arguments /= Void then
-				process_actual_arguments (an_arguments)
+			if attached a_call.arguments as l_arguments then
+				process_actual_arguments (l_arguments)
 			end
 		end
 
@@ -1446,12 +1299,9 @@ feature {ET_AST_NODE} -- Processing
 
 	process_tagged_assertion (an_assertion: ET_TAGGED_ASSERTION)
 			-- Process `an_assertion'.
-		local
-			an_expression: ET_EXPRESSION
 		do
-			an_expression := an_assertion.expression
-			if an_expression /= Void then
-				process_expression (an_expression)
+			if attached an_assertion.expression as l_expression then
+				process_expression (l_expression)
 			end
 		end
 
@@ -1459,7 +1309,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		local
 			a_class: ET_CLASS
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			a_class := a_type.base_class
 			if not a_class.is_marked then
@@ -1468,9 +1317,8 @@ feature {ET_AST_NODE} -- Processing
 					process_class (a_class)
 				end
 			end
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
-				process_actual_parameter_list (a_parameters)
+			if attached a_type.actual_parameters as l_actual_parameters then
+				process_actual_parameter_list (l_actual_parameters)
 			end
 		end
 
@@ -1500,6 +1348,18 @@ feature {ET_AST_NODE} -- Processing
 			process_type (a_feature.type)
 		end
 
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_feature_call (an_expression)
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_feature_call (an_instruction)
+		end
+
 	process_variant (a_variant: ET_VARIANT)
 			-- Process `a_variant'.
 		do
@@ -1514,13 +1374,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_when_part (a_when_part: ET_WHEN_PART)
 			-- Process `a_when_part'.
-		local
-			a_compound: ET_COMPOUND
 		do
 			process_choice_list (a_when_part.choices)
-			a_compound := a_when_part.then_compound
-			if a_compound /= Void then
-				process_compound (a_compound)
+			if attached a_when_part.then_compound as l_then_compound then
+				process_compound (l_then_compound)
 			end
 		end
 

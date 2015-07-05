@@ -5,7 +5,7 @@ note
 		"Eiffel object equality expressions (i.e. '~' and '/~')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 			reset
 		end
 
-	ET_FEATURE_CALL_EXPRESSION
+	ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 		rename
 			target as left,
 			arguments as right
@@ -53,16 +53,12 @@ feature -- Initialization
 
 	reset
 			-- Reset object expression as it was just after it was last parsed.
-		local
-			l_convert: ET_CONVERT_EXPRESSION
 		do
-			l_convert ?= left
-			if l_convert /= Void then
+			if attached {ET_CONVERT_EXPRESSION} left as l_convert then
 				left := l_convert.expression
 			end
 			left.reset
-			l_convert ?= right
-			if l_convert /= Void then
+			if attached {ET_CONVERT_EXPRESSION} right as l_convert then
 				right := l_convert.expression
 			end
 			right.reset

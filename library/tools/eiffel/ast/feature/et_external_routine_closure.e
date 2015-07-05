@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to external routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ feature -- Access
 	language: ET_EXTERNAL_LANGUAGE
 			-- External language
 
-	alias_clause: ET_EXTERNAL_ALIAS
+	alias_clause: detachable ET_EXTERNAL_ALIAS
 			-- Alias clause
 
 feature -- Setting

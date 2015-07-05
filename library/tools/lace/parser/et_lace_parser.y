@@ -6,7 +6,7 @@ note
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,12 +36,16 @@ create
 %token L_STRERR
 
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
-%type <ET_LACE_CLUSTERS> Cluster_list Clusters_opt Subclusters_opt Subcluster_list
-%type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
-%type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt External_items
+%type <ET_LACE_CLUSTERS> Cluster_list Subcluster_list
+%type <detachable ET_LACE_CLUSTERS> Clusters_opt Subclusters_opt 
+%type <ET_LACE_EXCLUDE> Exclude_list
+%type <detachable ET_LACE_EXCLUDE> Excludes Cluster_options_opt
+%type <ET_IDENTIFIER> Identifier External_items
+%type <detachable ET_IDENTIFIER> Root_cluster_opt Creation_procedure_opt Prefix_opt
 %type <ET_LACE_DOTNET_ASSEMBLY> Assembly
-%type <ET_LACE_SYSTEM> System
-%type <ET_ADAPTED_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
+%type <ET_LACE_SYSTEM> System Ace
+%type <ET_ADAPTED_DOTNET_ASSEMBLIES> Assembly_list
+%type <detachable ET_ADAPTED_DOTNET_ASSEMBLIES> Assemblies_opt
 
 %start Ace
 
@@ -51,22 +55,23 @@ create
 Ace: System L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
 	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
-			set_system (last_system)
-			if $7 /= Void then
-				last_system.set_clusters ($7)
+			$$ := $1
+			set_system ($$)
+			if attached $7 as l_clusters then
+				$$.set_clusters (l_clusters)
 			end
-			if $8 /= Void then
-				last_system.set_dotnet_assemblies ($8)
+			if attached $8 as l_assemblies then
+				$$.set_dotnet_assemblies (l_assemblies)
 			end
-			last_system.set_root_type ($3)
-			last_system.set_root_creation ($5)
+			$$.set_root_type ($3)
+			$$.set_root_creation ($5)
 		}
 	;
 
 System: L_SYSTEM Identifier
 		{
-			last_system := new_system ($2.name)
-			$$ := last_system
+			$$ := new_system ($2.name)
+			last_system := $$
 		}
 	;
 

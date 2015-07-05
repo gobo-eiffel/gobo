@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to internal (do or once) routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,13 +21,13 @@ inherit
 
 feature -- Access
 
-	compound: ET_COMPOUND
+	compound: detachable ET_COMPOUND
 			-- Routine body
 
-	locals: ET_LOCAL_VARIABLE_LIST
+	locals: detachable ET_LOCAL_VARIABLE_LIST
 			-- Local variables
 
-	rescue_clause: ET_COMPOUND
+	rescue_clause: detachable ET_COMPOUND
 			-- Rescue clause
 
 feature -- Setting

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -126,11 +126,11 @@ feature -- Status report
 	is_used: BOOLEAN
 			-- Should current type used in the system?
 		do
-			Result := is_alive or has_static or (meta_type /= Void and then meta_type.is_used)
+			Result := is_alive or has_static or (attached meta_type as l_meta_type and then l_meta_type.is_used)
 		ensure
 			is_alive: is_alive implies Result
 			has_static: has_static implies Result
-			has_meta_type: (meta_type /= Void and then meta_type.is_used) implies Result
+			has_meta_type: (attached meta_type as l_meta_type and then l_meta_type.is_used) implies Result
 		end
 
 	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN
@@ -206,7 +206,7 @@ feature -- Access
 	base_class: ET_CLASS
 			-- Base class
 
-	meta_type: ET_DYNAMIC_TYPE
+	meta_type: detachable ET_DYNAMIC_TYPE
 			-- Type representing current type, if any.
 			-- If current type is of the form 'T', then
 			-- the meta type will be 'TYPE [T]'.
@@ -316,20 +316,25 @@ feature -- Features
 				has_reference_attributes := True
 				nb := attribute_count
 				from i := 1 until i > nb loop
-					l_type := queries.item (i).result_type_set.static_type
-					if l_type.is_expanded and then l_type.has_nested_reference_attributes then
-							-- Note that for non-generic expanded types, there is no type other
-							-- than itself that conforms to it. However for generic expanded types,
-							-- other generic derivations of the same generic class may conform to
-							-- it. But it is OK to take only the static type of the expanded attribute
-							-- into account even in that case, and we won't miss any sub-attribute
-							-- of reference types in conforming expanded generic derivations.
-							-- Indeed, if that static type has expanded attributes, then conforming
-							-- generic derivations cannot have these attributes of reference
-							-- type (because no reference type conforms to an expanded type).
-						Result := True
-						i := nb + 1
+					if attached queries.item (i).result_type_set as l_result_type_set then
+						l_type := l_result_type_set.static_type
+						if l_type.is_expanded and then l_type.has_nested_reference_attributes then
+								-- Note that for non-generic expanded types, there is no type other
+								-- than itself that conforms to it. However for generic expanded types,
+								-- other generic derivations of the same generic class may conform to
+								-- it. But it is OK to take only the static type of the expanded attribute
+								-- into account even in that case, and we won't miss any sub-attribute
+								-- of reference types in conforming expanded generic derivations.
+								-- Indeed, if that static type has expanded attributes, then conforming
+								-- generic derivations cannot have these attributes of reference
+								-- type (because no reference type conforms to an expanded type).
+							Result := True
+							i := nb + 1
+						else
+							i := i + 1
+						end
 					else
+							-- Should never happen: queries have a result type set.
 						i := i + 1
 					end
 				end
@@ -362,6 +367,7 @@ feature -- Features
 		local
 			i, nb: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_result: detachable ET_DYNAMIC_FEATURE
 		do
 			if queries = empty_features then
 				create queries.make_with_capacity (base_class.queries.count)
@@ -376,13 +382,15 @@ feature -- Features
 				from i := 1 until i > nb loop
 					l_dynamic_feature := queries.item (i)
 					if l_dynamic_feature.static_feature = a_query then
-						Result := l_dynamic_feature
+						l_result := l_dynamic_feature
 						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1
 					end
 				end
-				if Result = Void then
+				if l_result /= Void then
+					Result := l_result
+				else
 					Result := new_dynamic_query (a_query, a_system)
 					if Result.is_attribute then
 						put_attribute (Result)
@@ -405,6 +413,7 @@ feature -- Features
 		local
 			i, nb: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_result: detachable ET_DYNAMIC_FEATURE
 		do
 			if procedures = empty_features then
 				create procedures.make_with_capacity (base_class.procedures.count)
@@ -415,13 +424,15 @@ feature -- Features
 				from i := 1 until i > nb loop
 					l_dynamic_feature := procedures.item (i)
 					if l_dynamic_feature.static_feature = a_procedure then
-						Result := l_dynamic_feature
+						l_result := l_dynamic_feature
 						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1
 					end
 				end
-				if Result = Void then
+				if l_result /= Void then
+					Result := l_result
+				else
 					Result := new_dynamic_procedure (a_procedure, a_system)
 					procedures.force_last (Result)
 				end
@@ -431,19 +442,17 @@ feature -- Features
 			is_procedure: Result.is_procedure
 		end
 
-	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
+	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time query with seed `a_seed';
 			-- Void if no such query
 		require
 			a_system_not_void: a_system /= Void
 		local
 			i, nb: INTEGER
-			l_query: ET_QUERY
 			l_dynamic_query: ET_DYNAMIC_FEATURE
 		do
 			if queries = empty_features then
-				l_query := base_class.seeded_query (a_seed)
-				if l_query /= Void then
+				if attached base_class.seeded_query (a_seed) as l_query then
 					create queries.make_with_capacity (base_class.queries.count)
 					Result := new_dynamic_query (l_query, a_system)
 					if Result.is_attribute then
@@ -464,8 +473,7 @@ feature -- Features
 					end
 				end
 				if Result = Void then
-					l_query := base_class.seeded_query (a_seed)
-					if l_query /= Void then
+					if attached base_class.seeded_query (a_seed) as l_query then
 						Result := new_dynamic_query (l_query, a_system)
 						if Result.is_attribute then
 							put_attribute (Result)
@@ -479,19 +487,17 @@ feature -- Features
 			is_query: Result /= Void implies Result.is_query
 		end
 
-	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
+	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): detachable ET_DYNAMIC_FEATURE
 			-- Run-time procedure with seed `a_seed';
 			-- Void if no such procedure
 		require
 			a_system_not_void: a_system /= Void
 		local
 			i, nb: INTEGER
-			l_procedure: ET_PROCEDURE
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
 			if procedures = empty_features then
-				l_procedure := base_class.seeded_procedure (a_seed)
-				if l_procedure /= Void then
+				if attached base_class.seeded_procedure (a_seed) as l_procedure then
 					create procedures.make_with_capacity (base_class.procedures.count)
 					Result := new_dynamic_procedure (l_procedure, a_system)
 					procedures.put_last (Result)
@@ -508,8 +514,7 @@ feature -- Features
 					end
 				end
 				if Result = Void then
-					l_procedure := base_class.seeded_procedure (a_seed)
-					if l_procedure /= Void then
+					if attached base_class.seeded_procedure (a_seed) as l_procedure then
 						Result := new_dynamic_procedure (l_procedure, a_system)
 						procedures.force_last (Result)
 					end
@@ -527,7 +532,6 @@ feature -- Features
 		local
 			l_queries: ET_QUERY_LIST
 			l_query: ET_QUERY
-			l_external_function: ET_EXTERNAL_FUNCTION
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 		do
@@ -539,8 +543,7 @@ feature -- Features
 					l_dynamic_feature := dynamic_query (l_query, a_system)
 				else
 						-- Check if we have built-in attributes.
-					l_external_function ?= l_query
-					if l_external_function /= Void and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_code) then
+					if attached {ET_EXTERNAL_FUNCTION} l_query as l_external_function and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_code) then
 						l_dynamic_feature := dynamic_query (l_external_function, a_system)
 					end
 				end
@@ -646,25 +649,31 @@ feature {NONE} -- Fetaures
 				queries.force_last (queries.item (attribute_count))
 				queries.put (an_attribute, attribute_count)
 			end
-			l_type := an_attribute.result_type_set.static_type
-			if not l_type.is_expanded then
-				has_reference_attributes := True
-			elseif l_type.is_generic then
-				has_generic_expanded_attributes := True
+			if not attached an_attribute.result_type_set as l_result_type_set then
+					-- Should never happen. The precondition says that `an_attribute'
+					-- is a query, an therefore has a result type set.
+				check is_query: False end
+			else
+				l_type := l_result_type_set.static_type
+				if not l_type.is_expanded then
+					has_reference_attributes := True
+				elseif l_type.is_generic then
+					has_generic_expanded_attributes := True
+				end
 			end
 		ensure
 			one_more: attribute_count = old attribute_count + 1
-			reference_attribute: not an_attribute.result_type_set.is_expanded implies has_reference_attributes
-			generic_expanded_attribute: (an_attribute.result_type_set.is_expanded and then an_attribute.result_type_set.static_type.is_generic) implies has_generic_expanded_attributes
+			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
+			generic_expanded_attribute: (attached an_attribute.result_type_set as l_result_type_set and then l_result_type_set.is_expanded and then l_result_type_set.static_type.is_generic) implies has_generic_expanded_attributes
 		end
 
 feature -- Calls
 
-	query_calls: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+	query_calls: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			-- First qualified query call with current type as target static type
 			-- (Other calls are accessed with 'query_calls.next'.)
 
-	procedure_calls: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+	procedure_calls: detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			-- First qualified procedure call with current type as target static type
 			-- (Other calls are accessed with 'procedure_calls.next'.)
 
@@ -688,13 +697,13 @@ feature -- Calls
 
 feature -- Equality expressions
 
-	equality_expressions: ET_DYNAMIC_EQUALITY_EXPRESSION
+	equality_expressions: detachable ET_DYNAMIC_EQUALITY_EXPRESSION
 			-- First equality expression with current type as static type of the left operand;
 			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally
 			-- called when the operands involved in the equality expression are of expanded types.
 			-- (Other equality expressions are accessed with `equality_expressions.next'.)
 
-	object_equality_expressions: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
+	object_equality_expressions: detachable ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 			-- First object-equality expression with current type as static type of the left operand;
 			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally called.
 			-- (Other object-equality expressions are accessed with `equality_expressions.next'.)
@@ -746,7 +755,7 @@ feature -- Output
 
 feature -- Link
 
-	next_type: ET_DYNAMIC_TYPE
+	next_type: detachable ET_DYNAMIC_TYPE
 			-- Next dynamic type with the same base class in the surrounding system
 
 	set_next_type (a_type: like next_type)

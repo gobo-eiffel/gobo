@@ -5,7 +5,7 @@ note
 		"Eiffel loop variants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Access
 	variant_keyword: ET_KEYWORD
 			-- 'variant' keyword
 
-	tag: ET_TAG
+	tag: detachable ET_TAG
 			-- Tag
 
 	expression: ET_EXPRESSION
@@ -60,8 +60,8 @@ feature -- Access
 		do
 			Result := variant_keyword.position
 			if Result.is_null then
-				if tag /= Void then
-					Result := tag.position
+				if attached tag as l_tag then
+					Result := l_tag.position
 				else
 					Result := expression.position
 				end
@@ -78,12 +78,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := expression.break
 		end
 
 feature -- Setting

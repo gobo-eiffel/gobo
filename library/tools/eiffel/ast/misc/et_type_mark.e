@@ -5,7 +5,7 @@ note
 		"Eiffel type marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Access
 
-	overridden_type_mark (a_override_type_mark: ET_TYPE_MARK): ET_TYPE_MARK
+	overridden_type_mark (a_override_type_mark: detachable ET_TYPE_MARK): ET_TYPE_MARK
 			-- Version of current type mark overridden by `a_override_type_mark'
 		local
 			l_result_expanded_mark: BOOLEAN

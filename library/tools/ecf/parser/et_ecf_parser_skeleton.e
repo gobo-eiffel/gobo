@@ -5,7 +5,7 @@ note
 		"ECF parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -126,24 +126,23 @@ feature -- Setting
 
 feature {NONE} -- AST factory
 
-	new_adapted_dotnet_assembly (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+	new_adapted_dotnet_assembly (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLY
 			-- New .NET assembly built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_assembly: STRING_.same_case_insensitive (an_element.name, xml_assembly)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_filename: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
+			l_filename: detachable XM_ATTRIBUTE
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
-			l_old_name: XM_ATTRIBUTE
-			l_new_name: XM_ATTRIBUTE
-			l_renamings: DS_HASH_TABLE [STRING, STRING]
-			l_readonly: XM_ATTRIBUTE
-			l_prefix: XM_ATTRIBUTE
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
+			l_old_name: detachable XM_ATTRIBUTE
+			l_new_name: detachable XM_ATTRIBUTE
+			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
+			l_readonly: detachable XM_ATTRIBUTE
+			l_prefix: detachable XM_ATTRIBUTE
 			l_bool: STRING
 		do
 			l_name := an_element.attribute_by_name (xml_name)
@@ -216,24 +215,23 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_adapted_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY
+	new_adapted_library (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ADAPTED_LIBRARY
 			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_library: STRING_.same_case_insensitive (an_element.name, xml_library)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_filename: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
+			l_filename: detachable XM_ATTRIBUTE
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
-			l_old_name: XM_ATTRIBUTE
-			l_new_name: XM_ATTRIBUTE
-			l_renamings: DS_HASH_TABLE [STRING, STRING]
-			l_readonly: XM_ATTRIBUTE
-			l_prefix: XM_ATTRIBUTE
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
+			l_old_name: detachable XM_ATTRIBUTE
+			l_new_name: detachable XM_ATTRIBUTE
+			l_renamings: detachable DS_HASH_TABLE [STRING, STRING]
+			l_readonly: detachable XM_ATTRIBUTE
+			l_prefix: detachable XM_ATTRIBUTE
 			l_bool: STRING
 		do
 			l_name := an_element.attribute_by_name (xml_name)
@@ -306,16 +304,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_build_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_BUILD_CONDITION
+	new_build_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_BUILD_CONDITION
 			-- New build condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_build: STRING_.same_case_insensitive (an_element.name, xml_build)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
-			l_excluded_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_excluded_value: detachable XM_ATTRIBUTE
 		do
 			l_value := an_element.attribute_by_name (xml_value)
 			l_excluded_value := an_element.attribute_by_name (xml_excluded_value)
@@ -336,26 +333,25 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_cluster (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_override: BOOLEAN; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
+	new_cluster (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_override: BOOLEAN; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTER
 			-- New cluster built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_cluster: STRING_.same_case_insensitive (an_element.name, xml_cluster)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_pathname: XM_ATTRIBUTE
-			l_recursive: XM_ATTRIBUTE
-			l_readonly: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
+			l_pathname: detachable XM_ATTRIBUTE
+			l_recursive: detachable XM_ATTRIBUTE
+			l_readonly: detachable XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_cluster: ET_ECF_CLUSTER
-			l_subclusters: ET_ECF_CLUSTERS
-			l_file_rule: ET_ECF_FILE_RULE
-			l_file_rules: ET_ECF_FILE_RULES
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
+			l_cluster: detachable ET_ECF_CLUSTER
+			l_subclusters: detachable ET_ECF_CLUSTERS
+			l_file_rule: detachable ET_ECF_FILE_RULE
+			l_file_rules: detachable ET_ECF_FILE_RULES
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_pathname := an_element.attribute_by_name (xml_location)
@@ -432,16 +428,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_concurrency_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONCURRENCY_CONDITION
+	new_concurrency_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONCURRENCY_CONDITION
 			-- New concurrency condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_concurrency: STRING_.same_case_insensitive (an_element.name, xml_concurrency)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
-			l_excluded_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_excluded_value: detachable XM_ATTRIBUTE
 		do
 			l_value := an_element.attribute_by_name (xml_value)
 			l_excluded_value := an_element.attribute_by_name (xml_excluded_value)
@@ -462,16 +457,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CONDITIONS
+	new_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CONDITIONS
 			-- New condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_condition: STRING_.same_case_insensitive (an_element.name, xml_condition)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_condition: ET_ECF_CONDITION
+			l_condition: detachable ET_ECF_CONDITION
 		do
 			Result := ast_factory.new_condition
 			l_cursor := an_element.new_cursor
@@ -523,17 +517,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_custom_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CUSTOM_CONDITION
+	new_custom_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CUSTOM_CONDITION
 			-- New custom condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_custom: STRING_.same_case_insensitive (an_element.name, xml_custom)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_value: XM_ATTRIBUTE
-			l_excluded_value: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_excluded_value: detachable XM_ATTRIBUTE
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_value := an_element.attribute_by_name (xml_value)
@@ -559,15 +552,14 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_dotnet_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DOTNET_CONDITION
+	new_dotnet_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_DOTNET_CONDITION
 			-- New dotnet condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_dotnet: STRING_.same_case_insensitive (an_element.name, xml_dotnet)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
 			l_bool: STRING
 		do
 			l_value := an_element.attribute_by_name (xml_value)
@@ -585,15 +577,14 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_dynamic_runtime_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_DYNAMIC_RUNTIME_CONDITION
+	new_dynamic_runtime_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_DYNAMIC_RUNTIME_CONDITION
 			-- New dynamic_runtime condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_dynamic_runtime: STRING_.same_case_insensitive (an_element.name, xml_dynamic_runtime)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
 			l_bool: STRING
 		do
 			l_value := an_element.attribute_by_name (xml_value)
@@ -611,17 +602,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_include (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_INCLUDE
+	new_external_include (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_INCLUDE
 			-- New external include built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_external_include: STRING_.same_case_insensitive (an_element.name, xml_external_include)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_pathname: XM_ATTRIBUTE
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
+			l_pathname: detachable XM_ATTRIBUTE
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
@@ -651,17 +641,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_LIBRARY
+	new_external_library (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_LIBRARY
 			-- New external library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_external_library: STRING_.same_case_insensitive (an_element.name, xml_external_library)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_pathname: XM_ATTRIBUTE
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
+			l_pathname: detachable XM_ATTRIBUTE
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
@@ -691,17 +680,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_object (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_EXTERNAL_OBJECT
+	new_external_object (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_EXTERNAL_OBJECT
 			-- New external object built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_external_object: STRING_.same_case_insensitive (an_element.name, xml_external_object)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_pathname: XM_ATTRIBUTE
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
+			l_pathname: detachable XM_ATTRIBUTE
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			l_pathname := an_element.attribute_by_name (xml_location)
@@ -731,19 +719,18 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_file_rule (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_FILE_RULE
+	new_file_rule (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_FILE_RULE
 			-- New file rule built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_file_rule: STRING_.same_case_insensitive (an_element.name, xml_file_rule)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_excluded: DS_HASH_SET [STRING]
-			l_included: DS_HASH_SET [STRING]
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
-			l_text: STRING
+			l_excluded: detachable DS_HASH_SET [STRING]
+			l_included: detachable DS_HASH_SET [STRING]
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
+			l_text: detachable STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 		do
 			l_cursor := an_element.new_cursor
@@ -782,18 +769,17 @@ feature {NONE} -- AST factory
 			Result.set_condition (l_conditions)
 		end
 
-	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING; a_adapted_library: ET_ECF_ADAPTED_LIBRARY): ET_ECF_LIBRARY
+	new_library (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING; a_adapted_library: ET_ECF_ADAPTED_LIBRARY): detachable ET_ECF_LIBRARY
 			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
-			a_position_table_not_void: a_position_table /= Void
 			a_filename_not_void: a_filename /= Void
 			a_adapted_library_not_void: a_adapted_library /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_uuid: XM_ATTRIBUTE
-			l_unknown_library: ET_ECF_LIBRARY
+			l_name: detachable XM_ATTRIBUTE
+			l_uuid: detachable XM_ATTRIBUTE
+			l_unknown_library: detachable ET_ECF_LIBRARY
 			l_parsed_libraries: like parsed_libraries
 			l_system: ET_SYSTEM
 		do
@@ -837,15 +823,14 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_multithreaded_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_MULTITHREADED_CONDITION
+	new_multithreaded_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_MULTITHREADED_CONDITION
 			-- New multithreaded condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_multithreaded: STRING_.same_case_insensitive (an_element.name, xml_multithreaded)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
 			l_bool: STRING
 		do
 			l_value := an_element.attribute_by_name (xml_value)
@@ -863,26 +848,25 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_override (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER
+	new_override (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_CLUSTER
 			-- New override built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_override: STRING_.same_case_insensitive (an_element.name, xml_override)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_pathname: XM_ATTRIBUTE
-			l_recursive: XM_ATTRIBUTE
-			l_readonly: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
+			l_pathname: detachable XM_ATTRIBUTE
+			l_recursive: detachable XM_ATTRIBUTE
+			l_readonly: detachable XM_ATTRIBUTE
 			l_bool: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_cluster: ET_ECF_CLUSTER
-			l_subclusters: ET_ECF_CLUSTERS
-			l_file_rule: ET_ECF_FILE_RULE
-			l_file_rules: ET_ECF_FILE_RULES
-			l_condition: ET_ECF_CONDITIONS
-			l_conditions: ET_ECF_CONDITIONS
+			l_cluster: detachable ET_ECF_CLUSTER
+			l_subclusters: detachable ET_ECF_CLUSTERS
+			l_file_rule: detachable ET_ECF_FILE_RULE
+			l_file_rules: detachable ET_ECF_FILE_RULES
+			l_condition: detachable ET_ECF_CONDITIONS
+			l_conditions: detachable ET_ECF_CONDITIONS
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_pathname := an_element.attribute_by_name (xml_location)
@@ -959,16 +943,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_platform_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_PLATFORM_CONDITION
+	new_platform_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_PLATFORM_CONDITION
 			-- New platform condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_platform: STRING_.same_case_insensitive (an_element.name, xml_platform)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_value: XM_ATTRIBUTE
-			l_excluded_value: XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_excluded_value: detachable XM_ATTRIBUTE
 		do
 			l_value := an_element.attribute_by_name (xml_value)
 			l_excluded_value := an_element.attribute_by_name (xml_excluded_value)
@@ -989,7 +972,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_root (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ROOT
+	new_root (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_ROOT
 			-- New root built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -997,12 +980,12 @@ feature {NONE} -- AST factory
 			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_root_class: ET_ECF_ROOT_CLASS
-			l_all_classes: XM_ATTRIBUTE
+			l_root_class: detachable ET_ECF_ROOT_CLASS
+			l_all_classes: detachable XM_ATTRIBUTE
 			l_all_classes_true: BOOLEAN
 			l_bool: STRING
-			l_class_name: XM_ATTRIBUTE
-			l_feature: XM_ATTRIBUTE
+			l_class_name: detachable XM_ATTRIBUTE
+			l_feature: detachable XM_ATTRIBUTE
 		do
 			l_all_classes := an_element.attribute_by_name (xml_all_classes)
 			l_class_name := an_element.attribute_by_name (xml_class)
@@ -1034,16 +1017,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING): ET_ECF_SYSTEM
+	new_system (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING): detachable ET_ECF_SYSTEM
 			-- New system built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
-			a_position_table_not_void: a_position_table /= Void
 			a_filename_not_void: a_filename /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_unknown_universe: ET_ECF_SYSTEM
+			l_name: detachable XM_ATTRIBUTE
+			l_unknown_universe: detachable ET_ECF_SYSTEM
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			if l_name = Void then
@@ -1058,31 +1040,30 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_target (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_TARGET
+	new_target (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_TARGET
 			-- New target built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_target: STRING_.same_case_insensitive (an_element.name, xml_target)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
+			l_name: detachable XM_ATTRIBUTE
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_cluster: ET_ECF_CLUSTER
-			l_clusters: ET_ECF_CLUSTERS
-			l_library: ET_ECF_ADAPTED_LIBRARY
-			l_libraries: ET_ECF_ADAPTED_LIBRARIES
-			l_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY
-			l_dotnet_assemblies: ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
-			l_file_rule: ET_ECF_FILE_RULE
-			l_file_rules: ET_ECF_FILE_RULES
-			l_external_include: ET_ECF_EXTERNAL_INCLUDE
-			l_external_includes: ET_ECF_EXTERNAL_INCLUDES
-			l_external_object: ET_ECF_EXTERNAL_OBJECT
-			l_external_objects: ET_ECF_EXTERNAL_OBJECTS
-			l_external_library: ET_ECF_EXTERNAL_LIBRARY
-			l_external_libraries: ET_ECF_EXTERNAL_LIBRARIES
-			l_root: ET_ECF_ROOT
+			l_cluster: detachable ET_ECF_CLUSTER
+			l_clusters: detachable ET_ECF_CLUSTERS
+			l_library: detachable ET_ECF_ADAPTED_LIBRARY
+			l_libraries: detachable ET_ECF_ADAPTED_LIBRARIES
+			l_dotnet_assembly: detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLY
+			l_dotnet_assemblies: detachable ET_ECF_ADAPTED_DOTNET_ASSEMBLIES
+			l_file_rule: detachable ET_ECF_FILE_RULE
+			l_file_rules: detachable ET_ECF_FILE_RULES
+			l_external_include: detachable ET_ECF_EXTERNAL_INCLUDE
+			l_external_includes: detachable ET_ECF_EXTERNAL_INCLUDES
+			l_external_object: detachable ET_ECF_EXTERNAL_OBJECT
+			l_external_objects: detachable ET_ECF_EXTERNAL_OBJECTS
+			l_external_library: detachable ET_ECF_EXTERNAL_LIBRARY
+			l_external_libraries: detachable ET_ECF_EXTERNAL_LIBRARIES
+			l_root: detachable ET_ECF_ROOT
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			if l_name = Void then
@@ -1194,19 +1175,18 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_version_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_VERSION_CONDITION
+	new_version_condition (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE): detachable ET_ECF_VERSION_CONDITION
 			-- New version condition built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_version: STRING_.same_case_insensitive (an_element.name, xml_version)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_type: XM_ATTRIBUTE
-			l_min: XM_ATTRIBUTE
-			l_max: XM_ATTRIBUTE
-			l_min_version: UT_VERSION
-			l_max_version: UT_VERSION
+			l_type: detachable XM_ATTRIBUTE
+			l_min: detachable XM_ATTRIBUTE
+			l_max: detachable XM_ATTRIBUTE
+			l_min_version: detachable UT_VERSION
+			l_max_version: detachable UT_VERSION
 			l_version_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			l_min := an_element.attribute_by_name (xml_min)
@@ -1247,7 +1227,7 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
-			if (l_min_version /= Void and l_max_version /= Void) and then l_max_version < l_min_version then
+			if (l_min /= Void and l_max /= Void) and then (l_min_version /= Void and l_max_version /= Void) and then l_max_version < l_min_version then
 				error_handler.report_eabh_error (attribute_name (l_min, a_position_table), l_min.value, attribute_name (l_max, a_position_table), l_max.value, a_universe)
 			end
 			l_type := an_element.attribute_by_name (xml_type)
@@ -1264,33 +1244,27 @@ feature {NONE} -- AST factory
 
 feature {NONE} -- Element change
 
-	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Build system `a_system_config' from `an_element'
 		require
 			a_system_config_not_void: a_system_config /= Void
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_uuid: STRING
 			l_namespace: XM_NAMESPACE
 			l_namespace_uri: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			l_target: ET_ECF_TARGET
-			l_targets: ET_ECF_TARGETS
-			l_target_name: XM_ATTRIBUTE
+			l_target: detachable ET_ECF_TARGET
+			l_targets: detachable ET_ECF_TARGETS
+			l_target_name: detachable XM_ATTRIBUTE
 		do
-			if an_element.has_attribute_by_name (xml_uuid) then
-				l_uuid := an_element.attribute_by_name (xml_uuid).value
+			if attached an_element.attribute_by_name (xml_uuid) as l_uuid_attribute then
+				l_uuid := l_uuid_attribute.value
 				a_system_config.set_uuid (l_uuid)
 			end
 			l_namespace := an_element.namespace
-			check
-					-- According to the invariant 'has_namespace' in XM_NAMED_NODE,
-					-- the namespace of an element is not void.
-				l_namespace_not_void: l_namespace /= Void
-			end
 			l_namespace_uri := l_namespace.uri
 			a_system_config.set_ecf_namespace (l_namespace_uri)
 			a_system_config.set_ecf_version (ecf_version (l_namespace_uri))
@@ -1332,18 +1306,17 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_variable (a_variables: ET_ECF_VARIABLES; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_variable (a_variables: ET_ECF_VARIABLES; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Add to `a_variables' the variable held in `an_element'.
 		require
 			a_variables_not_void: a_variables /= Void
 			an_element_not_void: an_element /= Void
 			is_variable: STRING_.same_case_insensitive (an_element.name, xml_variable)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_value: XM_ATTRIBUTE
-			l_other_value: STRING
+			l_name: detachable XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_other_value: detachable STRING
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_value := an_element.attribute_by_name (xml_value)
@@ -1364,18 +1337,17 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_setting (a_settings: ET_ECF_SETTINGS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_setting (a_settings: ET_ECF_SETTINGS; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Add to `a_settings' the setting held in `an_element'.
 		require
 			a_settings_not_void: a_settings /= Void
 			an_element_not_void: an_element /= Void
 			is_setting: STRING_.same_case_insensitive (an_element.name, xml_setting)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_name: XM_ATTRIBUTE
-			l_value: XM_ATTRIBUTE
-			l_other_value: STRING
+			l_name: detachable XM_ATTRIBUTE
+			l_value: detachable XM_ATTRIBUTE
+			l_other_value: detachable STRING
 		do
 			l_name := an_element.attribute_by_name (xml_name)
 			l_value := an_element.attribute_by_name (xml_value)
@@ -1396,18 +1368,17 @@ feature {NONE} -- Element change
 			end
 		end
 
-	add_option (a_options: ET_ECF_OPTIONS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
+	add_option (a_options: ET_ECF_OPTIONS; an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_universe: ET_ECF_INTERNAL_UNIVERSE)
 			-- Add to `a_options' the setting held in `an_element'.
 		require
 			a_options_not_void: a_options /= Void
 			an_element_not_void: an_element /= Void
 			is_option: STRING_.same_case_insensitive (an_element.name, xml_option)
-			a_position_table_not_void: a_position_table /= Void
 			a_universe_not_void: a_universe /= Void
 		local
 			l_name: STRING
-			l_attribute: XM_ATTRIBUTE
-			l_other_value: STRING
+			l_attribute: detachable XM_ATTRIBUTE
+			l_other_value: detachable STRING
 		do
 			l_name := xml_void_safety
 			l_attribute := an_element.attribute_by_name (l_name)
@@ -1439,12 +1410,12 @@ feature {NONE} -- Element change
 			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_libraries: ET_ADAPTED_LIBRARIES
-			l_library: ET_ECF_LIBRARY
+			l_libraries: detachable ET_ADAPTED_LIBRARIES
+			l_library: detachable ET_ECF_LIBRARY
 			i, nb: INTEGER
 			l_file: KL_TEXT_INPUT_FILE
 			l_library_parser: like library_parser
-			l_target: ET_ECF_TARGET
+			l_target: detachable ET_ECF_TARGET
 			l_filename: STRING
 		do
 			l_libraries := a_universe.libraries
@@ -1502,7 +1473,7 @@ feature {NONE} -- Element change
 			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
+			l_dotnet_assemblies: detachable ET_ADAPTED_DOTNET_ASSEMBLIES
 			l_dotnet_assembly: ET_ECF_DOTNET_ASSEMBLY
 			i, nb: INTEGER
 			l_filename: STRING
@@ -1547,37 +1518,39 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation
 
-	element_name (a_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
+	element_name (a_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Element name
 		require
 			a_element_not_void: a_element /= Void
-			a_position_table_not_void: a_position_table /= Void
 		local
 			l_position: XM_POSITION
 		do
 			create Result.make (a_element.name)
-			l_position := a_position_table.item (a_element)
-			Result.set_position (l_position.row, l_position.column)
+			if a_position_table /= Void and then a_position_table.has (a_element) then
+				l_position := a_position_table.item (a_element)
+				Result.set_position (l_position.row, l_position.column)
+			end
 		ensure
 			element_name_not_void: Result /= Void
 		end
 
-	attribute_name (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
+	attribute_name (a_attribute: XM_ATTRIBUTE; a_position_table: detachable XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Attribute name
 		require
 			a_attribute_not_void: a_attribute /= Void
-			a_position_table_not_void: a_position_table /= Void
 		local
 			l_position: XM_POSITION
 		do
 			create Result.make (a_attribute.name)
-			l_position := a_position_table.item (a_attribute)
-			Result.set_position (l_position.row, l_position.column)
+			if a_position_table /= Void and then a_position_table.has (a_attribute) then
+				l_position := a_position_table.item (a_attribute)
+				Result.set_position (l_position.row, l_position.column)
+			end
 		ensure
 			attribute_name_not_void: Result /= Void
 		end
 
-	attribute_value (a_attribute: XM_ATTRIBUTE; a_position_table: XM_POSITION_TABLE): ET_IDENTIFIER
+	attribute_value (a_attribute: XM_ATTRIBUTE; a_position_table: detachable XM_POSITION_TABLE): ET_IDENTIFIER
 			-- Attribute value
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -1587,8 +1560,10 @@ feature {NONE} -- Implementation
 			l_position: XM_POSITION
 		do
 			create Result.make (a_attribute.value)
-			l_position := a_position_table.item (a_attribute)
-			Result.set_position (l_position.row, l_position.column)
+			if a_position_table /= Void and then a_position_table.has (a_attribute) then
+				l_position := a_position_table.item (a_attribute)
+				Result.set_position (l_position.row, l_position.column)
+			end
 		ensure
 			attribute_value_not_void: Result /= Void
 		end
@@ -1609,7 +1584,7 @@ feature {NONE} -- Implementation
 			Result := STRING_.same_case_insensitive (a_string, False_constant)
 		end
 
-	ecf_version (a_namespace: STRING): UT_VERSION
+	ecf_version (a_namespace: STRING): detachable UT_VERSION
 			-- ECF version corresponding to `a_namespace', or void if not recognized
 		require
 			a_namespace_not_void: a_namespace /= Void

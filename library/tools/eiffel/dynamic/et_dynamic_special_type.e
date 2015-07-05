@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic SPECIAL types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			-- Create a new object at each call.
 		local
 			l_name: ET_FEATURE_NAME
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			Result := precursor (a_query, a_system)
 			l_name := a_query.name

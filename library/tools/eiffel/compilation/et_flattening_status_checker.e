@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-09-02 14:03:45 +0200 (Tue, 02 Sep 2008) $"
 	revision: "$Revision: 6495 $"
@@ -108,7 +108,6 @@ feature {NONE} -- Processing
 			old_class: ET_CLASS
 			i, nb: INTEGER
 			l_reset_needed: BOOLEAN
-			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 		do
 			old_class := current_class
@@ -122,8 +121,7 @@ feature {NONE} -- Processing
 					-- Otherwise the class will be reset to the previous processing step.
 				current_class.unset_flattening_error
 					-- Process parents first.
-				a_parents := current_class.parents
-				if a_parents /= Void then
+				if attached current_class.parents as a_parents then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
 						a_parent_class := a_parents.parent (i).type.base_class
@@ -163,16 +161,12 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 			-- has been modified.
 		local
 			i, nb: INTEGER
-			l_parameters: ET_FORMAL_PARAMETER_LIST
-			l_constraint: ET_TYPE
 		do
 			if current_class.features_flattened then
-				l_parameters := current_class.formal_parameters
-				if l_parameters /= Void then
+				if attached current_class.formal_parameters as l_parameters then
 					nb := l_parameters.count
 					from i := 1 until i > nb loop
-						l_constraint := l_parameters.formal_parameter (i).constraint
-						if l_constraint /= Void then
+						if attached l_parameters.formal_parameter (i).constraint as l_constraint then
 							class_type_checker.check_type_validity (l_constraint)
 							if class_type_checker.has_fatal_error then
 								set_fatal_error (current_class)
@@ -189,12 +183,10 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 			-- Check whether none of the classes appearing in the
 			-- parent types of `current_class' has been modified.
 		local
-			l_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 		do
 			if current_class.features_flattened then
-				l_parents := current_class.parents
-				if l_parents /= Void then
+				if attached current_class.parents as l_parents then
 					nb := l_parents.count
 					from i := 1 until i > nb loop
 						class_type_checker.check_type_validity (l_parents.parent (i).type)
@@ -226,8 +218,7 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 		require
 			a_features_not_void: a_features /= Void
 		local
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_type, l_previous_type: ET_TYPE
+			l_type, l_previous_type: detachable ET_TYPE
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_feature: ET_FEATURE
@@ -246,8 +237,7 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 					end
 				end
 				if not l_has_error then
-					l_arguments := l_feature.arguments
-					if l_arguments /= Void then
+					if attached l_feature.arguments as l_arguments then
 						l_previous_type := Void
 						nb2 := l_arguments.count
 						from j := 1 until j > nb2 loop

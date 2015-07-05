@@ -5,7 +5,7 @@ note
 		"Xace error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -208,8 +208,8 @@ feature -- Reporting warnings
 		require
 			an_element_not_void: an_element /= Void
 			an_element_has_option_as_name: STRING_.same_string (an_element.name, uc_option)
-			an_element_has_name_attribute: an_element.has_attribute_by_name (uc_name)
-			a_name_attribute_not_empty: an_element.attribute_by_name (uc_name).value.count > 0
+			an_element_has_name_attribute: attached an_element.attribute_by_name (uc_name) as l_name_attribute
+			a_name_attribute_not_empty: l_name_attribute.value.count > 0
 			a_position_not_void: a_position /= Void
 		deferred
 		end

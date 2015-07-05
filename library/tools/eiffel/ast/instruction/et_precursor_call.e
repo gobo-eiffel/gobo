@@ -41,8 +41,8 @@ feature -- Initialization
 				-- set by the feature flattener if we only want to reset
 				-- what the implementation checker did, and especially since
 				-- it does not hurt to leave it there.
-			if arguments /= Void then
-				arguments.reset
+			if attached arguments as l_arguments then
+				l_arguments.reset
 			end
 			parenthesis_call := Void
 		end
@@ -52,17 +52,17 @@ feature -- Access
 	precursor_keyword: ET_PRECURSOR_KEYWORD
 			-- 'precursor' keyword
 
-	parent_name: ET_PRECURSOR_CLASS_NAME
+	parent_name: detachable ET_PRECURSOR_CLASS_NAME
 			-- Parent class name surrounded by braces
 
-	arguments: ET_ACTUAL_ARGUMENT_LIST
+	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments
 
-	parent_type: ET_BASE_TYPE
+	parent_type: detachable ET_BASE_TYPE
 			-- Parent type;
 			-- Void if not resolved yet.
 
-	parenthesis_call: detachable ET_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
 			-- Unfolded form when the current precursor call is of the parenthesis alias form;
 			-- For example, if the current precursor call is 'precursor (args)', its parenthesis call
 			-- will be 'precursor.g (args)' where 'g' is declared as 'g alias "()"'.
@@ -71,8 +71,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if is_parent_prefixed and parent_name /= Void then
-				Result := parent_name.position
+			if is_parent_prefixed and then attached parent_name as l_parent_name then
+				Result := l_parent_name.position
 			else
 				Result := precursor_keyword.position
 			end
@@ -81,8 +81,8 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if is_parent_prefixed and parent_name /= Void then
-				Result := parent_name.first_leaf
+			if is_parent_prefixed and then attached parent_name as l_parent_name then
+				Result := l_parent_name.first_leaf
 			else
 				Result := precursor_keyword
 			end
@@ -91,24 +91,12 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if arguments /= Void then
-				Result := arguments.last_leaf
-			elseif not is_parent_prefixed and parent_name /= Void then
-				Result := parent_name.last_leaf
+			if attached arguments as l_arguments then
+				Result := l_arguments.last_leaf
+			elseif not is_parent_prefixed and then attached parent_name as l_parent_name then
+				Result := l_parent_name.last_leaf
 			else
 				Result := precursor_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if arguments /= Void then
-				Result := arguments.break
-			elseif not is_parent_prefixed and parent_name /= Void then
-				Result := parent_name.break
-			else
-				Result := precursor_keyword.break
 			end
 		end
 

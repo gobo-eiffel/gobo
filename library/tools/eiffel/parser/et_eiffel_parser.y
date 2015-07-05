@@ -35,58 +35,58 @@ create
 
 %}
 
-%token <ET_KEYWORD> E_ALIAS E_ALL E_AS E_CHECK
-%token <ET_KEYWORD> E_CLASS E_CREATE E_CREATION E_DEBUG
-%token <ET_KEYWORD> E_DO E_ELSE E_ELSEIF E_END E_ENSURE
-%token <ET_KEYWORD> E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
-%token <ET_KEYWORD> E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
-%token <ET_KEYWORD> E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_NOTE E_OBSOLETE
-%token <ET_KEYWORD> E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
-%token <ET_KEYWORD> E_RESCUE E_SELECT E_STRIP E_WHEN
-%token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
-%token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
-%token <ET_KEYWORD> E_ATTACHED E_DETACHABLE
-%token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
-%token <ET_KEYWORD> E_ACROSS E_SOME
-%token <ET_AGENT_KEYWORD> E_AGENT
-%token <ET_PRECURSOR_KEYWORD> E_PRECURSOR
+%token <detachable ET_KEYWORD> E_ALIAS E_ALL E_AS E_CHECK
+%token <detachable ET_KEYWORD> E_CLASS E_CREATE E_CREATION E_DEBUG
+%token <detachable ET_KEYWORD> E_DO E_ELSE E_ELSEIF E_END E_ENSURE
+%token <detachable ET_KEYWORD> E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
+%token <detachable ET_KEYWORD> E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
+%token <detachable ET_KEYWORD> E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_NOTE E_OBSOLETE
+%token <detachable ET_KEYWORD> E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
+%token <detachable ET_KEYWORD> E_RESCUE E_SELECT E_STRIP E_WHEN
+%token <detachable ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
+%token <detachable ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
+%token <detachable ET_KEYWORD> E_ATTACHED E_DETACHABLE
+%token <detachable ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
+%token <detachable ET_KEYWORD> E_ACROSS E_SOME
+%token <detachable ET_AGENT_KEYWORD> E_AGENT
+%token <detachable ET_PRECURSOR_KEYWORD> E_PRECURSOR
 
-%token <ET_SYMBOL> E_ARROW E_DOTDOT E_LARRAY E_RARRAY
-%token <ET_SYMBOL> E_ASSIGN_SYMBOL E_REVERSE
-%token <ET_POSITION> E_UNKNOWN
+%token <detachable ET_SYMBOL> E_ARROW E_DOTDOT E_LARRAY E_RARRAY
+%token <detachable ET_SYMBOL> E_ASSIGN_SYMBOL E_REVERSE
+%token <detachable ET_POSITION> E_UNKNOWN
 
-%token <ET_BIT_CONSTANT> E_BIT
-%token <ET_BOOLEAN_CONSTANT> E_FALSE E_TRUE
-%token <ET_BREAK> E_BREAK
-%token <ET_CHARACTER_CONSTANT> E_CHARACTER
-%token <ET_CURRENT> E_CURRENT
-%token <ET_FREE_OPERATOR> E_FREEOP
-%token <ET_IDENTIFIER> E_IDENTIFIER E_BITTYPE E_TUPLE
-%token <ET_INTEGER_CONSTANT> E_INTEGER
-%token <ET_KEYWORD_OPERATOR> E_AND E_OR E_XOR E_NOT E_IMPLIES
-%token <ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
-%token <ET_MANIFEST_STRING> E_STRMOD E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE
-%token <ET_MANIFEST_STRING> E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
-%token <ET_MANIFEST_STRING> E_STRDOTDOT E_STRBRACKET E_STRPARENTHESIS
-%token <ET_MANIFEST_STRING> E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
-%token <ET_REAL_CONSTANT> E_REAL
-%token <ET_RESULT> E_RESULT
-%token <ET_RETRY_INSTRUCTION> E_RETRY
-%token <ET_SYMBOL_OPERATOR> E_DIV '/' E_GE '>' E_LE '<' E_MOD '^' '*'
-%token <ET_VOID> E_VOID
+%token <detachable ET_BIT_CONSTANT> E_BIT
+%token <detachable ET_BOOLEAN_CONSTANT> E_FALSE E_TRUE
+%token <detachable ET_BREAK> E_BREAK
+%token <detachable ET_CHARACTER_CONSTANT> E_CHARACTER
+%token <detachable ET_CURRENT> E_CURRENT
+%token <detachable ET_FREE_OPERATOR> E_FREEOP
+%token <detachable ET_IDENTIFIER> E_IDENTIFIER E_BITTYPE E_TUPLE
+%token <detachable ET_INTEGER_CONSTANT> E_INTEGER
+%token <detachable ET_KEYWORD_OPERATOR> E_AND E_OR E_XOR E_NOT E_IMPLIES
+%token <detachable ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
+%token <detachable ET_MANIFEST_STRING> E_STRMOD E_STRPOWER E_STRLT E_STRLE E_STRGT E_STRGE
+%token <detachable ET_MANIFEST_STRING> E_STRAND E_STROR E_STRXOR E_STRANDTHEN E_STRORELSE
+%token <detachable ET_MANIFEST_STRING> E_STRDOTDOT E_STRBRACKET E_STRPARENTHESIS
+%token <detachable ET_MANIFEST_STRING> E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
+%token <detachable ET_REAL_CONSTANT> E_REAL
+%token <detachable ET_RESULT> E_RESULT
+%token <detachable ET_RETRY_INSTRUCTION> E_RETRY
+%token <detachable ET_SYMBOL_OPERATOR> E_DIV '/' E_GE '>' E_LE '<' E_MOD '^' '*'
+%token <detachable ET_VOID> E_VOID
 
-%token <ET_POSITION> E_CHARERR E_STRERR E_INTERR
+%token <detachable ET_POSITION> E_CHARERR E_STRERR E_INTERR
 
-%token <ET_KEYWORD> E_OLD
-%token <ET_SYMBOL> '{' '}'
-%token <ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
-%token <ET_SYMBOL_OPERATOR> '-'
-%token <ET_SYMBOL_OPERATOR> '+'
-%token <ET_SYMBOL> '=' '~'
-%token <ET_SYMBOL> E_NE E_NOT_TILDE
-%token <ET_SEMICOLON_SYMBOL> ';'
-%token <ET_BRACKET_SYMBOL> '['
-%token <ET_QUESTION_MARK_SYMBOL> '?'
+%token <detachable ET_KEYWORD> E_OLD
+%token <detachable ET_SYMBOL> '{' '}'
+%token <detachable ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
+%token <detachable ET_SYMBOL_OPERATOR> '-'
+%token <detachable ET_SYMBOL_OPERATOR> '+'
+%token <detachable ET_SYMBOL> '=' '~'
+%token <detachable ET_SYMBOL> E_NE E_NOT_TILDE
+%token <detachable ET_SEMICOLON_SYMBOL> ';'
+%token <detachable ET_BRACKET_SYMBOL> '['
+%token <detachable ET_QUESTION_MARK_SYMBOL> '?'
 
 %left E_IMPLIES
 %left E_OR E_XOR
@@ -98,129 +98,129 @@ create
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%type <ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
-%type <ET_ACROSS_INSTRUCTION> Across_instruction_header
-%type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
-%type <ET_ACTUAL_PARAMETER_ITEM> Type_no_identifier_comma
-%type <ET_ACTUAL_PARAMETER_ITEM> Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_semicolon
-%type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
-%type <ET_ACTUAL_PARAMETER_LIST> Tuple_actual_parameters_opt Tuple_actual_parameters
-%type <ET_ACTUAL_PARAMETER_LIST> Tuple_labeled_actual_parameter_list
-%type <ET_AGENT_ARGUMENT_OPERAND> Agent_actual
-%type <ET_AGENT_ARGUMENT_OPERAND_ITEM> Agent_actual_comma
-%type <ET_AGENT_ARGUMENT_OPERAND_LIST> Agent_actuals_opt Agent_actual_list
-%type <ET_AGENT_TARGET> Agent_target
-%type <ET_ALIAS_NAME> Alias_name
-%type <ET_ASSIGNER> Assigner_opt
-%type <ET_BOOLEAN_CONSTANT> Boolean_constant
-%type <ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
-%type <ET_BRACKET_EXPRESSION> Bracket_expression Typed_bracket_expression Untyped_bracket_expression
-%type <ET_CALL_AGENT> Call_agent
-%type <ET_CALL_EXPRESSION> Qualified_call_expression
-%type <ET_CHARACTER_CONSTANT> Character_constant Typed_character_constant Untyped_character_constant
-%type <ET_CHECK_INSTRUCTION> Check_instruction
-%type <ET_CHOICE> Choice
-%type <ET_CHOICE_CONSTANT> Choice_constant
-%type <ET_CHOICE_ITEM> Choice_comma
-%type <ET_CHOICE_LIST> Choices Choice_list
-%type <ET_CLASS> Class_header Class_to_end Class_declaration
-%type <ET_CLIENT_ITEM> Client Client_comma
-%type <ET_CLIENTS> Clients Client_list
-%type <ET_COMPOUND> Compound Rescue_opt Do_compound
-%type <ET_COMPOUND> Then_compound Explicit_then_compound
-%type <ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
-%type <ET_COMPOUND> From_compound From_compound_opt Loop_compound Attribute_compound
-%type <ET_COMPOUND> Instruction_list Compound_opt Explicit_compound_opt
-%type <ET_CONDITIONAL> Until_expression_opt
-%type <ET_CONSTANT> Manifest_constant
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter_semicolon
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters Constraint_actual_parameters_opt
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameter_list
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_actual_parameters Constraint_tuple_actual_parameters_opt
-%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_labeled_actual_parameter_list
-%type <ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
-%type <ET_CONSTRAINT_TYPE> Constraint_type Constraint_type_no_identifier
-%type <ET_CONVERT_FEATURE> Convert_feature
-%type <ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
-%type <ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
-%type <ET_CREATE_EXPRESSION> Create_expression
-%type <ET_CREATOR> Creation_clause Creation_procedure_list
-%type <ET_CREATOR_LIST> Creators Creators_opt Creators_list
-%type <ET_DEBUG_INSTRUCTION> Debug_instruction
-%type <ET_ELSEIF_PART> Elseif_part
-%type <ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
-%type <ET_EXPORT> New_export_item
-%type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
-%type <ET_EXPRESSION> Expression Typed_call_chain Untyped_call_chain
-%type <ET_EXPRESSION> Precursor_expression Address_mark
-%type <ET_EXPRESSION> Typed_call_expression Untyped_call_expression
-%type <ET_EXPRESSION> Typed_bracket_target Untyped_bracket_target
-%type <ET_EXPRESSION> Binary_expression Non_binary_expression Non_binary_and_typed_expression
-%type <ET_EXPRESSION_ITEM> Expression_comma
-%type <ET_EXTENDED_FEATURE_NAME> Extended_feature_name
-%type <ET_EXTERNAL_ALIAS> External_name_opt
-%type <ET_FEATURE_CLAUSE> Feature_clause Feature_clause_header
-%type <ET_FEATURE_CLAUSE_LIST> Features Features_opt Feature_clause_list
-%type <ET_FEATURE_EXPORT> Export_feature_name_list
-%type <ET_FEATURE_NAME> Feature_name
-%type <ET_FEATURE_NAME_ITEM> Feature_name_comma Creation_procedure_comma
-%type <ET_FORMAL_ARGUMENT> Formal_argument_name Formal_argument_name_comma
-%type <ET_FORMAL_ARGUMENT_ITEM> Formal_argument Formal_argument_semicolon
-%type <ET_FORMAL_ARGUMENT_LIST> Formal_arguments Formal_argument_list Inline_agent_formal_arguments Feature_formal_arguments
-%type <ET_FORMAL_PARAMETER> Formal_parameter
-%type <ET_FORMAL_PARAMETER_ITEM> Formal_parameter_comma
-%type <ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
-%type <ET_IDENTIFIER> Identifier Class_name
-%type <ET_IF_INSTRUCTION> Conditional
-%type <ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
-%type <ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
-%type <ET_INDEXING_TERM> Index_value
-%type <ET_INDEXING_TERM_ITEM> Index_value_comma
-%type <ET_INDEXING_TERM_LIST> Index_terms
-%type <ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
-%type <ET_INSPECT_INSTRUCTION> Multi_branch
-%type <ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
-%type <ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
-%type <ET_INVARIANTS> Invariant_clause Invariant_clause_opt
-%type <ET_KEYWORD> Frozen_opt External_opt Is_opt
-%type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
-%type <ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
-%type <ET_LIKE_TYPE> Anchored_type Anchored_type_with_no_type_mark
-%type <ET_LOCAL_VARIABLE> Local_name Local_name_comma
-%type <ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
-%type <ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
-%type <ET_LOOP_INVARIANTS> Loop_invariant_clause Loop_invariant_clause_opt
-%type <ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
-%type <ET_MANIFEST_STRING> Manifest_string Typed_manifest_string Untyped_manifest_string
-%type <ET_MANIFEST_STRING_ITEM> Manifest_string_comma
-%type <ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
-%type <ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
-%type <ET_OBSOLETE> Obsolete_opt
-%type <ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
-%type <ET_PARENT> Parent Parent_end
-%type <ET_PARENT_ITEM> Parent_semicolon
-%type <ET_PARENT_LIST> Inheritance_opt Inheritance_end Parent_list Parent_list_end
-%type <ET_POSTCONDITIONS> Postcondition_opt
-%type <ET_PRECONDITIONS> Precondition_opt
-%type <ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
-%type <ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type Qualified_anchored_type_with_no_type_mark
-%type <ET_QUERY> Query_declaration Single_query_declaration
-%type <ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
-%type <ET_RENAME_ITEM> Rename Rename_comma
-%type <ET_RENAME_LIST> Rename_clause Rename_list
-%type <ET_SEMICOLON_SYMBOL> Semicolon_opt
-%type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
-%type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
-%type <ET_SYMBOL> Left_parenthesis
-%type <ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
-%type <ET_TYPE_ITEM> Type_comma
-%type <ET_TYPE_LIST> Convert_types Convert_type_list
-%type <ET_VARIANT> Variant_clause Variant_clause_opt
-%type <ET_WHEN_PART> When_part
-%type <ET_WHEN_PART_LIST> When_list When_list_opt
-%type <ET_WRITABLE> Writable
+%type <detachable ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
+%type <detachable ET_ACROSS_INSTRUCTION> Across_instruction_header
+%type <detachable ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
+%type <detachable ET_ACTUAL_PARAMETER_ITEM> Type_no_identifier_comma
+%type <detachable ET_ACTUAL_PARAMETER_ITEM> Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_semicolon
+%type <detachable ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
+%type <detachable ET_ACTUAL_PARAMETER_LIST> Tuple_actual_parameters_opt Tuple_actual_parameters
+%type <detachable ET_ACTUAL_PARAMETER_LIST> Tuple_labeled_actual_parameter_list
+%type <detachable ET_AGENT_ARGUMENT_OPERAND> Agent_actual
+%type <detachable ET_AGENT_ARGUMENT_OPERAND_ITEM> Agent_actual_comma
+%type <detachable ET_AGENT_ARGUMENT_OPERAND_LIST> Agent_actuals_opt Agent_actual_list
+%type <detachable ET_AGENT_TARGET> Agent_target
+%type <detachable ET_ALIAS_NAME> Alias_name
+%type <detachable ET_ASSIGNER> Assigner_opt
+%type <detachable ET_BOOLEAN_CONSTANT> Boolean_constant
+%type <detachable ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
+%type <detachable ET_BRACKET_EXPRESSION> Bracket_expression Typed_bracket_expression Untyped_bracket_expression
+%type <detachable ET_CALL_AGENT> Call_agent
+%type <detachable ET_QUALIFIED_CALL_EXPRESSION> Qualified_call_expression
+%type <detachable ET_CHARACTER_CONSTANT> Character_constant Typed_character_constant Untyped_character_constant
+%type <detachable ET_CHECK_INSTRUCTION> Check_instruction
+%type <detachable ET_CHOICE> Choice
+%type <detachable ET_CHOICE_CONSTANT> Choice_constant
+%type <detachable ET_CHOICE_ITEM> Choice_comma
+%type <detachable ET_CHOICE_LIST> Choices Choice_list
+%type <detachable ET_CLASS> Class_header Class_to_end Class_declaration
+%type <detachable ET_CLIENT_ITEM> Client Client_comma
+%type <detachable ET_CLIENTS> Clients Client_list
+%type <detachable ET_COMPOUND> Compound Rescue_opt Do_compound
+%type <detachable ET_COMPOUND> Then_compound Explicit_then_compound
+%type <detachable ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
+%type <detachable ET_COMPOUND> From_compound From_compound_opt Loop_compound Attribute_compound
+%type <detachable ET_COMPOUND> Instruction_list Compound_opt Explicit_compound_opt
+%type <detachable ET_CONDITIONAL> Until_expression_opt
+%type <detachable ET_CONSTANT> Manifest_constant
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_type_no_identifier_comma
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM> Constraint_tuple_labeled_actual_parameter_semicolon
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters Constraint_actual_parameters_opt
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameter_list
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_actual_parameters Constraint_tuple_actual_parameters_opt
+%type <detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_tuple_labeled_actual_parameter_list
+%type <detachable ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
+%type <detachable ET_CONSTRAINT_TYPE> Constraint_type Constraint_type_no_identifier
+%type <detachable ET_CONVERT_FEATURE> Convert_feature
+%type <detachable ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
+%type <detachable ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
+%type <detachable ET_CREATE_EXPRESSION> Create_expression
+%type <detachable ET_CREATOR> Creation_clause Creation_procedure_list
+%type <detachable ET_CREATOR_LIST> Creators Creators_opt Creators_list
+%type <detachable ET_DEBUG_INSTRUCTION> Debug_instruction
+%type <detachable ET_ELSEIF_PART> Elseif_part
+%type <detachable ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
+%type <detachable ET_EXPORT> New_export_item
+%type <detachable ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
+%type <detachable ET_EXPRESSION> Expression Typed_call_chain Untyped_call_chain
+%type <detachable ET_EXPRESSION> Precursor_expression Address_mark
+%type <detachable ET_EXPRESSION> Typed_call_expression Untyped_call_expression
+%type <detachable ET_EXPRESSION> Typed_bracket_target Untyped_bracket_target
+%type <detachable ET_EXPRESSION> Binary_expression Non_binary_expression Non_binary_and_typed_expression
+%type <detachable ET_EXPRESSION_ITEM> Expression_comma
+%type <detachable ET_EXTENDED_FEATURE_NAME> Extended_feature_name
+%type <detachable ET_EXTERNAL_ALIAS> External_name_opt
+%type <detachable ET_FEATURE_CLAUSE> Feature_clause Feature_clause_header
+%type <detachable ET_FEATURE_CLAUSE_LIST> Features Features_opt Feature_clause_list
+%type <detachable ET_FEATURE_EXPORT> Export_feature_name_list
+%type <detachable ET_FEATURE_NAME> Feature_name
+%type <detachable ET_FEATURE_NAME_ITEM> Feature_name_comma Creation_procedure_comma
+%type <detachable ET_FORMAL_ARGUMENT> Formal_argument_name Formal_argument_name_comma
+%type <detachable ET_FORMAL_ARGUMENT_ITEM> Formal_argument Formal_argument_semicolon
+%type <detachable ET_FORMAL_ARGUMENT_LIST> Formal_arguments Formal_argument_list Inline_agent_formal_arguments Feature_formal_arguments
+%type <detachable ET_FORMAL_PARAMETER> Formal_parameter
+%type <detachable ET_FORMAL_PARAMETER_ITEM> Formal_parameter_comma
+%type <detachable ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
+%type <detachable ET_IDENTIFIER> Identifier Class_name
+%type <detachable ET_IF_INSTRUCTION> Conditional
+%type <detachable ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
+%type <detachable ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
+%type <detachable ET_INDEXING_TERM> Index_value
+%type <detachable ET_INDEXING_TERM_ITEM> Index_value_comma
+%type <detachable ET_INDEXING_TERM_LIST> Index_terms
+%type <detachable ET_INLINE_AGENT> Inline_agent Inline_agent_no_actual_arguments
+%type <detachable ET_INSPECT_INSTRUCTION> Multi_branch
+%type <detachable ET_INSTRUCTION> Instruction Creation_instruction Call_instruction Create_instruction
+%type <detachable ET_INTEGER_CONSTANT> Integer_constant Typed_integer_constant Untyped_integer_constant Signed_integer_constant
+%type <detachable ET_INVARIANTS> Invariant_clause Invariant_clause_opt
+%type <detachable ET_KEYWORD> Frozen_opt External_opt Is_opt
+%type <detachable ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
+%type <detachable ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
+%type <detachable ET_LIKE_TYPE> Anchored_type Anchored_type_with_no_type_mark
+%type <detachable ET_LOCAL_VARIABLE> Local_name Local_name_comma
+%type <detachable ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
+%type <detachable ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
+%type <detachable ET_LOOP_INVARIANTS> Loop_invariant_clause Loop_invariant_clause_opt
+%type <detachable ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
+%type <detachable ET_MANIFEST_STRING> Manifest_string Typed_manifest_string Untyped_manifest_string
+%type <detachable ET_MANIFEST_STRING_ITEM> Manifest_string_comma
+%type <detachable ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
+%type <detachable ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
+%type <detachable ET_OBSOLETE> Obsolete_opt
+%type <detachable ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
+%type <detachable ET_PARENT> Parent Parent_end
+%type <detachable ET_PARENT_ITEM> Parent_semicolon
+%type <detachable ET_PARENT_LIST> Inheritance_opt Inheritance_end Parent_list Parent_list_end
+%type <detachable ET_POSTCONDITIONS> Postcondition_opt
+%type <detachable ET_PRECONDITIONS> Precondition_opt
+%type <detachable ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
+%type <detachable ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type Qualified_anchored_type_with_no_type_mark
+%type <detachable ET_QUERY> Query_declaration Single_query_declaration
+%type <detachable ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
+%type <detachable ET_RENAME_ITEM> Rename Rename_comma
+%type <detachable ET_RENAME_LIST> Rename_clause Rename_list
+%type <detachable ET_SEMICOLON_SYMBOL> Semicolon_opt
+%type <detachable ET_STATIC_CALL_EXPRESSION> Static_call_expression
+%type <detachable ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
+%type <detachable ET_SYMBOL> Left_parenthesis
+%type <detachable ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
+%type <detachable ET_TYPE_ITEM> Type_comma
+%type <detachable ET_TYPE_LIST> Convert_types Convert_type_list
+%type <detachable ET_VARIANT> Variant_clause Variant_clause_opt
+%type <detachable ET_WHEN_PART> When_part
+%type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
+%type <detachable ET_WRITABLE> Writable
 
 %expect 82
 %start Class_declarations
@@ -234,8 +234,8 @@ Class_declarations: Class_declaration
 		}
 	| E_BREAK Class_declaration
 		{
-			if $2 /= Void then
-				$2.set_leading_break ($1)
+			if attached $2 as l_class_declaration then
+				l_class_declaration.set_leading_break ($1)
 			end
 		}
 	;
@@ -303,8 +303,8 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 		{
 			$$ := $1
 			set_class_to_inheritance_end ($$, $3, $4)
-			if $7 /= Void then
-				$7.set_first_indexing ($5)
+			if attached $8 as l_class then
+				l_class.set_first_indexing ($5)
 			end
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Set_providers Class_declaration_opt
@@ -368,10 +368,10 @@ Indexing_clause_opt: -- Empty
 
 Note_list: Note_item
 		{
-			if $1 /= Void then
+			if attached $1 as l_note then
 				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_note)
 				end
 			else
 				$$ := ast_factory.new_indexings (last_keyword, counter_value)
@@ -382,8 +382,8 @@ Note_list: Note_item
 	  Note_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_note then
+				$$.put_first (l_note)
 			end
 		}
 	| Note_item_semicolon
@@ -391,8 +391,8 @@ Note_list: Note_item
 	  Note_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_note then
+				$$.put_first (l_note)
 			end
 		}
 	;
@@ -416,10 +416,10 @@ Note_item_semicolon: Note_item ';'
 
 Index_list: Index_clause
 		{
-			if $1 /= Void then
+			if attached $1 as l_indexing_clause then
 				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_indexing_clause)
 				end
 			else
 				$$ := ast_factory.new_indexings (last_keyword, counter_value)
@@ -428,10 +428,10 @@ Index_list: Index_clause
 	| Index_clause_semicolon
 		-- TODO: Syntax error
 		{
-			if $1 /= Void then
+			if attached $1 as l_indexing_clause then
 				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_indexing_clause)
 				end
 			else
 				$$ := ast_factory.new_indexings (last_keyword, counter_value)
@@ -442,8 +442,8 @@ Index_list: Index_clause
 	  Index_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_indexing_clause then
+				$$.put_first (l_indexing_clause)
 			end
 		}
 	| Index_clause_semicolon
@@ -451,8 +451,8 @@ Index_list: Index_clause
 	  Index_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_indexing_clause then
+				$$.put_first (l_indexing_clause)
 			end
 		}
 	;
@@ -483,10 +483,10 @@ Index_clause_semicolon: Index_clause ';'
 
 Index_terms: Index_value
 		{
-			if $1 /= Void then
+			if attached $1 as l_index_value then
 				$$ := ast_factory.new_indexing_terms (counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_index_value)
 				end
 			else
 				$$ := ast_factory.new_indexing_terms (counter_value)
@@ -495,8 +495,8 @@ Index_terms: Index_value
 	| Index_value_comma Index_terms
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_index_value then
+				$$.put_first (l_index_value)
 			end
 		}
 	;
@@ -536,7 +536,9 @@ Class_header: Frozen_opt External_opt E_CLASS Identifier
 		{
 			$$ := new_class ($4)
 			if $$ /= Void then
-				$$.set_class_keyword ($3)
+				if attached $3 as l_class_keyword then
+					$$.set_class_keyword (l_class_keyword)
+				end
 				$$.set_frozen_keyword ($1)
 				$$.set_external_keyword ($2)
 			end
@@ -546,7 +548,9 @@ Class_header: Frozen_opt External_opt E_CLASS Identifier
 		{
 			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($4)
+				if attached $4 as l_class_keyword then
+					$$.set_class_keyword (l_class_keyword)
+				end
 				$$.set_class_mark ($2)
 				$$.set_frozen_keyword ($1)
 				$$.set_external_keyword ($3)
@@ -557,7 +561,9 @@ Class_header: Frozen_opt External_opt E_CLASS Identifier
 		{
 			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($4)
+				if attached $4 as l_class_keyword then
+					$$.set_class_keyword (l_class_keyword)
+				end
 				$$.set_class_mark ($2)
 				$$.set_frozen_keyword ($1)
 				$$.set_external_keyword ($3)
@@ -568,7 +574,9 @@ Class_header: Frozen_opt External_opt E_CLASS Identifier
 		{
 			$$ := new_class ($5)
 			if $$ /= Void then
-				$$.set_class_keyword ($4)
+				if attached $4 as l_class_keyword then
+					$$.set_class_keyword (l_class_keyword)
+				end
 				$$.set_class_mark ($2)
 				$$.set_frozen_keyword ($1)
 				$$.set_external_keyword ($3)
@@ -617,10 +625,10 @@ Formal_parameters_opt: -- Empty
 
 Formal_parameter_list: Formal_parameter ']'
 		{
-			if $1 /= Void then
+			if attached $1 as l_formal_parameter then
 				$$ := ast_factory.new_formal_parameters (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_formal_parameter)
 				end
 			else
 				$$ := ast_factory.new_formal_parameters (last_symbol, $2, counter_value)
@@ -629,8 +637,8 @@ Formal_parameter_list: Formal_parameter ']'
 	| Formal_parameter_comma Formal_parameter_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_formal_parameter then
+				$$.put_first (l_formal_parameter)
 			end
 		}
 	;
@@ -726,10 +734,10 @@ Constraint_create: E_CREATE E_END
 
 Constraint_create_procedure_list: Identifier E_END
 		{
-			if $1 /= Void then
+			if attached $1 as l_identifier then
 				$$ := ast_factory.new_constraint_creator (last_keyword, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_identifier)
 				end
 			else
 				$$ := ast_factory.new_constraint_creator (last_keyword, $2, counter_value)
@@ -739,15 +747,15 @@ Constraint_create_procedure_list: Identifier E_END
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_constraint_creator (last_keyword, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_creation_procedure then
+				$$.put_first (l_creation_procedure)
 			end
 		}
 	| Creation_procedure_comma Constraint_create_procedure_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_creation_procedure then
+				$$.put_first (l_creation_procedure)
 			end
 		}
 	;
@@ -875,10 +883,10 @@ Constraint_actual_parameters: '[' ']'
 
 Constraint_actual_parameter_list: Constraint_type ']'
 		{
-			if $1 /= Void then
+			if attached $1 as l_constraint_type then
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_constraint_type)
 				end
 			else
 				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value)
@@ -1094,36 +1102,36 @@ Parent_end: Class_name Actual_parameters_opt E_END
 Parent_list: Parent
 		{
 			$$ := ast_factory.new_parents (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent_semicolon
 		{
 			$$ := ast_factory.new_parents (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent Parent_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent_end Parent_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent_semicolon Parent_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	;
@@ -1131,29 +1139,29 @@ Parent_list: Parent
 Parent_list_end: Parent_end
 		{
 			$$ := ast_factory.new_parents (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent Parent_list_end
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent_end Parent_list_end
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	| Parent_semicolon Parent_list_end
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_parent then
+				$$.put_first (l_parent)
 			end
 		}
 	;
@@ -1194,15 +1202,15 @@ Rename_clause: E_RENAME
 Rename_list: Rename
 		{
 			$$ := ast_factory.new_renames (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
 			end
 		}
 	| Rename_comma
 		{
 			$$ := ast_factory.new_renames (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
 			end
 				-- TODO: syntax error.
 			raise_error
@@ -1210,8 +1218,8 @@ Rename_list: Rename
 	| Rename_comma Rename_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_rename then
+				$$.put_first (l_rename)
 			end
 		}
 	;
@@ -1259,10 +1267,10 @@ New_exports_opt: -- Empty
 
 New_export_list: New_export_item
 		{
-			if $1 /= Void then
+			if attached $1 as l_new_export then
 				$$ := ast_factory.new_exports (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_new_export)
 				end
 			else
 				$$ := ast_factory.new_exports (last_keyword, counter_value)
@@ -1277,8 +1285,8 @@ New_export_list: New_export_item
 	  New_export_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_new_export then
+				$$.put_first (l_new_export)
 			end
 		}
 	;
@@ -1308,10 +1316,10 @@ New_export_item: Clients E_ALL
 
 Export_feature_name_list: Feature_name
 		{
-			if $1 /= Void then
+			if attached $1 as l_feature_name then
 				$$ := ast_factory.new_feature_export (last_export_clients, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_feature_name)
 				end
 			else
 				$$ := ast_factory.new_feature_export (last_export_clients, counter_value)
@@ -1321,15 +1329,15 @@ Export_feature_name_list: Feature_name
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_feature_export (last_export_clients, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	| Feature_name_comma Export_feature_name_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	;
@@ -1354,31 +1362,31 @@ Clients: '{'
 Client_list: Client '}'
 		{
 			$$ := ast_factory.new_clients (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_client then
+				$$.put_first (l_client)
 			end
 		}
 	| Client_comma '}'
 		-- Syntax error
 		{
 			$$ := ast_factory.new_clients (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_client then
+				$$.put_first (l_client)
 			end
 		}
 	| Client_comma Client_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_client then
+				$$.put_first (l_client)
 			end
 		}
 	| Client Client_list
 		-- Syntax error
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_client then
+				$$.put_first (l_client)
 			end
 		}
 	;
@@ -1468,10 +1476,10 @@ Select_clause_opt: -- Empty
 
 Keyword_feature_name_list: Feature_name
 		{
-			if $1 /= Void then
+			if attached $1 as l_feature_name then
 				$$ := ast_factory.new_keyword_feature_name_list (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_feature_name)
 				end
 			else
 				$$ := ast_factory.new_keyword_feature_name_list (last_keyword, counter_value)
@@ -1481,15 +1489,15 @@ Keyword_feature_name_list: Feature_name
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_keyword_feature_name_list (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	| Feature_name_comma Keyword_feature_name_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	;
@@ -1523,10 +1531,10 @@ Creators: Add_counter Creators_list
 
 Creators_list: Creation_clause
 		{
-			if $1 /= Void then
+			if attached $1 as l_creation_clause then
 				$$ := ast_factory.new_creators (counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_creation_clause)
 				end
 			else
 				$$ := ast_factory.new_creators (counter_value)
@@ -1541,8 +1549,8 @@ Creators_list: Creation_clause
 	  Creators_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_creation_clause then
+				$$.put_first (l_creation_clause)
 			end
 		}
 	;
@@ -1607,10 +1615,10 @@ Creation_clause: E_CREATION Clients
 
 Creation_procedure_list: Identifier
 		{
-			if $1 /= Void then
+			if attached $1 as l_identifier then
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_identifier)
 				end
 			else
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
@@ -1623,16 +1631,16 @@ Creation_procedure_list: Identifier
 				raise_error
 			else
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
-				if $$ /= Void and $1 /= Void then
-					$$.put_first ($1)
+				if $$ /= Void and attached $1 as l_creation_procedure then
+					$$.put_first (l_creation_procedure)
 				end
 			end
 		}
 	| Creation_procedure_comma Creation_procedure_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_creation_procedure then
+				$$.put_first (l_creation_procedure)
 			end
 		}
 	;
@@ -1670,22 +1678,22 @@ Convert_clause: E_CONVERT
 Convert_list: Convert_feature
 		{
 			$$ := ast_factory.new_convert_features (last_keyword, counter_value + 1)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_convert_feature then
+				$$.put_first (l_convert_feature)
 			end
 		}
 	| Convert_feature_comma
 		{
 			$$ := ast_factory.new_convert_features (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_convert_feature then
+				$$.put_first (l_convert_feature)
 			end
 		}
 	| Convert_feature_comma Convert_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_convert_feature then
+				$$.put_first (l_convert_feature)
 			end
 		}
 	;
@@ -1726,10 +1734,10 @@ Convert_types: '{' '}'
 
 Convert_type_list: Type '}'
 		{
-			if $1 /= Void then
+			if attached $1 as l_convert_type then
 				$$ := ast_factory.new_convert_types (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_convert_type)
 				end
 			else
 				$$ := ast_factory.new_convert_types (last_symbol, $2, counter_value)
@@ -1738,8 +1746,8 @@ Convert_type_list: Type '}'
 	| Type_comma Convert_type_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_convert_type then
+				$$.put_first (l_convert_type)
 			end
 		}
 	;
@@ -1775,15 +1783,15 @@ Features: Add_counter Feature_clause_list
 Feature_clause_list: Feature_clause
 		{
 			$$ := ast_factory.new_feature_clauses (counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_clause then
+				$$.put_first (l_feature_clause)
 			end
 		}
 	| Feature_clause Feature_clause_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_clause then
+				$$.put_first (l_feature_clause)
 			end
 		}
 	;
@@ -1832,8 +1840,10 @@ Query_declaration: Single_query_declaration
 	| E_FROZEN Single_query_declaration
 		{
 			$$ := $2
-			$$.set_frozen_keyword ($1)
-			register_query ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_query ($$)
+			end
 		}
 	| Extended_feature_name ',' Query_declaration
 		{
@@ -1849,15 +1859,19 @@ Query_declaration: Single_query_declaration
 	| E_FROZEN Extended_feature_name ',' Query_declaration
 		{
 			$$ := new_query_synonym (ast_factory.new_extended_feature_name_comma ($2, $3), $4)
-			$$.set_frozen_keyword ($1)
-			register_query_synonym ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_query_synonym ($$)
+			end
 		}
 	| E_FROZEN Extended_feature_name Query_declaration
 			-- TODO: Syntax error
 		{
 			$$ := new_query_synonym ($2, $3)
-			$$.set_frozen_keyword ($1)
-			register_query_synonym ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_query_synonym ($$)
+			end
 		}
 	;
 
@@ -1869,8 +1883,10 @@ Procedure_declaration: Single_procedure_declaration
 	| E_FROZEN Single_procedure_declaration
 		{
 			$$ := $2
-			$$.set_frozen_keyword ($1)
-			register_procedure ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_procedure ($$)
+			end
 		}
 	| Extended_feature_name ',' Procedure_declaration
 		{
@@ -1886,15 +1902,19 @@ Procedure_declaration: Single_procedure_declaration
 	| E_FROZEN Extended_feature_name ',' Procedure_declaration
 		{
 			$$ := new_procedure_synonym (ast_factory.new_extended_feature_name_comma ($2, $3), $4)
-			$$.set_frozen_keyword ($1)
-			register_procedure_synonym ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_procedure_synonym ($$)
+			end
 		}
 	| E_FROZEN Extended_feature_name Procedure_declaration
 			-- TODO: Syntax error
 		{
 			$$ := new_procedure_synonym ($2, $3)
-			$$.set_frozen_keyword ($1)
-			register_procedure_synonym ($$)
+			if $$ /= Void then
+				$$.set_frozen_keyword ($1)
+				register_procedure_synonym ($$)
+			end
 		}
 	;
 
@@ -1910,7 +1930,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1920,7 +1940,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1932,7 +1952,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -1946,7 +1966,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
@@ -1958,7 +1978,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $10, ast_factory.new_once_compound ($9, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class)
@@ -1972,7 +1992,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class)
@@ -1982,7 +2002,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
@@ -1994,7 +2014,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
@@ -2006,7 +2026,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -2020,7 +2040,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
@@ -2058,7 +2078,7 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 
 Is_opt: -- Empty
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := Void
@@ -2260,24 +2280,24 @@ Left_parenthesis: '('
 Formal_argument_list: Formal_argument ')'
 		{
 			$$ := new_formal_arguments (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_formal_argument then
+				$$.put_first (l_formal_argument)
 			end
 		}
 	| Formal_argument_semicolon ')'
 		{
 			$$ := new_formal_arguments (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_formal_argument then
+				$$.put_first (l_formal_argument)
 			end
 		}
 	| Formal_argument_name_comma Formal_argument_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
+			if $$ /= Void and attached $1 as l_formal_argument then
 				if not $$.is_empty then
-					$1.set_declared_type ($$.first.type)
-					$$.put_first ($1)
+					l_formal_argument.set_declared_type ($$.first.type)
+					$$.put_first (l_formal_argument)
 				end
 			end
 		}
@@ -2285,25 +2305,25 @@ Formal_argument_list: Formal_argument ')'
 		{
 			-- TODO: Syntax error
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
+			if $$ /= Void and attached $1 as l_formal_argument then
 				if not $$.is_empty then
-					$1.set_declared_type ($$.first.type)
-					$$.put_first ($1)
+					l_formal_argument.set_declared_type ($$.first.type)
+					$$.put_first (l_formal_argument)
 				end
 			end
 		}
 	| Formal_argument_semicolon Formal_argument_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_formal_argument then
+				$$.put_first (l_formal_argument)
 			end
 		}
 	| Formal_argument Formal_argument_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_formal_argument then
+				$$.put_first (l_formal_argument)
 			end
 		}
 	;
@@ -2366,24 +2386,24 @@ Local_declarations_opt: -- Empty
 Local_variable_list: Local_variable
 		{
 			$$ := new_local_variables (last_keyword, counter_value)
-			if $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_local_variable then
+				$$.put_first (l_local_variable)
 			end
 		}
 	| Local_variable_semicolon
 		{
 			$$ := new_local_variables (last_keyword, counter_value)
-			if $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_local_variable then
+				$$.put_first (l_local_variable)
 			end
 		}
 	| Local_name_comma Local_variable_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
+			if $$ /= Void and attached $1 as l_local_variable then
 				if not $$.is_empty then
-					$1.set_declared_type ($$.first.type)
-					$$.put_first ($1)
+					l_local_variable.set_declared_type ($$.first.type)
+					$$.put_first (l_local_variable)
 				end
 			end
 		}
@@ -2391,25 +2411,25 @@ Local_variable_list: Local_variable
 		{
 			-- TODO: Syntax error
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
+			if $$ /= Void and attached $1 as l_local_variable then
 				if not $$.is_empty then
-					$1.set_declared_type ($$.first.type)
-					$$.put_first ($1)
+					l_local_variable.set_declared_type ($$.first.type)
+					$$.put_first (l_local_variable)
 				end
 			end
 		}
 	| Local_variable_semicolon Local_variable_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_local_variable then
+				$$.put_first (l_local_variable)
 			end
 		}
 	| Local_variable Local_variable_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_local_variable then
+				$$.put_first (l_local_variable)
 			end
 		}
 	;
@@ -2738,10 +2758,10 @@ Open_bracket: '['
 
 Actual_parameter_list: Type ']'
 		{
-			if $1 /= Void then
+			if attached $1 as l_type then
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_type)
 				end
 			else
 				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value)
@@ -2986,7 +3006,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
-			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
@@ -2996,7 +3016,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
-			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
@@ -3006,7 +3026,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
-			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
@@ -3016,7 +3036,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
-			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
@@ -3161,10 +3181,10 @@ Explicit_compound_opt: -- Empty
 		
 Instruction_list: Instruction
 		{
-			if $1 /= Void then
+			if attached $1 as l_instruction then
 				$$ := ast_factory.new_compound (counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_instruction)
 				end
 			else
 				$$ := ast_factory.new_compound (counter_value)
@@ -3179,8 +3199,8 @@ Instruction_list: Instruction
 	  Instruction_list
 		{
 			$$ := $3
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_instruction then
+				$$.put_first (l_instruction)
 			end
 		}
 -- TODO: generate nice syntax error messages.
@@ -3213,7 +3233,7 @@ Instruction: Creation_instruction
 		{ $$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound E_END
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_6_3_7_4554 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
 				$$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, Void, ast_factory.new_conditional ($3, $4), $5, $6)
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, Void, $6)
@@ -3221,7 +3241,7 @@ Instruction: Creation_instruction
 		}
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound Variant_clause E_END
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_6_3_7_4554 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
 				raise_error
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, $6, $7)
@@ -3310,15 +3330,15 @@ Elseif_list: Add_counter Elseif_part_list
 Elseif_part_list: Elseif_part
 		{
 			$$ := ast_factory.new_elseif_part_list (counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
 			end
 		}
 	| Elseif_part Elseif_part_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
 			end
 		}
 	;
@@ -3352,15 +3372,15 @@ When_list_opt: -- Empty
 When_list: When_part
 		{
 			$$ := ast_factory.new_when_part_list (counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
 			end
 		}
 	| When_part When_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_when_part then
+				$$.put_first (l_when_part)
 			end
 		}
 	;
@@ -3391,10 +3411,10 @@ Choices: E_WHEN
 
 Choice_list: Choice
 		{
-			if $1 /= Void then
+			if attached $1 as l_choice then
 				$$ := ast_factory.new_choice_list (last_keyword, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_choice)
 				end
 			else
 				$$ := ast_factory.new_choice_list (last_keyword, counter_value)
@@ -3404,15 +3424,15 @@ Choice_list: Choice
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_choice_list (last_keyword, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_choice then
+				$$.put_first (l_choice)
 			end
 		}
 	| Choice_comma Choice_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_choice then
+				$$.put_first (l_choice)
 			end
 		}
 	;
@@ -3479,10 +3499,10 @@ Parenthesized_manifest_string_list_opt: -- Empty
 
 Manifest_string_list: Untyped_manifest_string ')'
 		{
-			if $1 /= Void then
+			if attached $1 as l_manifest_string then
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_manifest_string)
 				end
 			else
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value)
@@ -3491,8 +3511,8 @@ Manifest_string_list: Untyped_manifest_string ')'
 	| Manifest_string_comma Manifest_string_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_manifest_string then
+				$$.put_first (l_manifest_string)
 			end
 		}
 	;
@@ -3511,9 +3531,9 @@ Manifest_string_comma: Untyped_manifest_string ','
 Call_instruction: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_instruction ($1, $2) }
 	| Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, Void, $2) }
 	| E_PRECURSOR '{' Class_name '}' Actuals_opt
@@ -3527,17 +3547,17 @@ Call_instruction: Identifier Actuals_opt
 Untyped_call_expression: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 	
 Typed_call_expression: Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 	
 Qualified_call_expression: Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
 Static_call_expression: E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
@@ -3564,7 +3584,7 @@ Untyped_call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Untyped_bracket_expression
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := $1
@@ -3573,19 +3593,19 @@ Untyped_call_chain: Identifier Actuals_opt
 	| Static_call_expression
 		{ $$ := $1 }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
 Typed_call_chain: Typed_bracket_expression
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := $1
 			end
 		}
 	| Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 	
 ------------------------------------------------------------------------------------
@@ -3609,10 +3629,10 @@ Actuals_opt: -- Empty
 
 Actuals_expression_list: Expression ')'
 		{
-			if $1 /= Void then
+			if attached $1 as l_expression then
 				$$ := ast_factory.new_actual_arguments (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_expression)
 				end
 			else
 				$$ := ast_factory.new_actual_arguments (last_symbol, $2, counter_value)
@@ -3622,15 +3642,15 @@ Actuals_expression_list: Expression ')'
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_actual_arguments (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	| Expression_comma Actuals_expression_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	;
@@ -3759,7 +3779,7 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 		{ $$ := ast_factory.new_old_expression ($1, $2) }
 	| '{' Identifier ':' Type '}' Non_binary_expression %prec E_NOT
 		{
-			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := new_old_object_test ($1, $2, $3, $4, $5, $6)
@@ -3884,10 +3904,10 @@ Untyped_bracket_expression: Untyped_bracket_target '['
 
 Bracket_actual_list: Expression ']'
 		{
-			if $1 /= Void then
+			if attached $1 as l_expression then
 				$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_expression)
 				end
 			else
 				$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value)
@@ -3897,15 +3917,15 @@ Bracket_actual_list: Expression ']'
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	| Expression_comma Bracket_actual_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	;
@@ -3935,10 +3955,10 @@ Manifest_array: E_LARRAY E_RARRAY
 
 Manifest_array_expression_list: Expression E_RARRAY
 		{
-			if $1 /= Void then
+			if attached $1 as l_expression then
 				$$ := ast_factory.new_manifest_array (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_expression)
 				end
 			else
 				$$ := ast_factory.new_manifest_array (last_symbol, $2, counter_value)
@@ -3948,15 +3968,15 @@ Manifest_array_expression_list: Expression E_RARRAY
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_manifest_array (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	| Expression_comma Manifest_array_expression_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	;
@@ -3978,10 +3998,10 @@ Manifest_tuple: '[' ']'
 
 Manifest_tuple_expression_list: Expression ']'
 		{
-			if $1 /= Void then
+			if attached $1 as l_expression then
 				$$ := ast_factory.new_manifest_tuple (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_expression)
 				end
 			else
 				$$ := ast_factory.new_manifest_tuple (last_symbol, $2, counter_value)
@@ -3991,15 +4011,15 @@ Manifest_tuple_expression_list: Expression ']'
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_manifest_tuple (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	| Expression_comma Manifest_tuple_expression_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_expression then
+				$$.put_first (l_expression)
 			end
 		}
 	;
@@ -4023,10 +4043,10 @@ Strip_expression: E_STRIP '(' ')'
 
 Strip_feature_name_list: Feature_name ')'
 		{
-			if $1 /= Void then
+			if attached $1 as l_feature_name then
 				$$ := ast_factory.new_strip_expression (last_keyword, last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_feature_name)
 				end
 			else
 				$$ := ast_factory.new_strip_expression (last_keyword, last_symbol, $2, counter_value)
@@ -4036,15 +4056,15 @@ Strip_feature_name_list: Feature_name ')'
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_strip_expression (last_keyword, last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	| Feature_name_comma Strip_feature_name_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_feature_name then
+				$$.put_first (l_feature_name)
 			end
 		}
 	;
@@ -4209,10 +4229,10 @@ Agent_actuals_opt: -- Empty
 
 Agent_actual_list: Agent_actual ')'
 		{
-			if $1 /= Void then
+			if attached $1 as l_agent_actual then
 				$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
-					$$.put_first ($1)
+					$$.put_first (l_agent_actual)
 				end
 			else
 				$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value)
@@ -4222,15 +4242,15 @@ Agent_actual_list: Agent_actual ')'
 		-- TODO: syntax error.
 		{
 			$$ := ast_factory.new_agent_argument_operands (last_symbol, $2, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_agent_actual then
+				$$.put_first (l_agent_actual)
 			end
 		}
 	| Agent_actual_comma Agent_actual_list
 		{
 			$$ := $2
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if $$ /= Void and attached $1 as l_agent_actual then
+				$$.put_first (l_agent_actual)
 			end
 		}
 	;
@@ -4313,7 +4333,9 @@ Untyped_manifest_string: E_STRING
 Typed_manifest_string: '{' Type '}' Untyped_manifest_string
 		{
 			$$ := $4
-			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
 		}
 	;
 
@@ -4332,7 +4354,9 @@ Untyped_character_constant: E_CHARACTER
 Typed_character_constant: '{' Type '}' Untyped_character_constant
 		{
 			$$ := $4
-			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
 		}
 	;
 	
@@ -4357,19 +4381,25 @@ Untyped_integer_constant: E_INTEGER
 Signed_integer_constant: '-' E_INTEGER
 		{
 			$$ := $2
-			$$.set_sign ($1)
+			if $$ /= Void then
+				$$.set_sign ($1)
+			end
 		}
 	| '+' E_INTEGER
 		{
 			$$ := $2
-			$$.set_sign ($1)
+			if $$ /= Void then
+				$$.set_sign ($1)
+			end
 		}
 	;
 
 Typed_integer_constant: '{' Type '}' Untyped_integer_constant
 		{
 			$$ := $4
-			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
 		}
 	;
 
@@ -4388,19 +4418,25 @@ Untyped_real_constant: E_REAL
 Signed_real_constant: '-' E_REAL
 		{
 			$$ := $2
-			$$.set_sign ($1)
+			if $$ /= Void then
+				$$.set_sign ($1)
+			end
 		}
 	| '+' E_REAL
 		{
 			$$ := $2
-			$$.set_sign ($1)
+			if $$ /= Void then
+				$$.set_sign ($1)
+			end
 		}
 	;
 
 Typed_real_constant: '{' Type '}' Untyped_real_constant
 		{
 			$$ := $4
-			$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
 		}
 	;
 
@@ -4475,10 +4511,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -4503,7 +4536,7 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := SPECIAL_INTEGER_.resize (yyss, yystacksize)
+						yyss := SPECIAL_INTEGER_.aliased_resized_area (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)
@@ -4566,10 +4599,7 @@ feature -- Parsing
 								-- Skip next conditional instruction:
 							yyn := -1
 						end
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yychar1
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yychar1 then
 							yy_goto := yyDefault
 						else
 							yyn := yytable.item (yyn)
@@ -4643,10 +4673,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -4701,10 +4728,7 @@ feature -- Parsing
 						yy_goto := yyErrpop
 					else
 						yyn := yyn + yyTerror
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yyTerror
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yyTerror then
 							yy_goto := yyErrpop
 						else
 							yyn := yytable.item (yyn)
@@ -4749,5 +4773,6 @@ feature -- Parsing
 			abort
 			yy_clear_all
 		end
+
 
 end

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-09-08 13:38:07 +0200 (Mon, 08 Sep 2008) $"
 	revision: "$Revision: 6501 $"
@@ -92,7 +92,6 @@ feature {NONE} -- Processing
 			old_class: ET_CLASS
 			i, nb: INTEGER
 			l_reset_needed: BOOLEAN
-			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 		do
 			old_class := current_class
@@ -106,8 +105,7 @@ feature {NONE} -- Processing
 					-- be reset to the previous processing step.
 				current_class.unset_implementation_error
 					-- Process parents first.
-				a_parents := current_class.parents
-				if a_parents /= Void then
+				if attached current_class.parents as a_parents then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
 						a_parent_class := a_parents.parent (i).type.base_class
@@ -141,7 +139,7 @@ feature {NONE} -- Suppliers and providers validity
 			-- Check whether none of the supplier classes
 			-- of `current_class' has been modified.
 		local
-			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_suppliers: detachable DS_HASH_SET [ET_NAMED_CLASS]
 			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			l_class: ET_NAMED_CLASS
 		do
@@ -173,7 +171,7 @@ feature {NONE} -- Suppliers and providers validity
 			-- Check whether none of the provider classes
 			-- of `current_class' has been modified.
 		local
-			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_providers: detachable DS_HASH_SET [ET_NAMED_CLASS]
 			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
 			l_class: ET_NAMED_CLASS
 		do

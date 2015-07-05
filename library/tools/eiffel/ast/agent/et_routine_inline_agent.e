@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with a routine as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,27 +30,11 @@ feature -- Access
 
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
-		local
-			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			l_arguments ?= actual_arguments
-			if l_arguments /= Void then
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} actual_arguments as l_arguments then
 				Result := l_arguments.last_leaf
 			else
 				Result := end_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		local
-			l_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
-		do
-			l_arguments ?= actual_arguments
-			if l_arguments /= Void then
-				Result := l_arguments.break
-			else
-				Result := end_keyword.break
 			end
 		end
 

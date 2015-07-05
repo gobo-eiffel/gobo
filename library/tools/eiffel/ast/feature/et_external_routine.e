@@ -5,7 +5,7 @@ note
 		"Eiffel external routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008/12/01 $"
 	revision: "$Revision: #8 $"

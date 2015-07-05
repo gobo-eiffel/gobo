@@ -172,6 +172,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_ast_null_leaf (a_leaf: ET_AST_NULL_LEAF)
+			-- Process `a_leaf'.
+		require
+			a_leaf_not_void: a_leaf /= Void
+		deferred
+		end
+
 	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
 			-- Process `a_keywords'.
 		require
@@ -295,20 +302,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
-	process_call_expression (an_expression: ET_CALL_EXPRESSION)
-			-- Process `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
-	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION)
-			-- Process `an_instruction'.
-		require
-			an_instruction_not_void: an_instruction /= Void
 		deferred
 		end
 
@@ -1249,6 +1242,20 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		require
@@ -1435,6 +1442,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
+	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
 		deferred
 		end
 

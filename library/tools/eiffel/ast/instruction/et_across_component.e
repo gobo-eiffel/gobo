@@ -5,7 +5,7 @@ note
 		"Eiffel across components (either across expressions or across instructions)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,13 +62,13 @@ feature -- Setting
 
 feature -- Unfolded form
 
-	new_cursor_expression: ET_CALL_EXPRESSION
+	new_cursor_expression: ET_QUALIFIED_CALL_EXPRESSION
 			-- Expression corresponding to `iterable_expression'.new_cursor
 
-	cursor_after_expression: ET_CALL_EXPRESSION
+	cursor_after_expression: ET_QUALIFIED_CALL_EXPRESSION
 			-- Expression corresponding to `cursor_name'.after
 
-	cursor_forth_instruction: ET_CALL_INSTRUCTION
+	cursor_forth_instruction: ET_QUALIFIED_CALL_INSTRUCTION
 			-- Instruction corresponding to `cursor_name'.forth
 
 	create_unfolded_form

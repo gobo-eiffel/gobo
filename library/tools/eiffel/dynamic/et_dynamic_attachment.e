@@ -5,7 +5,7 @@ note
 		"Eiffel attachments at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -114,10 +114,10 @@ feature -- Element change
 
 feature -- Link
 
-	next_attachment: ET_DYNAMIC_ATTACHMENT
+	next_attachment: detachable ET_DYNAMIC_ATTACHMENT
 			-- Next linked attachment in list of attachments
 
-	set_next_attachment (a_next: ET_DYNAMIC_ATTACHMENT)
+	set_next_attachment (a_next: like next_attachment)
 			-- Set `next_attachment' to `a_next'.
 		do
 			next_attachment := a_next

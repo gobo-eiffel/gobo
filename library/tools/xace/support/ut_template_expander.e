@@ -5,7 +5,7 @@ note
 		"Expands special tokens in a template with given parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -173,7 +173,7 @@ feature -- Access
 			c: CHARACTER
 			stop: BOOLEAN
 			has_brackets: BOOLEAN
-			value: STRING
+			value: detachable STRING
 		do
 			from
 				i := 1

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,22 +73,20 @@ feature -- Generation
 		local
 			i, nb: INTEGER
 			l_type: ET_DYNAMIC_TYPE
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
-			l_precursor: ET_DYNAMIC_PRECURSOR
-			l_other_precursors: ET_DYNAMIC_PRECURSOR_LIST
+			l_precursor: detachable ET_DYNAMIC_PRECURSOR
+			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-			l_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			l_procedure_call: detachable ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			l_query_call: detachable ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
-			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
+			l_equality: detachable ET_DYNAMIC_EQUALITY_EXPRESSION
+			l_object_equality: detachable ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
@@ -100,14 +98,10 @@ feature -- Generation
 				nb := l_dynamic_types.count
 				from i := 1 until i > nb loop
 					l_type := l_dynamic_types.item (i)
-					l_tuple_type ?= l_type
-					if l_tuple_type /= Void then
+					if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
 						propagate_types (l_tuple_type.item_type_sets)
-					else
-						l_agent_type ?= l_type
-						if l_agent_type /= Void then
-							propagate_types (l_agent_type.open_operand_type_sets)
-						end
+					elseif attached {ET_DYNAMIC_ROUTINE_TYPE} l_type as l_agent_type then
+						propagate_types (l_agent_type.open_operand_type_sets)
 					end
 						-- Process dynamic queries.
 					l_features := l_type.queries
@@ -278,7 +272,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			-- Build type set of result type of `an_item_feature' from `a_tuple_type'.
 		local
 			i, nb: INTEGER
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
@@ -368,9 +362,9 @@ feature {NONE} -- Generation
 			a_feature_not_void: a_feature /= Void
 		local
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_target: ET_DYNAMIC_TYPE_SET
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			l_locals: detachable ET_LOCAL_VARIABLE_LIST
+			l_target: detachable ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
 			i, nb: INTEGER
 		do
@@ -436,7 +430,7 @@ feature {NONE} -- Generation
 
 feature {NONE} -- CAT-calls
 
-	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
 		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
 		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
@@ -448,255 +442,260 @@ feature {NONE} -- CAT-calls
 			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		local
 			l_class_impl: ET_CLASS
-			l_source: ET_DYNAMIC_ATTACHMENT
-			l_type_set: ET_DYNAMIC_TYPE_SET
+			l_source: detachable ET_DYNAMIC_ATTACHMENT
+			l_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
 			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
-			l_target: ET_TARGET_OPERAND
 			l_position: ET_POSITION
 			l_argument: ET_ARGUMENT_OPERAND
-			l_implicit_open_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			i, j, nb: INTEGER
 		do
 -- TODO: better error message reporting.
-			precursor (a_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
-			a_message.append_string (":%N")
-			l_visited_sources := shared_visited_sources
-			l_visited_sources.wipe_out
-			l_source_stack := shared_source_stack
-			l_source_stack.wipe_out
-			from
-				a_message.append_string ("%TTarget type: '")
-				a_message.append_string (a_target_type.base_type.to_text)
-				a_message.append_string ("'%N")
-				l_type_set := a_call.target_type_set
-			until
-				l_type_set = Void
-			loop
-				if l_type_set = a_target_type then
-					j := j + 1
-					a_message.append_string ("%T%TAttachment stack #")
-					a_message.append_string (j.out)
-					a_message.append_character ('%N')
-					a_message.append_string ("%T%T%Tclass ")
-					a_message.append_string (a_call.current_type.base_type.to_text)
-					a_message.append_string (" (")
-					l_class_impl := a_call.current_feature.static_feature.implementation_class
-					if a_call.current_type.base_type.base_class /= l_class_impl then
-						a_message.append_string (l_class_impl.upper_name)
-						a_message.append_character (',')
-					end
-					l_target := a_call.static_call.target
-					l_position := l_target.position
-					a_message.append_string (l_position.line.out)
-					a_message.append_character (',')
-					a_message.append_string (l_position.column.out)
-					if l_target.is_open_operand then
-						a_message.append_string ("): open target%N")
-					else
-						a_message.append_string ("): target%N")
-					end
-					nb := l_source_stack.count
-					from i := 1 until i > nb loop
-						l_source := l_source_stack.i_th (i)
-						if not l_source.is_null_attachment then
-							a_message.append_string ("%T%T%Tclass ")
-							a_message.append_string (l_source.current_type.base_type.to_text)
-							a_message.append_string (" (")
-							l_class_impl := l_source.current_feature.static_feature.implementation_class
-							if l_source.current_type.base_type.base_class /= l_class_impl then
-								a_message.append_string (l_class_impl.upper_name)
-								a_message.append_character (',')
-							end
-							l_position := l_source.position
-							a_message.append_string (l_position.line.out)
-							a_message.append_character (',')
-							a_message.append_string (l_position.column.out)
-							a_message.append_character (')')
-							a_message.append_character (':')
-							a_message.append_character (' ')
-							a_message.append_string (l_source.description)
-							a_message.append_character ('%N')
-						end
-						i := i + 1
-					end
-					from
-						l_source := Void
-					until
-						l_source /= Void or l_source_stack.is_empty
-					loop
-						l_source := l_source_stack.item.next_attachment
-						l_source_stack.remove
-					end
-				else
-					l_source := l_type_set.sources
-				end
+			if not attached a_call.static_call.arguments as l_arguments then
+					-- Should never happen according to the precondition.
+				check precondition_valid_arg: False end
+			elseif not attached a_call.static_call.target as l_target then
+					-- Should never happen since according to the precondition
+					-- the target type set is not void.
+				check target_not_void: False end
+			else
+				precursor (a_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
+				a_message.append_string (":%N")
+				l_visited_sources := shared_visited_sources
+				l_visited_sources.wipe_out
+				l_source_stack := shared_source_stack
+				l_source_stack.wipe_out
 				from
-					l_type_set := Void
+					a_message.append_string ("%TTarget type: '")
+					a_message.append_string (a_target_type.base_type.to_text)
+					a_message.append_string ("'%N")
+					l_type_set := a_call.target_type_set
 				until
-					l_source = Void
+					l_type_set = Void
 				loop
-					if l_source.visited then
-						from
-							l_source := l_source.next_attachment
-						until
-							l_source /= Void or l_source_stack.is_empty
-						loop
-							l_source := l_source_stack.item.next_attachment
-							l_source_stack.remove
+					if l_type_set = a_target_type then
+						j := j + 1
+						a_message.append_string ("%T%TAttachment stack #")
+						a_message.append_string (j.out)
+						a_message.append_character ('%N')
+						a_message.append_string ("%T%T%Tclass ")
+						a_message.append_string (a_call.current_type.base_type.to_text)
+						a_message.append_string (" (")
+						l_class_impl := a_call.current_feature.static_feature.implementation_class
+						if a_call.current_type.base_type.base_class /= l_class_impl then
+							a_message.append_string (l_class_impl.upper_name)
+							a_message.append_character (',')
 						end
-					elseif l_source.has_type (a_target_type) then
-						l_source.set_visited (True)
-						l_visited_sources.force_last (l_source)
-						l_source_stack.force (l_source)
-						l_type_set := l_source.source_type_set
-							-- Jump out of the loop.
-						l_source := Void
-					else
-						from
-							l_source := l_source.next_attachment
-						until
-							l_source /= Void or l_source_stack.is_empty
-						loop
-							l_source := l_source_stack.item.next_attachment
-							l_source_stack.remove
-						end
-					end
-				end
-				if j >= 10 then
-						-- Report no more than 10 entries in the
-						-- attachment stack, otherwise `a_message'
-						-- gets too big and we run out of memory.
-					l_type_set := Void
-				end
-			end
-			nb := l_visited_sources.count
-			from i := 1 until i > nb loop
-				l_visited_sources.item (i).set_visited (False)
-				i := i + 1
-			end
-			l_visited_sources.wipe_out
-			l_source_stack.wipe_out
-			j := 0
-			from
-				a_message.append_string ("%TArgument type: '")
-				a_message.append_string (an_actual_type.base_type.to_text)
-				a_message.append_string ("'%N")
-				l_type_set := an_actual_type_set
-			until
-				l_type_set = Void
-			loop
-				if l_type_set = an_actual_type then
-					j := j + 1
-					a_message.append_string ("%T%TAttachment stack #")
-					a_message.append_string (j.out)
-					a_message.append_character ('%N')
-					a_message.append_string ("%T%T%Tclass ")
-					a_message.append_string (a_call.current_type.base_type.to_text)
-					a_message.append_string (" (")
-					l_class_impl := a_call.current_feature.static_feature.implementation_class
-					if a_call.current_type.base_type.base_class /= l_class_impl then
-						a_message.append_string (l_class_impl.upper_name)
+						l_position := l_target.position
+						a_message.append_string (l_position.line.out)
 						a_message.append_character (',')
-					end
-					l_argument := a_call.static_call.arguments.actual_argument (arg)
-					l_position := l_argument.position
-					a_message.append_string (l_position.line.out)
-					a_message.append_character (',')
-					a_message.append_string (l_position.column.out)
-					if l_argument.is_open_operand then
-						l_implicit_open_argument ?= l_argument
-						if l_implicit_open_argument /= Void then
-							a_message.append_string ("): implicit open argument #")
-							a_message.append_string (l_implicit_open_argument.argument_index.out)
-							a_message.append_character ('%N')
+						a_message.append_string (l_position.column.out)
+						if l_target.is_open_operand then
+							a_message.append_string ("): open target%N")
 						else
-							a_message.append_string ("): open argument%N")
+							a_message.append_string ("): target%N")
+						end
+						nb := l_source_stack.count
+						from i := 1 until i > nb loop
+							l_source := l_source_stack.i_th (i)
+							if not l_source.is_null_attachment then
+								a_message.append_string ("%T%T%Tclass ")
+								a_message.append_string (l_source.current_type.base_type.to_text)
+								a_message.append_string (" (")
+								l_class_impl := l_source.current_feature.static_feature.implementation_class
+								if l_source.current_type.base_type.base_class /= l_class_impl then
+									a_message.append_string (l_class_impl.upper_name)
+									a_message.append_character (',')
+								end
+								l_position := l_source.position
+								a_message.append_string (l_position.line.out)
+								a_message.append_character (',')
+								a_message.append_string (l_position.column.out)
+								a_message.append_character (')')
+								a_message.append_character (':')
+								a_message.append_character (' ')
+								a_message.append_string (l_source.description)
+								a_message.append_character ('%N')
+							end
+							i := i + 1
+						end
+						from
+							l_source := Void
+						until
+							l_source /= Void or l_source_stack.is_empty
+						loop
+							l_source := l_source_stack.item.next_attachment
+							l_source_stack.remove
 						end
 					else
-						a_message.append_string ("): argument%N")
-					end
-					nb := l_source_stack.count
-					from i := 1 until i > nb loop
-						l_source := l_source_stack.i_th (i)
-						if not l_source.is_null_attachment then
-							a_message.append_string ("%T%T%Tclass ")
-							a_message.append_string (l_source.current_type.base_type.to_text)
-							a_message.append_string (" (")
-							l_class_impl := l_source.current_feature.static_feature.implementation_class
-							if l_source.current_type.base_type.base_class /= l_class_impl then
-								a_message.append_string (l_class_impl.upper_name)
-								a_message.append_character (',')
-							end
-							l_position := l_source.position
-							a_message.append_string (l_position.line.out)
-							a_message.append_character (',')
-							a_message.append_string (l_position.column.out)
-							a_message.append_character (')')
-							a_message.append_character (':')
-							a_message.append_character (' ')
-							a_message.append_string (l_source.description)
-							a_message.append_character ('%N')
-						end
-						i := i + 1
+						l_source := l_type_set.sources
 					end
 					from
-						l_source := Void
+						l_type_set := Void
 					until
-						l_source /= Void or l_source_stack.is_empty
+						l_source = Void
 					loop
-						l_source := l_source_stack.item.next_attachment
-						l_source_stack.remove
+						if l_source.visited then
+							from
+								l_source := l_source.next_attachment
+							until
+								l_source /= Void or l_source_stack.is_empty
+							loop
+								l_source := l_source_stack.item.next_attachment
+								l_source_stack.remove
+							end
+						elseif l_source.has_type (a_target_type) then
+							l_source.set_visited (True)
+							l_visited_sources.force_last (l_source)
+							l_source_stack.force (l_source)
+							l_type_set := l_source.source_type_set
+								-- Jump out of the loop.
+							l_source := Void
+						else
+							from
+								l_source := l_source.next_attachment
+							until
+								l_source /= Void or l_source_stack.is_empty
+							loop
+								l_source := l_source_stack.item.next_attachment
+								l_source_stack.remove
+							end
+						end
 					end
-				else
-					l_source := l_type_set.sources
+					if j >= 10 then
+							-- Report no more than 10 entries in the
+							-- attachment stack, otherwise `a_message'
+							-- gets too big and we run out of memory.
+						l_type_set := Void
+					end
 				end
+				nb := l_visited_sources.count
+				from i := 1 until i > nb loop
+					l_visited_sources.item (i).set_visited (False)
+					i := i + 1
+				end
+				l_visited_sources.wipe_out
+				l_source_stack.wipe_out
+				j := 0
 				from
-					l_type_set := Void
+					a_message.append_string ("%TArgument type: '")
+					a_message.append_string (an_actual_type.base_type.to_text)
+					a_message.append_string ("'%N")
+					l_type_set := an_actual_type_set
 				until
-					l_source = Void
+					l_type_set = Void
 				loop
-					if l_source.visited then
+					if l_type_set = an_actual_type then
+						j := j + 1
+						a_message.append_string ("%T%TAttachment stack #")
+						a_message.append_string (j.out)
+						a_message.append_character ('%N')
+						a_message.append_string ("%T%T%Tclass ")
+						a_message.append_string (a_call.current_type.base_type.to_text)
+						a_message.append_string (" (")
+						l_class_impl := a_call.current_feature.static_feature.implementation_class
+						if a_call.current_type.base_type.base_class /= l_class_impl then
+							a_message.append_string (l_class_impl.upper_name)
+							a_message.append_character (',')
+						end
+						l_argument := l_arguments.actual_argument (arg)
+						l_position := l_argument.position
+						a_message.append_string (l_position.line.out)
+						a_message.append_character (',')
+						a_message.append_string (l_position.column.out)
+						if l_argument.is_open_operand then
+							if attached {ET_AGENT_IMPLICIT_OPEN_ARGUMENT} l_argument as l_implicit_open_argument then
+								a_message.append_string ("): implicit open argument #")
+								a_message.append_string (l_implicit_open_argument.argument_index.out)
+								a_message.append_character ('%N')
+							else
+								a_message.append_string ("): open argument%N")
+							end
+						else
+							a_message.append_string ("): argument%N")
+						end
+						nb := l_source_stack.count
+						from i := 1 until i > nb loop
+							l_source := l_source_stack.i_th (i)
+							if not l_source.is_null_attachment then
+								a_message.append_string ("%T%T%Tclass ")
+								a_message.append_string (l_source.current_type.base_type.to_text)
+								a_message.append_string (" (")
+								l_class_impl := l_source.current_feature.static_feature.implementation_class
+								if l_source.current_type.base_type.base_class /= l_class_impl then
+									a_message.append_string (l_class_impl.upper_name)
+									a_message.append_character (',')
+								end
+								l_position := l_source.position
+								a_message.append_string (l_position.line.out)
+								a_message.append_character (',')
+								a_message.append_string (l_position.column.out)
+								a_message.append_character (')')
+								a_message.append_character (':')
+								a_message.append_character (' ')
+								a_message.append_string (l_source.description)
+								a_message.append_character ('%N')
+							end
+							i := i + 1
+						end
 						from
-							l_source := l_source.next_attachment
+							l_source := Void
 						until
 							l_source /= Void or l_source_stack.is_empty
 						loop
 							l_source := l_source_stack.item.next_attachment
 							l_source_stack.remove
 						end
-					elseif l_source.has_type (an_actual_type) then
-						l_source.set_visited (True)
-						l_visited_sources.force_last (l_source)
-						l_source_stack.force (l_source)
-						l_type_set := l_source.source_type_set
-							-- Jump out of the loop.
-						l_source := Void
 					else
-						from
-							l_source := l_source.next_attachment
-						until
-							l_source /= Void or l_source_stack.is_empty
-						loop
-							l_source := l_source_stack.item.next_attachment
-							l_source_stack.remove
+						l_source := l_type_set.sources
+					end
+					from
+						l_type_set := Void
+					until
+						l_source = Void
+					loop
+						if l_source.visited then
+							from
+								l_source := l_source.next_attachment
+							until
+								l_source /= Void or l_source_stack.is_empty
+							loop
+								l_source := l_source_stack.item.next_attachment
+								l_source_stack.remove
+							end
+						elseif l_source.has_type (an_actual_type) then
+							l_source.set_visited (True)
+							l_visited_sources.force_last (l_source)
+							l_source_stack.force (l_source)
+							l_type_set := l_source.source_type_set
+								-- Jump out of the loop.
+							l_source := Void
+						else
+							from
+								l_source := l_source.next_attachment
+							until
+								l_source /= Void or l_source_stack.is_empty
+							loop
+								l_source := l_source_stack.item.next_attachment
+								l_source_stack.remove
+							end
 						end
 					end
+					if j >= 10 then
+							-- Report no more than 10 entries in the
+							-- attachment stack, otherwise `a_message'
+							-- gets too big and we run out of memory.
+						l_type_set := Void
+					end
 				end
-				if j >= 10 then
-						-- Report no more than 10 entries in the
-						-- attachment stack, otherwise `a_message'
-						-- gets too big and we run out of memory.
-					l_type_set := Void
+				nb := l_visited_sources.count
+				from i := 1 until i > nb loop
+					l_visited_sources.item (i).set_visited (False)
+					i := i + 1
 				end
+				l_visited_sources.wipe_out
+				l_source_stack.wipe_out
 			end
-			nb := l_visited_sources.count
-			from i := 1 until i > nb loop
-				l_visited_sources.item (i).set_visited (False)
-				i := i + 1
-			end
-			l_visited_sources.wipe_out
-			l_source_stack.wipe_out
 		end
 
 	shared_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT]
@@ -745,11 +744,10 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
-			l_expression_type_set: ET_DYNAMIC_TYPE_SET
+			l_expression_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_item_attachment: ET_DYNAMIC_MANIFEST_ARRAY_ITEM_ATTACHMENT
 			l_area_attachment: ET_DYNAMIC_MANIFEST_ARRAY_AREA_ATTACHMENT
 		do
@@ -772,8 +770,7 @@ feature {NONE} -- Event handling
 						set_fatal_error
 -- TODO: report internal error.
 					else
-						l_special_type ?= l_dynamic_type_set.static_type
-						if l_special_type = Void then
+						if not attached {ET_DYNAMIC_SPECIAL_TYPE} l_dynamic_type_set.static_type as l_special_type then
 								-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
 -- TODO: report internal error.
@@ -830,20 +827,18 @@ feature {NONE} -- Event handling
 			-- `current_type' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_MANIFEST_TUPLE_ITEM_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
-				l_tuple_type ?= l_type
-				if l_tuple_type = Void then
+				if not attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
 						-- Internal error: the type of a manifest tuple should be a tuple type.
 					set_fatal_error
 					error_handler.report_giaaa_error
@@ -885,38 +880,38 @@ feature {NONE} -- Implementation
 			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
 		local
 			l_operand: ET_OPERAND
-			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			l_arguments: detachable ET_AGENT_ARGUMENT_OPERANDS
 			i, nb_args: INTEGER
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_tuple_type: ET_TUPLE_TYPE
-			l_dynamic_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			j, nb_items: INTEGER
 			l_item_attachment: ET_DYNAMIC_AGENT_CLOSED_OPERANDS_ITEM_ATTACHMENT
 			l_tuple_attachment: ET_DYNAMIC_AGENT_CLOSED_OPERANDS_ATTACHMENT
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			l_arguments := an_agent.arguments
 			if l_arguments /= Void then
 				nb_args := l_arguments.count
-			end
-			create l_parameters.make_with_capacity (nb_args + 1)
-			from i := nb_args until i < 1 loop
-				l_operand := l_arguments.actual_argument (i)
-				if not l_operand.is_open_operand then
-					l_dynamic_type_set := dynamic_type_set (l_operand)
-					if l_dynamic_type_set = Void then
-							-- Internal error: the dynamic type set of the closed
-							-- operand should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+				create l_parameters.make_with_capacity (nb_args + 1)
+				from i := nb_args until i < 1 loop
+					l_operand := l_arguments.actual_argument (i)
+					if not l_operand.is_open_operand then
+						l_dynamic_type_set := dynamic_type_set (l_operand)
+						if l_dynamic_type_set = Void then
+								-- Internal error: the dynamic type set of the closed
+								-- operand should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+						end
 					end
+					i := i - 1
 				end
-				i := i - 1
+			else
+				create l_parameters.make_with_capacity (1)
 			end
 			l_operand := an_agent.target
 			if not l_operand.is_open_operand then
@@ -931,8 +926,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
-			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
-			if l_dynamic_tuple_type = Void then
+			if not attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type) as l_dynamic_tuple_type then
 					-- Internal error: the dynamic type of a Tuple type
 					-- should be a dynamic tuple type.
 				set_fatal_error
@@ -943,8 +937,11 @@ feature {NONE} -- Implementation
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
 						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
+				elseif not attached an_agent_type.queries.item (1).result_type_set as l_result_type_set then
+						-- Internal error: an attribute should have a result type set.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					l_result_type_set := an_agent_type.queries.item (1).result_type_set
 					if not l_result_type_set.is_expanded then
 						create l_tuple_attachment.make (l_dynamic_tuple_type, an_agent, current_dynamic_feature, current_dynamic_type)
 						l_result_type_set.put_source (l_tuple_attachment, current_dynamic_system)
@@ -974,30 +971,32 @@ feature {NONE} -- Implementation
 							j := j + 1
 						end
 					end
-					from i := 1 until i > nb_args loop
-						l_operand := l_arguments.actual_argument (i)
-						if not l_operand.is_open_operand then
-							l_dynamic_type_set := dynamic_type_set (l_operand)
-							if l_dynamic_type_set = Void then
-									-- Internal error: the dynamic type set of the closed
-									-- operand should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							elseif j > nb_items then
-									-- Internal error: there is a mismatch between the number of closed
-									-- operands and the size of the corresponding Tuple.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_item_type_set := l_item_type_sets.item (j)
-								if not l_item_type_set.is_expanded then
-									create l_item_attachment.make (l_dynamic_type_set, l_operand, current_dynamic_feature, current_dynamic_type)
-									l_item_type_set.put_source (l_item_attachment, current_dynamic_system)
+					if l_arguments /= Void then
+						from i := 1 until i > nb_args loop
+							l_operand := l_arguments.actual_argument (i)
+							if not l_operand.is_open_operand then
+								l_dynamic_type_set := dynamic_type_set (l_operand)
+								if l_dynamic_type_set = Void then
+										-- Internal error: the dynamic type set of the closed
+										-- operand should be known at this stage.
+									set_fatal_error
+									error_handler.report_giaaa_error
+								elseif j > nb_items then
+										-- Internal error: there is a mismatch between the number of closed
+										-- operands and the size of the corresponding Tuple.
+									set_fatal_error
+									error_handler.report_giaaa_error
+								else
+									l_item_type_set := l_item_type_sets.item (j)
+									if not l_item_type_set.is_expanded then
+										create l_item_attachment.make (l_dynamic_type_set, l_operand, current_dynamic_feature, current_dynamic_type)
+										l_item_type_set.put_source (l_item_attachment, current_dynamic_system)
+									end
+									j := j + 1
 								end
-								j := j + 1
 							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
 			end
@@ -1008,7 +1007,7 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set `a_formal_type_set' of the
 			-- corresponding formal argument.
 		local
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 		do
 			l_actual_type_set := dynamic_type_set (an_actual)
@@ -1028,8 +1027,8 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set of the corresponding formal
 			-- argument at index `a_formal' in `a_callee'.
 		local
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_actual_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ARGUMENT_ATTACHMENT
 		do
 			l_actual_type_set := dynamic_type_set (an_actual)
@@ -1054,8 +1053,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of `an_assignment'
 			-- to the dynamic type set of the target of `an_assignment'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ASSIGNMENT
 		do
 			l_source_type_set := dynamic_type_set (an_assignment.source)
@@ -1080,8 +1079,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of `an_assignment_attempt'
 			-- to the dynamic type set of the target of `an_assignment_attempt'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_assignment_attempt: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
 		do
 			l_source_type_set := dynamic_type_set (an_assignment_attempt.source)
@@ -1107,7 +1106,7 @@ feature {NONE} -- Implementation
 			-- of the formal argument at index `a_formal' in `a_callee' when involved
 			-- in built-in feature `current_dynamic_feature'.
 		local
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
 			l_formal_type_set := a_callee.argument_type_set (a_formal)
@@ -1127,7 +1126,7 @@ feature {NONE} -- Implementation
 			-- at index `a_formal' in built-in feature `current_dynamic_feature'
 			-- to `a_target_type_set'.
 		local
-			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
 			l_formal_type_set := current_dynamic_feature.argument_type_set (a_formal)
@@ -1146,7 +1145,7 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of `a_source_type_set' to the dynamic type set
 			-- of the result of the built-in feature `a_query'.
 		local
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
 			l_result_type_set := a_query.result_type_set
@@ -1167,7 +1166,7 @@ feature {NONE} -- Implementation
 			-- `a_result_type_set' of the result of type of `an_agent' (probably a FUNCTION
 			-- or a PREDICATE).
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_attachment: ET_DYNAMIC_AGENT_RESULT_ATTACHMENT
 		do
 			l_dynamic_type_set := a_query.result_type_set
@@ -1186,7 +1185,7 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set of the target of `a_creation'.
 		local
 			l_attachment: ET_DYNAMIC_CREATION_INSTRUCTION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_target_type_set := dynamic_type_set (a_creation.target)
 			if l_target_type_set = Void then
@@ -1205,8 +1204,8 @@ feature {NONE} -- Implementation
 			-- to the dynamic type set `a_result_type_set' of the result of type of `an_agent'
 			-- (probably a FUNCTION or a PREDICATE).
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_implicit_result: ET_RESULT
+			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_implicit_result: detachable ET_RESULT
 			l_result_attachment: ET_DYNAMIC_AGENT_RESULT_ATTACHMENT
 		do
 			l_implicit_result := an_agent.implicit_result
@@ -1260,8 +1259,8 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_dynamic_object_test: ET_DYNAMIC_OBJECT_TEST
 		do
 			l_source_type_set := dynamic_type_set (a_object_test.expression)
@@ -1286,7 +1285,7 @@ feature {NONE} -- Implementation
 			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
 			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		local
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_TUPLE_LABEL_SETTER
 		do
 			l_source_type_set := current_dynamic_feature.dynamic_type_set (a_assigner.source)

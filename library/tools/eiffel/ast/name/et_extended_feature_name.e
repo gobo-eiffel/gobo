@@ -35,7 +35,7 @@ feature -- Access
 			feature_name_not_void: Result /= Void
 		end
 
-	alias_name: ET_ALIAS_NAME
+	alias_name: detachable ET_ALIAS_NAME
 			-- Alias name, if any
 		deferred
 		end
@@ -48,16 +48,16 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			if alias_name = Void then
-				if other.alias_name = Void then
+			if not attached alias_name as l_alias_name then
+				if not attached other.alias_name then
 					Result := feature_name.same_feature_name (other.feature_name)
 				end
-			elseif other.alias_name /= Void then
+			elseif attached other.alias_name as l_other_alias_name then
 				if feature_name.same_feature_name (other.feature_name) then
-					if ANY_.same_objects (alias_name, feature_name) then
+					if ANY_.same_objects (l_alias_name, feature_name) then
 							-- This is a 'prefix "..."' or 'infix "..."'.
 						Result := True
-					elseif alias_name.same_alias_name (other.alias_name) then
+					elseif l_alias_name.same_alias_name (l_other_alias_name) then
 						Result := True
 					end
 				end

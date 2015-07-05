@@ -5,7 +5,7 @@ note
 		"Eiffel character constants of the form 'A'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	literal: CHARACTER
+	literal: CHARACTER_8
 			-- Character A such as 'A' is current character
 		do
 			Result := value.to_character_8

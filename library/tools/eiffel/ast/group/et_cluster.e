@@ -5,7 +5,7 @@ note
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,8 +50,8 @@ feature -- Status report
 		do
 			if is_abstract then
 				Result := True
-				if subclusters /= Void then
-					a_cluster_list := subclusters.clusters
+				if attached subclusters as l_subclusters then
+					a_cluster_list := l_subclusters.clusters
 					nb := a_cluster_list.count
 					from i := 1 until i > nb loop
 						if not a_cluster_list.item (i).is_fully_abstract then
@@ -81,7 +81,7 @@ feature -- Status report
 			a_cluster_not_void: a_cluster /= Void
 			a_cluster_is_ancestor: has_ancestor (a_cluster)
 		local
-			l_parent: ET_CLUSTER
+			l_parent: detachable ET_CLUSTER
 		do
 			if a_cluster = Current then
 				Result := True
@@ -134,7 +134,7 @@ feature -- Status report
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_parent: ET_CLUSTER
+			l_parent: detachable ET_CLUSTER
 		do
 			if a_cluster = Current then
 				Result := True
@@ -160,7 +160,7 @@ feature -- Status report
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			l_parent: ET_GROUP
+			l_parent: detachable ET_GROUP
 		do
 			from
 				l_parent := a_cluster.parent
@@ -178,13 +178,14 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			if a_names.is_empty then
 				Result := True
-			elseif subclusters /= Void then
-				Result := subclusters.has_subcluster_by_name (a_names)
+			elseif attached subclusters as l_subclusters then
+				Result := l_subclusters.has_subcluster_by_name (a_names)
 			end
 		end
 
@@ -200,8 +201,8 @@ feature -- Status report
 		do
 			if file_system.same_pathnames (a_pathname, absolute_pathname) then
 				Result := True
-			elseif subclusters /= Void then
-				Result := subclusters.has_subcluster_with_absolute_pathname (a_pathname)
+			elseif attached subclusters as l_subclusters then
+				Result := l_subclusters.has_subcluster_with_absolute_pathname (a_pathname)
 			end
 		end
 
@@ -254,13 +255,11 @@ feature -- Access
 			-- `a_universe' and `universe', and if no such path exists then return
 			-- the name relative to its parents only.
 		local
-			l_parent: like parent
 			l_parent_name: STRING
 			l_basename: STRING
 		do
 			if a_universe = universe then
-				l_parent := parent
-				if l_parent /= Void then
+				if attached parent as l_parent then
 					l_parent_name := l_parent.relative_name (l_parent.universe, a_separator)
 					l_basename := name
 					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
@@ -284,13 +283,11 @@ feature -- Access
 			-- `a_universe' and `universe', and if no such path exists then return
 			-- the name relative to its parents only.
 		local
-			l_parent: like parent
 			l_parent_name: STRING
 			l_basename: STRING
 		do
 			if a_universe = universe then
-				l_parent := parent
-				if l_parent /= Void then
+				if attached parent as l_parent then
 					l_parent_name := l_parent.relative_lower_name (l_parent.universe, a_separator)
 					l_basename := lower_name
 					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
@@ -305,19 +302,16 @@ feature -- Access
 			end
 		end
 
-
 	implicit_relative_name (a_separator: CHARACTER): STRING
 			-- Name of current cluster relative its explicit ancestor
 			-- (use `a_separator' as separator between parents' and universes' names)
 		require
 			is_implicit: is_implicit
 		local
-			l_parent: like parent
 			l_parent_name: STRING
 			l_basename: STRING
 		do
-			l_parent := parent
-			if l_parent /= Void and then l_parent.is_implicit then
+			if attached parent as l_parent and then l_parent.is_implicit then
 				l_parent_name := l_parent.implicit_relative_name (a_separator)
 				l_basename := name
 				Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
@@ -338,12 +332,10 @@ feature -- Access
 		require
 			is_implicit: is_implicit
 		local
-			l_parent: like parent
 			l_parent_name: STRING
 			l_basename: STRING
 		do
-			l_parent := parent
-			if l_parent /= Void and then l_parent.is_implicit then
+			if attached parent as l_parent and then l_parent.is_implicit then
 				l_parent_name := l_parent.implicit_relative_lower_name (a_separator)
 				l_basename := lower_name
 				Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
@@ -362,21 +354,19 @@ feature -- Access
 	full_pathname: STRING
 			-- Full directory pathname
 		local
-			a_pathname: STRING
 			parent_pathname: STRING
 			a_basename: STRING
 		do
-			a_pathname := pathname
-			if is_relative and parent /= Void then
-				parent_pathname := parent.full_pathname
-				if a_pathname /= Void and then a_pathname.count > 0 then
-					a_basename := a_pathname
+			if is_relative and attached parent as l_parent then
+				parent_pathname := l_parent.full_pathname
+				if attached pathname as l_pathname and then l_pathname.count > 0 then
+					a_basename := l_pathname
 				else
 					a_basename := name
 				end
 				Result := file_system.pathname (parent_pathname, a_basename)
-			elseif a_pathname /= Void and then a_pathname.count > 0 then
-				Result := a_pathname
+			elseif attached pathname as l_pathname and then l_pathname.count > 0 then
+				Result := l_pathname
 			else
 				Result := name
 			end
@@ -385,21 +375,19 @@ feature -- Access
 	full_unix_pathname: STRING
 			-- Full Unix directory pathname
 		local
-			a_pathname: STRING
 			parent_pathname: STRING
 			a_basename: STRING
 		do
-			a_pathname := pathname
-			if is_relative and parent /= Void then
-				parent_pathname := parent.full_unix_pathname
-				if a_pathname /= Void and then a_pathname.count > 0 then
-					a_basename := a_pathname
+			if is_relative and attached parent as l_parent then
+				parent_pathname := l_parent.full_unix_pathname
+				if attached pathname as l_pathname and then l_pathname.count > 0 then
+					a_basename := l_pathname
 				else
 					a_basename := name
 				end
 				Result := unix_file_system.pathname (parent_pathname, a_basename)
-			elseif a_pathname /= Void and then a_pathname.count > 0 then
-				Result := a_pathname
+			elseif attached pathname as l_pathname and then l_pathname.count > 0 then
+				Result := l_pathname
 			else
 				Result := name
 			end
@@ -421,10 +409,10 @@ feature -- Access
 
 feature -- Nested
 
-	parent: ET_CLUSTER
+	parent: detachable ET_CLUSTER
 			-- Parent cluster
 
-	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
+	cluster_by_name (a_names: ARRAY [STRING]): detachable ET_CLUSTER
 			-- Current cluster if `a_names' is empty, otherwise
 			-- (recursively) subcluster named `a_names'
 			--
@@ -432,20 +420,28 @@ feature -- Nested
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			l_name: STRING
 		do
 			if a_names.is_empty then
 				Result := Current
-			elseif subclusters /= Void then
-				Result := subclusters.subcluster_by_name_with_parent (a_names, Current)
+			elseif attached subclusters as l_subclusters then
+				Result := l_subclusters.subcluster_by_name_with_parent (a_names, Current)
 			elseif is_recursive then
 				l_name := a_names.item (a_names.lower)
 				if is_valid_directory_name (l_name) then
 					add_recursive_cluster (l_name)
-					Result := subclusters.subcluster_by_name_with_parent (a_names, Current)
+					if attached subclusters as l_subclusters then
+						Result := l_subclusters.subcluster_by_name_with_parent (a_names, Current)
+					else
+						check
+								-- Postcondition of `add_recursive_cluster'.
+							subclusters_not_void: False
+						end
+					end
 				end
 			end
 		ensure
@@ -453,7 +449,7 @@ feature -- Nested
 			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
 		end
 
-	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
+	cluster_with_absolute_pathname (a_pathname: STRING): detachable ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in either current cluster
 			-- or one of its subclusters (recursively)
 			--
@@ -474,15 +470,15 @@ feature -- Nested
 				if l_current_pathname.is_case_insensitive_subpathname (l_pathname) then
 					Result := cluster_by_name (l_current_pathname.trailing_items (l_pathname))
 				end
-			elseif subclusters /= Void then
-				Result := subclusters.subcluster_with_absolute_pathname (a_pathname)
+			elseif attached subclusters as l_subclusters then
+				Result := l_subclusters.subcluster_with_absolute_pathname (a_pathname)
 			end
 		ensure
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
 			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
 		end
 
-	cluster_with_relative_pathname_to (a_cluster, a_ancestor: ET_CLUSTER): ET_CLUSTER
+	cluster_with_relative_pathname_to (a_cluster, a_ancestor: ET_CLUSTER): detachable ET_CLUSTER
 			-- Cluster in either current cluster or one of its subclusters (recursively)
 			-- whose relative pathname to current cluster is the same as the relative
 			-- pathname between `a_cluster' and `a_ancestor'
@@ -498,7 +494,6 @@ feature -- Nested
 			l_cluster_pathname, l_ancestor_pathname: KI_PATHNAME
 			l_trailing_items: ARRAY [STRING]
 			l_full_pathname: STRING
-			l_cluster: ET_CLUSTER
 		do
 			l_cluster_pathname := file_system.string_to_pathname (a_cluster.absolute_pathname)
 			l_ancestor_pathname := file_system.string_to_pathname (a_ancestor.absolute_pathname)
@@ -509,8 +504,7 @@ feature -- Nested
 				Result := cluster_by_name (l_trailing_items)
 			else
 				l_full_pathname := file_system.nested_pathname (absolute_pathname, l_trailing_items)
-				l_cluster := cluster_with_absolute_pathname (l_full_pathname)
-				if l_cluster /= Void and then l_cluster.is_relative_to (Current) then
+				if attached cluster_with_absolute_pathname (l_full_pathname) as l_cluster and then l_cluster.is_relative_to (Current) then
 					Result := l_cluster
 				end
 			end
@@ -519,12 +513,12 @@ feature -- Nested
 			is_relative: Result /= Void implies Result.is_relative_to (Current)
 		end
 
-	subclusters: ET_CLUSTERS
+	subclusters: detachable ET_CLUSTERS
 			-- Subclusters
 
 feature -- Dependence constraints
 
-	provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+	provider_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			-- Clusters that are the only allowed providers of current cluster;
 			-- No such constraint if `provider_constraint' is Void.
 			-- If a file 'providers.txt' is found in current cluster's directory,
@@ -533,7 +527,7 @@ feature -- Dependence constraints
 			-- tabs or newlines). Otherwise `provider_constraint' is set to be the
 			-- `provider_constraint' of current cluster's parent cluster if any.
 
-	dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+	dependant_constraint: detachable ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			-- Clusters that are the only allowed dependants of current cluster;
 			-- No such constraint if `dependant_constraint' is Void.
 			-- If a file 'dependants.txt' is found in current cluster's directory,
@@ -555,19 +549,19 @@ feature -- Dependence constraints
 
 feature -- SCM mappings
 
-	scm_read_mapping: ET_CLUSTER_SCM_READ_MAPPING
+	scm_read_mapping: detachable ET_CLUSTER_SCM_READ_MAPPING
 			-- SCM read mapping declared in current cluster
 			--
 			-- See class ET_CLUSTER_SCM_READ_MAPPING for explanations
 			-- about SCM read mappings.
 
-	scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
+	scm_write_mapping: detachable ET_CLUSTER_SCM_WRITE_MAPPING
 			-- SCM write mapping declared in current cluster
 			--
 			-- See class ET_CLUSTER_SCM_WRITE_MAPPING for explanations
 			-- about SCM write mappings.
 
-	scm_read_mapping_recursive: ET_CLUSTER_SCM_READ_MAPPING
+	scm_read_mapping_recursive: detachable ET_CLUSTER_SCM_READ_MAPPING
 			-- SCM read mapping applicable to current cluster;
 			-- It is either `scm_read_mapping' if not Void, or recursively
 			-- the version from the parent cluster if the current cluster is relative
@@ -575,15 +569,15 @@ feature -- SCM mappings
 		do
 			if scm_read_mapping /= Void then
 				Result := scm_read_mapping
-			elseif parent /= Void and is_relative then
-				Result := parent.scm_read_mapping_recursive
+			elseif attached parent as l_parent and is_relative then
+				Result := l_parent.scm_read_mapping_recursive
 			end
 		ensure
 			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
 			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
-	scm_write_mapping_recursive: ET_CLUSTER_SCM_WRITE_MAPPING
+	scm_write_mapping_recursive: detachable ET_CLUSTER_SCM_WRITE_MAPPING
 			-- SCM write mapping applicable to current cluster;
 			-- It is either `scm_write_mapping' if not Void, or recursively
 			-- the version from its parent cluster if the current cluster is relative
@@ -591,15 +585,15 @@ feature -- SCM mappings
 		do
 			if scm_write_mapping /= Void then
 				Result := scm_write_mapping
-			elseif parent /= Void and is_relative then
-				Result := parent.scm_write_mapping_recursive
+			elseif attached parent as l_parent and is_relative then
+				Result := l_parent.scm_write_mapping_recursive
 			end
 		ensure
 			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
 			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
-	scm_mapping_recursive: ET_CLUSTER_SCM_MAPPING
+	scm_mapping_recursive: detachable ET_CLUSTER_SCM_MAPPING
 			-- SCM read or write mapping applicable to current cluster;
 			-- It is either `scm_write_mapping' if not Void, or else
 			-- `scm_read_mapping' if not Void, or recursively the version
@@ -611,8 +605,8 @@ feature -- SCM mappings
 				Result := scm_write_mapping
 			elseif scm_read_mapping /= Void then
 				Result := scm_read_mapping
-			elseif parent /= Void and is_relative then
-				Result := parent.scm_mapping_recursive
+			elseif attached parent as l_parent and is_relative then
+				Result := l_parent.scm_mapping_recursive
 			end
 		ensure
 			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
@@ -628,8 +622,8 @@ feature -- Measurement
 			if not is_abstract then
 				Result := 1
 			end
-			if subclusters /= Void then
-				Result := Result + subclusters.count_recursive
+			if attached subclusters as l_subclusters then
+				Result := Result + l_subclusters.count_recursive
 			end
 		ensure
 			count_recursive_not_negative: Result >= 0
@@ -642,8 +636,8 @@ feature -- Measurement
 			if not is_read_only and not is_abstract and is_override then
 				Result := 1
 			end
-			if subclusters /= Void then
-				Result := Result + subclusters.override_count_recursive
+			if attached subclusters as l_subclusters then
+				Result := Result + l_subclusters.override_count_recursive
 			end
 		ensure
 			override_count_not_negative: Result >= 0
@@ -656,8 +650,8 @@ feature -- Measurement
 			if not is_read_only and not is_abstract then
 				Result := 1
 			end
-			if subclusters /= Void then
-				Result := Result + subclusters.read_write_count_recursive
+			if attached subclusters as l_subclusters then
+				Result := Result + l_subclusters.read_write_count_recursive
 			end
 		ensure
 			read_write_count_recursive_not_negative: Result >= 0
@@ -751,8 +745,8 @@ feature -- Status setting
 				scm_mapping_constraint_enabled := False
 			end
 			overridden_constraint_enabled := b
-			if subclusters /= Void then
-				subclusters.set_overridden_constraint_enabled (b)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_overridden_constraint_enabled (b)
 			end
 		ensure
 			overridden_constraint_enabled_set: overridden_constraint_enabled = b
@@ -765,8 +759,8 @@ feature -- Status setting
 				overridden_constraint_enabled := False
 			end
 			scm_mapping_constraint_enabled := b
-			if subclusters /= Void then
-				subclusters.set_scm_mapping_constraint_enabled (b)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_scm_mapping_constraint_enabled (b)
 			end
 		ensure
 			scm_mapping_constraint_enabled_set: scm_mapping_constraint_enabled = b
@@ -777,12 +771,12 @@ feature -- Setting
 	set_subclusters (a_subclusters: like subclusters)
 			-- Set `subclusters' to `a_subclusters'.
 		do
-			if subclusters /= Void then
-				subclusters.set_parent (Void)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_parent (Void)
 			end
 			subclusters := a_subclusters
-			if subclusters /= Void then
-				subclusters.set_parent (Current)
+			if a_subclusters /= Void then
+				a_subclusters.set_parent (Current)
 			end
 		ensure
 			subclusters_set: subclusters = a_subclusters
@@ -792,8 +786,8 @@ feature -- Setting
 			-- Set `provider_constraint' to `a_constraint'.
 		do
 			provider_constraint := a_constraint
-			if subclusters /= Void then
-				subclusters.set_provider_constraint (a_constraint)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_provider_constraint (a_constraint)
 			end
 		ensure
 			provider_constraint_set: provider_constraint = a_constraint
@@ -803,8 +797,8 @@ feature -- Setting
 			-- Set `dependant_constraint' to `a_constraint'.
 		do
 			dependant_constraint := a_constraint
-			if subclusters /= Void then
-				subclusters.set_dependant_constraint (a_constraint)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_dependant_constraint (a_constraint)
 			end
 		ensure
 			dependant_constraint_set: dependant_constraint = a_constraint
@@ -828,18 +822,19 @@ feature -- Setting
 
 feature -- Element change
 
-	add_subcluster (a_cluster: like parent)
+	add_subcluster (a_cluster: attached like parent)
 			-- Add `a_cluster' to the list of subsclusters.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
-			a_subclusters: like subclusters
+			l_subclusters: like subclusters
 		do
-			if subclusters = Void then
-				create a_subclusters.make_empty
-				set_subclusters (a_subclusters)
+			l_subclusters := subclusters
+			if l_subclusters = Void then
+				create l_subclusters.make_empty
+				set_subclusters (l_subclusters)
 			end
-			subclusters.put_last (a_cluster)
+			l_subclusters.put_last (a_cluster)
 			a_cluster.set_parent (Current)
 		ensure
 			subclusters_not_void: subclusters /= Void
@@ -857,8 +852,8 @@ feature -- Element change
 			found: BOOLEAN
 			i, nb: INTEGER
 		do
-			if subclusters /= Void then
-				a_cluster_list := subclusters.clusters
+			if attached subclusters as l_subclusters then
+				a_cluster_list := l_subclusters.clusters
 				nb := a_cluster_list.count
 				from i := 1 until i > nb loop
 					a_cluster := a_cluster_list.item (i)
@@ -907,8 +902,8 @@ feature -- Element change
 					-- Just ignore it.
 				end
 			end
-			if subclusters /= Void then
-				subclusters.add_implicit_subclusters
+			if attached subclusters as l_subclusters then
+				l_subclusters.add_implicit_subclusters
 			end
 		end
 
@@ -952,9 +947,9 @@ feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
-			if parent /= Void then
-				set_provider_constraint (parent.provider_constraint)
-				set_dependant_constraint (parent.dependant_constraint)
+			if a_parent /= Void then
+				set_provider_constraint (a_parent.provider_constraint)
+				set_dependant_constraint (a_parent.dependant_constraint)
 			else
 				set_provider_constraint (Void)
 				set_dependant_constraint (Void)

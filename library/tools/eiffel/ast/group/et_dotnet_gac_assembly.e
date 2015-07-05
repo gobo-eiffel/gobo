@@ -5,7 +5,7 @@ note
 		"GAC .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,13 +49,13 @@ feature -- Access
 	assembly_name: STRING
 			-- Name of current assembly
 
-	assembly_version: STRING
+	assembly_version: detachable STRING
 			-- Version of current assembly (may be Void)
 
-	assembly_culture: STRING
+	assembly_culture: detachable STRING
 			-- Culture of current assembly (may be Void)
 
-	assembly_public_key_token: STRING
+	assembly_public_key_token: detachable STRING
 			-- Public key of current assembly (may be Void)
 
 feature -- Setting

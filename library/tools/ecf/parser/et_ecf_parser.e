@@ -5,7 +5,7 @@ note
 		"ECF parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,22 +32,28 @@ feature {NONE} -- Initialization
 			parsed_libraries.set_key_equality_tester (case_insensitive_string_equality_tester)
 			create parsed_dotnet_assemblies.make_map (10)
 			parsed_dotnet_assemblies.set_key_equality_tester (string_equality_tester)
-				-- We must not create a new ET_ECF_LIBRARY_PARSER
-				-- object if `Current' is one already, or we will
-				-- recurse in this routine forever.
-			if attached {ET_ECF_LIBRARY_PARSER} Current as l_library_parser then
-				library_parser := l_library_parser
-			else
-				create library_parser.make_with_factory (a_factory, an_error_handler)
-				library_parser.set_parsed_libraries (parsed_libraries)
-				library_parser.set_parsed_dotnet_assemblies (parsed_dotnet_assemblies)
-			end
 			create {XM_EIFFEL_PARSER} xml_parser.make
 			xml_parser.set_string_mode_mixed
 				-- The parser will build a tree.
 			create tree_pipe.make
 			xml_parser.set_callbacks (tree_pipe.start)
 			tree_pipe.tree.enable_position_table (xml_parser)
+			create_library_parser (a_factory, an_error_handler)
+		end
+
+	create_library_parser (a_factory: like ast_factory; an_error_handler: like error_handler)
+			-- Create `library_parser', or set it to `Current' in descendant class
+			-- ET_ECF_LIBRARY_PARSER (otherwise we would recurse in
+			-- `make_with_factory' forever).
+		require
+			a_factory_not_void: a_factory /= Void
+			an_error_handler_not_void: an_error_handler /= Void
+		do
+			create library_parser.make_with_factory (a_factory, an_error_handler)
+			library_parser.set_parsed_libraries (parsed_libraries)
+			library_parser.set_parsed_dotnet_assemblies (parsed_dotnet_assemblies)
+		ensure
+			library_parser_created: library_parser /= Void
 		end
 
 feature -- Access
@@ -72,7 +78,7 @@ feature -- Parsing
 			l_root_name: STRING
 			l_document: XM_DOCUMENT
 			l_root_element: XM_ELEMENT
-			l_position_table: XM_POSITION_TABLE
+			l_position_table: detachable XM_POSITION_TABLE
 			l_unknown_universe: ET_ECF_SYSTEM
 			l_full_filename: STRING
 			l_position: ET_COMPRESSED_POSITION
@@ -145,12 +151,11 @@ feature -- Setting
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
+	build_system_config (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
-			a_position_table_not_void: a_position_table /= Void
 			a_filename_not_void: a_filename /= Void
 		deferred
 		end

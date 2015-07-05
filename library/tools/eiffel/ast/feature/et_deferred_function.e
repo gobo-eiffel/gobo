@@ -5,7 +5,7 @@ note
 		"Eiffel deferred-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 	make (a_name: like extended_name; args: like arguments; a_type: like declared_type; a_class: like implementation_class)
 			-- Create a new deferred function.
 		do
-			precursor (a_name, args, a_type, a_class)
 			deferred_keyword := tokens.deferred_keyword
+			precursor (a_name, args, a_type, a_class)
 		end
 
 feature -- Duplication

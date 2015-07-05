@@ -123,7 +123,6 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 			i, nb: INTEGER
 		do
@@ -135,8 +134,7 @@ feature {NONE} -- Processing
 				if current_class.ancestors_built and then not current_class.has_ancestors_error then
 					current_class.set_features_flattened
 						-- Process parents first.
-					a_parents := current_class.parents
-					if a_parents /= Void then
+					if attached current_class.parents as a_parents then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
 							a_parent_class := a_parents.parent (i).type.base_class
@@ -226,10 +224,9 @@ feature {NONE} -- Feature flattening
 		local
 			a_named_feature: ET_FLATTENED_FEATURE
 			a_feature: ET_FEATURE
-			a_deferred_feature: ET_FLATTENED_FEATURE
+			a_deferred_feature: detachable ET_FLATTENED_FEATURE
 			i, nb: INTEGER
 			a_type: ET_TYPE
-			l_alias_name: ET_ALIAS_NAME
 			l_feature_name: ET_FEATURE_NAME
 			l_other_feature: ET_FLATTENED_FEATURE
 			l_parent_feature: ET_PARENT_FEATURE
@@ -249,14 +246,10 @@ feature {NONE} -- Feature flattening
 					a_named_feature := named_features.item_for_iteration
 					flatten_feature (a_named_feature)
 					a_feature := a_named_feature.flattened_feature
-					l_procedure ?= a_feature
-					if l_procedure /= Void then
-						procedures.force_last (l_procedure)
-					else
-						l_query ?= a_feature
-						if l_query /= Void then
-							queries.force_last (l_query)
-						end
+					if attached {ET_PROCEDURE} a_feature as l_flattened_procedure then
+						procedures.force_last (l_flattened_procedure)
+					elseif attached {ET_QUERY} a_feature as l_flattened_query then
+						queries.force_last (l_flattened_query)
 					end
 					named_features.back
 				end
@@ -338,8 +331,7 @@ feature {NONE} -- Feature flattening
 							error_handler.report_vffd6a_error (current_class, l_query)
 						end
 					else
-						l_alias_name := l_query.alias_name
-						if l_alias_name /= Void then
+						if attached l_query.alias_name as l_alias_name then
 							if l_alias_name.is_bracket then
 								if not l_query.is_bracketable then
 										-- A feature with a Bracket alias should be
@@ -430,8 +422,7 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_vffd6a_error (current_class, l_procedure)
 					else
-						l_alias_name := l_procedure.alias_name
-						if l_alias_name /= Void then
+						if attached l_procedure.alias_name as l_alias_name then
 							if l_alias_name.is_bracket then
 									-- A feature with a Bracket alias should be
 									-- a function with one or more arguments.
@@ -469,8 +460,7 @@ feature {NONE} -- Feature flattening
 						-- See VFAV-1 and VFAV-2, ECMA p.42.
 						-- See also VFAV-4 from ISE.
 					a_feature := a_named_feature.flattened_feature
-					l_alias_name := a_feature.alias_name
-					if l_alias_name /= Void then
+					if attached a_feature.alias_name as l_alias_name then
 						aliased_features.search (l_alias_name)
 						if aliased_features.found then
 							set_fatal_error (current_class)
@@ -599,9 +589,10 @@ feature {NONE} -- Feature processing
 			else
 				if not current_class.is_dotnet then
 					an_adapted_feature := a_feature.adapted_feature
-					if an_adapted_feature.has_selected_feature and not an_adapted_feature.is_selected then
+					if attached an_adapted_feature.selected_feature as l_selected_feature and not an_adapted_feature.is_selected then
+						check has_selected_feature: an_adapted_feature.has_selected_feature end
 							-- This is not a fatal error for gelint.
-						error_handler.report_vmss3a_error (current_class, an_adapted_feature.selected_feature)
+						error_handler.report_vmss3a_error (current_class, l_selected_feature)
 					end
 				end
 				if a_feature.is_redeclared then
@@ -633,14 +624,14 @@ feature {NONE} -- Feature processing
 			a_feature_not_void: a_feature /= Void
 		local
 			l_flattened_feature: ET_FEATURE
-			l_parent_feature: ET_PARENT_FEATURE
+			l_parent_feature: detachable ET_PARENT_FEATURE
 			l_has_redefine: BOOLEAN
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
+			l_preconditions: detachable ET_PRECONDITIONS
+			l_postconditions: detachable ET_POSTCONDITIONS
 			nb_precursors: INTEGER
 			l_precursor: ET_FEATURE
-			l_first_precursor: ET_FEATURE
-			l_other_precursors: ET_FEATURE_LIST
+			l_first_precursor: detachable ET_FEATURE
+			l_other_precursors: detachable ET_FEATURE_LIST
 			l_found: BOOLEAN
 			l_dotnet: BOOLEAN
 			i, nb: INTEGER
@@ -694,12 +685,14 @@ feature {NONE} -- Feature processing
 				if l_first_precursor = Void then
 					l_first_precursor := l_precursor
 				elseif not l_precursor.same_version (l_first_precursor) then
-					from i := 1 until i > nb loop
-						if l_precursor.same_version (l_other_precursors.item (i)) then
-							l_found := True
-							i := nb + 1
-						else
-							i := i + 1
+					if l_other_precursors /= Void then
+						from i := 1 until i > nb loop
+							if l_precursor.same_version (l_other_precursors.item (i)) then
+								l_found := True
+								i := nb + 1
+							else
+								i := i + 1
+							end
 						end
 					end
 					if not l_found then
@@ -737,23 +730,22 @@ feature {NONE} -- Feature processing
 			a_feature_not_void: a_feature /= Void
 		local
 			l_flattened_feature: ET_FEATURE
-			l_parent_feature: ET_PARENT_FEATURE
-			l_effective, l_deferred: ET_PARENT_FEATURE
+			l_parent_feature: detachable ET_PARENT_FEATURE
+			l_effective, l_deferred: detachable ET_PARENT_FEATURE
 			l_first_seed: INTEGER
-			l_other_seeds: ET_FEATURE_IDS
+			l_other_seeds: detachable ET_FEATURE_IDS
 			l_keep_same_version: BOOLEAN
 			l_duplication_needed: BOOLEAN
-			l_alias_name: ET_ALIAS_NAME
-			l_parent_alias_name: ET_ALIAS_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
+			l_parent_alias_name: detachable ET_ALIAS_NAME
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
 			l_clients: ET_CLIENT_LIST
 			l_precursor: ET_FEATURE
 			l_first_precursor: ET_FEATURE
-			l_other_precursors: ET_FEATURE_LIST
+			l_other_precursors: detachable ET_FEATURE_LIST
 			nb: INTEGER
 			l_extended_name: ET_EXTENDED_FEATURE_NAME
-			l_identifier: ET_IDENTIFIER
 			l_has_effective: BOOLEAN
 		do
 			l_clients := inherited_clients (a_feature)
@@ -843,9 +835,17 @@ feature {NONE} -- Feature processing
 			if l_effective /= Void then
 				l_parent_feature := l_effective
 				l_first_precursor := l_effective.precursor_feature
-			else
+			elseif l_deferred /= Void then
 				l_parent_feature := l_deferred
 				l_first_precursor := l_deferred.precursor_feature
+			else
+					-- Internal error: at this stage either `l_effective' or `l_deferred'
+					-- should be non-void.
+				set_fatal_error (current_class)
+				error_handler.report_giaaa_error
+					-- Make the compiler happy in void-safe mode.
+				l_parent_feature := a_feature.parent_feature
+				l_first_precursor := l_parent_feature.precursor_feature
 			end
 				-- There is a caveat here with precursors. Only features with the
 				-- same version are supposed to be able to be shared. But in the
@@ -900,12 +900,12 @@ feature {NONE} -- Feature processing
 				precursors.wipe_out
 			end
 			l_flattened_feature := l_parent_feature.precursor_feature
-			if l_parent_feature.has_undefine then
-				l_extended_name := l_parent_feature.undefine_name
+			if attached l_parent_feature.undefine_name as l_undefine_name then
+				check has_undefine: l_parent_feature.has_undefine end
+				l_extended_name := l_undefine_name
 				l_alias_name := l_parent_feature.alias_name
 				if l_alias_name /= Void then
-					l_identifier ?= l_parent_feature.undefine_name
-					if l_identifier /= Void then
+					if attached {ET_IDENTIFIER} l_parent_feature.undefine_name as l_identifier then
 						create {ET_ALIASED_FEATURE_NAME} l_extended_name.make (l_identifier, l_alias_name)
 					end
 				end
@@ -1009,21 +1009,21 @@ feature {NONE} -- Replication
 			l_need_twin: BOOLEAN
 			l_seed: INTEGER
 			l_first_seed: INTEGER
-			l_other_seeds: ET_FEATURE_IDS
-			l_replicated_seeds: ET_FEATURE_IDS
+			l_other_seeds: detachable ET_FEATURE_IDS
+			l_replicated_seeds: detachable ET_FEATURE_IDS
 			l_seeds_done: BOOLEAN
 		do
 				-- Remove replicated seeds and add the new seed.
 			l_first_seed := a_feature.first_seed
 			l_other_seeds := a_feature.other_seeds
-			check
-					-- See postcondition of `is_replicated' in
-					-- class ET_FEATURE.
-				is_replicated: a_feature.replicated_seeds /= Void
-			end
 			l_replicated_seeds := a_feature.replicated_seeds
-			nb := l_replicated_seeds.count
-			if l_other_seeds /= Void then
+			if l_replicated_seeds = Void then
+				check
+						-- See postcondition of `is_replicated' in class ET_FEATURE.
+					is_replicated: False
+				end
+			elseif l_other_seeds /= Void then
+				nb := l_replicated_seeds.count
 				if l_replicated_seeds.has (l_first_seed) then
 					if nb = 1 then
 							-- There was only the first seed to be removed.
@@ -1046,7 +1046,7 @@ feature {NONE} -- Replication
 					create l_other_seeds.make (a_new_seed)
 					l_seeds_done := True
 				end
-				if not l_seeds_done then
+				if l_other_seeds /= Void and not l_seeds_done then
 					l_need_twin := a_feature.is_other_seeds_shared
 					if l_need_twin then
 						l_other_seeds := l_other_seeds.cloned_object
@@ -1087,15 +1087,14 @@ feature {NONE} -- Clients
 			-- Clients indexed by classes
 
 	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST
-			-- Clients inherited by the not redeclared feature `a_feature'.
+			-- Clients inherited by the non-redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parent_feature: ET_PARENT_FEATURE
+			l_parent_feature: detachable ET_PARENT_FEATURE
 			l_clients: ET_CLIENT_LIST
 			l_client: ET_CLIENT
 			l_parent: ET_PARENT
-			l_exports: ET_EXPORT_LIST
 			l_export: ET_EXPORT
 			l_name: ET_FEATURE_NAME
 			l_overridden: BOOLEAN
@@ -1103,6 +1102,7 @@ feature {NONE} -- Clients
 			l_has_all: BOOLEAN
 			i, nb: INTEGER
 			j, nb2: INTEGER
+			l_largest_clients: detachable ET_CLIENT_LIST
 		do
 			l_ise := current_system.is_ise
 			from
@@ -1113,8 +1113,7 @@ feature {NONE} -- Clients
 				l_overridden := False
 				l_name := l_parent_feature.name
 				l_parent := l_parent_feature.parent
-				l_exports := l_parent.exports
-				if l_exports /= Void then
+				if attached l_parent.exports as l_exports then
 					nb := l_exports.count
 					if l_ise then
 							-- The ISE semantics follows what is described in ETL2:
@@ -1180,29 +1179,22 @@ feature {NONE} -- Clients
 			elseif clients_list.count = 1 then
 				Result := clients_list.first
 			else
-				Result := Void
+					-- Find the largest client clause which
+					-- contains all client classes if any.
 				nb2 := client_classes.count
 				nb := clients_list.count
 				from i := 1 until i > nb loop
 					l_clients := clients_list.item (i)
 					if l_clients.count >= nb2 then
-						Result := l_clients
+						l_largest_clients := l_clients
 						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1
 					end
 				end
-				if Result /= Void then
-					from client_classes.start until client_classes.after loop
-						if not Result.has_class (client_classes.key_for_iteration) then
-							Result := Void
-							client_classes.go_after -- Jump out of the loop.
-						else
-							client_classes.forth
-						end
-					end
-				end
-				if Result = Void then
+				if l_largest_clients /= Void and then client_classes.keys.for_all (agent l_largest_clients.has_class) then
+					Result := l_largest_clients
+				else
 					create Result.make_with_capacity (nb2)
 					from client_classes.finish until client_classes.before loop
 						Result.put_first (client_classes.item_for_iteration)
@@ -1212,6 +1204,8 @@ feature {NONE} -- Clients
 			end
 			client_classes.wipe_out
 			clients_list.wipe_out
+		ensure
+			inherited_clients_not_void: Result /= Void
 		end
 
 feature {NONE} -- Feature adaptation validity
@@ -1228,8 +1222,8 @@ feature {NONE} -- Feature adaptation validity
 			a_redeclared_feature_not_void: a_redeclared_feature /= Void
 		local
 			l_precursor_feature: ET_FEATURE
-			l_parent_alias_name: ET_ALIAS_NAME
-			l_alias_name: ET_ALIAS_NAME
+			l_parent_alias_name: detachable ET_ALIAS_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
 		do
 			check_rename_clause_validity (a_parent_feature)
 			check_undefine_clause_validity (a_parent_feature)
@@ -1321,21 +1315,22 @@ feature {NONE} -- Feature adaptation validity
 			l_precursor_feature: ET_FEATURE
 			l_extended_name: ET_EXTENDED_FEATURE_NAME
 			l_name: ET_FEATURE_NAME
-			l_alias_name: ET_ALIAS_NAME
+			l_alias_name: detachable ET_ALIAS_NAME
 		do
-			if a_parent_feature.has_rename then
+			if attached a_parent_feature.new_name as l_new_name then
+				check has_rename: a_parent_feature.has_rename end
 				l_precursor_feature := a_parent_feature.precursor_feature
-				l_extended_name := a_parent_feature.new_name.new_name
+				l_extended_name := l_new_name.new_name
 				l_name := l_extended_name.feature_name
 				if l_name.is_infix then
 					if not l_precursor_feature.is_infixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc5a_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+						error_handler.report_vhrc5a_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 					end
 				elseif l_name.is_prefix then
 					if not l_precursor_feature.is_prefixable then
 						set_fatal_error (current_class)
-						error_handler.report_vhrc4a_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+						error_handler.report_vhrc4a_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 					end
 				else
 					l_alias_name := l_extended_name.alias_name
@@ -1346,14 +1341,14 @@ feature {NONE} -- Feature adaptation validity
 									-- A feature with a Bracket alias should be
 									-- a function with one or more arguments.
 								set_fatal_error (current_class)
-								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 							end
 						elseif l_alias_name.is_parenthesis then
 							if not l_precursor_feature.is_parenthesisable then
 									-- A feature with a Parenthesis alias should be
 									-- a function with one or more arguments.
 								set_fatal_error (current_class)
-								error_handler.report_vfav4e_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+								error_handler.report_vfav4e_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 							end
 						elseif l_precursor_feature.is_prefixable then
 							if l_alias_name.is_prefixable then
@@ -1362,7 +1357,7 @@ feature {NONE} -- Feature adaptation validity
 									-- A feature with a binary Operator alias should be
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
-								error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+								error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 							end
 						elseif l_precursor_feature.is_infixable then
 							if l_alias_name.is_infixable then
@@ -1371,19 +1366,19 @@ feature {NONE} -- Feature adaptation validity
 									-- A feature with a unary Operator alias should be
 									-- a query with no argument.
 								set_fatal_error (current_class)
-								error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+								error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 							end
 						elseif l_alias_name.is_infix then
 								-- A feature with a binary Operator alias should be
 								-- a function with exactly one argument.
 							set_fatal_error (current_class)
-							error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 						else
 							check is_prefix: l_alias_name.is_prefix end
 								-- A feature with a unary Operator alias should be
 								-- a query with no argument.
 							set_fatal_error (current_class)
-							error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, l_new_name, l_precursor_feature)
 						end
 					end
 				end
@@ -1397,15 +1392,16 @@ feature {NONE} -- Feature adaptation validity
 		local
 			l_precursor_feature: ET_FEATURE
 		do
-			if a_parent_feature.has_undefine then
+			if attached a_parent_feature.undefine_name as l_undefine_name then
+				check has_undefine: a_parent_feature.has_undefine end
 				l_precursor_feature := a_parent_feature.precursor_feature
 				if l_precursor_feature.is_deferred then
 						-- This is not a fatal error for gelint.
-					error_handler.report_vdus3a_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
+					error_handler.report_vdus3a_error (current_class, a_parent_feature.parent, l_undefine_name)
 				end
 				if l_precursor_feature.is_frozen then
 					set_fatal_error (current_class)
-					error_handler.report_vdus2a_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
+					error_handler.report_vdus2a_error (current_class, a_parent_feature.parent, l_undefine_name)
 				end
 				if
 					l_precursor_feature.is_attribute or
@@ -1413,7 +1409,7 @@ feature {NONE} -- Feature adaptation validity
 					l_precursor_feature.is_constant_attribute
 				then
 					set_fatal_error (current_class)
-					error_handler.report_vdus2b_error (current_class, a_parent_feature.parent, a_parent_feature.undefine_name)
+					error_handler.report_vdus2b_error (current_class, a_parent_feature.parent, l_undefine_name)
 				end
 			end
 		end
@@ -1425,18 +1421,19 @@ feature {NONE} -- Feature adaptation validity
 		local
 			l_precursor_feature: ET_FEATURE
 		do
-			if a_parent_feature.has_redefine then
+			if attached a_parent_feature.redefine_name as l_redefine_name then
+				check has_redefine: a_parent_feature.has_redefine end
 				l_precursor_feature := a_parent_feature.precursor_feature
 				if l_precursor_feature.is_frozen then
 					set_fatal_error (current_class)
-					error_handler.report_vdrs2a_error (current_class, a_parent_feature.parent, a_parent_feature.redefine_name)
+					error_handler.report_vdrs2a_error (current_class, a_parent_feature.parent, l_redefine_name)
 				end
 				if
 					l_precursor_feature.is_unique_attribute or
 					l_precursor_feature.is_constant_attribute
 				then
 					set_fatal_error (current_class)
-					error_handler.report_vdrs2b_error (current_class, a_parent_feature.parent, a_parent_feature.redefine_name)
+					error_handler.report_vdrs2b_error (current_class, a_parent_feature.parent, l_redefine_name)
 				end
 			end
 		end
@@ -1472,8 +1469,7 @@ feature {NONE} -- Signature resolving
 			a_feature_not_void: a_feature /= Void
 			a_feature_registered: a_feature.is_registered
 		local
-			a_type, previous_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
+			a_type, previous_type: detachable ET_TYPE
 			an_arg, other_arg: ET_FORMAL_ARGUMENT
 			other_feature: ET_FEATURE
 			a_name: ET_IDENTIFIER
@@ -1486,8 +1482,7 @@ feature {NONE} -- Signature resolving
 					set_fatal_error (current_class)
 				end
 			end
-			args := a_feature.arguments
-			if args /= Void then
+			if attached a_feature.arguments as args then
 				nb := args.count
 				from i := 1 until i > nb loop
 					an_arg := args.formal_argument (i)
@@ -1780,7 +1775,7 @@ feature {NONE} -- Creators validity
 	check_creators_validity
 			-- Check validity of creators of `current_class'.
 		local
-			a_creators: ET_CREATOR_LIST
+			a_creators: detachable ET_CREATOR_LIST
 			a_creator, other_creator: ET_CREATOR
 			a_name, other_name: ET_FEATURE_NAME
 			i, j, nb: INTEGER
@@ -1860,15 +1855,13 @@ feature {NONE} -- Convert validity
 	check_convert_validity
 			-- Check validity of convert clause of `current_class'.
 		local
-			a_convert_features: ET_CONVERT_FEATURE_LIST
 			a_convert_feature: ET_CONVERT_FEATURE
 			i, nb: INTEGER
 			a_name: ET_FEATURE_NAME
 			a_feature: ET_FEATURE
 		do
 -- TODO: check the conversion type.
-			a_convert_features := current_class.convert_features
-			if a_convert_features /= Void then
+			if attached current_class.convert_features as a_convert_features then
 				nb := a_convert_features.count
 				from i := 1 until i > nb loop
 					a_convert_feature := a_convert_features.convert_feature (i)
@@ -1896,16 +1889,13 @@ feature -- Assigner validity
 		local
 			l_queries: ET_QUERY_LIST
 			l_query: ET_QUERY
-			l_assigner: ET_ASSIGNER
 			l_feature_name: ET_FEATURE_NAME
-			l_feature: ET_FEATURE
-			l_query_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_procedure_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_query_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+			l_procedure_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb_args: INTEGER
 			l_arg_offset: INTEGER
 			l_type, l_other_type: ET_TYPE
-			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
 		do
 			l_queries := current_class.queries
@@ -1913,21 +1903,18 @@ feature -- Assigner validity
 			nb := l_queries.declared_count
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				l_assigner := l_query.assigner
-				if l_assigner /= Void then
+				if attached l_query.assigner as l_assigner then
 					l_feature_name := l_assigner.feature_name
 					named_features.search (l_feature_name)
 					if not named_features.found then
 						set_fatal_error (current_class)
 						error_handler.report_vfac1a_error (current_class, l_feature_name, l_query)
 					else
-						l_feature := named_features.found_item.flattened_feature
-						l_procedure ?= l_feature
-						if l_procedure = Void then
+						if not attached {ET_PROCEDURE} named_features.found_item.flattened_feature as l_procedure then
 							set_fatal_error (current_class)
 							error_handler.report_vfac1b_error (current_class, l_feature_name, l_query)
 						else
-							l_feature_name.set_seed (l_feature.first_seed)
+							l_feature_name.set_seed (l_procedure.first_seed)
 							l_procedure_arguments := l_procedure.arguments
 							if l_procedure_arguments = Void then
 								set_fatal_error (current_class)
@@ -1963,15 +1950,17 @@ feature -- Assigner validity
 									end
 								end
 								l_query_arguments := l_query.arguments
-								nb_args := l_procedure_arguments.count - 1
-								from j := 1 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j).type
-									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
-									if not l_type.same_named_type (l_other_type, current_class, current_class) then
-										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
+								if l_query_arguments /= Void then
+									nb_args := l_query_arguments.count
+									from j := 1 until j > nb_args loop
+										l_type := l_query_arguments.formal_argument (j).type
+										l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
+										if not l_type.same_named_type (l_other_type, current_class, current_class) then
+											set_fatal_error (current_class)
+											error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
+										end
+										j := j + 1
 									end
-									j := j + 1
 								end
 							end
 						end
@@ -1983,8 +1972,7 @@ feature -- Assigner validity
 			nb := l_queries.count
 			from until i > nb loop
 				l_query := l_queries.item (i)
-				l_assigner := l_query.assigner
-				if l_assigner /= Void then
+				if attached l_query.assigner as l_assigner then
 					l_feature_name := l_assigner.feature_name
 					l_seed := l_feature_name.seed
 					if l_seed = 0 then
@@ -1994,8 +1982,7 @@ feature -- Assigner validity
 						set_fatal_error (current_class)
 						error_handler.report_giaaa_error
 					else
-						l_procedure := current_class.seeded_procedure (l_seed)
-						if l_procedure = Void then
+						if not attached current_class.seeded_procedure (l_seed) as l_procedure then
 							if not current_class.has_flattening_error then
 									-- Internal error: if the assigner was valid
 									-- in the ancestor class and there was no error
@@ -2054,15 +2041,17 @@ feature -- Assigner validity
 									end
 								end
 								l_query_arguments := l_query.arguments
-								nb_args := l_procedure_arguments.count - 1
-								from j := 1 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j).type
-									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
-									if not l_type.same_named_type (l_other_type, current_class, current_class) then
-										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
+								if l_query_arguments /= Void then
+									nb_args := l_query_arguments.count
+									from j := 1 until j > nb_args loop
+										l_type := l_query_arguments.formal_argument (j).type
+										l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
+										if not l_type.same_named_type (l_other_type, current_class, current_class) then
+											set_fatal_error (current_class)
+											error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
+										end
+										j := j + 1
 									end
-									j := j + 1
 								end
 							end
 						end

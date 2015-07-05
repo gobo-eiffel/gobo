@@ -5,7 +5,7 @@ note
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,16 +40,13 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_universe_not_void: a_universe /= Void
-		local
-			l_ecf_version: UT_VERSION
 		do
 			name := a_name
 			pathname := a_pathname
 			is_relative := (a_pathname = Void)
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
-			l_ecf_version := universe.ecf_version
-			if l_ecf_version /= Void and then l_ecf_version <= ecf_1_4_0 then
+			if attached universe.ecf_version as l_ecf_version  and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
 			end
 		ensure
@@ -66,17 +63,16 @@ feature -- Access
 	name: STRING
 			-- Name
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Directory pathname (may be Void)
 
 	full_pathname: STRING
 			-- Full directory pathname
 		local
-			a_pathname: STRING
+			a_pathname: detachable STRING
 			parent_pathname: STRING
 			a_basename: STRING
 			l_relative: BOOLEAN
-			l_ecf_universe: ET_ECF_INTERNAL_UNIVERSE
 			l_ecf_filename: STRING
 			i, nb: INTEGER
 		do
@@ -113,8 +109,8 @@ feature -- Access
 					-- and '/' as directory separator.
 				a_pathname := file_system.pathname_from_file_system (a_pathname, windows_file_system)
 			end
-			if (is_relative or l_relative) and parent /= Void then
-				parent_pathname := parent.full_pathname
+			if (is_relative or l_relative) and attached parent as l_parent then
+				parent_pathname := l_parent.full_pathname
 				if a_pathname /= Void and then a_pathname.count > 0 then
 					a_basename := a_pathname
 				else
@@ -128,8 +124,7 @@ feature -- Access
 					Result := name
 				end
 				if file_system.is_relative_pathname (Result) then
-					l_ecf_universe ?= universe
-					if l_ecf_universe /= Void then
+					if attached {ET_ECF_INTERNAL_UNIVERSE} universe as l_ecf_universe then
 						l_ecf_filename := l_ecf_universe.filename
 						Result := file_system.pathname (file_system.dirname (l_ecf_filename), Result)
 					end
@@ -143,10 +138,10 @@ feature -- Access
 			Result := unix_file_system.pathname_from_file_system (full_pathname, file_system)
 		end
 
-	file_rules: ET_ECF_FILE_RULES
+	file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules
 
-	ecf_file_rules: ET_ECF_FILE_RULES
+	ecf_file_rules: detachable ET_ECF_FILE_RULES
 			-- File rules as they appear in the ECF file;
 			-- Some of them might not be included in `file_rules'
 			-- depending on their associated condition, whereas
@@ -165,15 +160,15 @@ feature -- Status report
 			l_pathname: STRING
 		do
 			if precursor (a_filename) then
-				if file_rules = Void then
-					Result := True
-				else
+				if attached file_rules as l_file_rules then
 					if is_implicit then
 						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_filename)
 					else
 						l_pathname := "/" + a_filename
 					end
-					Result := file_rules.is_included (l_pathname)
+					Result := l_file_rules.is_included (l_pathname)
+				else
+					Result := True
 				end
 			end
 		end
@@ -185,28 +180,28 @@ feature -- Status report
 			l_pathname: STRING
 		do
 			if precursor (a_dirname) then
-				if file_rules = Void then
-					Result := True
-				else
+				if attached file_rules as l_file_rules then
 					if is_implicit then
 						l_pathname := "/" + unix_file_system.pathname (implicit_relative_name ('/'), a_dirname)
 					else
 						l_pathname := "/" + a_dirname
 					end
-					Result := file_rules.is_included (l_pathname)
+					Result := l_file_rules.is_included (l_pathname)
+				else
+					Result := True
 				end
 			end
 		end
 
 feature -- Nested
 
-	parent: ET_ECF_CLUSTER
+	parent: detachable ET_ECF_CLUSTER
 			-- Parent cluster
 
-	subclusters: ET_ECF_CLUSTERS
+	subclusters: detachable ET_ECF_CLUSTERS
 			-- Subclusters
 
-	ecf_subclusters: ET_ECF_CLUSTERS
+	ecf_subclusters: detachable ET_ECF_CLUSTERS
 			-- Subclusters as they appear in the ECF file;
 			-- Some of them might not be included in `subclusters'
 			-- depending on their associated condition.
@@ -232,12 +227,12 @@ feature -- Setting
 	set_ecf_subclusters (a_subclusters: like ecf_subclusters)
 			-- Set `ecf_subclusters' to `a_subclusters'.
 		do
-			if ecf_subclusters /= Void then
-				ecf_subclusters.set_parent (Void)
+			if attached ecf_subclusters as l_ecf_subclusters then
+				l_ecf_subclusters.set_parent (Void)
 			end
 			ecf_subclusters := a_subclusters
-			if ecf_subclusters /= Void then
-				ecf_subclusters.set_parent (Current)
+			if a_subclusters /= Void then
+				a_subclusters.set_parent (Current)
 			end
 		ensure
 			ecf_subclusters_set: ecf_subclusters = a_subclusters
@@ -255,10 +250,10 @@ feature -- Element change
 			i, nb: INTEGER
 			l_cluster: ET_ECF_CLUSTER
 		do
-			if ecf_subclusters /= Void then
-				nb := ecf_subclusters.count
+			if attached ecf_subclusters as l_ecf_subclusters then
+				nb := l_ecf_subclusters.count
 				from i := 1 until i > nb loop
-					l_cluster := ecf_subclusters.cluster (i)
+					l_cluster := l_ecf_subclusters.cluster (i)
 					if l_cluster.is_enabled (a_state) then
 						add_subcluster (l_cluster)
 						l_cluster.fill_subclusters (a_state)
@@ -277,23 +272,24 @@ feature -- Element change
 			a_target_not_void: a_target /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_parent_file_rules: ET_ECF_FILE_RULES
+			l_file_rules: detachable ET_ECF_FILE_RULES
 		do
-			if file_rules = Void then
-				create file_rules.make_empty
+			l_file_rules := file_rules
+			if l_file_rules = Void then
+				create l_file_rules.make_empty
+				file_rules := l_file_rules
 			end
-			a_target.fill_file_rules (file_rules, a_state)
-			if parent /= Void then
-				l_parent_file_rules := parent.file_rules
-				if l_parent_file_rules /= Void then
-					l_parent_file_rules.fill_file_rules (file_rules, a_state)
+			a_target.fill_file_rules (l_file_rules, a_state)
+			if attached parent as l_parent then
+				if attached l_parent.file_rules as l_parent_file_rules then
+					l_parent_file_rules.fill_file_rules (l_file_rules, a_state)
 				end
 			end
-			if ecf_file_rules /= Void then
-				ecf_file_rules.fill_file_rules (file_rules, a_state)
+			if attached ecf_file_rules as l_ecf_file_rules then
+				l_ecf_file_rules.fill_file_rules (l_file_rules, a_state)
 			end
-			if subclusters /= Void then
-				subclusters.do_all (agent {ET_ECF_CLUSTER}.fill_file_rules (a_target, a_state))
+			if attached subclusters as l_subclusters then
+				l_subclusters.do_all (agent {ET_ECF_CLUSTER}.fill_file_rules (a_target, a_state))
 			end
 		end
 

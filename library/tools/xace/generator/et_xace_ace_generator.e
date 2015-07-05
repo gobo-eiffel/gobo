@@ -5,7 +5,7 @@ note
 		"Ace file generators from Xace files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,31 +62,46 @@ feature {NONE} -- Output
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: a_system.system_name /= Void
-			system_name_not_empty: a_system.system_name.count > 0
-			root_class_name_not_void: a_system.root_class_name /= Void
-			root_class_name_not_empty: a_system.root_class_name.count > 0
-			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
-			creation_procedure_name_not_empty: a_system.creation_procedure_name.count > 0
+			system_name_not_void: attached a_system.system_name as l_system_name
+			system_name_not_empty: l_system_name.count > 0
+			root_class_name_not_void: attached a_system.root_class_name as l_root_class_name
+			root_class_name_not_empty: l_root_class_name.count > 0
+			creation_procedure_name_not_void: attached a_system.creation_procedure_name as l_creation_procedure_name
+			creation_procedure_name_not_empty: l_creation_procedure_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			an_option: ET_XACE_OPTIONS
-			a_clusters: ET_XACE_CLUSTERS
+			an_option: detachable ET_XACE_OPTIONS
+			a_clusters: detachable ET_XACE_CLUSTERS
 			an_external: ET_XACE_EXTERNALS
 		do
 			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			print_escaped_name (a_system.system_name, a_file)
+			if attached a_system.system_name as l_system_name then
+				print_escaped_name (l_system_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check precondition_system_name_not_void: False end
+			end
 			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			print_escaped_name (a_system.root_class_name, a_file)
+			if attached a_system.root_class_name as l_root_class_name then
+				print_escaped_name (l_root_class_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check precondition_root_class_name_not_void: False end
+			end
 			a_file.put_string (": ")
-			print_escaped_name (a_system.creation_procedure_name, a_file)
+			if attached a_system.creation_procedure_name as l_creation_procedure_name then
+				print_escaped_name (l_creation_procedure_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check precondition_creation_procedure_name_not_void: False end
+			end
 			a_file.put_new_line
 			a_file.put_new_line
 			an_option := a_system.options
@@ -124,19 +139,24 @@ feature {NONE} -- Output
 			-- Print precompilation Ace file to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: a_library.name /= Void
-			a_library_name_not_empty: a_library.name.count > 0
+			a_library_name_not_void: attached a_library.name as l_library_name
+			a_library_name_not_empty: l_library_name.count > 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			an_option: ET_XACE_OPTIONS
+			an_option: detachable ET_XACE_OPTIONS
 			an_external: ET_XACE_EXTERNALS
-			a_clusters: ET_XACE_CLUSTERS
+			a_clusters: detachable ET_XACE_CLUSTERS
 		do
 			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			print_escaped_name (a_library.name, a_file)
+			if attached a_library.name as l_library_name then
+				print_escaped_name (l_library_name, a_file)
+			else
+					-- Should never happen according to the precondition.
+				check precondition_a_library_name_not_void: False end
+			end
 			a_file.put_new_line
 			a_file.put_new_line
 			a_file.put_line ("root")
@@ -187,8 +207,8 @@ feature {NONE} -- Output
 			an_assemblies: DS_LINKED_LIST [ET_XACE_ASSEMBLY]
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_ASSEMBLY]
 			an_assembly: ET_XACE_ASSEMBLY
-			a_pathname: STRING
-			a_prefix: STRING
+			a_pathname: detachable STRING
+			a_prefix: detachable STRING
 		do
 			create an_assemblies.make
 			a_clusters.merge_assemblies (an_assemblies)
@@ -354,10 +374,10 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_document_declared then
+			if an_option.is_document_declared and then attached an_option.document as l_document then
 				print_indentation (indent, a_file)
 				a_file.put_string ("document (%"")
-				a_file.put_string (an_option.document)
+				a_file.put_string (l_document)
 				a_file.put_line ("%")")
 			end
 			if an_option.dotnet_naming_convention then
@@ -416,22 +436,22 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("line_generation (no)")
 			end
-			if an_option.is_metadata_cache_path_declared then
+			if an_option.is_metadata_cache_path_declared and then attached an_option.metadata_cache_path as l_metadata_cache_path then
 				print_indentation (indent, a_file)
 				a_file.put_string ("metadata_cache_path (%"")
-				a_file.put_string (an_option.metadata_cache_path)
+				a_file.put_string (l_metadata_cache_path)
 				a_file.put_line ("%")")
 			end
-			if an_option.is_msil_assembly_compatibility_declared then
+			if an_option.is_msil_assembly_compatibility_declared and then attached an_option.msil_assembly_compatibility as l_msil_assembly_compatibility then
 				print_indentation (indent, a_file)
 				a_file.put_string ("msil_assembly_compatibility (%"")
-				a_file.put_string (an_option.msil_assembly_compatibility)
+				a_file.put_string (l_msil_assembly_compatibility)
 				a_file.put_line ("%")")
 			end
-			if an_option.is_msil_clr_version_declared then
+			if an_option.is_msil_clr_version_declared and then attached an_option.msil_clr_version as l_msil_clr_version then
 				print_indentation (indent, a_file)
 				a_file.put_string ("msil_clr_version (%"")
-				a_file.put_string (an_option.msil_clr_version)
+				a_file.put_string (l_msil_clr_version)
 				a_file.put_line ("%")")
 			end
 			if an_option.msil_generation then
@@ -441,10 +461,10 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("msil_generation (no)")
 			end
-			if an_option.is_msil_generation_version_declared then
+			if an_option.is_msil_generation_version_declared and then attached an_option.msil_generation_version as l_msil_generation_version then
 				print_indentation (indent, a_file)
 				a_file.put_string ("version (%"")
-				a_file.put_string (an_option.msil_generation_version)
+				a_file.put_string (l_msil_generation_version)
 				a_file.put_line ("%")")
 			end
 			if an_option.multithreaded then
@@ -464,10 +484,10 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_precompiled_declared then
+			if an_option.is_precompiled_declared and then attached an_option.precompiled as l_precompiled then
 				print_indentation (indent, a_file)
 				a_file.put_string ("precompiled (%"")
-				a_file.put_string (an_option.precompiled)
+				a_file.put_string (l_precompiled)
 				a_file.put_line ("%")")
 			end
 			if an_option.profile then
@@ -477,10 +497,10 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("profile (no)")
 			end
-			if an_option.is_shared_library_definition_declared then
+			if an_option.is_shared_library_definition_declared and then attached an_option.shared_library_definition as l_shared_library_definition then
 				print_indentation (indent, a_file)
 				a_file.put_string ("shared_library_definition (%"")
-				a_file.put_string (an_option.shared_library_definition)
+				a_file.put_string (l_shared_library_definition)
 				a_file.put_line ("%")")
 			end
 			a_target := an_option.target
@@ -556,12 +576,12 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_parent: ET_XACE_CLUSTER
+			a_parent: detachable ET_XACE_CLUSTER
 			a_pathname: STRING
-			an_option: ET_XACE_OPTIONS
-			subclusters: ET_XACE_CLUSTERS
+			an_option: detachable ET_XACE_OPTIONS
+			subclusters: detachable ET_XACE_CLUSTERS
 			need_end_keyword: BOOLEAN
-			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			a_class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 		do
 			if not a_cluster.is_fully_abstract then
 				an_option := a_cluster.options
@@ -594,8 +614,8 @@ feature {NONE} -- Output
 								-- We cannot use the workaround.
 							if a_cluster.is_relative then
 								a_file.put_string ("$/")
-								if a_cluster.pathname /= Void then
-									a_file.put_string (a_cluster.pathname)
+								if attached a_cluster.pathname as l_cluster_pathname then
+									a_file.put_string (l_cluster_pathname)
 								else
 									a_file.put_string (a_cluster.name)
 								end
@@ -783,16 +803,16 @@ feature {NONE} -- Output
 					a_file.put_line ("%")")
 					a_debug_tag_cursor.forth
 				end
-				if an_option.is_document_declared then
+				if an_option.is_document_declared and then attached an_option.document as l_document then
 					print_indentation (an_indent, a_file)
 					a_file.put_string ("document (%"")
-					a_file.put_string (an_option.document)
+					a_file.put_string (l_document)
 					a_file.put_line ("%")")
 				end
-				if an_option.is_namespace_declared then
+				if an_option.is_namespace_declared and then attached an_option.namespace as l_namespace then
 					print_indentation (an_indent, a_file)
 					a_file.put_string ("namespace (%"")
-					a_file.put_string (an_option.namespace)
+					a_file.put_string (l_namespace)
 					a_file.put_line ("%")")
 				end
 				if an_option.is_profile_declared then
@@ -835,7 +855,7 @@ feature {NONE} -- Output
 			need_visible, visible_printed: BOOLEAN
 			nb_export: INTEGER
 			a_class_name: STRING
-			a_feature_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+			a_feature_list: detachable DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
 			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
 			a_feature_options: ET_XACE_FEATURE_OPTIONS
 			an_option: ET_XACE_OPTIONS
@@ -976,7 +996,7 @@ feature {NONE} -- Output
 					print_escaped_name (a_class_name, a_file)
 					a_file.put_new_line
 					an_indent := an_indent + 1
-					if nb_export > 0 then
+					if nb_export > 0 and a_feature_list /= Void then
 						print_indentation (an_indent, a_file)
 						a_file.put_line ("export")
 						an_indent := an_indent + 1

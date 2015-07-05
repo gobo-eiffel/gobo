@@ -54,7 +54,7 @@ feature -- Access
 			Result := extended_feature_name.feature_name
 		end
 
-	alias_name: ET_ALIAS_NAME
+	alias_name: detachable ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 			Result := extended_feature_name.alias_name
@@ -80,12 +80,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := comma
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := comma.break
 		end
 
 feature -- Comparison

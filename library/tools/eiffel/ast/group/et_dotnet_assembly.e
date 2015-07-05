@@ -5,7 +5,7 @@ note
 		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,16 +121,15 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_dotnet_assembly := referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index))
-				if l_dotnet_assembly /= Void then
+				if attached referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index)) as l_dotnet_assembly then
 					if a_index = nb then
 						Result := True
 					else
@@ -142,10 +141,10 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Status report
 
 feature -- Access
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Assembly pathname (may be Void)
 
-	classname_mapping: DS_HASH_TABLE [ET_CLASS_NAME, STRING]
+	classname_mapping: detachable DS_HASH_TABLE [ET_CLASS_NAME, STRING]
 			-- Mapping between names of .NET classes provided
 			-- in current assembly and their Eiffel class name
 			-- counterparts
@@ -153,7 +152,7 @@ feature -- Access
 	referenced_assemblies: ET_DOTNET_ASSEMBLIES
 			-- .NET assemblies that current universe depends on
 
-	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+	group_by_name (a_names: ARRAY [STRING]): detachable ET_GROUP
 			-- Group named `a_names' starting from within current universe
 			-- and recursively traversing dependent universes if needed
 			--
@@ -163,7 +162,7 @@ feature -- Access
 			Result := group_by_name_at_index (a_names, a_names.lower)
 		end
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
+	adapted_universe (a_universe: ET_UNIVERSE): detachable ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
@@ -201,7 +200,7 @@ feature -- Access
 
 feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 
-	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_GROUP
+	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): detachable ET_GROUP
 			-- Group named `a_names', ignoring the entries before `a_index',
 			-- starting from within current universe and recursively traversing
 			-- dependent universes if needed
@@ -210,16 +209,15 @@ feature {ET_DOTNET_ASSEMBLY, ET_INTERNAL_UNIVERSE} -- Access
 			-- Void if not such group.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_dotnet_assembly := referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index))
-				if l_dotnet_assembly /= Void then
+				if attached referenced_assemblies.dotnet_assembly_by_name (a_names.item (a_index)) as l_dotnet_assembly then
 					if a_index = nb then
 						Result := l_dotnet_assembly
 					else
@@ -274,7 +272,7 @@ feature -- Measurement
 
 feature -- Nested
 
-	parent: ET_DOTNET_ASSEMBLY
+	parent: detachable ET_DOTNET_ASSEMBLY
 			-- Parent group
 		do
 			-- Result := Void
@@ -420,7 +418,7 @@ invariant
 
 	is_dotnet_assembly: is_dotnet_assembly
 	self_adapted: dotnet_assembly = Current
-	no_void_classname: classname_mapping /= Void implies not classname_mapping.has_void_item
+	no_void_classname: attached classname_mapping as l_classname_mapping implies not l_classname_mapping.has_void_item
 	referenced_assemblies_not_void: referenced_assemblies /= Void
 
 end

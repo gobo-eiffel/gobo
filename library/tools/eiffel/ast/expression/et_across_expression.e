@@ -88,14 +88,14 @@ feature -- Initialization
 			-- Reset expression as it was just after it was last parsed.
 		do
 			iterable_expression.reset
-			if invariant_part /= Void then
-				invariant_part.reset
+			if attached invariant_part as l_invariant_part then
+				l_invariant_part.reset
 			end
-			if variant_part /= Void then
-				variant_part.reset
+			if attached variant_part as l_variant_part then
+				l_variant_part.reset
 			end
-			if until_conditional /= Void then
-				until_conditional.expression.reset
+			if attached until_conditional as l_until_conditional then
+				l_until_conditional.expression.reset
 			end
 			iteration_conditional.expression.reset
 			reset_unfolded_form
@@ -114,13 +114,13 @@ feature -- Status report
 
 feature -- Access
 
-	invariant_part: ET_LOOP_INVARIANTS
+	invariant_part: detachable ET_LOOP_INVARIANTS
 			-- Invariant part
 
-	variant_part: ET_VARIANT
+	variant_part: detachable ET_VARIANT
 			-- Variant part
 
-	until_conditional: ET_CONDITIONAL
+	until_conditional: detachable ET_CONDITIONAL
 			-- Until conditional
 
 	iteration_conditional: ET_CONDITIONAL
@@ -150,12 +150,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

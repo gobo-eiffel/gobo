@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Lace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			error_handler := an_error_handler
 			create eif_buffer.make (Init_buffer_size)
 			eif_lineno := 1
+			last_et_identifier_value := new_identifier ("**unknown**")
 		ensure
 			filename_set: filename = a_filename
 			error_handler_set: error_handler = an_error_handler
@@ -61,7 +62,6 @@ feature -- Initialization
 feature -- Access
 
 	code_: INTEGER
-	str_: STRING
 
 	filename: STRING
 			-- Name of file being parsed
@@ -94,6 +94,21 @@ feature -- AST factory
 		do
 			create Result.make (a_text)
 			Result.set_position (eif_lineno, 1)
+		ensure
+			identifier_not_void: Result /= Void
+		end
+
+	new_identifier_from_buffer (a_buffer: STRING): ET_IDENTIFIER
+			-- New identifier using `a_buffer'
+		require
+			a_buffer_not_void: a_buffer /= Void
+			a_buffer_not_empty: a_buffer.count > 0
+		local
+			l_str: STRING
+		do
+			create l_str.make (a_buffer.count)
+			l_str.append_string (a_buffer)
+			Result := new_identifier (l_str)
 		ensure
 			identifier_not_void: Result /= Void
 		end

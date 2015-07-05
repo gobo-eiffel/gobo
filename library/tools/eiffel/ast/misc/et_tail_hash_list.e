@@ -40,9 +40,9 @@ feature {NONE} -- Initialization
 			-- Create a new empty list.
 		do
 			count := 0
-			storage := Void
-			slots := Void
-			clashes := Void
+			storage := fixed_array.make (1)
+			clashes := SPECIAL_INTEGER_.make_filled (0, 1)
+			slots := SPECIAL_INTEGER_.make_filled (0, 1)
 		end
 
 	make_with_capacity (nb: INTEGER)
@@ -51,16 +51,10 @@ feature {NONE} -- Initialization
 			m: INTEGER
 		do
 			count := 0
-			if nb > 0 then
-				storage := fixed_array.make (nb + 1)
-				clashes := SPECIAL_INTEGER_.make_filled (0, nb + 1)
-				m := new_modulus (nb)
-				slots := SPECIAL_INTEGER_.make_filled (0, m)
-			else
-				storage := Void
-				slots := Void
-				clashes := Void
-			end
+			storage := fixed_array.make (nb + 1)
+			clashes := SPECIAL_INTEGER_.make_filled (0, nb + 1)
+			m := new_modulus (nb)
+			slots := SPECIAL_INTEGER_.make_filled (0, m)
 		end
 
 feature -- Access
@@ -335,15 +329,9 @@ feature -- Resizing
 		do
 			if nb > capacity then
 				m := new_modulus (nb)
-				if storage = Void then
-					storage := fixed_array.make (nb + 1)
-					clashes := SPECIAL_INTEGER_.make_filled (0, nb + 1)
-					slots := SPECIAL_INTEGER_.make_filled (0, m)
-				else
-					storage := fixed_array.resize (storage, nb + 1)
-					clashes := SPECIAL_INTEGER_.aliased_resized_area_with_default (clashes, 0, nb + 1)
-					slots := SPECIAL_INTEGER_.aliased_resized_area_with_default (slots, 0, m)
-				end
+				storage := fixed_array.aliased_resized_area (storage, nb + 1)
+				clashes := SPECIAL_INTEGER_.aliased_resized_area_with_default (clashes, 0, nb + 1)
+				slots := SPECIAL_INTEGER_.aliased_resized_area_with_default (slots, 0, m)
 				from
 					i := slots.count - 1
 				until

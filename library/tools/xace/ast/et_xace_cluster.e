@@ -5,7 +5,7 @@ note
 		"Xace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -88,16 +88,16 @@ feature -- Access
 	cluster_prefix: STRING
 			-- Cluster name prefix specified in <cluster>
 
-	pathname: STRING
+	pathname: detachable STRING
 			-- Directory pathname (may be Void)
 
-	libraries: ET_XACE_MOUNTED_LIBRARIES
+	libraries: detachable ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries
 
-	options: ET_XACE_OPTIONS
+	options: detachable ET_XACE_OPTIONS
 			-- Options
 
-	class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+	class_options: detachable DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 			-- Class options
 
 feature -- Status report
@@ -116,12 +116,12 @@ feature -- Status report
 		do
 			if is_override then
 				Result := True
-			elseif options /= Void and then options.is_ecf_library_declared then
+			elseif attached options as l_options and then l_options.is_ecf_library_declared then
 				Result := True
 			elseif is_abstract then
 				Result := True
-				if subclusters /= Void then
-					a_cluster_list := subclusters.clusters
+				if attached subclusters as l_subclusters then
+					a_cluster_list := l_subclusters.clusters
 					nb := a_cluster_list.count
 					from i := 1 until i > nb loop
 						if not a_cluster_list.item (i).is_fully_ecf_abstract then
@@ -142,8 +142,8 @@ feature -- Status report
 			an_exclude: DS_HASH_SET [STRING]
 		do
 			if precursor (a_filename) then
-				if options /= Void and then options.is_exclude_declared then
-					an_exclude := options.exclude
+				if attached options as l_options and then l_options.is_exclude_declared then
+					an_exclude := l_options.exclude
 					if operating_system.is_windows then
 						Result := not has_case_insensitive (an_exclude, a_filename)
 					else
@@ -162,8 +162,8 @@ feature -- Status report
 			an_exclude: DS_HASH_SET [STRING]
 		do
 			if precursor (a_dirname) then
-				if options /= Void and then options.is_exclude_declared then
-					an_exclude := options.exclude
+				if attached options as l_options and then l_options.is_exclude_declared then
+					an_exclude := l_options.exclude
 					if operating_system.is_windows then
 						Result := not has_case_insensitive (an_exclude, a_dirname)
 					else
@@ -177,10 +177,10 @@ feature -- Status report
 
 feature -- Nested
 
-	parent: ET_XACE_CLUSTER
+	parent: detachable ET_XACE_CLUSTER
 			-- Parent cluster
 
-	subclusters: ET_XACE_CLUSTERS
+	subclusters: detachable ET_XACE_CLUSTERS
 			-- Subclusters
 
 feature -- Setting
@@ -208,8 +208,8 @@ feature -- Setting
 			a_prefix_not_void: a_prefix /= Void
 		do
 			library_prefix := a_prefix
-			if subclusters /= Void then
-				subclusters.set_library_prefix (a_prefix)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_library_prefix (a_prefix)
 			end
 		ensure
 			library_prefix_set: library_prefix = a_prefix
@@ -231,11 +231,15 @@ feature -- Element change
 			-- Add `an_option' to `class_options'.
 		require
 			an_option_not_void: an_option /= Void
+		local
+			l_class_options: like class_options
 		do
-			if class_options = Void then
-				create class_options.make
+			l_class_options := class_options
+			if l_class_options = Void then
+				create l_class_options.make
+				class_options := l_class_options
 			end
-			class_options.put_last (an_option)
+			l_class_options.put_last (an_option)
 		end
 
 feature -- Status setting
@@ -244,8 +248,8 @@ feature -- Status setting
 			-- Set `is_mounted' to `b'.
 		do
 			is_mounted := b
-			if subclusters /= Void then
-				subclusters.set_mounted (b)
+			if attached subclusters as l_subclusters then
+				l_subclusters.set_mounted (b)
 			end
 		ensure
 			mounted_set: is_mounted = b
@@ -260,11 +264,11 @@ feature -- Basic operations
 			a_libraries_not_void: a_libraries /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			if libraries /= Void then
-				libraries.merge_libraries (a_libraries, an_error_handler)
+			if attached libraries as l_libraries then
+				l_libraries.merge_libraries (a_libraries, an_error_handler)
 			end
-			if subclusters /= Void then
-				subclusters.merge_libraries (a_libraries, an_error_handler)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_libraries (a_libraries, an_error_handler)
 			end
 		end
 
@@ -277,25 +281,25 @@ feature -- Basic operations
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
 			a_link_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
-			if options /= Void then
-				a_cursor := options.c_compiler_options.new_cursor
+			if attached options as l_options then
+				a_cursor := l_options.c_compiler_options.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					an_externals.put_c_compiler_options (a_cursor.item)
 					a_cursor.forth
 				end
-				a_cursor := options.header.new_cursor
+				a_cursor := l_options.header.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					an_externals.put_include_directory (a_cursor.item)
 					a_cursor.forth
 				end
-				a_link_cursor := options.link.new_cursor
+				a_link_cursor := l_options.link.new_cursor
 				from a_link_cursor.start until a_link_cursor.after loop
 					an_externals.put_link_library (a_link_cursor.item)
 					a_link_cursor.forth
 				end
 			end
-			if subclusters /= Void then
-				subclusters.merge_externals (an_externals)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_externals (an_externals)
 			end
 		end
 
@@ -309,23 +313,21 @@ feature -- Basic operations
 			an_exported_feature: ET_XACE_EXPORTED_FEATURE
 			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
 			a_class_options: ET_XACE_CLASS_OPTIONS
-			a_feature_options_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
 			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
 			a_feature_options: ET_XACE_FEATURE_OPTIONS
 			an_options: ET_XACE_OPTIONS
 		do
-			if class_options /= Void then
-				a_class_cursor := class_options.new_cursor
+			if attached class_options as l_class_options then
+				a_class_cursor := l_class_options.new_cursor
 				from a_class_cursor.start until a_class_cursor.after loop
 					a_class_options := a_class_cursor.item
-					a_feature_options_list := a_class_options.feature_options
-					if a_feature_options_list /= Void then
-						a_feature_cursor := a_feature_options_list.new_cursor
+					if attached a_class_options.feature_options as l_feature_options_list then
+						a_feature_cursor := l_feature_options_list.new_cursor
 						from a_feature_cursor.start until a_feature_cursor.after loop
 							a_feature_options := a_feature_cursor.item
 							an_options := a_feature_options.options
-							if an_options.is_export_option_declared then
-								create an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, an_options.export_option)
+							if an_options.is_export_option_declared and then attached an_options.export_option as l_export_option then
+								create an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, l_export_option)
 								an_export.force_last (an_exported_feature)
 							end
 							a_feature_cursor.forth
@@ -334,8 +336,8 @@ feature -- Basic operations
 					a_class_cursor.forth
 				end
 			end
-			if subclusters /= Void then
-				subclusters.merge_exported_features (an_export)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_exported_features (an_export)
 			end
 		ensure
 			no_void_export: not an_export.has_void
@@ -350,14 +352,14 @@ feature -- Basic operations
 		local
 			a_component: ET_XACE_COMPONENT
 		do
-			if options /= Void then
-				if options.is_component_declared then
-					create a_component.make (name, options.component)
+			if attached options as l_options then
+				if l_options.is_component_declared and then attached l_options.component as l_component then
+					create a_component.make (name, l_component)
 					a_components.force_last (a_component)
 				end
 			end
-			if subclusters /= Void then
-				subclusters.merge_components (a_components)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_components (a_components)
 			end
 		ensure
 			no_void_component: not a_components.has_void
@@ -372,18 +374,18 @@ feature -- Basic operations
 		local
 			an_assembly: ET_XACE_ASSEMBLY
 		do
-			if options /= Void then
-				if options.is_assembly_declared then
-					create an_assembly.make (name, options.assembly, options.version,
-						options.culture, options.public_key_token, options.prefix_option)
+			if attached options as l_options then
+				if l_options.is_assembly_declared and then attached l_options.assembly as l_assembly then
+					create an_assembly.make (name, l_assembly, l_options.version,
+						l_options.culture, l_options.public_key_token, l_options.prefix_option)
 					if pathname /= Void then
 						an_assembly.set_assembly_pathname (full_pathname)
 					end
 					an_assemblies.force_last (an_assembly)
 				end
 			end
-			if subclusters /= Void then
-				subclusters.merge_assemblies (an_assemblies)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_assemblies (an_assemblies)
 			end
 		ensure
 			no_void_assembly: not an_assemblies.has_void
@@ -399,8 +401,8 @@ feature -- Basic operations
 		do
 			if is_override then
 				an_override_clusters.force_last (Current)
-			elseif subclusters /= Void then
-				subclusters.merge_override_clusters (an_override_clusters)
+			elseif attached subclusters as l_subclusters then
+				l_subclusters.merge_override_clusters (an_override_clusters)
 			end
 		ensure
 			no_void_override_cluster: not an_override_clusters.has_void
@@ -414,11 +416,11 @@ feature -- Basic operations
 			an_ecf_clusters_not_void: an_ecf_clusters /= Void
 			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		do
-			if options /= Void and then options.is_ecf_library_declared then
+			if attached options as l_options and then l_options.is_ecf_library_declared then
 				an_ecf_clusters.force_last (Current)
 			end
-			if subclusters /= Void then
-				subclusters.merge_ecf_clusters (an_ecf_clusters)
+			if attached subclusters as l_subclusters then
+				l_subclusters.merge_ecf_clusters (an_ecf_clusters)
 			end
 		ensure
 			no_void_ecf_cluster: not an_ecf_clusters.has_void
@@ -468,6 +470,6 @@ invariant
 
 	library_prefix_not_void: library_prefix /= Void
 	cluster_prefix_not_void: cluster_prefix /= Void
-	no_void_class_option: class_options /= Void implies not class_options.has_void
+	no_void_class_option: attached class_options as l_class_options implies not l_class_options.has_void
 
 end

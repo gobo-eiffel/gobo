@@ -5,7 +5,7 @@ note
 		"Eiffel adapted .NET assembly lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Access
 			dotnet_assembly_not_void: Result /= Void
 		end
 
-	dotnet_assembly_by_name (a_name: STRING): like dotnet_assembly
+	dotnet_assembly_by_name (a_name: STRING): detachable like dotnet_assembly
 			-- .NET assembly with name `a_name';
 			-- Void if not such .NET assembly
 		require
@@ -91,7 +91,7 @@ feature -- Access
 			end
 		end
 
-	adapted_dotnet_assembly (a_dotnet_assembly: ET_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLY
+	adapted_dotnet_assembly (a_dotnet_assembly: ET_DOTNET_ASSEMBLY): detachable ET_ADAPTED_DOTNET_ASSEMBLY
 			-- Adapted .NET assembly corresponding to `a_dotnet_assembly' in current list
 			--  if any, Void otherwise
 			--

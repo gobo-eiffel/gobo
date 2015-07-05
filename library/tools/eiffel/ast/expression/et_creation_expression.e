@@ -5,7 +5,7 @@ note
 		"Eiffel creation expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,12 +28,12 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	name: ET_FEATURE_NAME
+	name: detachable ET_FEATURE_NAME
 			-- Creation procedure name
 		deferred
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: detachable ET_ACTUAL_ARGUMENTS
 			-- Arguments of creation call
 		deferred
 		end

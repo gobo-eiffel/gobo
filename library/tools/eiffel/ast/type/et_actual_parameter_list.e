@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,15 +116,16 @@ feature -- Access
 			i, j, nb: INTEGER
 			a_parameter: ET_ACTUAL_PARAMETER
 			a_named_parameter: ET_ACTUAL_PARAMETER
-			l_type, l_other_type: ET_TYPE
-			l_named_type: ET_NAMED_TYPE
+			l_type: ET_TYPE
+			l_other_type: detachable ET_TYPE
+			l_named_type: detachable ET_NAMED_TYPE
 		do
 			Result := Current
 			nb := count - 1
 			from i := 0 until i > nb loop
 				a_parameter := storage.item (i).actual_parameter
 				l_type := a_parameter.type
-				if l_type /= l_other_type then
+				if l_type /= l_other_type or l_named_type = Void then
 					l_named_type := l_type.named_type (a_context)
 					l_other_type := l_type
 				end
@@ -155,13 +156,11 @@ feature -- Access
 		require
 			a_label_not_void: a_label /= Void
 		local
-			l_actual_label: ET_IDENTIFIER
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				l_actual_label := storage.item (i).label
-				if l_actual_label /= Void and then a_label.same_identifier (l_actual_label) then
+				if attached storage.item (i).label as l_actual_label and then a_label.same_identifier (l_actual_label) then
 					Result := count - i
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -193,12 +192,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := right_bracket
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := right_bracket.break
 		end
 
 feature -- Status report
@@ -508,15 +501,16 @@ feature -- Type processing
 		local
 			i, j, nb: INTEGER
 			a_parameter, a_resolved_parameter: ET_ACTUAL_PARAMETER_ITEM
-			l_type, l_other_type: ET_TYPE
-			l_resolved_type: ET_TYPE
+			l_type: ET_TYPE
+			l_other_type: detachable ET_TYPE
+			l_resolved_type: detachable ET_TYPE
 		do
 			Result := Current
 			nb := count - 1
 			from i := 0 until i > nb loop
 				a_parameter := storage.item (i)
 				l_type := a_parameter.type
-				if l_type /= l_other_type then
+				if l_type /= l_other_type or l_resolved_type = Void then
 					l_resolved_type := l_type.resolved_formal_parameters (a_parameters)
 					l_other_type := l_type
 				end

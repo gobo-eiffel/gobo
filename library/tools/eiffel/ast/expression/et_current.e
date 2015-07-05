@@ -5,7 +5,7 @@ note
 		"Eiffel current entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,16 +16,20 @@ inherit
 
 	ET_EXPRESSION
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
-			is_current, is_never_void
+			is_current,
+			is_never_void
 		end
 
 	ET_KEYWORD
 		rename
 			make_current as make
 		undefine
-			is_current, is_false
+			is_current,
+			is_false
 		redefine
 			process
 		end

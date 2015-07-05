@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	arguments: ET_FORMAL_ARGUMENT_LIST
+	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments
 
 end

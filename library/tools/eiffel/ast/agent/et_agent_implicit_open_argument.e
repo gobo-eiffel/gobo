@@ -5,7 +5,7 @@ note
 		"Eiffel agent implicit open arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 	ET_AGENT_ARGUMENT_OPERAND
 		redefine
 			is_open_operand,
-			first_position, last_position
+			break
 		end
 
 create
@@ -59,20 +59,6 @@ feature -- Access
 			Result := agent_expression.implicit_argument_position.position
 		end
 
-	first_position: ET_POSITION
-			-- Position of first character of current node in source code;
-			-- Null position is current node is empty
-		do
-			Result := agent_expression.implicit_argument_position.first_position
-		end
-
-	last_position: ET_POSITION
-			-- Position of last character of current node in source code;
-			-- Null position is current node is empty
-		do
-			Result := agent_expression.implicit_argument_position.last_position
-		end
-
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
@@ -85,7 +71,7 @@ feature -- Access
 			Result := agent_expression.implicit_argument_position.last_leaf
 		end
 
-	break: ET_BREAK
+	break: detachable ET_BREAK
 			-- Break which appears just after current node
 		do
 		end

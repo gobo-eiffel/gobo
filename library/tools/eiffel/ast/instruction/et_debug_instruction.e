@@ -5,7 +5,7 @@ note
 		"Eiffel debug instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,17 +41,17 @@ feature -- Initialization
 	reset
 			-- Reset instruction as it was just after it was last parsed.
 		do
-			if compound /= Void then
-				compound.reset
+			if attached compound as l_compound then
+				l_compound.reset
 			end
 		end
 
 feature -- Access
 
-	compound: ET_COMPOUND
+	compound: detachable ET_COMPOUND
 			-- Debug instructions
 
-	keys: ET_MANIFEST_STRING_LIST
+	keys: detachable ET_MANIFEST_STRING_LIST
 			-- Debug keys
 
 	end_keyword: ET_KEYWORD
@@ -63,19 +63,19 @@ feature -- Access
 		local
 			a_debug_keyword: ET_KEYWORD
 		do
-			if compound /= Void then
-				a_debug_keyword := compound.keyword
+			if attached compound as l_compound then
+				a_debug_keyword := l_compound.keyword
 				if not a_debug_keyword.position.is_null then
 					Result := a_debug_keyword.position
-				elseif keys /= Void then
-					Result := keys.position
-				elseif not compound.is_empty then
-					Result := compound.item (1).position
+				elseif attached keys as l_keys then
+					Result := l_keys.position
+				elseif not l_compound.is_empty then
+					Result := l_compound.item (1).position
 				else
 					Result := end_keyword.position
 				end
-			elseif keys /= Void then
-				Result := keys.position
+			elseif attached keys as l_keys then
+				Result := l_keys.position
 			else
 				Result := end_keyword.position
 			end
@@ -84,10 +84,10 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if compound /= Void then
-				Result := compound.keyword
-			elseif keys /= Void then
-				Result := keys.first_leaf
+			if attached compound as l_compound then
+				Result := l_compound.keyword
+			elseif attached keys as l_keys then
+				Result := l_keys.first_leaf
 			else
 				Result := end_keyword
 			end
@@ -97,12 +97,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

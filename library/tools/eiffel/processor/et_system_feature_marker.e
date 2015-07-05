@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/20 $"
 	revision: "$Revision: #7 $"
@@ -188,7 +188,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_system_until (a_feature: ET_FEATURE; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	mark_system_until (a_feature: ET_FEATURE; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if
@@ -452,7 +452,7 @@ feature {NONE} -- Event handling
 			a_target_class_not_void: a_target_class /= Void
 			a_descendant_not_void: a_descendant /= Void
 		local
-			l_other_feature: ET_FEATURE
+			l_other_feature: detachable ET_FEATURE
 			l_features: DS_HASH_SET [ET_FEATURE]
 		do
 			if a_feature.is_query then
@@ -517,6 +517,6 @@ invariant
 	descendant_classes_not_void: descendant_classes /= Void
 	precursor_features_not_void: precursor_features /= Void
 	marked_polymorphic_calls_not_void: marked_polymorphic_calls /= Void
-	no_void_marked_polymorphic_call: not marked_polymorphic_calls.has (Void)
+	no_void_marked_polymorphic_call: not marked_polymorphic_calls.has_void
 
 end

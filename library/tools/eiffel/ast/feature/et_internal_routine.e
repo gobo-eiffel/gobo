@@ -34,14 +34,14 @@ feature -- Initialization
 			-- Reset current feature as it was just after its interface was last checked.
 		do
 			if validity_checked then
-				if locals /= Void then
-					locals.reset
+				if attached locals as l_locals then
+					l_locals.reset
 				end
-				if compound /= Void then
-					compound.reset
+				if attached compound as l_compound then
+					l_compound.reset
 				end
-				if rescue_clause /= Void then
-					rescue_clause.reset
+				if attached rescue_clause as l_rescue_clause then
+					l_rescue_clause.reset
 				end
 			end
 			precursor

@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,13 +61,13 @@ feature -- Validity checking
 			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
-			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			had_error: BOOLEAN
-			l_type, l_previous_type: ET_TYPE
+			l_type: ET_TYPE
+			l_previous_type: detachable ET_TYPE
 		do
 			has_fatal_error := False
 			old_class := current_class
@@ -80,8 +80,7 @@ feature -- Validity checking
 				current_class_impl := l_query.implementation_class
 				l_query.type.process (Current)
 				had_error := had_error or has_fatal_error
-				args := l_query.arguments
-				if args /= Void then
+				if attached l_query.arguments as args then
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
 						l_type := args.formal_argument (j).type
@@ -101,8 +100,7 @@ feature -- Validity checking
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
 				current_class_impl := l_procedure.implementation_class
-				args := l_procedure.arguments
-				if args /= Void then
+				if attached l_procedure.arguments as args then
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
 						l_type := args.formal_argument (j).type
@@ -132,9 +130,7 @@ feature {NONE} -- Type validity
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_seed: INTEGER
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
+			args: detachable ET_FORMAL_ARGUMENT_LIST
 			l_index: INTEGER
 		do
 			if in_qualified_anchored_type then
@@ -142,12 +138,7 @@ feature {NONE} -- Type validity
 				if l_seed /= 0 then
 						-- Anchored type already resolved.
 					if a_type.is_like_argument then
-						if a_type.is_procedure then
-							l_feature := current_class.seeded_procedure (l_seed)
-						else
-							l_feature := current_class.seeded_query (l_seed)
-						end
-						if l_feature /= Void then
+						if attached current_class.seeded_feature (l_seed) as l_feature then
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
@@ -172,8 +163,7 @@ feature {NONE} -- Type validity
 							error_handler.report_giaaa_error
 						end
 					else
-						l_query := current_class.seeded_query (l_seed)
-						if l_query /= Void then
+						if attached current_class.seeded_query (l_seed) as l_query then
 							if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 									-- Error: the type of the anchor appearing in a qualified
 									-- anchored type should not depend on a qualified anchored type.
@@ -203,7 +193,6 @@ feature {NONE} -- Type validity
 			a_type_not_void: a_type /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
 			l_seed: INTEGER
@@ -231,8 +220,7 @@ feature {NONE} -- Type validity
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							l_query := l_class.named_query (a_type.name)
-							if l_query /= Void then
+							if attached l_class.named_query (a_type.name) as l_query then
 									-- The fact that the signature of `l_query' is valid
 									-- or not (e.g. conformance of redeclared signature),
 									-- and hence its type, will be checked later on (by
@@ -256,8 +244,7 @@ feature {NONE} -- Type validity
 							end
 						end
 					else
-						l_query := l_class.seeded_query (l_seed)
-						if l_query /= Void then
+						if attached l_class.seeded_query (l_seed) as l_query then
 								-- The fact that the signature of `l_query' is valid
 								-- or not (e.g. conformance of redeclared signature),
 								-- and hence its type, will be checked later on (by
@@ -314,11 +301,8 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
 		end
@@ -349,11 +333,8 @@ feature {ET_AST_NODE} -- Type processing
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
 		end

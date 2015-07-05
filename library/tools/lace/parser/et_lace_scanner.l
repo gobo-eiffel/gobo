@@ -6,7 +6,7 @@ note
 		"Scanners for Lace parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -135,10 +135,8 @@ create
 			end
 			if eif_buffer.count > 0 then
 				last_token := L_STRING
-				create str_.make (eif_buffer.count)
-				str_.append_string (eif_buffer)
+				last_et_identifier_value := new_identifier_from_buffer (eif_buffer)
 				STRING_.wipe_out (eif_buffer)
-				last_et_identifier_value := new_identifier (str_)
 			else
 				last_token := L_STRERR
 			end

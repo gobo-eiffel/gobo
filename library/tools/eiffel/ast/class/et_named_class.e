@@ -5,7 +5,7 @@ note
 		"Eiffel classes with a given name."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #3 $"
@@ -61,7 +61,7 @@ feature -- Access
 			unignorable_actual_class_not_void: Result /= Void
 		end
 
-	first_non_override_overridden_class: ET_CLASS
+	first_non_override_overridden_class: detachable ET_CLASS
 			-- First class other than `actual_class' that is not in an override group;
 			-- Void if no such class
 		deferred

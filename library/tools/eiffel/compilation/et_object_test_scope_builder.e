@@ -5,7 +5,7 @@ note
 		"Eiffel object-test scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,12 +40,12 @@ feature -- Status report
 
 feature -- Access
 
-	scope: ET_OBJECT_TEST_SCOPE
+	scope: detachable ET_OBJECT_TEST_SCOPE
 			-- Scope being built
 
 feature -- Basic operations
 
-	build_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
+	build_scope (a_expression: ET_EXPRESSION; a_scope: detachable ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
 			-- Add to `a_scope' the object-tests found in `a_expression', appearing in
 			-- class `a_class', that are guaranteed to be successful if `a_expression'
 			-- is evaluated to True.
@@ -71,7 +71,7 @@ feature -- Basic operations
 			scope := old_scope
 		end
 
-	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
+	build_negated_scope (a_expression: ET_EXPRESSION; a_scope: detachable ET_OBJECT_TEST_SCOPE; a_class: ET_CLASS)
 			-- Add to `a_scope' the object-tests found in `a_expression', appearing in
 			-- class `a_class', that are guaranteed to be successful if `a_expression'
 			-- is evaluated to False.
@@ -128,13 +128,10 @@ feature {ET_AST_NODE} -- Processing
 
 	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST)
 			-- Process `an_expression'.
-		local
-			l_other_object_test: ET_NAMED_OBJECT_TEST
 		do
 			if not is_negated then
-				if scope /= Void then
-					l_other_object_test := scope.object_test (an_expression.name)
-					if l_other_object_test /= Void then
+				if attached scope as l_scope then
+					if attached l_scope.object_test (an_expression.name) as l_other_object_test then
 							-- Two object-tests with the same local name appear in the same
 							-- expression in such a way that their scope will overlap.
 							-- For example:
@@ -145,7 +142,7 @@ feature {ET_AST_NODE} -- Processing
 						set_fatal_error
 						error_handler.report_vuot1f_error (current_class, an_expression, l_other_object_test)
 					else
-						scope.add_object_test (an_expression)
+						l_scope.add_object_test (an_expression)
 					end
 				end
 			end

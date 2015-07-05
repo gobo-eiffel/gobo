@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with an external procedure as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 		require
 			a_language_not_void: a_language /= Void
 		do
-			make_procedure (a_formal_args, an_actual_args)
 			language := a_language
+			make_procedure (a_formal_args, an_actual_args)
 		ensure
 			formal_arguments_set: formal_arguments = a_formal_args
 			language_set: language = a_language

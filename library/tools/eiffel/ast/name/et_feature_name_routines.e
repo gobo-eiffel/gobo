@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	feature_name (a_feature_name: STRING): ET_FEATURE_NAME
+	feature_name (a_feature_name: STRING): detachable ET_FEATURE_NAME
 			-- Feature name corresponding to `a_feature_name';
 			-- Void if not a valid feature name
 		require

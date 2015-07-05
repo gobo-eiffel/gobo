@@ -9,7 +9,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			a_system_not_void: a_system /= Void
 			a_builder_not_void: a_builder /= Void
 		local
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			if a_type.is_basic then
 				-- For basic types, we have an optimization which avoids calling
@@ -147,10 +147,10 @@ feature {NONE} -- Implementation
 
 feature -- Link
 
-	next: like Current
+	next: detachable like Current
 			-- Next object-equality with the same target static type
 
-	set_next (a_next: like Current)
+	set_next (a_next: like next)
 			-- Set `next' to `a_next'.
 		do
 			next := a_next

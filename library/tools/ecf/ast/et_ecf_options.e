@@ -5,7 +5,7 @@ note
 		"ECF options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_name: STRING): STRING
+	value (a_name: STRING): detachable STRING
 			-- Value of option `a_name';
 			-- Void if option is not defined in `primary_options' nor in `secondary_options'
 		do
 			primary_options.search (a_name)
 			if primary_options.found then
 				Result := primary_options.found_item
-			elseif secondary_options /= Void then
-				Result := secondary_options.value (a_name)
+			elseif attached secondary_options as l_secondary_options then
+				Result := l_secondary_options.value (a_name)
 			end
 		end
 
-	primary_value (a_name: STRING): STRING
+	primary_value (a_name: STRING): detachable STRING
 			-- Value of option `a_name';
 			-- Void if option is not defined in `primary_options'
 		require
@@ -65,7 +65,7 @@ feature -- Access
 	primary_options: DS_HASH_TABLE [STRING, STRING]
 			-- Options explicitly defined in the target
 
-	secondary_options: KL_STRING_VALUES
+	secondary_options: detachable KL_STRING_VALUES
 			-- Options to be taken into account when not
 			-- explicitly defined in `primary_options'
 

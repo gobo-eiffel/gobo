@@ -5,7 +5,7 @@ note
 		"Eiffel assigner instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 			reset
 		end
 
-	ET_FEATURE_CALL_INSTRUCTION -- Unfolded form
+	ET_QUALIFIED_FEATURE_CALL_INSTRUCTION -- Unfolded form
 		undefine
 			reset
 		end
@@ -52,12 +52,9 @@ feature -- Initialization
 
 	reset
 			-- Reset instruction as it was just after it was last parsed.
-		local
-			l_convert: ET_CONVERT_EXPRESSION
 		do
 			call.reset
-			l_convert ?= source
-			if l_convert /= Void then
+			if attached {ET_CONVERT_EXPRESSION} source as l_convert then
 				source := l_convert.expression
 			end
 			source.reset
@@ -66,7 +63,7 @@ feature -- Initialization
 
 feature -- Access
 
-	call: ET_FEATURE_CALL_EXPRESSION
+	call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION
 			-- Target of assignment
 
 	source: ET_EXPRESSION
@@ -92,12 +89,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := source.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := source.break
 		end
 
 feature -- Setting
@@ -149,6 +140,8 @@ feature -- Unfolded form
 			-- Arguments of unfolded form
 		do
 			Result := Current
+		ensure then
+			arguments_not_void: Result /= Void
 		end
 
 feature -- Arguments of unfolded form
@@ -159,7 +152,9 @@ feature -- Arguments of unfolded form
 			if i = 1 then
 				Result := source
 			else
-				Result := call.arguments.actual_argument (i - 1)
+				check one_more_argument: attached call.arguments as l_call_arguments then
+					Result := l_call_arguments.actual_argument (i - 1)
+				end
 			end
 		end
 
@@ -190,7 +185,6 @@ feature {NONE} -- Constants
 invariant
 
 	call_not_void: call /= Void
-	call_qualified: call.is_qualified_call
 	source_not_void: source /= Void
 	assign_symbol_not_void: assign_symbol /= Void
 

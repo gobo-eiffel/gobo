@@ -6,7 +6,7 @@ note
 		in clusters, or imported from libraries or .NET assemblies.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
 	revision: "$Revision: 6570 $"
@@ -72,7 +72,8 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := clusters.has_subcluster_by_name (a_names)
@@ -84,7 +85,8 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := internal_universes_there_exists (agent {ET_INTERNAL_UNIVERSE}.has_cluster_by_name (a_names))
@@ -124,33 +126,28 @@ feature {ET_INTERNAL_UNIVERSE} -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
-			l_library: ET_LIBRARY
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_library := library_by_name (a_names.item (a_index))
-				if l_library /= Void then
+				if attached library_by_name (a_names.item (a_index)) as l_library then
 					if a_index = nb then
 						Result := True
 					else
 						Result := l_library.has_group_by_name_at_index (a_names, a_index + 1)
 					end
-				else
-					l_dotnet_assembly := dotnet_assembly_by_name (a_names.item (a_index))
-					if l_dotnet_assembly /= Void then
-						if a_index = nb then
-							Result := True
-						else
-							Result := l_dotnet_assembly.has_group_by_name_at_index (a_names, a_index + 1)
-						end
+				elseif attached dotnet_assembly_by_name (a_names.item (a_index)) as l_dotnet_assembly then
+					if a_index = nb then
+						Result := True
 					else
-						Result := clusters.has_subcluster_by_name_at_index (a_names, a_index)
+						Result := l_dotnet_assembly.has_group_by_name_at_index (a_names, a_index + 1)
 					end
+				else
+					Result := clusters.has_subcluster_by_name_at_index (a_names, a_index)
 				end
 			end
 		end
@@ -166,14 +163,15 @@ feature -- Access
 	dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- .NET assemblies that current universe depends on
 
-	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER
+	cluster_by_name (a_names: ARRAY [STRING]): detachable ET_CLUSTER
 			-- Cluster named `a_names' in current universe
 			--
 			-- Add missing implicit subclusters if needed.
 			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := clusters.subcluster_by_name (a_names)
@@ -181,37 +179,31 @@ feature -- Access
 			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
 		end
 
-	library_by_name (a_name: STRING): ET_LIBRARY
+	library_by_name (a_name: STRING): detachable ET_LIBRARY
 			-- Library with name `a_name';
 			-- Void if not such library
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-		local
-			l_adapted_library: ET_ADAPTED_LIBRARY
 		do
-			l_adapted_library := libraries.library_by_name (a_name)
-			if l_adapted_library /= Void then
+			if attached libraries.library_by_name (a_name) as l_adapted_library then
 				Result := l_adapted_library.library
 			end
 		end
 
-	dotnet_assembly_by_name (a_name: STRING): ET_DOTNET_ASSEMBLY
+	dotnet_assembly_by_name (a_name: STRING): detachable ET_DOTNET_ASSEMBLY
 			-- .NET assembly with name `a_name';
 			-- Void if not such .NET assembly
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-		local
-			l_adapted_dotnet_assembly: ET_ADAPTED_DOTNET_ASSEMBLY
 		do
-			l_adapted_dotnet_assembly := dotnet_assemblies.dotnet_assembly_by_name (a_name)
-			if l_adapted_dotnet_assembly /= Void then
+			if attached dotnet_assemblies.dotnet_assembly_by_name (a_name) as l_adapted_dotnet_assembly then
 				Result := l_adapted_dotnet_assembly.dotnet_assembly
 			end
 		end
 
-	group_by_name (a_names: ARRAY [STRING]): ET_GROUP
+	group_by_name (a_names: ARRAY [STRING]): detachable ET_GROUP
 			-- Group named `a_names' starting from within current universe
 			-- and recursively traversing dependent universes if needed
 			--
@@ -221,7 +213,7 @@ feature -- Access
 			Result := group_by_name_at_index (a_names, a_names.lower)
 		end
 
-	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER
+	cluster_with_absolute_pathname (a_pathname: STRING): detachable ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in current universe
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
@@ -236,7 +228,7 @@ feature -- Access
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
 		end
 
-	cluster_with_absolute_pathname_recursive (a_pathname: STRING): ET_CLUSTER
+	cluster_with_absolute_pathname_recursive (a_pathname: STRING): detachable ET_CLUSTER
 			-- Cluster with absolute pathname `a_pathname' in current universe
 			-- or recursively in one of the universes it depends on.
 			--
@@ -247,40 +239,33 @@ feature -- Access
 			a_pathname_not_void: a_pathname /= Void
 			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
 		local
-			l_cell: DS_CELL [ET_CLUSTER]
+			l_cell: DS_CELL [detachable ET_CLUSTER]
 		do
 			create l_cell.make (Void)
-			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.do_cluster_with_absolute_pathname (a_pathname, agent l_cell.put))
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.do_cluster_with_absolute_pathname (a_pathname, agent l_cell.put ({ET_CLUSTER}?)))
 			Result := l_cell.item
 		ensure
 			not_void_if_has: has_cluster_with_absolute_pathname_recursive (a_pathname) implies Result /= Void
 		end
 
-	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE
+	adapted_universe (a_universe: ET_UNIVERSE): detachable ET_ADAPTED_UNIVERSE
 			-- Adapted version of `a_universe' viewed from current universe
 			-- when it depends on it, Void otherwise
 			--
 			-- `a_universe' may be a library or assembly from which the current
 			-- universe imports classes. Note that `a_universe' may be imported
 			-- twice by the current universe. Return one of them in that case.
-		local
-			l_library: ET_LIBRARY
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
-			l_library ?= a_universe
-			if l_library /= Void then
+			if attached {ET_LIBRARY} a_universe as l_library then
 				Result := libraries.adapted_library (l_library)
-			else
-				l_dotnet_assembly ?= a_universe
-				if l_dotnet_assembly /= Void then
-					Result := dotnet_assemblies.adapted_dotnet_assembly (l_dotnet_assembly)
-				end
+			elseif attached {ET_DOTNET_ASSEMBLY} a_universe as l_dotnet_assembly then
+				Result := dotnet_assemblies.adapted_dotnet_assembly (l_dotnet_assembly)
 			end
 		end
 
 feature {ET_INTERNAL_UNIVERSE} -- Access
 
-	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): ET_GROUP
+	group_by_name_at_index (a_names: ARRAY [STRING]; a_index: INTEGER): detachable ET_GROUP
 			-- Group named `a_names', ignoring the entries before `a_index',
 			-- starting from within current universe and recursively traversing
 			-- dependent universes if needed
@@ -289,33 +274,28 @@ feature {ET_INTERNAL_UNIVERSE} -- Access
 			-- Void if not such group.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+-- Does not compile in void-safe mode:
+--			no_void_name: not a_names.has (Void)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			nb: INTEGER
-			l_library: ET_LIBRARY
-			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
 			nb := a_names.upper
 			if a_index <= nb then
-				l_library := library_by_name (a_names.item (a_index))
-				if l_library /= Void then
+				if attached library_by_name (a_names.item (a_index)) as l_library then
 					if a_index = nb then
 						Result := l_library
 					else
 						Result := l_library.group_by_name_at_index (a_names, a_index + 1)
 					end
-				else
-					l_dotnet_assembly := dotnet_assembly_by_name (a_names.item (a_index))
-					if l_dotnet_assembly /= Void then
-						if a_index = nb then
-							Result := l_dotnet_assembly
-						else
-							Result := l_dotnet_assembly.group_by_name_at_index (a_names, a_index + 1)
-						end
+				elseif attached dotnet_assembly_by_name (a_names.item (a_index)) as l_dotnet_assembly then
+					if a_index = nb then
+						Result := l_dotnet_assembly
 					else
-						Result := clusters.subcluster_by_name_at_index (a_names, a_index)
+						Result := l_dotnet_assembly.group_by_name_at_index (a_names, a_index + 1)
 					end
+				else
+					Result := clusters.subcluster_by_name_at_index (a_names, a_index)
 				end
 			end
 		ensure
@@ -500,7 +480,7 @@ feature -- Iteration
 			l_visited.do_all (an_action)
 		end
 
-	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN])
+	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
 			--
@@ -603,11 +583,8 @@ feature -- Actions
 			a_pathname_not_void: a_pathname /= Void
 			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
 			a_action_not_void: a_action /= Void
-		local
-			l_cluster: ET_CLUSTER
 		do
-			l_cluster := cluster_with_absolute_pathname (a_pathname)
-			if l_cluster /= Void then
+			if attached cluster_with_absolute_pathname (a_pathname) as l_cluster then
 				a_action.call ([l_cluster])
 			end
 		end

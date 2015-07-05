@@ -5,7 +5,7 @@ note
 		"Eiffel object-test expressions with a local name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,9 +19,7 @@ inherit
 			make as make_object_test
 		redefine
 			name,
-			reset,
 			last_leaf,
-			break,
 			process
 		end
 
@@ -49,14 +47,6 @@ feature {NONE} -- Initialization
 			expression_set: expression = a_expression
 		end
 
-feature -- Initialization
-
-	reset
-			-- Reset expression as it was just after it was last parsed.
-		do
-			precursor
-		end
-
 feature -- Access
 
 	as_keyword: ET_KEYWORD
@@ -64,7 +54,6 @@ feature -- Access
 
 	name: ET_IDENTIFIER
 			-- Name of object-test local
-
 
 	hash_code: INTEGER
 			-- Hash value
@@ -76,12 +65,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := name.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := name.break
 		end
 
 feature -- Setting

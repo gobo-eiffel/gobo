@@ -178,11 +178,10 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			l_subclusters: ET_CLUSTERS
 			old_group: ET_PRIMARY_GROUP
 			l_already_preparsed: BOOLEAN
-			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-			l_class: ET_CLASS
+			l_classes: detachable DS_ARRAYED_LIST [ET_CLASS]
+			l_class: detachable ET_CLASS
 			i, nb: INTEGER
 		do
 			old_group := group
@@ -216,7 +215,7 @@ feature -- Parsing
 								nb := l_classes.count
 								from i := 1 until i > nb loop
 									l_class := l_classes.item (i)
-									if file_system.same_pathnames (l_class.filename, a_filename) then
+									if attached l_class.filename as l_class_filename and then file_system.same_pathnames (l_class_filename, a_filename) then
 										if not l_class.is_parsed then
 												-- Force the parsing.
 											l_class.reset
@@ -257,8 +256,7 @@ feature -- Parsing
 			end
 			build_provider_constraint (a_cluster)
 			build_dependant_constraint (a_cluster)
-			l_subclusters := a_cluster.subclusters
-			if l_subclusters /= Void then
+			if attached a_cluster.subclusters as l_subclusters then
 				parse_clusters (l_subclusters)
 			end
 			group := old_group
@@ -315,7 +313,6 @@ feature -- AST processing
 			-- parsing works. Read the header comments of these features
 			-- for more details.
 		local
-			a_filename: STRING
 			a_time_stamp: INTEGER
 			a_cluster: ET_CLUSTER
 			a_file: KL_TEXT_INPUT_FILE
@@ -337,8 +334,7 @@ feature -- AST processing
 				old_group := group
 				group := current_class.group
 				if not current_class.is_parsed then
-					if current_class.is_in_cluster then
-						a_filename := current_class.filename
+					if current_class.is_in_cluster and then attached current_class.filename as a_filename then
 						a_cluster := current_class.group.cluster
 						current_class.reset_after_preparsed
 						a_file := tmp_file
@@ -400,18 +396,18 @@ feature -- AST processing
 
 feature {NONE} -- Basic operations
 
-	register_query (a_query: ET_QUERY)
+	register_query (a_query: detachable ET_QUERY)
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
 				current_system.register_feature (a_query)
 				queries.force_last (a_query)
 				queries.finish
-				if last_object_tests /= Void then
-					a_query.set_object_tests (last_object_tests.cloned_object_test_list)
+				if attached last_object_tests as l_last_object_tests then
+					a_query.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if last_across_components /= Void then
-					a_query.set_across_components (last_across_components.cloned_across_component_list)
+				if attached last_across_components as l_last_across_components then
+					a_query.set_across_components (l_last_across_components.cloned_across_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
@@ -422,7 +418,7 @@ feature {NONE} -- Basic operations
 			wipe_out_last_across_components_stack
 		end
 
-	register_query_synonym (a_query: ET_QUERY)
+	register_query_synonym (a_query: detachable ET_QUERY)
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
@@ -435,18 +431,18 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	register_procedure (a_procedure: ET_PROCEDURE)
+	register_procedure (a_procedure: detachable ET_PROCEDURE)
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
 				current_system.register_feature (a_procedure)
 				procedures.force_last (a_procedure)
 				procedures.finish
-				if last_object_tests /= Void then
-					a_procedure.set_object_tests (last_object_tests.cloned_object_test_list)
+				if attached last_object_tests as l_last_object_tests then
+					a_procedure.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if last_across_components /= Void then
-					a_procedure.set_across_components (last_across_components.cloned_across_component_list)
+				if attached last_across_components as l_last_across_components then
+					a_procedure.set_across_components (l_last_across_components.cloned_across_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
@@ -457,7 +453,7 @@ feature {NONE} -- Basic operations
 			wipe_out_last_across_components_stack
 		end
 
-	register_procedure_synonym (a_procedure: ET_PROCEDURE)
+	register_procedure_synonym (a_procedure: detachable ET_PROCEDURE)
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
@@ -470,22 +466,22 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	register_inline_agent (a_inline_agent: ET_INLINE_AGENT)
+	register_inline_agent (a_inline_agent: detachable ET_INLINE_AGENT)
 			-- Register `a_inline_agent'.
 		do
 			if a_inline_agent /= Void then
-				if last_object_tests /= Void then
-					a_inline_agent.set_object_tests (last_object_tests.cloned_object_test_list)
+				if attached last_object_tests as l_last_object_tests then
+					a_inline_agent.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if last_across_components /= Void then
-					a_inline_agent.set_across_components (last_across_components.cloned_across_component_list)
+				if attached last_across_components as l_last_across_components then
+					a_inline_agent.set_across_components (l_last_across_components.cloned_across_component_list)
 				end
 					-- Clean up after the inline agent has been parsed.
 				set_end_closure
 			end
 		end
 
-	register_constraint (a_constraint: ET_CONSTRAINT_TYPE)
+	register_constraint (a_constraint: detachable ET_CONSTRAINT_TYPE)
 			-- Register generic constraint.
 		do
 			constraints.force_last (a_constraint)
@@ -494,7 +490,7 @@ feature {NONE} -- Basic operations
 			registered: constraints.last = a_constraint
 		end
 
-	dummy_constraint (a_constraint: ET_CONSTRAINT_TYPE): ET_TYPE
+	dummy_constraint (a_constraint: detachable ET_CONSTRAINT_TYPE): detachable ET_TYPE
 			-- Dummy type, or Void if `a_constraint' is Void
 		do
 			if a_constraint /= Void then
@@ -505,16 +501,15 @@ feature {NONE} -- Basic operations
 			non_void_type: a_constraint /= Void implies Result /= Void
 		end
 
-	set_formal_parameters (a_parameters: ET_FORMAL_PARAMETER_LIST)
+	set_formal_parameters (a_parameters: detachable ET_FORMAL_PARAMETER_LIST)
 			-- Set formal generic parameters of `last_class'.
 		require
 			no_constraint: a_parameters = Void implies constraints.is_empty
 			same_count: a_parameters /= Void implies constraints.count = a_parameters.count
 		local
 			a_class: like last_class
-			a_constrained_formal: ET_CONSTRAINED_FORMAL_PARAMETER
-			a_constraint: ET_CONSTRAINT_TYPE
-			a_type: ET_TYPE
+			a_constraint: detachable ET_CONSTRAINT_TYPE
+			a_type: detachable  ET_TYPE
 			i, nb: INTEGER
 		do
 			if a_parameters /= Void then
@@ -523,8 +518,7 @@ feature {NONE} -- Basic operations
 					a_class.set_formal_parameters (a_parameters)
 					nb := a_parameters.count
 					from i := nb until i < 1 loop
-						a_constrained_formal ?= a_parameters.formal_parameter (i)
-						if a_constrained_formal /= Void then
+						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_parameters.formal_parameter (i) as a_constrained_formal then
 							a_constraint := constraints.item (i)
 							if a_constraint /= Void then
 								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
@@ -579,7 +573,7 @@ feature {NONE} -- Basic operations
 			-- Set providers of `last_class' (when enabled).
 		local
 			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
-			l_class: ET_CLASS
+			l_class: like last_class
 		do
 			if providers_enabled then
 				l_class := last_class
@@ -595,10 +589,10 @@ feature {NONE} -- Basic operations
 			providers.wipe_out
 		end
 
-	set_class_to_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST;
-		a_creators: ET_CREATOR_LIST; a_convert_features: ET_CONVERT_FEATURE_LIST;
-		a_feature_clauses: ET_FEATURE_CLAUSE_LIST; an_invariants: ET_INVARIANTS;
-		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD)
+	set_class_to_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_LIST;
+		a_creators: detachable ET_CREATOR_LIST; a_convert_features: detachable ET_CONVERT_FEATURE_LIST;
+		a_feature_clauses: detachable ET_FEATURE_CLAUSE_LIST; an_invariants: detachable ET_INVARIANTS;
+		a_second_indexing: detachable ET_INDEXING_LIST; an_end: detachable ET_KEYWORD)
 			-- Set various elements to `a_class'.
 		do
 			if a_class /= Void then
@@ -615,7 +609,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	set_class_to_inheritance_end (a_class: ET_CLASS; an_obsolete: ET_OBSOLETE; a_parents: ET_PARENT_LIST)
+	set_class_to_inheritance_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_LIST)
 			-- Set various elements to `a_class'.
 			-- Note: This is the case where the following class declaration:
 			--		class FOO inherit BAR end
@@ -625,7 +619,7 @@ feature {NONE} -- Basic operations
 			-- end of the class FOO.
 		local
 			a_parent: ET_PARENT
-			an_end: ET_KEYWORD
+			an_end: detachable ET_KEYWORD
 		do
 			if a_class /= Void then
 				if a_parents /= Void and then not a_parents.is_empty then
@@ -641,7 +635,7 @@ feature {NONE} -- Basic operations
 			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, Void, an_end)
 		end
 
-	set_inline_agent_actual_arguments (a_inline_agent: ET_INLINE_AGENT; a_actual_arguments: ET_AGENT_ARGUMENT_OPERANDS)
+	set_inline_agent_actual_arguments (a_inline_agent: detachable ET_INLINE_AGENT; a_actual_arguments: detachable ET_AGENT_ARGUMENT_OPERANDS)
 			-- Set actual arguments of inline agent.
 		do
 			if a_inline_agent /= Void and a_actual_arguments /= Void then
@@ -649,21 +643,19 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_expression_assertion (an_expression: ET_EXPRESSION; a_semicolon: ET_SYMBOL)
+	add_expression_assertion (an_expression: detachable ET_EXPRESSION; a_semicolon: detachable ET_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
-			an_assertion: ET_ASSERTION_ITEM
-			a_tagged: ET_TAGGED_ASSERTION
+			an_assertion: detachable ET_ASSERTION_ITEM
 			done: BOOLEAN
 		do
 			if not assertions.is_empty then
-				a_tagged ?= assertions.last
-				if a_tagged /= Void and then a_tagged.expression = Void then
+				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
 					if an_expression /= Void then
-						a_tagged.set_expression (an_expression)
+						l_tagged.set_expression (an_expression)
 						if a_semicolon /= Void then
-							an_assertion := ast_factory.new_assertion_semicolon (a_tagged, a_semicolon)
+							an_assertion := ast_factory.new_assertion_semicolon (l_tagged, a_semicolon)
 							if an_assertion /= Void then
 								assertions.replace (an_assertion, assertions.count)
 							else
@@ -688,13 +680,12 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_tagged_assertion (a_tag: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_semicolon: ET_SYMBOL)
+	add_tagged_assertion (a_tag: detachable ET_IDENTIFIER; a_colon: detachable ET_SYMBOL; a_semicolon: detachable ET_SYMBOL)
 			-- Add tagged assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
-			an_assertion: ET_TAGGED_ASSERTION
-			an_assertion_item: ET_ASSERTION_ITEM
-			a_tagged: ET_TAGGED_ASSERTION
+			an_assertion: detachable ET_TAGGED_ASSERTION
+			an_assertion_item: detachable ET_ASSERTION_ITEM
 			l_position: ET_POSITION
 			l_file_position: ET_FILE_POSITION
 		do
@@ -703,14 +694,17 @@ feature {NONE} -- Basic operations
 					--      a_tag: -- a comment assertion
 					-- when followed by another tagged assertion.
 				if not assertions.is_empty then
-					a_tagged ?= assertions.last
-					if a_tagged /= Void and then a_tagged.expression = Void then
-						l_position := a_tag.position
-						if not l_position.is_null then
-							create l_file_position.make (filename, l_position.line, l_position.column)
-							l_position := l_file_position
-						else
+					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
+						if a_tag = Void then
 							l_position := current_position
+						else
+							l_position := a_tag.position
+							if not l_position.is_null then
+								create l_file_position.make (filename, l_position.line, l_position.column)
+								l_position := l_file_position
+							else
+								l_position := current_position
+							end
 						end
 						report_syntax_error (l_position)
 					end
@@ -727,7 +721,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_to_actual_parameter_list (a_parameter: ET_ACTUAL_PARAMETER_ITEM; a_list: ET_ACTUAL_PARAMETER_LIST)
+	add_to_actual_parameter_list (a_parameter: detachable ET_ACTUAL_PARAMETER_ITEM; a_list: detachable ET_ACTUAL_PARAMETER_LIST)
 			-- Add `a_parameter' at the beginning of `a_list'.
 		do
 			if a_list /= Void and a_parameter /= Void then
@@ -735,7 +729,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	add_to_constraint_actual_parameter_list (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM; a_list: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST)
+	add_to_constraint_actual_parameter_list (a_parameter: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM; a_list: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST)
 			-- Add `a_parameter' at the beginning of `a_list'.
 		do
 			if a_list /= Void and a_parameter /= Void then
@@ -743,7 +737,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	set_start_closure (a_formal_arguments: ET_FORMAL_ARGUMENT_LIST)
+	set_start_closure (a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST)
 			-- Indicate the we just parsed the formal arguments of a
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
@@ -812,7 +806,7 @@ feature {NONE} -- Basic operations
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
 			-- Version of `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -824,10 +818,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
-			a_formal: ET_FORMAL_PARAMETER
-			a_type_mark: ET_TYPE_MARK
+			a_formal: detachable ET_FORMAL_PARAMETER
+			a_type_mark: detachable ET_TYPE_MARK
 			a_base_class: ET_MASTER_CLASS
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -869,7 +863,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_TYPE
 			-- Version `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -881,11 +875,11 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
-			a_type_mark: ET_TYPE_MARK
-			a_formal: ET_FORMAL_PARAMETER
+			a_type_mark: detachable ET_TYPE_MARK
+			a_formal: detachable ET_FORMAL_PARAMETER
 			a_base_class: ET_MASTER_CLASS
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_type_mark: ET_TYPE_MARK
+			a_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -930,7 +924,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
-		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_ACTUAL_PARAMETER_LIST
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): detachable ET_ACTUAL_PARAMETER_LIST
 			-- Version of `a_constraint', appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been
@@ -942,9 +936,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_class_not_void: a_class /= Void
 		local
 			i, nb: INTEGER
-			l_type, l_other_type: ET_CONSTRAINT_TYPE
-			l_resolved_type: ET_TYPE
-			l_parameter: ET_ACTUAL_PARAMETER_ITEM
+			l_type: ET_CONSTRAINT_TYPE
+			l_other_type: detachable ET_CONSTRAINT_TYPE
+			l_resolved_type: detachable ET_TYPE
+			l_parameter: detachable ET_ACTUAL_PARAMETER_ITEM
 			l_actual: ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
 			nb := a_constraint.count
@@ -967,19 +962,19 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_comma (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_COMMA;
-		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
+		a_type: detachable ET_TYPE): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
 		local
-			a_parameter: ET_ACTUAL_PARAMETER
+			a_parameter: detachable ET_ACTUAL_PARAMETER
 		do
 			a_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint_with_type (a_type, Current)
 			Result := ast_factory.new_actual_parameter_comma (a_parameter, a_constraint.comma)
 		end
 
 	resolved_constraint_labeled_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER;
-		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER
+		a_type: detachable ET_TYPE): detachable ET_LABELED_ACTUAL_PARAMETER
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -988,7 +983,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_labeled_comma_actual_parameter (a_constraint: ET_CONSTRAINT_LABELED_COMMA_ACTUAL_PARAMETER;
-		a_type: ET_TYPE): ET_LABELED_ACTUAL_PARAMETER
+		a_type: detachable ET_TYPE): detachable ET_LABELED_ACTUAL_PARAMETER
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
@@ -997,12 +992,12 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_labeled_actual_parameter_semicolon (a_constraint: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER_SEMICOLON;
-		a_type: ET_TYPE): ET_ACTUAL_PARAMETER_ITEM
+		a_type: detachable ET_TYPE): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- Version of `a_constraint', where its type has been replaced by `a_type'
 		require
 			a_constraint_not_void: a_constraint /= Void
 		local
-			l_parameter: ET_LABELED_ACTUAL_PARAMETER
+			l_parameter: detachable ET_LABELED_ACTUAL_PARAMETER
 		do
 			l_parameter := a_constraint.actual_parameter.resolved_syntactical_constraint_with_type (a_type, Current)
 			Result := ast_factory.new_labeled_actual_parameter_semicolon (l_parameter, a_constraint.semicolon)
@@ -1010,9 +1005,9 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 
 feature {NONE} -- AST factory
 
-	new_across_all_expression (a_across_header: ET_ACROSS_EXPRESSION; an_invariant: ET_LOOP_INVARIANTS;
-			an_until_conditional: ET_CONDITIONAL; a_all_conditional: ET_CONDITIONAL;
-			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+	new_across_all_expression (a_across_header: detachable ET_ACROSS_EXPRESSION; an_invariant: detachable ET_LOOP_INVARIANTS;
+			an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
+			a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 				-- New across all expression
 			do
 				if a_across_header /= Void and a_all_conditional /= Void then
@@ -1031,26 +1026,33 @@ feature {NONE} -- AST factory
 				end
 			end
 
-	new_across_expression_header (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER): ET_ACROSS_EXPRESSION
+	new_across_expression_header (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
+		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_EXPRESSION
 				-- New across expression header
+		local
+			l_last_across_components: like last_across_components
+			l_cursor_name: ET_IDENTIFIER
 		do
 			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, tokens.true_keyword, Void, Void)
 			if Result /= Void then
-				if last_across_components = Void then
-					last_across_components := new_across_component_list
+				l_last_across_components := last_across_components
+				if l_last_across_components = Void then
+					l_last_across_components := new_across_component_list
+					last_across_components := l_last_across_components
 				end
-				last_across_components.force_last (Result)
+				l_last_across_components.force_last (Result)
 					-- We set 'cursor_name.is_across_cursor' to False when
 					-- parsing within its scope.
-				a_cursor_name.set_across_cursor (False)
-				a_cursor_name.set_seed (last_across_components.count)
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_across_cursor (False)
+				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end
 
-	new_across_instruction (a_across_header: ET_ACROSS_INSTRUCTION;
-		a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
-		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
-		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_INSTRUCTION
+	new_across_instruction (a_across_header: detachable ET_ACROSS_INSTRUCTION;
+		a_from_compound: detachable ET_COMPOUND; an_invariant: detachable ET_LOOP_INVARIANTS;
+		an_until_conditional: detachable ET_CONDITIONAL; a_loop_compound: detachable ET_COMPOUND;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction
 		do
 			if a_across_header /= Void then
@@ -1069,25 +1071,36 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_across_instruction_header (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER): ET_ACROSS_INSTRUCTION
+	new_across_instruction_header (a_across: detachable ET_KEYWORD;
+		a_iterable_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD;
+		a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction header
+		local
+			l_last_across_components: like last_across_components
+			l_cursor_name: ET_IDENTIFIER
 		do
 			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, Void, Void, Void, Void)
 			if Result /= Void then
-				if last_across_components = Void then
-					last_across_components := new_across_component_list
+				l_last_across_components := last_across_components
+				if l_last_across_components = Void then
+					l_last_across_components := new_across_component_list
+					last_across_components := l_last_across_components
 				end
-				last_across_components.force_last (Result)
+				l_last_across_components.force_last (Result)
 					-- We set 'cursor_name.is_across_cursor' to False when
 					-- parsing within its scope.
-				a_cursor_name.set_across_cursor (False)
-				a_cursor_name.set_seed (last_across_components.count)
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_across_cursor (False)
+				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end
 
-	new_across_some_expression (a_across_header: ET_ACROSS_EXPRESSION; an_invariant: ET_LOOP_INVARIANTS;
-			an_until_conditional: ET_CONDITIONAL; a_some_conditional: ET_CONDITIONAL;
-			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+	new_across_some_expression (a_across_header: detachable ET_ACROSS_EXPRESSION;
+		an_invariant: detachable ET_LOOP_INVARIANTS;
+			an_until_conditional: detachable ET_CONDITIONAL;
+			a_some_conditional: detachable ET_CONDITIONAL;
+			a_variant: detachable ET_VARIANT;
+			an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 				-- New across some expression
 			do
 				if a_across_header /= Void and a_some_conditional /= Void then
@@ -1106,39 +1119,39 @@ feature {NONE} -- AST factory
 				end
 			end
 
-	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER
+	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_IDENTIFIER
 			-- New agent identifier target
 		local
 			a_seed: INTEGER
 		do
 			if an_identifier /= Void then
 				Result := an_identifier
-				if last_formal_arguments /= Void then
-					a_seed := last_formal_arguments.index_of (an_identifier)
+				if attached last_formal_arguments as l_last_formal_arguments then
+					a_seed := l_last_formal_arguments.index_of (an_identifier)
 					if a_seed /= 0 then
 						an_identifier.set_seed (a_seed)
 						an_identifier.set_argument (True)
-						last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_local_variables /= Void then
-					a_seed := last_local_variables.index_of (an_identifier)
+				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					a_seed := l_last_local_variables.index_of (an_identifier)
 					if a_seed /= 0 then
 						an_identifier.set_seed (a_seed)
 						an_identifier.set_local (True)
-						last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
 				if a_seed = 0 then
-					if last_object_tests /= Void then
-						a_seed := last_object_tests.index_of_name (an_identifier)
+					if attached last_object_tests as l_last_object_tests then
+						a_seed := l_last_object_tests.index_of_name (an_identifier)
 						if a_seed /= 0 then
 							an_identifier.set_object_test_local (True)
 						end
 					end
-					if last_across_components /= Void then
-						a_seed := last_across_components.index_of_name (an_identifier)
-						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+					if attached last_across_components as l_last_across_components then
+						a_seed := l_last_across_components.index_of_name (an_identifier)
+						if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
 								-- We set 'cursor_name.is_across_cursor' to False when
 								-- parsing withing its scope.
 							an_identifier.set_across_cursor (True)
@@ -1148,7 +1161,8 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME
+	new_alias_free_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		do
 			if a_string /= Void then
@@ -1162,13 +1176,13 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_any_clients (a_keyword: ET_KEYWORD): ET_CLIENT_LIST
+	new_any_clients (a_keyword: detachable ET_KEYWORD): detachable ET_CLIENT_LIST
 			-- Implicit client list (when preceded by `a_keyword')
 			-- with only one client: "ANY"
 		local
 			l_name: ET_IDENTIFIER
 			l_position: ET_POSITION
-			l_client: ET_CLIENT
+			l_client: detachable ET_CLIENT
 		do
 			if a_keyword = Void or else a_keyword.position.is_null then
 				Result := current_system.any_clients
@@ -1184,7 +1198,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE
+	new_bit_feature (a_bit: detachable ET_IDENTIFIER; an_id: detachable ET_IDENTIFIER): detachable ET_BIT_FEATURE
 			-- New 'BIT Identifier' type
 		local
 			a_class: ET_CLASS
@@ -1193,7 +1207,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_bit_feature (a_bit, an_id, a_class)
 		end
 
-	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N
+	new_bit_n (a_bit: detachable ET_IDENTIFIER; an_int: detachable ET_INTEGER_CONSTANT): detachable ET_BIT_N
 			-- New 'BIT N' type
 		local
 			a_class: ET_CLASS
@@ -1203,16 +1217,16 @@ feature {NONE} -- AST factory
 			if Result /= Void then
 				Result.compute_size
 				if Result.has_size_error then
-					if last_class /= Void then
-						set_fatal_error (last_class)
-						error_handler.report_vtbt0c_error (last_class, Result)
+					if attached last_class as l_last_class then
+						set_fatal_error (l_last_class)
+						error_handler.report_vtbt0c_error (l_last_class, Result)
 					else
 						error_handler.report_syntax_error (filename, Result.constant.position)
 					end
 				elseif Result.size = 0 and Result.constant.is_negative then
 						-- Not considered as a fatal error by gelint.
-					if last_class /= Void then
-						error_handler.report_vtbt0d_error (last_class, Result)
+					if attached last_class as l_last_class then
+						error_handler.report_vtbt0d_error (l_last_class, Result)
 					else
 						error_handler.report_syntax_error (filename, Result.constant.position)
 					end
@@ -1220,7 +1234,8 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_check_instruction (a_check: ET_KEYWORD; a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION
+	new_check_instruction (a_check: detachable ET_KEYWORD; a_then_compound: detachable ET_COMPOUND;
+		an_end: detachable ET_KEYWORD): detachable ET_CHECK_INSTRUCTION
 			-- New check instruction
 		local
 			i, nb: INTEGER
@@ -1254,7 +1269,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER
+	new_choice_attribute_constant (a_name: detachable ET_IDENTIFIER): detachable ET_IDENTIFIER
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
 		local
@@ -1262,32 +1277,32 @@ feature {NONE} -- AST factory
 		do
 			if a_name /= Void then
 				Result := a_name
-				if last_formal_arguments /= Void then
-					a_seed := last_formal_arguments.index_of (a_name)
+				if attached last_formal_arguments as l_last_formal_arguments then
+					a_seed := l_last_formal_arguments.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_argument (True)
-						last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_local_variables /= Void then
-					a_seed := last_local_variables.index_of (a_name)
+				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					a_seed := l_last_local_variables.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
-						last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
 				if a_seed = 0 then
-					if last_object_tests /= Void then
-						a_seed := last_object_tests.index_of_name (a_name)
+					if attached last_object_tests as l_last_object_tests then
+						a_seed := l_last_object_tests.index_of_name (a_name)
 						if a_seed /= 0 then
 							a_name.set_object_test_local (True)
 						end
 					end
-					if last_across_components /= Void then
-						a_seed := last_across_components.index_of_name (a_name)
-						if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+					if attached last_across_components as l_last_across_components then
+						a_seed := l_last_across_components.index_of_name (a_name)
+						if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
 								-- We set 'cursor_name.is_across_cursor' to False when
 								-- parsing within its scope.
 							a_name.set_across_cursor (True)
@@ -1297,26 +1312,30 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_client (a_name: ET_CLASS_NAME): ET_CLIENT
+	new_client (a_name: detachable ET_CLASS_NAME): detachable ET_CLIENT
 			-- New client
 		local
 			l_base_class: ET_MASTER_CLASS
 		do
-			l_base_class := current_universe.master_class (a_name)
-			Result := ast_factory.new_client (a_name, l_base_class)
+			if a_name /= Void then
+				l_base_class := current_universe.master_class (a_name)
+				Result := ast_factory.new_client (a_name, l_base_class)
+			end
 		end
 
-	new_client_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLIENT_ITEM
+	new_client_comma (a_name: detachable ET_CLASS_NAME; a_comma: detachable ET_SYMBOL): detachable ET_CLIENT_ITEM
 			-- New client followed by a comma
 		local
 			l_base_class: ET_MASTER_CLASS
 		do
-			l_base_class := current_universe.master_class (a_name)
-			Result := ast_factory.new_client_comma (a_name, l_base_class, a_comma)
+			if a_name /= Void then
+				l_base_class := current_universe.master_class (a_name)
+				Result := ast_factory.new_client_comma (a_name, l_base_class, a_comma)
+			end
 		end
 
-	new_constraint_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
-		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE
+	new_constraint_named_type (a_type_mark: detachable ET_TYPE_MARK; a_name: detachable ET_IDENTIFIER;
+		a_parameters: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): detachable ET_CONSTRAINT_NAMED_TYPE
 			-- New Eiffel class type or formal generic paramater
 			-- appearing in a generic constraint
 		do
@@ -1327,12 +1346,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
-		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION
+	new_external_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_language: detachable ET_EXTERNAL_LANGUAGE;
+		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
+		an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_EXTERNAL_FUNCTION
 			-- New external function
 		do
 			Result := ast_factory.new_external_function (a_name, args, a_type, an_assigner, an_is, a_first_indexing,
@@ -1340,12 +1363,12 @@ feature {NONE} -- AST factory
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 		end
 
-	new_external_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
-		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE
+	new_external_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE; an_alias: detachable ET_EXTERNAL_ALIAS;
+		a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_EXTERNAL_PROCEDURE
 			-- New external procedure
 		do
 			Result := ast_factory.new_external_procedure (a_name, args, an_is, a_first_indexing,
@@ -1353,40 +1376,38 @@ feature {NONE} -- AST factory
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 		end
 
-	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS
+	new_feature_address (d: detachable ET_SYMBOL; a_name: detachable ET_FEATURE_NAME): detachable ET_FEATURE_ADDRESS
 			-- New feature address
 		local
-			l_identifier: ET_IDENTIFIER
 			l_seed: INTEGER
 		do
-			l_identifier ?= a_name
-			if l_identifier /= Void then
-				if last_formal_arguments /= Void then
-					l_seed := last_formal_arguments.index_of (l_identifier)
+			if attached {ET_IDENTIFIER} a_name as l_identifier then
+				if attached last_formal_arguments as l_last_formal_arguments then
+					l_seed := l_last_formal_arguments.index_of (l_identifier)
 					if l_seed /= 0 then
 						l_identifier.set_seed (l_seed)
 						l_identifier.set_argument (True)
-						last_formal_arguments.formal_argument (l_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (l_seed).set_used (True)
 					end
 				end
-				if l_seed = 0 and then last_local_variables /= Void then
-					l_seed := last_local_variables.index_of (l_identifier)
+				if l_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					l_seed := l_last_local_variables.index_of (l_identifier)
 					if l_seed /= 0 then
 						l_identifier.set_seed (l_seed)
 						l_identifier.set_local (True)
-						last_local_variables.local_variable (l_seed).set_used (True)
+						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
 				if l_seed = 0 then
-					if last_object_tests /= Void then
-						l_seed := last_object_tests.index_of_name (l_identifier)
+					if attached last_object_tests as l_last_object_tests then
+						l_seed := l_last_object_tests.index_of_name (l_identifier)
 						if l_seed /= 0 then
 							l_identifier.set_object_test_local (True)
 						end
 					end
-					if last_across_components /= Void then
-						l_seed := last_across_components.index_of_name (l_identifier)
-						if l_seed /= 0 and then not last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
+					if attached last_across_components as l_last_across_components then
+						l_seed := l_last_across_components.index_of_name (l_identifier)
+						if l_seed /= 0 and then not l_last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
 								-- We set 'cursor_name.is_across_cursor' to False when
 								-- parsing within its scope.
 							l_identifier.set_across_cursor (True)
@@ -1397,7 +1418,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_feature_address (d, a_name)
 		end
 
-	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST
+	new_formal_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_FORMAL_ARGUMENT_LIST
 			-- New formal argument list with given capacity
 		require
 			nb_positive: nb >= 0
@@ -1405,28 +1426,28 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
 		end
 
-	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME
+	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
 		do
 -- ERROR
 			Result := new_alias_free_name (an_alias, a_string)
 		end
 
-	new_invalid_infix_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME
+	new_invalid_infix_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
 			-- New invalid infix feature name
 		do
 -- ERROR
 			Result := new_infix_free_name (an_infix, an_operator)
 		end
 
-	new_invalid_prefix_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME
+	new_invalid_prefix_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
 			-- New invalid prefix feature name
 		do
 -- ERROR
 			Result := new_prefix_free_name (a_prefix, an_operator)
 		end
 
-	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME
+	new_infix_free_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
@@ -1440,7 +1461,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_invariants (an_invariant: ET_KEYWORD): ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_INVARIANTS
 			-- New class invariants
 		local
 			i: INTEGER
@@ -1459,11 +1480,11 @@ feature {NONE} -- AST factory
 				assertions.wipe_out
 			end
 			if Result /= Void then
-				if last_object_tests /= Void then
-					Result.set_object_tests (last_object_tests.cloned_object_test_list)
+				if attached last_object_tests as l_last_object_tests then
+					Result.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if last_across_components /= Void then
-					Result.set_across_components (last_across_components.cloned_across_component_list)
+				if attached last_across_components as l_last_across_components then
+					Result.set_across_components (l_last_across_components.cloned_across_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
@@ -1474,7 +1495,7 @@ feature {NONE} -- AST factory
 			wipe_out_last_across_components_stack
 		end
 
-	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST
+	new_local_variables (a_local: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOCAL_VARIABLE_LIST
 			-- New local variable list with given capacity
 		require
 			nb_positive: nb >= 0
@@ -1483,7 +1504,7 @@ feature {NONE} -- AST factory
 			last_local_variables := Result
 		end
 
-	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants
 		local
 			i: INTEGER
@@ -1503,30 +1524,36 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
+	new_named_object_test (a_attached: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD;
+		a_name: detachable ET_IDENTIFIER): detachable ET_NAMED_OBJECT_TEST
 			-- New named object-test expression
 		local
 			l_name: ET_IDENTIFIER
+			l_last_object_tests: like last_object_tests
 		do
 			Result := ast_factory.new_named_object_test (a_attached, a_type, a_expression, a_as, a_name)
 			if Result /= Void then
-				if last_object_tests = Void then
-					last_object_tests := new_object_test_list
+				l_last_object_tests := last_object_tests
+				if l_last_object_tests = Void then
+					l_last_object_tests := new_object_test_list
+					last_object_tests := l_last_object_tests
 				end
-				last_object_tests.force_last (Result)
+				l_last_object_tests.force_last (Result)
 				l_name := Result.name
 				l_name.set_object_test_local (True)
-				l_name.set_seed (last_object_tests.count)
+				l_name.set_seed (l_last_object_tests.count)
 			end
 		end
 
-	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE
+	new_named_type (a_type_mark: detachable ET_TYPE_MARK; a_name: detachable ET_IDENTIFIER;
+		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TYPE
 			-- New Eiffel class type or formal generic paramater
 		local
-			a_parameter: ET_FORMAL_PARAMETER
-			a_last_class: ET_CLASS
+			a_parameter: detachable ET_FORMAL_PARAMETER
+			a_last_class: like last_class
 			l_class: ET_MASTER_CLASS
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
@@ -1558,12 +1585,12 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_parent (a_name: ET_IDENTIFIER; a_generic_parameters: ET_ACTUAL_PARAMETER_LIST;
-		a_renames: ET_RENAME_LIST; an_exports: ET_EXPORT_LIST; an_undefines, a_redefines,
-		a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_KEYWORD): ET_PARENT
+	new_parent (a_name: detachable ET_IDENTIFIER; a_generic_parameters: detachable ET_ACTUAL_PARAMETER_LIST;
+		a_renames: detachable ET_RENAME_LIST; an_exports: detachable ET_EXPORT_LIST; an_undefines, a_redefines,
+		a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST; an_end: detachable ET_KEYWORD): detachable ET_PARENT
 			-- New parent
 		local
-			a_type: ET_CLASS_TYPE
+			a_type: detachable ET_CLASS_TYPE
 			a_last_class: like last_class
 			l_class: ET_MASTER_CLASS
 		do
@@ -1587,24 +1614,29 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST
+	new_old_object_test (a_left_brace: detachable ET_SYMBOL; a_name: detachable ET_IDENTIFIER;
+		a_colon: detachable ET_SYMBOL; a_type: detachable ET_TYPE; a_right_brace: detachable ET_SYMBOL;
+		a_expression: detachable ET_EXPRESSION): detachable ET_OLD_OBJECT_TEST
 			-- New object-test expression
 		local
 			l_name: ET_IDENTIFIER
+			l_last_object_tests: like last_object_tests
 		do
 			Result := ast_factory.new_old_object_test (a_left_brace, a_name, a_colon, a_type, a_right_brace, a_expression)
 			if Result /= Void then
-				if last_object_tests = Void then
-					last_object_tests := new_object_test_list
+				l_last_object_tests := last_object_tests
+				if l_last_object_tests = Void then
+					l_last_object_tests := new_object_test_list
+					last_object_tests := l_last_object_tests
 				end
-				last_object_tests.force_last (Result)
+				l_last_object_tests.force_last (Result)
 				l_name := Result.name
 				l_name.set_object_test_local (True)
-				l_name.set_seed (last_object_tests.count)
+				l_name.set_seed (l_last_object_tests.count)
 			end
 		end
 
-	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING
+	new_once_manifest_string (a_once: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ONCE_MANIFEST_STRING
 			-- New once manifest string
 		do
 			Result := ast_factory.new_once_manifest_string (a_once, a_string)
@@ -1613,7 +1645,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD): ET_POSTCONDITIONS
+	new_postconditions (an_ensure: detachable ET_KEYWORD; a_then: detachable ET_KEYWORD): detachable ET_POSTCONDITIONS
 			-- New postconditions
 		local
 			i: INTEGER
@@ -1633,7 +1665,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_preconditions (a_require: ET_KEYWORD; an_else: ET_KEYWORD): ET_PRECONDITIONS
+	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD): detachable ET_PRECONDITIONS
 			-- New preconditions
 		local
 			i: INTEGER
@@ -1653,7 +1685,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME
+	new_prefix_free_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
 			-- New prefix free feature name
 		do
 			if an_operator /= Void then
@@ -1667,26 +1699,19 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_minus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION
+	new_prefix_minus_expression (a_sign: detachable ET_SYMBOL_OPERATOR; an_expression: detachable ET_EXPRESSION): detachable ET_EXPRESSION
 			-- New prefix minus expression
-		local
-			l_integer: ET_INTEGER_CONSTANT
-			l_real: ET_REAL_CONSTANT
 		do
 			if a_sign /= Void and an_expression /= Void then
-				l_integer ?= an_expression
-				if l_integer /= Void then
+				if attached {ET_INTEGER_CONSTANT} an_expression as l_integer then
 					if l_integer.sign = Void then
 						l_integer.set_sign (a_sign)
 						Result := l_integer
 					end
-				else
-					l_real ?= an_expression
-					if l_real /= Void then
-						if l_real.sign = Void then
-							l_real.set_sign (a_sign)
-							Result := l_real
-						end
+				elseif attached {ET_REAL_CONSTANT} an_expression as l_real then
+					if l_real.sign = Void then
+						l_real.set_sign (a_sign)
+						Result := l_real
 					end
 				end
 			end
@@ -1695,26 +1720,19 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_plus_expression (a_sign: ET_SYMBOL_OPERATOR; an_expression: ET_EXPRESSION): ET_EXPRESSION
+	new_prefix_plus_expression (a_sign: detachable ET_SYMBOL_OPERATOR; an_expression: detachable ET_EXPRESSION): detachable ET_EXPRESSION
 			-- New prefix plus expression
-		local
-			l_integer: ET_INTEGER_CONSTANT
-			l_real: ET_REAL_CONSTANT
 		do
 			if a_sign /= Void and an_expression /= Void then
-				l_integer ?= an_expression
-				if l_integer /= Void then
+				if attached {ET_INTEGER_CONSTANT} an_expression as l_integer then
 					if l_integer.sign = Void then
 						l_integer.set_sign (a_sign)
 						Result := l_integer
 					end
-				else
-					l_real ?= an_expression
-					if l_real /= Void then
-						if l_real.sign = Void then
-							l_real.set_sign (a_sign)
-							Result := l_real
-						end
+				elseif attached {ET_REAL_CONSTANT} an_expression as l_real then
+					if l_real.sign = Void then
+						l_real.set_sign (a_sign)
+						Result := l_real
 					end
 				end
 			end
@@ -1723,61 +1741,64 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE
+	new_tuple_type (a_type_mark: detachable ET_TYPE_MARK; a_tuple: detachable ET_IDENTIFIER;
+		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TUPLE_TYPE
 			-- New 'TUPLE' type
 		local
 			a_class: ET_NAMED_CLASS
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
-			a_class := current_universe.master_class (a_tuple)
-			if providers_enabled then
-				providers.force_last (a_class)
+			if a_tuple /= Void then
+				a_class := current_universe.master_class (a_tuple)
+				if providers_enabled then
+					providers.force_last (a_class)
+				end
+				a_class.set_in_system (True)
+				l_type_mark := a_type_mark
+				if l_type_mark = Void then
+					l_type_mark := current_universe.implicit_attachment_type_mark
+				end
+				Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 			end
-			a_class.set_in_system (True)
-			l_type_mark := a_type_mark
-			if l_type_mark = Void then
-				l_type_mark := current_universe.implicit_attachment_type_mark
-			end
-			Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 		end
 
-	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION
+	new_unqualified_call_expression (a_name: detachable ET_IDENTIFIER; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_EXPRESSION
 			-- New unqualified call expression
 		local
 			a_seed: INTEGER
 		do
 			if args /= Void then
-				Result := ast_factory.new_call_expression (Void, a_name, args)
+				Result := ast_factory.new_unqualified_call_expression (a_name, args)
 			else
 				Result := a_name
 			end
 			if a_name /= Void then
-				if last_formal_arguments /= Void then
-					a_seed := last_formal_arguments.index_of (a_name)
+				if attached last_formal_arguments as l_last_formal_arguments then
+					a_seed := l_last_formal_arguments.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_argument (True)
-						last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_local_variables /= Void then
-					a_seed := last_local_variables.index_of (a_name)
+				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					a_seed := l_last_local_variables.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
-						last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_across_components /= Void then
-					a_seed := last_across_components.index_of_name (a_name)
-					if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+				if a_seed = 0 and then attached last_across_components as l_last_across_components then
+					a_seed := l_last_across_components.index_of_name (a_name)
+					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
 							-- We set 'cursor_name.is_across_cursor' to False when
 							-- parsing within its scope.
 						a_name.set_across_cursor (True)
 					end
 				end
-				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of_name (a_name)
+				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					a_seed := l_last_object_tests.index_of_name (a_name)
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
@@ -1785,43 +1806,43 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_unqualified_call_instruction (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_INSTRUCTION
+	new_unqualified_call_instruction (a_name: detachable ET_IDENTIFIER; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_INSTRUCTION
 			-- New unqualified call instruction
 		local
 			a_seed: INTEGER
 		do
 			if args /= Void then
-				Result := ast_factory.new_call_instruction (Void, a_name, args)
+				Result := ast_factory.new_unqualified_call_instruction (a_name, args)
 			else
 				Result := a_name
 			end
 			if a_name /= Void then
-				if last_formal_arguments /= Void then
-					a_seed := last_formal_arguments.index_of (a_name)
+				if attached last_formal_arguments as l_last_formal_arguments then
+					a_seed := l_last_formal_arguments.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_argument (True)
-						last_formal_arguments.formal_argument (a_seed).set_used (True)
+						l_last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_local_variables /= Void then
-					a_seed := last_local_variables.index_of (a_name)
+				if a_seed = 0 and then attached last_local_variables as l_last_local_variables then
+					a_seed := l_last_local_variables.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
-						last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then last_across_components /= Void then
-					a_seed := last_across_components.index_of_name (a_name)
-					if a_seed /= 0 and then not last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+				if a_seed = 0 and then attached last_across_components as l_last_across_components then
+					a_seed := l_last_across_components.index_of_name (a_name)
+					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
 							-- We set 'cursor_name.is_across_cursor' to False when
 							-- parsing within its scope.
 						a_name.set_across_cursor (True)
 					end
 				end
-				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of_name (a_name)
+				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					a_seed := l_last_object_tests.index_of_name (a_name)
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
@@ -1832,25 +1853,25 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_writable (a_name: ET_IDENTIFIER): ET_WRITABLE
+	new_writable (a_name: detachable ET_IDENTIFIER): detachable ET_WRITABLE
 			-- New writable
 		local
 			a_seed: INTEGER
 		do
 			if a_name /= Void then
 				Result := a_name
-				if last_local_variables /= Void then
-					a_seed := last_local_variables.index_of (a_name)
+				if attached last_local_variables as l_last_local_variables then
+					a_seed := l_last_local_variables.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
-						last_local_variables.local_variable (a_seed).set_used (True)
+						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
 			end
 		end
 
-	new_class (a_name: ET_IDENTIFIER): ET_CLASS
+	new_class (a_name: detachable ET_IDENTIFIER): detachable ET_CLASS
 			-- New Eiffel class
 		local
 			old_current_class: ET_CLASS
@@ -1863,8 +1884,8 @@ feature {NONE} -- AST factory
 				l_master_class := current_universe.master_class (a_name)
 				if l_master_class.has_local_class (current_class) then
 					Result := current_class
-				elseif l_master_class.first_local_class /= Void then
-					Result := l_master_class.first_local_class
+				elseif attached l_master_class.first_local_class as l_first_local_class then
+					Result := l_first_local_class
 				else
 					Result := tokens.unknown_class
 				end
@@ -1890,7 +1911,7 @@ feature {NONE} -- AST factory
 						-- Stop the parsing.
 					accept
 				else
-					if not Result.is_unknown and then ((Result = current_class) or (Result.is_in_cluster and then (Result.group = group and file_system.same_pathnames (Result.filename, filename)))) then
+					if not Result.is_unknown and then ((Result = current_class) or (Result.is_in_cluster and then (Result.group = group and attached Result.filename as l_result_filename and then file_system.same_pathnames (l_result_filename, filename)))) then
 							-- This is the class we want to parse.
 						if Result.is_parsed then
 -- TODO: find a way to check whether two classes in the same file don't have the same name.
@@ -1921,26 +1942,20 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_query_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_query: ET_QUERY): ET_QUERY
+	new_query_synonym (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_query: detachable ET_QUERY): detachable ET_QUERY
 			-- New synomym for feature `a_query'
-		require
-			a_name_not_void: a_name /= Void
-			a_query_not_void: a_query /= Void
 		do
-			Result := a_query.new_synonym (a_name)
-		ensure
-			synonym_not_void: Result /= Void
+			if a_name /= Void and a_query /= Void then
+				Result := a_query.new_synonym (a_name)
+			end
 		end
 
-	new_procedure_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_procedure: ET_PROCEDURE): ET_PROCEDURE
+	new_procedure_synonym (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_procedure: detachable ET_PROCEDURE): detachable ET_PROCEDURE
 			-- New synomym for feature `a_procedure'
-		require
-			a_name_not_void: a_name /= Void
-			a_procedure_not_void: a_procedure /= Void
 		do
-			Result := a_procedure.new_synonym (a_name)
-		ensure
-			synonym_not_void: Result /= Void
+			if a_name /= Void and a_procedure /= Void then
+				Result := a_procedure.new_synonym (a_name)
+			end
 		end
 
 feature -- Error handling
@@ -1954,8 +1969,8 @@ feature -- Error handling
 	set_syntax_error
 			-- Set syntax error flag in class being parsed, if already known.
 		do
-			if last_class /= Void then
-				set_fatal_error (last_class)
+			if attached last_class as l_last_class then
+				set_fatal_error (l_last_class)
 			end
 		end
 
@@ -1973,16 +1988,16 @@ feature -- Error handling
 
 feature {NONE} -- Access
 
-	last_clients: ET_CLIENT_LIST
+	last_clients: detachable ET_CLIENT_LIST
 			-- Last clients read
 
-	last_export_clients: ET_CLIENTS
+	last_export_clients: detachable ET_CLIENTS
 			-- Last clients read in New_export clauses
 
-	last_feature_clause: ET_FEATURE_CLAUSE
+	last_feature_clause: detachable ET_FEATURE_CLAUSE
 			-- Last feature clause read
 
-	last_class: ET_CLASS
+	last_class: detachable ET_CLASS
 			-- Class being parsed
 
 	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
@@ -1997,7 +2012,7 @@ feature {NONE} -- Access
 	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 			-- List of procedures currently being parsed
 
-	constraints: DS_ARRAYED_LIST [ET_CONSTRAINT_TYPE]
+	constraints: DS_ARRAYED_LIST [detachable ET_CONSTRAINT_TYPE]
 			-- List of generic constraints currently being parsed
 
 	providers: DS_HASH_SET [ET_NAMED_CLASS]
@@ -2005,11 +2020,11 @@ feature {NONE} -- Access
 
 feature {NONE} -- Local variables
 
-	last_local_variables: ET_LOCAL_VARIABLE_LIST
+	last_local_variables: detachable ET_LOCAL_VARIABLE_LIST
 			-- Last local variable clause read for the closure
 			-- (i.e. feature or inline agent) being parsed
 
-	last_local_variables_stack: DS_ARRAYED_STACK [ET_LOCAL_VARIABLE_LIST]
+	last_local_variables_stack: DS_ARRAYED_STACK [detachable ET_LOCAL_VARIABLE_LIST]
 			-- Stack of last local variable clauses read
 			-- for the enclosing closures (i.e. feature or
 			-- inline agents) of the closure being parsed
@@ -2027,11 +2042,11 @@ feature {NONE} -- Local variables
 
 feature {NONE} -- Object-tests
 
-	last_object_tests: ET_OBJECT_TEST_LIST
+	last_object_tests: detachable ET_OBJECT_TEST_LIST
 			-- Object-tests already found in the closure (i.e. feature,
 			-- invariant or inline agent) being parsed
 
-	last_object_tests_stack: DS_ARRAYED_STACK [ET_OBJECT_TEST_LIST]
+	last_object_tests_stack: DS_ARRAYED_STACK [detachable ET_OBJECT_TEST_LIST]
 			-- Stack of object-tests already found in the enclosing
 			-- closures (i.e. feature, invariant or inline agents)
 			-- of the closure being parsed
@@ -2058,12 +2073,12 @@ feature {NONE} -- Object-tests
 			-- Wipe out `last_object_tests_stack' and
 			-- set `last_object_tests' to Void.
 		local
-			l_object_test_list: ET_OBJECT_TEST_LIST
+			l_object_test_list: detachable ET_OBJECT_TEST_LIST
 			i, nb: INTEGER
 		do
-			if last_object_tests /= Void then
-				last_object_tests.wipe_out
-				last_object_tests_pool.force (last_object_tests)
+			if attached last_object_tests as l_last_object_tests then
+				l_last_object_tests.wipe_out
+				last_object_tests_pool.force (l_last_object_tests)
 				last_object_tests := Void
 			end
 			nb := last_object_tests_stack.count
@@ -2083,11 +2098,11 @@ feature {NONE} -- Object-tests
 
 feature {NONE} -- Across components
 
-	last_across_components: ET_ACROSS_COMPONENT_LIST
+	last_across_components: detachable ET_ACROSS_COMPONENT_LIST
 			-- Across components already found in the closure (i.e. feature,
 			-- invariant or inline agent) being parsed
 
-	last_across_components_stack: DS_ARRAYED_STACK [ET_ACROSS_COMPONENT_LIST]
+	last_across_components_stack: DS_ARRAYED_STACK [detachable ET_ACROSS_COMPONENT_LIST]
 			-- Stack of across components already found in the enclosing
 			-- closures (i.e. feature, invariant or inline agents)
 			-- of the closure being parsed
@@ -2114,12 +2129,12 @@ feature {NONE} -- Across components
 			-- Wipe out `last_across_components_stack' and
 			-- set `last_across_components' to Void.
 		local
-			l_across_component_list: ET_ACROSS_COMPONENT_LIST
+			l_across_component_list: detachable ET_ACROSS_COMPONENT_LIST
 			i, nb: INTEGER
 		do
-			if last_across_components /= Void then
-				last_across_components.wipe_out
-				last_across_components_pool.force (last_across_components)
+			if attached last_across_components as l_last_across_components then
+				l_last_across_components.wipe_out
+				last_across_components_pool.force (l_last_across_components)
 				last_across_components := Void
 			end
 			nb := last_across_components_stack.count
@@ -2139,11 +2154,11 @@ feature {NONE} -- Across components
 
 feature {NONE} -- Formal arguments
 
-	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+	last_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Last formal argument clause read for the closure
 			-- (i.e. feature or inline agent) being parsed
 
-	last_formal_arguments_stack: DS_ARRAYED_STACK [ET_FORMAL_ARGUMENT_LIST]
+	last_formal_arguments_stack: DS_ARRAYED_STACK [detachable ET_FORMAL_ARGUMENT_LIST]
 			-- Stack of last formal argument clauses read
 			-- for the enclosing closures (i.e. feature or
 			-- inline agents) of the closure being parsed
@@ -2161,7 +2176,7 @@ feature {NONE} -- Formal arguments
 
 feature {NONE} -- Last keyword
 
-	last_keyword: ET_KEYWORD
+	last_keyword: detachable ET_KEYWORD
 			-- Last keyword read
 		require
 			last_keywords_not_empty: not last_keywords.is_empty
@@ -2169,7 +2184,7 @@ feature {NONE} -- Last keyword
 			Result := last_keywords.item
 		end
 
-	add_keyword (a_keyword: ET_KEYWORD)
+	add_keyword (a_keyword: detachable ET_KEYWORD)
 			-- Add `a_keyword' to `last_keywords'.
 		do
 			last_keywords.force (a_keyword)
@@ -2188,12 +2203,12 @@ feature {NONE} -- Last keyword
 			one_less: last_keywords.count = old last_keywords.count - 1
 		end
 
-	last_keywords: DS_ARRAYED_STACK [ET_KEYWORD]
+	last_keywords: DS_ARRAYED_STACK [detachable ET_KEYWORD]
 			-- Last keywords read
 
 feature {NONE} -- Last symbol
 
-	last_symbol: ET_SYMBOL
+	last_symbol: detachable ET_SYMBOL
 			-- Last symbol read
 		require
 			last_symbols_not_empty: not last_symbols.is_empty
@@ -2201,7 +2216,7 @@ feature {NONE} -- Last symbol
 			Result := last_symbols.item
 		end
 
-	add_symbol (a_symbol: ET_SYMBOL)
+	add_symbol (a_symbol: detachable ET_SYMBOL)
 			-- Add `a_symbol' to `last_symbols'.
 		do
 			last_symbols.force (a_symbol)
@@ -2220,7 +2235,7 @@ feature {NONE} -- Last symbol
 			one_less: last_symbols.count = old last_symbols.count - 1
 		end
 
-	last_symbols: DS_ARRAYED_STACK [ET_SYMBOL]
+	last_symbols: DS_ARRAYED_STACK [detachable ET_SYMBOL]
 			-- Last symbols read
 
 feature {NONE} -- Counters

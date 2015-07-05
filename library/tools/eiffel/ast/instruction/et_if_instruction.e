@@ -5,7 +5,7 @@ note
 		"Eiffel if instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,14 +44,14 @@ feature -- Initialization
 			-- Reset instruction as it was just after it was last parsed.
 		do
 			expression.reset
-			if then_compound /= Void then
-				then_compound.reset
+			if attached then_compound as l_then_compound then
+				l_then_compound.reset
 			end
-			if elseif_parts /= Void then
-				elseif_parts.reset
+			if attached elseif_parts as l_elseif_parts then
+				l_elseif_parts.reset
 			end
-			if else_compound /= Void then
-				else_compound.reset
+			if attached else_compound as l_else_compound then
+				l_else_compound.reset
 			end
 		end
 
@@ -68,13 +68,13 @@ feature -- Access
 			expression_not_void: Result /= Void
 		end
 
-	then_compound: ET_COMPOUND
+	then_compound: detachable ET_COMPOUND
 			-- Then part
 
-	elseif_parts: ET_ELSEIF_PART_LIST
+	elseif_parts: detachable ET_ELSEIF_PART_LIST
 			-- Elseif parts
 
-	else_compound: ET_COMPOUND
+	else_compound: detachable ET_COMPOUND
 			-- Else part
 
 	end_keyword: ET_KEYWORD
@@ -97,12 +97,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := end_keyword.break
 		end
 
 feature -- Setting

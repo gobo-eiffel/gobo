@@ -5,7 +5,7 @@ note
 		"Eiffel actual generic parameters followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,7 @@ feature -- Access
 			Result := actual_parameter.type
 		end
 
-	label: ET_IDENTIFIER
+	label: detachable ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		do
@@ -73,12 +73,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := comma
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := comma.break
 		end
 
 feature -- Type processing

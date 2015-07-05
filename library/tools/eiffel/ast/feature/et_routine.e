@@ -5,7 +5,7 @@ note
 		"Eiffel routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,29 +40,19 @@ feature -- Status report
 
 feature -- Access
 
-	is_keyword: ET_KEYWORD
+	is_keyword: detachable ET_KEYWORD
 			-- 'is' keyword
 
-	obsolete_message: ET_OBSOLETE
+	obsolete_message: detachable ET_OBSOLETE
 			-- Obsolete message
 
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if semicolon /= Void then
-				Result := semicolon
+			if attached semicolon as l_semicolon then
+				Result := l_semicolon
 			else
 				Result := end_keyword
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if semicolon /= Void then
-				Result := semicolon.break
-			else
-				Result := end_keyword.break
 			end
 		end
 

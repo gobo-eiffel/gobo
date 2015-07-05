@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,20 +108,20 @@ feature -- Validity checking
 		local
 			a_type_class: ET_CLASS
 			a_base_class: ET_CLASS
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actuals: detachable ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
 			a_named_actual: ET_NAMED_TYPE
-			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formals: detachable ET_FORMAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER
-			a_creator: ET_CONSTRAINT_CREATOR
+			a_creator: detachable ET_CONSTRAINT_CREATOR
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_procedure: ET_PROCEDURE
+			a_creation_procedure: detachable ET_PROCEDURE
 			an_index: INTEGER
-			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
-			a_formal_parameter: ET_FORMAL_PARAMETER
-			a_formal_creator: ET_CONSTRAINT_CREATOR
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
+			a_formal_parameter: detachable ET_FORMAL_PARAMETER
+			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
+			a_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
 			has_formal_type_error: BOOLEAN
 			i, nb: INTEGER
 			j, nb2: INTEGER
@@ -188,7 +188,7 @@ feature -- Validity checking
 											set_fatal_error
 											error_handler.report_giaaa_error
 										elseif a_formal_type /= Void then
-											if not has_formal_type_error then
+											if not has_formal_type_error and a_formal_parameter /= Void then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 													set_fatal_error
 													error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
@@ -254,7 +254,7 @@ feature -- Validity checking
 												--
 												-- which was nevertheless not more unsafe than the other cases above.
 											elseif
-												(current_system.is_ise and then current_system.ise_version < ise_6_0_6_7358) and then
+												(current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_0_6_7358) and then
 												(a_base_class.is_deferred and a_creation_procedure.has_seed (current_system.default_create_seed))
 											then
 												-- ISE started to report this VTCG error with version 6.0.6.7358.
@@ -308,7 +308,7 @@ feature -- Validity checking
 
 feature -- Type conversion
 
-	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE
+	convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): detachable ET_CONVERT_FEATURE
 			-- Feature to convert `a_source_type' to `a_target_type';
 			-- Void if no such feature
 		require
@@ -337,12 +337,12 @@ feature -- Type conversion
 					a_target_base_class.process (a_target_base_class.current_system.eiffel_parser)
 				end
 				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type)
-			end
-			if Result = Void then
-				a_source_named_type := a_source_type.named_type
-				if a_target_base_class.is_preparsed and then a_target_base_class.is_dotnet and a_target_base_class.is_system_object_class then
-						-- Needed for Eiffel for .NET.
-					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
+				if Result = Void then
+					a_source_named_type := a_source_type.named_type
+					if a_target_base_class.is_preparsed and then a_target_base_class.is_dotnet and a_target_base_class.is_system_object_class then
+							-- Needed for Eiffel for .NET.
+						create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
+					end
 				end
 			end
 		end
@@ -356,9 +356,6 @@ feature {NONE} -- Validity checking
 		require
 			a_type_not_void: a_type /= Void
 			-- no_cycle: no cycle in anchored types involved.
-		local
-			a_query: ET_QUERY
-			a_procedure: ET_PROCEDURE
 		do
 			has_fatal_error := False
 -- TODO: should we check whether class BIT is in the universe or not?
@@ -367,48 +364,42 @@ feature {NONE} -- Validity checking
 				current_class_impl.process (current_system.interface_checker)
 				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
 					set_fatal_error
-				else
-					a_query := current_class_impl.named_query (a_type.name)
-					if a_query /= Void then
-						if attached {ET_CONSTANT_ATTRIBUTE} a_query as a_constant_attribute and then attached {ET_INTEGER_CONSTANT} a_constant_attribute.constant as a_constant then
-							a_type.resolve_identifier_type (a_query.first_seed, a_constant)
-							check_bit_type_validity (a_type)
-						else
-								-- VTBT error (ETL2 page 210): The identifier
-								-- in Bit_type must be the final name of a
-								-- constant attribute of type INTEGER.
-							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vtbt0a_error (current_class, a_type)
-							else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtbt0a_error (current_class_impl, a_type)
-							end
-						end
+				elseif attached current_class_impl.named_query (a_type.name) as a_query then
+					if attached {ET_CONSTANT_ATTRIBUTE} a_query as a_constant_attribute and then attached {ET_INTEGER_CONSTANT} a_constant_attribute.constant as a_constant then
+						a_type.resolve_identifier_type (a_query.first_seed, a_constant)
+						check_bit_type_validity (a_type)
 					else
-						a_procedure := current_class_impl.named_procedure (a_type.name)
-						if a_procedure /= Void then
-								-- VTBT error (ETL2 page 210): The identifier
-								-- in Bit_type must be the final name of a
-								-- constant attribute of type INTEGER.
-							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vtbt0a_error (current_class, a_type)
-							else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtbt0a_error (current_class_impl, a_type)
-							end
+							-- VTBT error (ETL2 page 210): The identifier
+							-- in Bit_type must be the final name of a
+							-- constant attribute of type INTEGER.
+						set_fatal_error
+						if current_class = current_class_impl then
+							error_handler.report_vtbt0a_error (current_class, a_type)
 						else
-								-- VTBT error (ETL2 page 210): The identifier
-								-- in Bit_type must be the final name of a feature.
-							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vtbt0b_error (current_class, a_type)
-							else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtbt0b_error (current_class_impl, a_type)
-							end
+							error_handler.report_vtbt0a_error (current_class_impl, a_type)
 						end
+					end
+				elseif attached current_class_impl.named_procedure (a_type.name) as a_procedure then
+						-- VTBT error (ETL2 page 210): The identifier
+						-- in Bit_type must be the final name of a
+						-- constant attribute of type INTEGER.
+					set_fatal_error
+					if current_class = current_class_impl then
+						error_handler.report_vtbt0a_error (current_class, a_type)
+					else
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+						error_handler.report_vtbt0a_error (current_class_impl, a_type)
+					end
+				else
+						-- VTBT error (ETL2 page 210): The identifier
+						-- in Bit_type must be the final name of a feature.
+					set_fatal_error
+					if current_class = current_class_impl then
+						error_handler.report_vtbt0b_error (current_class, a_type)
+					else
+-- TODO: this error should have already been reported when processing `current_class_impl'.
+						error_handler.report_vtbt0b_error (current_class_impl, a_type)
 					end
 				end
 			end
@@ -436,22 +427,28 @@ feature {NONE} -- Validity checking
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			has_fatal_error := False
-			a_type.compute_size
-			if a_type.has_size_error then
+			if not attached a_type.constant as l_type_constant then
+					-- The precondition says it's attached.
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vtbt0c_error (current_class, a_type)
-				else
+				error_handler.report_giaaa_error
+			else
+				a_type.compute_size
+				if a_type.has_size_error then
+					set_fatal_error
+					if current_class = current_class_impl then
+						error_handler.report_vtbt0c_error (current_class, a_type)
+					else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-					error_handler.report_vtbt0c_error (current_class_impl, a_type)
-				end
-			elseif a_type.size = 0 and a_type.constant.is_negative then
-					-- Not considered as a fatal error by gelint.
-				if current_class = current_class_impl then
-					error_handler.report_vtbt0d_error (current_class, a_type)
-				else
+						error_handler.report_vtbt0c_error (current_class_impl, a_type)
+					end
+				elseif a_type.size = 0 and l_type_constant.is_negative then
+						-- Not considered as a fatal error by gelint.
+					if current_class = current_class_impl then
+						error_handler.report_vtbt0d_error (current_class, a_type)
+					else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-					error_handler.report_vtbt0d_error (current_class_impl, a_type)
+						error_handler.report_vtbt0d_error (current_class_impl, a_type)
+					end
 				end
 			end
 		end
@@ -464,11 +461,9 @@ feature {NONE} -- Validity checking
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: ET_TYPE
+			a_constraint: detachable ET_TYPE
 			a_class: ET_CLASS
 			had_error: BOOLEAN
 		do
@@ -518,13 +513,15 @@ feature {NONE} -- Validity checking
 -- TODO: this error should have already been reported when processing `current_class_impl'.
 						error_handler.report_vtug2a_error (current_class_impl, a_type)
 					end
+				elseif not attached a_class.formal_parameters as a_formals then
+						-- Internal error: `a_class' is generic.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached a_type.actual_parameters as an_actuals then
+						-- Internal error: `a_type' is generic.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					a_formals := a_class.formal_parameters
-					an_actuals := a_type.actual_parameters
-					check
-						a_class_generic: a_formals /= Void
-						a_type_generic: an_actuals /= Void
-					end
 					if an_actuals.count /= a_formals.count then
 						set_fatal_error
 						if current_class = current_class_impl then
@@ -628,11 +625,9 @@ feature {NONE} -- Validity checking
 		local
 			l_seed: INTEGER
 			l_name: ET_FEATURE_NAME
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
+			args: detachable ET_FORMAL_ARGUMENT_LIST
 			l_index: INTEGER
 			resolved: BOOLEAN
-			l_feature: ET_FEATURE
 		do
 			has_fatal_error := False
 			l_seed := a_type.seed
@@ -650,11 +645,9 @@ feature {NONE} -- Validity checking
 						set_fatal_error
 					else
 						l_name := a_type.name
-						l_query := current_class.named_query (l_name)
-						if l_query /= Void then
+						if attached current_class.named_query (l_name) as l_query then
 								-- This is a 'like feature'.
 							a_type.resolve_like_feature (l_query)
-							resolved := True
 							if in_qualified_anchored_type then
 								if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
@@ -668,8 +661,7 @@ feature {NONE} -- Validity checking
 								-- This has to be a 'like argument', otherwise this is an error.
 								-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
 								-- This is supported here for backward compatibility.
-							if attached {ET_FEATURE} current_feature_impl as l_attached_feature then
-								l_feature := l_attached_feature
+							if attached {ET_FEATURE} current_feature_impl as l_feature then
 								if attached {ET_IDENTIFIER} l_name as l_argument_name then
 									args := l_feature.arguments
 									if args /= Void then
@@ -691,14 +683,13 @@ feature {NONE} -- Validity checking
 										end
 									end
 								end
-							end
-						end
-						if not resolved then
-							set_fatal_error
-							if l_feature /= Void then
-								error_handler.report_vtat1b_error (current_class, l_feature, a_type)
+								if not resolved then
+									set_fatal_error
+									error_handler.report_vtat1b_error (current_class, l_feature, a_type)
+								end
 							else
 									-- 'like argument' not valid in inline agents and invariants.
+								set_fatal_error
 								error_handler.report_vtat1a_error (current_class, a_type)
 							end
 						end
@@ -708,12 +699,7 @@ feature {NONE} -- Validity checking
 				if l_seed /= 0 then
 						-- Anchored type already resolved.
 					if a_type.is_like_argument then
-						if a_type.is_procedure then
-							l_feature := current_class.seeded_procedure (l_seed)
-						else
-							l_feature := current_class.seeded_query (l_seed)
-						end
-						if l_feature /= Void then
+						if attached current_class.seeded_feature (l_seed) as l_feature then
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
@@ -738,9 +724,8 @@ feature {NONE} -- Validity checking
 							error_handler.report_giaaa_error
 						end
 					else
-						l_query := current_class.seeded_query (l_seed)
-						if l_query /= Void then
-							if  l_query.type.depends_on_qualified_anchored_type (current_class) then
+						if attached current_class.seeded_query (l_seed) as l_query then
+							if l_query.type.depends_on_qualified_anchored_type (current_class) then
 									-- Error: the type of the anchor appearing in a qualified
 									-- anchored type should not depend on a qualified anchored type.
 									-- This is a way to avoid cycles in qualified anchored types.
@@ -771,7 +756,6 @@ feature {NONE} -- Validity checking
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_seed: INTEGER
-			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
 			old_in_qualified_anchored_type: BOOLEAN
@@ -798,8 +782,7 @@ feature {NONE} -- Validity checking
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
 						else
-							l_query := l_class.named_query (a_type.name)
-							if l_query /= Void then
+							if attached l_class.named_query (a_type.name) as l_query then
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
 								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
@@ -822,8 +805,7 @@ feature {NONE} -- Validity checking
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else
-						l_query := l_class.seeded_query (l_seed)
-						if l_query /= Void then
+						if attached l_class.seeded_query (l_seed) as l_query then
 -- TODO: check that `l_query' is exported to `current_class'.
 							if l_query.type.depends_on_qualified_anchored_type (l_class) then
 									-- Error: the type of the anchor appearing in a qualified
@@ -851,13 +833,11 @@ feature {NONE} -- Validity checking
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 -- TODO: should we check whether class TUPLE is in the universe or not?
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void then
+			if attached a_type.actual_parameters as a_parameters then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
 					a_parameters.type (i).process (Current)
@@ -872,7 +852,7 @@ feature {NONE} -- Validity checking
 
 feature -- Client/Supplier relationship
 
-	supplier_handler: ET_SUPPLIER_HANDLER
+	supplier_handler: detachable ET_SUPPLIER_HANDLER
 			-- Supplier handler
 
 	set_supplier_handler (a_handler: like supplier_handler)
@@ -895,8 +875,8 @@ feature {NONE} -- Client/Supplier relationship
 			a_client_not_void: a_client /= Void
 			a_client_valid: a_client.is_valid_context
 		do
-			if supplier_handler /= Void then
-				supplier_handler.report_qualified_anchored_type_supplier (a_supplier, a_client)
+			if attached supplier_handler as l_supplier_handler then
+				l_supplier_handler.report_qualified_anchored_type_supplier (a_supplier, a_client)
 			end
 		end
 

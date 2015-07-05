@@ -5,7 +5,7 @@ note
 		"Eiffel create expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,8 +44,8 @@ feature -- Initialization
 			-- Reset expression as it was just after it was last parsed.
 		do
 			type.reset
-			if creation_call /= Void then
-				creation_call.reset
+			if attached creation_call as l_creation_call then
+				l_creation_call.reset
 			end
 		end
 
@@ -63,22 +63,22 @@ feature -- Access
 			Result := creation_type.type
 		end
 
-	creation_call: ET_QUALIFIED_CALL
+	creation_call: detachable ET_QUALIFIED_CALL
 			-- Call to creation procedure
 
-	name: ET_FEATURE_NAME
+	name: detachable ET_FEATURE_NAME
 			-- Creation procedure name
 		do
-			if creation_call /= Void then
-				Result := creation_call.name
+			if attached creation_call as l_creation_call then
+				Result := l_creation_call.name
 			end
 		end
 
-	arguments: ET_ACTUAL_ARGUMENTS
+	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments of creation call
 		do
-			if creation_call /= Void then
-				Result := creation_call.arguments
+			if attached creation_call as l_creation_call then
+				Result := l_creation_call.arguments
 			end
 		end
 
@@ -108,20 +108,10 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if creation_call /= Void then
-				Result := creation_call.last_leaf
+			if attached creation_call as l_creation_call then
+				Result := l_creation_call.last_leaf
 			else
 				Result := creation_type.last_leaf
-			end
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			if creation_call /= Void then
-				Result := creation_call.break
-			else
-				Result := creation_type.break
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Lists of features called by another feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -126,14 +126,14 @@ feature {NONE} -- Constants
 invariant
 
 	polymorphic_features_not_void: polymorphic_features /= Void
-	no_void_polymorphic_feature: not polymorphic_features.has (Void)
+	no_void_polymorphic_feature: not polymorphic_features.has_void
 	polymorphic_feature_target_classes_not_void: polymorphic_feature_target_classes /= Void
-	no_void_polymorphic_feature_target_class: not polymorphic_feature_target_classes.has (Void)
+	no_void_polymorphic_feature_target_class: not polymorphic_feature_target_classes.has_void
 	polymorphic_count_consistent: polymorphic_features.count = polymorphic_feature_target_classes.count
 	monomorphic_features_not_void: monomorphic_features /= Void
-	no_void_monomorphic_feature: not monomorphic_features.has (Void)
+	no_void_monomorphic_feature: not monomorphic_features.has_void
 	monomorphic_feature_target_classes_not_void: monomorphic_feature_target_classes /= Void
-	no_void_monomorphic_feature_target_class: not monomorphic_feature_target_classes.has (Void)
+	no_void_monomorphic_feature_target_class: not monomorphic_feature_target_classes.has_void
 	monomorphic_count_consistent: monomorphic_features.count = monomorphic_feature_target_classes.count
 
 end

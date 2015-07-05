@@ -5,7 +5,7 @@ note
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,12 +21,15 @@ inherit
 			is_prefix_freeop,
 			is_infix, is_prefix,
 			first_position,
-			last_position
+			last_position,
+			break
 		end
 
 	ET_FREE_NAME
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
 			is_infix_freeop,
 			is_prefix_freeop,

@@ -5,7 +5,7 @@ note
 		"Eiffel 'agent' keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,12 +24,16 @@ inherit
 			is_prefix as is_prefix_keyword,
 			is_alias as is_alias_keyword
 		redefine
-			process, is_equal
+			process,
+			is_equal
 		end
 
 	ET_FEATURE_NAME
 		undefine
-			first_position, last_position, is_equal
+			first_position,
+			last_position,
+			is_equal,
+			break
 		end
 
 create

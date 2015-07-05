@@ -5,7 +5,7 @@ note
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,41 +18,41 @@ inherit
 
 feature -- Access
 
-	type: ET_TYPE
+	type: detachable ET_TYPE
 			-- Return type;
 			-- Void for procedures
 		do
 		end
 
-	arguments: ET_FORMAL_ARGUMENT_LIST
+	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if no arguments
 		do
 		end
 
-	locals: ET_LOCAL_VARIABLE_LIST
+	locals: detachable ET_LOCAL_VARIABLE_LIST
 			-- Local variables;
 			-- Void if no local variables
 		do
 		end
 
-	preconditions: ET_PRECONDITIONS
+	preconditions: detachable ET_PRECONDITIONS
 			-- Preconditions;
 			-- Void if no preconditions
 		do
 		end
 
-	postconditions: ET_POSTCONDITIONS
+	postconditions: detachable ET_POSTCONDITIONS
 			-- Postconditions;
 			-- Void if no postconditions
 		do
 		end
 
-	object_tests: ET_OBJECT_TEST_LIST
+	object_tests: detachable ET_OBJECT_TEST_LIST
 			-- Object-tests declared in current closure;
 			-- Void if none
 
-	across_components: ET_ACROSS_COMPONENT_LIST
+	across_components: detachable ET_ACROSS_COMPONENT_LIST
 			-- Across components declared in current closure;
 			-- Void if none
 

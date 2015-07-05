@@ -5,7 +5,7 @@ note
 		"Eiffel inline agents with a function as associated feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,11 +37,11 @@ feature {NONE} -- Initialization
 		require
 			a_type_not_void: a_type /= Void
 		do
-			make_inline_agent (an_actual_args)
 			formal_arguments := a_formal_args
 			declared_type := a_type
 			end_keyword := tokens.end_keyword
 			create implicit_result.make
+			make_inline_agent (an_actual_args)
 		ensure
 			formal_arguments_set: formal_arguments = a_formal_args
 			declared_type_set: declared_type = a_type

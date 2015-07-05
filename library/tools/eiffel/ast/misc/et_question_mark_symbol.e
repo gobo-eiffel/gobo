@@ -5,7 +5,7 @@ note
 		"Eiffel '?' symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,9 @@ inherit
 
 	ET_AGENT_ARGUMENT_OPERAND
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		redefine
 			is_open_operand
 		end

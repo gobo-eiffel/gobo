@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets of agent operands pushing types to supersets (type sets of argument of features 'call' and 'item')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 			an_agent_type_not_void: an_agent_type /= Void
 		do
 			static_type := a_type
+			agent_type := an_agent_type
 			if a_type.is_expanded then
 				put_type (a_type)
 			end
-			agent_type := an_agent_type
 		ensure
 			static_type_set: static_type = a_type
 			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)

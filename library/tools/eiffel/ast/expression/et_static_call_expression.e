@@ -16,7 +16,6 @@ inherit
 
 	ET_STATIC_FEATURE_CALL
 		redefine
-			is_expression,
 			parenthesis_call
 		end
 
@@ -29,29 +28,10 @@ create
 
 	make
 
-feature -- Status report
-
-	is_expression: BOOLEAN = True
-			-- Is current call an expression?
-
 feature -- Access
 
-	parenthesis_call: detachable ET_CALL_EXPRESSION
+	parenthesis_call: detachable ET_QUALIFIED_CALL_EXPRESSION
 			-- <Precursor>
-
-feature -- Conversion
-
-	as_expression: ET_STATIC_CALL_EXPRESSION
-			-- `Current' viewed as an expression
-		do
-			Result := Current
-		end
-
-	as_instruction: ET_STATIC_CALL_INSTRUCTION
-			-- `Current' viewed as an instruction
-		do
-			check not_instruction: False end
-		end
 
 feature -- Setting
 

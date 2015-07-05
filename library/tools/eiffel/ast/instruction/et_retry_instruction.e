@@ -5,7 +5,7 @@ note
 		"Eiffel retry instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	ET_INSTRUCTION
 		undefine
-			first_position, last_position
+			first_position,
+			last_position,
+			break
 		end
 
 	ET_KEYWORD

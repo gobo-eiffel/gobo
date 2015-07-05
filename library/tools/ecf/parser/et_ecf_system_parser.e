@@ -5,7 +5,7 @@ note
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Status setting
 
 feature -- Access
 
-	last_system: ET_ECF_SYSTEM
+	last_system: detachable ET_ECF_SYSTEM
 			-- Eiffel system being parsed
 
 feature -- Parsing
@@ -56,44 +56,48 @@ feature -- Parsing
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING)
+	build_system_config (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING)
 			-- Build system config from `an_element'.
 		local
-			l_system: ET_ECF_SYSTEM
+			l_system: detachable ET_ECF_SYSTEM
 			l_state: ET_ECF_STATE
-			l_targets: ET_ECF_TARGETS
-			l_target: ET_ECF_TARGET
+			l_targets: detachable ET_ECF_TARGETS
+			l_target: detachable ET_ECF_TARGET
 		do
 			l_system := new_system (an_element, a_position_table, a_filename)
-			l_targets := l_system.targets
--- TODO: we need to be able to select the target.
-			if l_targets /= Void and then not l_targets.is_empty then
-					-- Use last target as default target.
-				l_target := l_targets.target (l_targets.count)
+			if l_system = Void then
+					-- Error already reported in `new_system'.
 			else
-					-- No target found in the ECF file.
-					-- Error already reported in `fill_system_config'.
-			end
-			if l_target /= Void then
-				create l_state.make (l_target, ise_version)
-				l_state.set_finalize_mode (finalize_mode)
-				l_target.update_state (l_state)
-				l_system.select_target (l_target, l_state)
-				parse_libraries (l_system, l_state)
-				from parsed_libraries.start until parsed_libraries.after loop
-					parse_libraries (parsed_libraries.item_for_iteration, l_state)
-					parsed_libraries.forth
+				l_targets := l_system.targets
+-- TODO: we need to be able to select the target.
+				if l_targets /= Void and then not l_targets.is_empty then
+						-- Use last target as default target.
+					l_target := l_targets.target (l_targets.count)
+				else
+						-- No target found in the ECF file.
+						-- Error already reported in `fill_system_config'.
 				end
-				l_system.libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_read_only)
-				l_target.fill_root (l_system)
-				l_target.fill_settings (l_system)
-				l_target.fill_options (l_system)
-				parse_dotnet_assemblies (l_system, l_state)
-				from parsed_libraries.start until parsed_libraries.after loop
-					parse_dotnet_assemblies (parsed_libraries.item_for_iteration, l_state)
-					parsed_libraries.forth
+				if l_target /= Void then
+					create l_state.make (l_target, ise_version)
+					l_state.set_finalize_mode (finalize_mode)
+					l_target.update_state (l_state)
+					l_system.select_target (l_target, l_state)
+					parse_libraries (l_system, l_state)
+					from parsed_libraries.start until parsed_libraries.after loop
+						parse_libraries (parsed_libraries.item_for_iteration, l_state)
+						parsed_libraries.forth
+					end
+					l_system.libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_read_only)
+					l_target.fill_root (l_system)
+					l_target.fill_settings (l_system)
+					l_target.fill_options (l_system)
+					parse_dotnet_assemblies (l_system, l_state)
+					from parsed_libraries.start until parsed_libraries.after loop
+						parse_dotnet_assemblies (parsed_libraries.item_for_iteration, l_state)
+						parsed_libraries.forth
+					end
+					last_system := l_system
 				end
-				last_system := l_system
 			end
 		end
 

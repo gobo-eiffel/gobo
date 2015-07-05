@@ -5,7 +5,7 @@ note
 		"ECF Eiffel internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature -- Access
 	name: STRING
 			-- Name of universe
 
-	selected_target: ET_ECF_TARGET
+	selected_target: detachable ET_ECF_TARGET
 			-- Selected target
 
 feature -- Setting
@@ -40,7 +40,7 @@ feature -- Setting
 		require
 			not_selected_yet: selected_target = Void
 			a_target_not_void: a_target /= Void
-			valid_target: targets /= Void and then targets.has (a_target)
+			valid_target: attached targets as l_targets and then l_targets.has (a_target)
 			a_state_not_void: a_state /= Void
 		do
 			a_target.fill_universe (Current, a_state)
@@ -51,6 +51,6 @@ feature -- Setting
 
 invariant
 
-	valid_selected_target: selected_target /= Void implies (targets /= Void and then targets.has (selected_target))
+	valid_selected_target: attached selected_target as l_selected_target implies (attached targets as l_targets and then l_targets.has (l_selected_target))
 
 end

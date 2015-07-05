@@ -5,7 +5,7 @@ note
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,13 +63,10 @@ feature -- Initialization
 
 	reset
 			-- Reset type as it was just after it was last parsed.
-		local
-			an_identifier: ET_IDENTIFIER
 		do
 			if is_like_argument then
-				an_identifier ?= name
-				if an_identifier /= Void then
-					an_identifier.set_argument (False)
+				if attached {ET_IDENTIFIER} name as l_identifier then
+					l_identifier.set_argument (False)
 				end
 			end
 			name.reset
@@ -111,32 +108,16 @@ feature -- Access
 			-- or unmatched formal generic parameter.
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.named_base_class (a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.named_base_class (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -145,8 +126,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.named_base_class (a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -157,37 +137,21 @@ feature -- Access
 			end
 		end
 
-	base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
+	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -196,8 +160,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -208,37 +171,21 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -247,8 +194,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -264,32 +210,16 @@ feature -- Access
 			-- type when it appears in `a_context'
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.base_type_actual (i, a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_actual (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -298,8 +228,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_actual (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -315,32 +244,16 @@ feature -- Access
 			-- type when it appears in `a_context'
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.base_type_actual_parameter (i, a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_actual_parameter (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -349,8 +262,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_actual_parameter (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -367,32 +279,16 @@ feature -- Access
 			-- 0 if it does not exist
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := 0
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := 0
-					else
-						Result := args.item (an_index).type.base_type_index_of_label (a_label, a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_index_of_label (a_label, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -401,8 +297,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_index_of_label (a_label, a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -413,37 +308,21 @@ feature -- Access
 			end
 		end
 
-	named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
+	named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -452,8 +331,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -464,37 +342,21 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := tokens.unknown_class
-					else
-						Result := args.item (an_index).type.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -503,8 +365,7 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -515,11 +376,11 @@ feature -- Access
 			end
 		end
 
-	type_with_type_mark (a_type_mark: ET_TYPE_MARK): ET_LIKE_FEATURE
+	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_LIKE_FEATURE
 			-- Current type whose type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
-			l_type_mark: ET_TYPE_MARK
+			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark = type_mark then
@@ -540,14 +401,13 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if type_mark /= Void and then not type_mark.is_implicit_mark then
-				Result := type_mark.position
-			end
-			if Result = Void or else Result.is_null then
+			if attached type_mark as l_type_mark and then not l_type_mark.is_implicit_mark and then not l_type_mark.position.is_null then
+				Result := l_type_mark.position
+			else
 				Result := like_keyword.position
-				if Result.is_null then
-					Result := name.position
-				end
+			end
+			if Result.is_null then
+				Result := name.position
 			end
 		end
 
@@ -557,44 +417,23 @@ feature -- Access
 			Result := name.last_leaf
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := name.break
-		end
-
 feature -- Measurement
 
 	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER
 			-- Number of actual generic parameters of the base type of current type
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := 0
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := 0
-					else
-						Result := args.item (an_index).type.base_type_actual_count (a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_actual_count (a_context)
+
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -603,8 +442,7 @@ feature -- Measurement
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_actual_count (a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -652,37 +490,21 @@ feature -- Status report
 			-- Only make sense in case of 'like argument',
 			-- otherwise the feature has to be a query.
 
-	is_type_expanded_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -691,8 +513,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -703,37 +524,21 @@ feature -- Status report
 			end
 		end
 
-	is_type_reference_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_reference_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_reference' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -742,8 +547,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -754,37 +558,21 @@ feature -- Status report
 			end
 		end
 
-	is_type_attached_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_attached_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_attached' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -793,8 +581,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -805,37 +592,21 @@ feature -- Status report
 			end
 		end
 
-	is_type_detachable_with_type_mark (a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	is_type_detachable_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `is_type_detachable' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -844,8 +615,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -859,34 +629,18 @@ feature -- Status report
 	depends_on_qualified_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does current type depend on a qualified anchored type when
 			-- viewed from `a_context' when trying to determine its base type?
-				local
+		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.depends_on_qualified_anchored_type (a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.depends_on_qualified_anchored_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -895,8 +649,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.depends_on_qualified_anchored_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -913,32 +666,16 @@ feature -- Status report
 			-- a formal parameter when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.named_type_is_formal_type (a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.named_type_is_formal_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -947,8 +684,7 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.named_type_is_formal_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -964,32 +700,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		local
 			a_base_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := a_class.is_unknown
 			elseif is_like_argument then
 				a_base_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := a_class.is_unknown
-					else
-						Result := args.item (an_index).type.base_type_has_class (a_class, a_context)
-					end
+				l_index := index
+				if attached a_base_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.base_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -998,8 +718,7 @@ feature -- Status report
 				end
 			else
 				a_base_class := a_context.base_class
-				l_query := a_base_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_base_class.seeded_query (seed) as l_query then
 					Result := l_query.type.base_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1015,32 +734,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		local
 			a_base_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := a_class.is_unknown
 			elseif is_like_argument then
 				a_base_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := a_class.is_unknown
-					else
-						Result := args.item (an_index).type.named_type_has_class (a_class, a_context)
-					end
+				l_index := index
+				if attached a_base_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.named_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1049,8 +752,7 @@ feature -- Status report
 				end
 			else
 				a_base_class := a_context.base_class
-				l_query := a_base_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_base_class.seeded_query (seed) as l_query then
 					Result := l_query.type.named_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1063,7 +765,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_syntactical_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
@@ -1074,15 +776,12 @@ feature -- Comparison
 			end
 		end
 
-	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_named_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -1091,18 +790,9 @@ feature -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				l_feature := a_class.seeded_query (seed)
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1111,8 +801,7 @@ feature -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1123,15 +812,12 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `same_base_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -1140,22 +826,9 @@ feature -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1164,8 +837,7 @@ feature -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1178,7 +850,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_like_feature_with_type_marks (other: ET_LIKE_FEATURE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_syntactical_like_feature_with_type_marks (other: ET_LIKE_FEATURE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the base types here!
@@ -1189,8 +861,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
+			l_feature: detachable ET_FEATURE
+			l_query: detachable ET_QUERY
 			l_class: ET_CLASS
 			l_other_seed: INTEGER
 		do
@@ -1211,19 +883,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					else
 						l_class := other_context.base_class
 						l_other_seed := other.seed
-						if other.is_procedure then
-							l_feature := l_class.seeded_procedure (l_other_seed)
-						else
-							l_feature := l_class.seeded_query (l_other_seed)
-						end
+						l_feature := l_class.seeded_feature (l_other_seed)
 						Result := l_feature /= Void and then l_feature.has_seed (seed)
 						if not Result then
 							l_class := a_context.base_class
-							if is_procedure then
-								l_feature := l_class.seeded_procedure (seed)
-							else
-								l_feature := l_class.seeded_query (seed)
-							end
+							l_feature := l_class.seeded_feature (seed)
 							Result := l_feature /= Void and then l_feature.has_seed (l_other_seed)
 						end
 					end
@@ -1245,39 +909,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1286,8 +934,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1298,39 +945,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1339,8 +970,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1351,39 +981,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1392,8 +1006,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1404,39 +1017,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1445,8 +1042,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1457,39 +1053,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1498,8 +1078,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1510,39 +1089,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1551,8 +1114,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1563,39 +1125,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1604,8 +1150,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1616,39 +1161,23 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	same_base_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1657,8 +1186,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1671,15 +1199,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Same as `conforms_to_type' except that the type mark status of `Current'
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -1688,22 +1213,9 @@ feature -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1712,8 +1224,7 @@ feature -- Conformance
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1726,7 +1237,7 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1735,32 +1246,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1769,8 +1264,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1781,7 +1275,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1790,32 +1284,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1824,8 +1302,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context,  overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1836,7 +1313,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1845,32 +1322,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1879,8 +1340,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1891,7 +1351,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+	conforms_from_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: attached ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: attached ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
 			-- Note that the type mark status of `Current' and `other' is
@@ -1900,32 +1360,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we resolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-					end
+				l_index := index
+				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
+					Result := l_args.item (l_index).type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1934,8 +1378,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
+				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
@@ -1979,12 +1422,12 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			if type_mark /= Void then
-				if type_mark.is_implicit_mark then
+			if attached type_mark as l_type_mark then
+				if l_type_mark.is_implicit_mark then
 					a_string.append_character ('[')
 				end
-				a_string.append_string (type_mark.text)
-				if type_mark.is_implicit_mark then
+				a_string.append_string (l_type_mark.text)
+				if l_type_mark.is_implicit_mark then
 					a_string.append_character (']')
 				end
 				a_string.append_character (' ')

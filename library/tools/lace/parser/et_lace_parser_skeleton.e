@@ -5,7 +5,7 @@ note
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,7 +102,7 @@ feature -- Parsing
 
 feature -- Access
 
-	last_system: ET_LACE_SYSTEM
+	last_system: detachable ET_LACE_SYSTEM
 			-- Eiffel system being parsed
 
 	ast_factory: ET_LACE_AST_FACTORY
@@ -118,10 +118,10 @@ feature -- Default options
 			-- Value of 'exception_trace' default option, if any;
 			-- False by default
 
-	metadata_cache_path_value: ET_IDENTIFIER
+	metadata_cache_path_value: detachable ET_IDENTIFIER
 			-- Value of 'metadata_cache_path' default option, if any
 
-	msil_clr_version_value: ET_IDENTIFIER
+	msil_clr_version_value: detachable ET_IDENTIFIER
 			-- Value of 'msil_clr_version' default option, if any
 
 	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
@@ -139,13 +139,13 @@ feature -- Default options
 
 feature {NONE} -- AST factory
 
-	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_DOTNET_ASSEMBLY
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: detachable ET_IDENTIFIER): ET_LACE_DOTNET_ASSEMBLY
 			-- New assembly
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if last_system /= Void then
-				Result := ast_factory.new_assembly (a_name, a_pathname, last_system)
+			if attached last_system as l_last_system then
+				Result := ast_factory.new_assembly (a_name, a_pathname, l_last_system)
 			else
 				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.unknown_system)
 			end
@@ -163,13 +163,13 @@ feature {NONE} -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: detachable ET_IDENTIFIER): ET_LACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if last_system /= Void then
-				Result := ast_factory.new_cluster (a_name, a_pathname, last_system)
+			if attached last_system as l_last_system then
+				Result := ast_factory.new_cluster (a_name, a_pathname, l_last_system)
 			else
 				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.unknown_system)
 			end
@@ -188,7 +188,7 @@ feature {NONE} -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_default_value (a_name, a_value: ET_IDENTIFIER): ANY
+	new_default_value (a_name, a_value: ET_IDENTIFIER): detachable ANY
 			-- New default value;
 			-- Void if not recognized
 		require
@@ -216,16 +216,16 @@ feature {NONE} -- AST factory
 					report_error ("Option 'exception_trace' should be set to either 'yes' or 'no'.")
 				end
 			elseif a_name.same_identifier (msil_clr_version_option) then
-				if msil_clr_version_value /= Void then
+				if attached msil_clr_version_value as l_msil_clr_version_value then
 						-- TODO: better error handling
-					report_error ("Option 'msil_clr_version' already set to '" + msil_clr_version_value.name + "'.")
+					report_error ("Option 'msil_clr_version' already set to '" + l_msil_clr_version_value.name + "'.")
 				else
 					msil_clr_version_value := a_value
 				end
 			elseif a_name.same_identifier (metadata_cache_path_option) then
-				if metadata_cache_path_value /= Void then
+				if attached metadata_cache_path_value as l_metadata_cache_path_value then
 						-- TODO: better error handling
-					report_error ("Option 'metadata_cache_path' already set to '" + metadata_cache_path_value.name + "'.")
+					report_error ("Option 'metadata_cache_path' already set to '" + l_metadata_cache_path_value.name + "'.")
 				else
 					metadata_cache_path_value := a_value
 				end
@@ -241,14 +241,14 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name, a_version, a_culture, a_public_key_token: ET_IDENTIFIER): ET_LACE_DOTNET_GAC_ASSEMBLY
+	new_gac_assembly (a_name: ET_IDENTIFIER; an_assembly_name: ET_IDENTIFIER; a_version, a_culture, a_public_key_token: detachable ET_IDENTIFIER): ET_LACE_DOTNET_GAC_ASSEMBLY
 			-- New GAC assembly
 		require
 			a_name_not_void: a_name /= Void
 			an_assembly_name_not_void: an_assembly_name /= Void
 		do
-			if last_system /= Void then
-				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, last_system)
+			if attached last_system as l_last_system then
+				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, l_last_system)
 			else
 				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.unknown_system)
 			end
@@ -260,7 +260,7 @@ feature {NONE} -- AST factory
 		end
 
 	new_qualified_subcluster (a_name: ET_IDENTIFIER; a_parent: ET_IDENTIFIER;
-		a_pathname: ET_IDENTIFIER; an_exclude: ET_LACE_EXCLUDE): ET_LACE_CLUSTER
+		a_pathname: ET_IDENTIFIER; an_exclude: detachable ET_LACE_EXCLUDE): ET_LACE_CLUSTER
 			-- New subcluster named `a_name' with pathname `a_pathname'
 			-- Add this subcluster to parent cluster named `a_parent'.
 			-- The leading '$' sign in `a_pathname' will be replaced by

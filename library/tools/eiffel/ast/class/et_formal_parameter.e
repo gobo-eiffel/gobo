@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,16 +50,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_mark: ET_KEYWORD
+	type_mark: detachable ET_KEYWORD
 			-- 'expanded', 'reference' keyword
 
-	constraint: ET_TYPE
+	constraint: detachable ET_TYPE
 			-- Generic constraint
 		do
 			-- Result := Void
 		end
 
-	creation_procedures: ET_CONSTRAINT_CREATOR
+	creation_procedures: detachable ET_CONSTRAINT_CREATOR
 			-- Creation procedures expected in `constraint'
 		do
 			-- Result := Void
@@ -67,7 +67,7 @@ feature -- Access
 			constraint_not_void: Result /= Void implies constraint /= Void
 		end
 
-	constraint_base_type: ET_BASE_TYPE
+	constraint_base_type: detachable ET_BASE_TYPE
 			-- Base type of constraint;
 			-- Void means that there is no explicit constraint
 			-- (i.e. the implicit constraint is "ANY"), or there
@@ -88,8 +88,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if type_mark /= Void then
-				Result := type_mark.position
+			if attached type_mark as l_type_mark then
+				Result := l_type_mark.position
 			else
 				Result := name.position
 			end
@@ -98,8 +98,8 @@ feature -- Access
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if type_mark /= Void then
-				Result := type_mark
+			if attached type_mark as l_type_mark then
+				Result := l_type_mark
 			else
 				Result := name
 			end
@@ -116,13 +116,13 @@ feature -- Status report
 	is_expanded: BOOLEAN
 			-- Has formal parameter been declared as expanded?
 		do
-			Result := type_mark /= Void and then type_mark.is_expanded
+			Result := attached type_mark as l_type_mark and then l_type_mark.is_expanded
 		end
 
 	is_reference: BOOLEAN
 			-- Has formal parameter been declared as reference?
 		do
-			Result := type_mark /= Void and then type_mark.is_reference
+			Result := attached type_mark as l_type_mark and then l_type_mark.is_reference
 		end
 
 feature -- Setting
@@ -167,6 +167,6 @@ feature -- Processing
 
 invariant
 
-	constraint_base_type_named: constraint_base_type /= Void implies constraint_base_type.is_named_type
+	constraint_base_type_named: attached constraint_base_type as l_constraint_base_type implies l_constraint_base_type.is_named_type
 
 end

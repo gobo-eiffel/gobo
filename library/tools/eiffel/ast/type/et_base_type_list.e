@@ -5,7 +5,7 @@ note
 		"Eiffel lists of base-types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Access
 			end
 		end
 
-	base_type (a_class: ET_CLASS): ET_BASE_TYPE
+	base_type (a_class: ET_CLASS): detachable ET_BASE_TYPE
 			-- Type in the list whose base class is `a_class';
 			-- Void if no such type
 		require
@@ -68,6 +68,8 @@ feature -- Iteration
 	base_classes_there_exists (a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one of the base classes?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
+		require
+			a_test_not_void: a_test /= Void
 		local
 			i, nb: INTEGER
 		do

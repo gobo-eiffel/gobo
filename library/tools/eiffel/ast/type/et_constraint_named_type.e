@@ -8,7 +8,7 @@ note
 		%of formal generic parameters."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Name of type
 
-	type_mark: ET_TYPE_MARK
+	type_mark: detachable ET_TYPE_MARK
 			-- 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
@@ -50,8 +50,8 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if type_mark /= Void then
-				Result := type_mark.position
+			if attached type_mark as l_type_mark then
+				Result := l_type_mark.position
 			else
 				Result := name.position
 			end
@@ -60,7 +60,7 @@ feature -- Access
 feature -- Conversion
 
 	resolved_syntactical_constraint (a_formals: ET_FORMAL_PARAMETER_LIST;
-		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): ET_TYPE
+		a_class: ET_CLASS; a_parser: ET_EIFFEL_PARSER_SKELETON): detachable ET_TYPE
 			-- Version of current type, appearing in the constraint of one
 			-- of the formal generic parameters in `a_formals' of `a_class',
 			-- where class names and formal generic parameter names have been

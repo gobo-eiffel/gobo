@@ -5,7 +5,7 @@ note
 		"Eiffel null export clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,7 @@ feature -- Access
 	clients (a_name: ET_FEATURE_NAME): ET_CLIENTS
 			-- Clients for feature `a_name'
 		do
+			check not_has_feature_name: False then end
 		end
 
 feature -- Status report

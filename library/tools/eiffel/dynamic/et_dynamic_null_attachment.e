@@ -5,7 +5,7 @@ note
 		"Eiffel null attachments at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,8 @@ feature -- Access
 	attachment: ET_AST_NODE
 			-- Attachment
 		do
-			-- Result := Void
+				-- Precondition violated.
+			check False then end
 		end
 
 	position: ET_POSITION

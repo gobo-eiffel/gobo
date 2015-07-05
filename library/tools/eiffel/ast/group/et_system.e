@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 		do
 			error_handler := tokens.standard_error_handler
 			ast_factory := tokens.default_ast_factory
-			current_system := Current
 			initialize
 			set_default_keyword_usage
 			set_preparse_shallow_mode
@@ -55,8 +54,6 @@ feature {NONE} -- Initialization
 			alias_transition_mode := True
 			unknown_builtin_reported := True
 			qualified_anchored_types_enabled := True
-			set_default_class_mapping
-			set_kernel_types
 			create null_processor.make
 			eiffel_preparser := null_processor
 			master_class_checker := null_processor
@@ -68,7 +65,18 @@ feature {NONE} -- Initialization
 			implementation_checker := null_processor
 			flat_implementation_checker := null_processor
 			set_system_name (a_name)
+				-- First set the kernel types to some dummy types so that the attached attributes
+				-- get properly set before using `Current'. Otherwise the compiler will complain.
+			set_unknown_kernel_types
+			current_system := Current
+				-- Set `universe' and `name' outside of `make_adapted', otherwise the compiler
+				-- will complain about these attributes not properly set when passing `Current'
+				-- as argument.
+			universe := Current
+			name := a_name
 			make_adapted (a_name, Current)
+			set_kernel_types
+			set_default_class_mapping
 		end
 
 feature -- Status report
@@ -97,10 +105,10 @@ feature -- Status report
 
 feature -- Access
 
-	root_type: ET_BASE_TYPE
+	root_type: detachable ET_BASE_TYPE
 			-- Root type
 
-	root_creation: ET_FEATURE_NAME
+	root_creation: detachable ET_FEATURE_NAME
 			-- Root creation procedure
 
 	error_handler: ET_ERROR_HANDLER
@@ -315,8 +323,7 @@ feature -- Setting
 				create {ET_CLASS_TYPE} root_type.make (Void, a_name, l_class)
 			end
 		ensure
-			root_type_not_void: root_type /= Void
-			root_type_set: root_type.name.same_class_name (a_name)
+			root_type_set: attached root_type as l_root_type and then l_root_type.name.same_class_name (a_name)
 		end
 
 	unset_root_type
@@ -378,7 +385,7 @@ feature -- Compilation options
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
-	system_name: STRING
+	system_name: detachable STRING
 			-- Name of system
 
 	external_include_pathnames: DS_ARRAYED_LIST [STRING]
@@ -708,17 +715,16 @@ feature -- Implementation checking status setting
 
 	set_flat_mode (b: BOOLEAN)
 			-- Set `flat_mode' to `b'.
-		local
-			a_checker: ET_IMPLEMENTATION_CHECKER
 		do
 			flat_mode := b
 			if b then
-				a_checker ?= flat_implementation_checker
+				if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
+					l_checker.set_flat_mode (b)
+				end
 			else
-				a_checker ?= implementation_checker
-			end
-			if a_checker /= Void then
-				a_checker.set_flat_mode (b)
+				if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
+					l_checker.set_flat_mode (b)
+				end
 			end
 		ensure
 			flat_mode_set: flat_mode = b
@@ -726,17 +732,13 @@ feature -- Implementation checking status setting
 
 	set_flat_dbc_mode (b: BOOLEAN)
 			-- Set `flat_dbc_mode' to `b'.
-		local
-			a_checker: ET_IMPLEMENTATION_CHECKER
 		do
 			flat_dbc_mode := b
-			a_checker ?= implementation_checker
-			if a_checker /= Void then
-				a_checker.set_flat_dbc_mode (b)
+			if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
+				l_checker.set_flat_dbc_mode (b)
 			end
-			a_checker ?= flat_implementation_checker
-			if a_checker /= Void then
-				a_checker.set_flat_dbc_mode (b)
+			if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
+				l_checker.set_flat_dbc_mode (b)
 			end
 		ensure
 			flat_dbc_mode_set: flat_dbc_mode = b
@@ -744,17 +746,13 @@ feature -- Implementation checking status setting
 
 	set_suppliers_enabled (b: BOOLEAN)
 			-- Set `suppliers_enabled' to `b'.
-		local
-			a_checker: ET_IMPLEMENTATION_CHECKER
 		do
 			suppliers_enabled := b
-			a_checker ?= implementation_checker
-			if a_checker /= Void then
-				a_checker.set_suppliers_enabled (b)
+			if attached {ET_IMPLEMENTATION_CHECKER} implementation_checker as l_checker then
+				l_checker.set_suppliers_enabled (b)
 			end
-			a_checker ?= flat_implementation_checker
-			if a_checker /= Void then
-				a_checker.set_suppliers_enabled (b)
+			if attached {ET_IMPLEMENTATION_CHECKER} flat_implementation_checker as l_checker then
+				l_checker.set_suppliers_enabled (b)
 			end
 		ensure
 			suppliers_enabled_set: suppliers_enabled = b
@@ -829,14 +827,14 @@ feature -- Parsing
 			l_old_parsed_class_count: INTEGER
 			l_done: BOOLEAN
 		do
-			if root_type = Void then
+			if not attached root_type as l_root_type then
 				-- Do nothing.
-			elseif root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
+			elseif l_root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
 				parse_all_recursive
-			elseif root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
+			elseif l_root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
 				parse_all_recursive
 			else
-				l_root_class := root_type.base_class
+				l_root_class := l_root_type.base_class
 				l_root_class.process (eiffel_parser)
 				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
@@ -897,20 +895,17 @@ feature -- SCM mappings
 			-- Build SCM read mapping of `a_cluster' if not already done.
 		require
 			a_cluster_not_void: a_cluster /= Void
-		local
-			l_mapping: ET_CLUSTER_SCM_READ_MAPPING
 		do
 			if a_cluster.scm_read_mapping = Void then
-				if scm_read_mapping_builder /= Void then
-					l_mapping := scm_read_mapping_builder.item ([a_cluster])
-					if l_mapping /= Void then
+				if attached scm_read_mapping_builder as l_scm_read_mapping_builder then
+					if attached l_scm_read_mapping_builder.item ([a_cluster]) as l_mapping then
 						a_cluster.set_scm_read_mapping (l_mapping)
 					end
 				end
 			end
 		end
 
-	scm_read_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_READ_MAPPING]
+	scm_read_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_READ_MAPPING]
 			-- Function which is able to build a SCM read mapping for a given cluster
 
 	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder)
@@ -931,21 +926,20 @@ feature -- SCM mappings
 			-- Build SCM write mapping of `a_cluster' if not already done.
 		require
 			a_cluster_not_void: a_cluster /= Void
-		local
-			l_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
 		do
 			if a_cluster.scm_write_mapping = Void then
-				if scm_write_mapping_builder /= Void then
-					l_mapping := scm_write_mapping_builder.item ([a_cluster])
-					if l_mapping /= Void then
-						a_cluster.set_scm_write_mapping (l_mapping)
-						l_mapping.master_cluster.scm_read_mapping_recursive.scm_write_mappings.force_last (l_mapping)
+				if attached scm_write_mapping_builder as l_scm_write_mapping_builder then
+					if attached l_scm_write_mapping_builder.item ([a_cluster]) as l_write_mapping then
+						a_cluster.set_scm_write_mapping (l_write_mapping)
+						if attached l_write_mapping.master_cluster.scm_read_mapping_recursive as l_read_mapping then
+							l_read_mapping.scm_write_mappings.force_last (l_write_mapping)
+						end
 					end
 				end
 			end
 		end
 
-	scm_write_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_WRITE_MAPPING]
+	scm_write_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_WRITE_MAPPING]
 			-- Function which is able to build a SCM write mapping for a given cluster
 
 	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder)
@@ -966,7 +960,7 @@ feature -- Compilation status report
 			definition: Result = (ecma_version /= Void)
 		end
 
-	ecma_version: UT_VERSION
+	ecma_version: detachable UT_VERSION
 			-- ECMA version, if any, whose semantics should be
 			-- used by the compilation process
 
@@ -978,9 +972,55 @@ feature -- Compilation status report
 			definition: Result = (ise_version /= Void)
 		end
 
-	ise_version: UT_VERSION
+	ise_version: detachable UT_VERSION
 			-- ISE version, if any, whose semantics should be
 			-- used by the compilation process
+
+	older_ise_version (a_version: UT_VERSION): BOOLEAN
+			-- Should the compilation process use ISE's semantics
+			-- corresponding to a version older than `a_version'?
+		require
+			a_version_not_void: a_version /= Void
+		do
+			Result := attached ise_version as l_version and then l_version < a_version
+		ensure
+			definition: Result = (attached ise_version as l_version and then l_version < a_version)
+		end
+
+	older_or_same_ise_version (a_version: UT_VERSION): BOOLEAN
+			-- Should the compilation process use ISE's semantics
+			-- corresponding to a version older than or same as
+			-- `a_version'?
+		require
+			a_version_not_void: a_version /= Void
+		do
+			Result := attached ise_version as l_version and then l_version <= a_version
+		ensure
+			definition: Result = (attached ise_version as l_version and then l_version <= a_version)
+		end
+
+	newer_ise_version (a_version: UT_VERSION): BOOLEAN
+			-- Should the compilation process use ISE's semantics
+			-- corresponding to a version more recent than `a_version'?
+		require
+			a_version_not_void: a_version /= Void
+		do
+			Result := attached ise_version as l_version and then l_version > a_version
+		ensure
+			definition: Result = (attached ise_version as l_version and then l_version > a_version)
+		end
+
+	newer_or_same_ise_version (a_version: UT_VERSION): BOOLEAN
+			-- Should the compilation process use ISE's semantics
+			-- corresponding to a version more recent than or same as
+			-- `a_version'?
+		require
+			a_version_not_void: a_version /= Void
+		do
+			Result := attached ise_version as l_version and then l_version >= a_version
+		ensure
+			definition: Result = (attached ise_version as l_version and then l_version >= a_version)
+		end
 
 feature -- Compilation setting
 
@@ -1007,12 +1047,12 @@ feature -- Compilation setting
 			-- Set `ise_version' to `a_version'.
 		do
 			ise_version := a_version
-			if ise_version /= Void then
-				set_use_attribute_keyword (ise_version >= ise_6_4_7_6592)
-				set_use_note_keyword (ise_version >= ise_6_4_7_6592)
+			if attached ise_version as l_ise_version then
+				set_use_attribute_keyword (l_ise_version >= ise_6_4_7_6592)
+				set_use_note_keyword (l_ise_version >= ise_6_4_7_6592)
 				set_use_reference_keyword (True)
-				set_use_attached_keyword (ise_version >= ise_6_4_7_7252)
-				set_use_detachable_keyword (ise_version >= ise_6_4_7_7252)
+				set_use_attached_keyword (l_ise_version >= ise_6_4_7_7252)
+				set_use_detachable_keyword (l_ise_version >= ise_6_4_7_7252)
 			elseif ecma_version /= Void then
 				set_ecma_version (ecma_version)
 			else
@@ -1057,8 +1097,8 @@ feature -- Compilation
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		local
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: DT_DATE_TIME
+			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
+			dt1: detachable DT_DATE_TIME
 		do
 			activate_processors
 			if error_handler.benchmark_shown then
@@ -1066,7 +1106,7 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			preparse_recursive
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 6")
 				dt1 := l_clock.system_clock.date_time_now
 			end
@@ -1081,17 +1121,17 @@ feature -- Compilation
 				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -1107,8 +1147,8 @@ feature -- Compilation
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		local
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: DT_DATE_TIME
+			l_clock: detachable DT_SHARED_SYSTEM_CLOCK
+			dt1: detachable DT_DATE_TIME
 		do
 			activate_processors
 			if error_handler.benchmark_shown then
@@ -1117,7 +1157,7 @@ feature -- Compilation
 			end
 			if preparse_enabled then
 				preparse_recursive
-				if not stop_requested and then error_handler.benchmark_shown then
+				if not stop_requested and then dt1 /= Void and l_clock /= Void then
 					print_time (dt1, "Degree 6")
 					dt1 := l_clock.system_clock.date_time_now
 				end
@@ -1126,17 +1166,17 @@ feature -- Compilation
 				parse_all_recursive
 				check_provider_validity
 			end
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void and l_clock /= Void then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			if not stop_requested and then error_handler.benchmark_shown then
+			if not stop_requested and then dt1 /= Void then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -1245,11 +1285,14 @@ feature -- Processors
 	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
 			-- .NET assembly consumer
 		do
-			Result := internal_dotnet_assembly_consumer
-			if Result = Void then
+			if attached internal_dotnet_assembly_consumer as l_internal_dotnet_assembly_consumer then
+				Result := l_internal_dotnet_assembly_consumer
+			else
 				create {ET_DOTNET_ASSEMBLY_CLASSIC_CONSUMER} Result.make (Current)
 				internal_dotnet_assembly_consumer := Result
 			end
+		ensure
+			dotnet_assembly_consumer_not_void: Result /= Void
 		end
 
 	provider_checker: ET_AST_PROCESSOR
@@ -1422,12 +1465,12 @@ feature -- Stop
 			-- been requested? The operation will therefore be
 			-- interrupted at the earliest possible time.
 		do
-			if stop_request /= Void then
-				Result := stop_request.item ([])
+			if attached stop_request as l_stop_request then
+				Result := l_stop_request.item ([])
 			end
 		end
 
-	stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]
+	stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
 			-- Agent used to figure out whether there has been
 			-- a request to interrupt the current operation;
 			-- No interruption if Void
@@ -1468,7 +1511,7 @@ feature -- Timing
 
 feature {NONE} -- Implementation
 
-	internal_dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER
+	internal_dotnet_assembly_consumer: detachable ET_DOTNET_ASSEMBLY_CONSUMER
 			-- .NET assembly consumer
 
 feature {NONE} -- Constants

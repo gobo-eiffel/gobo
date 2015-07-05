@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,8 +40,8 @@ feature -- Initialization
 			-- Reset call as it was when it was last parsed.
 		do
 			name.reset
-			if arguments /= Void then
-				arguments.reset
+			if attached arguments as l_arguments then
+				l_arguments.reset
 			end
 		end
 
@@ -58,7 +58,7 @@ feature -- Access
 			definition: Result = qualified_name.feature_name
 		end
 
-	arguments: ET_ACTUAL_ARGUMENT_LIST
+	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
 			-- Arguments
 
 	position: ET_POSITION
@@ -77,38 +77,45 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			if arguments /= Void then
-				Result := arguments.last_leaf
+			if attached arguments as l_arguments then
+				Result := l_arguments.last_leaf
 			else
 				Result := qualified_name.last_leaf
 			end
 		end
 
-	break: ET_BREAK
-			-- Break which appears just after current node
+feature -- Setting
+
+	set_name (a_name: like qualified_name)
+			-- Set `qualified_name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
 		do
-			if arguments /= Void then
-				Result := arguments.break
-			else
-				Result := qualified_name.break
-			end
+			qualified_name := a_name
+		ensure
+			name_set: qualified_name = a_name
+		end
+
+	set_arguments (args: like arguments)
+			-- Set `arguments' to `args'.
+		do
+			arguments := args
+		ensure
+			arguments_set: arguments = args
 		end
 
 feature -- Measurement
 
 	arguments_count: INTEGER
 			-- Number of arguments
-		local
-			l_arguments: like arguments
 		do
-			l_arguments := arguments
-			if l_arguments /= Void then
+			if attached arguments as l_arguments then
 				Result := l_arguments.count
 			end
 		ensure
 			arguments_count_not_negative: Result >= 0
 			no_argument: arguments = Void implies Result = 0
-			with_arguments: arguments /= Void implies Result = arguments.count
+			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
 		end
 
 feature -- Processing

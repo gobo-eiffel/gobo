@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets pushing types to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	targets: ET_DYNAMIC_TARGET_LIST
+	targets: detachable ET_DYNAMIC_TARGET_LIST
 			-- Supersets of the current set
 
 feature -- Element change
@@ -58,10 +58,10 @@ feature -- Element change
 			old_count := count
 			precursor (a_type, a_type_set, a_system)
 			if old_count < count then
-				if targets /= Void then
-					nb := targets.count
+				if attached targets as l_targets then
+					nb := l_targets.count
 					from i := 1 until i > nb loop
-						targets.item (i).put_type_from_type_set (a_type, Current, a_system)
+						l_targets.item (i).put_type_from_type_set (a_type, Current, a_system)
 						i := i + 1
 					end
 				end
@@ -74,14 +74,17 @@ feature -- Element change
 		local
 			found: BOOLEAN
 			i, nb: INTEGER
+			l_targets: like targets
 		do
-			if targets = Void then
-				create targets.make_with_capacity (2)
-				targets.put_last (a_target)
-			elseif targets.has (a_target) then
+			l_targets := targets
+			if l_targets = Void then
+				create l_targets.make_with_capacity (2)
+				l_targets.put_last (a_target)
+				targets := l_targets
+			elseif l_targets.has (a_target) then
 				found := True
 			else
-				targets.force_last (a_target)
+				l_targets.force_last (a_target)
 			end
 			if not found then
 				nb := count
@@ -104,10 +107,10 @@ feature -- Element change
 		do
 			if is_never_void then
 				is_never_void := False
-				if targets /= Void then
-					nb := targets.count
+				if attached targets as l_targets then
+					nb := l_targets.count
 					from i := 1 until i > nb loop
-						targets.item (i).propagate_can_be_void (Current)
+						l_targets.item (i).propagate_can_be_void (Current)
 						i := i + 1
 					end
 				end

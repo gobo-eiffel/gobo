@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type sets of agent operands pulling types from subsets (type sets of argument of features 'call' and 'item')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 			an_agent_type_not_void: an_agent_type /= Void
 		do
 			static_type := a_type
+			agent_type := an_agent_type
 			if a_type.is_expanded then
 				put_type (a_type)
 			end
-			agent_type := an_agent_type
 		ensure
 			static_type_set: static_type = a_type
 			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
@@ -57,7 +57,6 @@ feature -- Element change
 		local
 			old_count: INTEGER
 			i, nb: INTEGER
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
@@ -66,8 +65,7 @@ feature -- Element change
 			old_count := count
 			put_type_from_type_set (a_type, an_attachment.source_type_set, a_system)
 			if old_count < count then
-				l_tuple_type ?= a_type
-				if l_tuple_type /= Void then
+				if attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					l_open_operand_type_sets := agent_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count
@@ -91,8 +89,7 @@ feature -- Element change
 					-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
 					-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
 				 	-- conforms to type STRING.
-				l_tuple_type ?= a_type
-				if l_tuple_type /= Void then
+				if attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					l_open_operand_type_sets := agent_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count

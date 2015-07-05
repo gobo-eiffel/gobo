@@ -356,7 +356,7 @@ feature -- Statut setting
 
 feature -- Eiffel keywords
 
-	new_across_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_across_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'across' keyword
 		do
 			create Result.make_across
@@ -365,7 +365,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_AGENT_KEYWORD
+	new_agent_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_AGENT_KEYWORD
 			-- New 'agent' keyword
 		do
 			create Result.make
@@ -374,7 +374,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_alias_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'alias' keyword
 		do
 			create Result.make_alias
@@ -383,7 +383,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_all_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'all' keyword
 		do
 			create Result.make_all
@@ -392,7 +392,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_and_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR
+	new_and_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD_OPERATOR
 			-- New 'and' keyword
 		do
 			create Result.make_and
@@ -401,7 +401,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_as_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'as' keyword
 		do
 			create Result.make_as
@@ -410,7 +410,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_assign_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_assign_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'assign' keyword
 		do
 			create Result.make_assign
@@ -419,7 +419,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_attached_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_attached_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'attached' keyword
 		do
 			create Result.make_attached
@@ -428,7 +428,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'attribute' keyword
 		do
 			create Result.make_attribute
@@ -437,7 +437,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'check' keyword
 		do
 			create Result.make_check
@@ -446,7 +446,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_class_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'class' keyword
 		do
 			create Result.make_class
@@ -455,7 +455,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'convert' keyword
 		do
 			create Result.make_convert
@@ -464,7 +464,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_create_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'create' keyword
 		do
 			create Result.make_create
@@ -473,7 +473,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_creation_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'creation' keyword
 		do
 			create Result.make_creation
@@ -482,7 +482,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_current_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_CURRENT
+	new_current_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_CURRENT
 			-- New 'current' keyword
 		do
 			create Result.make
@@ -491,7 +491,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_debug_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'debug' keyword
 		do
 			create Result.make_debug
@@ -500,7 +500,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_deferred_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_deferred_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'deferred' keyword
 		do
 			create Result.make_deferred
@@ -509,7 +509,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_detachable_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_detachable_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'detachable' keyword
 		do
 			create Result.make_detachable
@@ -518,7 +518,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'do' keyword
 		do
 			create Result.make_do
@@ -527,7 +527,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_else_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'else' keyword
 		do
 			create Result.make_else
@@ -536,7 +536,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_elseif_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'elseif' keyword
 		do
 			create Result.make_elseif
@@ -545,7 +545,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_end_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'end' keyword
 		do
 			create Result.make_end
@@ -554,7 +554,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_ensure_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'ensure' keyword
 		do
 			create Result.make_ensure
@@ -563,7 +563,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_expanded_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_expanded_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'expanded' keyword
 		do
 			create Result.make_expanded
@@ -572,7 +572,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_export_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'export' keyword
 		do
 			create Result.make_export
@@ -581,7 +581,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_external_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'external' keyword
 		do
 			create Result.make_external
@@ -590,7 +590,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_false_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FALSE_CONSTANT
+	new_false_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_FALSE_CONSTANT
 			-- New 'false' keyword
 		do
 			create Result.make
@@ -599,7 +599,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_feature_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'feature' keyword
 		do
 			create Result.make_feature
@@ -608,7 +608,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_from_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'from' keyword
 		do
 			create Result.make_from
@@ -617,7 +617,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_frozen_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'frozen' keyword
 		do
 			create Result.make_frozen
@@ -626,7 +626,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_if_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'if' keyword
 		do
 			create Result.make_if
@@ -635,7 +635,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_implies_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR
+	new_implies_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD_OPERATOR
 			-- New 'implies' keyword
 		do
 			create Result.make_implies
@@ -644,7 +644,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_indexing_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'indexing' keyword
 		do
 			create Result.make_indexing
@@ -653,7 +653,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_infix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'infix' keyword
 		do
 			create Result.make_infix
@@ -662,7 +662,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_inherit_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'inherit' keyword
 		do
 			create Result.make_inherit
@@ -671,7 +671,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_inspect_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'inspect' keyword
 		do
 			create Result.make_inspect
@@ -680,7 +680,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_invariant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'invariant' keyword
 		do
 			create Result.make_invariant
@@ -689,7 +689,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_is_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'is' keyword
 		do
 			create Result.make_is
@@ -698,7 +698,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_like_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'like' keyword
 		do
 			create Result.make_like
@@ -707,7 +707,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_local_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'local' keyword
 		do
 			create Result.make_local
@@ -716,7 +716,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_loop_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'loop' keyword
 		do
 			create Result.make_loop
@@ -725,7 +725,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_not_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR
+	new_not_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD_OPERATOR
 			-- New 'not' keyword
 		do
 			create Result.make_not
@@ -734,7 +734,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_note_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_note_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'note' keyword
 		do
 			create Result.make_note
@@ -743,7 +743,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'obsolete' keyword
 		do
 			create Result.make_obsolete
@@ -752,7 +752,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_old_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'old' keyword
 		do
 			create Result.make_old
@@ -761,7 +761,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_once_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'once' keyword
 		do
 			create Result.make_once
@@ -770,7 +770,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_or_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR
+	new_or_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD_OPERATOR
 			-- New 'or' keyword
 		do
 			create Result.make_or
@@ -779,7 +779,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_PRECURSOR_KEYWORD
+	new_precursor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_PRECURSOR_KEYWORD
 			-- New 'precursor' keyword
 		do
 			create Result.make
@@ -788,7 +788,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_prefix_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'prefix' keyword
 		do
 			create Result.make_prefix
@@ -797,7 +797,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'redefine' keyword
 		do
 			create Result.make_redefine
@@ -806,7 +806,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_reference_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_reference_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'reference' keyword
 		do
 			create Result.make_reference
@@ -815,7 +815,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_rename_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'rename' keyword
 		do
 			create Result.make_rename
@@ -824,7 +824,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_require_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'require' keyword
 		do
 			create Result.make_require
@@ -833,7 +833,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_rescue_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'rescue' keyword
 		do
 			create Result.make_rescue
@@ -842,7 +842,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_result_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RESULT
+	new_result_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_RESULT
 			-- New 'result' keyword
 		do
 			create Result.make
@@ -851,7 +851,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_retry_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_RETRY_INSTRUCTION
+	new_retry_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_RETRY_INSTRUCTION
 			-- New 'retry' keyword
 		do
 			create Result.make
@@ -860,7 +860,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_select_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'select' keyword
 		do
 			create Result.make_select
@@ -869,7 +869,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_separate_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_separate_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'separate' keyword
 		do
 			create Result.make_separate
@@ -878,7 +878,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_some_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_some_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'some' keyword
 		do
 			create Result.make_some
@@ -887,7 +887,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_strip_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'strip' keyword
 		do
 			create Result.make_strip
@@ -896,7 +896,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_then_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'then' keyword
 		do
 			create Result.make_then
@@ -905,7 +905,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_true_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_TRUE_CONSTANT
+	new_true_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_TRUE_CONSTANT
 			-- New 'true' keyword
 		do
 			create Result.make
@@ -914,7 +914,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_undefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'undefine' keyword
 		do
 			create Result.make_undefine
@@ -923,7 +923,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_unique_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'unique' keyword
 		do
 			create Result.make_unique
@@ -932,7 +932,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_until_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'until' keyword
 		do
 			create Result.make_until
@@ -941,7 +941,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_variant_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'variant' keyword
 		do
 			create Result.make_variant
@@ -950,7 +950,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_void_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VOID
+	new_void_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_VOID
 			-- New 'void' keyword
 		do
 			create Result.make
@@ -959,7 +959,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD
+	new_when_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
 			-- New 'when' keyword
 		do
 			create Result.make_when
@@ -968,7 +968,7 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_xor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD_OPERATOR
+	new_xor_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD_OPERATOR
 			-- New 'xor' keyword
 		do
 			create Result.make_xor
@@ -979,7 +979,7 @@ feature -- Eiffel keywords
 
 feature -- Eiffel symbols
 
-	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_arrow_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '->' symbol
 		do
 			create Result.make_arrow
@@ -987,7 +987,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_assign_attempt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_assign_attempt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '?=' symbol
 		do
 			create Result.make_assign_attempt
@@ -995,7 +995,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_assign_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_assign_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ':=' symbol
 		do
 			create Result.make_assign
@@ -1003,7 +1003,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_bang_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '!' symbol
 		do
 			create Result.make_bang
@@ -1011,7 +1011,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ':' symbol
 		do
 			create Result.make_colon
@@ -1019,7 +1019,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_comma_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_comma_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ',' symbol
 		do
 			create Result.make_comma
@@ -1027,7 +1027,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_div_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_div_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '//' symbol
 		do
 			create Result.make_div
@@ -1035,7 +1035,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_divide_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_divide_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '/' symbol
 		do
 			create Result.make_divide
@@ -1043,7 +1043,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_dollar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_dollar_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '$' symbol
 		do
 			create Result.make_dollar
@@ -1051,7 +1051,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_dot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_dot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '.' symbol
 		do
 			create Result.make_dot
@@ -1059,7 +1059,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_dotdot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_dotdot_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '..' symbol
 		do
 			create Result.make_dotdot
@@ -1067,7 +1067,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '=' symbol
 		do
 			create Result.make_equal
@@ -1075,7 +1075,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_ge_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_ge_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '>=' symbol
 		do
 			create Result.make_ge
@@ -1083,7 +1083,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_gt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_gt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '>' symbol
 		do
 			create Result.make_gt
@@ -1091,7 +1091,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_le_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '<=' symbol
 		do
 			create Result.make_le
@@ -1099,7 +1099,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_left_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_left_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '<<' symbol
 		do
 			create Result.make_left_array
@@ -1107,7 +1107,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_left_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_left_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '{' symbol
 		do
 			create Result.make_left_brace
@@ -1115,7 +1115,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BRACKET_SYMBOL
+	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BRACKET_SYMBOL
 			-- New '[' symbol
 		do
 			create Result.make
@@ -1123,7 +1123,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_left_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_left_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '(' symbol
 		do
 			create Result.make_left_parenthesis
@@ -1131,7 +1131,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_lt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_lt_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '<' symbol
 		do
 			create Result.make_lt
@@ -1139,7 +1139,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_minus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_minus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '-' symbol
 		do
 			create Result.make_minus
@@ -1147,7 +1147,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_mod_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_mod_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '\\' symbol
 		do
 			create Result.make_mod
@@ -1155,7 +1155,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_not_equal_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '/=' symbol
 		do
 			create Result.make_not_equal
@@ -1163,7 +1163,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_not_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_not_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '/~' symbol
 		do
 			create Result.make_not_tilde
@@ -1171,7 +1171,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '+' symbol
 		do
 			create Result.make_plus
@@ -1179,7 +1179,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_power_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_power_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '^' symbol
 		do
 			create Result.make_power
@@ -1187,7 +1187,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_QUESTION_MARK_SYMBOL
+	new_question_mark_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_QUESTION_MARK_SYMBOL
 			-- New '?' symbol
 		do
 			create Result.make
@@ -1195,7 +1195,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_right_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_right_array_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '>>' symbol
 		do
 			create Result.make_right_array
@@ -1203,7 +1203,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_right_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_right_brace_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '}' symbol
 		do
 			create Result.make_right_brace
@@ -1211,7 +1211,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_right_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_right_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ']' symbol
 		do
 			create Result.make_right_bracket
@@ -1219,7 +1219,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_right_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_right_parenthesis_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New ')' symbol
 		do
 			create Result.make_right_parenthesis
@@ -1227,7 +1227,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SEMICOLON_SYMBOL
+	new_semicolon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SEMICOLON_SYMBOL
 			-- New ';' symbol
 		do
 			create Result.make
@@ -1235,7 +1235,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL
+	new_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL
 			-- New '~' symbol
 		do
 			create Result.make_tilde
@@ -1243,7 +1243,7 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR
+	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SYMBOL_OPERATOR
 			-- New '*' symbol
 		do
 			create Result.make_times
@@ -1253,7 +1253,7 @@ feature -- Eiffel symbols
 
 feature -- AST leaves
 
-	new_binary_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BINARY_INTEGER_CONSTANT
+	new_binary_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BINARY_INTEGER_CONSTANT
 			-- New integer constant in binary format
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1261,7 +1261,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BIT_CONSTANT
+	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BIT_CONSTANT
 			-- New bit constant
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1275,7 +1275,7 @@ feature -- AST leaves
 			create Result.make (a_scanner.last_break)
 		end
 
-	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C1_CHARACTER_CONSTANT
+	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
 			-- New character constant of the form 'A'
 		do
 			create Result.make (a_value)
@@ -1283,7 +1283,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_c2_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C2_CHARACTER_CONSTANT
+	new_c2_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C2_CHARACTER_CONSTANT
 			-- New character constant of the form '%A'
 		do
 			create Result.make (a_value)
@@ -1291,7 +1291,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT
+	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C3_CHARACTER_CONSTANT
 			-- New character constant of the form '%/code/`'
 		do
 			Result := a_scanner.last_c3_character_constant
@@ -1299,13 +1299,13 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_comment (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_COMMENT
+	new_comment (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_COMMENT
 			-- New comment
 		do
 			create Result.make (a_scanner.last_comment)
 		end
 
-	new_free_operator (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_FREE_OPERATOR
+	new_free_operator (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_FREE_OPERATOR
 			-- New free operator
 		do
 			create Result.make_prefix (a_scanner.last_literal)
@@ -1313,7 +1313,7 @@ feature -- AST leaves
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_hexadecimal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_HEXADECIMAL_INTEGER_CONSTANT
+	new_hexadecimal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_HEXADECIMAL_INTEGER_CONSTANT
 			-- New integer constant in hexadecimal format
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1321,7 +1321,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_identifier (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_IDENTIFIER
+	new_identifier (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_IDENTIFIER
 			-- New identifier
 		do
 			Result := a_scanner.last_identifier
@@ -1329,7 +1329,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_octal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_OCTAL_INTEGER_CONSTANT
+	new_octal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_OCTAL_INTEGER_CONSTANT
 			-- New integer constant in octal format
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1337,7 +1337,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_regular_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_INTEGER_CONSTANT
+	new_regular_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_REGULAR_INTEGER_CONSTANT
 			-- New integer constant with no underscore
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1345,7 +1345,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_regular_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_MANIFEST_STRING
+	new_regular_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_REGULAR_MANIFEST_STRING
 			-- New manifest string with no special character
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1353,7 +1353,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_regular_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_REGULAR_REAL_CONSTANT
+	new_regular_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_REGULAR_REAL_CONSTANT
 			-- New real constant with no underscore
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1361,7 +1361,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SPECIAL_MANIFEST_STRING
+	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_SPECIAL_MANIFEST_STRING
 			-- New manifest string with special characters
 		do
 			Result := a_scanner.last_special_manifest_string
@@ -1369,7 +1369,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_INTEGER_CONSTANT
+	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_UNDERSCORED_INTEGER_CONSTANT
 			-- New integer constant with underscores
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1377,7 +1377,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_underscored_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_REAL_CONSTANT
+	new_underscored_real_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_UNDERSCORED_REAL_CONSTANT
 			-- New real constant with underscores
 		do
 			create Result.make (a_scanner.last_literal)
@@ -1385,7 +1385,7 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_VERBATIM_STRING
+	new_verbatim_string (a_marker, an_open, a_close: STRING; a_left_aligned: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_VERBATIM_STRING
 			-- New verbatim string
 		do
 			Result := a_scanner.last_verbatim_string (a_marker, an_open, a_close, a_left_aligned)
@@ -1395,10 +1395,10 @@ feature -- AST leaves
 
 feature -- AST nodes
 
-	new_across_all_expression (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
-			a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER; an_invariant: ET_LOOP_INVARIANTS;
-			an_until_conditional: ET_CONDITIONAL; a_all_conditional: ET_CONDITIONAL;
-			a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+	new_across_all_expression (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
+			a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
+			an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
+			a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 				-- New across all expression
 			do
 				if a_iterable_expression /= Void and a_cursor_name /= Void and a_all_conditional /= Void then
@@ -1417,11 +1417,11 @@ feature -- AST nodes
 				end
 			end
 
-	new_across_instruction (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
-		a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER;
-		a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
-		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
-		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_INSTRUCTION
+	new_across_instruction (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
+		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER;
+		a_from_compound: detachable ET_COMPOUND; an_invariant: detachable ET_LOOP_INVARIANTS;
+		an_until_conditional: detachable ET_CONDITIONAL; a_loop_compound: detachable ET_COMPOUND;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction
 		do
 			if a_iterable_expression /= Void and a_cursor_name /= Void then
@@ -1440,10 +1440,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_across_some_expression (a_across: ET_KEYWORD; a_iterable_expression: ET_EXPRESSION;
-		a_as: ET_KEYWORD; a_cursor_name: ET_IDENTIFIER; an_invariant: ET_LOOP_INVARIANTS;
-		an_until_conditional: ET_CONDITIONAL; a_some_conditional: ET_CONDITIONAL;
-		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_ACROSS_EXPRESSION
+	new_across_some_expression (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
+		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER; an_invariant: detachable ET_LOOP_INVARIANTS;
+		an_until_conditional: detachable ET_CONDITIONAL; a_some_conditional: detachable ET_CONDITIONAL;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
 			-- New across some expression
 		do
 			if a_iterable_expression /= Void and a_cursor_name /= Void and a_some_conditional /= Void then
@@ -1462,7 +1462,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_actual_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_ARGUMENT_LIST
+	new_actual_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_ACTUAL_ARGUMENT_LIST
 			-- New actual argument list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -1474,7 +1474,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM
+	new_actual_parameter_comma (a_parameter: detachable ET_ACTUAL_PARAMETER;
+		a_comma: detachable ET_SYMBOL): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- New actual_parameter-comma
 		do
 			if a_comma = Void then
@@ -1484,7 +1485,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_ACTUAL_PARAMETER_LIST
+	new_actual_parameters (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_ACTUAL_PARAMETER_LIST
 			-- New actual generic parameter list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -1496,7 +1497,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND; a_comma: ET_SYMBOL): ET_AGENT_ARGUMENT_OPERAND_ITEM
+	new_agent_argument_operand_comma (an_argument: detachable ET_AGENT_ARGUMENT_OPERAND;
+		a_comma: detachable ET_SYMBOL): detachable ET_AGENT_ARGUMENT_OPERAND_ITEM
 			-- New agent_argument_operand-comma
 		do
 			if a_comma = Void then
@@ -1506,7 +1508,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_argument_operands (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_AGENT_ARGUMENT_OPERAND_LIST
+	new_agent_argument_operands (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 			-- New agent argument operand list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -1518,7 +1520,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_typed_open_argument (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL; a_question_mark: ET_QUESTION_MARK_SYMBOL): ET_AGENT_TYPED_OPEN_ARGUMENT
+	new_agent_typed_open_argument (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE;
+		r: detachable ET_SYMBOL; a_question_mark: detachable ET_QUESTION_MARK_SYMBOL): detachable ET_AGENT_TYPED_OPEN_ARGUMENT
 			-- New agent open argument of the form '{TYPE} ?'
 		do
 			if a_type /= Void then
@@ -1535,7 +1538,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_open_target (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_OPEN_TARGET
+	new_agent_open_target (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE;
+		r: detachable ET_SYMBOL): detachable ET_AGENT_OPEN_TARGET
 			-- New agent open target of the form '{TYPE}'
 		do
 			if a_type /= Void then
@@ -1549,7 +1553,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_and_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_and_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "and" feature name
 		do
 			if a_string /= Void then
@@ -1560,7 +1565,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_and_then_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_and_then_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "and then" feature name
 		do
 			if a_string /= Void then
@@ -1571,7 +1577,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_bracket_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_bracket_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "[]" feature name
 		do
 			if a_string /= Void then
@@ -1582,7 +1589,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_div_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_div_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "//" feature name
 		do
 			if a_string /= Void then
@@ -1593,7 +1601,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_divide_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_divide_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "//" feature name
 		do
 			if a_string /= Void then
@@ -1604,7 +1613,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_dotdot_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_dotdot_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias ".." feature name
 		do
 			if a_string /= Void then
@@ -1615,7 +1625,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME
+	new_alias_free_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		do
 			if a_string /= Void then
@@ -1626,7 +1637,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_ge_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_ge_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias ">=" feature name
 		do
 			if a_string /= Void then
@@ -1637,7 +1649,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_gt_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_gt_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias ">" feature name
 		do
 			if a_string /= Void then
@@ -1648,7 +1661,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_implies_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_implies_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "implies" feature name
 		do
 			if a_string /= Void then
@@ -1659,7 +1673,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_le_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_le_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "<=" feature name
 		do
 			if a_string /= Void then
@@ -1670,7 +1685,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_lt_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_lt_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "<" feature name
 		do
 			if a_string /= Void then
@@ -1681,7 +1697,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_minus_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_minus_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "-" feature name
 		do
 			if a_string /= Void then
@@ -1692,7 +1709,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_mod_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_mod_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "\\" feature name
 		do
 			if a_string /= Void then
@@ -1703,7 +1721,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_not_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_not_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "not" feature name
 		do
 			if a_string /= Void then
@@ -1714,7 +1733,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_or_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_or_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "or" feature name
 		do
 			if a_string /= Void then
@@ -1725,7 +1745,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_or_else_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_or_else_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "or else" feature name
 		do
 			if a_string /= Void then
@@ -1736,7 +1757,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_parenthesis_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_parenthesis_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "()" feature name
 		do
 			if a_string /= Void then
@@ -1747,7 +1769,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_plus_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_plus_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "+" feature name
 		do
 			if a_string /= Void then
@@ -1758,7 +1781,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_power_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_power_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "^" feature name
 		do
 			if a_string /= Void then
@@ -1769,7 +1793,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_times_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_times_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "*" feature name
 		do
 			if a_string /= Void then
@@ -1780,7 +1805,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_xor_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME
+	new_alias_xor_name (an_alias: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
 			-- New alias "xor" feature name
 		do
 			if a_string /= Void then
@@ -1791,7 +1817,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_all_export (a_clients: ET_CLIENTS; an_all: ET_KEYWORD): ET_ALL_EXPORT
+	new_all_export (a_clients: detachable ET_CLIENTS;
+		an_all: detachable ET_KEYWORD): detachable ET_ALL_EXPORT
 			-- New 'all' export clause
 		do
 			if a_clients /= Void then
@@ -1802,7 +1829,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_argument_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_ARGUMENT_NAME
+	new_argument_name_comma (a_name: detachable ET_IDENTIFIER;
+		a_comma: detachable ET_SYMBOL): detachable ET_ARGUMENT_NAME
 			-- New argument_name-comma
 		do
 			if a_comma = Void then
@@ -1812,7 +1840,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_assertion_semicolon (an_assertion: ET_ASSERTION; a_semicolon: ET_SYMBOL): ET_ASSERTION_ITEM
+	new_assertion_semicolon (an_assertion: detachable ET_ASSERTION;
+		a_semicolon: detachable ET_SYMBOL): detachable ET_ASSERTION_ITEM
 			-- New assertion followed by a semicolon
 		do
 			if a_semicolon = Void then
@@ -1822,7 +1851,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_assigner (an_assign: ET_KEYWORD; a_feature_name: ET_FEATURE_NAME): ET_ASSIGNER
+	new_assigner (an_assign: detachable ET_KEYWORD;
+		a_feature_name: detachable ET_FEATURE_NAME): detachable ET_ASSIGNER
 			-- New assigner
 		local
 			l_assigner: ET_ASSIGN_FEATURE_NAME
@@ -1836,7 +1866,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_assigner_instruction (a_target: ET_FEATURE_CALL_EXPRESSION; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNER_INSTRUCTION
+	new_assigner_instruction (a_target: detachable ET_QUALIFIED_FEATURE_CALL_EXPRESSION;
+		an_assign: detachable ET_SYMBOL; a_source: detachable ET_EXPRESSION): detachable ET_ASSIGNER_INSTRUCTION
 			-- New assigner instruction
 		do
 			if a_target /= Void and a_source /= Void then
@@ -1847,7 +1878,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_assignment (a_target: ET_WRITABLE; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT
+	new_assignment (a_target: detachable ET_WRITABLE; an_assign: detachable ET_SYMBOL;
+		a_source: detachable ET_EXPRESSION): detachable ET_ASSIGNMENT
 			-- New assignment instruction
 		do
 			if a_target /= Void and a_source /= Void then
@@ -1858,7 +1890,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_assignment_attempt (a_target: ET_WRITABLE; an_assign_attempt: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT_ATTEMPT
+	new_assignment_attempt (a_target: detachable ET_WRITABLE; an_assign_attempt: detachable ET_SYMBOL;
+		a_source: detachable ET_EXPRESSION): detachable ET_ASSIGNMENT_ATTEMPT
 			-- New assignment-attempt instruction
 		do
 			if a_target /= Void and a_source /= Void then
@@ -1869,9 +1902,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ATTRIBUTE
+	new_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_type: detachable ET_DECLARED_TYPE;
+		an_assigner: detachable ET_ASSIGNER;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_ATTRIBUTE
 			-- New attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -1883,7 +1917,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_attribute_compound (a_attribute: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_attribute_compound (a_attribute: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'attribute' keyword
 		do
 			if a_compound /= Void then
@@ -1896,7 +1930,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_bang_instruction (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL; a_target: ET_WRITABLE; a_call: ET_QUALIFIED_CALL): ET_BANG_INSTRUCTION
+	new_bang_instruction (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE;
+		r: detachable ET_SYMBOL; a_target: detachable ET_WRITABLE;
+		a_call: detachable ET_QUALIFIED_CALL): detachable ET_BANG_INSTRUCTION
 			-- New bang creation instruction
 		do
 			if a_target /= Void then
@@ -1910,7 +1946,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER; a_base_class: ET_CLASS): ET_BIT_FEATURE
+	new_bit_feature (a_bit: detachable ET_IDENTIFIER; an_id: detachable ET_IDENTIFIER; a_base_class: detachable ET_CLASS): detachable ET_BIT_FEATURE
 			-- New 'BIT Identifier' type
 		do
 			if an_id /= Void and a_base_class /= Void then
@@ -1921,7 +1957,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT; a_base_class: ET_CLASS): ET_BIT_N
+	new_bit_n (a_bit: detachable ET_IDENTIFIER; an_int: detachable ET_INTEGER_CONSTANT; a_base_class: detachable ET_CLASS): detachable ET_BIT_N
 			-- New 'BIT N' type
 		do
 			if an_int /= Void and a_base_class /= Void then
@@ -1932,7 +1968,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_bracket_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_BRACKET_ARGUMENT_LIST
+	new_bracket_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_BRACKET_ARGUMENT_LIST
 			-- New bracket argument list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -1944,7 +1980,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_check_instruction (a_check: ET_KEYWORD; a_then_compound: ET_COMPOUND; an_end: ET_KEYWORD; nb: INTEGER): ET_CHECK_INSTRUCTION
+	new_check_instruction (a_check: detachable ET_KEYWORD; a_then_compound: detachable ET_COMPOUND;
+		an_end: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CHECK_INSTRUCTION
 			-- New check instruction with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -1957,7 +1994,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_choice_comma (a_choice: ET_CHOICE; a_comma: ET_SYMBOL): ET_CHOICE_ITEM
+	new_choice_comma (a_choice: detachable ET_CHOICE; a_comma: detachable ET_SYMBOL): detachable ET_CHOICE_ITEM
 			-- New choice-comma
 		do
 			if a_comma = Void then
@@ -1967,7 +2004,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_choice_list (a_when: ET_KEYWORD; nb: INTEGER): ET_CHOICE_LIST
+	new_choice_list (a_when: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CHOICE_LIST
 			-- New choice list with capacity `nb'
 		do
 			create Result.make_with_capacity (nb)
@@ -1976,7 +2013,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_choice_range (a_lower: ET_CHOICE_CONSTANT; a_dotdot: ET_SYMBOL; an_upper: ET_CHOICE_CONSTANT): ET_CHOICE_RANGE
+	new_choice_range (a_lower: detachable ET_CHOICE_CONSTANT; a_dotdot: detachable ET_SYMBOL;
+		an_upper: detachable ET_CHOICE_CONSTANT): detachable ET_CHOICE_RANGE
 			-- New choice range
 		do
 			if a_lower /= Void and an_upper /= Void then
@@ -1987,7 +2025,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_NAMED_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM
+	new_client_comma (a_name: detachable ET_CLASS_NAME; a_base_class: detachable ET_NAMED_CLASS;
+		a_comma: detachable ET_SYMBOL): detachable ET_CLIENT_ITEM
 			-- New client followed by a comma
 		do
 			if a_name /= Void and a_base_class /= Void then
@@ -1999,7 +2038,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_clients (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CLIENTS
+	new_clients (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_CLIENTS
 			-- New client clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2011,7 +2050,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_colon_type (a_colon: ET_SYMBOL; a_type: ET_TYPE): ET_DECLARED_TYPE
+	new_colon_type (a_colon: detachable ET_SYMBOL; a_type: detachable ET_TYPE): detachable ET_DECLARED_TYPE
 			-- New colon-type
 		do
 			if a_colon = Void then
@@ -2021,13 +2060,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_empty_compound: ET_COMPOUND
+	new_empty_compound: detachable ET_COMPOUND
 			-- New empty instruction compound
 		do
 			create Result.make_with_capacity (0)
 		end
 
-	new_conditional (a_keyword: ET_KEYWORD; an_expression: ET_EXPRESSION): ET_CONDITIONAL
+	new_conditional (a_keyword: detachable ET_KEYWORD; an_expression: detachable ET_EXPRESSION): detachable ET_CONDITIONAL
 			-- New conditional
 		do
 			if a_keyword = Void then
@@ -2037,10 +2076,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_constant_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
-		an_is: ET_AST_LEAF; a_constant: ET_CONSTANT; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
-		a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE
+	new_constant_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		an_is: detachable ET_AST_LEAF; a_constant: detachable ET_CONSTANT; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST; a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_CONSTANT_ATTRIBUTE
 			-- New constant attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_constant /= Void and a_clients /= Void and a_class /= Void then
@@ -2055,8 +2094,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
-		a_creation: ET_CONSTRAINT_CREATOR; a_class: ET_CLASS): ET_CONSTRAINED_FORMAL_PARAMETER
+	new_constrained_formal_parameter (a_type_mark: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER;
+		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_TYPE;
+		a_creation: detachable ET_CONSTRAINT_CREATOR; a_class: detachable ET_CLASS): detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- New constrained formal generic parameter
 		do
 			if a_name /= Void and a_constraint /= Void and a_class /= Void then
@@ -2070,7 +2110,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_actual_parameter_comma (a_parameter: ET_CONSTRAINT_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
+	new_constraint_actual_parameter_comma (a_parameter: detachable ET_CONSTRAINT_ACTUAL_PARAMETER;
+		a_comma: detachable ET_SYMBOL): detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 			-- New constraint_actual_parameter-comma
 		do
 			if a_comma = Void then
@@ -2080,7 +2121,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
+	new_constraint_actual_parameters (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 			-- New constraint actual generic parameter list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2092,7 +2133,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_creator (a_create: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CONSTRAINT_CREATOR
+	new_constraint_creator (a_create: detachable ET_KEYWORD; an_end: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CONSTRAINT_CREATOR
 			-- New constraint creation clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2104,7 +2145,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_labeled_actual_parameter_semicolon (a_parameter: ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SEMICOLON_SYMBOL): ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
+	new_constraint_labeled_actual_parameter_semicolon (a_parameter: detachable ET_CONSTRAINT_LABELED_ACTUAL_PARAMETER;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 			-- New constraint_labeled_actual_parameter-semicolon
 		do
 			if a_semicolon = Void then
@@ -2114,7 +2156,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_convert_feature_comma (a_convert_feature: ET_CONVERT_FEATURE; a_comma: ET_SYMBOL): ET_CONVERT_FEATURE_ITEM
+	new_convert_feature_comma (a_convert_feature: detachable ET_CONVERT_FEATURE;
+		a_comma: detachable ET_SYMBOL): detachable ET_CONVERT_FEATURE_ITEM
 			-- New convert_feature-comma
 		do
 			if a_comma = Void then
@@ -2124,7 +2167,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_convert_features (a_convert: ET_KEYWORD; nb: INTEGER): ET_CONVERT_FEATURE_LIST
+	new_convert_features (a_convert: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CONVERT_FEATURE_LIST
 			-- New convert clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2133,7 +2176,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_convert_function (a_name: ET_FEATURE_NAME; a_colon: ET_SYMBOL; a_types: ET_TYPE_LIST): ET_CONVERT_FUNCTION
+	new_convert_function (a_name: detachable ET_FEATURE_NAME; a_colon: detachable ET_SYMBOL;
+		a_types: detachable ET_TYPE_LIST): detachable ET_CONVERT_FUNCTION
 			-- New convert function
 		do
 			if a_name /= Void and a_types /= Void then
@@ -2144,7 +2188,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_convert_procedure (a_name: ET_FEATURE_NAME; a_left_parenthesis: ET_SYMBOL; a_types: ET_TYPE_LIST; a_right_parenthesis: ET_SYMBOL): ET_CONVERT_PROCEDURE
+	new_convert_procedure (a_name: detachable ET_FEATURE_NAME; a_left_parenthesis: detachable ET_SYMBOL;
+		a_types: detachable ET_TYPE_LIST; a_right_parenthesis: detachable ET_SYMBOL): detachable ET_CONVERT_PROCEDURE
 			-- New convert procedure
 		do
 			if a_name /= Void and a_types /= Void then
@@ -2158,7 +2203,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_convert_types (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_TYPE_LIST
+	new_convert_types (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_LIST
 			-- New convert type list with given capacity
 		local
 			a_braced_types: ET_BRACED_TYPE_LIST
@@ -2173,7 +2218,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_expression (a_create: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_call: ET_QUALIFIED_CALL): ET_CREATE_EXPRESSION
+	new_create_expression (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_EXPRESSION
 			-- New create expression
 		do
 			if a_type /= Void then
@@ -2184,7 +2230,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_instruction (a_create: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_target: ET_WRITABLE; a_call: ET_QUALIFIED_CALL): ET_CREATE_INSTRUCTION
+	new_create_instruction (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_target: detachable ET_WRITABLE; a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_INSTRUCTION
 			-- New create instruction
 		do
 			if a_target /= Void then
@@ -2195,7 +2242,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_creator (a_creation: ET_KEYWORD; a_clients: ET_CLIENT_LIST; nb: INTEGER): ET_CREATOR
+	new_creator (a_creation: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
 			-- New creation clause with given capacity
 		do
 			if a_clients /= Void then
@@ -2206,7 +2253,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_current_address (d: ET_SYMBOL; c: ET_CURRENT): ET_CURRENT_ADDRESS
+	new_current_address (d: detachable ET_SYMBOL; c: detachable ET_CURRENT): detachable ET_CURRENT_ADDRESS
 			-- New address of Current
 		do
 			create Result.make
@@ -2218,8 +2265,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_custom_attribute (a_creation: ET_CREATE_EXPRESSION;
-		a_settings: ET_MANIFEST_TUPLE; an_end: ET_KEYWORD): ET_CUSTOM_ATTRIBUTE
+	new_custom_attribute (a_creation: detachable ET_CREATE_EXPRESSION;
+		a_settings: detachable ET_MANIFEST_TUPLE; an_end: detachable ET_KEYWORD): detachable ET_CUSTOM_ATTRIBUTE
 			-- New if instruction
 		do
 			if a_creation /= Void then
@@ -2230,7 +2277,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_debug_compound (a_debug: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_debug_compound (a_debug: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'debug' keyword
 		do
 			if a_compound /= Void then
@@ -2243,7 +2290,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_debug_instruction (a_keys: ET_MANIFEST_STRING_LIST; a_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_DEBUG_INSTRUCTION
+	new_debug_instruction (a_keys: detachable ET_MANIFEST_STRING_LIST; a_compound: detachable ET_COMPOUND;
+		an_end: detachable ET_KEYWORD): detachable ET_DEBUG_INSTRUCTION
 			-- New debug instruction
 		do
 			create Result.make (a_keys, a_compound)
@@ -2252,12 +2300,14 @@ feature -- AST nodes
 			end
 		end
 
-	new_deferred_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD;
-		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_FUNCTION
+	new_deferred_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_deferred: detachable ET_KEYWORD;
+		a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_DEFERRED_FUNCTION
 			-- New deferred function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -2282,11 +2332,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_deferred_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_PROCEDURE
+	new_deferred_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_deferred: detachable ET_KEYWORD; a_postconditions: detachable ET_POSTCONDITIONS;
+		an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_DEFERRED_PROCEDURE
 			-- New deferred procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
@@ -2310,7 +2360,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_compound (a_do: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_do_compound (a_do: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'do' keyword
 		do
 			if a_compound /= Void then
@@ -2323,12 +2373,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
-		a_class: ET_CLASS): ET_DO_FUNCTION
+	new_do_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_compound: detachable ET_COMPOUND;
+		a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST; a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_DO_FUNCTION
 			-- New do function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -2353,9 +2407,12 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_DO_FUNCTION_INLINE_AGENT
+	new_do_function_inline_agent (an_agent: detachable ET_AGENT_KEYWORD;
+		a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST; a_type: detachable ET_DECLARED_TYPE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_DO_FUNCTION_INLINE_AGENT
 			-- New inline agent whose associated feature is a do function
 		do
 			if a_type /= Void then
@@ -2374,12 +2431,15 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
-		a_class: ET_CLASS): ET_DO_PROCEDURE
+	new_do_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_compound: detachable ET_COMPOUND;
+		a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST; a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_DO_PROCEDURE
 			-- New do procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
@@ -2403,9 +2463,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_DO_PROCEDURE_INLINE_AGENT
+	new_do_procedure_inline_agent (an_agent: detachable ET_AGENT_KEYWORD; a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_DO_PROCEDURE_INLINE_AGENT
 			-- New inline agent whose associated feature is a do procedure
 		do
 			create Result.make (a_formal_args, an_actual_args)
@@ -2422,7 +2484,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_dot_feature_name (a_dot: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_QUALIFIED_FEATURE_NAME
+	new_dot_feature_name (a_dot: detachable ET_SYMBOL; a_name: detachable ET_FEATURE_NAME): detachable ET_QUALIFIED_FEATURE_NAME
 			-- New dot-feature_name
 		do
 			if a_dot = Void then
@@ -2432,7 +2494,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_else_compound (an_else: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_else_compound (an_else: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by an 'else' keyword
 		do
 			if a_compound /= Void then
@@ -2445,7 +2507,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_exports (an_export: ET_KEYWORD; nb: INTEGER): ET_EXPORT_LIST
+	new_exports (an_export: detachable ET_KEYWORD; nb: INTEGER): detachable ET_EXPORT_LIST
 			-- New export clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2454,7 +2516,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_expression_address (d: ET_SYMBOL; e: ET_PARENTHESIZED_EXPRESSION): ET_EXPRESSION_ADDRESS
+	new_expression_address (d: detachable ET_SYMBOL; e: detachable ET_PARENTHESIZED_EXPRESSION): detachable ET_EXPRESSION_ADDRESS
 			-- New expression address
 		do
 			if e /= Void then
@@ -2465,7 +2527,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_expression_comma (an_expression: ET_EXPRESSION; a_comma: ET_SYMBOL): ET_EXPRESSION_ITEM
+	new_expression_comma (an_expression: detachable ET_EXPRESSION; a_comma: detachable ET_SYMBOL): detachable ET_EXPRESSION_ITEM
 			-- New expression-comma
 		do
 			if a_comma = Void then
@@ -2475,12 +2537,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_extended_attribute (a_name: ET_EXTENDED_FEATURE_NAME;
-		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; a_first_indexing: ET_INDEXING_LIST;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST;
-		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
-		a_rescue_clause: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTENDED_ATTRIBUTE
+	new_extended_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue_clause: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST; a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_EXTENDED_ATTRIBUTE
 			-- New extended attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -2502,7 +2568,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_EXTENDED_FEATURE_NAME
+	new_extended_feature_name_comma (a_name: detachable ET_EXTENDED_FEATURE_NAME;
+		a_comma: detachable ET_SYMBOL): detachable ET_EXTENDED_FEATURE_NAME
 			-- New extended_feature_name-comma
 		do
 			if a_comma = Void then
@@ -2512,7 +2579,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_alias (a_keyword: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_ALIAS
+	new_external_alias (a_keyword: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_EXTERNAL_ALIAS
 			-- New external alias
 		do
 			if a_keyword = Void then
@@ -2522,12 +2589,15 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
-		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
-		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION
+	new_external_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_type: detachable ET_DECLARED_TYPE; an_assigner: detachable ET_ASSIGNER;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_language: detachable ET_EXTERNAL_LANGUAGE;
+		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
+		an_end: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_EXTERNAL_FUNCTION
 			-- New external function
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
@@ -2550,9 +2620,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_EXTERNAL_FUNCTION_INLINE_AGENT
+	new_external_function_inline_agent (an_agent: detachable ET_AGENT_KEYWORD;
+		a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST; a_type: detachable ET_DECLARED_TYPE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE;
+		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
+		an_end: detachable ET_KEYWORD; an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_EXTERNAL_FUNCTION_INLINE_AGENT
 			-- New inline agent whose associated feature is an external function
 		do
 			if a_type /= Void and a_language /= Void then
@@ -2569,7 +2641,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_language (a_keyword: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_LANGUAGE
+	new_external_language (a_keyword: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_EXTERNAL_LANGUAGE
 			-- New external language
 		do
 			if a_keyword = Void then
@@ -2579,12 +2651,12 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
-		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE
+	new_external_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE;
+		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_EXTERNAL_PROCEDURE
 			-- New external procedure
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
@@ -2606,9 +2678,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_external_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
-		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_EXTERNAL_PROCEDURE_INLINE_AGENT
+	new_external_procedure_inline_agent (an_agent: detachable ET_AGENT_KEYWORD; a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: detachable ET_PRECONDITIONS; a_language: detachable ET_EXTERNAL_LANGUAGE;
+		an_alias: detachable ET_EXTERNAL_ALIAS; a_postconditions: detachable ET_POSTCONDITIONS;
+		an_end: detachable ET_KEYWORD;
+		an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_EXTERNAL_PROCEDURE_INLINE_AGENT
 			-- New inline agent whose associated feature is an external procedure
 		do
 			if a_language /= Void then
@@ -2625,7 +2699,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS
+	new_feature_address (d: detachable ET_SYMBOL; a_name: detachable ET_FEATURE_NAME): detachable ET_FEATURE_ADDRESS
 			-- New feature address
 		do
 			if a_name /= Void then
@@ -2636,7 +2710,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_feature_clause (a_feature: ET_KEYWORD; a_clients: ET_CLIENT_LIST): ET_FEATURE_CLAUSE
+	new_feature_clause (a_feature: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST): detachable ET_FEATURE_CLAUSE
 			-- New fetaure clause
 		do
 			if a_clients /= Void then
@@ -2647,7 +2721,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_feature_name_comma (a_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_FEATURE_NAME_ITEM
+	new_feature_name_comma (a_name: detachable ET_FEATURE_NAME; a_comma: detachable ET_SYMBOL): detachable ET_FEATURE_NAME_ITEM
 			-- New feature_name-comma
 		do
 			if a_comma = Void then
@@ -2657,7 +2731,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_formal_argument_semicolon (an_argument: ET_FORMAL_ARGUMENT; a_semicolon: ET_SYMBOL): ET_FORMAL_ARGUMENT_ITEM
+	new_formal_argument_semicolon (an_argument: detachable ET_FORMAL_ARGUMENT;
+		a_semicolon: detachable ET_SYMBOL): detachable ET_FORMAL_ARGUMENT_ITEM
 			-- New formal_argument-semicolon
 		do
 			if a_semicolon = Void then
@@ -2667,7 +2742,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST
+	new_formal_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_FORMAL_ARGUMENT_LIST
 			-- New formal argument list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2679,7 +2754,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_formal_parameter_comma (a_formal: ET_FORMAL_PARAMETER; a_comma: ET_SYMBOL): ET_FORMAL_PARAMETER_ITEM
+	new_formal_parameter_comma (a_formal: detachable ET_FORMAL_PARAMETER;
+		a_comma: detachable ET_SYMBOL): detachable ET_FORMAL_PARAMETER_ITEM
 			-- New formal_generic_parameter-comma
 		do
 			if a_comma = Void then
@@ -2689,7 +2765,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_formal_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_PARAMETER_LIST
+	new_formal_parameters (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_FORMAL_PARAMETER_LIST
 			-- New formal generic parameter list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2701,7 +2777,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_from_compound (a_from: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_from_compound (a_from: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'from' keyword
 		do
 			if a_compound /= Void then
@@ -2714,9 +2790,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_if_instruction (a_conditional: ET_CONDITIONAL; a_then_compound: ET_COMPOUND;
-		an_elseif_parts: ET_ELSEIF_PART_LIST; an_else_compound: ET_COMPOUND;
-		an_end: ET_KEYWORD): ET_IF_INSTRUCTION
+	new_if_instruction (a_conditional: detachable ET_CONDITIONAL; a_then_compound: detachable ET_COMPOUND;
+		an_elseif_parts: detachable ET_ELSEIF_PART_LIST; an_else_compound: detachable ET_COMPOUND;
+		an_end: detachable ET_KEYWORD): detachable ET_IF_INSTRUCTION
 			-- New if instruction
 		do
 			if a_conditional /= Void then
@@ -2729,7 +2805,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing (a_terms: ET_INDEXING_TERM_LIST): ET_INDEXING
+	new_indexing (a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_INDEXING
 			-- New indexing clause
 		do
 			if a_terms /= Void then
@@ -2737,7 +2813,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing_semicolon (an_indexing: ET_INDEXING_ITEM; a_semicolon: ET_SYMBOL): ET_INDEXING_ITEM
+	new_indexing_semicolon (an_indexing: detachable ET_INDEXING_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_INDEXING_ITEM
 			-- New indexing-semicolon
 		do
 			if a_semicolon = Void then
@@ -2747,7 +2823,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing_term_comma (a_term: ET_INDEXING_TERM; a_comma: ET_SYMBOL): ET_INDEXING_TERM_ITEM
+	new_indexing_term_comma (a_term: detachable ET_INDEXING_TERM; a_comma: detachable ET_SYMBOL): detachable ET_INDEXING_TERM_ITEM
 			-- New indexing_term-comma
 		do
 			if a_comma = Void then
@@ -2757,13 +2833,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing_terms (nb: INTEGER): ET_INDEXING_TERM_LIST
+	new_indexing_terms (nb: INTEGER): detachable ET_INDEXING_TERM_LIST
 			-- New indexing terms with given capacity
 		do
 			create Result.make_with_capacity (nb)
 		end
 
-	new_indexings (an_indexing: ET_KEYWORD; nb: INTEGER): ET_INDEXING_LIST
+	new_indexings (an_indexing: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INDEXING_LIST
 			-- New indexing clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -2772,7 +2848,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_and_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_and_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "and" feature name
 		do
 			if an_operator /= Void then
@@ -2783,7 +2860,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_and_then_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_and_then_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "and then" feature name
 		do
 			if an_operator /= Void then
@@ -2794,7 +2872,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_and_then_operator (an_and: ET_KEYWORD; a_then: ET_KEYWORD): ET_INFIX_AND_THEN_OPERATOR
+	new_infix_and_then_operator (an_and: detachable ET_KEYWORD;
+		a_then: detachable ET_KEYWORD): detachable ET_INFIX_AND_THEN_OPERATOR
 			-- New binary "and then" operator
 		do
 			create Result.make
@@ -2806,7 +2885,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_div_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_div_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
@@ -2817,7 +2897,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_divide_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_divide_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "//" feature name
 		do
 			if an_operator /= Void then
@@ -2828,7 +2909,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME
+	new_infix_free_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
@@ -2841,7 +2923,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_ge_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_ge_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix ">=" feature name
 		do
 			if an_operator /= Void then
@@ -2852,7 +2935,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_gt_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_gt_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix ">" feature name
 		do
 			if an_operator /= Void then
@@ -2863,7 +2947,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_implies_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_implies_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "implies" feature name
 		do
 			if an_operator /= Void then
@@ -2874,7 +2959,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_le_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_le_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "<=" feature name
 		do
 			if an_operator /= Void then
@@ -2885,7 +2971,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_lt_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_lt_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "<" feature name
 		do
 			if an_operator /= Void then
@@ -2896,7 +2983,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_minus_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_minus_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "-" feature name
 		do
 			if an_operator /= Void then
@@ -2907,7 +2995,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_mod_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_mod_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "\\" feature name
 		do
 			if an_operator /= Void then
@@ -2918,7 +3007,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_or_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_or_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "or" feature name
 		do
 			if an_operator /= Void then
@@ -2929,7 +3019,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_or_else_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_or_else_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "or else" feature name
 		do
 			if an_operator /= Void then
@@ -2940,7 +3031,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_or_else_operator (an_or: ET_KEYWORD; an_else: ET_KEYWORD): ET_INFIX_OR_ELSE_OPERATOR
+	new_infix_or_else_operator (an_or: detachable ET_KEYWORD;
+		an_else: detachable ET_KEYWORD): detachable ET_INFIX_OR_ELSE_OPERATOR
 			-- New binary "or else" operator
 		do
 			create Result.make
@@ -2952,7 +3044,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_plus_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_plus_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "+" feature name
 		do
 			if an_operator /= Void then
@@ -2963,7 +3056,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_power_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_power_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "^" feature name
 		do
 			if an_operator /= Void then
@@ -2974,7 +3068,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_times_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_times_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "*" feature name
 		do
 			if an_operator /= Void then
@@ -2985,7 +3080,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_infix_xor_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME
+	new_infix_xor_name (an_infix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
 			-- New infix "xor" feature name
 		do
 			if an_operator /= Void then
@@ -2996,8 +3092,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_inspect_instruction (a_conditional: ET_CONDITIONAL; a_when_parts: ET_WHEN_PART_LIST;
-		an_else_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_INSPECT_INSTRUCTION
+	new_inspect_instruction (a_conditional: detachable ET_CONDITIONAL; a_when_parts: detachable ET_WHEN_PART_LIST;
+		an_else_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_INSPECT_INSTRUCTION
 			-- New inspect instruction
 		do
 			if a_conditional /= Void then
@@ -3009,7 +3105,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_invariants (an_invariant: ET_KEYWORD; a_class: ET_CLASS; nb: INTEGER): ET_INVARIANTS
+	new_invariants (an_invariant: detachable ET_KEYWORD; a_class: detachable ET_CLASS; nb: INTEGER): detachable ET_INVARIANTS
 			-- New class invariants with given capacity
 		do
 			if a_class /= Void then
@@ -3020,14 +3116,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_keyword_feature_name_list (a_keyword: ET_KEYWORD; nb: INTEGER): ET_KEYWORD_FEATURE_NAME_LIST
+	new_keyword_feature_name_list (a_keyword: detachable ET_KEYWORD; nb: INTEGER): detachable ET_KEYWORD_FEATURE_NAME_LIST
 			-- New feature name list, with a given capacity, preceded by a keyword
 		do
 			create Result.make_with_capacity (nb)
-			Result.set_keyword (a_keyword)
+			if a_keyword /= Void then
+				Result.set_keyword (a_keyword)
+			end
 		end
 
-	new_label_comma (a_label: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_LABEL
+	new_label_comma (a_label: detachable ET_IDENTIFIER; a_comma: detachable ET_SYMBOL): detachable ET_LABEL
 			-- New label-comma
 		do
 			if a_comma = Void then
@@ -3037,7 +3135,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_labeled_actual_parameter_semicolon (a_parameter: ET_LABELED_ACTUAL_PARAMETER; a_semicolon: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM
+	new_labeled_actual_parameter_semicolon (a_parameter: detachable ET_LABELED_ACTUAL_PARAMETER;
+		a_semicolon: detachable ET_SYMBOL): detachable ET_ACTUAL_PARAMETER_ITEM
 			-- New labeled_actual_parameter-semicolon
 		do
 			if a_semicolon = Void then
@@ -3047,7 +3146,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_current (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT
+	new_like_current (a_type_mark: detachable ET_TYPE_MARK; a_like: detachable ET_KEYWORD;
+		a_current: detachable ET_CURRENT): detachable ET_LIKE_CURRENT
 			-- New 'like Current' type
 		do
 			create Result.make (a_type_mark)
@@ -3059,7 +3159,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_feature (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE
+	new_like_feature (a_type_mark: detachable ET_TYPE_MARK; a_like: detachable ET_KEYWORD;
+		a_name: detachable ET_FEATURE_NAME): detachable ET_LIKE_FEATURE
 			-- New 'like name' type
 		do
 			if a_name /= Void then
@@ -3070,7 +3171,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_local_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_LOCAL_NAME
+	new_local_name_comma (a_name: detachable ET_IDENTIFIER; a_comma: detachable ET_SYMBOL): detachable ET_LOCAL_NAME
 			-- New local_name-comma
 		do
 			if a_comma = Void then
@@ -3080,7 +3181,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_local_variable_semicolon (a_variable: ET_LOCAL_VARIABLE; a_semicolon: ET_SYMBOL): ET_LOCAL_VARIABLE_ITEM
+	new_local_variable_semicolon (a_variable: detachable ET_LOCAL_VARIABLE;
+		a_semicolon: detachable ET_SYMBOL): detachable ET_LOCAL_VARIABLE_ITEM
 			-- New local_variable-semicolon
 		do
 			if a_semicolon = Void then
@@ -3090,7 +3192,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST
+	new_local_variables (a_local: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOCAL_VARIABLE_LIST
 			-- New local variable list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3099,7 +3201,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_compound (a_loop: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_loop_compound (a_loop: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'loop' keyword
 		do
 			if a_compound /= Void then
@@ -3112,9 +3214,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
-		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
-		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION
+	new_loop_instruction (a_from_compound: detachable ET_COMPOUND; an_invariant: detachable ET_LOOP_INVARIANTS;
+		an_until_conditional: detachable ET_CONDITIONAL; a_loop_compound: detachable ET_COMPOUND;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_LOOP_INSTRUCTION
 			-- New loop instruction
 		do
 			if an_until_conditional /= Void then
@@ -3128,9 +3230,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_instruction_old_syntax (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
-		a_variant: ET_VARIANT; an_until_conditional: ET_CONDITIONAL;
-		a_loop_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION
+	new_loop_instruction_old_syntax (a_from_compound: detachable ET_COMPOUND; an_invariant: detachable ET_LOOP_INVARIANTS;
+		a_variant: detachable ET_VARIANT; an_until_conditional: detachable ET_CONDITIONAL;
+		a_loop_compound: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD): detachable ET_LOOP_INSTRUCTION
 			-- New loop instruction with the old syntax where the variant
 			-- clause appears after the invariant clause
 		do
@@ -3145,7 +3247,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_loop_invariants (an_invariant: ET_KEYWORD; nb: INTEGER): ET_LOOP_INVARIANTS
+	new_loop_invariants (an_invariant: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3154,7 +3256,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_manifest_array (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_ARRAY
+	new_manifest_array (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_MANIFEST_ARRAY
 			-- New manifest array with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3166,7 +3268,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_manifest_string_comma (a_string: ET_MANIFEST_STRING; a_comma: ET_SYMBOL): ET_MANIFEST_STRING_ITEM
+	new_manifest_string_comma (a_string: detachable ET_MANIFEST_STRING;
+		a_comma: detachable ET_SYMBOL): detachable ET_MANIFEST_STRING_ITEM
 			-- New manifest_string-comma
 		do
 			if a_comma = Void then
@@ -3176,7 +3279,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_manifest_string_list (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_STRING_LIST
+	new_manifest_string_list (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_MANIFEST_STRING_LIST
 			-- New list of manifest strings with capacity `nb'.
 		do
 			create Result.make_with_capacity (nb)
@@ -3188,7 +3291,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_manifest_tuple (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_MANIFEST_TUPLE
+	new_manifest_tuple (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_MANIFEST_TUPLE
 			-- New manifest tuple with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3200,7 +3303,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_manifest_type (a_left: ET_SYMBOL; a_type: ET_TYPE; a_right: ET_SYMBOL): ET_MANIFEST_TYPE
+	new_manifest_type (a_left: detachable ET_SYMBOL; a_type: detachable ET_TYPE;
+		a_right: detachable ET_SYMBOL): detachable ET_MANIFEST_TYPE
 			-- New manifest type
 		do
 			if a_type /= Void then
@@ -3214,7 +3318,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
+	new_named_object_test (a_attached: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_expression: detachable ET_EXPRESSION; a_as: detachable ET_KEYWORD;
+		a_name: detachable ET_IDENTIFIER): detachable ET_NAMED_OBJECT_TEST
 			-- New named object-test expression
 		do
 			if a_name /= Void and a_expression /= Void then
@@ -3228,7 +3334,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_none_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS
+	new_none_clients (a_left, a_right: detachable ET_SYMBOL): detachable ET_CLIENTS
 			-- Client list of the form {}
 		do
 			create Result.make
@@ -3240,19 +3346,20 @@ feature -- AST nodes
 			end
 		end
 
-	new_null_export (a_semicolon: ET_SEMICOLON_SYMBOL): ET_NULL_EXPORT
+	new_null_export (a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_NULL_EXPORT
 			-- New null export
 		do
 			Result := a_semicolon
 		end
 
-	new_null_instruction (a_semicolon: ET_SEMICOLON_SYMBOL): ET_NULL_INSTRUCTION
+	new_null_instruction (a_semicolon: detachable ET_SEMICOLON_SYMBOL): detachable ET_NULL_INSTRUCTION
 			-- New null instruction
 		do
 			Result := a_semicolon
 		end
 
-	new_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION): ET_OBJECT_TEST
+	new_object_test (a_attached: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_expression: detachable ET_EXPRESSION): detachable ET_OBJECT_TEST
 			-- New object-test expression
 		do
 			if a_expression /= Void then
@@ -3263,7 +3370,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_obsolete_message (an_obsolete: ET_KEYWORD; a_message: ET_MANIFEST_STRING): ET_OBSOLETE
+	new_obsolete_message (an_obsolete: detachable ET_KEYWORD;
+		a_message: detachable ET_MANIFEST_STRING): detachable ET_OBSOLETE
 			-- New obsolete clause
 		do
 			if an_obsolete = Void then
@@ -3273,7 +3381,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_old_expression (an_old: ET_KEYWORD; e: ET_EXPRESSION): ET_OLD_EXPRESSION
+	new_old_expression (an_old: detachable ET_KEYWORD; e: detachable ET_EXPRESSION): detachable ET_OLD_EXPRESSION
 			-- New old expression
 		do
 			if e /= Void then
@@ -3284,7 +3392,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST
+	new_old_object_test (a_left_brace: detachable ET_SYMBOL; a_name: detachable ET_IDENTIFIER;
+		a_colon: detachable ET_SYMBOL; a_type: detachable ET_TYPE; a_right_brace: detachable ET_SYMBOL;
+		a_expression: detachable ET_EXPRESSION): detachable ET_OLD_OBJECT_TEST
 			-- New object-test expression
 		do
 			if a_name /= Void and a_type /= Void and a_expression /= Void then
@@ -3301,7 +3411,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_compound (a_once: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_once_compound (a_once: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'once' keyword
 		do
 			if a_compound /= Void then
@@ -3314,12 +3424,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
-		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
-		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ONCE_FUNCTION
+	new_once_function (a_name: detachable ET_EXTENDED_FEATURE_NAME;
+		args: detachable ET_FORMAL_ARGUMENT_LIST; a_type: detachable ET_DECLARED_TYPE;
+		an_assigner: detachable ET_ASSIGNER; an_is: detachable ET_KEYWORD;
+		a_first_indexing: detachable ET_INDEXING_LIST; an_obsolete: detachable ET_OBSOLETE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_keys: detachable ET_MANIFEST_STRING_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE; a_class: detachable ET_CLASS): detachable ET_ONCE_FUNCTION
 			-- New once function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -3345,10 +3459,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_function_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
-		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
-		an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_FUNCTION_INLINE_AGENT
+	new_once_function_inline_agent (an_agent: detachable ET_AGENT_KEYWORD;
+		a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST; a_type: detachable ET_DECLARED_TYPE;
+		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_keys: detachable ET_MANIFEST_STRING_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_ONCE_FUNCTION_INLINE_AGENT
 			-- New inline agent whose associated feature is a once function
 		do
 			if a_type /= Void then
@@ -3368,7 +3485,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING
+	new_once_manifest_string (a_once: detachable ET_KEYWORD;
+		a_string: detachable ET_MANIFEST_STRING): detachable ET_ONCE_MANIFEST_STRING
 			-- New once manifest string
 		do
 			if a_string /= Void then
@@ -3379,12 +3497,16 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST; a_compound: ET_COMPOUND;
-		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
-		a_class: ET_CLASS): ET_ONCE_PROCEDURE
+	new_once_procedure (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
+		an_is: detachable ET_KEYWORD; a_first_indexing: detachable ET_INDEXING_LIST;
+		an_obsolete: detachable ET_OBSOLETE; a_preconditions: detachable ET_PRECONDITIONS;
+		a_locals: detachable ET_LOCAL_VARIABLE_LIST; a_keys: detachable ET_MANIFEST_STRING_LIST;
+		a_compound: detachable ET_COMPOUND;
+		a_postconditions: detachable ET_POSTCONDITIONS; a_rescue: detachable ET_COMPOUND;
+		an_end: detachable ET_KEYWORD;
+		a_semicolon: detachable ET_SEMICOLON_SYMBOL; a_clients: detachable ET_CLIENT_LIST;
+		a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_ONCE_PROCEDURE
 			-- New once procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
@@ -3409,10 +3531,12 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_procedure_inline_agent (an_agent: ET_AGENT_KEYWORD; a_formal_args: ET_FORMAL_ARGUMENT_LIST;
-		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_keys: ET_MANIFEST_STRING_LIST;
-		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
-		an_actual_args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_ONCE_PROCEDURE_INLINE_AGENT
+	new_once_procedure_inline_agent (an_agent: detachable ET_AGENT_KEYWORD; a_formal_args: detachable ET_FORMAL_ARGUMENT_LIST;
+		a_preconditions: detachable ET_PRECONDITIONS; a_locals: detachable ET_LOCAL_VARIABLE_LIST;
+		a_keys: detachable ET_MANIFEST_STRING_LIST;
+		a_compound: detachable ET_COMPOUND; a_postconditions: detachable ET_POSTCONDITIONS;
+		a_rescue: detachable ET_COMPOUND; an_end: detachable ET_KEYWORD;
+		an_actual_args: detachable ET_AGENT_ARGUMENT_OPERAND_LIST): detachable ET_ONCE_PROCEDURE_INLINE_AGENT
 			-- New inline agent whose assicated feature is a once procedure
 		do
 			create Result.make (a_formal_args, an_actual_args)
@@ -3430,8 +3554,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_parent (a_type: ET_CLASS_TYPE; a_renames: ET_RENAME_LIST; an_exports: ET_EXPORT_LIST;
-		an_undefines, a_redefines, a_selects: ET_KEYWORD_FEATURE_NAME_LIST; an_end: ET_KEYWORD): ET_PARENT
+	new_parent (a_type: detachable ET_CLASS_TYPE; a_renames: detachable ET_RENAME_LIST;
+		an_exports: detachable ET_EXPORT_LIST;
+		an_undefines, a_redefines, a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST;
+		an_end: detachable ET_KEYWORD): detachable ET_PARENT
 			-- New parent
 		do
 			if a_type /= Void then
@@ -3442,7 +3568,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_parent_semicolon (a_parent: ET_PARENT; a_semicolon: ET_SYMBOL): ET_PARENT_ITEM
+	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SYMBOL): detachable ET_PARENT_ITEM
 			-- New parent-semicolon
 		do
 			if a_semicolon = Void then
@@ -3452,7 +3578,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_parents (an_inherit: ET_KEYWORD; nb: INTEGER): ET_PARENT_LIST
+	new_parents (an_inherit: detachable ET_KEYWORD; nb: INTEGER): detachable ET_PARENT_LIST
 			-- New class parent list with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3461,7 +3587,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_parenthesized_expression (l: ET_SYMBOL; e: ET_EXPRESSION; r: ET_SYMBOL): ET_PARENTHESIZED_EXPRESSION
+	new_parenthesized_expression (l: detachable ET_SYMBOL; e: detachable ET_EXPRESSION;
+		r: detachable ET_SYMBOL): detachable ET_PARENTHESIZED_EXPRESSION
 			-- New parenthesized expression
 		do
 			if e /= Void then
@@ -3475,7 +3602,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_postconditions (an_ensure: ET_KEYWORD; a_then: ET_KEYWORD; nb: INTEGER): ET_POSTCONDITIONS
+	new_postconditions (an_ensure: detachable ET_KEYWORD;
+		a_then: detachable ET_KEYWORD; nb: INTEGER): detachable ET_POSTCONDITIONS
 			-- New postconditions with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3487,7 +3615,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_preconditions (a_require: ET_KEYWORD; an_else: ET_KEYWORD; nb: INTEGER): ET_PRECONDITIONS
+	new_preconditions (a_require: detachable ET_KEYWORD;
+		an_else: detachable ET_KEYWORD; nb: INTEGER): detachable ET_PRECONDITIONS
 			-- New preconditions with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3499,7 +3628,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_precursor_class_name (l: ET_SYMBOL; a_name: ET_CLASS_NAME; r: ET_SYMBOL): ET_PRECURSOR_CLASS_NAME
+	new_precursor_class_name (l: detachable ET_SYMBOL; a_name: detachable ET_CLASS_NAME;
+		r: detachable ET_SYMBOL): detachable ET_PRECURSOR_CLASS_NAME
 			-- New class name surrounded by braces
 		local
 			a_braced_name: ET_BRACED_CLASS_NAME
@@ -3516,7 +3646,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_precursor_expression (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_EXPRESSION
+	new_precursor_expression (is_parent_prefixed: BOOLEAN;
+		a_precursor: detachable ET_PRECURSOR_KEYWORD;
+		a_parent: detachable ET_PRECURSOR_CLASS_NAME;
+		args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_PRECURSOR_EXPRESSION
 			-- New precursor expression
 		do
 			if a_precursor /= Void then
@@ -3526,7 +3659,9 @@ feature -- AST nodes
 			end
 		end
 
-	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: ET_PRECURSOR_KEYWORD; a_parent: ET_PRECURSOR_CLASS_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_PRECURSOR_INSTRUCTION
+	new_precursor_instruction (is_parent_prefixed: BOOLEAN; a_precursor: detachable ET_PRECURSOR_KEYWORD;
+		a_parent: detachable ET_PRECURSOR_CLASS_NAME;
+		args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_PRECURSOR_INSTRUCTION
 			-- New precursor instruction
 		do
 			if a_precursor /= Void then
@@ -3536,7 +3671,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME
+	new_prefix_free_name (a_prefix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
 			-- New prefix free feature name
 		do
 			if an_operator /= Void then
@@ -3549,7 +3685,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_prefix_minus_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_NAME
+	new_prefix_minus_name (a_prefix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
 			-- New prefix "-" feature name
 		do
 			if an_operator /= Void then
@@ -3560,7 +3697,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_prefix_not_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_NAME
+	new_prefix_not_name (a_prefix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
 			-- New prefix "not" feature name
 		do
 			if an_operator /= Void then
@@ -3571,7 +3709,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_prefix_plus_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_NAME
+	new_prefix_plus_name (a_prefix: detachable ET_KEYWORD;
+		an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_NAME
 			-- New prefix "+" feature name
 		do
 			if an_operator /= Void then
@@ -3582,7 +3721,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_qualified_like_braced_type (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_left_brace: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_BRACED_TYPE
+	new_qualified_like_braced_type (a_type_mark: detachable ET_TYPE_MARK;
+		a_like: detachable ET_KEYWORD; a_left_brace: detachable ET_SYMBOL;
+		a_type: detachable ET_TYPE; a_right_brace: detachable ET_SYMBOL;
+		a_name: detachable ET_QUALIFIED_FEATURE_NAME): detachable ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- New qualified anchored type of the form 'like {A}.b'
 		do
 			if a_type /= Void and a_name /= Void then
@@ -3599,7 +3741,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_EXTENDED_FEATURE_NAME): ET_RENAME
+	new_rename (old_name: detachable ET_FEATURE_NAME; an_as: detachable ET_KEYWORD;
+		new_name: detachable ET_EXTENDED_FEATURE_NAME): detachable ET_RENAME
 			-- New rename pair
 		do
 			if old_name /= Void and new_name /= Void then
@@ -3610,8 +3753,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD;
-		new_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_ITEM
+	new_rename_comma (old_name: detachable ET_FEATURE_NAME; an_as: detachable ET_KEYWORD;
+		new_name: detachable ET_EXTENDED_FEATURE_NAME; a_comma: detachable ET_SYMBOL): detachable ET_RENAME_ITEM
 			-- New rename pair followed by a comma
 		local
 			a_rename: ET_RENAME
@@ -3629,7 +3772,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_renames (a_rename: ET_KEYWORD; nb: INTEGER): ET_RENAME_LIST
+	new_renames (a_rename: detachable ET_KEYWORD; nb: INTEGER): detachable ET_RENAME_LIST
 			-- New rename clause with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3638,7 +3781,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_rescue_compound (a_rescue: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_rescue_compound (a_rescue: detachable ET_KEYWORD;
+		a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'rescue' keyword
 		do
 			if a_compound /= Void then
@@ -3651,7 +3795,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_result_address (d: ET_SYMBOL; r: ET_RESULT): ET_RESULT_ADDRESS
+	new_result_address (d: detachable ET_SYMBOL; r: detachable ET_RESULT): detachable ET_RESULT_ADDRESS
 			-- New address of 'Result'
 		do
 			create Result.make
@@ -3663,8 +3807,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_static_call_expression (a_feature: ET_KEYWORD; a_type: ET_TARGET_TYPE;
-		a_name: ET_QUALIFIED_FEATURE_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_STATIC_CALL_EXPRESSION
+	new_static_call_expression (a_feature: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_name: detachable ET_QUALIFIED_FEATURE_NAME; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_STATIC_CALL_EXPRESSION
 			-- New static call expression
 		do
 			if a_type /= Void and a_name /= Void then
@@ -3675,8 +3819,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_static_call_instruction (a_feature: ET_KEYWORD; a_type: ET_TARGET_TYPE;
-		a_name: ET_QUALIFIED_FEATURE_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_STATIC_CALL_INSTRUCTION
+	new_static_call_instruction (a_feature: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+		a_name: detachable ET_QUALIFIED_FEATURE_NAME; args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_STATIC_CALL_INSTRUCTION
 			-- New static call instruction
 		do
 			if a_type /= Void and a_name /= Void then
@@ -3687,7 +3831,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_strip_expression (a_strip: ET_KEYWORD; l, r: ET_SYMBOL; nb: INTEGER): ET_STRIP_EXPRESSION
+	new_strip_expression (a_strip: detachable ET_KEYWORD; l, r: detachable ET_SYMBOL; nb: INTEGER): detachable ET_STRIP_EXPRESSION
 			-- New strip expression with given capacity
 		do
 			create Result.make_with_capacity (nb)
@@ -3702,7 +3846,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_tag (a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL): ET_TAG
+	new_tag (a_name: detachable ET_IDENTIFIER; a_colon: detachable ET_SYMBOL): detachable ET_TAG
 			-- New tag
 		do
 			if a_colon = Void then
@@ -3712,7 +3856,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_tagged_indexing (a_tag: ET_TAG; a_terms: ET_INDEXING_TERM_LIST): ET_TAGGED_INDEXING
+	new_tagged_indexing (a_tag: detachable ET_TAG; a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_TAGGED_INDEXING
 			-- New tagged indexing clause
 		do
 			if a_tag /= Void and a_terms /= Void then
@@ -3720,7 +3864,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_target_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_TARGET_TYPE
+	new_target_type (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE; r: detachable ET_SYMBOL): detachable ET_TARGET_TYPE
 			-- New type surrounded by braces
 		local
 			a_braced_type: ET_BRACED_TYPE
@@ -3737,7 +3881,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_then_compound (a_then: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND
+	new_then_compound (a_then: detachable ET_KEYWORD; a_compound: detachable ET_COMPOUND): detachable ET_COMPOUND
 			-- New compound preceded by a 'then' keyword
 		do
 			if a_compound /= Void then
@@ -3750,7 +3894,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_type_comma (a_type: ET_TYPE; a_comma: ET_SYMBOL): ET_TYPE_ITEM
+	new_type_comma (a_type: detachable ET_TYPE; a_comma: detachable ET_SYMBOL): detachable ET_TYPE_ITEM
 			-- New type-comma
 		do
 			if a_comma = Void then
@@ -3760,10 +3904,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_unique_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE;
-		an_assigner: ET_ASSIGNER; an_is: ET_AST_LEAF; a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
-		a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE
+	new_unique_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_type: detachable ET_DECLARED_TYPE;
+		an_assigner: detachable ET_ASSIGNER; an_is: detachable ET_AST_LEAF;
+		a_unique: detachable ET_KEYWORD; a_semicolon: detachable ET_SEMICOLON_SYMBOL;
+		a_clients: detachable ET_CLIENT_LIST; a_feature_clause: detachable ET_FEATURE_CLAUSE;
+		a_class: detachable ET_CLASS): detachable ET_UNIQUE_ATTRIBUTE
 			-- New unique attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
@@ -3781,7 +3926,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_variant (a_variant: ET_KEYWORD; a_tag: ET_TAG; an_expression: ET_EXPRESSION): ET_VARIANT
+	new_variant (a_variant: detachable ET_KEYWORD; a_tag: detachable ET_TAG;
+		an_expression: detachable ET_EXPRESSION): detachable ET_VARIANT
 			-- New loop variant
 		do
 			if an_expression /= Void then
@@ -3794,7 +3940,7 @@ feature -- AST nodes
 
 feature {NONE} -- Implementation
 
-	last_break (is_header: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BREAK
+	last_break (is_header: BOOLEAN; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BREAK
 			-- Last break, comment (or header comment when `is_header' is true)
 			-- from `a_scanner'
 		require

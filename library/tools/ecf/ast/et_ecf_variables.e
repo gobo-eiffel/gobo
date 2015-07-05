@@ -5,7 +5,7 @@ note
 		"ECF variables"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value (a_variable: STRING): STRING
+	value (a_variable: STRING): detachable STRING
 			-- Value of variable `a_variable';
 			-- Void if variable is not defined in `primary_variables' nor in `secondary_variables'
 		do
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	primary_value (a_variable: STRING): STRING
+	primary_value (a_variable: STRING): detachable STRING
 			-- Value of variable `a_variable';
 			-- Void if variable is not defined in `primary_variables'
 		require

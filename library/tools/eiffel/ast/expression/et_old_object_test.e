@@ -5,7 +5,7 @@ note
 		"Eiffel object-test expressions using the old syntax"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,11 +18,11 @@ inherit
 		rename
 			make as make_named_object_test
 		redefine
-			reset,
 			position,
 			first_leaf,
 			last_leaf,
-			break,
+			declared_type,
+			type,
 			process
 		end
 
@@ -53,20 +53,6 @@ feature {NONE} -- Initialization
 			expression_set: expression = a_expression
 		end
 
-feature -- Initialization
-
-	reset
-			-- Reset expression as it was just after it was last parsed.
-		local
-			l_type: ET_TYPE
-		do
-			l_type := type
-			if l_type /= Void then
-				l_type.reset
-			end
-			expression.reset
-		end
-
 feature -- Access
 
 	left_brace: ET_SYMBOL
@@ -77,6 +63,17 @@ feature -- Access
 
 	right_brace: ET_SYMBOL
 			-- '}' symbol
+
+	declared_type: ET_TARGET_TYPE
+			-- Type declared in the object test, surrounded by braces
+
+	type: ET_TYPE
+			-- Type expected for the expression
+		do
+			Result := declared_type.type
+		ensure then
+			type_not_void: Result /= Void
+		end
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -98,12 +95,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := expression.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := expression.break
 		end
 
 feature -- Setting

@@ -5,7 +5,7 @@ note
 		"Xace class options"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Access
 	options: ET_XACE_OPTIONS
 			-- Class options
 
-	feature_options: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+	feature_options: detachable DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
 			-- Feature options
 
 feature -- Element change
@@ -49,11 +49,15 @@ feature -- Element change
 			-- Add `an_option' to `feature_options'.
 		require
 			an_option_not_void: an_option /= Void
+		local
+			l_feature_options: like feature_options
 		do
-			if feature_options = Void then
-				create feature_options.make
+			l_feature_options := feature_options
+			if l_feature_options = Void then
+				create l_feature_options.make
+				feature_options := l_feature_options
 			end
-			feature_options.put_last (an_option)
+			l_feature_options.put_last (an_option)
 		end
 
 invariant
@@ -61,6 +65,6 @@ invariant
 	class_name_not_void: class_name /= Void
 	class_name_not_empty: class_name.count > 0
 	options_not_void: options /= Void
-	no_void_feature_option: feature_options /= Void implies not feature_options.has_void
+	no_void_feature_option: attached feature_options as l_feature_options implies not l_feature_options.has_void
 
 end

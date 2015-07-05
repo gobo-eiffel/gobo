@@ -43,9 +43,6 @@ feature -- Initialization
 
 	reset
 			-- Reset current feature as it was just after it was last parsed.
-		local
-			l_type: like type
-			l_arguments: like arguments
 		do
 			name.reset
 			first_seed := id
@@ -53,12 +50,10 @@ feature -- Initialization
 			version := id
 			first_precursor := Void
 			other_precursors := Void
-			l_type := type
-			if l_type /= Void then
+			if attached type as l_type then
 				l_type.reset
 			end
-			l_arguments := arguments
-			if l_arguments /= Void then
+			if attached arguments as l_arguments then
 				l_arguments.reset
 			end
 			reset_after_features_flattened
@@ -73,16 +68,11 @@ feature -- Initialization
 
 	reset_after_interface_checked
 			-- Reset current feature as it was just after its interface was last checked.
-		local
-			l_preconditions: like preconditions
-			l_postconditions: like postconditions
 		do
-			l_preconditions := preconditions
-			if l_preconditions /= Void then
+			if attached preconditions as l_preconditions then
 				l_preconditions.reset
 			end
-			l_postconditions := postconditions
-			if l_postconditions /= Void then
+			if attached postconditions as l_postconditions then
 				l_postconditions.reset
 			end
 			reset_validity_checked
@@ -91,16 +81,11 @@ feature -- Initialization
 	reset_signature_qualified_anchored_types
 			-- Reset qualified anchored types contained in signature of
 			-- current feature as they were just after they were last parsed.
-		local
-			l_type: like type
-			l_arguments: like arguments
 		do
-			l_type := type
-			if l_type /= Void then
+			if attached type as l_type then
 				l_type.reset_qualified_anchored_types
 			end
-			l_arguments := arguments
-			if l_arguments /= Void then
+			if attached arguments as l_arguments then
 				l_arguments.reset_qualified_anchored_types
 			end
 		end
@@ -125,7 +110,7 @@ feature -- Access
 			definition: Result.is_equal (name.name.as_lower)
 		end
 
-	alias_name: ET_ALIAS_NAME
+	alias_name: detachable ET_ALIAS_NAME
 			-- Alias name, if any
 		do
 			Result := extended_name.alias_name
@@ -152,24 +137,24 @@ feature -- Access
 			overloaded_name_not_void: Result /= Void
 		end
 
-	overloaded_alias_name: ET_ALIAS_NAME
+	overloaded_alias_name: detachable ET_ALIAS_NAME
 			-- Possibly overloaded Eiffel alias name, if any
 			-- (useful in .NET)
 		do
 			Result := overloaded_extended_name.alias_name
 		end
 
-	header_break: ET_BREAK
+	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
 		deferred
 		end
 
-	obsolete_message: ET_OBSOLETE
+	obsolete_message: detachable ET_OBSOLETE
 			-- Obsolete message
 		do
 		end
 
-	first_indexing: ET_INDEXING_LIST
+	first_indexing: detachable ET_INDEXING_LIST
 			-- Note clause at the beginning of the feature
 
 	id: INTEGER
@@ -179,13 +164,13 @@ feature -- Access
 			-- Version (feature ID of last declaration
 			-- of current feature)
 
-	first_precursor: ET_FEATURE
+	first_precursor: detachable ET_FEATURE
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
 			-- postconditions of the feature.
 
-	other_precursors: ET_FEATURE_LIST
+	other_precursors: detachable ET_FEATURE_LIST
 			-- Other precursors (Features from which the current
 			-- feature gets parts of its preconditions and
 			-- postconditions from its parents. Note that because
@@ -214,16 +199,16 @@ feature -- Access
 			-- Note that the signature has already been resolved
 			-- in the context of the current class.
 
-	frozen_keyword: ET_KEYWORD
+	frozen_keyword: detachable ET_KEYWORD
 			-- 'frozen' keyword
 
-	feature_clause: ET_FEATURE_CLAUSE
+	feature_clause: detachable ET_FEATURE_CLAUSE
 			-- Feature clause containing current feature
 
-	semicolon: ET_SEMICOLON_SYMBOL
+	semicolon: detachable ET_SEMICOLON_SYMBOL
 			-- Optional semicolon in semicolon-separated list of features
 
-	synonym: ET_FEATURE
+	synonym: detachable ET_FEATURE
 			-- Next synonym if any
 
 	hash_code: INTEGER
@@ -233,23 +218,23 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if not is_frozen then
-				Result := extended_name.position
-			else
-				Result := frozen_keyword.position
+			if attached frozen_keyword as l_frozen_keyword then
+				Result := l_frozen_keyword.position
 				if Result.is_null then
 					Result := extended_name.position
 				end
+			else
+				Result := extended_name.position
 			end
 		end
 
 	first_leaf: ET_AST_LEAF
 			-- First leaf node in current node
 		do
-			if not is_frozen then
-				Result := extended_name.first_leaf
+			if attached frozen_keyword as l_frozen_keyword then
+				Result := l_frozen_keyword
 			else
-				Result := frozen_keyword
+				Result := extended_name.first_leaf
 			end
 		end
 
@@ -265,24 +250,18 @@ feature -- Status report
 
 	has_header_comment: BOOLEAN
 			-- Does current feature have a header comment?
-		local
-			a_break: like break
 		do
-			a_break := header_break
-			if a_break /= Void then
-				Result := a_break.has_comment
+			if attached header_break as l_break then
+				Result := l_break.has_comment
 			end
 		end
 
 	has_non_empty_header_comment: BOOLEAN
 			-- Does current feature have a non-empty header comment?
 			-- (Comments only made up of white characters or minus signs are not taken into account.)
-		local
-			a_break: like break
 		do
-			a_break := header_break
-			if a_break /= Void then
-				Result := a_break.has_non_empty_comment
+			if attached header_break as l_break then
+				Result := l_break.has_non_empty_comment
 			end
 		end
 
@@ -375,7 +354,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			definition: not is_dotnet implies Result = (type /= Void and (arguments /= Void and then arguments.count = 1))
+			definition: not is_dotnet implies Result = (type /= Void and (attached arguments as l_arguments and then l_arguments.count = 1))
 		end
 
 	is_prefixable: BOOLEAN
@@ -384,7 +363,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			definition: not is_dotnet implies Result = (type /= Void and (arguments = Void or else arguments.count = 0))
+			definition: not is_dotnet implies Result = (type /= Void and (not attached arguments as l_arguments or else l_arguments.count = 0))
 		end
 
 	is_bracketable: BOOLEAN
@@ -393,7 +372,7 @@ feature -- Status report
 		do
 			-- Result := False
 		ensure
-			definition: Result = (type /= Void and (arguments /= Void and then arguments.count > 0))
+			definition: Result = (type /= Void and (attached arguments as l_arguments and then l_arguments.count > 0))
 		end
 
 	is_parenthesisable: BOOLEAN
@@ -453,7 +432,7 @@ feature -- Status report
 		do
 			if first_precursor /= Void then
 				if implementation_feature /= Current then
-					Result := other_precursors /= Void and then not other_precursors.is_empty
+					Result := attached other_precursors as l_other_precursors and then not l_other_precursors.is_empty
 				end
 			end
 		end
@@ -470,17 +449,14 @@ feature -- Measurement
 
 	arguments_count: INTEGER
 			-- Number of formal arguments
-		local
-			l_arguments: like arguments
 		do
-			l_arguments := arguments
-			if l_arguments /= Void then
+			if attached arguments as l_arguments then
 				Result := l_arguments.count
 			end
 		ensure
 			arguments_count_not_negative: Result >= 0
 			no_argument: arguments = Void implies Result = 0
-			with_arguments: arguments /= Void implies Result = arguments.count
+			with_arguments: attached arguments as l_arguments implies Result = l_arguments.count
 		end
 
 feature -- Export status

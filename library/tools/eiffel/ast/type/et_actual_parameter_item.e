@@ -5,7 +5,7 @@ note
 		"Eiffel actual generic parameters which appear in a comma-separated list of parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	label: ET_IDENTIFIER
+	label: detachable ET_IDENTIFIER
 			-- Label of `actual_parameter';
 			-- Useful when part of a labeled tuple, Void if no label
 		deferred

@@ -5,7 +5,7 @@ note
 		"Lace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- AST factory
 
-	new_assembly (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_ASSEMBLY
+	new_assembly (a_name: ET_IDENTIFIER; a_pathname: detachable ET_IDENTIFIER; a_system: ET_SYSTEM): ET_LACE_DOTNET_ASSEMBLY
 			-- New assembly
 		require
 			a_name_not_void: a_name /= Void
@@ -46,7 +46,7 @@ feature -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_universe: ET_UNIVERSE): ET_LACE_CLUSTER
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: detachable ET_IDENTIFIER; a_universe: ET_UNIVERSE): ET_LACE_CLUSTER
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
@@ -95,8 +95,8 @@ feature -- Eiffel AST factory
 	new_ast_factory: ET_AST_FACTORY
 			-- New Eiffel AST factory
 		do
-			if ast_factory /= Void then
-				Result := ast_factory
+			if attached ast_factory as l_ast_factory then
+				Result := l_ast_factory
 			else
 				create Result.make
 			end
@@ -107,8 +107,8 @@ feature -- Eiffel AST factory
 	new_error_handler: ET_ERROR_HANDLER
 			-- New error handler for Eiffel parser
 		do
-			if error_handler /= Void then
-				Result := error_handler
+			if attached error_handler as l_error_handler then
+				Result := l_error_handler
 			else
 				create Result.make_standard
 			end
@@ -118,11 +118,11 @@ feature -- Eiffel AST factory
 
 feature -- Configuration
 
-	ast_factory: ET_AST_FACTORY
+	ast_factory: detachable ET_AST_FACTORY
 			-- Return this AST factory in `new_ast_factory'
 			-- if not void
 
-	error_handler: ET_ERROR_HANDLER
+	error_handler: detachable ET_ERROR_HANDLER
 			-- Return this error handler in `new_error handler'
 			-- if not void
 

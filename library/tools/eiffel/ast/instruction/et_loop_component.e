@@ -5,7 +5,7 @@ note
 		"Eiffel loop components (either loop instructions or across instructions)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2012-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,27 +18,27 @@ inherit
 
 feature -- Access
 
-	from_compound: ET_COMPOUND
+	from_compound: detachable ET_COMPOUND
 			-- From compound
 		deferred
 		end
 
-	invariant_part: ET_LOOP_INVARIANTS
+	invariant_part: detachable ET_LOOP_INVARIANTS
 			-- Invariant part
 		deferred
 		end
 
-	variant_part: ET_VARIANT
+	variant_part: detachable ET_VARIANT
 			-- Variant part
 		deferred
 		end
 
-	until_conditional: ET_CONDITIONAL
+	until_conditional: detachable ET_CONDITIONAL
 			-- Until conditional
 		deferred
 		end
 
-	loop_compound: ET_COMPOUND
+	loop_compound: detachable ET_COMPOUND
 			-- Loop compound
 		deferred
 		end

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Access
 
-	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
+	object_test (a_name: ET_IDENTIFIER): detachable ET_NAMED_OBJECT_TEST
 			-- If we are currently in the scope of object-test local `a_name',
 			-- then return its associated object-test, otherwise Void
 			-- (Ignore hidden object-test locals.)
@@ -100,7 +100,7 @@ feature -- Access
 			object_test_not_void: has_local (a_name) = (Result /= Void)
 		end
 
-	hidden_object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST
+	hidden_object_test (a_name: ET_IDENTIFIER): detachable ET_NAMED_OBJECT_TEST
 			-- If we are currently in the scope of object-test local `a_name' although
 			-- it has been hidden, then return its associated object-test, otherwise Void
 			-- (We are probably currently analyzing an inline agent and `a_name'

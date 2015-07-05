@@ -5,7 +5,7 @@ note
 		"Eiffel clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -82,12 +82,6 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := name.last_leaf
-		end
-
-	break: ET_BREAK
-			-- Break which appears just after current node
-		do
-			Result := name.break
 		end
 
 feature -- Processing

@@ -5,7 +5,7 @@ note
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Access
 
-	first_precursor: ET_STANDALONE_CLOSURE
+	first_precursor: detachable ET_STANDALONE_CLOSURE
 			-- First precursor;
 			-- Void if the feature has no precursor.
 			-- Useful to build the flat preconditions and
@@ -127,7 +127,7 @@ feature -- Conversion
 		require
 			is_feature: is_feature
 		do
-			check is_feature: is_feature end
+			check is_feature: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end
@@ -137,7 +137,7 @@ feature -- Conversion
 		require
 			is_invariants: is_invariants
 		do
-			check is_invariants: is_invariants end
+			check is_invariants: False then end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

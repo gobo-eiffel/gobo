@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic ROUTINE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature -- Access
 	open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Type sets of open operands
 
-	result_type_set: ET_DYNAMIC_TYPE_SET
+	result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			-- Type set of result, if any
 		deferred
 		end
