@@ -5,7 +5,7 @@ note
 		"Event filters that can forward event to 'next' filter"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,19 +31,31 @@ inherit
 
 create
 
-	make_null,
-	set_next
+	make_next,
+	make_null
 
 feature {NONE} -- Initialization
+
+	make_next (a_next: like next)
+			-- Create a new event filter with `a_next' as next filter.
+		require
+			a_next_not_void: a_next /= Void
+		do
+			initialize
+			set_next (a_next)
+		ensure
+			next_set: next = a_next
+		end
 
 	make_null
 			-- Next is null processor.
 		do
-			create {XM_CALLBACKS_NULL} next.make
+			make_next (null_callbacks)
 		end
 
-invariant
-
-	next_not_void: next /= Void
+	initialize
+			-- Initialize current callbacks.
+		do
+		end
 
 end

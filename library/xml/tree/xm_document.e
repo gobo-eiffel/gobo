@@ -5,7 +5,7 @@ note
 		"XML documents"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_COMPOSITE
 		redefine
+			last,
 			root_node
 		end
 
@@ -38,9 +39,10 @@ feature {NONE} -- Initialization
 		require
 			not_void: a_name /= Void
 			not_empty: a_name.count > 0
+			a_ns_not_void: a_ns /= Void
 		do
+			create children.make
 			create root_element.make (Current, a_name, a_ns)
-			list_make
 			force_last (root_element)
 		ensure
 			root_element_name_set: root_element.name = a_name
@@ -48,64 +50,13 @@ feature {NONE} -- Initialization
 
 	Default_name: STRING = "root"
 
-feature {NONE} -- Parent processing
-
-	before_addition (a_node: XM_NODE)
-			-- Remove node from original parent if not us.
-		do
-			if a_node /= Void then
-				check addable: addable_item (a_node) end
-					-- Remove from previous parent.
-				if a_node.parent /= Void then
-					a_node.parent.equality_delete (a_node)
-				end
-				a_node.node_set_parent (Current)
-			end
-		ensure then
-			parent_accepted: a_node /= Void implies a_node.parent = Current
-		end
-
-	addable_item (a_node: XM_NODE): BOOLEAN
-			-- Is this not of the correct type for addition?
-			-- (document node)
-		local
-			typer: XM_NODE_TYPER
-		do
-			if a_node /= Void then
-				create typer
-				a_node.process (typer)
-				Result := typer.is_comment
-					or typer.is_processing_instruction
-					or typer.is_element
-			end
-		end
-
-feature {XM_NODE} -- Removal
-
-	equality_delete (v: XM_NODE)
-			-- Call `delete' with Void equality tester.
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-		do
-			-- we do DS_LIST.delete by hand, because
-			-- it takes a descendant type, while we don't
-			-- really need to know the subtype for object
-			-- equality.
-			from
-				a_cursor := new_cursor
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				if a_cursor.item = v then
-					a_cursor.remove
-				else
-					a_cursor.forth
-				end
-			end
-		end
-
 feature -- Access
+
+	last: XM_DOCUMENT_NODE
+			-- Last child
+		do
+			Result := children.last
+		end
 
 	root_element: XM_ELEMENT
 			-- Root element of current document
@@ -156,7 +107,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	element_by_name (a_name: STRING): XM_ELEMENT
+	element_by_name (a_name: STRING): detachable XM_ELEMENT
 			-- Direct child element with name `a_name';
 			-- If there are more than one element with that name, anyone may be returned.
 			-- Return Void if no element with that name is a child of current node.
@@ -168,7 +119,7 @@ feature -- Access
 			root_element: has_element_by_name (a_name) implies Result = root_element
 		end
 
-	element_by_qualified_name (a_uri: STRING; a_name: STRING): XM_ELEMENT
+	element_by_qualified_name (a_uri: STRING; a_name: STRING): detachable XM_ELEMENT
 			-- Root element, if name matches, Void otherwise.
 		do
 			if has_element_by_qualified_name (a_uri, a_name) then

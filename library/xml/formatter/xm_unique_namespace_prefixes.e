@@ -5,7 +5,7 @@ note
 		"Infer a unique set of namespace prefixes for a document tree"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,14 +54,14 @@ feature -- Node processor.
 
 feature -- State
 
-	namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING]
+	namespaces: detachable DS_HASH_TABLE [XM_NAMESPACE, STRING]
 			-- All of the document namespaces with
 			-- explicit prefixes (indexed by URI).
 			-- ensure prefixes are unique.
 
 feature {NONE} -- State
 
-	prefixes: DS_HASH_TABLE [XM_NAMESPACE, STRING]
+	prefixes: detachable DS_HASH_TABLE [XM_NAMESPACE, STRING]
 			-- Inverted index of prefixes from `namespaces'.
 
 feature -- Result
@@ -74,18 +74,20 @@ feature -- Result
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_NAMESPACE, STRING]
 		do
-			from
-				create Result.make_empty
-				a_cursor := namespaces.new_cursor
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
+			check precondition: attached namespaces as l_namespaces then
+				from
+					create Result.make_empty
+					a_cursor := l_namespaces.new_cursor
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 
-				Result := STRING_.appended_string (Result, namespace_declaration (a_cursor.item))
-				a_cursor.forth
-				if not a_cursor.after then
-					Result := STRING_.appended_string (Result, Space_s)
+					Result := STRING_.appended_string (Result, namespace_declaration (a_cursor.item))
+					a_cursor.forth
+					if not a_cursor.after then
+						Result := STRING_.appended_string (Result, Space_s)
+					end
 				end
 			end
 		ensure
@@ -97,8 +99,7 @@ feature -- Result
 		require
 			a_ns_not_void: a_ns /= Void
 		do
-			Result := namespaces /= Void
-				and then (namespaces.has (a_ns.uri) or implicit_namespaces.has (a_ns.uri))
+			Result := attached namespaces as l_namespaces and then (l_namespaces.has (a_ns.uri) or implicit_namespaces.has (a_ns.uri))
 		end
 
 	ns_prefix (a_ns: XM_NAMESPACE): STRING
@@ -106,12 +107,17 @@ feature -- Result
 		require
 			a_ns_not_void: a_ns /= Void
 			has: has_namespace (a_ns)
-			item_has_prefix: namespaces.has (a_ns.uri) implies namespaces.item (a_ns.uri).has_prefix
+			item_has_prefix: (attached namespaces as l_namespaces and then l_namespaces.has (a_ns.uri)) implies l_namespaces.item (a_ns.uri).has_prefix
+		local
+			l_ns_prefix: detachable STRING
 		do
-			if namespaces.has (a_ns.uri) then
-				Result := namespaces.item (a_ns.uri).ns_prefix
+			if attached namespaces as l_namespaces and then l_namespaces.has (a_ns.uri) then
+				l_ns_prefix := l_namespaces.item (a_ns.uri).ns_prefix
 			else
-				Result := implicit_namespaces.item (a_ns.uri).ns_prefix
+				l_ns_prefix := implicit_namespaces.item (a_ns.uri).ns_prefix
+			end
+			check has_prefix: l_ns_prefix /= Void then
+				Result := l_ns_prefix
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -124,9 +130,9 @@ feature -- Result
 			a_ns_not_void: a_ns /= Void
 		do
 			Result := STRING_.cloned_string (Xmlns)
-			if a_ns.has_prefix then
+			if a_ns.has_prefix and attached a_ns.ns_prefix as l_ns_prefix then
 				Result := STRING_.appended_string (Result, Prefix_separator)
-				Result := STRING_.appended_string (Result, a_ns.ns_prefix)
+				Result := STRING_.appended_string (Result, l_ns_prefix)
 			end
 			Result := STRING_.appended_string (Result, Eq_s)
 			Result := STRING_.appended_string (Result, Quot_s)
@@ -144,32 +150,34 @@ feature {NONE} -- Implementation
 		local
 			a_candidate_namespace: XM_NAMESPACE
 		do
-			if a_namespace.uri.is_empty then
-				-- not a defined namespace
-			else
-				-- the namespace is a defined URI
-				if not namespaces.has (a_namespace.uri) and not implicit_namespaces.has (a_namespace.uri) then
-					-- The namespace is not known, we need
-					-- to register it.
-					if a_namespace.has_prefix
-						and then not prefixes.has (a_namespace.ns_prefix)
-					then
-						register_namespace (a_namespace)
-					else
-						-- The namespace may be without prefix (a default
-						-- declaration) or the prefix is already used.
-						-- Use an alternative prefix.
-						create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
-						register_namespace (a_candidate_namespace)
-					end
+			check precondition_and_invariant: attached namespaces as l_namespaces and attached prefixes as l_prefixes then
+				if a_namespace.uri.is_empty then
+					-- not a defined namespace
 				else
-					check
-						has_or_implicit: namespaces.has (a_namespace.uri)
-							or implicit_namespaces.has (a_namespace.uri)
+					-- the namespace is a defined URI
+					if not l_namespaces.has (a_namespace.uri) and not implicit_namespaces.has (a_namespace.uri) then
+						-- The namespace is not known, we need
+						-- to register it.
+						if attached a_namespace.ns_prefix as l_ns_prefix and then a_namespace.has_prefix
+							and then not l_prefixes.has (l_ns_prefix)
+						then
+							register_namespace (a_namespace)
+						else
+							-- The namespace may be without prefix (a default
+							-- declaration) or the prefix is already used.
+							-- Use an alternative prefix.
+							create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
+							register_namespace (a_candidate_namespace)
+						end
+					else
+						check
+							has_or_implicit: l_namespaces.has (a_namespace.uri)
+								or implicit_namespaces.has (a_namespace.uri)
+						end
+						-- The namespace is known, this may be with another
+						-- prefix, in which case the first prefix will be
+						-- used everywhere.
 					end
-					-- The namespace is known, this may be with another
-					-- prefix, in which case the first prefix will be
-					-- used everywhere.
 				end
 			end
 		end
@@ -178,11 +186,16 @@ feature {NONE} -- Implementation
 
 	make_namespaces
 			-- Initialise namespace tables.
+		local
+			l_namespaces: like namespaces
+			l_prefixes: like prefixes
 		do
-			create namespaces.make_map_default
-			namespaces.set_key_equality_tester (string_equality_tester)
-			create prefixes.make_map_default
-			prefixes.set_key_equality_tester (string_equality_tester)
+			create l_namespaces.make_map_default
+			l_namespaces.set_key_equality_tester (string_equality_tester)
+			namespaces := l_namespaces
+			create l_prefixes.make_map_default
+			l_prefixes.set_key_equality_tester (string_equality_tester)
+			prefixes := l_prefixes
 		ensure
 			namespaces_not_void: namespaces /= Void
 			prefixes_not_void: prefixes /= Void
@@ -192,13 +205,15 @@ feature {NONE} -- Implementation
 			-- Register a namespace (and prefix).
 		require
 			a_ns_not_void: a_ns /= Void
-			not_default_declaration: a_ns.has_prefix
-			namespaces_not_void: namespaces /= Void
-			not_known_namespace: not namespaces.has (a_ns.uri)
-			not_known_prefix: not prefixes.has (a_ns.ns_prefix)
+			not_default_declaration: attached a_ns.ns_prefix as l_ns_prefix and then a_ns.has_prefix
+			namespaces_not_void: attached namespaces as l_namespaces
+			not_known_namespace: not l_namespaces.has (a_ns.uri)
+			not_known_prefix: attached prefixes as l_prefixes and then not l_prefixes.has (l_ns_prefix)
 		do
-			namespaces.force_new (a_ns, a_ns.uri)
-			prefixes.force_new (a_ns, a_ns.ns_prefix)
+			check precondition: attached namespaces as l_namespaces and attached prefixes as l_prefixes and attached a_ns.ns_prefix as l_ns_prefix then
+				l_namespaces.force_new (a_ns, a_ns.uri)
+				l_prefixes.force_new (a_ns, l_ns_prefix)
+			end
 		end
 
 	unique_prefix: STRING
@@ -209,25 +224,27 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			-- This linear search will not be very efficient
-			-- if there are lots of different namespaces with
-			-- duplicate prefixes, but this seems unlikely.
-			-- An alternative implementation could use
-			-- dichotomic search on i, or a pseudo-random i.
-			from
-				Result := "ns1"
-				i := 1
-			until
-				not prefixes.has (Result)
-			loop
-				i := i + 1
-				Result := "ns" + i.out
-			variant
-				prefixes.count + 2 - i
+			check precondition_and_invariant: attached prefixes as l_prefixes then
+				-- This linear search will not be very efficient
+				-- if there are lots of different namespaces with
+				-- duplicate prefixes, but this seems unlikely.
+				-- An alternative implementation could use
+				-- dichotomic search on i, or a pseudo-random i.
+				from
+					Result := "ns1"
+					i := 1
+				until
+					not l_prefixes.has (Result)
+				loop
+					i := i + 1
+					Result := "ns" + i.out
+				variant
+					l_prefixes.count + 2 - i
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
-			new_prefix: not prefixes.has (Result)
+			new_prefix: attached prefixes as l_prefixes and then not l_prefixes.has (Result)
 		end
 
 	implicit_namespaces: DS_HASH_TABLE [XM_NAMESPACE, STRING]

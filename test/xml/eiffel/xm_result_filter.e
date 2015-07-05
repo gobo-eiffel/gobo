@@ -5,7 +5,7 @@ note
 		"Filter collecting content events"
 
 	library: "Gobo Eiffel XML Tests"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_content
 		end
@@ -28,6 +29,14 @@ create
 	make_null,
 	set_next
 
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			create content.make_empty
+		end
+
 feature
 
 	content: STRING
@@ -36,7 +45,7 @@ feature
 	on_start
 			-- Initialize.
 		do
-			create content.make_empty
+			initialize
 		end
 
 	on_content (a_string: STRING)
@@ -44,5 +53,9 @@ feature
 		do
 			content := STRING_.appended_string (content, a_string)
 		end
+
+invariant
+
+--	content_not_void: content /= Void
 
 end

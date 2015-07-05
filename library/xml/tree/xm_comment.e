@@ -5,7 +5,7 @@ note
 		"XML comment nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,10 +47,11 @@ feature {NONE} -- Initialization
 			a_data_not_void: a_data /= Void
 		do
 			data := a_data
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			data_set: data = a_data
 		end
 
@@ -62,10 +63,11 @@ feature {NONE} -- Initialization
 			a_data_not_void: a_data /= Void
 		do
 			data := a_data
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			data_set: data = a_data
 		end
 

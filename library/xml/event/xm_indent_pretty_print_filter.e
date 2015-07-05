@@ -5,7 +5,7 @@ note
 		"Pretty print filter with indentation; for tags not separated by content (see XM_WHITESPACE_NORMALIZER)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_PRETTY_PRINT_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_attribute,
 			on_start_tag,
@@ -26,7 +27,17 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			indent := Default_indent
+			create space_preserved.make_default
+			space_preserved.force (Default_space_preserve)
+		end
 
 feature -- Indent
 
@@ -39,6 +50,8 @@ feature -- Indent
 			an_indent_not_void: an_indent /= Void
 		do
 			indent := an_indent
+		ensure
+			indent_set: indent = an_indent
 		end
 
 	Default_indent: STRING = " "
@@ -49,29 +62,17 @@ feature -- Events
 	on_start
 			-- Start of document.
 		do
-			if indent = Void then
-				indent := Default_indent
-			end
 			create space_preserved.make_default
 			space_preserved.force (Default_space_preserve)
-
 			has_content := False
-
 			is_root := True
-
 			Precursor
-		ensure then
-			space_preserved_not_void: space_preserved /= Void
-			indent_not_void: indent /= Void
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
-			check space_preserved_not_void: space_preserved /= Void end
-
 			flush_pending_tag_end
-
 			if not has_content then
 				if is_root then
 					is_root := False
@@ -81,19 +82,14 @@ feature -- Events
 				output_indent
 			end
 			has_content := False
-
 			depth := depth + 1
-
 			Precursor (a_namespace, a_prefix, a_local_part)
-
 			space_preserved.force (space_preserved.item)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Handle xml:space.
 		do
-			check space_preserved_not_void: space_preserved /= Void end
-
 			if has_xml_space (a_prefix, a_local_part) then
 					--Replace value for current element.
 				space_preserved.remove
@@ -102,11 +98,10 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			depth := depth - 1
-
 			if last_call_was_start_tag_finish and empty_element_tags_enabled then
 				Precursor (a_namespace, a_prefix, a_local_part)
 			else
@@ -114,10 +109,8 @@ feature -- Events
 					output_indent_new_line
 					output_indent
 				end
-
 				Precursor (a_namespace, a_prefix, a_local_part)
 			end
-
 			has_content := False
 			space_preserved.remove
 		end
@@ -139,10 +132,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Space preserve
 
-	has_xml_space (a_prefix: STRING; a_local_part: STRING): BOOLEAN
+	has_xml_space (a_prefix: detachable STRING; a_local_part: STRING): BOOLEAN
 			-- Is this attribute xml:space?
 		do
-			Result := has_prefix (a_prefix)
+			Result := a_prefix /= Void and then has_prefix (a_prefix)
 				and then STRING_.same_string (Xml_prefix, a_prefix)
 					and then STRING_.same_string (Xml_space, a_local_part)
 		end
@@ -164,10 +157,6 @@ feature {NONE} -- Indent
 
 	output_indent
 			-- Append indent before element.
-		require
-			space_preserve_not_void: space_preserved /= Void
-			space_preserve_not_empty: not space_preserved.is_empty
-			indent_not_void: indent /= Void
 		local
 			i: INTEGER
 		do
@@ -185,12 +174,15 @@ feature {NONE} -- Indent
 
 	output_indent_new_line
 			-- Append indent after element.
-		require
-			space_preserve_not_void: space_preserved /= Void
 		do
 			if not space_preserved.item then
 				output (Lf_s)
 			end
 		end
+
+invariant
+
+	space_preserve_not_void: space_preserved /= Void
+	space_preserve_not_empty: not space_preserved.is_empty
 
 end

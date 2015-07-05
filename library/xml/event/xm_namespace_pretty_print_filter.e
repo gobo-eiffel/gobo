@@ -5,7 +5,7 @@ note
 		"Pretty printers with resolved namespaces"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,11 +25,11 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			namespace := a_namespace
@@ -37,7 +37,7 @@ feature -- Tag
 			namespace := Void
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Print attribute.
 		do
 			namespace := a_namespace
@@ -45,7 +45,7 @@ feature -- Tag
 			namespace := Void
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			namespace := a_namespace
@@ -56,15 +56,15 @@ feature -- Tag
 
 feature {NONE} -- Name output
 
-	namespace: STRING
+	namespace: detachable STRING
 			-- Namespace stored for output
 
-	output_name (a_prefix: STRING; a_local_part: STRING)
+	output_name (a_prefix: detachable STRING; a_local_part: STRING)
 			-- Output prefix:name, with namespace annotation.
 		do
-			if namespace /= Void and then namespace.count > 0 then
+			if attached namespace as l_namespace and then l_namespace.count > 0 then
 				output_constant ("{")
-				output (namespace)
+				output (l_namespace)
 				output_constant ("}")
 			end
 			output (a_local_part)

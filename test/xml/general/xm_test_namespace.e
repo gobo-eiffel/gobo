@@ -151,8 +151,8 @@ feature {NONE} -- Implementation
 			-- filter pipe
 			create a_printer.make_null
 			a_printer.set_output_to_string
-			create a_stop.set_next (a_printer)
-			create a_resolver.set_next (a_stop)
+			create a_stop.make_next (a_printer)
+			create a_resolver.make_next (a_stop)
 			a_resolver.set_forward_xmlns (with_xmlns)
 
 			create a_parser.make

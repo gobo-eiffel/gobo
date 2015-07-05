@@ -2,10 +2,10 @@ note
 
 	description:
 
-	"Filters that read oasis-xml-catalog PIs and update the catalog manager."
+		"Filters that read oasis-xml-catalog PIs and update the catalog manager."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	XM_DTD_CALLBACKS_FILTER
 		rename
+			make_next as make_dtd_next,
 			make_null as make_dtd_null,
+			initialize as initialize_dtd,
 			set_next as set_next_dtd,
 			next as dtd_callbacks
 		redefine
@@ -25,7 +27,9 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		rename
+			make_next as make_filter_next,
 			make_null as make_filter_null,
+			initialize as initialize_filter,
 			set_next as set_next_filter,
 			next as callbacks
 		redefine
@@ -38,23 +42,25 @@ inherit
 
 create
 
-	set_next
+	make_next
 
 feature {NONE} -- Initalization
 
-	set_next (a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
+	make_next (a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
 			-- Set forward chains.
 		require
 			callbacks_not_void: a_callback /= Void
 			dtd_callbacks_not_void: a_dtd_callback /= Void
 		do
+			initialize_filter
+			initialize_dtd
 			callbacks := a_callback
 			dtd_callbacks := a_dtd_callback
 		end
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			is_disallowed := True
@@ -74,8 +80,9 @@ feature -- Meta
 				if is_disallowed then
 					shared_catalog_manager.debug_message (1, "Oasis-xml-catalog processing instruction appears too late in the document", "ignored")
 				else
-					if is_doubtful then
-						shared_catalog_manager.debug_message (2, "Oasis-xml-catalog processing instruction might be erroneous as it appears after other PI", other_pi)
+					if attached other_pi as l_other_pi then
+						check is_doubtful: is_doubtful end
+						shared_catalog_manager.debug_message (2, "Oasis-xml-catalog processing instruction might be erroneous as it appears after other PI", l_other_pi)
 					end
 					if a_content.substring_index ("catalog=%"", 1) = 1 and then a_content.count > 11 and then a_content.index_of ('"', a_content.count) > 0 then
 						a_catalog_name := a_content.substring (10, a_content.count - 1)
@@ -119,9 +126,7 @@ feature {NONE} -- Implementation
 	is_doubtful: BOOLEAN
 			-- Have other PIs appeared?
 
-	other_pi: STRING
+	other_pi: detachable STRING
 			-- Processing instruction which raised doubtful status
-
-invariant
 
 end

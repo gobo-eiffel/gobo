@@ -53,15 +53,19 @@ feature -- Access
 			has_node: has (a_node)
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [DS_PAIR [XM_POSITION, XM_NODE]]
+			l_item: detachable XM_POSITION
 		do
 			a_cursor := table.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				if a_cursor.item.second = a_node then
-					Result := a_cursor.item.first
+					l_item := a_cursor.item.first
 					a_cursor.go_after -- Jump out of the loop.
 				else
 					a_cursor.forth
 				end
+			end
+			check has: attached l_item then
+				Result := l_item
 			end
 		ensure
 			position_not_void: Result /= Void

@@ -5,7 +5,7 @@ note
 		"External URI resolver for the data protocol (RFC 2397)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 	make
 		-- Nothing to do
 		do
+			last_error := "no stream"
+			has_error := True
 		end
 
 feature -- Operation(s)
@@ -39,45 +41,51 @@ feature -- Operation(s)
 			-- Resolve URI to stream.
 		local
 			l_string_stream: KL_STRING_INPUT_STREAM
-			l_data: STRING
+			l_data: detachable STRING
 			l_utf8: BOOLEAN
 		do
 			has_error := False
-			if a_uri.is_opaque and then STRING_.same_string (a_uri.scheme, scheme) then
+			if a_uri.is_opaque and then attached a_uri.scheme as l_uri_scheme and then STRING_.same_string (l_uri_scheme, scheme) then
 				parse_components (a_uri)
 				if not has_error then
 					if is_base_64 then
-						create l_string_stream.make (data)
-						create {UT_BASE64_DECODING_INPUT_STREAM} last_stream.make (l_string_stream)
+						check has_no_error: attached data as l_attached_data then
+							create l_string_stream.make (l_attached_data)
+							create {UT_BASE64_DECODING_INPUT_STREAM} last_stream.make (l_string_stream)
+						end
 					else
-						if last_media_type.has_parameter (Charset_parameter) then
-							if STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "utf-8") then
-								l_utf8 := True
-							elseif STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "us-ascii") then
-								-- OK
-							elseif STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "iso-8859-1") then
-								-- OK
-							else
-								set_last_error (STRING_.concat (last_media_type.parameter (Charset_parameter), " is not supported. Only US-ASCII, ISO-8859-1 and UTF-8 are supported"))
+						check has_no_error: attached last_media_type as l_last_media_type then
+							if l_last_media_type.has_parameter (Charset_parameter) then
+								if STRING_.same_case_insensitive (l_last_media_type.parameter (Charset_parameter), "utf-8") then
+									l_utf8 := True
+								elseif STRING_.same_case_insensitive (l_last_media_type.parameter (Charset_parameter), "us-ascii") then
+									-- OK
+								elseif STRING_.same_case_insensitive (l_last_media_type.parameter (Charset_parameter), "iso-8859-1") then
+									-- OK
+								else
+									set_last_error (STRING_.concat (l_last_media_type.parameter (Charset_parameter), " is not supported. Only US-ASCII, ISO-8859-1 and UTF-8 are supported"))
+								end
 							end
 						end
 						if not has_error then
-							if l_utf8 then
-								l_data := Url_encoding.unescape_utf8 (data)
-							else
-								l_data := Url_encoding.unescape_string (data)
-							end
-							if l_data = Void then
-								set_last_error (STRING_.concat (data, " has escaped characters that do not represent valid UTF-8 (and the content encoding was specified as UTF-8)"))
-							else
-								create l_string_stream.make (l_data)
-								last_stream := l_string_stream
+							check has_no_error: attached data as l_attached_data then
+								if l_utf8 then
+									l_data := Url_encoding.unescape_utf8 (l_attached_data)
+								else
+									l_data := Url_encoding.unescape_string (l_attached_data)
+								end
+								if l_data = Void then
+									set_last_error (STRING_.concat (l_attached_data, " has escaped characters that do not represent valid UTF-8 (and the content encoding was specified as UTF-8)"))
+								else
+									create l_string_stream.make (l_data)
+									last_stream := l_string_stream
+								end
 							end
 						end
 					end
 				end
 			else
-				if STRING_.same_string (a_uri.scheme, scheme) then
+				if attached a_uri.scheme as l_uri_scheme and then STRING_.same_string (l_uri_scheme, scheme) then
 					set_last_error (a_uri.full_reference + " is not an opaque URI")
 				else
 					set_last_error (a_uri.full_reference + " is not a data URI - software is configured wrongly.")
@@ -90,9 +98,9 @@ feature -- Result
 	has_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 
-	last_error: STRING
+	last_error: detachable STRING
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Matching stream
 
 	has_media_type: BOOLEAN
@@ -101,12 +109,12 @@ feature -- Result
 			Result := not has_error
 		end
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
 
 feature {NONE} -- Implementation
 
-	data: STRING
+	data: detachable STRING
 			-- Actual data
 
 	is_base_64: BOOLEAN
@@ -130,11 +138,12 @@ feature {NONE} -- Implementation
 	parse_components (a_uri: UT_URI)
 			-- Parse `a_uri' into parameters, media-type and data
 		require
-			data_uri: a_uri /= Void and then a_uri.is_opaque and then a_uri.scheme.is_equal (scheme)
+			data_uri: a_uri /= Void and then a_uri.is_opaque and then attached a_uri.scheme as l_scheme and then l_scheme.is_equal (scheme)
 			no_previous_error: not has_error
 		local
 			opaque_part: STRING
 			comma_index: INTEGER
+			l_last_media_type: like last_media_type
 		do
 			data := Void
 			last_media_type := Void
@@ -148,8 +157,9 @@ feature {NONE} -- Implementation
 				if comma_index > 1 then
 					parse_parameters (opaque_part.substring (1, comma_index - 1))
 				else
-					create last_media_type.make ("text", "plain")
-					last_media_type.add_parameter ("charset", "US-ASCII")
+					create l_last_media_type.make ("text", "plain")
+					l_last_media_type.add_parameter ("charset", "US-ASCII")
+					last_media_type := l_last_media_type
 				end
 			end
 		ensure
@@ -167,6 +177,7 @@ feature {NONE} -- Implementation
 			some_parameters, a_parameter_pair, some_components: DS_LIST [STRING]
 			a_media_type: STRING
 			a_cursor: DS_LIST_CURSOR [STRING]
+			l_last_media_type: like last_media_type
 		do
 			create a_splitter.make
 			a_splitter.set_separators (";")
@@ -177,7 +188,8 @@ feature {NONE} -- Implementation
 			if some_components.count /= 2 then
 				set_last_error ("Content-type must contain exactly one /")
 			else
-				create last_media_type.make (some_components.item (1), some_components.item (2))
+				create l_last_media_type.make (some_components.item (1), some_components.item (2))
+				last_media_type := l_last_media_type
 				if some_parameters.count > 1 then
 					some_parameters.remove_first
 					if STRING_.same_case_insensitive (some_parameters.item (some_parameters.count), "base64") then
@@ -195,7 +207,7 @@ feature {NONE} -- Implementation
 							set_last_error (a_cursor.item + " is not valid syntax for a Content-type parameter.")
 							a_cursor.go_after
 						else
-							last_media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
+							l_last_media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
 							a_cursor.forth
 						end
 					variant
@@ -204,5 +216,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+invariant
+
+	data_not_void: not has_error implies data /= Void
+
 end
 

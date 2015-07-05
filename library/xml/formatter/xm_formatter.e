@@ -68,7 +68,7 @@ feature -- Tree processor routines
 		do
 			create pretty_print.make_null
 			pretty_print.set_output_stream (last_output)
-			create xmlns_generator.set_next (pretty_print)
+			create xmlns_generator.make_next (pretty_print)
 			a_document.process_to_events (xmlns_generator)
 		end
 

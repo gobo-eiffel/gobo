@@ -5,7 +5,7 @@ note
 		"Standard pipe of callbacks filter leading to construction of a tree of XM_NODEs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,7 +73,9 @@ feature -- Shortcuts
 		require
 			error: error.has_error
 		do
-			Result := error.last_error
+			check has_error: attached error.last_error as l_last_error then
+				Result := l_last_error
+			end
 		ensure
 			last_error_not_void: Result /= Void
 		end

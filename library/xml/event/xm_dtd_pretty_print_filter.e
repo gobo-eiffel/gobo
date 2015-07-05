@@ -5,7 +5,7 @@ note
 		"Print DTD declaration events"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,11 +28,11 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			output ("<!DOCTYPE ")
@@ -69,8 +69,8 @@ feature -- Document type definition callbacks
 			Precursor (an_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: detachable STRING;
+		an_id: detachable XM_DTD_EXTERNAL_ID; notation_name: detachable STRING)
 			-- Entity declaration.
 		do
 			output ("<!ENTITY ")
@@ -109,6 +109,7 @@ feature -- Document type definition callbacks
 feature {NONE} -- Output
 
 	output_new_line
+			-- Output a new-line.
 		do
 			output ("%N")
 		end

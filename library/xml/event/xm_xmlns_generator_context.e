@@ -5,7 +5,7 @@ note
 		"Prefix map and context for xmlns declaration generation filter"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,7 +76,7 @@ feature {NONE} -- Prefixed context
 	element_prefixes: DS_HASH_SET [STRING]
 			-- Prefixes in use (not only declared) in top element.
 
-	last_item: STRING
+	last_item: detachable STRING
 			-- Cache for lookup
 
 feature -- Status
@@ -105,7 +105,7 @@ feature -- Status
 			end
 		end
 
-	item (a_namespace: STRING): STRING
+	item (a_namespace: STRING): detachable STRING
 			-- Find prefix for namespace
 		require
 			a_namespace_not_void: a_namespace /= Void

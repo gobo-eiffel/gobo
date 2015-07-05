@@ -5,7 +5,7 @@ note
 		"XML namespace declaration, equality and hashable based on uri only"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2013, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ns_prefix: STRING
+	ns_prefix: detachable STRING
 			-- Prefix of current namespace
 
 	uri: STRING
@@ -91,23 +91,25 @@ feature -- Status report
 
 	same_prefix (other: XM_NAMESPACE): BOOLEAN
 			-- Same
+		require
+			other_not_void: other /= Void
 		do
 			Result := is_equal (other) and then
 				((ns_prefix = other.ns_prefix) or else
-					((ns_prefix /= Void and other.ns_prefix /= Void) and then STRING_.same_string (ns_prefix, other.ns_prefix)))
+					((attached ns_prefix as l_ns_prefix and attached other.ns_prefix as l_other_ns_prefix) and then STRING_.same_string (l_ns_prefix, l_other_ns_prefix)))
 		ensure
 			equal: Result implies is_equal (other)
 			same_prefix: Result implies
-				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
+				(ns_prefix = other.ns_prefix or else ((attached ns_prefix as l_ns_prefix and attached other.ns_prefix as l_other_ns_prefix) and then STRING_.same_string (l_ns_prefix, l_other_ns_prefix)))
 		end
 
 	has_prefix: BOOLEAN
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
 		do
-			Result := (ns_prefix /= Void and then ns_prefix.count > 0)
+			Result := (attached ns_prefix as l_ns_prefix and then l_ns_prefix.count > 0)
 		ensure
-			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
+			definition: Result = (attached ns_prefix as l_ns_prefix and then l_ns_prefix.count > 0)
 		end
 
 invariant

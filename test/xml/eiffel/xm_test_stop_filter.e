@@ -35,7 +35,7 @@ feature -- Test
 				-- ns -> result -> error pipe
 			error_filter := parser.new_stop_on_error_filter
 			create result_filter.set_next (error_filter)
-			create ns_filter.set_next (result_filter)
+			create ns_filter.make_next (result_filter)
 
 			parser.set_callbacks (ns_filter)
 			parser.parse_from_string ("<doc broken:attr=''>hello</doc>")

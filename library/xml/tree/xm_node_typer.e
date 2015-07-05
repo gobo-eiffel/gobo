@@ -110,32 +110,32 @@ feature -- Status report
 
 feature -- Access
 
-	element: XM_ELEMENT
+	element: detachable XM_ELEMENT
 			-- Element
 			-- require type_ok: is_element
 			-- ensure not_void: Result /= Void
 
-	character_data: XM_CHARACTER_DATA
+	character_data: detachable XM_CHARACTER_DATA
 			-- Character data
 			-- require type_ok: is_character_data
 			-- ensure not_void: Result /= Void
 
-	processing_instruction: XM_PROCESSING_INSTRUCTION
+	processing_instruction: detachable XM_PROCESSING_INSTRUCTION
 			-- Processing instruction
 			-- require type_ok: is_processing_instruction
 			-- ensure not_void: Result /= Void
 
-	document: XM_DOCUMENT
+	document: detachable XM_DOCUMENT
 			-- Document
 			-- require type_ok: is_document
 			-- ensure not_void: Result /= Void
 
-	comment: XM_COMMENT
+	comment: detachable XM_COMMENT
 			-- Comment
 			-- require type_ok: is_comment
 			-- ensure not_void: Result /= Void
 
-	xml_attribute: XM_ATTRIBUTE
+	xml_attribute: detachable XM_ATTRIBUTE
 			-- Attribute
 			-- require type_ok: is_attribute
 			-- ensure not_void: Result /= Void
@@ -152,7 +152,7 @@ feature -- Status report
 
 feature -- Access
 
-	composite: XM_COMPOSITE
+	composite: detachable XM_COMPOSITE
 			-- Composite
 			-- require type_ok: is_composite
 			-- ensure not_void: Result /= Void
@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 			document := Void
 			comment := Void
 			xml_attribute := Void
-
 			composite := Void
 		end
 

@@ -5,7 +5,7 @@ note
 		"Objects that split XPointer pointers into tokens"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			input_index := 1
 			input := an_input
 			input_length := input.count
+			current_token_value := "no token scanned yet"
 		end
 
 feature -- Access
@@ -50,7 +51,9 @@ feature -- Access
 		require
 			no_lexical_error: is_lexical_error = False
 		do
-			Result := current_token_value
+			check no_lexical_error: attached current_token_value as l_current_token_value then
+				Result := l_current_token_value
+			end
 		ensure
 			last_token_value_not_void: Result /= Void
 		end
@@ -67,9 +70,11 @@ feature -- Access
 		require
 			lexical_error: is_lexical_error
 		do
-			Result := internal_last_lexical_error
+			check lexical_error: attached internal_last_lexical_error as l_internal_last_lexical_error then
+				Result := l_internal_last_lexical_error
+			end
 		ensure
-			text_not_void: Result /= Void
+			last_lexical_error_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -171,19 +176,19 @@ feature {NONE} -- Implementation
 			internal_last_lexical_error := a_message
 		ensure
 			in_error: is_lexical_error
-			correct_error_value: STRING_.same_string (internal_last_lexical_error, a_message)
+			correct_error_value: attached internal_last_lexical_error as l_internal_last_lexical_error and then STRING_.same_string (l_internal_last_lexical_error, a_message)
 		end
 
 	input_index: INTEGER
 			-- The current position within `input'
 
-	internal_last_lexical_error: STRING
+	internal_last_lexical_error: detachable STRING
 			-- Error text of last lexical error
 
 	current_token: INTEGER
 			-- The number identifying the most recently read token
 
-	current_token_value: STRING
+	current_token_value: detachable STRING
 			-- The string value of the most recently read token
 
 	was_whitespace_found: BOOLEAN
@@ -213,7 +218,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			whitespace_found_sets_token: was_whitespace_found implies current_token = Whitespace_token
-				and then STRING_.same_string (current_token_value, whitespace)
+				and then attached current_token_value as l_current_token_value and then STRING_.same_string (l_current_token_value, whitespace)
 			whitespace_not_found_unsets_token: not was_whitespace_found implies current_token_value = Void
 			next_character_not_whitespace: is_input_stream_exhausted or else not whitespace.has (input.item (input_index))
 		end
@@ -253,6 +258,12 @@ feature {NONE} -- Implementation
 			token_is_string: current_token = String_token
 			token_value_set_if_no_error: not is_lexical_error implies last_token_value /= Void
 		end
+
+invariant
+
+	input_not_void: input /= Void
+	has_lexical_error: is_lexical_error implies internal_last_lexical_error /= Void
+	has_no_lexical_error: not is_lexical_error implies current_token_value /= Void
 
 end
 

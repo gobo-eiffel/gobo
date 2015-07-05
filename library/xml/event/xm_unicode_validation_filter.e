@@ -5,7 +5,7 @@ note
 		"Filters that validate unicode character classes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Actions (redirected)
 
@@ -49,20 +49,20 @@ feature -- Actions (redirected)
 			Precursor (a_name, a_content)
 		end
 
-	on_start_tag (a_namespace, a_prefix, a_local_part: STRING)
+	on_start_tag (a_namespace, a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start tag.
 		do
-			if has_prefix (a_prefix) then
+			if a_prefix /= Void and then has_prefix (a_prefix) then
 				validate_name (a_prefix)
 			end
 			validate_name (a_local_part)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace, a_prefix, a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace, a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		do
-			if has_prefix (a_prefix) then
+			if a_prefix /= Void and then has_prefix (a_prefix) then
 				validate_name (a_prefix)
 			end
 			validate_name (a_local_part)

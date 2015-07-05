@@ -13,7 +13,7 @@ note
 		%included. This is not really a is-a relationship though."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,10 +78,13 @@ feature {NONE} -- Initialization
 		require
 			other_not_void: other /= Void
 		do
-			if other.is_external then
-				make_external (other.resolver, other.external_id)
+			if attached other.external_id as l_external_id then
+				check is_external: other.is_external end
+				make_external (other.resolver, l_external_id)
 			else
-				make_literal (other.literal_name, other.value)
+				check is_literal: attached other.literal_name as l_literal_name and attached other.value as l_value then
+					make_literal (l_literal_name, l_value)
+				end
 			end
 		ensure
 			is_external: is_external = other.is_external
@@ -111,22 +114,23 @@ feature -- Status report
 
 feature -- Access
 
-	literal_name: STRING
+	literal_name: detachable STRING
 			-- Literal entity name
-	value: STRING
+
+	value: detachable STRING
 			-- Literal entity value
 
-	external_id: XM_DTD_EXTERNAL_ID
+	external_id: detachable XM_DTD_EXTERNAL_ID
 			-- Resolve external value.
 
 	hash_code: INTEGER
 			-- Hash code value
 			-- (on the entity name aspect)
 		do
-			if value /= Void then
-				Result := value.hash_code
-			elseif is_external then
-				Result := external_id.hash_code
+			if attached value as l_value then
+				Result := l_value.hash_code
+			elseif attached external_id as l_external_id then
+				Result := l_external_id.hash_code
 			end
 		end
 
@@ -139,29 +143,35 @@ feature -- Scanner: set input buffer
 		do
 			if in_use then
 				fatal_error (Error_recursive_entity)
-			elseif is_literal then
+			elseif attached literal_name as l_literal_name and attached value as l_value then
 					-- Literal string.
+				check literal_string: is_literal end
 				reset
 				-- the value we get may be UC_STRING, so it must be
 				-- converted back to UTF8 for the scanner which operates
 				-- on UTF8-in-STRING input
-				create str_stream.make (utf8.to_utf8 (value))
+				create str_stream.make (utf8.to_utf8 (l_value))
 				set_input_stream (str_stream)
-				input_name := literal_name
-			else
+				input_name := l_literal_name
+			elseif attached external_id as l_external_id and then attached l_external_id.system_id as l_system_id then
 					-- External entity in a file.
+				check external_entity: is_external end
 				reset
-				if external_id.is_public then
-					resolver.resolve_public (external_id.public_id, external_id.system_id)
+				if attached l_external_id.public_id as l_public_id then
+					check is_public: l_external_id.is_public end
+					resolver.resolve_public (l_public_id, l_system_id)
 				else
-					resolver.resolve (external_id.system_id)
+					resolver.resolve (l_system_id)
 				end
-				if not resolver.has_error then
+				if attached resolver.last_error as l_last_error then
+					check has_error: resolver.has_error end
+					fatal_error (l_last_error)
+				else
 					set_input_from_resolver (resolver)
 					-- `has_error'/`last_error' set by `set_input_file'.
-				else
-					fatal_error (resolver.last_error)
 				end
+			else
+				fatal_error ("Internal error")
 			end
 		end
 

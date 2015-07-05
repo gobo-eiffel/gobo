@@ -5,7 +5,7 @@ note
 		"XML attribute nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			-- Create a new attribute.
 		require
 			a_name_not_void: a_name /= Void
-			a_ns_not_void: a_ns /= Void
 			a_name_not_empty: a_name.count > 0
+			a_ns_not_void: a_ns /= Void
 			a_value_not_void: a_value /= Void
 			a_parent_not_void: a_parent /= Void
 		do
@@ -54,18 +54,19 @@ feature {NONE} -- Initialization
 			-- and add it to parent..
 		require
 			a_name_not_void: a_name /= Void
-			a_ns_not_void: a_ns /= Void
 			a_name_not_empty: a_name.count > 0
+			a_ns_not_void: a_ns /= Void
 			a_value_not_void: a_value /= Void
 			a_parent_not_void: a_parent /= Void
 		do
 			name := a_name
 			namespace := a_ns
 			value := a_value
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns
 			value_set: value = a_value
@@ -76,8 +77,8 @@ feature -- Status report
 	is_namespace_declaration: BOOLEAN
 			-- Is current attribute a namespace declaration?
 		do
-			if has_prefix then
-				Result := same_string (Xmlns, ns_prefix)
+			if attached ns_prefix as l_ns_prefix and then has_prefix then
+				Result := same_string (Xmlns, l_ns_prefix)
 			else
 				Result := same_string (Xmlns, name)
 			end

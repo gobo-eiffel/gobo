@@ -5,7 +5,7 @@ note
 		"xml:id validator"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_finish,
 			on_attribute
@@ -36,32 +37,39 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			create ids.make_default
+			ids.set_equality_tester (string_equality_tester)
+		end
 
 feature -- Events
 
 	on_start
 			-- Initialize ID set.
 		do
-			create ids.make_default
-			ids.set_equality_tester (string_equality_tester)
+			ids.wipe_out
 			Precursor
 		end
 
 	on_finish
 			-- Clear ID set.
 		do
-			ids := Void
+			ids.wipe_out
 			Precursor
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Normalize xml:id attribute and check it is unique.
 		local
 			an_id: STRING
 		do
-			check ids_not_void: ids /= Void end
-			if (has_prefix (a_prefix) and then a_prefix.same_string (Xml_prefix)) and a_local_part.same_string (Xml_id) then
+			if (a_prefix /= Void and then has_prefix (a_prefix) and then a_prefix.same_string (Xml_prefix)) and a_local_part.same_string (Xml_id) then
 				an_id := normalize (a_value)
 				if not characters_1_0.is_ncname (an_id) then
 					on_error (Id_not_ncname_error)
@@ -93,6 +101,7 @@ feature {NONE} -- Implementation
 		do
 				-- Remove duplicate spaces
 			from
+				create Result.make_empty
 				last_start := 1
 				i := 2
 			until
@@ -101,9 +110,6 @@ feature {NONE} -- Implementation
 				if is_space (an_id.item_code (i)) and is_space (an_id.item_code (i - 1)) then
 					if last_start > 0 then
 							-- There has been valid chars since last duplicate space
-						if Result = Void then
-							create Result.make_empty
-						end
 						Result := STRING_.appended_string (Result, an_id.substring (last_start, i - 1))
 						last_start := 0
 					end
@@ -158,5 +164,10 @@ feature {NONE} -- Constants
 
 	Id_not_ncname_error: STRING = "xml:id value is not an NCName"
 			-- NCName error
+
+invariant
+
+	ids_not_void: ids /= Void
+	no_void_id: not ids.has_void
 
 end

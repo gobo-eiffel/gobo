@@ -5,7 +5,7 @@ note
 		"XML character data nodes (plain text)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,10 +46,11 @@ feature {NONE} -- Initialization
 			c_not_void: c /= Void
 		do
 			content := c
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			content_set: content = c
 		end
 

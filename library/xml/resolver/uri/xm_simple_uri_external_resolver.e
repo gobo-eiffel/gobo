@@ -5,7 +5,7 @@ note
 		"URI resolver:handles relative URI resolution, delegates scheme specific URL resolution"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -158,54 +158,59 @@ feature -- URI
 			-- Resolve an absolute URI.
 		require
 			an_uri_not_void: an_uri /= Void
+		local
+			l_last_resolver: XM_URI_RESOLVER
 		do
 			last_resolver := Void
-			if schemes.has (an_uri.scheme) then
-				last_resolver := schemes.item (an_uri.scheme)
-				last_resolver.resolve (an_uri)
+			if attached an_uri.scheme as l_scheme and then schemes.has (l_scheme) then
+				l_last_resolver := schemes.item (l_scheme)
+				l_last_resolver.resolve (an_uri)
+				last_resolver := l_last_resolver
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	last_resolver: XM_URI_RESOLVER
+	last_resolver: detachable XM_URI_RESOLVER
 			-- Last resolver used.
 
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
 		do
-			Result := last_resolver.last_stream
+			check not_has_error: attached last_resolver as l_last_resolver then
+				Result := l_last_resolver.last_stream
+			end
 		end
 
 	has_error: BOOLEAN
 			-- Did the last resolution attempt succeed?
 		do
-			if last_resolver /= Void then
-				Result := last_resolver.has_error
+			if attached last_resolver as l_last_resolver then
+				Result := l_last_resolver.has_error
 			else
 				Result := True
 			end
 		end
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error message.
 		do
-			if last_resolver /= Void then
-				Result := last_resolver.last_error
+			if attached last_resolver as l_last_resolver then
+				Result := l_last_resolver.last_error
 			else
 				Result := Unknown_scheme_error
 			end
 		end
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
+	last_uri_reference_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
 		do
 			Result := last_stream
 		end
 
-	last_system_id: UT_URI
+	last_system_id: detachable UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 		do
 			Result := uri
@@ -217,7 +222,7 @@ feature -- Result
 			Result := has_error
 		end
 
-	last_uri_reference_error: STRING
+	last_uri_reference_error: detachable STRING
 			-- Last error message.
 		do
 			Result := last_error
@@ -226,13 +231,15 @@ feature -- Result
 	has_media_type: BOOLEAN
 			-- Is the media type available.
 		do
-			Result := last_resolver.has_media_type
+			Result := attached last_resolver as l_last_resolver and then l_last_resolver.has_media_type
 		end
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
-			Result := last_resolver.last_media_type
+			check has_media_type: attached last_resolver as l_last_resolver and then attached l_last_resolver.last_media_type as l_last_media_type then
+				Result := l_last_media_type
+			end
 		end
 
 feature {NONE} -- Errors

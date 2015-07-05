@@ -8,7 +8,7 @@ note
 	implements: "XML 1.0 (Second Edition) - W3C Recommendation 6 October 2000"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,7 @@ create
 %type <STRING> value_reference entity_value_reference
 %type <STRING> comment_content comment_content_trail comment_content_item 
 %type <STRING> pi_content pi_content_first pi_content_trail pi_content_item
-%type <STRING> cdata_body cdata_body_item content_text
+%type <STRING> content_text
 %type <XM_DTD_EXTERNAL_ID> external_id public_id doctype_decl_external_name
 %type <STRING> ndata_decl doctype_name_space
 %type <XM_DTD_ELEMENT_CONTENT> content_spec children cp choice choice_trail seq seq_trail mixed mixed_trail
@@ -289,7 +289,11 @@ att_value_trail: att_value_trail_item att_value_trail_item
 
 att_value_trail_item: char_data { $$ := $1 }
 	| value_reference { $$ := $1 }
-	| ATTRIBUTE_LT { force_error (Error_lt_not_allowed_attribute_value) }
+	| ATTRIBUTE_LT 
+		{
+			force_error (Error_lt_not_allowed_attribute_value)
+			$$ := ""
+		}
 	;
 
 value_reference: ATTRIBUTE_ENTITY { $$ := shared_empty_string } -- really handled by `read_token'
@@ -323,7 +327,11 @@ comment_content_trail: comment_content_item comment_content_item
 	;
 
 comment_content_item: char_data { $$ := $1 }
-	| COMMENT_DASHDASH { force_error (Error_no_dash_dash_in_comment) }
+	| COMMENT_DASHDASH
+		{
+			force_error (Error_no_dash_dash_in_comment)
+			$$ := ""
+		}
 	;
 
 -- 2.6 Processing instructions
@@ -414,7 +422,11 @@ xml_decl: XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
 			$3.set_version ($2)
 			$$ := $3
 		}
-	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
+	| XMLDECLARATION_START error
+		{
+			force_error (Error_xml_declaration)
+			create $$.make
+		}
 	;
 
 xml_decl_opt: maybe_space
@@ -440,9 +452,13 @@ xml_decl_opt: maybe_space
 	;
 
 space_eq: EQ
+		{ $$ := $1 }
 	| SPACE EQ
+		{ $$ := $2 }
 	| EQ SPACE
+		{ $$ := $1 }
 	| SPACE EQ SPACE
+		{ $$ := $2 }
 	;
 	
 version_info: XMLDECLARATION_VERSION space_eq APOS XMLDECLARATION_VERSION_10 APOS
@@ -575,7 +591,11 @@ s_tag: TAG_START s_tag_name TAG_END
 			$$ := $2
 			on_start_tag_finish
 		}
-	| TAG_START error { force_error (Error_start_tag) }
+	| TAG_START error
+		{
+			force_error (Error_start_tag)
+			create $$.make_no_namespaces
+		}
 	;
 
 empty_elem_tag: TAG_START s_tag_name TAG_END_EMPTY
@@ -619,7 +639,10 @@ attribute: namespace_name EQ att_value
 			on_attribute (Void, $1.ns_prefix, $1.local_part, $3)
 		}
 	| namespace_name error 
-		{ force_error (Error_attribute) }
+		{
+			force_error (Error_attribute)
+			create $$.make_no_namespaces
+		}
 	;
 
 e_tag: TAG_START_END namespace_name TAG_END
@@ -627,7 +650,11 @@ e_tag: TAG_START_END namespace_name TAG_END
 			$$ := $2
 			on_end_tag (Void, $2.ns_prefix, $2.local_part)
 		}
-	| TAG_START_END error { force_error (Error_end_tag) }
+	| TAG_START_END error
+		{
+			force_error (Error_end_tag)
+			create $$.make_no_namespaces
+		}
 	;
 
 content: content_item
@@ -704,13 +731,28 @@ repetition: DOCTYPE_GROUP_ANY maybe_space
 	;
 
 choice: group_start cp group_or choice_trail group_end
-		{ $$ := $4; $$.items.force_first ($2) }
+		{
+			$$ := $4
+			check attached $$.items as l_items then
+				l_items.force_first ($2)
+			end
+		}
 	;-- ensure choice.is_choice (that's why $4 is used)
 
 choice_trail: cp
-		{ create $$.make_choice; $$.items.force_last ($1) }
+		{
+			create $$.make_choice
+			check attached $$.items as l_items then
+				l_items.force_last ($1)
+			end
+		}
 	| choice_trail group_or cp
-		{ $$ := $1; $$.items.force_last ($3) }
+		{
+			$$ := $1
+			check attached $$.items as l_items then
+				l_items.force_last ($3)
+			end
+		}
 	; -- ensure choice_trail.is_choice
 
 
@@ -719,9 +761,19 @@ seq: group_start seq_trail group_end
 	;
 
 seq_trail: cp
-		{ create $$.make_sequence; $$.items.force_last ($1) }
+		{
+			create $$.make_sequence
+			check attached $$.items as l_items then
+				l_items.force_last ($1)
+			end
+		}
 	| seq_trail group_seq cp
-		{ $$ := $1; $$.items.force_last ($3) }
+		{
+			$$ := $1
+			check attached $$.items as l_items then
+				l_items.force_last ($3)
+			end
+		}
 	; -- ensure seq_trail.is_sequence
 
 mixed: group_start pc_data group_end
@@ -733,9 +785,19 @@ mixed: group_start pc_data group_end
 	; -- ensure mixed.is_content_mixed
 
 mixed_trail: doctype_name_space
-		{ create $$.make_mixed; $$.items.force_last (element_name ($1)) }
+		{ 
+			create $$.make_mixed
+			check attached $$.items as l_items then
+				l_items.force_last (element_name ($1))
+			end
+		}
 	| mixed_trail group_or doctype_name_space
-		{ $$ := $1; $$.items.force_last (element_name ($3)) }
+		{ 
+			$$ := $1
+			check attached $$.items as l_items then
+				l_items.force_last (element_name ($3))
+			end
+		}
 	; -- ensure mixed_trail.is_content_mixed
 
 -- Primitives with space
@@ -777,7 +839,11 @@ attlist_decl_trail: att_def
 
 att_def: req_space doctype_name req_space att_type req_space default_decl
 		{ $$ := $4; $$.set_name ($2); $$.copy_default ($6) }
-	| req_space doctype_name error { force_error (Error_doctype_attribute_item) }
+	| req_space doctype_name error
+		{
+			force_error (Error_doctype_attribute_item)
+			create $$.make
+		}
 	;
 
 att_type: DOCTYPE_ATT_CDATA -- string_type
@@ -1006,10 +1072,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -1034,7 +1097,7 @@ feature -- Parsing
 					yyssp := yyssp + 1
 					if yyssp >= yystacksize then
 						yystacksize := yystacksize + yyInitial_stack_size
-						yyss := SPECIAL_INTEGER_.resize (yyss, yystacksize)
+						yyss := SPECIAL_INTEGER_.aliased_resized_area (yyss, yystacksize)
 						debug ("GEYACC")
 							std.error.put_string ("Stack (yyss) size increased to ")
 							std.error.put_integer (yystacksize)
@@ -1097,10 +1160,7 @@ feature -- Parsing
 								-- Skip next conditional instruction:
 							yyn := -1
 						end
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yychar1
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yychar1 then
 							yy_goto := yyDefault
 						else
 							yyn := yytable.item (yyn)
@@ -1174,10 +1234,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -1232,10 +1289,7 @@ feature -- Parsing
 						yy_goto := yyErrpop
 					else
 						yyn := yyn + yyTerror
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yyTerror
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yyTerror then
 							yy_goto := yyErrpop
 						else
 							yyn := yytable.item (yyn)
@@ -1280,5 +1334,6 @@ feature -- Parsing
 			abort
 			yy_clear_all
 		end
+
 
 end

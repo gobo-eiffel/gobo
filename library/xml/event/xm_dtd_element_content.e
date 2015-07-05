@@ -5,7 +5,7 @@ note
 		"Content model for element declaration in DTD"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_name (a_name: like name)
+	make_name (a_name: attached like name)
 			-- Create a new name node.
 		require
 			a_name_not_void: a_name /= Void
@@ -137,12 +137,12 @@ feature {NONE} -- Initialization (derived)
 
 feature -- Data
 
-	name: STRING
+	name: detachable STRING
 			-- Name, IF leaf item
 		--require is_name
 		--ensure Result /= Void
 
-	items: DS_LIST [XM_DTD_ELEMENT_CONTENT]
+	items: detachable DS_LIST [XM_DTD_ELEMENT_CONTENT]
 			-- List of subitems
 		--require not is_name
 		--ensure Result /= Void
@@ -165,31 +165,35 @@ feature -- Output
 			a_cursor: DS_LINEAR_CURSOR [XM_DTD_ELEMENT_CONTENT]
 		do
 			if is_name then
-				Result := name
-				if not is_one then
-					Result.append_character (repetition)
+				check attached name as l_name then
+					Result := l_name
+					if not is_one then
+						Result.append_character (repetition)
+					end
 				end
 			elseif is_content_any then
 				Result := "ANY"
 			elseif is_content_empty then
 				Result := "EMPTY"
 			else
-				Result := STRING_.cloned_string ("(")
-				a_cursor := items.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					Result := STRING_.appended_string (Result, a_cursor.item.out)
-					a_cursor.forth
-					if not a_cursor.after then
-						if is_content_mixed then
-							Result.append_character ('|')
-						else
-							Result.append_character (type)
+				check attached items as l_items then
+					Result := STRING_.cloned_string ("(")
+					a_cursor := l_items.new_cursor
+					from a_cursor.start until a_cursor.after loop
+						Result := STRING_.appended_string (Result, a_cursor.item.out)
+						a_cursor.forth
+						if not a_cursor.after then
+							if is_content_mixed then
+								Result.append_character ('|')
+							else
+								Result.append_character (type)
+							end
 						end
 					end
-				end
-				Result.append_character (')')
-				if not is_one then
-					Result.append_character (repetition)
+					Result.append_character (')')
+					if not is_one then
+						Result.append_character (repetition)
+					end
 				end
 			end
 		end
@@ -333,7 +337,7 @@ feature -- Content (final)
 		do
 			Result := type = '?'
 		ensure
-			empty: Result implies (not is_name and items.count = 0)
+			empty: Result implies (not is_name and then attached items as l_items and then l_items.count = 0)
 			chardata: Result implies is_character_data_allowed
 		end
 
@@ -342,7 +346,7 @@ feature -- Content (final)
 		do
 			Result := type = '0'
 		ensure
-			empty: Result implies (not is_name and items.count = 0)
+			empty: Result implies (not is_name and then attached items as l_items and then l_items.count = 0)
 		end
 
 	set_content_any

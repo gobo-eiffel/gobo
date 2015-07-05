@@ -5,7 +5,7 @@ note
 		"Variant of XM_STOP_ON_ERROR_FILTER that also stops the parser if the error is not from the parser"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class XM_PARSER_STOP_ON_ERROR_FILTER
 inherit
 
 	XM_STOP_ON_ERROR_FILTER
+		rename
+			make_next as old_make_next
 		redefine
 			on_error
 		end
@@ -24,15 +26,14 @@ create
 	make,
 	make_next
 
-feature {NONE}
+feature {NONE} -- Inialization
 
 	make (a_parser: like parser)
 			-- Set parser.
 		require
 			a_parser_not_void: a_parser /= Void
 		do
-			parser := a_parser
-			make_null
+			make_next (a_parser, null_callbacks)
 		end
 
 	make_next (a_parser: like parser; a_next: like next)
@@ -41,9 +42,11 @@ feature {NONE}
 			a_parser_not_void: a_parser /= Void
 			a_next_not_void: a_next /= Void
 		do
-			make (a_parser)
-			set_next (a_next)
+			parser := a_parser
+			old_make_next (a_next)
 		end
+
+feature -- Access
 
 	parser: XM_PARSER
 			-- Associated parser.

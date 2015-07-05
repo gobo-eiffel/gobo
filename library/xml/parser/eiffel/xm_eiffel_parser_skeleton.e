@@ -7,7 +7,7 @@ note
 	implements: "XML 1.0 (Second Edition) - W3C Recommendation 6 October 2000"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			-- another string mode must be set explicitely to accept
 			-- the full range of unicode characters.
 		do
+			initialize
 			make_scanner
 			make_parser
 				-- Parser state:
@@ -78,6 +79,13 @@ feature {NONE} -- Initialization
 			use_namespaces := True
 		ensure
 			string_mode_set_to_safe_latin1_only: is_string_mode_latin1
+		end
+
+	initialize
+			-- Initialize current callbacks and DTD callbacks.
+		do
+			callbacks := null_callbacks
+			dtd_callbacks := null_dtd_callbacks
 		end
 
 	null_resolver: XM_NULL_EXTERNAL_RESOLVER
@@ -137,11 +145,12 @@ feature {NONE} -- Implementation
 	parse_from_entity
 			-- Parse from entity resolver
 		do
-			if not entity_resolver.has_error then
+			if attached entity_resolver.last_error as l_last_error then
+				check has_error: entity_resolver.has_error end
+				force_error (l_last_error)
+			else
 				scanner.set_input_from_resolver (entity_resolver)
 				parse_with_events
-			else
-				force_error (entity_resolver.last_error)
 			end
 		end
 
@@ -207,12 +216,14 @@ feature -- Error reporting
 	last_error_description: STRING
 			-- Textual description of last error
 		do
-			Result := internal_last_error_description
+			check is_correct: attached internal_last_error_description as l_internal_last_error_description then
+				Result := l_internal_last_error_description
+			end
 		end
 
 feature {NONE} -- Error reporting
 
-	internal_last_error_description: STRING
+	internal_last_error_description: detachable STRING
 			-- Textual description of last error, if any
 
 feature -- Error
@@ -254,10 +265,10 @@ feature -- Error
 	positions: DS_LIST [XM_POSITION]
 			-- Current stack of positions, starting with the current entity.
 		do
-			if error_positions = Void then
-				Result := new_positions
+			if attached error_positions as l_error_positions then
+				Result := l_error_positions
 			else
-				Result := error_positions
+				Result := new_positions
 			end
 		end
 
@@ -277,7 +288,7 @@ feature -- Error
 
 feature {NONE} -- Error
 
-	error_positions: like positions
+	error_positions: detachable like positions
 			-- Position stack in case of error.
 
 	reset_error_state
@@ -546,9 +557,9 @@ feature {NONE} -- Entities
 			debug ("xml_parser")
 				std.error.put_string ("Entity declared: ")
 				std.error.put_string (a_name)
-				if a_def /= Void and then a_def.value /= Void then
+				if a_def /= Void and then attached a_def.value as l_value then
 					std.error.put_string (" value: ")
-					std.error.put_string (a_def.value)
+					std.error.put_string (l_value)
 				end
 				std.error.put_new_line
 			end
@@ -571,9 +582,11 @@ feature {NONE} -- Entities
 			debug ("xml_parser")
 				std.error.put_string ("PE entity declared: ")
 				std.error.put_string (a_name)
-				std.error.put_string (" value: ")
-				std.error.put_string (in_def.value)
-				std.error.put_new_line
+				if in_def /= Void and then attached in_def.value as l_value then
+					std.error.put_string (" value: ")
+					std.error.put_string (l_value)
+					std.error.put_new_line
+				end
 			end
 				-- 4.2: when multiple declaration take first one.
 			if in_def /= Void then
@@ -597,9 +610,11 @@ feature {NONE} -- Entities
 				else
 						-- 4.4.4 Forbidden.
 					force_error (Error_external_reference_in_quoted_value)
+					Result := ""
 				end
 			else
 				force_error (Error_doctype_peref_only_in_dtd)
+				Result := ""
 			end
 		end
 
@@ -608,11 +623,14 @@ feature {NONE} -- Entities
 		require
 			a_def_not_void: a_def /= Void
 		do
-			if a_def.is_literal then
+			if attached a_def.value as l_value then
+				check is_literal: a_def.is_literal end
 					-- 4.4.5 Included in literal.
-				Result := a_def.value
+				Result := l_value
 			else
-				Result := external_entity_to_string (a_def.external_id)
+				check is_external: attached a_def.external_id as l_external_id then
+					Result := external_entity_to_string (l_external_id)
+				end
 			end
 		end
 
@@ -622,10 +640,13 @@ feature {NONE} -- Entities
 			a_resolver_not_void: a_resolver /= Void
 			an_id_not_void: an_id /= Void
 		do
-			if an_id.is_public then
-				a_resolver.resolve_public (an_id.public_id, an_id.system_id)
-			else
-				a_resolver.resolve (an_id.system_id)
+			check is_system_id: attached an_id.system_id as l_system_id then
+				if attached an_id.public_id as l_public_id then
+					check is_public: an_id.is_public end
+					a_resolver.resolve_public (l_public_id, l_system_id)
+				else
+					a_resolver.resolve (l_system_id)
+				end
 			end
 		end
 
@@ -638,38 +659,43 @@ feature {NONE} -- Entities
 			i: INTEGER
 		do
 			resolve_external_id (entity_resolver, a_sys)
-			if not entity_resolver.has_error then
-				create a_stream.make_from_stream (entity_resolver.last_stream)
-				a_stream.read_string (INTEGER_.Platform.Maximum_integer)
-				Result := a_stream.last_string
-				if entity_resolver.last_stream.is_closable then
-					entity_resolver.last_stream.close
-				end
-				entity_resolver.resolve_finish
-				-- newline normalization XML1.0:2.11
-				-- TODO: should be done in scanner?
-				from
-					i := 1
-				until
-					i >= Result.count
-				loop
-					if Result.item (i) = '%R' and Result.item (i+1) = '%N' then
-						Result.remove (i)
-					end
-					i := i + 1
-				end
-				from
-					i := 1
-				until
-					i > Result.count
-				loop
-					if Result.item (i) = '%R' then
-						Result.put ('%N', i)
-					end
-					i := i + 1
-				end
+			if attached entity_resolver.last_error as l_last_error then
+				check has_eror: entity_resolver.has_error end
+				force_error (l_last_error)
+				Result := ""
 			else
-				force_error (entity_resolver.last_error)
+				check attached entity_resolver.last_stream as l_last_stream then
+					check has_no_error: not entity_resolver.has_error end
+					create a_stream.make_from_stream (l_last_stream)
+					a_stream.read_string (INTEGER_.Platform.Maximum_integer)
+					Result := a_stream.last_string
+					if l_last_stream.is_closable then
+						l_last_stream.close
+					end
+					entity_resolver.resolve_finish
+					-- newline normalization XML1.0:2.11
+					-- TODO: should be done in scanner?
+					from
+						i := 1
+					until
+						i >= Result.count
+					loop
+						if Result.item (i) = '%R' and Result.item (i+1) = '%N' then
+							Result.remove (i)
+						end
+						i := i + 1
+					end
+					from
+						i := 1
+					until
+						i > Result.count
+					loop
+						if Result.item (i) = '%R' then
+							Result.put ('%N', i)
+						end
+						i := i + 1
+					end
+				end
 			end
 		end
 
@@ -686,17 +712,18 @@ feature {NONE} -- DTD
 			end
 
 			resolve_external_id (dtd_resolver, a_system)
-			if not dtd_resolver.has_error then
+			if attached dtd_resolver.last_error as l_last_error then
+				check has_error: dtd_resolver.has_error end
+				if dtd_resolver = null_resolver then
+					force_error (Error_doctype_external_no_resolver)
+				else
+					force_error (l_last_error)
+				end
+			else
 				-- Push old scanner.
 				scanners.force (scanner)
 				create {XM_EIFFEL_SCANNER_DTD} scanner.make_scanner
 				scanner.set_input_from_resolver (dtd_resolver)
-			else
-				if dtd_resolver = null_resolver then
-					force_error (Error_doctype_external_no_resolver)
-				else
-					force_error (dtd_resolver.last_error)
-				end
 			end
 		end
 
@@ -708,6 +735,7 @@ feature {NONE} -- Scanner implementation
 		do
 			create scanner.make_scanner
 			create scanners.make
+			last_string_value := ""
 		end
 
 	scanner: XM_EIFFEL_SCANNER
@@ -821,8 +849,9 @@ feature {NONE} -- Scanner entity processing
 			a_def_not_void: a_def /= Void
 		do
 			a_def.apply_input_buffer
-			if a_def.has_error then
-				force_error (a_def.last_error)
+			if attached a_def.last_error as l_last_error then
+				check has_error: a_def.has_error end
+				force_error (l_last_error)
 			else
 					-- Push scanner.
 				debug ("xml_parser")
@@ -857,6 +886,7 @@ feature {NONE} -- String mode
 		do
 			if is_string_mode_ascii then
 				force_error (Error_unicode_in_ascii_string_mode)
+				Result := ""
 			else
 				if utf8.valid_utf8 (a_string) then
 					Result := new_unicode_string_from_utf8 (a_string)
@@ -869,6 +899,7 @@ feature {NONE} -- String mode
 					end
 				else
 					force_error (Error_unicode_invalid_utf8)
+					Result := ""
 				end
 			end
 		end

@@ -205,9 +205,9 @@ feature {NONE} -- Implementation
 
 			create pretty_print.make_null
 			pretty_print.set_output_to_string
-			create stop_on_error.set_next (pretty_print)
-			create xmlns_generator.set_next (pretty_print)
-			create namespace_resolver.set_next (xmlns_generator)
+			create stop_on_error.make_next (pretty_print)
+			create xmlns_generator.make_next (pretty_print)
+			create namespace_resolver.make_next (xmlns_generator)
 
 			parser.set_callbacks (namespace_resolver)
 		end

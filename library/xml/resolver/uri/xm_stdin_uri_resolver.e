@@ -10,7 +10,7 @@ note
       ]"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,6 +39,7 @@ feature -- Initialization
 			-- Create with content type of application/xml.
 		do
 			make_with_media_type ("application", "xml")
+			last_error := "no stream"
 		end
 
 	make_with_media_type (a_type, a_subtype: STRING)
@@ -63,31 +64,39 @@ feature -- Action(s)
 
 	resolve (a_uri: UT_URI)
 			-- Resolve file URI.
+		local
+			l_last_stream: like last_stream
 		do
 			if not a_uri.is_absolute then
 				last_error := STRING_.concat (Valid_uri_message, a_uri.full_reference)
+				last_stream := Void
 			elseif a_uri.has_authority then
 				last_error := STRING_.concat (Valid_uri_message, a_uri.full_reference)
+				last_stream := Void
 			elseif not a_uri.path_items.is_empty then
 				last_error := STRING_.concat (Valid_uri_message, a_uri.full_reference)
+				last_stream := Void
 			elseif a_uri.has_query then
 				last_error := STRING_.concat (Valid_uri_message, a_uri.full_reference)
+				last_stream := Void
 			else
-				last_stream := std.input
-				if last_stream.is_open_read then
+				l_last_stream := std.input
+				if l_last_stream.is_open_read then
+					last_stream := l_last_stream
 					last_error := Void
 				else
 					last_error := "Standard input is closed"
+					last_stream := Void
 				end
 			end
 		end
 
 feature -- Result
 
-	last_stream: KL_STDIN_FILE
+	last_stream: detachable KL_STDIN_FILE
 			-- Standard input stream
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Error
 
 	has_error: BOOLEAN

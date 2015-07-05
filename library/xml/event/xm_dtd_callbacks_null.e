@@ -5,7 +5,7 @@ note
 		"Null handler for document type definition callbacks"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,9 +27,16 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current DTD callbacks.
+		do
+		end
+
 feature -- Document type definuition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 		end
@@ -44,8 +51,8 @@ feature -- Document type definuition callbacks
 		do
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: detachable STRING;
+		an_id: detachable XM_DTD_EXTERNAL_ID; notation_name: detachable STRING)
 			-- Entity declaration.
 		do
 		end
@@ -69,4 +76,5 @@ feature -- Document type definuition callbacks
 			-- End of DTD.
 		do
 		end
+
 end

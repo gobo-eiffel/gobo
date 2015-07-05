@@ -5,7 +5,7 @@ note
 		"xml:id DTD validator"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,11 +29,11 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			has_error := False
@@ -68,17 +68,20 @@ feature -- ID callbacks
 			a_name_not_void: a_name /= Void
 		local
 			a_set: DS_HASH_SET [STRING]
+			l_id_attributes: like id_attributes
 		do
-			if id_attributes = Void then
-				create id_attributes.make_map_default
-				id_attributes.set_key_equality_tester (string_equality_tester)
+			l_id_attributes := id_attributes
+			if l_id_attributes = Void then
+				create l_id_attributes.make_map_default
+				l_id_attributes.set_key_equality_tester (string_equality_tester)
+				id_attributes := l_id_attributes
 			end
-			if not id_attributes.has (an_element_name) then
+			if not l_id_attributes.has (an_element_name) then
 				create a_set.make_default
 				a_set.set_equality_tester (string_equality_tester)
-				id_attributes.force_new (a_set, an_element_name)
+				l_id_attributes.force_new (a_set, an_element_name)
 			end
-			id_attributes.item (an_element_name).force (a_name)
+			l_id_attributes.item (an_element_name).force (a_name)
 		ensure
 			done: is_id_attribute (an_element_name, a_name)
 		end
@@ -88,7 +91,7 @@ feature -- Access
 	has_error: BOOLEAN
 			-- Is xml:id incorrectly declared to be other than ID type?
 
-	id_attributes: DS_HASH_TABLE [DS_SET [STRING], STRING]
+	id_attributes: detachable DS_HASH_TABLE [DS_SET [STRING], STRING]
 			-- List of ID attributes other than xml:id
 
 	is_id_attribute (an_element_name, a_name: STRING): BOOLEAN
@@ -97,9 +100,9 @@ feature -- Access
 			an_element_name_not_void: an_element_name /= Void
 			a_name_not_void: a_name /= Void
 		do
-			Result := id_attributes /= Void and then
-					(id_attributes.has (an_element_name) and then
-						id_attributes.item (an_element_name).has (a_name))
+			Result := attached id_attributes as l_id_attributes and then
+					(l_id_attributes.has (an_element_name) and then
+						l_id_attributes.item (an_element_name).has (a_name))
 		end
 
 end

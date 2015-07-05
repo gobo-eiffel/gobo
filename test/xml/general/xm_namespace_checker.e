@@ -5,7 +5,7 @@ note
 		"Test namespace resolution, event tester"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_start_tag,
 			on_attribute
@@ -26,7 +27,16 @@ inherit
 
 create
 
-	make_null, set_next
+	make_null,
+	make_next
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			create actual.make
+		end
 
 feature -- Element change
 
@@ -34,9 +44,11 @@ feature -- Element change
 			-- Set expected URI list.
 		do
 			expected := a
+		ensure
+			expected_set: expected = a
 		end
 
-	expected: ARRAY [STRING]
+	expected: detachable ARRAY [STRING]
 			-- Array of expected URIs
 
 feature -- Events
@@ -44,17 +56,17 @@ feature -- Events
 	on_start
 			-- Initialize.
 		do
-			create actual.make
+			initialize
 		end
 
-	on_start_tag (a_ns, a_pre, a_local: STRING)
+	on_start_tag (a_ns, a_pre: detachable STRING; a_local: STRING)
 			-- Check namespace.
 		do
 			check_namespace (a_ns)
 			next.on_start_tag (a_ns, a_pre, a_local)
 		end
 
-	on_attribute (a_ns, a_pre, a_local: STRING; a_value: STRING)
+	on_attribute (a_ns, a_pre: detachable STRING; a_local: STRING; a_value: STRING)
 			-- Check namespace.
 		do
 			check_namespace (a_ns)
@@ -66,7 +78,7 @@ feature {NONE} -- Implementation
 	actual: DS_LINKED_LIST [STRING]
 			-- Actual namespaces
 
-	check_namespace (a_ns: STRING)
+	check_namespace (a_ns: detachable STRING)
 			-- Build namespace event sequence for later checking.
 		do
 			if a_ns = Void then
@@ -82,19 +94,20 @@ feature -- Status report
 			-- Is there a failed index?
 		local
 			i: INTEGER
-			it: DS_LINEAR_CURSOR[STRING]
+			it: DS_LINEAR_CURSOR [STRING]
 		do
-			Result := (expected = Void or actual = Void) or else actual.count /= expected.count
-			if not Result then
+			if not attached expected as l_expected or else actual.count /= l_expected.count then
+				Result := True
+			else
 				from
-					i := expected.lower
+					i := l_expected.lower
 					it := actual.new_cursor
 					it.start
 				until
-					i > expected.upper
+					i > l_expected.upper
 				loop
 					if not Result then
-						Result := not STRING_.same_string (it.item, expected.item (i))
+						Result := not STRING_.same_string (it.item, l_expected.item (i))
 					end
 					it.forth
 					i := i + 1
@@ -107,7 +120,7 @@ feature -- Status report
 		require
 			has: has_failed
 		local
-			it: DS_LINEAR_CURSOR[STRING]
+			it: DS_LINEAR_CURSOR [STRING]
 		do
 			from
 				Result := ""
@@ -124,6 +137,13 @@ feature -- Status report
 				Result := STRING_.appended_string (Result, " ")
 				it.forth
 			end
+		ensure
+			failed_not_void: Result /= Void
 		end
+
+invariant
+
+	actual_not_void: actual /= Void
+	no_void_actual: not actual.has_void
 
 end

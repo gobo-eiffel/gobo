@@ -5,7 +5,7 @@ note
 		"XML nodes that have a name"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,18 +23,16 @@ feature -- Status report
 	has_namespace: BOOLEAN
 			-- Has the name of current node been defined with namespace?
 		do
-			Result := (namespace /= Void)
-		ensure
-			definition: Result = (namespace /= Void)
+			Result := True
 		end
 
 	has_prefix: BOOLEAN
 			-- Has a prefix been used to define the namespace?
 			-- (It could also be that the namespace used was the default namespace)
 		do
-			Result := (ns_prefix /= Void and then ns_prefix.count > 0)
+			Result := (attached ns_prefix as l_ns_prefix and then l_ns_prefix.count > 0)
 		ensure
-			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
+			definition: Result = (attached ns_prefix as l_ns_prefix and then l_ns_prefix.count > 0)
 		end
 
 	same_namespace (other: XM_NAMED_NODE): BOOLEAN
@@ -42,11 +40,9 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := ((not has_namespace) and (not other.has_namespace))
-				or ((has_namespace and other.has_namespace) and then namespace.is_equal (other.namespace))
+			Result := namespace.is_equal (other.namespace)
 		ensure
-			equal_namespaces: Result implies (((not has_namespace) and (not other.has_namespace))
-				or else namespace.is_equal (other.namespace))
+			equal_namespaces: Result implies namespace.is_equal (other.namespace)
 		end
 
 	same_name (other: XM_NAMED_NODE): BOOLEAN
@@ -57,7 +53,7 @@ feature -- Status report
 			Result := same_namespace (other) and
 				STRING_.same_string (name, other.name)
 		ensure
-			definition: Result = (same_namespace (other) and same_name (other))
+			definition: Result = (same_namespace (other) and STRING_.same_string (name, other.name))
 		end
 
 	has_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
@@ -83,11 +79,9 @@ feature -- Access
 
 feature -- Access
 
-	ns_prefix: STRING
+	ns_prefix: detachable STRING
 			-- Namespace prefix used to declare the namespace of the
 			-- name of current node
-		require
-			has_ns: has_namespace
 		do
 			Result := namespace.ns_prefix
 		ensure
@@ -96,8 +90,6 @@ feature -- Access
 
 	ns_uri: STRING
 			-- URI of namespace.
-		require
-			has_ns: has_namespace
 		do
 			Result := namespace.uri
 		ensure
@@ -131,6 +123,6 @@ invariant
 
 	name_not_void: name /= Void
 	name_not_empty: name.count > 0
-	has_namespace: has_namespace
+	namespace_not_void: namespace /= Void
 
 end

@@ -5,7 +5,7 @@ note
 		"XML processing instruction nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 	make (a_parent: like parent; a_target: like target; a_data: like data)
 			-- Create a new processing instruction node.
 		require
+			a_parent_not_void: a_parent /= Void
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
@@ -51,10 +52,11 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			data := a_data
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			target_set: target = a_target
 			data_set: data = a_data
 		end
@@ -69,10 +71,11 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			data := a_data
+			parent := a_parent
 			a_parent.force_last (Current)
 		ensure
 			parent_set: parent = a_parent
-			in_parent: parent.last = Current
+			in_parent: a_parent.last = Current
 			target_set: target = a_target
 			data_set: data = a_data
 		end

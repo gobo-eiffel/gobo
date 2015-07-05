@@ -5,13 +5,13 @@ note
 		"Linked list with a routine called before adding an object"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 
-deferred class XM_LINKED_LIST [G]
+class XM_LINKED_LIST [G]
 
 inherit
 
@@ -28,11 +28,15 @@ inherit
 			replace, replace_at, replace_at_cursor
 		end
 
+create
+
+	make
+	
 feature {NONE} -- Preprocessing
 
 	before_addition (a_node: G)
 			-- Called before an item is added to this container.
-		deferred
+		do
 		end
 
 	before_addition_list (a_list: DS_LINEAR [G])

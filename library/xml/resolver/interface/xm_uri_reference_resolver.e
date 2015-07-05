@@ -5,12 +5,12 @@ note
 		"Objects that resolve URI references"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class  XM_URI_REFERENCE_RESOLVER
+deferred class XM_URI_REFERENCE_RESOLVER
 
 inherit
 
@@ -27,22 +27,14 @@ feature -- Action
 
 feature -- Result
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
+	last_uri_reference_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
-		require
-			not_error: not has_uri_reference_error
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
 
-	last_system_id: UT_URI
+	last_system_id: detachable UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
-		require
-			not_error: not has_uri_reference_error
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
 
 	has_uri_reference_error: BOOLEAN
@@ -50,14 +42,16 @@ feature -- Result
 		deferred
 		end
 
-	last_uri_reference_error: STRING
+	last_uri_reference_error: detachable STRING
 			-- Last error message.
-		require
-			has_error: has_uri_reference_error
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
+
+invariant
+
+	last_uri_reference_error_not_void: has_uri_reference_error implies last_uri_reference_error /= Void
+--	last_uri_reference_stream_not_void: not has_uri_reference_error implies last_uri_reference_stream /= Void
+--	last_system_id_not_void: not has_uri_reference_error implies last_system_id /= Void
 
 end
 

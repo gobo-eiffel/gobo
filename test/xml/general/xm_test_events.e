@@ -61,8 +61,8 @@ feature -- Test
 			counter: XM_EVENT_COUNT_FILTER
 		do
 			create pretty.make_null
-			create counter.set_next (pretty)
-			create concat.set_next (counter)
+			create counter.make_next (pretty)
+			create concat.make_next (counter)
 
 			pretty.set_output_to_string
 
@@ -96,7 +96,7 @@ feature -- Test
 			counter: XM_EVENT_COUNT_FILTER
 		do
 			create counter.make_null
-			create tested.set_next (counter)
+			create tested.make_next (counter)
 
 			tested.on_start
 			tested.on_comment ("c1")

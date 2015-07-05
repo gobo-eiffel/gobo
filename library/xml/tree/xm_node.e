@@ -5,7 +5,7 @@ note
 		"XML nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,24 +23,22 @@ inherit
 
 feature -- Access
 
-	parent: XM_COMPOSITE
+	parent: detachable XM_COMPOSITE
 			-- Parent of current node;
 			-- Void if current node is root
+		do
+		end
 
 feature -- Status report
 
 	parent_element: XM_ELEMENT
-			-- Parent element.
+			-- Parent element
 		require
-			not_root_node: not is_root_node
-			not_root_element: not parent.is_root_node
-		local
-			typer: XM_NODE_TYPER
+			not_root_element: attached parent as l_parent and then not l_parent.is_root_node
 		do
-			create typer
-			parent.process (typer)
-			check precondition: typer.is_element end
-			Result := typer.element
+			check attached {XM_ELEMENT} parent as l_element then
+				Result := l_element
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -48,10 +46,11 @@ feature -- Status report
 	root_node: XM_DOCUMENT
 			-- Root node of current node
 		do
-			check not_root_node: not is_root_node end
-			-- is_root_node case dealt by descendant because
-			-- we cannot do Result := Current here.
-			Result := parent.root_node
+			check attached parent as l_parent then
+					-- is_root_node case dealt by descendant because
+					-- we cannot do Result := Current here.
+				Result := l_parent.root_node
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -60,10 +59,10 @@ feature -- Status report
 			-- Depth at which current node appears relative to its root
 			-- (The root node has the level 1.)
 		do
-			if is_root_node then
+			if not attached parent as l_parent then
 				Result := 1
 			else
-				Result := parent.level + 1
+				Result := l_parent.level + 1
 			end
 		ensure
 			root_level: is_root_node implies (Result = 1)
@@ -81,41 +80,42 @@ feature -- Status report
 			-- Is this node the first in its parent's child list,
 			-- or the root node?
 		do
-			Result := is_root_node or else (parent.first = Current)
+			Result := not attached parent as l_parent or else (l_parent.first = Current)
 		ensure
-			definition: Result = (is_root_node or else (parent.first = Current))
+			definition: Result = (not attached parent as l_parent or else (l_parent.first = Current))
 		end
 
 	is_last: BOOLEAN
 			-- Is this node the last in its parent's child list,
 			-- or the root node?
 		do
-			Result := is_root_node or else (parent.last = Current)
+			Result := not attached parent as l_parent or else (l_parent.last = Current)
 		ensure
-			definition: Result = (is_root_node or else (parent.last = Current))
+			definition: Result = (not attached parent as l_parent or else (l_parent.last = Current))
 		end
 
-feature -- Element change
+feature -- Position
 
-	set_parent (a_parent: like parent)
-			-- Set `parent' to `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-			not_root_node: not is_root_node
+	position (a_position_table: detachable XM_POSITION_TABLE): XM_POSITION
+			-- Position of current node
+			--
+			-- If not found in `a_position_table', then return a null position.
 		do
-			parent := a_parent
+			if a_position_table /= Void and then a_position_table.has (Current) then
+				Result := a_position_table.item (Current)
+			else
+				Result := null_position
+			end
 		ensure
-			parent_set: parent = a_parent
+			position_not_void: Result /= Void
 		end
 
-feature {XM_COMPOSITE} -- Element change
-
-	node_set_parent (a_parent: like parent)
-			-- Set `parent' to `a_parent'.
-		do
-			parent := a_parent
+	null_position: XM_DEFAULT_POSITION
+			-- Null position
+		once
+			create Result.make ("", 0, 0, 0)
 		ensure
-			parent_set: parent = a_parent
+			null_position_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -125,6 +125,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_default
 		ensure
+			not_void: Result /= Void
 			definition: Result.uri.count = 0
 		end
 

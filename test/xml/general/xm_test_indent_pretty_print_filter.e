@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		do
 			create indent_pretty_print.make_null
 			indent_pretty_print.set_output_to_string
-			create whitespace_normalizer.set_next (indent_pretty_print)
+			create whitespace_normalizer.make_next (indent_pretty_print)
 
 			create parser.make
 			parser.set_callbacks (whitespace_normalizer)

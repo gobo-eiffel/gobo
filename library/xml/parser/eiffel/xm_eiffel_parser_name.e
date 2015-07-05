@@ -7,7 +7,7 @@ note
 	todo: "Review how to handle strict XML 1.0 with namespaces"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,9 +61,9 @@ feature {NONE} -- Initialization
 			--
 		do
 			count := 0
-			first := Void
-			second := Void
-			tail := Void
+			first := ""
+			second := ""
+			tail := new_string_bilinked_list
 		ensure
 			not_use_namespaces: not use_namespaces
 
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Access
 
-	ns_prefix: STRING
+	ns_prefix: detachable STRING
 			-- Namespace prefix
 		do
 			if use_namespaces and is_namespace_name then
@@ -249,9 +249,9 @@ feature -- Removal
 			-- Remove all.
 		do
 			count := 0
-			first := Void
-			second := Void
-			tail := Void
+			first := ""
+			second := ""
+			tail := new_string_bilinked_list
 		ensure
 			wiped_out: is_empty
 		end
@@ -301,14 +301,16 @@ feature -- Output
 			nb := count
 			if nb > 0 then
 				Result := STRING_.cloned_string (item (1))
-			end
-			from
-				i := 2
-			until
-				i > nb
-			loop
-				Result := STRING_.appended_string (Result, item (i))
-				i := i + 1
+				from
+					i := 2
+				until
+					i > nb
+				loop
+					Result := STRING_.appended_string (Result, item (i))
+					i := i + 1
+				end
+			else
+				Result := ""
 			end
 		end
 

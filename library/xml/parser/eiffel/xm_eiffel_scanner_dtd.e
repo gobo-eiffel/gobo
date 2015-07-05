@@ -5,7 +5,7 @@ note
 		"Scanner adapter to external DTD"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,8 +47,9 @@ feature -- Input
 		do
 			debug ("xml_parser")
 				std.error.put_string ("--dtd-scanner--")
-				if has_error then
-					std.error.put_string (last_error)
+				if attached last_error as l_last_error then
+					check has_error: has_error end
+					std.error.put_string (l_last_error)
 				end
 			end
 			if not decl_start_sent then

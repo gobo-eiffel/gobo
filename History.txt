@@ -201,6 +201,7 @@ Version 3.10 - ?
 
 	* Added option to let the XML pretty printer use empty element tags
 	  <tag/> instead of <tag><tag/>.
+	* Made it compilable in void-safe mode with ISE 15.01.
 
 	Miscellaneous:
 

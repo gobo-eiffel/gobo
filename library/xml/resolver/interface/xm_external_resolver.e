@@ -5,7 +5,7 @@ note
 		"Interface for external resolver of system entities"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ feature -- Action(s)
 			a_system_not_void: a_system /= Void
 		deferred
 		ensure
-			stream_open_on_success: not has_error implies last_stream.is_open_read
+			stream_open_on_success: attached last_stream as l_last_stream implies l_last_stream.is_open_read
 			--depth: not has_error implies resolve_depth = old resolve_depth + 1
 		end
 
@@ -34,7 +34,7 @@ feature -- Action(s)
 		do
 			resolve (a_system)
 		ensure
-			stream_open_on_success: not has_error implies last_stream.is_open_read
+			stream_open_on_success: attached last_stream as l_last_stream implies l_last_stream.is_open_read
 			--depth: not has_error implies resolve_depth = old resolve_depth + 1
 		end
 
@@ -51,13 +51,9 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
-		require
-			not_error: not has_error
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
 
 	has_error: BOOLEAN
@@ -65,13 +61,14 @@ feature -- Result
 		deferred
 		end
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error message.
-		require
-			has_error: has_error
 		deferred
-		ensure
-			not_void: Result /= Void
 		end
+
+invariant
+
+	has_error: has_error implies last_error /= Void
+	has_no_error: not has_error implies last_stream /= Void
 
 end

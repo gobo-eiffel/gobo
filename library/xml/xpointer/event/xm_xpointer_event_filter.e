@@ -5,7 +5,7 @@ note
 		"Objects that filter an event stream according to an XPointer"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	XM_DTD_CALLBACKS_FILTER
 		rename
+			make_next as make_dtd_next,
 			make_null as make_dtd_null,
+			initialize as initialize_dtd,
 			set_next as set_next_dtd,
 			next as dtd_callbacks
 		redefine
@@ -25,7 +27,9 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		rename
+			make_next as make_filter_next,
 			make_null as make_filter_null,
+			initialize as initialize_filter,
 			set_next as set_next_filter,
 			next as callbacks
 		redefine
@@ -49,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_xpointer: STRING; a_media_type: UT_MEDIA_TYPE; a_resolver: XM_RESOLVER_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
+	make (an_xpointer: STRING; a_media_type: detachable UT_MEDIA_TYPE; a_resolver: XM_RESOLVER_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS)
 			-- Establish invariant.
 		require
 			xpointer_not_void: an_xpointer /= Void
@@ -73,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	media_type: UT_MEDIA_TYPE
+	media_type: detachable UT_MEDIA_TYPE
 		-- Media type of document entity
 
 	Unacceptable_media_type: STRING = "Media type is not acceptable for fragment processing"
@@ -90,7 +94,9 @@ feature -- Status report
 			filtering: is_filtering
 			media_type_not_void: a_media_type /= Void
 		do
-			Result := acceptable_media_types.has (a_media_type)
+			check is_filtering: attached acceptable_media_types as l_acceptable_media_types then
+				Result := l_acceptable_media_types.has (a_media_type)
+			end
 		end
 
 	any_types_added: BOOLEAN
@@ -98,7 +104,9 @@ feature -- Status report
 		require
 			filtering: is_filtering
 		do
-			Result := acceptable_media_types.count > 0
+			check is_filtering: attached acceptable_media_types as l_acceptable_media_types then
+				Result := l_acceptable_media_types.count > 0
+			end
 		end
 
 	generic_xml_types_allowed: BOOLEAN
@@ -126,6 +134,7 @@ feature -- Status setting
 			xpointer_not_void: an_xpointer /= Void
 		local
 			a_parser: XM_XPOINTER_PARSER
+			l_acceptable_media_types: like acceptable_media_types
 		do
 			is_error := False
 			create a_parser.make
@@ -138,8 +147,9 @@ feature -- Status setting
 			end
 			create attribute_types.make_with_equality_testers (7, Void, string_equality_tester)
 			is_filtering := True
-			create acceptable_media_types.make_default
-			acceptable_media_types.set_equality_tester (media_type_tester)
+			create l_acceptable_media_types.make_default
+			l_acceptable_media_types.set_equality_tester (media_type_tester)
+			acceptable_media_types := l_acceptable_media_types
 			are_media_type_ignored := False
 			create namespace_bindings_stack.make
 		ensure
@@ -156,7 +166,9 @@ feature -- Status setting
 			media_type_not_void: a_media_type /= Void
 			not_previously_added: not has_media_type (a_media_type)
 		do
-			acceptable_media_types.force_new (a_media_type)
+			check is_filtering: attached acceptable_media_types as l_acceptable_media_types then
+				l_acceptable_media_types.force_new (a_media_type)
+			end
 		ensure
 			media_type_added: has_media_type (a_media_type)
 		end
@@ -212,23 +224,25 @@ feature -- Document type definition callbacks
 			a_message: STRING
 		do
 			if is_filtering then
-				if not attribute_types.has (an_element_name) then
-					create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
-					attribute_types.force_new (an_attribute_table, an_element_name)
-				end
-				an_attribute_table := attribute_types.item (an_element_name)
-				check
-					attribute_table_not_void: an_attribute_table /= Void
-					-- because has() returned `True'
-				end
-				if an_attribute_table.has (a_name) then
-					a_message := "Attribute "
-					a_message.append_string (a_name)
-					a_message.append_string (" already present for element ")
-					a_message.append_string (an_element_name)
-					on_error (a_message)
-				else
-					an_attribute_table.force_new (a_model, a_name)
+				check is_filtering: attached attribute_types as l_attribute_types then
+					if not l_attribute_types.has (an_element_name) then
+						create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
+						l_attribute_types.force_new (an_attribute_table, an_element_name)
+					end
+					an_attribute_table := l_attribute_types.item (an_element_name)
+					check
+						attribute_table_not_void: an_attribute_table /= Void
+						-- because has() returned `True'
+					end
+					if an_attribute_table.has (a_name) then
+						a_message := "Attribute "
+						a_message.append_string (a_name)
+						a_message.append_string (" already present for element ")
+						a_message.append_string (an_element_name)
+						on_error (a_message)
+					else
+						an_attribute_table.force_new (a_model, a_name)
+					end
 				end
 			end
 			Precursor (an_element_name, a_name, a_model)
@@ -240,6 +254,7 @@ feature -- Document
 			-- Called when parsing starts.
 		local
 			ok_to_filter: BOOLEAN
+			l_message: STRING
 		do
 			if resolver.has_media_type then
 				media_type := resolver.last_media_type
@@ -251,16 +266,18 @@ feature -- Document
 				is_forwarding_processing_instructions := True
 				is_shorthand_found := False
 				if is_error then
-					on_error (error_message)
+					check is_error: attached error_message as l_error_message then
+						on_error (l_error_message)
+					end
 				else
 					ok_to_filter := are_media_type_ignored
 					if not ok_to_filter then
-						if media_type /= Void then
-							if has_media_type (media_type) then
+						if attached media_type as l_media_type then
+							if has_media_type (l_media_type) then
 								ok_to_filter := True
 							elseif generic_xml_types_allowed then
-								if media_type.subtype.count > 4 and then STRING_.same_string (media_type.type, "application") then
-									ok_to_filter := STRING_.same_string (media_type.subtype.substring (media_type.subtype.count - 4, media_type.subtype.count), "+xml")
+								if l_media_type.subtype.count > 4 and then STRING_.same_string (l_media_type.type, "application") then
+									ok_to_filter := STRING_.same_string (l_media_type.subtype.substring (l_media_type.subtype.count - 4, l_media_type.subtype.count), "+xml")
 								end
 							end
 						end
@@ -274,8 +291,9 @@ feature -- Document
 						is_forwarding := True
 					else
 						is_error := True
-						error_message := Unacceptable_media_type
-						on_error (error_message)
+						l_message := Unacceptable_media_type
+						error_message := l_message
+						on_error (l_message)
 					end
 				end
 			else
@@ -314,30 +332,39 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			l_element_qname, l_prefix: STRING
+			l_namespace_bindings: like namespace_bindings
 		do
 			if is_filtering then
 				is_forwarding_processing_instructions := is_forwarding
 				if not is_shorthand_found or is_shorthand_element then
-					create namespace_bindings.make
-					namespace_bindings_stack.put (namespace_bindings)
+					create l_namespace_bindings.make
+					namespace_bindings := l_namespace_bindings
+					check attached namespace_bindings_stack as l_namespace_bindings_stack then
+						l_namespace_bindings_stack.put (l_namespace_bindings)
+					end
 				end
 			end
 			if not is_filtering then
 				Precursor (a_namespace, a_prefix, a_local_part)
 			elseif not is_error then
-				pending_namespace := Void; pending_prefix := Void; pending_local_part := Void
+				pending_namespace := Void
+				pending_prefix := Void
+				pending_local_part := Void
 				if not is_shorthand_found then
 					if a_prefix = Void then
 						l_prefix := ""
 					else
 						l_prefix := a_prefix
 					end
-					is_forwarding := False; is_forwarding_processing_instructions := False
-					pending_namespace := a_namespace; pending_prefix := a_prefix; pending_local_part := a_local_part
+					is_forwarding := False
+					is_forwarding_processing_instructions := False
+					pending_namespace := a_namespace
+					pending_prefix := a_prefix
+					pending_local_part := a_local_part
 					create pending_attribute_namespaces.make
 					create pending_attribute_prefixes.make
 					create pending_attribute_local_parts.make
@@ -356,7 +383,7 @@ feature -- Tag
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
@@ -364,68 +391,86 @@ feature -- Tag
 			an_attribute_qname, an_xml_prefix: STRING
 		do
 			if is_filtering and (not is_shorthand_found or is_shorthand_element) then
-				if a_namespace = Void and a_prefix = Void and STRING_.same_string (Xmlns, a_local_part) then
-					namespace_bindings.bind ("", a_value)
-				elseif a_namespace = Void and a_prefix /= Void and then STRING_.same_string (Xmlns, a_prefix) then
-					namespace_bindings.bind (a_local_part, a_value)
+				check attached namespace_bindings as l_namespace_bindings then
+					if a_namespace = Void and a_prefix = Void and STRING_.same_string (Xmlns, a_local_part) then
+						l_namespace_bindings.bind ("", a_value)
+					elseif a_namespace = Void and a_prefix /= Void and then STRING_.same_string (Xmlns, a_prefix) then
+						l_namespace_bindings.bind (a_local_part, a_value)
+					end
 				end
 			end
 			if not is_filtering or else is_forwarding then
 				Precursor (a_namespace, a_prefix, a_local_part, a_value)
 			elseif not is_error and then not is_shorthand_found then
 				if a_prefix /= Void and then Xml_prefix.is_equal (a_prefix) and then Xml_id.is_equal (a_local_part) then
-					is_shorthand_found := STRING_.same_string (shorthand, a_value)
+					is_shorthand_found := attached shorthand as l_shorthand and then STRING_.same_string (l_shorthand, a_value)
 					if is_shorthand_found then
 						is_shorthand_element := True
 					end
 				else
-					if attribute_types.has (current_element_name) then
-						an_attribute_table := attribute_types.item (current_element_name)
-						check
-							attribute_table_not_void: an_attribute_table /= Void
-							-- because `has' returned `True'
-						end
-						if a_prefix = Void then
-							an_xml_prefix := ""
-						else
-							an_xml_prefix := a_prefix
-						end
-						if an_xml_prefix.count = 0 then
-							an_attribute_qname := STRING_.cloned_string (a_local_part)
-						else
-							an_attribute_qname := STRING_.cloned_string (an_xml_prefix)
-							an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
-							an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
-						end
-						if an_attribute_table.has (an_attribute_qname) then
-							an_attribute_model := an_attribute_table.item (an_attribute_qname)
+					check is_filtering: attached attribute_types as l_attribute_types then
+						if attached current_element_name as l_current_element_name and then l_attribute_types.has (l_current_element_name) then
+							an_attribute_table := l_attribute_types.item (l_current_element_name)
 							check
-								attribute_model_not_void: an_attribute_model /= Void
+								attribute_table_not_void: an_attribute_table /= Void
 								-- because `has' returned `True'
 							end
-							if an_attribute_model.is_id then
-								is_shorthand_found := STRING_.same_string (shorthand, a_value)
-								if is_shorthand_found then
-									is_shorthand_element := True
+							if a_prefix = Void then
+								an_xml_prefix := ""
+							else
+								an_xml_prefix := a_prefix
+							end
+							if an_xml_prefix.count = 0 then
+								an_attribute_qname := STRING_.cloned_string (a_local_part)
+							else
+								an_attribute_qname := STRING_.cloned_string (an_xml_prefix)
+								an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
+								an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
+							end
+							if an_attribute_table.has (an_attribute_qname) then
+								an_attribute_model := an_attribute_table.item (an_attribute_qname)
+								check
+									attribute_model_not_void: an_attribute_model /= Void
+									-- because `has' returned `True'
+								end
+								if an_attribute_model.is_id then
+									is_shorthand_found := attached shorthand as l_shorthand and then STRING_.same_string (l_shorthand, a_value)
+									if is_shorthand_found then
+										is_shorthand_element := True
+									end
 								end
 							end
 						end
 					end
 				end
-				if is_shorthand_found then
-					is_forwarding := True
-					on_start_tag (pending_namespace, pending_prefix, pending_local_part)
-					from
-					until
-						pending_attribute_namespaces.is_empty
-					loop
-						on_attribute (pending_attribute_namespaces.item, pending_attribute_prefixes.item, pending_attribute_local_parts.item, pending_attribute_values.item)
-						pending_attribute_namespaces.remove; pending_attribute_prefixes.remove; pending_attribute_local_parts.remove; pending_attribute_values.remove
+				check
+					attached pending_attribute_namespaces as l_pending_attribute_namespaces and
+					attached pending_attribute_prefixes as l_pending_attribute_prefixes and
+					attached pending_attribute_local_parts as l_pending_attribute_local_parts and
+					attached pending_attribute_values as l_pending_attribute_values
+				then
+					if is_shorthand_found then
+						is_forwarding := True
+						check attached pending_local_part as l_pending_local_part then
+							on_start_tag (pending_namespace, pending_prefix, l_pending_local_part)
+						end
+						from
+						until
+							l_pending_attribute_namespaces.is_empty
+						loop
+							on_attribute (l_pending_attribute_namespaces.item, l_pending_attribute_prefixes.item, l_pending_attribute_local_parts.item, l_pending_attribute_values.item)
+							l_pending_attribute_namespaces.remove
+							l_pending_attribute_prefixes.remove
+							l_pending_attribute_local_parts.remove
+							l_pending_attribute_values.remove
+						end
+						Precursor (a_namespace, a_prefix, a_local_part, a_value)
+					else
+						l_pending_attribute_namespaces.force (a_namespace)
+						l_pending_attribute_prefixes.force (a_prefix)
+						l_pending_attribute_local_parts.force (a_local_part)
+						l_pending_attribute_values.force (a_value)
 					end
-					Precursor (a_namespace, a_prefix, a_local_part, a_value)
-				else
-					pending_attribute_namespaces.force (a_namespace); pending_attribute_prefixes.force (a_prefix);
-					pending_attribute_local_parts.force (a_local_part); pending_attribute_values.force (a_value)
 				end
 			end
 		end
@@ -438,32 +483,34 @@ feature -- Tag
 			l_prefix, l_uri: STRING
 		do
 			if is_shorthand_element then
-				l_namespaces := namespace_bindings_stack.item
-				from
-					namespace_bindings_stack.remove
-				until
-					namespace_bindings_stack.is_empty
-				loop
-					l_cursor := namespace_bindings_stack.item.namespace_cursor
-					from l_cursor.start until l_cursor.after loop
-						l_prefix := l_cursor.key
-						l_uri := l_cursor.item
-						if not l_namespaces.is_prefix_declared (l_prefix) then
-							if l_prefix.is_empty then
-								on_attribute (Void, Void, Xmlns, l_uri)
-							else
-								on_attribute (Void, Xmlns, l_prefix, l_uri)
+				check attached namespace_bindings_stack as l_namespace_bindings_stack then
+					l_namespaces := l_namespace_bindings_stack.item
+					from
+						l_namespace_bindings_stack.remove
+					until
+						l_namespace_bindings_stack.is_empty
+					loop
+						l_cursor := l_namespace_bindings_stack.item.namespace_cursor
+						from l_cursor.start until l_cursor.after loop
+							l_prefix := l_cursor.key
+							l_uri := l_cursor.item
+							if not l_namespaces.is_prefix_declared (l_prefix) then
+								if l_prefix.is_empty then
+									on_attribute (Void, Void, Xmlns, l_uri)
+								else
+									on_attribute (Void, Xmlns, l_prefix, l_uri)
+								end
 							end
+							l_cursor.forth
 						end
-						l_cursor.forth
+						l_namespace_bindings_stack.remove
 					end
-					namespace_bindings_stack.remove
 				end
 			end
 			if not is_filtering or else is_forwarding then Precursor end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		local
 			an_element_qname, an_xml_prefix: STRING
@@ -472,7 +519,9 @@ feature -- Tag
 				Precursor (a_namespace, a_prefix, a_local_part)
 			else
 				if not is_shorthand_found then
-					namespace_bindings_stack.remove
+					check attached namespace_bindings_stack as l_namespace_bindings_stack then
+						l_namespace_bindings_stack.remove
+					end
 				end
 				if is_forwarding then
 					Precursor (a_namespace, a_prefix, a_local_part)
@@ -488,7 +537,7 @@ feature -- Tag
 						an_element_qname := STRING_.appended_string (an_element_qname, ":")
 						an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
 					end
-					if STRING_.same_string (an_element_qname, current_element_name) then
+					if attached current_element_name as l_current_element_name and then STRING_.same_string (an_element_qname, l_current_element_name) then
 						is_forwarding := False
 						is_forwarding_processing_instructions := False
 					end
@@ -507,40 +556,38 @@ feature -- Content
 
 feature {NONE} -- Implementation
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message from XPointer processing
 
-	attribute_types: DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], STRING]
+	attribute_types: detachable DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], STRING]
 			-- Stored attribute-type definitions per element name
 
-	current_element_name: STRING
+	current_element_name: detachable STRING
 			-- QName of the current element;
 			-- Used for tracking attribute types
 
-	pending_namespace, pending_prefix, pending_local_part: STRING
+	pending_namespace, pending_prefix, pending_local_part: detachable STRING
 			-- Start tag of shorthand element
 
-	pending_attribute_namespaces: DS_LINKED_QUEUE [STRING]
+	pending_attribute_namespaces: detachable DS_LINKED_QUEUE [detachable STRING]
 			-- Namespaces of pending attributes
 
-
-	pending_attribute_prefixes: DS_LINKED_QUEUE [STRING]
+	pending_attribute_prefixes: detachable DS_LINKED_QUEUE [detachable STRING]
 			-- prefixes of pending attributes
 
-
-	pending_attribute_local_parts: DS_LINKED_QUEUE [STRING]
+	pending_attribute_local_parts: detachable DS_LINKED_QUEUE [STRING]
 			-- Local parts of pending attributes
 
-	pending_attribute_values: DS_LINKED_QUEUE [STRING]
+	pending_attribute_values: detachable DS_LINKED_QUEUE [STRING]
 			-- Values of pending attributes
 
-	default_media_type: UT_MEDIA_TYPE
+	default_media_type: detachable UT_MEDIA_TYPE
 			-- Media type to use if resolver does not provide it
 
 	resolver: XM_RESOLVER_MEDIA_TYPE
 			-- Resolver for media type
 
-	shorthand: STRING
+	shorthand: detachable STRING
 			-- parsed shorthand pointer
 
 	is_forwarding, is_forwarding_processing_instructions: BOOLEAN
@@ -555,13 +602,13 @@ feature {NONE} -- Implementation
 	is_error: BOOLEAN
 			-- Did XPointer processing flag an error?
 
-	acceptable_media_types: DS_HASH_SET [UT_MEDIA_TYPE]
+	acceptable_media_types: detachable DS_HASH_SET [UT_MEDIA_TYPE]
 			-- Acceptable media types for current fragment-processing semantics
 
-	namespace_bindings_stack: DS_LINKED_STACK [XM_XPOINTER_NAMESPACE_CONTEXT]
+	namespace_bindings_stack: detachable DS_LINKED_STACK [XM_XPOINTER_NAMESPACE_CONTEXT]
 			-- Namespace declarations in scope
 
-	namespace_bindings: XM_XPOINTER_NAMESPACE_CONTEXT
+	namespace_bindings: detachable XM_XPOINTER_NAMESPACE_CONTEXT
 			-- Current namespace binding context
 
 invariant
@@ -569,7 +616,7 @@ invariant
 	resolver_not_void: resolver /= Void
 	xpointer_error: is_error implies error_message /= Void
 	attribute_types_not_void: is_filtering implies attribute_types /= Void
-	acceptable_media_types: is_filtering implies acceptable_media_types /= Void and then acceptable_media_types.equality_tester = media_type_tester
+	acceptable_media_types: is_filtering implies attached acceptable_media_types as l_acceptable_media_types and then l_acceptable_media_types.equality_tester = media_type_tester
 
 end
 

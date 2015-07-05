@@ -5,7 +5,7 @@ note
 		"Stop forwarding events on first error"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ inherit
 
 create
 
-	set_next,
+	make_next,
 	make_null
 
 feature -- Status
@@ -38,7 +38,7 @@ feature -- Status
 	has_error: BOOLEAN
 			-- Has an error occurred?
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Error message
 
 feature -- Document
@@ -93,7 +93,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Default: forward event to 'next'.
 		do
@@ -102,7 +102,7 @@ feature -- Tag
 			end
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Attribute.
 			-- Default: forward event to 'next'.
 		do
@@ -120,7 +120,7 @@ feature -- Tag
 			end
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 			-- Default: forward event to 'next'.
 		do

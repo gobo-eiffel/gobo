@@ -146,10 +146,10 @@ feature {NONE} -- Implementation
 
 				-- filters: namespace_resolver -> xml_id -> pretty_print -> error
 			create error.make_null
-			create pretty_print.set_next (error)
+			create pretty_print.make_next (error)
 			pretty_print.set_output_to_string
-			create xml_id.set_next (pretty_print)
-			create namespace_resolver.set_next (xml_id)
+			create xml_id.make_next (pretty_print)
+			create namespace_resolver.make_next (xml_id)
 			parser.set_callbacks (namespace_resolver)
 
 				-- DTD

@@ -5,7 +5,7 @@ note
 		"Pretty printer, output as XML document"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Meta
 
@@ -45,7 +45,6 @@ feature -- Meta
 			output_constant (Space_s)
 			output (a_content)
 			output_constant (Pi_end)
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_name, a_content)
 		end
@@ -56,37 +55,32 @@ feature -- Meta
 			output_constant (Comment_start)
 			output (a_content)
 			output_constant (Comment_end)
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_content)
 		end
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Print start of start tag.
 		do
 			flush_pending_tag_end
-
 			output_constant (Stag_start)
 			output_name (a_prefix, a_local_part)
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Print attribute.
 		do
 			flush_pending_tag_end
-
 			output_constant (Space_s)
 			output_name (a_prefix, a_local_part)
 			output_constant (Eq_s)
 			output_constant (Quot_s)
 			output_quote_escaped (a_value)
 			output_constant (Quot_s)
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
@@ -100,11 +94,10 @@ feature -- Tag
 				output_constant (stag_end)
 			end
 			last_call_was_start_tag_finish := True
-
 			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Print end tag.
 		do
 			if last_call_was_start_tag_finish and empty_element_tags_enabled then
@@ -115,7 +108,6 @@ feature -- Tag
 				output_name (a_prefix, a_local_part)
 				output_constant (Etag_end)
 			end
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
@@ -128,9 +120,7 @@ feature -- Content
 			-- Default: forward event to 'next'.
 		do
 			flush_pending_tag_end
-
 			output_escaped (a_content)
-
 			last_call_was_start_tag_finish := False
 			Precursor (a_content)
 		end
@@ -196,6 +186,8 @@ feature {NONE} -- Escaped
 				Result := STRING_.concat ("&#", a_char.out)
 				Result := STRING_.concat (Result, ";")
 			end
+		ensure
+			escaped_char_not_void: Result /= Void
 		end
 
 feature {NONE} -- Output
@@ -281,12 +273,12 @@ feature {NONE} -- Output
 			end
 		end
 
-	output_name (a_prefix: STRING; a_local_part: STRING)
+	output_name (a_prefix: detachable STRING; a_local_part: STRING)
 			-- Output prefix:name.
 		require
 			a_local_part_not_void: a_local_part /= Void
 		do
-			if has_prefix (a_prefix) then
+			if a_prefix /= Void and then has_prefix (a_prefix) then
 				output (a_prefix)
 				output_constant (Prefix_separator)
 			end

@@ -5,7 +5,7 @@ note
 		"Pretty printers as in James Clark's canonical XML"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Meta
 

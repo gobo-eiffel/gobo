@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for an XML parser"
 
 	library: "Gobo Eiffel XML library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,8 @@ feature -- Reset
 		do
 			Precursor
 			input_name := "-"
+			last_value := ""
+			last_string_value := ""
 			last_error := Void
 			create start_conditions.make
 		end
@@ -72,12 +74,15 @@ feature -- Input
 		require
 			not_void: a_stream /= Void
 			readable: a_stream.is_open_read
+		local
+			l_input_filter: like input_filter
 		do
 			input_stream := a_stream
 			input_resolver := Void
 
-			create input_filter.make_from_stream (a_stream)
-			set_input_buffer (new_file_buffer (input_filter))
+			create l_input_filter.make_from_stream (a_stream)
+			input_filter := l_input_filter
+			set_input_buffer (new_file_buffer (l_input_filter))
 		ensure
 			input_stream_set: input_stream = a_stream
 			input_resolver_reset: input_resolver = Void
@@ -90,8 +95,10 @@ feature -- Input
 			a_resolver_not_void: a_resolver /= Void
 			a_resolver_resolved: not a_resolver.has_error
 		do
-			set_input_stream (a_resolver.last_stream)
-			input_resolver := a_resolver
+			check a_resolver_resolved: attached a_resolver.last_stream as l_last_stream then
+				set_input_stream (l_last_stream)
+				input_resolver := a_resolver
+			end
 		ensure
 			input_stream_set: input_stream = a_resolver.last_stream
 			input_resolver_reset: input_resolver = a_resolver
@@ -100,15 +107,15 @@ feature -- Input
 	close_input
 			-- Close input buffer if needed.
 		do
-			if input_stream /= Void then
-				if input_resolver /= Void then
+			if attached input_stream as l_input_stream then
+				if attached input_resolver as l_input_resolver then
 						-- Close a stream if it comes from a resolver,
 						-- otherwise the client owns it and is in charge
 						-- of closing it.
-					if input_stream.is_closable then
-						input_stream.close
+					if l_input_stream.is_closable then
+						l_input_stream.close
 					end
-					input_resolver.resolve_finish
+					l_input_resolver.resolve_finish
 				end
 				input_stream := Void
 				input_resolver := Void
@@ -117,13 +124,13 @@ feature -- Input
 
 feature {NONE} -- Input
 
-	input_stream: KI_CHARACTER_INPUT_STREAM
+	input_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Saved stream for closing on end of stream
 
-	input_resolver: XM_EXTERNAL_RESOLVER
+	input_resolver: detachable XM_EXTERNAL_RESOLVER
 			-- Saved resolver for closure.
 
-	input_filter: XM_EIFFEL_INPUT_STREAM
+	input_filter: detachable XM_EIFFEL_INPUT_STREAM
 			-- Saved filter for encoding changes
 
 feature -- Encoding
@@ -131,9 +138,10 @@ feature -- Encoding
 	is_applicable_encoding (an_encoding: STRING): BOOLEAN
 			-- Is this encoding known?
 		do
-			check filter_set: input_filter /= Void end
-			Result := input_filter.is_valid_encoding (an_encoding)
-				and then input_filter.is_applicable_encoding (an_encoding)
+			check filter_set: attached input_filter as l_input_filter then
+				Result := l_input_filter.is_valid_encoding (an_encoding)
+					and then l_input_filter.is_applicable_encoding (an_encoding)
+			end
 		end
 
 	set_encoding (an_encoding: STRING)
@@ -141,8 +149,9 @@ feature -- Encoding
 		require
 			valid_encoding: is_applicable_encoding (an_encoding)
 		do
-			check filter_set: input_filter /= Void end
-			input_filter.set_encoding (an_encoding)
+			check filter_set: attached input_filter as l_input_filter then
+				l_input_filter.set_encoding (an_encoding)
+			end
 		end
 
 feature {NONE} -- Encodings
@@ -160,7 +169,7 @@ feature -- Error reporting
 			Result := last_error /= Void
 		end
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error
 
 	fatal_error (a_message: STRING)

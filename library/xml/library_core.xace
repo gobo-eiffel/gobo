@@ -48,9 +48,9 @@
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
 		<cluster name="xml_xpointer" location="${GOBO}/library/xml/xpointer">
-		  <option name="abstract" value="true"/>
-		  <cluster name="xpointer_common" location="common"  relative="true"/>
-		  <cluster name="xpointer_event" location="event"  relative="true"/>
+			<option name="abstract" value="true"/>
+			<cluster name="xpointer_common" location="common" relative="true"/>
+			<cluster name="xpointer_event" location="event" relative="true"/>
 		</cluster>
 	</cluster>
 </library>

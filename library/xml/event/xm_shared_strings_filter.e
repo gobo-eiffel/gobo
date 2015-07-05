@@ -5,7 +5,7 @@ note
 		"Event filters to share identical strings (clients should not later change strings)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_processing_instruction,
 			on_comment,
@@ -31,14 +32,22 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialize
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			strings := new_string_set
+		end
 
 feature -- Document events
 
 	on_start
 			-- Called when parsing starts.
 		do
-			strings := new_string_set
+			initialize
 			Precursor
 		end
 
@@ -59,28 +68,28 @@ feature -- Meta information
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
-			next.on_start_tag (shared_string (a_namespace),
-				shared_string (a_prefix),
+			next.on_start_tag (shared_detachable_string (a_namespace),
+				shared_detachable_string (a_prefix),
 				shared_string (a_local_part))
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of start tag.
 		do
-			next.on_attribute (shared_string (a_namespace),
-				shared_string (a_prefix),
+			next.on_attribute (shared_detachable_string (a_namespace),
+				shared_detachable_string (a_prefix),
 				shared_string (a_local_part),
 				shared_string (a_value))
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		do
-			next.on_end_tag (shared_string (a_namespace),
-				shared_string (a_prefix),
+			next.on_end_tag (shared_detachable_string (a_namespace),
+				shared_detachable_string (a_prefix),
 				shared_string (a_local_part))
 		end
 
@@ -99,22 +108,35 @@ feature {NONE} -- Share
 	strings: DS_HASH_SET [STRING]
 			-- Strings to be shared
 
-	shared_string (a_string: STRING): STRING
+	shared_detachable_string (a_string: detachable STRING): detachable STRING
 			-- If string known return the previous occurrence
 		do
 			if a_string /= Void then
-				if strings /= Void then
-					strings.search (a_string)
-					if strings.found then
-						Result := strings.found_item
-					else
-						strings.force_new (a_string)
-						Result := a_string
-					end
-				else
-					Result := a_string
-				end
+				Result := shared_string (a_string)
+			else
+				Result := a_string
 			end
 		end
+
+	shared_string (a_string: STRING): STRING
+			-- If string known return the previous occurrence
+		require
+			a_string_not_void: a_string /= Void
+		do
+			strings.search (a_string)
+			if strings.found then
+				Result := strings.found_item
+			else
+				strings.force_new (a_string)
+				Result := a_string
+			end
+		ensure
+			shared_string_not_void: Result /= Void
+		end
+
+invariant
+
+	strings_not_void: strings /= Void
+	no_void_string: not strings.has_void
 
 end

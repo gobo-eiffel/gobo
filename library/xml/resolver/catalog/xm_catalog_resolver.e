@@ -5,7 +5,7 @@ note
 		"Objects that use OASIS XML Catalogs to resolve external entities and URI referencxes."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -147,13 +147,13 @@ feature -- Actions
 
 feature -- Result
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
+	last_uri_reference_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_stream
 		end
 
-	last_system_id: UT_URI
+	last_system_id: detachable UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 
 	has_uri_reference_error: BOOLEAN
@@ -162,13 +162,13 @@ feature -- Result
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.has_error
 		end
 
-	last_uri_reference_error: STRING
+	last_uri_reference_error: detachable STRING
 			-- Last error message.
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_error
 		end
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_stream
@@ -180,7 +180,7 @@ feature -- Result
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.has_error
 		end
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error message.
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_error
@@ -192,7 +192,7 @@ feature -- Result
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.has_media_type
 		end
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_media_type

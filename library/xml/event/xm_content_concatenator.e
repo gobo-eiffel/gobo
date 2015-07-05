@@ -5,7 +5,7 @@ note
 		"Event filter that concatenates successive on_content events"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,22 +28,21 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature {NONE} -- Content
 
-	last_content: STRING
+	last_content: detachable STRING
 			-- Current content
 
 	flush_content
 			-- Generate content event if there is pending content.
 		do
-			if last_content /= Void and then last_content.count > 0 then
-				next.on_content (last_content)
+			if attached last_content as l_last_content and then l_last_content.count > 0 then
+				next.on_content (l_last_content)
 			end
 			last_content := Void
 		end
@@ -54,10 +53,10 @@ feature -- Content
 			-- Aggregate content events so that two content events
 			-- never follow each other.
 		do
-			if last_content = Void then
+			if not attached last_content as l_last_content then
 				last_content := STRING_.cloned_string (a_content)
 			else
-				last_content := STRING_.appended_string (last_content, a_content)
+				last_content := STRING_.appended_string (l_last_content, a_content)
 			end
 		end
 
@@ -78,21 +77,21 @@ feature -- Events
 			Precursor (a_name, a_content)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Flush content and forward.
 		do
 			flush_content
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Flush content and forward.
 		do
 			flush_content
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Flush content and forward.
 		do
 			flush_content

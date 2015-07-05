@@ -5,7 +5,7 @@ note
 		"Resolvers used in parsing OASIS XML Catalogs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,8 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 	KL_SHARED_FILE_SYSTEM
+
+	KL_SHARED_STREAMS
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -53,6 +55,7 @@ feature {NONE} -- Initialization
 			well_known_uri_references.put_new (Xml_catalog_rng, Xml_catalog_rng_id)
 			well_known_uri_references.put_new (Xml_catalog_xsd_1_0, Xml_catalog_xsd_id_1_0)
 			well_known_uri_references.put_new (Xml_catalog_rng_1_0, Xml_catalog_rng_id_1_0)
+			last_stream := null_input_stream
 		end
 
 	make_with_base_uri (a_uri: UT_URI)
@@ -1477,7 +1480,7 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from external entity.
 
 	has_error: BOOLEAN
@@ -1486,16 +1489,16 @@ feature -- Result
 			Result := uri_scheme_resolver.has_error
 		end
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Last error message.
 		do
 			Result := uri_scheme_resolver.last_error
 		end
 
-	last_uri_reference_stream: KI_CHARACTER_INPUT_STREAM
+	last_uri_reference_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Last stream initialised from URI reference.
 
-	last_system_id: UT_URI
+	last_system_id: detachable UT_URI
 			-- System id used to actually open `last_uri_reference_stream'
 
 	has_uri_reference_error: BOOLEAN
@@ -1504,7 +1507,7 @@ feature -- Result
 			Result := uri_scheme_resolver.has_error
 		end
 
-	last_uri_reference_error: STRING
+	last_uri_reference_error: detachable STRING
 			-- Last error message.
 		do
 			Result := uri_scheme_resolver.last_error
@@ -1513,7 +1516,14 @@ feature -- Result
 	has_media_type: BOOLEAN
 			-- Is the media type available.
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
+
+invariant
+
+	uri_scheme_resolver_not_void: uri_scheme_resolver /= Void
+	well_known_system_ids_not_void: well_known_system_ids /= Void
+	well_known_public_ids_not_void: well_known_public_ids /= Void
+	well_known_uri_references_not_void: well_known_uri_references /= Void
 
 end

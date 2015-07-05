@@ -6,7 +6,7 @@ note
    %the bootstrap resolver's `well_known_system_ids'."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature -- Initialization
 	make
 			-- Create.
 		do
+			last_error := "no stream"
 		end
 
 feature -- Status report
@@ -57,10 +58,10 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_CHARACTER_INPUT_STREAM
+	last_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- File matching stream
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Error
 
 	has_error: BOOLEAN
@@ -75,7 +76,7 @@ feature -- Result
 			Result := False
 		end
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			-- pre-condition is never met

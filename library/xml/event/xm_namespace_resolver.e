@@ -5,7 +5,7 @@ note
 		"Callbacks filter that resolves namespaces"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_finish,
 			on_start,
 			on_start_tag,
@@ -36,7 +37,16 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialize
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			create context.make
+			attributes_make
+		end
 
 feature -- Document
 
@@ -49,8 +59,7 @@ feature -- Document
 	on_start
 			-- Initialize document variables.
 		do
-			create context.make
-			attributes_make
+			initialize
 			next.on_start
 		end
 
@@ -70,7 +79,7 @@ feature -- Forwarding policy
 
 feature -- Element
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Process start of start tag.
 		do
 			context.push
@@ -80,7 +89,7 @@ feature -- Element
 			element_local_part := a_local_part
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Process attribute.
 		do
 			if not has_prefix (a_prefix) and is_xmlns (a_local_part) then
@@ -90,7 +99,7 @@ feature -- Element
 				if forward_xmlns then
 					attributes_force (a_prefix, a_local_part, a_value)
 				end
-			elseif is_xmlns (a_prefix) then
+			elseif a_prefix /= Void and then is_xmlns (a_prefix) then
 					-- Prefix declaration.
 				if context.shallow_has (a_prefix) then
 					on_error (Duplicate_namespace_declaration_error)
@@ -114,32 +123,34 @@ feature -- Element
 		local
 			error_msg: STRING
 		do
-			if has_prefix (element_prefix) then
-				if context.has (element_prefix) then
-					next.on_start_tag (context.resolve (element_prefix),
-							element_prefix, element_local_part)
-					on_delayed_attributes
+			check attached element_local_part as l_element_local_part then
+				if attached element_prefix as l_element_prefix and then has_prefix (l_element_prefix) then
+					if context.has (l_element_prefix) then
+						next.on_start_tag (context.resolve (l_element_prefix),
+								l_element_prefix, l_element_local_part)
+						on_delayed_attributes
+					else
+						error_msg := STRING_.cloned_string (Undeclared_namespace_error)
+						error_msg := STRING_.appended_string (error_msg, " in tag <")
+						error_msg := STRING_.appended_string (error_msg, l_element_prefix)
+						error_msg := STRING_.appended_string (error_msg, ":")
+						error_msg := STRING_.appended_string (error_msg, l_element_local_part)
+						error_msg := STRING_.appended_string (error_msg, ">")
+						on_error (error_msg)
+					end
 				else
-					error_msg := STRING_.cloned_string (Undeclared_namespace_error)
-					error_msg := STRING_.appended_string (error_msg, " in tag <")
-					error_msg := STRING_.appended_string (error_msg, element_prefix)
-					error_msg := STRING_.appended_string (error_msg, ":")
-					error_msg := STRING_.appended_string (error_msg, element_local_part)
-					error_msg := STRING_.appended_string (error_msg, ">")
-					on_error (error_msg)
+					next.on_start_tag (context.resolve_default,
+							element_prefix, l_element_local_part)
+					on_delayed_attributes
 				end
-			else
-				next.on_start_tag (context.resolve_default,
-						element_prefix, element_local_part)
-				on_delayed_attributes
+				Precursor
 			end
-			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Process end tag.
 		do
-			if has_prefix (a_prefix) then
+			if a_prefix /= Void and then has_prefix (a_prefix) then
 				Precursor (context.resolve (a_prefix), a_prefix, a_local_part)
 			else
 				Precursor (context.resolve_default, a_prefix, a_local_part)
@@ -151,27 +162,30 @@ feature {NONE} -- Attribute events
 
 	on_delayed_attributes
 			-- Resolve attributes.
+		local
+			l_attribute_prefix: detachable STRING
 		do
 			from
 			until
 				attributes_is_empty
 			loop
-				if has_prefix (attributes_prefix.item) then
+				l_attribute_prefix := attributes_prefix.item
+				if l_attribute_prefix /= Void and then has_prefix (l_attribute_prefix) then
 					-- Resolve the attribute's prefix if it has any.
-					if context.has (attributes_prefix.item) then
-						next.on_attribute (context.resolve (attributes_prefix.item),
-							attributes_prefix.item, attributes_local_part.item,
+					if context.has (l_attribute_prefix) then
+						next.on_attribute (context.resolve (l_attribute_prefix),
+							l_attribute_prefix, attributes_local_part.item,
 							attributes_value.item)
-					elseif is_xml (attributes_prefix.item) then
+					elseif is_xml (l_attribute_prefix) then
 							-- xml: prefix has implicit namespace
 						next.on_attribute (Xml_prefix_namespace,
-							attributes_prefix.item,
+							l_attribute_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
-					elseif is_xmlns (attributes_prefix.item) then
+					elseif is_xmlns (l_attribute_prefix) then
 							-- xmlns: prefix has implicit namespace
 						next.on_attribute (Xmlns_namespace,
-							attributes_prefix.item,
+							l_attribute_prefix,
 							attributes_local_part.item,
 							attributes_value.item)
 					else
@@ -179,7 +193,7 @@ feature {NONE} -- Attribute events
 					end
 				else
 					next.on_attribute (Unprefixed_attribute_namespace,
-						attributes_prefix.item, attributes_local_part.item,
+						l_attribute_prefix, attributes_local_part.item,
 						attributes_value.item)
 				end
 					-- Forth:
@@ -214,8 +228,8 @@ feature {NONE} -- Context
 
 feature {NONE} -- Element
 
-	element_prefix: STRING
-	element_local_part: STRING
+	element_prefix: detachable STRING
+	element_local_part: detachable STRING
 
 feature {NONE} -- Attributes
 
@@ -230,7 +244,7 @@ feature {NONE} -- Attributes
 			attributes_value := new_string_queue
 		end
 
-	attributes_force (a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	attributes_force (a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Like attributes.force.
 		do
 			attributes_prefix.force (a_prefix)
@@ -254,7 +268,7 @@ feature {NONE} -- Attributes
 			Result := attributes_prefix.is_empty
 		end
 
-	attributes_prefix: DS_QUEUE [STRING]
+	attributes_prefix: DS_QUEUE [detachable STRING]
 	attributes_local_part: DS_QUEUE [STRING]
 	attributes_value: DS_QUEUE [STRING]
 
@@ -263,5 +277,14 @@ feature {NONE} -- Error
 	Undeclared_namespace_error: STRING = "Undeclared namespace error"
 	Duplicate_namespace_declaration_error: STRING = "Namespace declared twice"
 			-- Error messages
+
+invariant
+
+	context_not_void: context /= Void
+	attributes_prefix_not_void: attributes_prefix /= Void
+	attributes_local_part_not_void: attributes_local_part /= Void
+	no_void_attribute_local_part: not attributes_local_part.has_void
+	attributes_value_not_void: attributes_value /= Void
+	no_void_attribute_value: not attributes_value.has_void
 
 end

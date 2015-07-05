@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ class XM_NAMESPACE_TABLE
 
 inherit
 
-	DS_HASH_TABLE [STRING, STRING]
+	DS_HASH_TABLE [STRING, detachable STRING]
 		rename
 			make as make_hash_table
 		end

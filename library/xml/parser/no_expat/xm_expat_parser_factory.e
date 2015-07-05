@@ -33,6 +33,8 @@ feature -- Access
 	new_expat_parser: XM_PARSER
 			-- New Expat XML parser
 		do
+			check not_possible: False then
+			end
 		ensure then
 			not_possible: False
 		end

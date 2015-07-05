@@ -49,8 +49,8 @@ feature {NONE} -- Initialization
 		do
 			set_data
 			set_value_implied
+			name := "?"
 		ensure
-			no_name: not has_name
 			no_default: not has_default_value
 			data: is_data
 			implied: is_value_implied
@@ -64,11 +64,7 @@ feature -- Output
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 		do
 				-- Name.
-			if has_name then
-				Result := STRING_.cloned_string (STRING_.as_string (name))
-			else
-				Result := STRING_.cloned_string ("?")
-			end
+			Result := STRING_.cloned_string (STRING_.as_string (name))
 				-- Type.
 			Result.append_character (' ')
 			if is_data then
@@ -111,10 +107,10 @@ feature -- Output
 			elseif is_value_fixed then
 				Result := STRING_.appended_string (Result, "#FIXED ")
 			end
-			if has_default_value then
+			if attached default_value as l_default_value then
 				Result.append_character (' ')
 				Result.append_character ('%"')
-				Result := STRING_.appended_string (Result, default_value)
+				Result := STRING_.appended_string (Result, l_default_value)
 				Result.append_character ('%"')
 			end
 		end
@@ -134,12 +130,6 @@ feature -- Name content type
 			name_set: name = a_name
 		end
 
-	has_name: BOOLEAN
-			-- Has name been set?
-		do
-			Result := name /= Void
-		end
-
 feature {NONE} -- Implementation
 
 	type: CHARACTER
@@ -150,7 +140,7 @@ feature {NONE} -- Implementation
 
 feature -- Default value
 
-	default_value: STRING
+	default_value: detachable STRING
 			-- require has_default_value
 			-- ensure Result /= Void
 
@@ -369,7 +359,9 @@ feature -- Enumeration
 		require
 			is_enumeration: is_enumeration
 		do
-			Result := enumeration_list
+			check is_enumeration: attached enumeration_list as l_enumeration_list then
+				Result := l_enumeration_list
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -388,7 +380,7 @@ feature -- Enumeration
 
 feature {NONE} -- Enumeration list
 
-	enumeration_list: like enumeration
+	enumeration_list: detachable like enumeration
 			-- List of allowed values for fixed enumeration.
 
 	Default_enumeration_list: DS_LINKED_LIST [STRING]
@@ -405,5 +397,6 @@ invariant
 	list_ok: is_list_type implies (is_token or is_entity or is_id_ref)
 	impl_type_enumeration: ("CIRETNU").has (type)
 	impl_default_enumeration: ("DRIF").has (value)
+	name_not_void: name /= Void
 
 end

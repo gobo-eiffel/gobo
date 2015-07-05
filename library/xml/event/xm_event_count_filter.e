@@ -5,7 +5,7 @@ note
 		"Count events"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
 
 feature -- Count
 
@@ -62,7 +62,7 @@ feature -- Count
 feature -- Events
 
 	on_start
-				-- Reset counters.
+			-- Reset counters.
 		do
 			processing_instructions := 0
 			comments := 0
@@ -87,21 +87,21 @@ feature -- Events
 			Precursor (a_content)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Count and forward.
 		do
 			start_tags := start_tags + 1
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Count and forward.
 		do
 			attributes := attributes + 1
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Count and forward.
 		do
 			end_tags := end_tags + 1

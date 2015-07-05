@@ -5,7 +5,7 @@ note
 		"External URI resolver for the file scheme applied on the local filesystem"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature -- Initialization
 	make
 			-- Create.
 		do
+			last_error := "no stream"
 		end
 
 feature -- Status report
@@ -44,17 +45,22 @@ feature -- Action(s)
 			-- Resolve file URI.
 		local
 			l_path: detachable STRING
+			l_last_stream: KL_BINARY_INPUT_FILE
 		do
-			last_stream := Void
 			l_path := File_uri.uri_to_filename (a_uri)
 			if l_path /= Void then
-				create {KL_BINARY_INPUT_FILE} last_stream.make (l_path)
-				last_stream.open_read
-			end
-			if last_stream /= Void and then last_stream.is_open_read then
-				last_error := Void
+				create l_last_stream.make (l_path)
+				l_last_stream.open_read
+				if l_last_stream.is_open_read then
+					last_stream := l_last_stream
+					last_error := Void
+				else
+					last_error := STRING_.concat (Cannot_open_file_error, a_uri.path)
+					last_stream := Void
+				end
 			else
 				last_error := STRING_.concat (Cannot_open_file_error, a_uri.path)
+				last_stream := Void
 			end
 		end
 
@@ -63,7 +69,7 @@ feature -- Result
 	last_stream: detachable KI_BINARY_INPUT_FILE
 			-- File matching stream
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Error
 
 	has_error: BOOLEAN
@@ -78,7 +84,7 @@ feature -- Result
 			Result := False
 		end
 
-	last_media_type: UT_MEDIA_TYPE
+	last_media_type: detachable UT_MEDIA_TYPE
 			-- Media type, if available.
 		do
 			-- pre-condition is never met

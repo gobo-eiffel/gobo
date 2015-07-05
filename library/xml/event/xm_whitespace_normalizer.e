@@ -5,7 +5,7 @@ note
 		"Remove head and tail whitespace (as defined by XML) from content; accounting for xml:space"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_CALLBACKS_FILTER
 		redefine
+			initialize,
 			on_start,
 			on_content,
 			on_comment,
@@ -35,7 +36,17 @@ inherit
 create
 
 	make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		do
+			last_content := Void
+			create is_space_preserved.make_default
+			is_space_preserved.force (default_space_preserved)
+		end
 
 feature -- Content
 
@@ -46,14 +57,14 @@ feature -- Content
 			if is_space_preserved.item then
 				next.on_content (a_content)
 			else
-				if in_content then
-					if is_space (last_content.item.item_code (last_content.item.count)) then
+				if attached last_content as l_last_content then
+					if is_space (l_last_content.item.item_code (l_last_content.item.count)) then
 							-- We don't know if we are at the end, so this could
 							-- be tail whitespace.
-						last_content.append_string (a_content)
+						l_last_content.append_string (a_content)
 					else
 							-- No tail whitespace, so can be processed now.
-						next.on_content (last_content.item)
+						next.on_content (l_last_content.item)
 						create last_content.make (a_content)
 					end
 				else
@@ -73,7 +84,7 @@ feature {NONE} -- Content
 	is_space_preserved: DS_ARRAYED_STACK [BOOLEAN]
 			-- Is xml:space="preserve" mode set?
 
-	last_content: ST_COPY_ON_WRITE_STRING
+	last_content: detachable ST_COPY_ON_WRITE_STRING
 			-- Last unprocessed content event.
 
 	default_space_preserved: BOOLEAN
@@ -88,6 +99,8 @@ feature {NONE} -- Content
 			-- Is there a pending unprocessed content event?
 		do
 			Result := last_content /= Void
+		ensure
+			definition: Result = (last_content /= Void)
 		end
 
 	end_content
@@ -96,8 +109,8 @@ feature {NONE} -- Content
 		do
 			if in_content then
 				normalize_content_tail
-				if last_content /= Void then
-					next.on_content (last_content.item)
+				if attached last_content as l_last_content then
+					next.on_content (l_last_content.item)
 					last_content := Void
 				end
 			end
@@ -121,27 +134,29 @@ feature {NONE} -- Content
 		local
 			i: INTEGER
 		do
-			from
-				i := 1
-			until
-				i > last_content.item.count or else not is_space (last_content.item.item_code (i))
-			loop
-				i := i + 1
-			variant
-				last_content.item.count - i + 1
-			end
+			check is_content: attached last_content as l_last_content then
+				from
+					i := 1
+				until
+					i > l_last_content.item.count or else not is_space (l_last_content.item.item_code (i))
+				loop
+					i := i + 1
+				variant
+					l_last_content.item.count - i + 1
+				end
 
-			if i > last_content.item.count then
-					-- All content is whitespace
-				last_content := Void
-			elseif i > 1 then
-					-- Remove whitespace.
-				create last_content.make (last_content.item.substring (i, last_content.item.count))
-			else
-					-- Unchanged, no whitespace.
+				if i > l_last_content.item.count then
+						-- All content is whitespace
+					last_content := Void
+				elseif i > 1 then
+						-- Remove whitespace.
+					create last_content.make (l_last_content.item.substring (i, l_last_content.item.count))
+				else
+						-- Unchanged, no whitespace.
+				end
 			end
 		ensure
-			no_whitespace_at_head: in_content implies not is_space (last_content.item.item_code (1))
+			no_whitespace_at_head: attached last_content as l_last_content implies not is_space (l_last_content.item.item_code (1))
 		end
 
 	normalize_content_tail
@@ -151,20 +166,22 @@ feature {NONE} -- Content
 		local
 			i: INTEGER
 		do
-			from
-				i := last_content.item.count
-			until
-				i = 0 or else not is_space (last_content.item.item_code (i))
-			loop
-				i := i - 1
-			variant
-				i
-			end
+			check in_content: attached last_content as l_last_content then
+				from
+					i := l_last_content.item.count
+				until
+					i = 0 or else not is_space (l_last_content.item.item_code (i))
+				loop
+					i := i - 1
+				variant
+					i
+				end
 
-			if i = 0 then
-				last_content := Void
-			elseif i < last_content.item.count then
-				create last_content.make (last_content.item.substring (1, i))
+				if i = 0 then
+					last_content := Void
+				elseif i < l_last_content.item.count then
+					create last_content.make (l_last_content.item.substring (1, i))
+				end
 			end
 		end
 
@@ -173,9 +190,7 @@ feature -- Events
 	on_start
 			-- Reset.
 		do
-			last_content := Void
-			create is_space_preserved.make_default
-			is_space_preserved.force (default_space_preserved)
+			initialize
 			Precursor
 		end
 
@@ -193,7 +208,7 @@ feature -- Events
 			Precursor (a_comment)
 		end
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Clear content and forward.
 		do
 			end_content
@@ -201,10 +216,10 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Process xml:space attribute
 		do
-			if has_prefix (a_prefix)
+			if a_prefix /= Void and then has_prefix (a_prefix)
 				and then STRING_.same_string (Xml_prefix, a_prefix)
 				and STRING_.same_string (Xml_space, a_local_part)
 			then
@@ -215,7 +230,7 @@ feature -- Events
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Clear content and forward.
 		do
 			end_content
@@ -232,6 +247,8 @@ feature -- Events
 
 invariant
 
-	last_content_not_empty: last_content = Void or else last_content.item.count > 0
+	is_space_preserved_not_void: is_space_preserved /= Void
+	is_space_preserved_not_empty: not is_space_preserved.is_empty
+	last_content_not_empty: not attached last_content as l_last_content or else l_last_content.item.count > 0
 
 end

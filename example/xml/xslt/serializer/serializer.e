@@ -96,9 +96,9 @@ feature {NONE} -- Basic operations
 			l_receiver := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current,
 																	  l_output, output_properties, Void)
 			create l_bridge.make (l_receiver, l_parser.new_stop_on_error_filter)
-			create l_namespace_resolver.set_next (l_bridge)
+			create l_namespace_resolver.make_next (l_bridge)
 			l_namespace_resolver.set_forward_xmlns (True)
-			create l_content.set_next (l_namespace_resolver)
+			create l_content.make_next (l_namespace_resolver)
 			l_parser.set_callbacks (l_content)
 			l_parser.parse_from_system (l_uri.full_reference)
 		end

@@ -5,7 +5,7 @@ note
 		"Objects that manage OASIS XML Catalogs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,6 +80,7 @@ feature -- Access
 			catalogs_not_disabled: not are_catalogs_disabled
 		local
 			an_fpi, another_fpi, a_debug_string: STRING
+			l_result: detachable STRING
 		do
 			if debug_level > 2 then
 				a_debug_string := STRING_.concat ("PUBLIC ", a_public_id)
@@ -99,28 +100,31 @@ feature -- Access
 				an_fpi := urn_to_fpi (a_system_id)
 				if another_fpi.count > 0 then
 					if STRING_.same_string (an_fpi, another_fpi) then
-						Result := resolved_fpi (an_fpi, False)
+						l_result := resolved_fpi (an_fpi, False)
 					else
 						debug_message (2, "SYSTEM id is a publicid URN, but differs from PUBLIC id", a_system_id)
-						Result := resolved_fpi (another_fpi, False)
+						l_result := resolved_fpi (another_fpi, False)
 					end
 				else
-					Result := resolved_fpi (an_fpi, False)
+					l_result := resolved_fpi (an_fpi, False)
 				end
-				if Result = Void then Result := a_system_id end
 			else
 				an_fpi := another_fpi
 				if a_system_id.count = 0 then
-					Result := resolved_fpi (an_fpi, False)
+					l_result := resolved_fpi (an_fpi, False)
 				else
-					Result := resolved_fsi (a_system_id)
-					if Result = Void then
+					l_result := resolved_fsi (a_system_id)
+					if l_result = Void then
 						if an_fpi.count > 0 then
-							Result := resolved_fpi (an_fpi, True)
+							l_result := resolved_fpi (an_fpi, True)
 						end
-						if Result = Void then Result := a_system_id end
 					end
 				end
+			end
+			if l_result /= Void then
+				Result := l_result
+			else
+				Result := a_system_id
 			end
 		ensure
 			resulting_uri_reference_not_void: Result /= Void -- but may be the original SYSTEM id, which may be zero length
@@ -133,6 +137,7 @@ feature -- Access
 			catalogs_not_disabled: not are_catalogs_disabled
 		local
 			an_fpi: STRING
+			l_result: detachable STRING
 		do
 			debug_message (3, "Resolving URI reference", a_uri_reference)
 
@@ -141,10 +146,15 @@ feature -- Access
 
 			if a_uri_reference.substring_index ("urn:publicid:", 1) = 1 then
 				an_fpi := urn_to_fpi (a_uri_reference)
-				Result := resolved_fpi (an_fpi, False)
+				l_result := resolved_fpi (an_fpi, False)
 			else
-				Result := resolved_uri (a_uri_reference)
-				if Result = Void then Result := a_uri_reference end
+				l_result := resolved_uri (a_uri_reference)
+
+			end
+			if l_result /= Void then
+				Result := l_result
+			else
+				Result := a_uri_reference
 			end
 		ensure
 			resulting_uri_reference_not_void: Result /= Void -- but may be the original reference
@@ -324,7 +334,7 @@ feature {TS_TEST_CASE} -- initialization
 
 feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 
-	retrieved_catalog (a_catalog_name: STRING): XM_CATALOG
+	retrieved_catalog (a_catalog_name: STRING): detachable XM_CATALOG
 			-- Parsed catalog named `a_catalog_name'
 		require
 			catalog_name_not_void: a_catalog_name /= Void
@@ -350,7 +360,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			retrieved_catalog_may_be_void: True
 		end
 
-	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): STRING
+	resolved_fpi (a_public_id: STRING; prefer_public_required: BOOLEAN): detachable STRING
 			-- Resolved URI reference for `a_public_id'
 		require
 			public_id_not_void: a_public_id /= Void
@@ -358,7 +368,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			an_fpi: STRING
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
-			a_catalog: XM_CATALOG
+			a_catalog: detachable XM_CATALOG
 		do
 			an_fpi := normalized_fpi (a_public_id)
 			debug_message (8, "Fpi normalized to", an_fpi)
@@ -418,7 +428,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			result_may_be_void_if_not_match: True
 		end
 
-	resolved_fsi (a_system_id: STRING): STRING
+	resolved_fsi (a_system_id: STRING): detachable STRING
 			-- Resolved URI reference for `a_system_id'
 		require
 			system_id_not_void: a_system_id /= Void
@@ -426,7 +436,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			an_fsi: STRING
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
-			a_catalog: XM_CATALOG
+			a_catalog: detachable XM_CATALOG
 		do
 			an_fsi := escape_custom (utf8.to_utf8 (a_system_id), unescaped_uri_characters, False)
 			debug_message (8, "Fsi normalized to", an_fsi)
@@ -486,7 +496,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			result_may_be_void_if_not_match: True
 		end
 
-	resolved_uri (a_uri_reference: STRING): STRING
+	resolved_uri (a_uri_reference: STRING): detachable STRING
 			-- Resolved URI reference for `a_uri_reference'
 		require
 			system_id_not_void: a_uri_reference /= Void
@@ -494,7 +504,7 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			a_uri: STRING
 			a_cursor: DS_LIST_CURSOR [STRING]
 			a_cursor_2: DS_ARRAYED_LIST_CURSOR [STRING]
-			a_catalog: XM_CATALOG
+			a_catalog: detachable XM_CATALOG
 		do
 			a_uri := escape_custom (utf8.to_utf8 (a_uri_reference), unescaped_uri_characters, False)
 			debug_message (8, "URI normalized to", a_uri)
@@ -562,7 +572,7 @@ feature {NONE} -- Implementation
 	pi_catalog_files: DS_ARRAYED_LIST [STRING]
 			-- Names of catalog files which are searched after `system_catalog_files'.
 
-	all_known_catalogs: DS_HASH_TABLE [XM_CATALOG, STRING]
+	all_known_catalogs: DS_HASH_TABLE [detachable XM_CATALOG, STRING]
 			-- Map of catalog names to parsed catalogs.
 			-- This will contain `Void' values for catalogs that failed parsing,
 			--  so as not to waste time parsing them again.
@@ -579,9 +589,10 @@ feature {NONE} -- Implementation
 	establish_system_catalog_files
 			-- Establish list of catalogs to be searched for all documents
 		local
-			xml_catalog_files, l_separator: STRING
+			xml_catalog_files: detachable STRING
+			l_separator: STRING
 			a_splitter: ST_SPLITTER
-			a_list: DS_LIST [STRING]
+			a_list: detachable DS_LIST [STRING]
 			a_base_uri: UT_URI
 			a_cursor: DS_LIST_CURSOR [STRING]
 		do

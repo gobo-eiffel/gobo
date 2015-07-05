@@ -5,12 +5,19 @@ note
 		"Callback interface for core content XML events"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class XM_CALLBACKS
+
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current callbacks.
+		deferred
+		end
 
 feature -- Document
 
@@ -24,7 +31,7 @@ feature -- Document
 		deferred
 		end
 
-	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
+	on_xml_declaration (a_version: STRING; an_encoding: detachable STRING; a_standalone: BOOLEAN)
 			-- XML declaration.
 		require
 			a_version_not_void: a_version /= Void
@@ -63,7 +70,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -72,7 +79,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -87,7 +94,7 @@ feature -- Tag
 		deferred
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -111,19 +118,19 @@ feature -- Content
 
 feature -- Support
 
-	has_prefix (a: STRING): BOOLEAN
+	has_prefix (a: detachable STRING): BOOLEAN
 			-- Is prefix in use?
 		do
 			Result := a /= Void and then a.count > 0
 		end
 
-	has_namespace (a: STRING): BOOLEAN
+	has_namespace (a: detachable STRING): BOOLEAN
 			-- Is namespace resolved?
 		do
 			Result := a /= Void
 		end
 
-	is_local_part (a: STRING): BOOLEAN
+	is_local_part (a: detachable STRING): BOOLEAN
 			-- Is this a valid local part string?
 		do
 			Result := a /= Void and then a.count > 0

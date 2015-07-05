@@ -5,7 +5,7 @@ note
 		"External identifiers in DTD"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,23 +52,23 @@ feature -- Status report
 
 feature -- Access
 
-	base: STRING
+	base: detachable STRING
 			-- Base URI
 
-	system_id: STRING
+	system_id: detachable STRING
 			-- SYSTEM
 
-	public_id: STRING
+	public_id: detachable STRING
 			-- PUBLIC
 
 	hash_code: INTEGER
 			-- Hash code
 		do
-			if public_id /= Void then
-				Result := public_id.hash_code // 3
+			if attached public_id as l_public_id then
+				Result := l_public_id.hash_code // 3
 			end
-			if system_id /= Void then
-				Result := Result + (system_id.hash_code // 3)
+			if attached system_id as l_system_id then
+				Result := Result + (l_system_id.hash_code // 3)
 			end
 		end
 
@@ -103,18 +103,21 @@ feature -- Output
 	out: STRING
 			-- Print as in input.
 		do
-			if public_id /= Void then
+			if attached public_id as l_public_id then
 				Result := STRING_.cloned_string ("PUBLIC ")
-				Result := STRING_.appended_string (Result, public_id)
-			end
-
-			if system_id /= Void then
-				if Result = Void then
-					Result := STRING_.cloned_string ("SYSTEM")
+				Result := STRING_.appended_string (Result, l_public_id)
+				if attached system_id as l_system_id then
+					Result.append_character (' ')
+					Result := STRING_.appended_string (Result, l_system_id)
+					Result.append_character (' ')
 				end
+			elseif attached system_id as l_system_id then
+				Result := STRING_.cloned_string ("SYSTEM")
 				Result.append_character (' ')
-				Result := STRING_.appended_string (Result, system_id)
+				Result := STRING_.appended_string (Result, l_system_id)
 				Result.append_character (' ')
+			else
+				Result := ""
 			end
 		end
 

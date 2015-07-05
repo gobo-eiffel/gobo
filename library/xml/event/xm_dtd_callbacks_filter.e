@@ -5,7 +5,7 @@ note
 		"DTD event filter that can forward events to 'next' filter"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,20 +23,36 @@ inherit
 
 create
 
-	make_null,
-	set_next
+	make_next,
+	make_null
 
 feature  {NONE} -- Initialization
+
+	make_next (a_next: like next)
+			-- Create a new DTD event filter with `a_next' as next filter.
+		require
+			a_next_not_void: a_next /= Void
+		do
+			initialize
+			set_next (a_next)
+		ensure
+			next_set: next = a_next
+		end
 
 	make_null
 			-- Next is null processor.
 		do
-			create {XM_DTD_CALLBACKS_NULL} next.make
+			make_next (null_dtd_callbacks)
+		end
+
+	initialize
+			-- Initialize current DTD callbacks.
+		do
 		end
 
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			next.on_doctype (a_name, an_id, has_internal_subset)
@@ -53,8 +69,8 @@ feature -- Document type definition callbacks
 			next.on_attribute_declaration (an_element_name, a_name, a_model)
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-				an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: detachable STRING;
+		an_id: detachable XM_DTD_EXTERNAL_ID; notation_name: detachable STRING)
 			-- Entity declaration.
 		do
 			next.on_entity_declaration (entity_name, is_parameter, value, an_id, notation_name)
@@ -93,6 +109,8 @@ feature -- Access
 			-- Set receiver of forwarded events.
 		do
 			next := a_next
+		ensure then
+			next_set: next = a_next
 		end
 
 invariant

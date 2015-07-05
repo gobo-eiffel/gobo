@@ -5,16 +5,23 @@ note
 		"Callbacks for DTD declaration"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class XM_DTD_CALLBACKS
 
+feature {NONE} -- Initialization
+
+	initialize
+			-- Initialize current DTD callbacks.
+		deferred
+		end
+
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration (first event).
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
@@ -41,8 +48,8 @@ feature -- Document type definition callbacks
 		deferred
 		end
 
-	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING)
+	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: detachable STRING;
+		an_id: detachable XM_DTD_EXTERNAL_ID; notation_name: detachable STRING)
 			-- Entity declaration.
 			-- Warning: strings may be polymorphic, see XM_STRING_MODE.
 		require
