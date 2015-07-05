@@ -5,7 +5,7 @@ note
 		"Objects that receive XPath events"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ inherit
 
 feature -- Access
 
-	document_uri: UT_URI
+	document_uri: detachable UT_URI
 			-- Absolute URI of resource from which document node will be constructed
 
 	base_uri: STRING
@@ -110,7 +110,7 @@ feature -- Events
 			document_started: is_document_started
 		end
 
-	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING)
+	set_unparsed_entity (a_name: STRING; a_system_id: detachable STRING; a_public_id: detachable STRING)
 			-- Notify an unparsed entity URI.
 		require
 			name_not_void: a_name /= Void
@@ -229,7 +229,7 @@ feature -- Events
 
 feature -- Element change
 
-	set_document_uri (a_uri: UT_URI)
+	set_document_uri (a_uri: detachable UT_URI)
 			-- Set `document_uri' for destination tree.
 		require
 			not_open: not is_open
@@ -265,6 +265,7 @@ feature -- Conversion
 		require
 			builder: is_builder
 		do
+			check precondition_is_builder: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -274,13 +275,14 @@ feature -- Conversion
 		require
 			proxy: is_proxy
 		do
+			check precondition_is_proxy: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
 invariant
 
-	document_uri_is_absolute: document_uri /= Void implies document_uri.is_absolute
+	document_uri_is_absolute: attached document_uri as l_document_uri implies l_document_uri.is_absolute
 	base_uri_not_void: base_uri /= Void
 	not_open_implies_not_started: not is_open implies not is_document_started
 	started_implies_open: is_document_started implies is_open

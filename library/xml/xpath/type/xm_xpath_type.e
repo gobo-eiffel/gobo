@@ -5,7 +5,7 @@ note
 		"XPath types"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -109,12 +109,14 @@ feature -- Access
 				elseif is_sub_type (t2, t1) then
 					Result := t1
 				else
-					Result := common_super_type (t2.super_type, t1)
+					check common_super_type_exisit: attached t2.super_type as l_t2_super_type then
+						Result := common_super_type (l_t2_super_type, t1)
 
-					-- eventually we will hit a type that is a supertype of t2. We reverse
-					-- the arguments so we go up each branch of the tree alternately.
-					-- If we hit the root of the tree, one of the earlier conditions will be satisfied,
-					-- so the recursion will stop.
+						-- eventually we will hit a type that is a supertype of t2. We reverse
+						-- the arguments so we go up each branch of the tree alternately.
+						-- If we hit the root of the tree, one of the earlier conditions will be satisfied,
+						-- so the recursion will stop.
+					end
 				end
 			end
 		ensure
@@ -149,7 +151,7 @@ feature -- Access
 			node_type_name_not_void: Result /= Void
 		end
 
-	built_in_item_type (a_uri, a_local_name: STRING): XM_XPATH_ITEM_TYPE
+	built_in_item_type (a_uri, a_local_name: STRING): detachable XM_XPATH_ITEM_TYPE
 			-- Built-in type named by `a_uri', `a_local_name'
 		require
 			uri_not_void: a_uri /= Void
@@ -206,7 +208,7 @@ feature -- Status report
 				a_fingerprint = Numeric_type_code
 		end
 
-	is_sub_type (a_sub_type, a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN
+	is_sub_type (a_sub_type: detachable  XM_XPATH_ITEM_TYPE; a_super_type: XM_XPATH_ITEM_TYPE): BOOLEAN
 			-- Is `a_sub_type' a (non-proper) descendant of `a_super_type'?
 		require
 			super_type_not_void: a_super_type /= Void
@@ -254,14 +256,14 @@ feature -- Status report
 							until
 								finished
 							loop
-								if not an_item_type.is_atomic_type then
+								if not attached {XM_XPATH_ATOMIC_TYPE} an_item_type as l_atomic_type then
 									finished := True
 								else
-									if a_fingerprint = an_item_type.as_atomic_type.fingerprint then
+									if a_fingerprint = l_atomic_type.fingerprint then
 										Result := Subsuming_type
 										finished := True
 									else
-										an_item_type := an_item_type.super_type
+										an_item_type := l_atomic_type.super_type
 									end
 								end
 							end
@@ -273,15 +275,15 @@ feature -- Status report
 								until
 									finished
 								loop
-									if not an_item_type.is_atomic_type then
+									if not attached {XM_XPATH_ATOMIC_TYPE} an_item_type as l_atomic_type then
 										Result := Disjoint_types
 										finished := True
 									else
-										if a_fingerprint = an_item_type.as_atomic_type.fingerprint then
+										if a_fingerprint = l_atomic_type.fingerprint then
 											Result := Subsumed_type
 											finished := True
 										else
-											an_item_type := an_item_type.super_type
+											an_item_type := l_atomic_type.super_type
 										end
 									end
 								end
@@ -459,7 +461,7 @@ feature {NONE} -- Implementation
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
 		local
-			a_set, another_set: DS_SET [INTEGER]
+			a_set, another_set: detachable DS_SET [INTEGER]
 		do
 			if a_node_test.is_at_most_one_name_constraint then
 				a_set := a_node_test.constraining_node_names
@@ -523,7 +525,7 @@ feature {NONE} -- Implementation
 			types_not_void: a_content_type /= Void and then another_content_type /= Void
 		local
 			finished: BOOLEAN
-			a_type: XM_XPATH_SCHEMA_TYPE
+			a_type: detachable XM_XPATH_SCHEMA_TYPE
 		do
 			if a_content_type.is_same_type (another_content_type) then
 				Result := Same_item_type

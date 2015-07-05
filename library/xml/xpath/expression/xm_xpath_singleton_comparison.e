@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Objects that compare two XPath singleton expressions;%
-	%Unlike XM_XPATH_VALUE_COMPARISON, this class allows%
-	%either operand to be an empty sequence, and converts%
-	%untyped atomic operands to the type of the other operand."
+		"Objects that compare two XPath singleton expressions;%
+		%Unlike XM_XPATH_VALUE_COMPARISON, this class allows%
+		%either operand to be an empty sequence, and converts%
+		%untyped atomic operands to the type of the other operand."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 			operand_2_not_void: an_operand_two /= Void
 			value_comparison_operator: is_value_comparison_operator (a_token)
 		do
-			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -67,37 +67,44 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
+			l_last_boolean_value: like last_boolean_value
 		do
 			atomic_comparer.set_dynamic_context (a_context)
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create last_boolean_value.make (False)
-			elseif l_result.item /= Void and then l_result.item.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (l_result.item.error_value)
-				set_last_error (l_result.item.error_value)
-			elseif not l_result.item.is_atomic_value then
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create l_last_boolean_value.make (False)
+				l_last_boolean_value.set_last_error (l_error_value)
+				last_boolean_value := l_last_boolean_value
+				set_last_error (l_error_value)
+			elseif not l_result_item.is_atomic_value then
 				create last_boolean_value.make (False)
 			else
-				l_item := l_result.item
+				l_item := l_result_item
 				create l_result.make (Void)
 				second_operand.evaluate_item (l_result, a_context)
-				if l_result.item /= Void and then l_result.item.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (l_result.item.error_value)
-					set_last_error (l_result.item.error_value)
-				elseif l_result.item = Void or else not l_result.item.is_atomic_value then
+				if attached l_result.item as l_result_item_2 and then attached l_result_item_2.error_value as l_error_value then
+					check is_error: l_result_item_2.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
+					set_last_error (l_error_value)
+				elseif not attached l_result.item as l_result_item_2 or else not l_result_item_2.is_atomic_value then
 					create last_boolean_value.make (False)
 				else
 					create l_comparison_checker
 					l_comparison_checker.check_correct_general_relation_xpath2 (l_item.as_atomic_value,
 																						  singleton_value_operator (operator), atomic_comparer,
-																						  l_result.item.as_atomic_value)
+																						  l_result_item_2.as_atomic_value)
 					if l_comparison_checker.is_comparison_type_error then
-						set_last_error (l_comparison_checker.last_type_error)
+						check attached l_comparison_checker.last_type_error as l_last_type_error then
+							set_last_error (l_last_type_error)
+						end
 						create last_boolean_value.make (False)
 					else
 						create last_boolean_value.make (l_comparison_checker.last_check_result)
@@ -106,7 +113,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)

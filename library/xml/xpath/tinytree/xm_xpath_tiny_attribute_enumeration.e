@@ -50,11 +50,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
-		local
-			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
 		do
-			a_tiny_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tiny_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement

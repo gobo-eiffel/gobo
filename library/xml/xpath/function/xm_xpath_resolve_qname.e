@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath resolve-qname() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_string, l_prefix, l_local_part: STRING
@@ -75,8 +75,8 @@ feature -- Evaluation
 			l_element: XM_XPATH_ELEMENT
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_string := a_result.item.string_value
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
+				l_string := a_result_item.string_value
 				create l_splitter.make
 				l_splitter.set_separators (":")
 				l_qname_parts := l_splitter.split (l_string)
@@ -94,21 +94,23 @@ feature -- Evaluation
 					end
 					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
-					if not a_result.item.is_error then
-						l_element := a_result.item.as_element
-						if not shared_name_pool.is_code_for_prefix_allocated (l_prefix) then
-							check
-								not_null_prefix: l_prefix.count > 0
-							end
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Prefix is not declared during resolve-qname()",
-								Xpath_errors_uri, "FONS0004", Dynamic_error))
-						else
-							if is_ncname (l_local_part) then
-								a_result.put (Void)
-								resolve_qname (a_result, l_element, l_prefix, l_local_part)
+					check attached a_result.item as a_result_item_2 then
+						if not a_result_item_2.is_error then
+							l_element := a_result_item_2.as_element
+							if not shared_name_pool.is_code_for_prefix_allocated (l_prefix) then
+								check
+									not_null_prefix: l_prefix.count > 0
+								end
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Prefix is not declared during resolve-qname()",
+									Xpath_errors_uri, "FONS0004", Dynamic_error))
 							else
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid local name in resolve-qname()",
-									Xpath_errors_uri, "FOCA0002", Dynamic_error))
+								if is_ncname (l_local_part) then
+									a_result.put (Void)
+									resolve_qname (a_result, l_element, l_prefix, l_local_part)
+								else
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid local name in resolve-qname()",
+										Xpath_errors_uri, "FOCA0002", Dynamic_error))
+								end
 							end
 						end
 					end
@@ -126,7 +128,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	resolve_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING)
+	resolve_qname (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING)
 			-- Resolve qname in scope of `an_element'.
 		require
 			a_result_not_void: a_result /= Void

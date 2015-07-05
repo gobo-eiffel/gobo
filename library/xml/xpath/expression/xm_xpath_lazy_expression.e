@@ -2,12 +2,12 @@ note
 
 	description:
 
-	"Expressions that must not be evaluated eagerly, %
-   %as a failure must not be reported until the value%
-   %is referenced"
+		"Expressions that must not be evaluated eagerly, %
+	   %as a failure must not be reported until the value%
+	   %is referenced"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,7 @@ feature -- Conversion
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)

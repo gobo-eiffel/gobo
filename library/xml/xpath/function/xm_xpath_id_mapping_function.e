@@ -5,7 +5,7 @@ note
 		"Objects which map documents to nodes identified by ID"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature -- Access
 	document: XM_XPATH_DOCUMENT
 			-- Document to which keys refer
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from `map_nodes'
 
 feature -- Evaluation
@@ -51,7 +51,7 @@ feature -- Evaluation
 			a_splitter: ST_SPLITTER
 			some_idrefs: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
-			an_element: XM_XPATH_ELEMENT
+			an_element: detachable XM_XPATH_ELEMENT
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			a_list: DS_ARRAYED_LIST [XM_XPATH_ELEMENT]
 		do

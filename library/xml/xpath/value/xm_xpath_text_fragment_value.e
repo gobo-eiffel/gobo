@@ -5,7 +5,7 @@ note
 		"Temporary trees whose document owns a single text node."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT
+	selected_id (an_id: STRING): detachable XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
 			Result := Void
@@ -128,13 +128,13 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING
+	unparsed_entity_system_id (an_entity_name: STRING): detachable STRING
 			-- System identifier of an unparsed external entity
 		do
 			Result := Void
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING
+	unparsed_entity_public_id (an_entity_name: STRING): detachable STRING
 			-- Public identifier of an unparsed external entity
 		do
 			Result := Void
@@ -180,7 +180,7 @@ feature -- Access
 			Result := Current
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE
+	parent: detachable XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes or namespaces.
 		do
@@ -228,16 +228,20 @@ feature {NONE} -- Implementation
 	text: STRING
 			--  Text value
 
-	cached_text_node: XM_XPATH_TEXT_FRAGMENT_NODE
+	cached_text_node: detachable XM_XPATH_TEXT_FRAGMENT_NODE
 			-- Sole text node
 
 	child_text_node: XM_XPATH_TEXT_FRAGMENT_NODE
 			-- Sole text node
+		local
+			l_cached_text_node: like cached_text_node
 		do
-			if cached_text_node = Void then
-				create cached_text_node.make (text, Current, system_id)
+			l_cached_text_node := cached_text_node
+			if l_cached_text_node = Void then
+				create l_cached_text_node.make (text, Current, system_id)
+				cached_text_node := l_cached_text_node
 			end
-			Result := cached_text_node
+			Result := l_cached_text_node
 		ensure
 			result_not_void: Result /= Void
 		end

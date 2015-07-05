@@ -5,7 +5,7 @@ note
 		"XPath numeric arithmetic expressons"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -33,8 +33,8 @@ feature -- Evaluation
 			l_string: STRING
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then a_result.item.is_atomic_value then
-				l_atomic_value := a_result.item.as_atomic_value.primitive_value
+			if attached a_result.item as l_result_item and then l_result_item.is_atomic_value then
+				l_atomic_value := l_result_item.as_atomic_value.primitive_value
 				if l_atomic_value.is_untyped_atomic then
 					l_string := l_atomic_value.as_untyped_atomic.string_value
 					if l_string.is_double then
@@ -45,8 +45,8 @@ feature -- Evaluation
 				end
 				a_result.put (Void)
 				second_operand.evaluate_item (a_result, a_context)
-				if a_result.item /= Void and then a_result.item.is_atomic_value then
-					l_other_atomic_value := a_result.item.as_atomic_value.primitive_value
+				if attached a_result.item as l_result_item_2 and then l_result_item_2.is_atomic_value then
+					l_other_atomic_value := l_result_item_2.as_atomic_value.primitive_value
 					if l_other_atomic_value.is_untyped_atomic then
 						l_string := l_other_atomic_value.as_untyped_atomic.string_value
 						if l_string.is_double then

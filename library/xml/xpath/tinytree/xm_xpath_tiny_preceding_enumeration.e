@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the preceding:: Axis"
 
 	library: "Gobo Eiffel XPATH Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,11 +55,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
-		local
-			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
 		do
-			a_tiny_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tiny_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -76,10 +73,15 @@ feature -- Cursor movement
 		local
 			l_next: INTEGER
 			l_found, l_valid: BOOLEAN
+			l_current_item: like current_item
 		do
 			index := index + 1
 			from
-				l_next := current_item.node_number
+				l_current_item := current_item
+				if l_current_item = Void then
+					l_current_item := starting_node
+				end
+				l_next := l_current_item.node_number
 			until
 				l_found
 			loop
@@ -111,10 +113,12 @@ feature -- Cursor movement
 						current_item := Void
 					elseif node_test.matches_node (document.retrieve_node_kind (l_next), fingerprint_from_name_code (document.retrieve_name_code (l_next)), document.element_annotation (l_next)) then
 						l_found := True
-						current_item := document.retrieve_node (l_next)
-						if not current_item.root.is_same_node (starting_node.root) then
+						l_current_item := document.retrieve_node (l_next)
+						if not l_current_item.root.is_same_node (starting_node.root) then
 							-- Different document fragments
 							current_item := Void
+						else
+							current_item := l_current_item
 						end
 					end
 					if l_valid and document.depth_of (l_next) = 1 then

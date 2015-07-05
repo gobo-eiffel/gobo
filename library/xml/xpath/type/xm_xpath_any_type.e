@@ -5,7 +5,7 @@ note
 		"Objects that implement xs:anyType"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Access
 			Result := True
 		end
 
-	super_type: XM_XPATH_ITEM_TYPE
+	super_type: detachable XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction
 		do
 			-- do nothing
@@ -77,6 +77,7 @@ feature -- Access
 			-- Simple content type
 		do
 			-- Pre-condition cannot be met
+			check is_simple_content: False then end
 		end
 
 feature -- Comparison

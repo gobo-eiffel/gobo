@@ -5,7 +5,7 @@ note
 		"Objects that merge a sequence of sequences into a single flat sequence."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT)
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: detachable XM_XPATH_CONTEXT)
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -52,13 +52,18 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := not before and then item = Void
+			Result := not before and then internal_item = Void
 		end
 
 feature -- Cursor movement
@@ -96,13 +101,13 @@ feature {NONE} -- Implementation
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- The underlying iterator
 
-	results: like base_iterator
+	results: detachable like base_iterator
 			-- An iterator that delivers the results
 
 	mapping_function: XM_XPATH_MAPPING_FUNCTION
 			-- The mapping function
 
-	context: XM_XPATH_CONTEXT
+	context: detachable XM_XPATH_CONTEXT
 			-- Optional dynamic context
 
 	advance
@@ -110,30 +115,34 @@ feature {NONE} -- Implementation
 		local
 			l_finished: BOOLEAN
 			l_next_source: like item
-			l_mapped_item: XM_XPATH_MAPPED_ITEM
+			l_mapped_item: detachable XM_XPATH_MAPPED_ITEM
+			l_results: like results
 		do
 			from
 			until
 				l_finished
 			loop
-				if results /= Void then
-					if results.is_error then
+				l_results := results
+				if l_results /= Void then
+					if attached l_results.error_value as l_error_value then
+						check is_error: l_results.is_error end
 						l_finished := True
-						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
-						set_last_error (results.error_value)
-					elseif results.before then
-						results.start
-					elseif not results.after then
-						results.forth
+						create {XM_XPATH_INVALID_ITEM} internal_item.make (l_error_value)
+						set_last_error (l_error_value)
+					elseif l_results.before then
+						l_results.start
+					elseif not l_results.after then
+						l_results.forth
 					end
-					if not l_finished and results.is_error then
+					if not l_finished and attached l_results.error_value as l_error_value then
+						check is_error: l_results.is_error end
 						l_finished := True
-						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
-						set_last_error (results.error_value)
+						create {XM_XPATH_INVALID_ITEM} internal_item.make (l_error_value)
+						set_last_error (l_error_value)
 					end
-					if not results.is_error then
-						if not results.after then
-							item := results.item
+					if not l_results.is_error then
+						if not l_results.after then
+							internal_item := l_results.item
 							l_finished := True
 						else
 							results := Void
@@ -144,61 +153,82 @@ feature {NONE} -- Implementation
 						check
 							no_results_yet: results = Void
 						end
-					if base_iterator.is_error then
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
 						l_finished := True
-						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
-						set_last_error (base_iterator.error_value)
+						create {XM_XPATH_INVALID_ITEM} internal_item.make (l_error_value)
+						set_last_error (l_error_value)
 					elseif base_iterator.before then
 						base_iterator.start
 					elseif not base_iterator.after then
 						base_iterator.forth
 					end
-					if base_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
-						set_last_error (base_iterator.error_value)
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
+						create {XM_XPATH_INVALID_ITEM} internal_item.make (l_error_value)
+						set_last_error (l_error_value)
 						l_finished := True
 					elseif not base_iterator.after then
 						l_next_source := base_iterator.item
 
 						-- Call the supplied mapping function
-
-						mapping_function.map (l_next_source, context)
+						if attached context as l_context then
+							mapping_function.map (l_next_source, l_context)
+						else
+							mapping_function.map (l_next_source, new_dummy_context)
+						end
 						l_mapped_item := mapping_function.last_mapped_item
-
 						if l_mapped_item /= Void then
 							if not l_mapped_item.is_sequence then
 								results := Void
 								l_finished := True
-								item := l_mapped_item.item
-								if item.is_error then
-									set_last_error (item.error_value)
+								internal_item := l_mapped_item.item
+								if attached item.error_value as l_error_value then
+									check is_error: item.is_error end
+									set_last_error (l_error_value)
 								end
 							else
-								results := l_mapped_item.sequence
-								if results.is_error then
+								l_results := l_mapped_item.sequence
+								results := l_results
+								if attached l_results.error_value as l_error_value then
+									check is_error: l_results.is_error end
 									l_finished := True
-									create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
-									set_last_error (results.error_value)
-								elseif results.before then
-									results.start
-								elseif not results.after then
-									results.forth
+									create {XM_XPATH_INVALID_ITEM} internal_item.make (l_error_value)
+									set_last_error (l_error_value)
+								elseif l_results.before then
+									l_results.start
+								elseif not l_results.after then
+									l_results.forth
 								end
-								if not results.is_error and then not results.after then
-									item := results.item
+								if not l_results.is_error and then not l_results.after then
+									internal_item := l_results.item
 									l_finished := True
 								end
 							end
 						end
 					else
 						results := Void
-						item := Void
+						internal_item := Void
 						l_finished := True
 					end
 				end
 			end
 		end
 
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
+
+	new_dummy_context: XM_XPATH_CONTEXT
+			-- New dummy context
+		local
+			l_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+		do
+			create l_function_library.make
+			create {XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT} Result.make_restricted (l_function_library)
+		ensure
+			new_dummy_context_not_void: Result /= Void
+		end
+		
 invariant
 
 	base_iterator_not_void: base_iterator /= Void

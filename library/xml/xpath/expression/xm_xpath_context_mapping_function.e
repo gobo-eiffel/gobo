@@ -8,7 +8,7 @@ note
 	%a series of such items, which each in turn become the context item."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ deferred class XM_XPATH_CONTEXT_MAPPING_FUNCTION
 
 feature -- Access
 
-	last_mapped_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	last_mapped_sequence: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Result from `map'
 
 feature -- Evaluation

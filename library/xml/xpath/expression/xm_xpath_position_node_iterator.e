@@ -5,7 +5,7 @@ note
 		"Objects that select a sub-sequence of nodes."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -87,8 +87,13 @@ feature -- Cursor movement
 				index = minimum or else base_iterator.is_error or else base_iterator.after
 			loop
 				index := index + 1
-				if not base_iterator.after then base_iterator.forth end
-				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
+				if not base_iterator.after then
+					base_iterator.forth
+				end
+				if attached base_iterator.error_value as l_error_value then
+					check is_error: base_iterator.is_error end
+					set_last_error (l_error_value)
+				end
 			end
 			if index < minimum then index := minimum end
 		end

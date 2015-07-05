@@ -5,7 +5,7 @@ note
 		"XPath expressions of the form E = N to M where E, N, and M are all expressions of type integer"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			check
@@ -101,7 +101,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -109,30 +109,30 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_value: XM_XPATH_NUMERIC_VALUE
 		do
 			value.evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as l_result_item then
 				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
-			elseif not a_result.item.is_error then
-				l_value := a_result.item.as_numeric_value
+			elseif not l_result_item.is_error then
+				l_value := l_result_item.as_numeric_value
 				a_result.put (Void)
 				minimum_bound.evaluate_item (a_result, a_context)
-				if a_result.item = Void or else a_result.item.is_error then
+				if not attached a_result.item as l_result_item2 or else l_result_item2.is_error then
 					-- nothing to do
 				else
-					if l_value.three_way_comparison (a_result.item.as_numeric_value, a_context) = -1 then
+					if l_value.three_way_comparison (l_result_item2.as_numeric_value, a_context) = -1 then
 						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 					else
 						a_result.put (Void)
 						maximum_bound.evaluate_item (a_result, a_context)
-						if a_result.item = Void or else a_result.item.is_error then
+						if not attached a_result.item as l_result_item3 or else l_result_item3.is_error then
 							-- nothing to do
 						else
-							a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (l_value.three_way_comparison (a_result.item.as_numeric_value, a_context) < 1))
+							a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (l_value.three_way_comparison (l_result_item3.as_numeric_value, a_context) < 1))
 						end
 					end
 				end

@@ -5,7 +5,7 @@ note
 		"XPath error values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: like value; a_error_type: like type)
+	make (a_description, a_namespace_uri, a_error_code: STRING; a_value: detachable like value; a_error_type: like type)
 			-- Create a general error value.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void

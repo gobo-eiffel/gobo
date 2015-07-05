@@ -5,7 +5,7 @@ note
 		"Objects that concatenate the results of two node iterators."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,17 +33,20 @@ feature {NONE} -- Initialization
 		do
 			base_iterator := a_base_iterator
 			second_iterator := a_second_iterator
-			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value)
-			elseif second_iterator.is_error then
-				set_last_error (second_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				set_last_error (l_error_value)
+			elseif attached second_iterator.error_value as l_error_value then
+				check is_error: second_iterator.is_error end
+				set_last_error (l_error_value)
 			else
 				second_iterator.start
 			end
 			context := a_context
 			current_iterator := base_iterator
-			if current_iterator.is_error then
-				set_last_error (current_iterator.error_value)
+			if attached current_iterator.error_value as l_error_value then
+				check is_error: current_iterator.is_error end
+				set_last_error (l_error_value)
 			end
 			initialized := True
 		ensure
@@ -93,8 +96,9 @@ feature -- Cursor movement
 			else
 				current_iterator.forth
 			end
-			if current_iterator.is_error then
-				set_last_error (current_iterator.error_value)
+			if attached current_iterator.error_value as l_error_value then
+				check is_erorr: current_iterator.is_error end
+				set_last_error (l_error_value)
 			end
 			if base_iterator.after and then second_iterator.before then
 				current_iterator := second_iterator
@@ -107,7 +111,7 @@ feature -- Conversion
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Duplication

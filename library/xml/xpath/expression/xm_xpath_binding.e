@@ -5,7 +5,7 @@ note
 		"Run-time properties of a variable"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Status report
 
-	last_evaluated_binding: XM_XPATH_VALUE
+	last_evaluated_binding: detachable XM_XPATH_VALUE
 			-- Value from calling `evaluate_variable'
 
 	is_global: BOOLEAN

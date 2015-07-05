@@ -5,7 +5,7 @@ note
 		"XPath cast as Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 	make (a_source: XM_XPATH_EXPRESSION; a_target_type: XM_XPATH_ATOMIC_TYPE; empty_ok: BOOLEAN)
 			-- Establish invariant.
 		do
-			make_unary (a_source)
 			target_type := a_target_type
+			make_unary (a_source)
 			is_empty_allowed := empty_ok
 			compute_static_properties
 		ensure
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -105,77 +105,87 @@ feature -- Optimization
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_expression: XM_XPATH_EXPRESSION
 			l_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
-			l_result: DS_CELL [XM_XPATH_ITEM]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_base_expression (l_replacement.item)
-				create l_sequence_type.make (type_factory.any_atomic_type, cardinality)
-				create l_role.make (Type_operation_role, "cast as", 1, Xpath_errors_uri, "XPTY0004")
-				create l_type_checker
-				l_type_checker.static_type_check (a_context, base_expression, l_sequence_type, False, l_role)
-				if l_type_checker.is_static_type_check_error then
-					set_last_error (l_type_checker.static_type_check_error)
-					a_replacement.put (Current)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
 				else
-					l_expression := l_type_checker.checked_expression
-					if is_sub_type (l_expression.item_type, target_type) then
-						set_replacement (a_replacement, l_expression)
-
-						-- It's not entirely clear that the spec permits this. Perhaps we should change the type label?
-						-- On the other hand, it's generally true that any expression defined to return an X
-						--  is allowed to return a subtype of X:
-
-					elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
-						create l_qname_cast.make (l_expression)
-						l_replacement.put (Void)
-						l_qname_cast.check_static_type (l_replacement, a_context, a_context_item_type)
-						if l_replacement.item.is_error then
-							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_replacement.item.error_value))
-						else
-							set_replacement (a_replacement, l_replacement.item)
+					set_base_expression (l_replacement_item)
+					create l_sequence_type.make (type_factory.any_atomic_type, cardinality)
+					create l_role.make (Type_operation_role, "cast as", 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					l_type_checker.static_type_check (a_context, base_expression, l_sequence_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							set_last_error (l_static_type_check_error)
+							a_replacement.put (Current)
 						end
 					else
-						if l_expression.is_atomic_value then
-							create l_result.make (Void)
-							evaluate_item (l_result, a_context.new_compile_time_context)
-							if l_result.item = Void then
-								set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
-							elseif l_result.item.is_error then
-								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_result.item.error_value))
-							elseif l_result.item.is_atomic_value then
-								set_replacement (a_replacement, l_result.item.as_atomic_value)
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+							l_expression := l_checked_expression
+							if is_sub_type (l_expression.item_type, target_type) then
+								set_replacement (a_replacement, l_expression)
+
+								-- It's not entirely clear that the spec permits this. Perhaps we should change the type label?
+								-- On the other hand, it's generally true that any expression defined to return an X
+								--  is allowed to return a subtype of X:
+
+							elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
+								create l_qname_cast.make (l_expression)
+								l_replacement.put (Void)
+								l_qname_cast.check_static_type (l_replacement, a_context, a_context_item_type)
+								check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+									if attached l_replacement_item_2.error_value as l_error_value then
+										check is_error: l_replacement_item_2.is_error end
+										set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+									else
+										set_replacement (a_replacement, l_replacement_item_2)
+									end
+								end
+							else
+								if l_expression.is_atomic_value then
+									create l_result.make (Void)
+									evaluate_item (l_result, a_context.new_compile_time_context)
+									if not attached l_result.item as l_result_item then
+										set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+									elseif attached l_result_item.error_value as l_error_value then
+										check is_error: l_result_item.is_error end
+										set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+									elseif l_result_item.is_atomic_value then
+										set_replacement (a_replacement, l_result_item.as_atomic_value)
+									end
+								else
+									set_base_expression (l_expression)
+								end
 							end
-						else
-							set_base_expression (l_expression)
 						end
 					end
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
-			elseif not a_result.item.is_atomic_value then
+			elseif not l_result_item.is_atomic_value then
 				if is_empty_allowed then
 					a_result.put (Void)
 				end
-			elseif a_result.item.as_atomic_value.is_convertible (target_type) then
-				a_result.item.as_atomic_value.convert_to_type (target_type)
-				a_result.put (a_result.item.as_atomic_value.converted_value)
+			elseif l_result_item.as_atomic_value.is_convertible (target_type) then
+				l_result_item.as_atomic_value.convert_to_type (target_type)
+				a_result.put (l_result_item.as_atomic_value.converted_value)
 			else
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
 					target_type.conventional_name), Xpath_errors_uri, "FORG0001", Dynamic_error))

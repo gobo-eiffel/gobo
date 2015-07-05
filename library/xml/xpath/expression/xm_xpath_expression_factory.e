@@ -5,7 +5,7 @@ note
 		"Factory routines for creating expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,10 +32,10 @@ inherit
 
 feature -- Access
 
-	parsed_error_value: XM_XPATH_ERROR_VALUE
+	parsed_error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error result from last call to make_expression
 
-	last_created_closure: XM_XPATH_VALUE
+	last_created_closure: detachable XM_XPATH_VALUE
 			-- Result from `create_closure' or `create_sequence_extent'
 
 	parsed_expression: XM_XPATH_EXPRESSION
@@ -43,7 +43,9 @@ feature -- Access
 		require
 			no_parse_error: not is_parse_error
 		do
-			Result := internal_parsed_expression
+			check preconditon_no_parse_error: attached internal_parsed_expression as l_internal_parsed_expression then
+				Result := l_internal_parsed_expression
+			end
 		ensure
 			parsed_expression_not_void: Result /= Void
 		end
@@ -70,7 +72,8 @@ feature -- Creation
 		local
 			l_parser: XM_XPATH_EXPRESSION_PARSER
 			l_error_type: INTEGER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_parsed_error_value: like parsed_error_value
 		do
 			is_parse_error := False
 			internal_parsed_expression := Void
@@ -78,38 +81,46 @@ feature -- Creation
 				create l_parser.make
 				l_parser.parse (a_expression, a_context, a_start, a_terminator, a_line_number)
 				if not l_parser.is_parse_error then
-					internal_parsed_expression := l_parser.last_parsed_expression
-					check
-						no_error: not internal_parsed_expression.is_error
-					end
-					debug ("XPath expression factory")
-						std.error.put_string ("After parsing:%N%N")
-						internal_parsed_expression.display (1)
-						std.error.put_new_line
-					end
-					create l_replacement.make (Void)
-					internal_parsed_expression.simplify (l_replacement)
-					if l_replacement.item.is_error then
-						is_parse_error := True
-						parsed_error_value := l_replacement.item.error_value
-						internal_parsed_expression := Void
-						debug ("XPath expression factory")
-							std.error.put_string ("Simplification failed!%N")
+					check not_is_parse_error: attached l_parser.last_parsed_expression as l_internal_parsed_expression then
+						internal_parsed_expression := l_internal_parsed_expression
+						check
+							no_error: not l_internal_parsed_expression.is_error
 						end
-					else
-						internal_parsed_expression := l_replacement.item
+						debug ("XPath expression factory")
+							std.error.put_string ("After parsing:%N%N")
+							l_internal_parsed_expression.display (1)
+							std.error.put_new_line
+						end
+						create l_replacement.make (Void)
+						l_internal_parsed_expression.simplify (l_replacement)
+						check simplified_expression_not_void: attached l_replacement.item as l_replacement_item then
+							if l_replacement_item.is_error then
+								is_parse_error := True
+								parsed_error_value := l_replacement_item.error_value
+								internal_parsed_expression := Void
+								debug ("XPath expression factory")
+									std.error.put_string ("Simplification failed!%N")
+								end
+							else
+								internal_parsed_expression := l_replacement_item
+							end
+						end
 					end
 				else
-					is_parse_error := True
-					l_error_type := Static_error
-					create parsed_error_value.make_from_string (l_parser.first_parse_error, Xpath_errors_uri, l_parser.first_parse_error_code, l_error_type)
-					parsed_error_value.set_location (a_system_id, l_parser.first_parse_error_line_number)
+					check is_parse_error: attached l_parser.first_parse_error as l_first_parse_error and attached l_parser.first_parse_error_code as l_first_parse_error_code then
+						is_parse_error := True
+						l_error_type := Static_error
+						create l_parsed_error_value.make_from_string (l_first_parse_error, Xpath_errors_uri, l_first_parse_error_code, l_error_type)
+						l_parsed_error_value.set_location (a_system_id, l_parser.first_parse_error_line_number)
+						parsed_error_value := l_parsed_error_value
+					end
 				end
 			else
 				is_parse_error := True
 				l_error_type := Static_error
-				create parsed_error_value.make_from_string ("Empty expression text", Xpath_errors_uri, "XPST0003", l_error_type)
-				parsed_error_value.set_location (a_system_id, a_line_number)
+				create l_parsed_error_value.make_from_string ("Empty expression text", Xpath_errors_uri, "XPST0003", l_error_type)
+				l_parsed_error_value.set_location (a_system_id, a_line_number)
+				parsed_error_value := l_parsed_error_value
 			end
 		ensure
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void
@@ -218,7 +229,7 @@ feature -- Creation
 
 feature {NONE} -- Implementation
 
-	internal_parsed_expression: XM_XPATH_EXPRESSION
+	internal_parsed_expression: detachable XM_XPATH_EXPRESSION
 			-- Result of `make_expression'
 
 invariant

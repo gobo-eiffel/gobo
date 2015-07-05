@@ -5,7 +5,7 @@ note
 		"Helper objects for enumerating XPath axes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Implmenentation
 	node_test: XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
 
-	next_node: like starting_node
+	next_node: detachable like starting_node
 			-- The first/next node to be returned by the enumeration
 
 	advance
@@ -57,7 +57,7 @@ feature {NONE} -- Implmenentation
 		deferred
 		end
 
-	is_conforming (a_node: like starting_node): BOOLEAN
+	is_conforming (a_node: detachable like starting_node): BOOLEAN
 			-- Does `a_node' conform to `node_test', or is it `Void'?
 		do
 			if a_node = Void then

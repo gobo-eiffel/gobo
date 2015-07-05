@@ -5,7 +5,7 @@ note
 		"Tiny tree composite nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,7 @@ feature -- Access
 			-- String-value
 		local
 			a_level, a_next_node, a_start_position, a_length: INTEGER
-			a_buffer: STRING
+			a_buffer: detachable STRING
 		do
 			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.

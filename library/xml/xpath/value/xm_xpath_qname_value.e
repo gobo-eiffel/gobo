@@ -5,7 +5,7 @@ note
 		"XPath QName values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,7 +92,9 @@ feature -- Access
 	optional_prefix: STRING
 			-- Optional prefix of `Current'
 		do
-			Result := shared_name_pool.prefix_from_name_code (name_code)
+			check attached shared_name_pool.prefix_from_name_code (name_code) as l_prefix_from_name_code then
+				Result := l_prefix_from_name_code
+			end
 		ensure
 			prefix_not_void: Result /= Void
 		end

@@ -5,7 +5,7 @@ note
 		"XPath orphan element/attribute/namespace/text/processing-instruction or comment nodes with no parent or children."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,7 @@ feature -- Access
 			create {XM_XPATH_NODE_KIND_TEST} Result.make (node_type)
 		end
 
-	document: XM_XPATH_DOCUMENT
+	document: detachable XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		do
 			-- `Void' - by definition of an orphan
@@ -70,7 +70,7 @@ feature -- Access
 	string_value: STRING
 			-- String value
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI
 		do
 			Result := Void
@@ -103,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE
+	parent: detachable XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node
 
 	root: XM_XPATH_NODE
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := Void
@@ -151,6 +151,7 @@ feature -- Access
 				else
 					-- schema-aware
 					todo ("typed_value", True)
+					check False then end
 				end
 			end
 		end
@@ -170,6 +171,7 @@ feature -- Access
 				else
 					-- schema-aware
 					todo ("atomized_value", True)
+					check False then end
 				end
 			end
 		end
@@ -178,6 +180,7 @@ feature -- Access
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			todo ("new_axis_iterator", False)
+			check False then end
 		end
 
 	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
@@ -185,6 +188,7 @@ feature -- Access
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
 			todo ("new_axis_iterator with node test", False)
+			check False then end
 		end
 
 	path: STRING

@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,10 +66,11 @@ feature {NONE} -- Initialization
 				l_counter := l_counter + 1
 				a_iterator.forth
 			end
-			if a_iterator.is_error then
-				create l_invalid_item.make (a_iterator.error_value)
+			if attached a_iterator.error_value as l_error_value then
+				check is_error: a_iterator.is_error end
+				create l_invalid_item.make (l_error_value)
 				l_value.force_last (l_invalid_item)
-				set_last_error (a_iterator.error_value)
+				set_last_error (l_error_value)
 			end
 
 			-- Drop all trailing `Void' entries to preserve semantics of item_at and iterator
@@ -153,29 +154,32 @@ feature -- Access
 			-- Data type of the expression
 		local
 			l_counter: INTEGER
+			l_cached_item_type: like cached_item_type
 		do
-			if cached_item_type = Void then
+			l_cached_item_type := cached_item_type
+			if l_cached_item_type = Void then
 				if count <= 1 then
-					cached_item_type := any_item
+					l_cached_item_type := any_item
 				else
-					cached_item_type := item (1).item_type
+					l_cached_item_type := item (1).item_type
 					from
 						l_counter := 2
 					until
 						l_counter > count
 					loop
-						if cached_item_type = any_item then
+						if l_cached_item_type = any_item then
 							l_counter := count + 1 -- make a quick exit
 						else
-							cached_item_type := common_super_type (cached_item_type, item (l_counter).item_type)
+							l_cached_item_type := common_super_type (l_cached_item_type, item (l_counter).item_type)
 							l_counter := l_counter + 1
 						end
 					variant
 						count + 1 - l_counter
 					end
 				end
+				cached_item_type := l_cached_item_type
 			end
-			Result := cached_item_type
+			Result := l_cached_item_type
 		end
 
 	item_at (a_index: INTEGER): XM_XPATH_ITEM
@@ -255,7 +259,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_count: INTEGER
@@ -281,24 +285,26 @@ feature -- Optimization
 	reduce
 			-- Reduce a value to its simplest form.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_last_reduced_value: like last_reduced_value
 		do
 			create l_replacement.make (Void)
 			simplify (l_replacement)
-			if l_replacement.item /= Void then
+			if attached l_replacement.item as l_replacement_item then
 				check
-					still_a_value: l_replacement.item.is_value
+					still_a_value: l_replacement_item.is_value
 					-- Values never become non-values
 				end
-				last_reduced_value := l_replacement.item.as_value
-				if last_reduced_value.is_error then
-					set_last_error (last_reduced_value.error_value)
+				l_last_reduced_value := l_replacement_item.as_value
+				last_reduced_value := l_last_reduced_value
+				if attached l_last_reduced_value.error_value as l_error_value then
+					check is_error: l_last_reduced_value.is_error end
+					set_last_error (l_error_value)
 				end
 			else
 				last_reduced_value := Current
 			end
 		end
-
 
 feature -- Evaluation
 
@@ -317,8 +323,9 @@ feature -- Evaluation
 					last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 				else
 					l_item.as_atomic_value.calculate_effective_boolean_value (a_context)
-					if l_item.is_error then
-						set_last_error (l_item.error_value)
+					if attached l_item.error_value as l_error_value then
+						check is_error: l_item.is_error end
+						set_last_error (l_error_value)
 					end
 					last_boolean_value := l_item.as_atomic_value.last_boolean_value
 				end
@@ -394,7 +401,7 @@ feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 	Estimated_item_count: INTEGER = 20
 			-- Guess at number of items in sequence
 
-	cached_item_type: XM_XPATH_ITEM_TYPE
+	cached_item_type: detachable XM_XPATH_ITEM_TYPE
 			-- Cached result for `item_type'
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

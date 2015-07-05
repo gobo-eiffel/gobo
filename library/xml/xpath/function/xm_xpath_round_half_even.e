@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath round-half-to-even() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
@@ -79,28 +79,29 @@ feature -- Evaluation
 			if arguments.count = 2 then
 				arguments.item (2).evaluate_item (a_result, a_context)
 				check
-					integer_precision: a_result.item.is_machine_integer_value
+					integer_precision: attached a_result.item as a_result_item and then a_result_item.is_machine_integer_value
 					-- static typing
-				end
-				l_integer_value := a_result.item.as_machine_integer_value
-				if l_integer_value.value.abs <= Platform.Maximum_integer then
-					l_scale := l_integer_value.value.to_integer
-				else
-					l_in_error := True
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Precision specified in round-to-half-even is outside the supported range.", Gexslt_eiffel_type_uri,
-						"PRECISION_OUT_OF_RANGE", Dynamic_error))
+				then
+					l_integer_value := a_result_item.as_machine_integer_value
+					if l_integer_value.value.abs <= Platform.Maximum_integer then
+						l_scale := l_integer_value.value.to_integer
+					else
+						l_in_error := True
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Precision specified in round-to-half-even is outside the supported range.", Gexslt_eiffel_type_uri,
+							"PRECISION_OUT_OF_RANGE", Dynamic_error))
+					end
 				end
 			end
 			if not l_in_error then
 				a_result.put (Void)
 				arguments.item (1).evaluate_item (a_result, a_context)
-				if a_result.item /= Void and then not a_result.item.is_error then
+				if attached a_result.item as a_result_item and then not a_result_item.is_error then
 					check
-						is_atomic: a_result.item.is_atomic_value
-						is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
+						is_atomic: a_result_item.is_atomic_value
+						is_numeric: a_result_item.as_atomic_value.primitive_value.is_numeric_value
 						-- static typing
 					end
-					a_result.put (a_result.item.as_atomic_value.primitive_value.as_numeric_value.rounded_half_even (l_scale))
+					a_result.put (a_result_item.as_atomic_value.primitive_value.as_numeric_value.rounded_half_even (l_scale))
 				end
 			end
 		end

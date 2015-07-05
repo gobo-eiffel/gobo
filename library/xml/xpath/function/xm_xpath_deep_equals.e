@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath deep-equals() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,31 +69,40 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_comparer: XM_XPATH_ATOMIC_COMPARER
+			l_comparer: detachable XM_XPATH_ATOMIC_COMPARER
 			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
 		do
 			l_comparer := atomic_comparer (3, a_context)
-			l_comparer.set_dynamic_context (a_context)
 			if l_comparer = Void then
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else
+				l_comparer.set_dynamic_context (a_context)
 				arguments.item (1).create_iterator (a_context)
-				l_iterator := arguments.item (1).last_iterator
-				if l_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-				else
-					arguments.item (2).create_iterator (a_context)
-					l_other_iterator := arguments.item (2).last_iterator
-					if l_other_iterator.is_error then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_other_iterator.error_value))
+				check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator_1 then
+					l_iterator := l_last_iterator_1
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 					else
-						l_comparer.set_dynamic_context (a_context)
-						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (deep_equals (l_iterator, l_other_iterator, l_comparer)))
-						if is_error then
-							a_result.item.set_last_error (error_value)
+						arguments.item (2).create_iterator (a_context)
+						check postcondition_of_create_iterator: attached arguments.item (2).last_iterator as l_last_iterator_2 then
+							l_other_iterator := l_last_iterator_2
+							if attached l_other_iterator.error_value as l_error_value then
+								check is_error: l_other_iterator.is_error end
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+							else
+								l_comparer.set_dynamic_context (a_context)
+								l_item := create {XM_XPATH_BOOLEAN_VALUE}.make (deep_equals (l_iterator, l_other_iterator, l_comparer))
+								a_result.put (l_item)
+								if attached error_value as l_error_value then
+									check is_error: is_error end
+									l_item.set_last_error (l_error_value)
+								end
+							end
 						end
 					end
 				end
@@ -141,44 +150,45 @@ feature {NONE} -- Implementation
 						another_item := another_iterator.item
 						if another_item.is_error then
 							Result := False; finished := True
-						end
-					end
-					if not finished then
-						if an_item.is_node then
-							if another_item.is_node then
-								if not nodes_are_deep_equal (an_item.as_node, another_item.as_node, a_comparer) then
+						elseif not finished then
+							if an_item.is_node then
+								if another_item.is_node then
+									if not nodes_are_deep_equal (an_item.as_node, another_item.as_node, a_comparer) then
+										Result := False; finished := True
+									end
+								else
 									Result := False; finished := True
 								end
 							else
-								Result := False; finished := True
-							end
-						else
-							if another_item.is_node then
-								Result := False; finished := True
-							else
-								check
-									first_item_atomic: an_item.is_atomic_value
-									second_item_atomic: another_item.is_atomic_value
-									-- as they are not nodes
-								end
-								if not a_comparer.are_comparable (an_item.as_atomic_value, another_item.as_atomic_value) then
+								if another_item.is_node then
 									Result := False; finished := True
-								elseif a_comparer.three_way_comparison (an_item.as_atomic_value, another_item.as_atomic_value) /= 0 then
-									Result := False; finished := True
+								else
+									check
+										first_item_atomic: an_item.is_atomic_value
+										second_item_atomic: another_item.is_atomic_value
+										-- as they are not nodes
+									end
+									if not a_comparer.are_comparable (an_item.as_atomic_value, another_item.as_atomic_value) then
+										Result := False; finished := True
+									elseif a_comparer.three_way_comparison (an_item.as_atomic_value, another_item.as_atomic_value) /= 0 then
+										Result := False; finished := True
+									end
 								end
 							end
 						end
 					end
 					if not finished then
 						an_iterator.forth; another_iterator.forth
-						if an_iterator.is_error then
+						if attached an_iterator.error_value as l_error_value then
+							check is_error: an_iterator.is_error end
 							finished := True
 							Result := False
-							set_last_error (an_iterator.error_value)
-						elseif another_iterator.is_error then
+							set_last_error (l_error_value)
+						elseif attached another_iterator.error_value as l_error_value then
+							check is_error: another_iterator.is_error end
 							finished := True
 							Result := False
-							set_last_error (another_iterator.error_value)
+							set_last_error (l_error_value)
 						end
 					end
 				end
@@ -243,7 +253,7 @@ feature {NONE} -- Implementation
 		local
 			a_child_iterator, another_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			finished, first_sequence_exhausted, second_sequence_exhausted: BOOLEAN
-			a_child_node, another_child_node: XM_XPATH_NODE
+			a_child_node, another_child_node: detachable XM_XPATH_NODE
 		do
 			from
 				Result := True -- innocent until proved guilty

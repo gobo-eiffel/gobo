@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath replace() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			n: INTEGER
@@ -83,78 +83,82 @@ feature -- Optimization
 					n := 4
 				end
 				try_to_compile (n, arguments)
-				if regexp_error_value /= Void then
+				if attached regexp_error_value as l_regexp_error_value then
 					a_replacement.put (Void)
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (regexp_error_value))
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_regexp_error_value))
 				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_input_string, l_pattern_string, l_flags_string: STRING
+			l_input_string, l_pattern_string: STRING
+			l_flags_string: detachable STRING
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as a_result_item_1 then
 				l_input_string := ""
 				a_result.put (Void)
-			elseif a_result.item.is_error then
+			elseif a_result_item_1.is_error then
 				-- nothing to do
+				l_input_string := ""
 			else
-				l_input_string := a_result.item.string_value
+				l_input_string := a_result_item_1.string_value
 				l_input_string := utf8.to_utf8 (l_input_string)
 				a_result.put (Void)
 			end
 			if a_result.item = Void then -- else it's an error
-				if regexp_cache_entry = Void then
+				if not attached regexp_cache_entry as l_regexp_cache_entry then
 					arguments.item (2).evaluate_item (a_result, a_context)
 					check
-						pattern_not_empty: a_result.item /= Void
+						pattern_not_empty: attached a_result.item as a_result_item_2
 						--static typing
-					end
-					if a_result.item.is_error then
-						-- nothing to do
-					else
-						check
-							atomic_pattern: a_result.item.is_atomic_value
-							-- Statically typed as a single string
-						end
-						l_pattern_string := a_result.item.as_atomic_value.string_value
-						l_pattern_string := utf8.to_utf8 (l_pattern_string)
-						a_result.put (Void)
-						if arguments.count = 3 then
-							l_flags_string := ""
+					then
+						if a_result_item_2.is_error then
+							-- nothing to do
 						else
-							arguments.item (4).evaluate_item (a_result, a_context)
 							check
-								flags_not_empty: a_result.item /= Void
-								--static typing
+								atomic_pattern: a_result_item_2.is_atomic_value
+								-- Statically typed as a single string
 							end
-							if a_result.item.is_error then
-								-- nothing to do
-							else
-								check
-									atomic_pattern: a_result.item.is_atomic_value
-									-- Statically typed as a single string
-								end
-								l_flags_string := normalized_flags_string (a_result.item.as_atomic_value.string_value)
-							end
-						end
-						if l_flags_string = Void then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
-						else
+							l_pattern_string := a_result_item_2.as_atomic_value.string_value
+							l_pattern_string := utf8.to_utf8 (l_pattern_string)
 							a_result.put (Void)
-							fetch_regular_expression (a_result, l_pattern_string, l_flags_string)
-							if a_result.item = Void then
-								fetch_replacement_string (a_result, a_context)
+							if arguments.count = 3 then
+								l_flags_string := ""
+							else
+								arguments.item (4).evaluate_item (a_result, a_context)
+								check
+									flags_not_empty: attached a_result.item as a_result_item_3
+									--static typing
+								then
+									if a_result_item_3.is_error then
+										-- nothing to do
+									else
+										check
+											atomic_pattern: a_result_item_3.is_atomic_value
+											-- Statically typed as a single string
+										end
+										l_flags_string := normalized_flags_string (a_result_item_3.as_atomic_value.string_value)
+									end
+								end
+							end
+							if l_flags_string = Void then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
+							else
+								a_result.put (Void)
+								fetch_regular_expression (a_result, l_pattern_string, l_flags_string)
+								if a_result.item = Void then
+									fetch_replacement_string (a_result, a_context)
+								end
 							end
 						end
 					end
 				else
-					regexp := regexp_cache_entry.regexp
+					regexp := l_regexp_cache_entry.regexp
 					fetch_replacement_string (a_result, a_context)
 				end
 				if a_result.item = Void then
@@ -173,16 +177,16 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	regexp: RX_PCRE_REGULAR_EXPRESSION
+	regexp: detachable RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression
 
-	replacement_string: STRING
+	replacement_string: detachable STRING
 			-- Replacement string
 
 	any_captures: BOOLEAN
 			-- Were any captured-substring replacement requests detected.
 
-	check_replacement_string (a_result: DS_CELL [XM_XPATH_ITEM])
+	check_replacement_string (a_result: DS_CELL [detachable XM_XPATH_ITEM])
 			-- Check `replacement_string' conforms to required format.
 			-- Captured-substring replacement syntax is modified for pcre -
 			--  i.e. $n is replaced by \n\ .
@@ -193,55 +197,57 @@ feature {NONE} -- Implementation
 		local
 			l_index, l_character_code: INTEGER
 		do
-			from
-				l_index := 1
-			until
-				regexp_error_value /= Void or else l_index > replacement_string.count
-			loop
-				l_character_code := replacement_string.item_code (l_index)
-				inspect
-					l_character_code
-				when 36 then -- $
-					if l_index > 1 and then replacement_string.item_code (l_index - 1) =  92 then -- \
-						-- escaped $
-					else
-						if l_index < replacement_string.count then
-							l_character_code := replacement_string.item_code (l_index + 1)
-							if l_character_code < 48 or else l_character_code > 57 then -- not 0-9
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign must be followed by digit 0-9",
+			check precondition_replacement_string_not_void: attached replacement_string as l_replacement_string then
+				from
+					l_index := 1
+				until
+					regexp_error_value /= Void or else l_index > l_replacement_string.count
+				loop
+					l_character_code := l_replacement_string.item_code (l_index)
+					inspect
+						l_character_code
+					when 36 then -- $
+						if l_index > 1 and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+							-- escaped $
+						else
+							if l_index < l_replacement_string.count then
+								l_character_code := l_replacement_string.item_code (l_index + 1)
+								if l_character_code < 48 or else l_character_code > 57 then -- not 0-9
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign must be followed by digit 0-9",
+										Xpath_errors_uri, "FORX0004", Dynamic_error))
+								else
+									any_captures := True
+								end
+							else
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign at end of string",
+									Xpath_errors_uri, "FORX0004", Dynamic_error))
+							end
+						end
+					when 92 then -- \
+						if l_index > 1 and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+							-- escaped \
+						elseif l_index < l_replacement_string.count and then l_replacement_string.item_code (l_index + 1) = 36 then
+							-- \$
+						elseif l_index < l_replacement_string.count and then l_replacement_string.item_code (l_index + 1) = 92 then
+							-- escaped \
+						else
+							if l_index < l_replacement_string.count then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): \ must be followed by \ or $",
 									Xpath_errors_uri, "FORX0004", Dynamic_error))
 							else
-								any_captures := True
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): single \ sign at end of string",
+									Xpath_errors_uri, "FORX0004", Dynamic_error))
 							end
-						else
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign at end of string",
-								Xpath_errors_uri, "FORX0004", Dynamic_error))
 						end
-					end
-				when 92 then -- \
-					if l_index > 1 and then  replacement_string.item_code (l_index - 1) =  92 then -- \
-						-- escaped \
-					elseif l_index < replacement_string.count and then replacement_string.item_code (l_index + 1) = 36 then
-						-- \$
-					elseif l_index < replacement_string.count and then replacement_string.item_code (l_index + 1) = 92 then
-						-- escaped \
 					else
-						if l_index < replacement_string.count then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): \ must be followed by \ or $",
-								Xpath_errors_uri, "FORX0004", Dynamic_error))
-						else
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): single \ sign at end of string",
-								Xpath_errors_uri, "FORX0004", Dynamic_error))
-						end
 					end
-				else
+					l_index := l_index + 1
+				variant
+					l_replacement_string.count + 1 - l_index
 				end
-				l_index := l_index + 1
-			variant
-				replacement_string.count + 1 - l_index
-			end
-			if a_result.item = Void and any_captures then
-				perform_replacement_string_substitution
+				if a_result.item = Void and any_captures then
+					perform_replacement_string_substitution
+				end
 			end
 		end
 
@@ -255,33 +261,35 @@ feature {NONE} -- Implementation
 			l_substitution: STRING
 			l_substitution_just_performed: BOOLEAN
 		do
-			from
-				l_index := 1
-			until
-				l_index > replacement_string.count
-			loop
-				l_character_code := replacement_string.item_code (l_index)
-				if l_character_code = 36 then -- $
-					if l_index > 1 and then not l_substitution_just_performed and then replacement_string.item_code (l_index - 1) =  92 then -- \
-						l_index := l_index + 2 -- escaped $
-						l_substitution_just_performed := False
+			check precondition_replacement_string_not_void: attached replacement_string as l_replacement_string then
+				from
+					l_index := 1
+				until
+					l_index > l_replacement_string.count
+				loop
+					l_character_code := l_replacement_string.item_code (l_index)
+					if l_character_code = 36 then -- $
+						if l_index > 1 and then not l_substitution_just_performed and then l_replacement_string.item_code (l_index - 1) =  92 then -- \
+							l_index := l_index + 2 -- escaped $
+							l_substitution_just_performed := False
+						else
+							l_substitution := STRING_.concat ("\", l_replacement_string.substring (l_index + 1, l_index + 1))
+							l_substitution := STRING_.appended_string (l_substitution, "\")
+							replacement_string := STRING_.replaced_substring (l_replacement_string, l_substitution, l_index, l_index + 1)
+							l_index := l_index + 3
+							l_substitution_just_performed := True
+						end
 					else
-						l_substitution := STRING_.concat ("\", replacement_string.substring (l_index + 1, l_index + 1))
-						l_substitution := STRING_.appended_string (l_substitution, "\")
-						replacement_string := STRING_.replaced_substring (replacement_string, l_substitution, l_index, l_index + 1)
-						l_index := l_index + 3
 						l_substitution_just_performed := True
+						l_index := l_index + 1
 					end
-				else
-					l_substitution_just_performed := True
-					l_index := l_index + 1
+				variant
+					l_replacement_string.count + 1 - l_index
 				end
-			variant
-				replacement_string.count + 1 - l_index
 			end
 		end
 
-	evaluate_replacement (a_result: DS_CELL [XM_XPATH_ITEM]; a_input_string: STRING)
+	evaluate_replacement (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_input_string: STRING)
 			-- Ensure subject and replacement strings are same type, then evaluate.
 		require
 			a_result_not_void: a_result /= Void
@@ -292,30 +300,34 @@ feature {NONE} -- Implementation
 			l_replacement_is_ascii, l_subject_is_ascii: BOOLEAN
 			l_subject_string, l_substitution_string: STRING
 		do
-			l_subject_is_ascii := ANY_.same_types (a_input_string, "")
-			l_replacement_is_ascii := ANY_.same_types (replacement_string, "")
-			if l_subject_is_ascii = l_replacement_is_ascii then
-				l_subject_string := a_input_string
-				l_substitution_string := replacement_string
-			elseif l_subject_is_ascii then
-				l_subject_string := STRING_.new_empty_string (replacement_string, a_input_string.count)
-				l_subject_string := STRING_.appended_string (l_subject_string, a_input_string)
-				l_substitution_string := replacement_string
-			else
-				l_subject_string := a_input_string
-				l_substitution_string := STRING_.new_empty_string (a_input_string, replacement_string.count)
-				l_substitution_string := STRING_.appended_string (l_substitution_string, replacement_string)
+			check precondition_replacement_string_not_void: attached replacement_string as l_replacement_string then
+				l_subject_is_ascii := ANY_.same_types (a_input_string, "")
+				l_replacement_is_ascii := ANY_.same_types (l_replacement_string, "")
+				if l_subject_is_ascii = l_replacement_is_ascii then
+					l_subject_string := a_input_string
+					l_substitution_string := l_replacement_string
+				elseif l_subject_is_ascii then
+					l_subject_string := STRING_.new_empty_string (l_replacement_string, a_input_string.count)
+					l_subject_string := STRING_.appended_string (l_subject_string, a_input_string)
+					l_substitution_string := l_replacement_string
+				else
+					l_subject_string := a_input_string
+					l_substitution_string := STRING_.new_empty_string (a_input_string, l_replacement_string.count)
+					l_substitution_string := STRING_.appended_string (l_substitution_string, l_replacement_string)
+				end
+				l_subject_string := utf8.to_utf8 (l_subject_string)
+				l_substitution_string := utf8.to_utf8 (l_substitution_string)
+				check attached regexp as l_regexp then
+					l_regexp.match (l_subject_string)
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (new_unicode_string_from_utf8 (l_regexp.replace_all (l_substitution_string))))
+				end
 			end
-			l_subject_string := utf8.to_utf8 (l_subject_string)
-			l_substitution_string := utf8.to_utf8 (l_substitution_string)
-			regexp.match (l_subject_string)
-			a_result.put (create {XM_XPATH_STRING_VALUE}.make (new_unicode_string_from_utf8 (regexp.replace_all (l_substitution_string))))
 		ensure
 			evaluated: a_result.item /= Void
 		end
 
 
-	fetch_regular_expression (a_result: DS_CELL [XM_XPATH_ITEM]; a_pattern_string, a_flags_string: STRING)
+	fetch_regular_expression (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_pattern_string, a_flags_string: STRING)
 			-- Fetch regular expression.
 		require
 			a_result_not_void: a_result /= Void
@@ -335,9 +347,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not l_regexp_cache_entry.is_error then
-				regexp := l_regexp_cache_entry.regexp
-				if regexp.matches ("") then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error))
+				check invariant_of_XM_XPATH_REGEXP_CACHE_ENTRY: attached l_regexp_cache_entry.regexp as l_regexp then
+					regexp := l_regexp
+					if l_regexp.matches ("") then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error))
+					end
 				end
 			else
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error))
@@ -346,7 +360,7 @@ feature {NONE} -- Implementation
 			regexp_set: a_result.item = Void implies regexp /= Void
 		end
 
-	fetch_replacement_string  (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	fetch_replacement_string  (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Fetch replacement string.
 		require
 			a_result_not_void: a_result /= Void
@@ -354,13 +368,14 @@ feature {NONE} -- Implementation
 		do
 			arguments.item (3).evaluate_item (a_result, a_context)
 			check
-				replacement_string_present: a_result.item /= Void
+				replacement_string_present: attached a_result.item as a_result_item
 				-- static typing
-			end
-			if not a_result.item.is_error then
-				replacement_string := a_result.item.string_value
-				a_result.put (Void)
-				check_replacement_string (a_result)
+			then
+				if not a_result_item.is_error then
+					replacement_string := a_result_item.string_value
+					a_result.put (Void)
+					check_replacement_string (a_result)
+				end
 			end
 		ensure
 			replacement_string_set: a_result.item = Void implies replacement_string /= Void

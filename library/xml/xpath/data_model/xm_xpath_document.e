@@ -5,7 +5,7 @@ note
 		"XPath Document nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ feature -- Access
 			Result := document_number \\ 7
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI of document entity as per W3C XML:Base REC
 		deferred
 		end
@@ -59,28 +59,28 @@ feature -- Access
 			element_list_not_void: Result /= Void
 		end
 
-	unparsed_entity_system_id (a_entity_name: STRING): STRING
+	unparsed_entity_system_id (a_entity_name: STRING): detachable STRING
 			-- System identifier of an unparsed external entity
 		require
 			a_entity_name_not_void: a_entity_name /= Void
 		deferred
 		end
 
-	unparsed_entity_public_id (a_entity_name: STRING): STRING
+	unparsed_entity_public_id (a_entity_name: STRING): detachable STRING
 			-- Public identifier of an unparsed external entity
 		require
 			a_entity_name_not_void: a_entity_name /= Void
 		deferred
 		end
 
-	document_uri: UT_URI
+	document_uri: detachable UT_URI
 			-- Absoulte URI of the source from which the document was constructed
 		deferred
 		ensure
 			absolute_uri: Result /= Void implies Result.is_absolute
 		end
 
-	selected_id (a_id: STRING): XM_XPATH_ELEMENT
+	selected_id (a_id: STRING): detachable XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		require
 			a_id_not_void: a_id /= Void
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Status report
 
-		is_document: BOOLEAN
+	is_document: BOOLEAN
 			-- Is `Current' a document?
 		do
 			Result := True

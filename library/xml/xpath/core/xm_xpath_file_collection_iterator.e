@@ -5,7 +5,7 @@ note
 		"Objects that iterate cheaply over a file collection"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,13 +53,18 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := item = Void
+			Result := internal_item = Void
 		end
 
 feature -- Cursor movement
@@ -71,7 +76,7 @@ feature -- Cursor movement
 			a_file_uri: UT_URI
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from item := Void until item /= Void or position > size loop
+			from internal_item := Void until internal_item /= Void or position > size loop
 				position := position + 1
 				if position <= size then
 					a_file_name := entries.item (position)
@@ -80,15 +85,14 @@ feature -- Cursor movement
 						-- for now, we just ignore errors, continuing around the loop
 
 						create a_file_uri.make_resolve (base_uri, a_file_name)
-						if saved_context.available_documents.is_document_mapped (a_file_uri.full_uri) then
-							create an_error.make_from_string ("Incompatiable isolation-levels between collection " + base_uri.full_reference + " and document " + a_file_uri.full_reference,
-																									Gexslt_eiffel_type_uri, "ISOLATION-LEVEL", Dynamic_error)
+						if attached saved_context.available_documents as l_available_documents and then l_available_documents.is_document_mapped (a_file_uri.full_uri) then
+							create an_error.make_from_string ("Incompatiable isolation-levels between collection " + base_uri.full_reference + " and document " + a_file_uri.full_reference, Gexslt_eiffel_type_uri, "ISOLATION-LEVEL", Dynamic_error)
 							set_last_error (an_error)
 							position := size + 1
 						else
 							saved_context.build_document (a_file_uri.full_reference)
 							if not saved_context.is_build_document_error then
-								item := saved_context.last_parsed_document
+								internal_item := saved_context.last_parsed_document
 							end
 						end
 					end
@@ -122,6 +126,9 @@ feature {NONE} -- Implementation
 
 	saved_context: XM_XPATH_CONTEXT
 			-- Saved dynamic context
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Value or node at the current position
 
 invariant
 

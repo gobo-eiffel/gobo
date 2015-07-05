@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath reverse() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			a_reverser: XM_XPATH_REVERSER

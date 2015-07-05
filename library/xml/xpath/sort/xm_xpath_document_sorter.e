@@ -5,7 +5,7 @@ note
 		"Objects that sort a sequence of nodes into document order"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,11 +32,10 @@ feature {NONE} -- Initialization
 			a_expression_not_void: a_expression /= Void
 			a_expression_initialized: a_expression.are_static_properties_computed
 		do
+			create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
 			make_unary (a_expression)
 			if base_expression.context_document_nodeset or else base_expression.single_document_nodeset then
 				create {XM_XPATH_LOCAL_ORDER_COMPARER} comparer
-			else
-				create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
 			end
 			compute_static_properties
 		end
@@ -65,41 +64,45 @@ feature -- Access
 		end
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error or else base_expression.ordered_nodeset then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error or else base_expression.ordered_nodeset then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.optimize (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error or else base_expression.ordered_nodeset then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error or else base_expression.ordered_nodeset then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -109,9 +112,11 @@ feature -- Optimization
 				a_replacement.put (Current)
 				create l_replacement.make (Void)
 				base_expression.promote (l_replacement, a_offer)
-				if base_expression /= l_replacement.item then
-					set_base_expression (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if base_expression /= l_replacement_item then
+						set_base_expression (l_replacement_item)
+						reset_static_properties
+					end
 				end
 			end
 		end
@@ -124,17 +129,19 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			else
-				if an_iterator.is_node_iterator then
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, comparer)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
 				else
-					if an_iterator.is_empty_iterator then
-						last_iterator := an_iterator
+					if an_iterator.is_node_iterator then
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, comparer)
 					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NON_NODE_SEQUENCE", Dynamic_error)
+						if an_iterator.is_empty_iterator then
+							last_iterator := an_iterator
+						else
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NON_NODE_SEQUENCE", Dynamic_error)
+						end
 					end
 				end
 			end
@@ -146,11 +153,13 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			base_expression.create_node_iterator (a_context)
-			l_iterator := base_expression.last_node_iterator
-			if l_iterator.is_error then
-				last_node_iterator := l_iterator
-			else
-				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_node_iterator.make (l_iterator, comparer)
+			check postcondition_of_create_node_iterator: attached base_expression.last_node_iterator as l_last_node_iterator then
+				l_iterator := l_last_node_iterator
+				if l_iterator.is_error then
+					last_node_iterator := l_iterator
+				else
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_node_iterator.make (l_iterator, comparer)
+				end
 			end
 		end
 

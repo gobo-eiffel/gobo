@@ -5,7 +5,7 @@ note
 		"XPath nodes that can have children"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	first_child: XM_XPATH_NODE
+	first_child: detachable XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'.
 		local
@@ -34,7 +34,7 @@ feature -- Access
 			end
 		end
 
-	last_child: XM_XPATH_NODE
+	last_child: detachable XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'.
 		local

@@ -11,7 +11,7 @@ note
 
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -129,7 +129,9 @@ feature -- Comparison
 				if double_value = Void then
 					convert_to_type (type_factory.double_type)
 				end
-				Result := double_value.three_way_comparison (a_other.as_numeric_value, Void)
+				check attached double_value as l_double_value then
+					Result := l_double_value.three_way_comparison (a_other.as_numeric_value, Void)
+				end
 			else
 				Result := a_collator.three_way_comparison (string_value, a_other.string_value)
 			end
@@ -192,6 +194,7 @@ feature -- Status report
 			a_string: STRING
 			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
 			a_duration_parser: XM_XPATH_DURATION_PARSER
+			l_last_decimal: like last_decimal
 		do
 			if a_required_type = type_factory.boolean_type then
 				a_string := trimmed_white_space (value)
@@ -224,8 +227,9 @@ feature -- Status report
 				Result := a_string.is_integer
 			elseif a_required_type = type_factory.decimal_type then
 				if value.index_of ('e', 1) = 0 and value.index_of ('E', 1) = 0 then
-					create last_decimal.make_from_string (trimmed_white_space (value))
-					Result := not (last_decimal.is_nan)
+					create l_last_decimal.make_from_string (trimmed_white_space (value))
+					last_decimal := l_last_decimal
+					Result := not (l_last_decimal.is_nan)
 				end
 			elseif a_required_type = type_factory.untyped_atomic_type
 				or else a_required_type = type_factory.string_type
@@ -287,7 +291,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-		calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		do
 			create last_boolean_value.make (value.count > 0)
@@ -311,6 +315,7 @@ feature -- Conversion
 			-- Convert `Current' to `a_required_type'
 		local
 			l_value: STRING
+			l_last_decimal: like last_decimal
 		do
 			if a_required_type = type_factory.string_type or
 				a_required_type = type_factory.any_atomic_type or
@@ -350,10 +355,12 @@ feature -- Conversion
 						create {XM_XPATH_INTEGER_VALUE} converted_value.make_from_string (l_value)
 					end
 				elseif a_required_type = type_factory.decimal_type then
-					if last_decimal = Void then
-						create last_decimal.make_from_string (trimmed_white_space (value))
+					l_last_decimal := last_decimal
+					if l_last_decimal = Void then
+						create l_last_decimal.make_from_string (trimmed_white_space (value))
+						last_decimal := l_last_decimal
 					end
-					create {XM_XPATH_DECIMAL_VALUE} converted_value.make (last_decimal)
+					create {XM_XPATH_DECIMAL_VALUE} converted_value.make (l_last_decimal)
 				elseif a_required_type = type_factory.any_uri_type then
 					create {XM_XPATH_ANY_URI_VALUE} converted_value.make (value)
 				elseif a_required_type = type_factory.date_type then
@@ -394,10 +401,10 @@ feature {NONE} -- Implementation
 	value: STRING
 			-- The actual string-value
 
-	double_value: XM_XPATH_DOUBLE_VALUE
+	double_value: detachable XM_XPATH_DOUBLE_VALUE
 			-- Cached result
 
-	last_decimal: MA_DECIMAL
+	last_decimal: detachable MA_DECIMAL
 			-- Cached value from `is_convertible (type_factory.decimal_type)'
 
 invariant

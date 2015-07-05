@@ -5,7 +5,7 @@ note
 		"XPath 1.0 compatibility-mode arithmetic expressons"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -47,79 +47,93 @@ feature -- Optimization
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_type, l_second_type: XM_XPATH_ITEM_TYPE
 			l_action: INTEGER
-			l_expression: XM_XPATH_EXPRESSION
+			l_expression: detachable XM_XPATH_EXPRESSION
 			l_numeric_arithmetic: XM_XPATH_NUMERIC_ARITHMETIC
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if first_operand.is_empty_sequence or second_operand.is_empty_sequence then
 				set_replacement (a_replacement, create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 			else
 				create l_replacement.make (Void)
 				first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_first_operand (l_replacement.item)
-				if first_operand.is_error then
-					set_replacement (a_replacement, first_operand)
-				else
-					l_replacement.put (Void)
-					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-					set_second_operand (l_replacement.item)
-					if second_operand.is_error then
-						set_replacement (a_replacement, second_operand)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					set_first_operand (l_replacement_item)
+					if first_operand.is_error then
+						set_replacement (a_replacement, first_operand)
 					else
-						create l_sequence_type.make_optional_atomic
-						create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-						create l_type_checker
-						l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, True, l_role)
-						if l_type_checker.is_static_type_check_error then
-							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-						else
-							set_first_operand (l_type_checker.checked_expression)
-							l_type := first_operand.item_type
-							set_first_operand (converted_operand (first_operand, l_type))
-							l_type := first_operand.item_type
-							if first_operand.cardinality_is_empty then
-								set_replacement (a_replacement, create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+						l_replacement.put (Void)
+						second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+						check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+							set_second_operand (l_replacement_item_2)
+							if second_operand.is_error then
+								set_replacement (a_replacement, second_operand)
 							else
-								create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-								l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, True, l_other_role)
-								if l_type_checker.is_static_type_check_error then
-									set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-								else
-									set_second_operand (l_type_checker.checked_expression)
-									l_second_type := second_operand.item_type
-									set_second_operand (converted_operand (second_operand, l_second_type))
-									l_second_type := second_operand.item_type
-									if second_operand.cardinality_is_empty then
-										set_replacement (a_replacement, create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+								create l_sequence_type.make_optional_atomic
+								check attached token_name (operator) as l_token_name then
+									create l_role.make (Binary_expression_role, l_token_name, 1, Xpath_errors_uri, "XPTY0004")
+									create l_type_checker
+									l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, True, l_role)
+									if l_type_checker.is_static_type_check_error then
+										check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+											set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+										end
 									else
-										if l_type = type_factory.boolean_type or l_type = type_factory.string_type then
-											l_type := type_factory.numeric_type
-										end
-										if l_second_type = type_factory.boolean_type or l_second_type = type_factory.string_type then
-											l_second_type := type_factory.numeric_type
-										end
-										l_action := action (l_type.primitive_type, l_second_type.primitive_type, operator)
-										inspect
-											l_action
-										when Numeric_arithmetic_action then
-											create l_numeric_arithmetic.make (first_operand, operator, second_operand)
-											l_numeric_arithmetic.set_backwards_compatible_mode
-											l_expression := l_numeric_arithmetic
-										when Date_and_duration_action then
-											create {XM_XPATH_DATE_AND_DURATION} l_expression.make (first_operand, operator, second_operand)
-										when Date_difference_action then
-											create {XM_XPATH_DATE_DIFFERENCE} l_expression.make (first_operand, operator, second_operand)
-										when Duration_addition_action then
-											create {XM_XPATH_DURATION_ADDITION} l_expression.make (first_operand, operator, second_operand)
-										when Duration_multiplication_action then
-											create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (first_operand, operator, second_operand)
-										when Duration_division_action then
-											create {XM_XPATH_DURATION_DIVISION} l_expression.make (first_operand, operator, second_operand)
-										when Unknown_action then
-											-- defer to runtime
-										end
-										if l_expression /= Void then
-											set_replacement (a_replacement, l_expression)
+										check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+											set_first_operand (l_checked_expression)
+											l_type := first_operand.item_type
+											set_first_operand (converted_operand (first_operand, l_type))
+											l_type := first_operand.item_type
+											if first_operand.cardinality_is_empty then
+												set_replacement (a_replacement, create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+											else
+												create l_other_role.make (Binary_expression_role, l_token_name, 2, Xpath_errors_uri, "XPTY0004")
+												l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, True, l_other_role)
+												if l_type_checker.is_static_type_check_error then
+													check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error_2 then
+														set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error_2))
+													end
+												else
+													check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression_2 then
+														set_second_operand (l_checked_expression_2)
+														l_second_type := second_operand.item_type
+														set_second_operand (converted_operand (second_operand, l_second_type))
+														l_second_type := second_operand.item_type
+														if second_operand.cardinality_is_empty then
+															set_replacement (a_replacement, create {XM_XPATH_DOUBLE_VALUE}.make_nan)
+														else
+															if l_type = type_factory.boolean_type or l_type = type_factory.string_type then
+																l_type := type_factory.numeric_type
+															end
+															if l_second_type = type_factory.boolean_type or l_second_type = type_factory.string_type then
+																l_second_type := type_factory.numeric_type
+															end
+															l_action := action (l_type.primitive_type, l_second_type.primitive_type, operator)
+															inspect
+																l_action
+															when Numeric_arithmetic_action then
+																create l_numeric_arithmetic.make (first_operand, operator, second_operand)
+																l_numeric_arithmetic.set_backwards_compatible_mode
+																l_expression := l_numeric_arithmetic
+															when Date_and_duration_action then
+																create {XM_XPATH_DATE_AND_DURATION} l_expression.make (first_operand, operator, second_operand)
+															when Date_difference_action then
+																create {XM_XPATH_DATE_DIFFERENCE} l_expression.make (first_operand, operator, second_operand)
+															when Duration_addition_action then
+																create {XM_XPATH_DURATION_ADDITION} l_expression.make (first_operand, operator, second_operand)
+															when Duration_multiplication_action then
+																create {XM_XPATH_DURATION_MULTIPLICATION} l_expression.make (first_operand, operator, second_operand)
+															when Duration_division_action then
+																create {XM_XPATH_DURATION_DIVISION} l_expression.make (first_operand, operator, second_operand)
+															when Unknown_action then
+																-- defer to runtime
+															end
+															if l_expression /= Void then
+																set_replacement (a_replacement, l_expression)
+															end
+														end
+													end
+												end
+											end
 										end
 									end
 								end
@@ -135,27 +149,29 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
-			l_atomic_value, l_second_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value, l_second_atomic_value: detachable XM_XPATH_ATOMIC_VALUE
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as l_result_item then
 				a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
-			elseif a_result.item.is_error then
+			elseif l_result_item.is_error then
 				-- nothing to do
 			else
-				if not a_result.item.is_atomic_value then
+				if not l_result_item.is_atomic_value then
 					a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 				else
-					l_atomic_value := a_result.item.as_atomic_value
+					l_atomic_value := l_result_item.as_atomic_value
 					a_result.put (Void)
 					if l_atomic_value.is_boolean_value or l_atomic_value.is_string_value or l_atomic_value.is_numeric_value then
 						if l_atomic_value.is_convertible (type_factory.double_type) then
 							l_atomic_value.convert_to_type (type_factory.double_type)
-							l_atomic_value := l_atomic_value.converted_value
+							check postcondition_of_convert_to_type: attached l_atomic_value.converted_value as l_converted_value then
+								l_atomic_value := l_converted_value
+							end
 						else
 							a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 						end
@@ -163,20 +179,22 @@ feature -- Evaluation
 				end
 				if a_result.item = Void then -- no error yet
 					second_operand.evaluate_item (a_result, a_context)
-					if a_result.item = Void then
+					if not attached a_result.item as l_result_item_2 then
 						a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
-					elseif a_result.item.is_error then
+					elseif l_result_item_2.is_error then
 						-- nothing to do
 					else
-						if not a_result.item.is_atomic_value then
+						if not l_result_item_2.is_atomic_value then
 							a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 						else
 							a_result.put (Void)
-							l_second_atomic_value := a_result.item.as_atomic_value
+							l_second_atomic_value := l_result_item_2.as_atomic_value
 							if l_second_atomic_value.is_boolean_value or l_second_atomic_value.is_string_value or l_second_atomic_value.is_numeric_value then
 								if l_second_atomic_value.is_convertible (type_factory.double_type) then
 									l_second_atomic_value.convert_to_type (type_factory.double_type)
-									l_second_atomic_value := l_second_atomic_value.converted_value
+									check postcondition_of_convert_to_type: attached l_second_atomic_value.converted_value as l_converted_value then
+										l_second_atomic_value := l_converted_value
+									end
 								else
 									a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 								end
@@ -185,18 +203,23 @@ feature -- Evaluation
 					end
 				end
 				if a_result.item = Void then -- no error yet
-					evaluate_item_stage_2 (a_result, a_context, l_atomic_value, l_second_atomic_value)
+					check l_atomic_value /= Void and then l_second_atomic_value /= Void then
+						evaluate_item_stage_2 (a_result, a_context, l_atomic_value, l_second_atomic_value)
+					end
 				end
 			end
 		end
 
 feature {NONE} -- Evaluation
 
-	evaluate_item_stage_2 (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE)
+	evaluate_item_stage_2 (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT; a_first_operand, a_second_operand: XM_XPATH_ATOMIC_VALUE)
 			-- Evaluate `Current' as a single item.
 		require
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void
+			a_context_not_void: a_context /= Void
+			a_first_operand_not_void: a_first_operand /= Void
+			a_second_operand_not_void: a_second_operand /= Void
 		local
 			l_action: INTEGER
 			l_numeric_arithmetic: XM_XPATH_NUMERIC_ARITHMETIC
@@ -231,7 +254,9 @@ feature {NONE} -- Evaluation
 				l_string := STRING_.appended_string (l_string, a_second_operand.item_type.conventional_name)
 				l_string := STRING_.appended_string (l_string,  ")")
 				set_last_error_from_string (l_string, Xpath_errors_uri, "XPTY0004", Type_error)
-				a_result.put (create {XM_XPATH_INVALID_VALUE}.make (error_value))
+				check postcondition_of_set_last_error_from_string: attached error_value as l_error_value then
+					a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+				end
 			end
 		end
 

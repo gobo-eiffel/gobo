@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath translate() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,43 +67,45 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_string: STRING
+			l_string: detachable STRING
 			l_source_map, l_target_map: XM_XPATH_STRING_VALUE
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then a_result.item.is_error then
+			if attached a_result.item as a_result_item and then a_result_item.is_error then
 				-- nothing to do
 			else
-				if a_result.item /= Void then
-					l_string := a_result.item.string_value
+				if attached a_result.item as a_result_item then
+					l_string := a_result_item.string_value
 				end
 				if l_string = Void then
 					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 				else
 					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
-					if a_result.item /= Void and then a_result.item.is_error then
+					if attached a_result.item as a_result_item and then a_result_item.is_error then
 						-- nothing to do
 					else
 						check
-							source_map: a_result.item /= Void and then a_result.item.is_string_value
+							source_map: attached a_result.item as a_result_item and then a_result_item.is_string_value
 							-- static typing
-						end
-						l_source_map := a_result.item.as_string_value
-						a_result.put (Void)
-						arguments.item (3).evaluate_item (a_result, a_context)
-						if a_result.item /= Void and then a_result.item.is_error then
-							-- nothing to do
-						else
-							check
-								target_map: a_result.item /= Void and then a_result.item.is_string_value
-								-- static typing
+						then
+							l_source_map := a_result_item.as_string_value
+							a_result.put (Void)
+							arguments.item (3).evaluate_item (a_result, a_context)
+							if attached a_result.item as a_result_item_3 and then a_result_item_3.is_error then
+								-- nothing to do
+							else
+								check
+									target_map: attached a_result.item as a_result_item_3 and then a_result_item_3.is_string_value
+									-- static typing
+								then
+									l_target_map := a_result_item_3.as_string_value
+									a_result.put (create {XM_XPATH_STRING_VALUE}.make (translated_string (l_string, l_source_map.string_value, l_target_map.string_value)))
+								end
 							end
-							l_target_map := a_result.item.as_string_value
-							a_result.put (create {XM_XPATH_STRING_VALUE}.make (translated_string (l_string, l_source_map.string_value, l_target_map.string_value)))
 						end
 					end
 				end
@@ -128,7 +130,8 @@ feature {NONE} -- Implementation
 			target_map_not_void: a_target_map /= Void
 		local
 			an_index, a_count: INTEGER
-			a_char, l_string: STRING
+			a_char: STRING
+			l_string: detachable STRING
 		do
 			from
 				Result := ""
@@ -149,7 +152,7 @@ feature {NONE} -- Implementation
 			translated_string_not_void: Result /= Void
 		end
 
-	translated_character (a_char, a_source_map, a_target_map: STRING): STRING
+	translated_character (a_char, a_source_map, a_target_map: STRING): detachable STRING
 			-- Translate one character
 		require
 			source_map_not_void: a_source_map /= Void

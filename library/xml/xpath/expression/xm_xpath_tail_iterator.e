@@ -5,7 +5,7 @@ note
 		"Objects that select a tail sequence."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,8 +98,9 @@ feature -- Cursor movement
 			elseif not base_iterator.after then
 				base_iterator.forth
 			end
-			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				set_last_error (l_error_value)
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"XPath InstanceOf Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			source_expression_not_void: a_source /= Void
 			target_sequence_type_not_void: a_target_type /= Void
 		do
-			make_unary (a_source)
 			target_type := a_target_type
+			make_unary (a_source)
 			compute_static_properties
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -103,48 +103,50 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_relation: INTEGER
-			l_result: DS_CELL [XM_XPATH_ITEM]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
-					create l_result.make (Void)
-					evaluate_item (l_result, a_context.new_compile_time_context)
-					if l_result.item /= Void then
-						set_replacement (a_replacement, l_result.item.as_atomic_value)
-					end
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
 				else
+					if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
+						create l_result.make (Void)
+						evaluate_item (l_result, a_context.new_compile_time_context)
+						if attached l_result.item as l_result_item then
+							set_replacement (a_replacement, l_result_item.as_atomic_value)
+						end
+					else
 
-					-- See if we can get the answer by static analysis.
+						-- See if we can get the answer by static analysis.
 
-					if target_type.cardinality_subsumes (base_expression.cardinality) then
-						l_relation := type_relationship (base_expression.item_type, target_type.primary_type)
-						if l_relation = Same_item_type or else l_relation = Subsumed_type then
-							create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
-							set_replacement (a_replacement, l_expression)
-						elseif l_relation = Disjoint_types then
-							-- it might still be true - iff both sequences are empty
-							if (not base_expression.cardinality_allows_zero) or (not target_type.cardinality_allows_zero) then
-								create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
+						if target_type.cardinality_subsumes (base_expression.cardinality) then
+							l_relation := type_relationship (base_expression.item_type, target_type.primary_type)
+							if l_relation = Same_item_type or else l_relation = Subsumed_type then
+								create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
 								set_replacement (a_replacement, l_expression)
+							elseif l_relation = Disjoint_types then
+								-- it might still be true - iff both sequences are empty
+								if (not base_expression.cardinality_allows_zero) or (not target_type.cardinality_allows_zero) then
+									create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
+									set_replacement (a_replacement, l_expression)
+								end
 							end
 						end
 					end
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
@@ -159,40 +161,45 @@ feature -- Evaluation
 			an_item: XM_XPATH_ITEM
 			counter: INTEGER
 			finished: BOOLEAN
+			l_last_boolean_value: like last_boolean_value
 		do
 			last_boolean_value := Void
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (an_iterator.error_value)
-			else
-				from
-					counter := 0; finished := False
-					an_iterator.start
-				until
-					finished or else an_iterator.is_error or else an_iterator.after
-				loop
-					an_item := an_iterator.item
-					counter := counter + 1
-					if not target_type.primary_type.matches_item (an_item, False) then
-						create last_boolean_value.make (False); finished := True
-					elseif counter = 2 and then not target_type.cardinality_allows_many then
-						create last_boolean_value.make (False)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if attached an_iterator.error_value as l_error_value then
+					check is_error: an_iterator.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
+				else
+					from
+						counter := 0; finished := False
+						an_iterator.start
+					until
+						finished or else an_iterator.is_error or else an_iterator.after
+					loop
+						an_item := an_iterator.item
+						counter := counter + 1
+						if not target_type.primary_type.matches_item (an_item, False) then
+							create last_boolean_value.make (False); finished := True
+						elseif counter = 2 and then not target_type.cardinality_allows_many then
+							create last_boolean_value.make (False)
+						end
+						an_iterator.forth
 					end
-					an_iterator.forth
-				end
-				if last_boolean_value = Void then
-					if counter = 0 and then not target_type.cardinality_allows_zero then
-						create last_boolean_value.make (False)
-					else
-						create last_boolean_value.make (True)
+					if last_boolean_value = Void then
+						if counter = 0 and then not target_type.cardinality_allows_zero then
+							create last_boolean_value.make (False)
+						else
+							create last_boolean_value.make (True)
+						end
 					end
 				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -211,6 +218,7 @@ feature {NONE} -- Implementation
 			-- Format `operator' for display
 		do
 			-- not used
+			check False then end
 		end
 
 invariant

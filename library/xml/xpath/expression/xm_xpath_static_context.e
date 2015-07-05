@@ -5,7 +5,7 @@ note
 		"XPath static context"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,9 @@ feature -- Access
 	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
 			-- The last variable bound by `bind_variable'
 		do
-			Result := internal_last_bound_variable
+			check attached internal_last_bound_variable as l_internal_last_bound_variable then
+				Result := l_internal_last_bound_variable
+			end
 		ensure
 			variable_not_void: Result /= Void
 		end
@@ -124,7 +126,7 @@ feature -- Access
 			-- Available functions
 		deferred
 		ensure
-				available_functions_not_void: Result /= Void
+			available_functions_not_void: Result /= Void
 		end
 
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
@@ -233,7 +235,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	internal_last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
+	internal_last_bound_variable: detachable XM_XPATH_VARIABLE_DECLARATION
 			-- Result of last sucessfull call to  `bind_variable'
 
 invariant

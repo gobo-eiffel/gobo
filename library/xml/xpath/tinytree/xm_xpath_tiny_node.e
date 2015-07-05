@@ -5,7 +5,7 @@ note
 		"Tiny tree nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,7 @@ feature -- Access
 		require
 			tiny_composite: is_tiny_composite_node
 		do
+			check is_tiny_composite_node: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -65,6 +66,7 @@ feature -- Access
 		require
 			tiny_document: is_tiny_document
 		do
+			check is_tiny_document: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -80,6 +82,7 @@ feature -- Access
 		require
 			tiny_element: is_tiny_element
 		do
+			check is_tiny_element: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -102,10 +105,12 @@ feature -- Access
 	tree: XM_XPATH_TINY_FOREST
 			-- Owning tree
 
-	document: XM_XPATH_TINY_DOCUMENT
+	document: detachable XM_XPATH_TINY_DOCUMENT
 			-- Document that owns this node
 		do
-			Result ?= document_root
+			if attached {XM_XPATH_TINY_DOCUMENT} document_root as l_document_root then
+				Result := l_document_root
+			end
 		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
@@ -129,7 +134,7 @@ feature -- Access
 			Result := tree.name_code_for_node (node_number)
 		end
 
-	parent: XM_XPATH_TINY_COMPOSITE_NODE
+	parent: detachable XM_XPATH_TINY_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
 		local
@@ -188,18 +193,20 @@ feature -- Access
 		do
 			if tree.depth_of (node_number) = 1 then
 				Result := Current
-			elseif cached_parent_node /= Void then
-				Result := cached_parent_node.root
+			elseif attached cached_parent_node as l_cached_parent_node then
+				Result := l_cached_parent_node.root
 			else
 				Result := tree.retrieve_node (tree.root_node (node_number))
 			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
-			Result ?= root
+			if attached {XM_XPATH_DOCUMENT} root as l_root then
+				Result := l_root
+			end
 		end
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
@@ -272,6 +279,7 @@ feature -- Access
 			l_annotation := type_annotation
 			if l_annotation /= type_factory.untyped_atomic_type.fingerprint and l_annotation /= type_factory.untyped_type.fingerprint then
 				todo ("atomized_value", True)
+				check todo: False then end
 			else
 				create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 			end
@@ -305,7 +313,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_parent_node (a_node: XM_XPATH_TINY_COMPOSITE_NODE)
+	set_parent_node (a_node: detachable XM_XPATH_TINY_COMPOSITE_NODE)
 			--
 		do
 			cached_parent_node := a_node
@@ -315,7 +323,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	cached_parent_node: XM_XPATH_TINY_COMPOSITE_NODE
+	cached_parent_node: detachable XM_XPATH_TINY_COMPOSITE_NODE
 			-- Cached parent node
 
 	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
@@ -425,13 +433,15 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		local
-			a_parent_node: XM_XPATH_TINY_NODE
+			a_parent_node: detachable XM_XPATH_TINY_NODE
 		do
 			if node_type = Document_node then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]} Result.make
 			elseif node_type = Attribute_node then
-					a_parent_node := parent
+				a_parent_node := parent
+				check a_parent_node /= Void then
 					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (tree, a_parent_node, a_node_test, True)
+				end
 			else
 				create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (tree, Current, a_node_test, False)
 			end
@@ -458,7 +468,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		local
-			a_parent_node: XM_XPATH_TINY_NODE
+			a_parent_node: detachable XM_XPATH_TINY_NODE
 		do
 			a_parent_node := parent
 			if a_parent_node = Void then
@@ -477,13 +487,15 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		local
-			a_parent_node: XM_XPATH_TINY_NODE
+			a_parent_node: detachable XM_XPATH_TINY_NODE
 		do
 			if node_type = Document_node then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]} Result.make
 			elseif node_type = Attribute_node then
 				a_parent_node := parent
-				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, a_parent_node, a_node_test, False)
+				check a_parent_node /= Void then
+					create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, a_parent_node, a_node_test, False)
+				end
 			else
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, Current, a_node_test, False)
 			end
@@ -510,15 +522,17 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		local
-			a_parent_node: XM_XPATH_TINY_NODE
+			a_parent_node: detachable XM_XPATH_TINY_NODE
 			an_enumeration: XM_XPATH_TINY_PRECEDING_ENUMERATION
 		do
 			if node_type = Document_node then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]} Result.make
 			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
-				create  an_enumeration.make (tree, a_parent_node, a_node_test, True)
-				create {XM_XPATH_PREPEND_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node, an_enumeration)
+				check a_parent_node /= Void then
+					create  an_enumeration.make (tree, a_parent_node, a_node_test, True)
+					create {XM_XPATH_PREPEND_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node, an_enumeration)
+				end
 			else
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, Current, a_node_test, True)
 			end

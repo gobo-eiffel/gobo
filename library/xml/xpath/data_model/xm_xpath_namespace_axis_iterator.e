@@ -5,7 +5,7 @@ note
 		"Objects that iterate over an XPath namespace axis"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			l_undeclared_prefixes: DS_HASH_SET [INTEGER]
 			l_declared_codes: DS_HASH_SET [INTEGER]
 			l_codes: DS_ARRAYED_LIST [INTEGER]
-			l_node: XM_XPATH_NODE
+			l_node: detachable XM_XPATH_NODE
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_uri_code, l_prefix_code: INTEGER --_16
 		do
@@ -82,7 +82,11 @@ feature -- Access
 
 	item: XM_XPATH_NAMESPACE_NODE
 			-- Node at the current position
-
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 feature -- Status report
 
 	before: BOOLEAN
@@ -104,10 +108,17 @@ feature -- Cursor movement
 		do
 			cursor.start; position := 1
 			from
-				if not cursor.after then create item.make (element, cursor.item, position) end
-			until cursor.after or else node_test.matches_item (item, False) loop
-				cursor.forth; position := position + 1
-				if not cursor.after then create item.make (element, cursor.item, position) end
+				if not cursor.after then
+					create internal_item.make (element, cursor.item, position)
+				end
+			until
+				cursor.after or else node_test.matches_item (item, False)
+			loop
+				cursor.forth
+				position := position + 1
+				if not cursor.after then
+					create internal_item.make (element, cursor.item, position)
+				end
 			end
 			index := 1
 		end
@@ -117,10 +128,16 @@ feature -- Cursor movement
 		do
 			cursor.forth; position := position + 1
 			from
-				if not cursor.after then create item.make (element, cursor.item, position) end
-			until cursor.after or else node_test.matches_item (item, False) loop
+				if not cursor.after then
+					create internal_item.make (element, cursor.item, position)
+				end
+			until
+				cursor.after or else node_test.matches_item (item, False)
+			loop
 				cursor.forth; position := position + 1
-			if not cursor.after then create item.make (element, cursor.item, position) end
+				if not cursor.after then
+					create internal_item.make (element, cursor.item, position)
+				end
 			end
 			index := index + 1
 		end
@@ -134,6 +151,9 @@ feature -- Duplication
 		end
 
 feature {NONE} -- Implementation
+
+	internal_item: detachable XM_XPATH_NAMESPACE_NODE
+			-- Node at the current position
 
 	element: XM_XPATH_ELEMENT
 			-- Element whose namespaces will be iterated over

@@ -18,7 +18,7 @@ deferred class XM_XPATH_SINGLETON_NODE_MAPPING_FUNCTION
 
 feature -- Access
 
-	mapped_node (a_node: XM_XPATH_NODE): XM_XPATH_NODE
+	mapped_node (a_node: XM_XPATH_NODE): detachable XM_XPATH_NODE
 			-- `a_node' mapped to zero or one nodes
 		require
 			a_node_may_be_void: True

@@ -5,7 +5,7 @@ note
 		"Routines that support XPath regular expression functions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,10 +34,10 @@ feature {NONE} -- Implementation
 	is_empty_match_ok: BOOLEAN
 			-- Is matching the empty string OK?
 
-	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
+	regexp_cache_entry: detachable XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Cached regular expression
 
-	regexp_error_value: XM_XPATH_ERROR_VALUE
+	regexp_error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Possible error set by `try_to_compile'
 
 	tolerate_empty_string_match
@@ -51,13 +51,15 @@ feature {NONE} -- Implementation
 	try_to_compile (a_flag_argument_position: INTEGER; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Attempt to compile `regexp'.
 		require
+			arguments: arguments /= Void and then arguments.equality_tester ~ expression_tester
 			flag_argument_number: a_flag_argument_position = 0
 				or else ( a_flag_argument_position > 2 and then a_flag_argument_position <= arguments.count)
-				arguments: arguments /= Void and then arguments.equality_tester.is_equal (expression_tester)
 		local
-			a_flags_string, a_key: STRING
+			a_flags_string: detachable STRING
+			a_key: STRING
 			an_expression: XM_XPATH_EXPRESSION
 			a_string_value: XM_XPATH_STRING_VALUE
+			l_regexp_cache_entry: like regexp_cache_entry
 		do
 			regexp_error_value := Void
 			if a_flag_argument_position = 0 then
@@ -73,17 +75,18 @@ feature {NONE} -- Implementation
 				if an_expression.is_string_value then
 					a_string_value := an_expression.as_string_value
 					a_key := composed_key (utf8.to_utf8 (a_string_value.string_value), a_flags_string)
-					regexp_cache_entry :=  shared_regexp_cache.item (a_key)
-					if regexp_cache_entry = Void then
-						create regexp_cache_entry.make (utf8.to_utf8 (a_string_value.string_value), a_flags_string)
-						if regexp_cache_entry.is_error then
-							regexp_cache_entry := Void
+					l_regexp_cache_entry := shared_regexp_cache.item (a_key)
+					if l_regexp_cache_entry = Void then
+						create l_regexp_cache_entry.make (utf8.to_utf8 (a_string_value.string_value), a_flags_string)
+						if l_regexp_cache_entry.is_error then
+							l_regexp_cache_entry := Void
 						else
-							shared_regexp_cache.put (regexp_cache_entry, a_key)
+							shared_regexp_cache.put (l_regexp_cache_entry, a_key)
 						end
 					end
-					if regexp_cache_entry /= Void and not is_empty_match_ok then
-						if regexp_cache_entry.regexp.matches ("") then
+					regexp_cache_entry := l_regexp_cache_entry
+					if l_regexp_cache_entry /= Void and not is_empty_match_ok then
+						if l_regexp_cache_entry.regexp.matches ("") then
 							create regexp_error_value.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Static_error)
 						end
 					end

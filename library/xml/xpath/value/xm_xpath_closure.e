@@ -5,7 +5,7 @@ note
 		"Values that have not yet been evaluated"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
 			context_not_void: a_context /= Void
 		local
-			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			make_value
 			base_expression := an_expression
@@ -150,66 +150,73 @@ feature -- Optimization
 		local
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
-			create_iterator (Void)
-			if last_iterator.is_error then
-				create {XM_XPATH_INVALID_VALUE} last_reduced_value.make (last_iterator.error_value)
-				set_last_error (last_iterator.error_value)
-			else
-				create a_sequence_extent.make (last_iterator)
-				a_sequence_extent.reduce
-				last_reduced_value := a_sequence_extent.last_reduced_value
+			create_iterator (new_dummy_context)
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if attached l_last_iterator.error_value as l_error_value then
+					check is_error: l_last_iterator.is_error end
+					create {XM_XPATH_INVALID_VALUE} last_reduced_value.make (l_error_value)
+					set_last_error (l_error_value)
+				else
+					create a_sequence_extent.make (l_last_iterator)
+					a_sequence_extent.reduce
+					last_reduced_value := a_sequence_extent.last_reduced_value
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
-			last_iterator.start
-			if last_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-			elseif not last_iterator.after then
-				a_result.put (last_iterator.item) -- the assumption is cardinality is zero or one
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				l_last_iterator.start
+				if attached l_last_iterator.error_value as l_error_value then
+					check is_error: l_last_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+				elseif not l_last_iterator.after then
+					a_result.put (l_last_iterator.item) -- the assumption is cardinality is zero or one
+				end
 			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		do
-			if input_iterator = Void then
+			if not attached input_iterator as l_input_iterator then
 				base_expression.create_iterator (saved_xpath_context)
 				input_iterator := base_expression.last_iterator
 				last_iterator := input_iterator
-			elseif input_iterator.is_error then
-				last_iterator := input_iterator
+			elseif l_input_iterator.is_error then
+				last_iterator := l_input_iterator
 			else
 
 				-- This ought not to happen, as a MEMO_CLOSURE should have been selected instead,
 				--  but it does.
 
-				last_iterator := input_iterator.another
+				last_iterator := l_input_iterator.another
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
-			if input_iterator = Void then
+			if not attached input_iterator as l_input_iterator then
 				base_expression.create_node_iterator (saved_xpath_context)
-				input_iterator := base_expression.last_node_iterator
-				last_node_iterator := input_iterator.as_node_iterator
-			elseif input_iterator.is_error then
-				last_node_iterator := input_iterator.as_node_iterator
+				check postcondition_of_create_node_iterator: attached base_expression.last_node_iterator as l_last_node_iterator then
+					input_iterator := l_last_node_iterator
+					last_node_iterator := l_last_node_iterator.as_node_iterator
+				end
+			elseif l_input_iterator.is_error then
+				last_node_iterator := l_input_iterator.as_node_iterator
 			else
 
 				-- This ought not to happen, as a MEMO_CLOSURE should have been selected instead,
 				--  but it does.
 
-				last_node_iterator := input_iterator.another.as_node_iterator
+				last_node_iterator := l_input_iterator.another.as_node_iterator
 			end
-
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT)
@@ -228,11 +235,13 @@ feature  -- Conversion
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM
 			-- Convert to an item
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			evaluate_item (l_result, a_context)
-			Result := l_result.item
+			check postcondition_of_evaluate_item: attached l_result.item as l_result_item then
+				Result := l_result_item
+			end
 		end
 
 feature {XM_XPATH_CLOSURE} -- Local
@@ -243,7 +252,7 @@ feature {XM_XPATH_CLOSURE} -- Local
 	saved_xpath_context: XM_XPATH_CONTEXT
 			-- Context created when the closure was created
 
-	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	input_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Underlying iterator
 
 	depth: INTEGER
@@ -267,7 +276,7 @@ feature {NONE} -- Implementation
 		local
 			a_local_variable_frame, a_saved_local_variable_frame: XM_XPATH_STACK_FRAME
 			an_index, a_depth: INTEGER
-			a_value: XM_XPATH_VALUE
+			a_value: detachable XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
 			slots_used: DS_ARRAYED_LIST [INTEGER]
 			a_slot_number: INTEGER
@@ -280,43 +289,50 @@ feature {NONE} -- Implementation
 			-- What's more, we only copy those variables that the expression actually depends on.
 
 			if base_expression.depends_upon_local_variables then
-				a_local_variable_frame := a_context.local_variable_frame
-				if a_local_variable_frame.variables.count > 0 then
-					slots_used := base_expression.slots_used
-					from
-						create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
-						an_index := 1
-					until
-						is_error or else an_index > slots_used.count
-					loop
-						a_slot_number := slots_used.item (an_index)
-						if a_slot_number <=  a_local_variable_frame.variables.count then
-							a_value := a_local_variable_frame.variables.item (a_slot_number)
-							if a_value /= Void and then a_value.is_closure then
-								a_closure := a_value.as_closure
-								a_depth := a_closure.depth
-								if a_depth >= Maximum_closure_nesting_depth then
-									a_closure.create_iterator (a_context)
-									expression_factory.create_sequence_extent (a_closure.last_iterator)
-									a_value := expression_factory.last_created_closure
-									if a_value.is_error then
-										set_last_error (a_value.error_value)
-									else
+				check attached a_context.local_variable_frame as l_context_local_variable_frame then
+					a_local_variable_frame := l_context_local_variable_frame
+					if a_local_variable_frame.variables.count > 0 then
+						slots_used := base_expression.slots_used
+						from
+							create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
+							an_index := 1
+						until
+							is_error or else an_index > slots_used.count
+						loop
+							a_slot_number := slots_used.item (an_index)
+							if a_slot_number <=  a_local_variable_frame.variables.count then
+								a_value := a_local_variable_frame.variables.item (a_slot_number)
+								if a_value /= Void and then a_value.is_closure then
+									a_closure := a_value.as_closure
+									a_depth := a_closure.depth
+									if a_depth >= Maximum_closure_nesting_depth then
+										a_closure.create_iterator (a_context)
+										check postcondition_of_create_iterator: attached a_closure.last_iterator as l_closure_last_iterator then
+											expression_factory.create_sequence_extent (l_closure_last_iterator)
+											a_value := expression_factory.last_created_closure
+											check postcondition_of_create_sequence_extent: a_value /= Void then
+												if attached a_value.error_value as l_error_value then
+													check is_error: a_value.is_error end
+													set_last_error (l_error_value)
+												else
 
-									end
-								else
-									if a_depth + 1 > depth then
-										depth := a_depth + 1
+												end
+											end
+										end
+									else
+										if a_depth + 1 > depth then
+											depth := a_depth + 1
+										end
 									end
 								end
+								a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
 							end
-							a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
+							an_index := an_index + 1
+						variant
+							slots_used.count + 1 - an_index
 						end
-						an_index := an_index + 1
-					variant
-						slots_used.count + 1 - an_index
+						saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)
 					end
-					saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)
 				end
 			end
 		end

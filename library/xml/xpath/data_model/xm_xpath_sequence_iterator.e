@@ -5,7 +5,7 @@ note
 		"Objects that iterate over an XPath sequence (of values or nodes)"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,10 +36,10 @@ feature -- Access
 			-- The position of the current item;
 			-- This will be zero after creation of the iterator
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Last error
 
-	last_realized_value: XM_XPATH_VALUE
+	last_realized_value: detachable XM_XPATH_VALUE
 			-- Result from calling `realize'
 
 	last_position: INTEGER
@@ -51,12 +51,12 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-
 	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- Iterator over same sequence as `Current', but in reverse order
 		require
 			reversible_iterator: is_reversible_iterator
 		do
+			check is_reversible_iterator: False then end
 		ensure
 			reverse_iterator_not_void: Result /= Void
 		end
@@ -200,6 +200,7 @@ feature -- Conversion
 		require
 			singleton_iterator: is_singleton_iterator
 		do
+			check is_singleton_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -209,6 +210,7 @@ feature -- Conversion
 		require
 			node_iterator: is_node_iterator
 		do
+			check is_node_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -218,6 +220,7 @@ feature -- Conversion
 		require
 			array_iterator: is_array_iterator
 		do
+			check is_array_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -227,6 +230,7 @@ feature -- Conversion
 		require
 			axis_iterator: is_axis_iterator
 		do
+			check is_axis_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -236,6 +240,7 @@ feature -- Conversion
 		require
 			empty_iterator: is_empty_iterator
 		do
+			check is_empty_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -263,8 +268,8 @@ feature -- Evaluation
 			realizable_iterator: is_realizable_iterator
 		do
 		ensure
-			realized_value_not_void: last_realized_value /= Void
-			not_a_closure: not last_realized_value.is_closure
+			realized_value_not_void: attached last_realized_value as l_last_realized_value
+			not_a_closure: not l_last_realized_value.is_closure
 		end
 
 invariant

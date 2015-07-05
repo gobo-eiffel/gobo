@@ -3,8 +3,8 @@
 <library name="xpath" prefix="xm_">
 	<description>
 		description: "Xace file for the Gobo Eiffel XML XPath Library"
-		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		library: "Gobo Eiffel XML XPath Library"
+		copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -23,10 +23,18 @@
 		<cluster name="stand_alone"/>
 		<cluster name="node_test"/>
 		<cluster name="type"/>
-		<cluster name="xpath_xpointer" location="xpointer"  relative="true"/>
+		<cluster name="xpath_xpointer" location="xpointer" relative="true"/>
+		<cluster name="xpath_xslt" location="xslt" relative="true"/>
 		<cluster name="core" />
 	</cluster>
 
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library_core.xace"/>
-
 </library>

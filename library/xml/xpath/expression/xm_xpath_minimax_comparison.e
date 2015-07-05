@@ -2,14 +2,14 @@ note
 
 	description:
 
-	"Objects that handle many-to-many A less-than B comparisons%
-	%by evaluating min(A) < max (B) and similarly for greater-than, etc.%
-	%This expression is only used where it is known that the comparisons%
-	%will all be numeric: that is, where at least one of the operands has%
-	%a static type that is a numeric sequence."
+		"Objects that handle many-to-many A less-than B comparisons%
+		%by evaluating min(A) < max (B) and similarly for greater-than, etc.%
+		%This expression is only used where it is known that the comparisons%
+		%will all be numeric: that is, where at least one of the operands has%
+		%a static type that is a numeric sequence."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,56 +50,64 @@ feature -- Access
 
 feature -- Optimization
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_value: XM_XPATH_VALUE
-			l_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_range: detachable ARRAY [XM_XPATH_NUMERIC_VALUE]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.optimize (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.optimize (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error then
-					set_replacement (a_replacement, second_operand)
-				end
-				if a_replacement.item = Void then
-					-- If either operand is a statically-known list of values, we only need
-					-- to retain the minimum or maximum value, depending on the operator.
-					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone then
-						l_value := first_operand.as_value
-						l_value.create_iterator (Void)
-						l_range := computed_range (l_value.last_iterator, Void)
-						if l_range = Void then
-							set_replacement (a_replacement, false_value)
-						elseif operator = Less_than_token or else operator = Less_equal_token then
-							set_first_operand (l_range.item (1))
-						else
-							set_first_operand (l_range.item (2))
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error then
+					set_replacement (a_replacement, first_operand)
+				else
+					l_replacement.put (Void)
+					second_operand.optimize (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error then
+							set_replacement (a_replacement, second_operand)
 						end
-					end
-					if a_replacement.item = Void then
-						if second_operand.is_value and not second_operand.depends_upon_implicit_timezone then
-							l_value := second_operand.as_value
-							l_value.create_iterator (Void)
-							l_range :=  computed_range (l_value.last_iterator, Void)
-							if l_range = Void then
-								set_replacement (a_replacement, false_value)
-							elseif operator = Greater_than_token or else operator = Greater_equal_token then
-								set_second_operand (l_range.item (1))
-							else
-								set_second_operand (l_range.item (2))
+						if a_replacement.item = Void then
+							-- If either operand is a statically-known list of values, we only need
+							-- to retain the minimum or maximum value, depending on the operator.
+							if first_operand.is_value and not first_operand.depends_upon_implicit_timezone then
+								l_value := first_operand.as_value
+								l_value.create_iterator (new_dummy_context)
+								check postcondition_of_create_iterator: attached l_value.last_iterator as l_last_iterator then
+									l_range := computed_range (l_last_iterator, new_dummy_context)
+									if l_range = Void then
+										set_replacement (a_replacement, false_value)
+									elseif operator = Less_than_token or else operator = Less_equal_token then
+										set_first_operand (l_range.item (1))
+									else
+										set_first_operand (l_range.item (2))
+									end
+								end
+							end
+							if a_replacement.item = Void then
+								if second_operand.is_value and not second_operand.depends_upon_implicit_timezone then
+									l_value := second_operand.as_value
+									l_value.create_iterator (new_dummy_context)
+									check postcondition_of_create_iterator: attached l_value.last_iterator as l_last_iterator then
+										l_range :=  computed_range (l_last_iterator, new_dummy_context)
+										if l_range = Void then
+											set_replacement (a_replacement, false_value)
+										elseif operator = Greater_than_token or else operator = Greater_equal_token then
+											set_second_operand (l_range.item (1))
+										else
+											set_second_operand (l_range.item (2))
+										end
+									end
+								end
+							end
+							if a_replacement.item = Void then
+								a_replacement.put (Current)
 							end
 						end
-					end
-					if a_replacement.item = Void then
-						a_replacement.put (Current)
 					end
 				end
 			end
@@ -110,44 +118,57 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
-			first_range, second_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
+			first_range, second_range: detachable ARRAY [XM_XPATH_NUMERIC_VALUE]
+			l_last_boolean_value: like last_boolean_value
 		do
 			first_operand.create_iterator (a_context)
-			if first_operand.last_iterator.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (first_operand.last_iterator.error_value)
-			else
-				first_range := computed_range (first_operand.last_iterator, a_context)
-				if first_operand.last_iterator.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (first_operand.last_iterator.error_value)
+			check postcondition_of_create_iterator: attached first_operand.last_iterator as l_first_iterator then
+				if attached l_first_iterator.error_value as l_error_value then
+					check is_error: l_first_iterator.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
 				else
-					second_operand.create_iterator (a_context)
-					if second_operand.last_iterator.is_error then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (second_operand.last_iterator.error_value)
+					first_range := computed_range (l_first_iterator, a_context)
+					if attached l_first_iterator.error_value as l_error_value then
+						check is_error: l_first_iterator.is_error end
+						create l_last_boolean_value.make (False)
+						l_last_boolean_value.set_last_error (l_error_value)
+						last_boolean_value := l_last_boolean_value
 					else
-						second_range := computed_range (second_operand.last_iterator, a_context)
-						if second_operand.last_iterator.is_error then
-							create last_boolean_value.make (False)
-							last_boolean_value.set_last_error (second_operand.last_iterator.error_value)
-						else
-							if first_range = Void or else second_range = Void then
-								last_boolean_value := false_value
+						second_operand.create_iterator (a_context)
+						check postcondition_of_create_iterator: attached second_operand.last_iterator as l_second_iterator then
+							if attached l_second_iterator.error_value as l_error_value then
+								check is_error: l_second_iterator.is_error end
+								create l_last_boolean_value.make (False)
+								l_last_boolean_value.set_last_error (l_error_value)
+								last_boolean_value := l_last_boolean_value
 							else
+								second_range := computed_range (l_second_iterator, a_context)
+								if attached l_second_iterator.error_value as l_error_value then
+									check is_error: l_second_iterator.is_error end
+									create l_last_boolean_value.make (False)
+									l_last_boolean_value.set_last_error (l_error_value)
+									last_boolean_value := l_last_boolean_value
+								else
+									if first_range = Void or else second_range = Void then
+										last_boolean_value := false_value
+									else
 
-								-- Now test how the min of one sequence compares to the max of the other
+										-- Now test how the min of one sequence compares to the max of the other
 
-								inspect
-									operator
-								when Less_than_token then
-									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) = -1)
-								when Less_equal_token then
-									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) <= 0)
-								when Greater_than_token then
-									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) = 1)
-								when Greater_equal_token then
-									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) >= 0)
+										inspect
+											operator
+										when Less_than_token then
+											create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) = -1)
+										when Less_equal_token then
+											create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) <= 0)
+										when Greater_than_token then
+											create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) = 1)
+										when Greater_equal_token then
+											create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) >= 0)
+										end
+									end
 								end
 							end
 						end
@@ -156,7 +177,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -165,7 +186,7 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): ARRAY [XM_XPATH_NUMERIC_VALUE]
+	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): detachable ARRAY [XM_XPATH_NUMERIC_VALUE]
 			-- Compute the range of a sequence, ignoring NaNs;
 			-- Not 100% pure - caller checks for iterators going into error status.
 		require

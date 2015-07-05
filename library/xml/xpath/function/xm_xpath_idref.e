@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath idref() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			Precursor (a_replacement)
@@ -91,41 +91,46 @@ feature -- Evaluation
 			l_node: XM_XPATH_NODE
 			l_splitter: ST_SPLITTER
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			last_iterator := Void
 			create l_result.make (Void)
 			arguments.item (2).evaluate_item (l_result, a_context)
-			if l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
-			else
-				check
-					node: l_result.item.is_node
-					-- `required_type' will have ensured this
-				end
-				l_node := l_result.item.as_node.root
-				if l_node.is_document then
-					arguments.item (1).create_iterator (a_context)
-					if arguments.item (1).last_iterator.is_error then
-						last_iterator := arguments.item (1).last_iterator
-					else
-						create l_idrefs.make_default
-						l_idrefs.set_equality_tester (string_equality_tester)
-						l_iterator := arguments.item (1).last_iterator
-						from l_iterator.start until l_iterator.is_error or else l_iterator.after loop
-							create l_splitter.make
-							l_idrefs.append_last (l_splitter.split (l_iterator.item.string_value))
-							l_iterator.forth
-						end
-						if l_iterator.is_error then
-							last_iterator := l_iterator
-						else
-							last_iterator := l_node.as_document.idrefs_nodes (l_idrefs)
-						end
-					end
+			check attached l_result.item as l_result_item_2 then
+				if attached l_result_item_2.error_value as l_error_value then
+					check is_error: l_result_item_2.is_error end
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the idref() function," +
-						" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+					check
+						node: l_result_item_2.is_node
+						-- `required_type' will have ensured this
+					end
+					l_node := l_result_item_2.as_node.root
+					if l_node.is_document then
+						arguments.item (1).create_iterator (a_context)
+						check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator_1 then
+							if l_last_iterator_1.is_error then
+								last_iterator := l_last_iterator_1
+							else
+								create l_idrefs.make_default
+								l_idrefs.set_equality_tester (string_equality_tester)
+								l_iterator := l_last_iterator_1
+								from l_iterator.start until l_iterator.is_error or else l_iterator.after loop
+									create l_splitter.make
+									l_idrefs.append_last (l_splitter.split (l_iterator.item.string_value))
+									l_iterator.forth
+								end
+								if l_iterator.is_error then
+									last_iterator := l_iterator
+								else
+									last_iterator := l_node.as_document.idrefs_nodes (l_idrefs)
+								end
+							end
+						end
+					else
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the idref() function," +
+							" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+					end
 				end
 			end
 		end
@@ -137,46 +142,53 @@ feature -- Evaluation
 			l_node: XM_XPATH_NODE
 			l_splitter: ST_SPLITTER
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			last_node_iterator := Void
 			create l_result.make (Void)
 			arguments.item (2).evaluate_item (l_result, a_context)
-			if l_result.item.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
-			else
-				check
-					node: l_result.item.is_node
-					-- `required_type' will have ensured this
-				end
-				l_node := l_result.item.as_node.root
-				if l_node.is_document then
-					arguments.item (1).create_iterator (a_context)
-					if arguments.item (1).last_iterator.is_error then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (arguments.item (1).last_iterator.error_value)
-					else
-						create l_idrefs.make_default
-						l_idrefs.set_equality_tester (string_equality_tester)
-						l_iterator := arguments.item (1).last_iterator
-						from l_iterator.start until l_iterator.is_error or else l_iterator.after loop
-							create l_splitter.make
-							l_idrefs.append_last (l_splitter.split (l_iterator.item.string_value))
-							l_iterator.forth
-						end
-						if l_iterator.is_error then
-							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_iterator.error_value)
-						else
-							last_node_iterator := l_node.as_document.idrefs_nodes (l_idrefs)
-						end
-					end
+			check attached l_result.item as l_result_item_2 then
+				if attached l_result_item_2.error_value as l_error_value then
+					check is_error: l_result_item_2.is_error end
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
 				else
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("In the idref() function," +
-						" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+					check
+						node: l_result_item_2.is_node
+						-- `required_type' will have ensured this
+					end
+					l_node := l_result_item_2.as_node.root
+					if l_node.is_document then
+						arguments.item (1).create_iterator (a_context)
+						check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+							if attached l_last_iterator.error_value as l_error_value then
+								check is_error: l_last_iterator.is_error end
+								create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+							else
+								create l_idrefs.make_default
+								l_idrefs.set_equality_tester (string_equality_tester)
+								l_iterator := l_last_iterator
+								from l_iterator.start until l_iterator.is_error or else l_iterator.after loop
+									create l_splitter.make
+									l_idrefs.append_last (l_splitter.split (l_iterator.item.string_value))
+									l_iterator.forth
+								end
+								if attached l_iterator.error_value as l_error_value then
+									check is_error: l_iterator.is_error end
+									create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+								else
+									last_node_iterator := l_node.as_document.idrefs_nodes (l_idrefs)
+								end
+							end
+						end
+					else
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("In the idref() function," +
+							" the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
+					end
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -184,17 +196,19 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context)
 			if a_replacement.item = Void then
 				create l_replacement.make (Void)
 				arguments.item (1).set_unsorted (l_replacement, False)
-				if arguments.item (1) /= l_replacement.item then
-					arguments.replace (l_replacement.item, 1)
+				check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+					if arguments.item (1) /= l_replacement_item then
+						arguments.replace (l_replacement_item, 1)
+					end
 				end
 			end
 		end

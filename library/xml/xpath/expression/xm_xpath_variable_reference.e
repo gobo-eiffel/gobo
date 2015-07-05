@@ -5,7 +5,7 @@ note
 	"References to a variable"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,10 +67,10 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
-			if static_type = Void then
+			if not attached static_type as l_static_type then
 				Result := any_item
 			else
-				Result := static_type.primary_type
+				Result := l_static_type.primary_type
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	binding: XM_XPATH_BINDING
+	binding: detachable XM_XPATH_BINDING
 			-- Binding for variable;
 			-- will be `Void' until `fix_up' is called.
 
@@ -113,7 +113,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	last_evaluated_binding: XM_XPATH_VALUE
+	last_evaluated_binding: detachable XM_XPATH_VALUE
 			-- Value from calling `evaluate_variable'
 
 	display (a_level: INTEGER)
@@ -138,7 +138,7 @@ feature -- Status setting
 	compute_intrinsic_dependencies
 			-- Determine the intrinsic dependencies of an expression.
 		do
-			if binding = Void or else not binding.is_global then
+			if not attached binding as l_binding or else not l_binding.is_global then
 				set_intrinsically_depends_upon_local_variables
 			else
 				initialize_intrinsic_dependencies
@@ -147,12 +147,12 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			if constant_value /= Void then
+			if attached constant_value as l_constant_value then
 				binding := Void
-				set_replacement (a_replacement, constant_value)
+				set_replacement (a_replacement, l_constant_value)
 			else
 				check
 					static_type_not_void: static_type /= Void
@@ -161,23 +161,23 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- Note that `set_static_type' might be called after type-checking, so:
 
-			if constant_value /= Void then
+			if attached constant_value as l_constant_value then
 				binding := Void
-				set_replacement (a_replacement, constant_value)
+				set_replacement (a_replacement, l_constant_value)
 			else
 				a_replacement.put (Current)
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
+			l_promotion: detachable XM_XPATH_EXPRESSION
 		do
 			if a_offer.action = Inline_variable_references then
 				a_offer.accept (Current)
@@ -201,12 +201,15 @@ feature -- Evaluation
 			l_binding: like last_evaluated_binding
 		do
 			evaluate_variable (a_context)
-			if last_evaluated_binding.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_binding.error_value)
-			else
-				l_binding := last_evaluated_binding
-				l_binding.create_iterator (a_context)
-				last_iterator := l_binding.last_iterator
+			check postcondition_of_evaluate_variable: attached last_evaluated_binding as l_last_evaluated_binding then
+				if attached l_last_evaluated_binding.error_value as l_error_value then
+					check is_error: l_last_evaluated_binding.is_error end
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+				else
+					l_binding := l_last_evaluated_binding
+					l_binding.create_iterator (a_context)
+					last_iterator := l_binding.last_iterator
+				end
 			end
 		end
 
@@ -214,11 +217,14 @@ feature -- Evaluation
 			-- Create an iterator over the values of a sequence
 		do
 			evaluate_variable (a_context)
-			if last_evaluated_binding.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (last_evaluated_binding.error_value)
-			else
-				last_evaluated_binding.create_node_iterator (a_context)
-				last_node_iterator := last_evaluated_binding.last_node_iterator
+			check postcondition_of_evaluate_variable: attached last_evaluated_binding as l_last_evaluated_binding then
+				if attached l_last_evaluated_binding.error_value as l_error_value then
+					check is_error: l_last_evaluated_binding.is_error end
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+				else
+					l_last_evaluated_binding.create_node_iterator (a_context)
+					last_node_iterator := l_last_evaluated_binding.last_node_iterator
+				end
 			end
 		end
 
@@ -226,21 +232,26 @@ feature -- Evaluation
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_variable (a_context)
-			if last_evaluated_binding.is_error then
-				a_context.report_fatal_error (last_evaluated_binding.error_value)
-			else
-				last_evaluated_binding.generate_events (a_context)
+			check postcondition_of_evaluate_variable: attached last_evaluated_binding as l_last_evaluated_binding then
+				if attached l_last_evaluated_binding.error_value as l_error_value then
+					check is_error: l_last_evaluated_binding.is_error end
+					a_context.report_fatal_error (l_error_value)
+				else
+					l_last_evaluated_binding.generate_events (a_context)
+				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_variable (a_context)
-			if last_evaluated_binding.is_convertible_to_item (a_context) then
-				a_result.put (last_evaluated_binding.as_item (a_context))
-			else
-				a_result.put (Void)
+			check postcondition_of_evaluate_variable: attached last_evaluated_binding as l_last_evaluated_binding then
+				if l_last_evaluated_binding.is_convertible_to_item (a_context) then
+					a_result.put (l_last_evaluated_binding.as_item (a_context))
+				else
+					a_result.put (Void)
+				end
 			end
 		end
 
@@ -249,15 +260,17 @@ feature -- Evaluation
 		require
 			binding_not_void: binding /= Void
 		do
-			binding.evaluate_variable (a_context)
-			last_evaluated_binding := binding.last_evaluated_binding
+			check precondition: attached binding as l_binding then
+				l_binding.evaluate_variable (a_context)
+				last_evaluated_binding := l_binding.last_evaluated_binding
+			end
 		ensure
 			evaluation: last_evaluated_binding /= Void
 		end
 
 feature -- Element change
 
-	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY)
+	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: detachable XM_XPATH_VALUE; a_properties: detachable XM_XPATH_STATIC_PROPERTY)
 			-- Fix up the static type of this variable reference
 			-- Optionally, supply a constant value for the variable.
 			-- Also supplies other static properties of the expression to which the variable is bound,
@@ -270,7 +283,7 @@ feature -- Element change
 				reset_static_properties
 			end
 			constant_value := a_constant_value
-			if	a_properties /= Void then
+			if a_properties /= Void then
 				merge_dependencies (a_properties)
 				set_cardinality (add_cardinality (a_properties.cardinality, a_type.cardinality))
 				clone_special_properties (a_properties)
@@ -298,10 +311,10 @@ feature {XM_XPATH_VARIABLE_REFERENCE} -- Access
 
 feature {NONE} -- Implementation
 
-	static_type: XM_XPATH_SEQUENCE_TYPE
+	static_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Static type
 
-	constant_value: XM_XPATH_VALUE
+	constant_value: detachable XM_XPATH_VALUE
 			-- Optional constant value
 
 	native_implementations: INTEGER
@@ -312,26 +325,23 @@ feature {NONE} -- Implementation
 
 	compute_cardinality
 			-- Compute cardinality.
-		local
-			l_assignation: XM_XPATH_ASSIGNATION
 		do
-			if static_type = Void then
-				if binding = Void then
+			if not attached static_type as l_static_type then
+				if not attached binding as l_binding then
 					set_cardinality_zero_or_more
 				else
-					l_assignation ?= binding
-					if l_assignation /= Void then
+					if attached {XM_XPATH_ASSIGNATION} l_binding as l_assignation then
 						if l_assignation.is_let_expression then
-							set_cardinality (binding.required_type.cardinality)
+							set_cardinality (l_binding.required_type.cardinality)
 						else
 							set_cardinality_exactly_one
 						end
 					else
-						set_cardinality (binding.required_type.cardinality)
+						set_cardinality (l_binding.required_type.cardinality)
 					end
 				end
 			else
-				set_cardinality (static_type.cardinality)
+				set_cardinality (l_static_type.cardinality)
 			end
 		end
 
@@ -348,14 +358,15 @@ feature {NONE} -- Implementation
 			a_slot_number: INTEGER
 		do
 			check
-				fixed_up: binding /= Void
+				fixed_up: attached binding as l_binding
 				-- How to prove this is always the case?
-			end
-			if not binding.is_global then
-				a_slot_number := binding.slot_number
-				if a_slot_number > 0 then
-					if not a_set.has (a_slot_number) then
-						a_set.force_new (a_slot_number)
+			then
+				if not l_binding.is_global then
+					a_slot_number := l_binding.slot_number
+					if a_slot_number > 0 then
+						if not a_set.has (a_slot_number) then
+							a_set.force_new (a_slot_number)
+						end
 					end
 				end
 			end

@@ -5,7 +5,7 @@ note
 	"Objects that return a non-empty sequence, or raise an error"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,8 +79,9 @@ feature -- Cursor movement
 		do
 			index := 1
 			base_iterator.start
-			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				set_last_error (l_error_value)
 			elseif base_iterator.after then
 				create l_error.make_from_string (STRING_.concat("An empty sequence is not allowed as the ", role_locator.message),
 															role_locator.namespace_uri, role_locator.error_code, Type_error)

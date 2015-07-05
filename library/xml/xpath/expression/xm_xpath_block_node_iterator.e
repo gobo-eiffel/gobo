@@ -5,7 +5,7 @@ note
 		"Objects that iterate over a sequence of nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,6 +41,11 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
@@ -51,7 +56,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -60,7 +65,7 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		do
 			Result := child_index >= child_list.count
-				and then (child_iterator = Void or else child_iterator.after)
+				and then (not attached child_iterator as l_child_iterator or else l_child_iterator.after)
 		end
 
 feature -- Cursor movement
@@ -68,48 +73,63 @@ feature -- Cursor movement
 	forth
 			-- Move to next position
 		local
-			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_child_iterator: like child_iterator
 		do
 			index := index + 1
-			if child_iterator = Void then
+			l_child_iterator := child_iterator
+			if l_child_iterator = Void then
 				from
 				until
-					(child_iterator /= Void and then (child_iterator.is_error or else not child_iterator.after)) or else child_index = child_list.count
+					(l_child_iterator /= Void and then (l_child_iterator.is_error or else not l_child_iterator.after)) or else child_index = child_list.count
 				loop
 					child_index := child_index + 1
 					child_list.item (child_index).create_node_iterator (context)
-					l_iterator := child_list.item (child_index).last_node_iterator
-					if not l_iterator.is_error then
-						child_iterator := l_iterator
-					else
-						create {XM_XPATH_INVALID_NODE_ITERATOR} child_iterator.make (l_iterator.error_value)
+					check postcondition_of_create_node_iterator: attached child_list.item (child_index).last_node_iterator as l_iterator then
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							create {XM_XPATH_INVALID_NODE_ITERATOR} l_child_iterator.make (l_error_value)
+							child_iterator := l_child_iterator
+						else
+							l_child_iterator := l_iterator
+							child_iterator := l_child_iterator
+						end
+						if not l_child_iterator.is_error then
+							l_child_iterator.start
+						end
 					end
-					if not child_iterator.is_error then child_iterator.start end
 				end
 			else
-				child_iterator.forth
-				if child_iterator.after and then child_index < child_list.count then
+				l_child_iterator.forth
+				if l_child_iterator.after and then child_index < child_list.count then
 					from
 					until
-						(child_iterator /= Void and then child_iterator.is_error or else not child_iterator.after) or else child_index = child_list.count
+						(l_child_iterator /= Void and then (l_child_iterator.is_error or else not l_child_iterator.after)) or else child_index = child_list.count
 					loop
 						child_index := child_index + 1
 						child_list.item (child_index).create_node_iterator (context)
-						child_iterator := child_list.item (child_index).last_node_iterator
-						if not child_iterator.is_error then child_iterator.start end
+						check postcondition_of_create_node_iterator: attached child_list.item (child_index).last_node_iterator as l_iterator then
+							l_child_iterator := l_iterator
+							child_iterator := l_child_iterator
+							if not l_child_iterator.is_error then
+								l_child_iterator.start
+							end
+						end
 					end
 				end
 			end
-			if child_iterator.is_error then
-				set_last_error (child_iterator.error_value)
-			elseif child_iterator.after then
-				check
-					last_child: child_index >= child_list.count
-					-- routine logic
+			check l_child_iterator /= Void then
+				if attached l_child_iterator.error_value as l_error_value then
+					check is_error: l_child_iterator.is_error end
+					set_last_error (l_error_value)
+				elseif l_child_iterator.after then
+					check
+						last_child: child_index >= child_list.count
+						-- routine logic
+					end
+					internal_item := Void
+				else
+					internal_item := l_child_iterator.item
 				end
-				item := Void
-			else
-				item := child_iterator.item
 			end
 		end
 
@@ -129,11 +149,14 @@ feature {NONE} -- Implementation
 	context: XM_XPATH_CONTEXT
 			-- Dynamic context
 
-	child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	child_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterator over current child
 
 	child_index: INTEGER
 			-- Current child being iterated
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Node at the current position
 
 invariant
 

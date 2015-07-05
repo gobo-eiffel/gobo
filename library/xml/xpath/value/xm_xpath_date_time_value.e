@@ -5,7 +5,7 @@ note
 		"Objects that represent XPath xs:dateTime values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,9 +91,13 @@ feature -- Access
 		do
 			create a_date_time_parser.make_1_1
 			if zoned then
-				Result := a_date_time_parser.zoned_date_time_to_string (zoned_date_time)
+				check attached zoned_date_time as l_zoned_date_time then
+					Result := a_date_time_parser.zoned_date_time_to_string (l_zoned_date_time)
+				end
 			else
-				Result := a_date_time_parser.date_time_to_string (local_date_time)
+				check attached local_date_time as l_local_date_time then
+					Result := a_date_time_parser.date_time_to_string (l_local_date_time)
+				end
 			end
 		end
 
@@ -101,7 +105,9 @@ feature -- Access
 			-- Same value as `Current', but without a time zone
 		do
 			if zoned then
-				create Result.make_from_date_time (zoned_date_time.date_time)
+				check attached zoned_date_time as l_zoned_date_time then
+					create Result.make_from_date_time (l_zoned_date_time.date_time)
+				end
 			else
 				Result := Current
 			end
@@ -120,12 +126,16 @@ feature -- Access
 		do
 			create a_zone.make (an_offset.duration.time_duration)
 			if not zoned then
-				create a_zoned_dt.make (local_date_time, a_zone)
-				create Result.make_from_zoned_date_time (a_zoned_dt)
+				check attached local_date_time as l_local_date_time then
+					create a_zoned_dt.make (l_local_date_time, a_zone)
+					create Result.make_from_zoned_date_time (a_zoned_dt)
+				end
 			else
-				a_dt := a_zone.date_time_from (zoned_date_time.date_time, zoned_date_time.time_zone)
-				create a_zoned_dt.make (a_dt, a_zone)
-				create Result.make_from_zoned_date_time (a_zoned_dt)
+				check attached zoned_date_time as l_zoned_date_time then
+					a_dt := a_zone.date_time_from (l_zoned_date_time.date_time, l_zoned_date_time.time_zone)
+					create a_zoned_dt.make (a_dt, a_zone)
+					create Result.make_from_zoned_date_time (a_zoned_dt)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -134,8 +144,8 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code value
 		do
-			if zoned_date_time = Void then
-				Result := local_date_time.hash_code
+			if attached local_date_time as l_local_date_time then
+				Result := l_local_date_time.hash_code
 			else
 
 				-- Equality implies same `hash_code', but
@@ -148,17 +158,21 @@ feature -- Access
 	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME
 			-- Date_Time adjusted to UTC via implicit time zone
 		do
-			Result := a_context.implicit_timezone.date_time_to_utc (local_date_time)
+			check precondition_not_zoned: attached local_date_time as l_local_date_time then
+				Result := a_context.implicit_timezone.date_time_to_utc (l_local_date_time)
+			end
 		end
 
 	utc_date_time: DT_DATE_TIME
 			-- Date_Time adjusted to UTC
 		do
-			if cached_utc_date_time /= Void then
-				Result := cached_utc_date_time
+			if attached cached_utc_date_time as l_cached_utc_date_time then
+				Result := l_cached_utc_date_time
 			else
-				cached_utc_date_time := zoned_date_time.date_time_to_utc
-				Result := cached_utc_date_time
+				check precondition_zoned: attached zoned_date_time as l_zoned_date_time then
+					Result := l_zoned_date_time.date_time_to_utc
+					cached_utc_date_time := Result
+				end
 			end
 		end
 
@@ -171,9 +185,13 @@ feature -- Comparison
 				if zoned then
 					Result := other.as_date_time_value.zoned
 						and then utc_date_time.three_way_comparison (other.as_date_time_value.utc_date_time) = 0
+				elseif other.as_date_time_value.zoned then
+					Result := False
 				else
-					Result := not other.as_date_time_value.zoned
-						and then local_date_time.three_way_comparison (other.as_date_time_value.local_date_time) = 0
+					check attached local_date_time as l_local_date_time and attached other.as_date_time_value.local_date_time as l_other_local_date_time then
+						Result := not other.as_date_time_value.zoned
+							and then l_local_date_time.three_way_comparison (l_other_local_date_time) = 0
+					end
 				end
 			end
 		end
@@ -187,28 +205,36 @@ feature -- Comparison
 			a_date_time := other.as_date_time_value
 			if zoned = a_date_time.zoned then
 				if zoned then
-					create dt2.make_from_date_time (a_date_time.zoned_date_time.date_time.date, a_date_time.zoned_date_time.date_time.time)
-					a_date_time.zoned_date_time.time_zone.convert_to_utc (dt2)
-					create dt1.make_from_date_time (zoned_date_time.date_time.date, zoned_date_time.date_time.time)
-					zoned_date_time.time_zone.convert_to_utc (dt1)
-					Result := dt1.three_way_comparison (dt2)
+					check attached zoned_date_time as l_zoned_date_time and attached a_date_time.zoned_date_time as l_other_zoned_date_time then
+						create dt2.make_from_date_time (l_other_zoned_date_time.date_time.date, l_other_zoned_date_time.date_time.time)
+						l_other_zoned_date_time.time_zone.convert_to_utc (dt2)
+						create dt1.make_from_date_time (l_zoned_date_time.date_time.date, l_zoned_date_time.date_time.time)
+						l_zoned_date_time.time_zone.convert_to_utc (dt1)
+						Result := dt1.three_way_comparison (dt2)
+					end
 				else
-					create dt2.make_from_date_time (a_date_time.local_date_time.date, a_date_time.local_date_time.time)
-					create dt1.make_from_date_time (local_date_time.date, local_date_time.time)
-					Result := dt1.three_way_comparison (dt2)
+					check attached local_date_time as l_local_date_time and attached a_date_time.local_date_time as l_other_local_date_time then
+						create dt2.make_from_date_time (l_other_local_date_time.date, l_other_local_date_time.time)
+						create dt1.make_from_date_time (l_local_date_time.date, l_local_date_time.time)
+						Result := dt1.three_way_comparison (dt2)
+					end
 				end
  			elseif zoned then
-				create dt2.make_from_date_time (a_date_time.local_date_time.date, a_date_time.local_date_time.time)
-				a_context.implicit_timezone.convert_to_utc (dt2)
-				create dt1.make_from_date_time (zoned_date_time.date_time.date, zoned_date_time.date_time.time)
-				zoned_date_time.time_zone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+ 				check attached zoned_date_time as l_zoned_date_time and attached a_date_time.local_date_time as l_other_local_date_time then
+					create dt2.make_from_date_time (l_other_local_date_time.date, l_other_local_date_time.time)
+					a_context.implicit_timezone.convert_to_utc (dt2)
+					create dt1.make_from_date_time (l_zoned_date_time.date_time.date, l_zoned_date_time.date_time.time)
+					l_zoned_date_time.time_zone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				end
 			else -- `other' is zoned
-				create dt2.make_from_date_time (a_date_time.zoned_date_time.date_time.date, a_date_time.zoned_date_time.date_time.time)
-				a_date_time.zoned_date_time.time_zone.convert_to_utc (dt2)
-				create dt1.make_from_date_time (local_date_time.date, local_date_time.time)
-				a_context.implicit_timezone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+				check attached local_date_time as l_local_date_time and attached a_date_time.zoned_date_time as l_other_zoned_date_time then
+					create dt2.make_from_date_time (l_other_zoned_date_time.date_time.date, l_other_zoned_date_time.date_time.time)
+					l_other_zoned_date_time.time_zone.convert_to_utc (dt2)
+					create dt1.make_from_date_time (l_local_date_time.date, l_local_date_time.time)
+					a_context.implicit_timezone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				end
 			end
 		end
 
@@ -276,45 +302,73 @@ feature -- Conversions
 				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			elseif a_required_type = type_factory.date_type then
 				if zoned then
-					create {XM_XPATH_DATE_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_DATE_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_DATE_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_DATE_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			elseif a_required_type = type_factory.time_type then
 				if zoned then
-					create {XM_XPATH_TIME_VALUE} converted_value.make_from_zoned_time (zoned_date_time.zoned_time)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_TIME_VALUE} converted_value.make_from_zoned_time (l_zoned_date_time.zoned_time)
+					end
 				else
-					create {XM_XPATH_TIME_VALUE} converted_value.make_from_time (local_date_time.time)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_TIME_VALUE} converted_value.make_from_time (l_local_date_time.time)
+					end
 				end
 			elseif a_required_type = type_factory.g_year_month_type then
 				if zoned then
-					create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			elseif a_required_type = type_factory.g_year_type then
 				if zoned then
-					create {XM_XPATH_YEAR_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_YEAR_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_YEAR_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_YEAR_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			elseif a_required_type = type_factory.g_month_type then
 				if zoned then
-					create {XM_XPATH_MONTH_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_MONTH_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_MONTH_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_MONTH_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			elseif a_required_type = type_factory.g_month_day_type then
 				if zoned then
-					create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			elseif a_required_type = type_factory.g_day_type then
 				if zoned then
-					create {XM_XPATH_DAY_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
+					check attached zoned_date_time as l_zoned_date_time then
+						create {XM_XPATH_DAY_VALUE} converted_value.make_from_zoned_date (l_zoned_date_time.zoned_date)
+					end
 				else
-					create {XM_XPATH_DAY_VALUE} converted_value.make_from_date (local_date_time.date)
+					check attached local_date_time as l_local_date_time then
+						create {XM_XPATH_DAY_VALUE} converted_value.make_from_date (l_local_date_time.date)
+					end
 				end
 			end
 		end
@@ -328,14 +382,20 @@ feature -- Basic operations
 			a_zoned_date_time: like zoned_date_time
 		do
 			if zoned then
-				a_date_time := zoned_date_time.date_time.twin
+				check attached zoned_date_time as l_zoned_date_time then
+					a_date_time := l_zoned_date_time.date_time.twin
+				end
 			else
-				a_date_time := local_date_time.twin
+				check attached local_date_time as l_local_date_time then
+					a_date_time := l_local_date_time.twin
+				end
 			end
 			a_date_time.add_duration (a_duration.duration)
 			if zoned then
-				create a_zoned_date_time.make (a_date_time, zoned_date_time.time_zone.twin)
-				create Result.make_from_zoned_date_time (a_zoned_date_time)
+				check attached zoned_date_time as l_zoned_date_time then
+					create a_zoned_date_time.make (a_date_time, l_zoned_date_time.time_zone.twin)
+					create Result.make_from_zoned_date_time (a_zoned_date_time)
+				end
 			else
 				create Result.make_from_date_time (a_date_time)
 			end
@@ -343,7 +403,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	cached_utc_date_time: DT_DATE_TIME
+	cached_utc_date_time: detachable DT_DATE_TIME
 			-- Cached `Result' for `utc_date_time'
 
 invariant

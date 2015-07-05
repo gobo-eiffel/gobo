@@ -5,7 +5,7 @@ note
 		"Tiny tree Attribute nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,9 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number of node in original source document, or -1 if not known
 		do
-			Result := parent.line_number
+			check attached parent as l_parent then
+				Result := l_parent.line_number
+			end
 		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
@@ -56,24 +58,30 @@ feature -- Access
 
 			-- Note - the offset is to allow room for namespace nodes
 
-			create Result.make_with_offset (parent.sequence_number.high_word, node_number - tree.alpha_value (tree.attribute_parent (node_number)))
+			check attached parent as l_parent then
+				create Result.make_with_offset (l_parent.sequence_number.high_word, node_number - tree.alpha_value (tree.attribute_parent (node_number)))
+			end
 		end
 
-	parent: XM_XPATH_TINY_COMPOSITE_NODE
+	parent: detachable XM_XPATH_TINY_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
 		local
 			a_node: XM_XPATH_TINY_NODE
 		do
 			a_node := tree.retrieve_node (tree.attribute_parent (node_number))
-			if a_node.is_tiny_composite_node then Result := a_node.as_tiny_composite_node end
+			if a_node.is_tiny_composite_node then
+				Result := a_node.as_tiny_composite_node
+			end
 		end
 
 	root: XM_XPATH_NODE
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		do
-			Result := parent.root
+			check attached parent as l_parent then
+				Result := l_parent.root
+			end
 		end
 
 	string_value: STRING

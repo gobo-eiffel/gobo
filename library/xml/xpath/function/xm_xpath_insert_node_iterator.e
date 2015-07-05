@@ -5,7 +5,7 @@ note
 		"Objects that insert a subsequence of nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,13 +43,18 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := item = Void
+			Result := internal_item = Void
 		end
 
 feature -- Cursor movement
@@ -67,26 +72,28 @@ feature -- Cursor movement
 				else
 					insertion_iterator.forth
 				end
-				if insertion_iterator.is_error then
-					set_last_error (insertion_iterator.error_value)
-					item := Void
+				if attached insertion_iterator.error_value as l_error_value then
+					check is_error: insertion_iterator.is_error end
+					set_last_error (l_error_value)
+					internal_item := Void
 				elseif not insertion_iterator.before and then insertion_iterator.after then
 					is_inserting := False
 					if not base_iterator.before and then base_iterator.after then
-						item := Void
+						internal_item := Void
 					else
 						base_iterator.start
-						if base_iterator.is_error then
-							set_last_error (base_iterator.error_value)
-							item := Void
+						if attached base_iterator.error_value as l_error_value then
+							check is_error: base_iterator.is_error end
+							set_last_error (l_error_value)
+							internal_item := Void
 						elseif base_iterator.after then
-							item := Void
+							internal_item := Void
 						else
-							item := base_iterator.item
+							internal_item := base_iterator.item
 						end
 					end
 				else
-					item := insertion_iterator.item
+					internal_item := insertion_iterator.item
 				end
 			else
 				if index = insert_position then
@@ -95,25 +102,27 @@ feature -- Cursor movement
 					else
 						insertion_iterator.forth
 					end
-					if insertion_iterator.is_error then
-						set_last_error (insertion_iterator.error_value)
-						item := Void
+					if attached insertion_iterator.error_value as l_error_value then
+						check is_error: insertion_iterator.is_error end
+						set_last_error (l_error_value)
+						internal_item := Void
 					elseif not insertion_iterator.before and then insertion_iterator.after then
 						if base_iterator.before then
 							base_iterator.start
 						else
 							base_iterator.forth
 						end
-						if base_iterator.is_error then
-							set_last_error (base_iterator.error_value)
-							item := Void
+						if attached base_iterator.error_value as l_error_value then
+							check is_error: base_iterator.is_error end
+							set_last_error (l_error_value)
+							internal_item := Void
 						elseif base_iterator.after then
-							item := Void
+							internal_item := Void
 						else
-							item := base_iterator.item
+							internal_item := base_iterator.item
 						end
 					else
-						item := insertion_iterator.item
+						internal_item := insertion_iterator.item
 					end
 				else
 					if base_iterator.before then
@@ -121,11 +130,12 @@ feature -- Cursor movement
 					else
 						base_iterator.forth
 					end
-					if base_iterator.is_error then
-						set_last_error (base_iterator.error_value)
-						item := Void
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
+						set_last_error (l_error_value)
+						internal_item := Void
 					elseif base_iterator.after then
-						item := Void
+						internal_item := Void
 						if index < insert_position then
 							is_inserting := True
 							if insertion_iterator.before then
@@ -133,17 +143,18 @@ feature -- Cursor movement
 							else
 								insertion_iterator.forth
 							end
-							if insertion_iterator.is_error then
-								set_last_error (insertion_iterator.error_value)
-								item := Void
+							if attached insertion_iterator.error_value as l_error_value then
+								check is_error: insertion_iterator.is_error end
+								set_last_error (l_error_value)
+								internal_item := Void
 							elseif not insertion_iterator.before and then insertion_iterator.after then
-								item := Void
+								internal_item := Void
 							else
-								item := insertion_iterator.item
+								internal_item := insertion_iterator.item
 							end
 						end
 					else
-						item := base_iterator.item
+						internal_item := base_iterator.item
 					end
 				end
 			end
@@ -170,6 +181,9 @@ feature {NONE} -- Implementation
 
 	is_inserting: BOOLEAN
 			-- Are we inserting?
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Node at the current position
 
 invariant
 

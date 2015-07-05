@@ -5,7 +5,7 @@ note
 		"Tiny-tree Document collections"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -114,7 +114,7 @@ feature -- Access
 	character_buffer: STRING
 			-- The charater contents of the contained documents
 
-	comment_buffer: STRING
+	comment_buffer: detachable STRING
 			-- Buffer for comments, created when needed
 
 	number_of_nodes: INTEGER
@@ -144,10 +144,10 @@ feature -- Access
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
-			if element_type_map = Void then
+			if not attached element_type_map as l_element_type_map then
 				Result := type_factory.untyped_type.fingerprint
-			elseif element_type_map.has (a_node_number)  then
-				Result := element_type_map.item (a_node_number)
+			elseif l_element_type_map.has (a_node_number)  then
+				Result := l_element_type_map.item (a_node_number)
 			else
 				Result := type_factory.untyped_type.fingerprint
 			end
@@ -209,7 +209,9 @@ feature -- Access
 		require
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
-			Result := prior_nodes_index.item (a_node_number)
+			check precondition_node_number_is_valid: attached prior_nodes_index as l_prior_nodes_index then
+				Result := l_prior_nodes_index.item (a_node_number)
+			end
 		end
 
 	namespace_parent (an_index: INTEGER): INTEGER
@@ -249,7 +251,9 @@ feature -- Access
 		require
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
 		do
-			Result := attribute_values.item (an_attribute_number)
+			check precondition_attribute_number_is_valid: attached attribute_values.item (an_attribute_number) as l_value then
+				Result := l_value
+			end
 		end
 
 	retrieve_next_sibling (a_node_number: INTEGER): INTEGER
@@ -283,10 +287,10 @@ feature -- Access
 		require
 			attribute_number_is_valid: is_attribute_number_valid (an_attribute_number)
 		do
-			if attribute_type_codes = Void then
+			if not attached attribute_type_codes as l_attribute_type_codes then
 				Result := Untyped_atomic_type_code
 			else
-				Result := attribute_type_codes.item (an_attribute_number)
+				Result := l_attribute_type_codes.item (an_attribute_number)
 			end
 		end
 
@@ -310,8 +314,8 @@ feature -- Access
 		require
 			valid_node_number: is_node_number_valid (a_node_number)
 		do
-			if line_number_map /= Void then
-				Result := line_number_map.line_number (a_node_number)
+			if attached line_number_map as l_line_number_map then
+				Result := l_line_number_map.line_number (a_node_number)
 			else
 				Result := 0
 			end
@@ -362,17 +366,17 @@ feature -- Access
 			minus_one_or_valid_node: Result /= -1 implies is_node_number_valid (Result)
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING
+	unparsed_entity_system_id (an_entity_name: STRING): detachable STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
-			if entity_table = Void then
+			if not attached entity_table as l_entity_table then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -381,17 +385,17 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING
+	unparsed_entity_public_id (an_entity_name: STRING): detachable STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
-			if entity_table = Void then
+			if not attached entity_table as l_entity_table then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -526,14 +530,16 @@ feature -- Status setting
 			-- On demand, make an index for quick access to preceding-sibling nodes
 		local
 			a_prior_index, a_next_node: INTEGER
+			l_prior_nodes_index: like prior_nodes_index
 		do
-			create prior_nodes_index.make_filled (0, 1, last_node_added)
+			create l_prior_nodes_index.make_filled (0, 1, last_node_added)
+			prior_nodes_index := l_prior_nodes_index
 			from
 				a_prior_index := 1
 			until
 				a_prior_index > last_node_added
 			loop
-				prior_nodes_index.put (-1, a_prior_index)
+				l_prior_nodes_index.put (-1, a_prior_index)
 				a_prior_index := a_prior_index + 1
 			variant
 				last_node_added - a_prior_index + 1
@@ -545,7 +551,7 @@ feature -- Status setting
 			loop
 				a_next_node := next_sibling_indices.item (a_prior_index)
 				if a_next_node > a_prior_index then
-					prior_nodes_index.put (a_prior_index, a_next_node)
+					l_prior_nodes_index.put (a_prior_index, a_next_node)
 				end
 				a_prior_index := a_prior_index + 1
 			variant
@@ -586,8 +592,8 @@ feature -- Element change
 			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
 			positive_line_number: a_line_number >= 0
 		do
-			if line_number_map /= Void then
-				line_number_map.set_line_number(a_node_number, a_line_number)
+			if attached line_number_map as l_line_number_map then
+				l_line_number_map.set_line_number(a_node_number, a_line_number)
 			end
 		end
 
@@ -659,7 +665,7 @@ feature -- Element change
 			next_sibling_set: next_sibling_indices.item (which_node) = a_next_node
 		end
 
-	add_attribute (a_document: XM_XPATH_TINY_DOCUMENT; a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING)
+	add_attribute (a_document: detachable XM_XPATH_TINY_DOCUMENT; a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING)
 			-- Add an attribute
 		local
 			a_new_size, an_index, another_type_code: INTEGER
@@ -668,6 +674,7 @@ feature -- Element change
 			a_splitter: ST_SPLITTER
 			some_idrefs: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
+			l_attribute_type_codes: like attribute_type_codes
 		do
 			number_of_attributes := number_of_attributes + 1
 			attribute_parents.force (a_parent, number_of_attributes)
@@ -681,25 +688,28 @@ feature -- Element change
 			--	another_type_code := a_type_code
 			--end
 			if another_type_code /= Untyped_atomic_type_code then
-				if attribute_type_codes = Void then
-					create attribute_type_codes.make_filled (0, 1, number_of_attributes)
+				l_attribute_type_codes := attribute_type_codes
+				if l_attribute_type_codes = Void then
+					create l_attribute_type_codes.make_filled (0, 1, number_of_attributes)
+					attribute_type_codes := l_attribute_type_codes
 					from
 						an_index := 1
 					until
 						an_index = number_of_attributes
 					loop
-						attribute_type_codes.put (Untyped_atomic_type_code, an_index)
+						l_attribute_type_codes.put (Untyped_atomic_type_code, an_index)
 					variant
 						number_of_attributes + 1 - an_index
 					end
 				end
 			end
-			if attribute_type_codes /= Void then
-				if attribute_type_codes.count < number_of_attributes then
+			l_attribute_type_codes := attribute_type_codes
+			if l_attribute_type_codes /= Void then
+				if l_attribute_type_codes.count < number_of_attributes then
 					a_new_size := last_node_added.max (number_of_attributes * 2)
-					INTEGER_ARRAY_.resize (attribute_type_codes, 1, a_new_size)
+					INTEGER_ARRAY_.resize (l_attribute_type_codes, 1, a_new_size)
 				end
-				attribute_type_codes.put (another_type_code, number_of_attributes)
+				l_attribute_type_codes.put (another_type_code, number_of_attributes)
 			end
 
 			if alpha.item (a_parent) = 0 then alpha.put (number_of_attributes, a_parent) end
@@ -762,26 +772,29 @@ feature -- Element change
 	next_comment_start: INTEGER
 			-- Start index of next comment to be stored
 		do
-			if comment_buffer = Void then
+			if not attached comment_buffer as l_comment_buffer then
 				Result := 1
 			else
-				Result := comment_buffer.count + 1
+				Result := l_comment_buffer.count + 1
 			end
 		ensure
 			strictly_positive_result: Result > 0
 			void_definition: comment_buffer = Void implies Result = 1
-			non_void_definition: comment_buffer /= Void implies Result = comment_buffer.count + 1
+			non_void_definition: attached comment_buffer as l_comment_buffer implies Result = l_comment_buffer.count + 1
 		end
 
 	store_comment (a_comment_string: STRING)
 			-- Store comment or processing instruction test
 		require
 			data_not_void: a_comment_string /= Void
+		local
+			l_comment_buffer: like comment_buffer
 		do
-			if comment_buffer = Void then
+			l_comment_buffer := comment_buffer
+			if l_comment_buffer = Void then
 				comment_buffer := STRING_.cloned_string (a_comment_string)
 			else
-				comment_buffer := STRING_.appended_string (comment_buffer, a_comment_string)
+				comment_buffer := STRING_.appended_string (l_comment_buffer, a_comment_string)
 			end
 		ensure
 			comment_buffer_created: comment_buffer /= Void
@@ -798,9 +811,9 @@ feature -- Element change
 	condense
 			-- Conditionally release unused memory.
 		local
-			some_node_kinds, some_name_codes, some_next_siblings, an_alpha, a_beta, a_depth: ARRAY [INTEGER]
-			some_namespace_parents, some_namespace_codes, some_attribute_parents, some_attribute_codes, some_attribute_type_codes: ARRAY [INTEGER]
-			some_attribute_values: ARRAY [STRING]
+			some_node_kinds, some_name_codes, some_next_siblings, an_alpha, a_beta, a_depth: detachable ARRAY [INTEGER]
+			some_namespace_parents, some_namespace_codes, some_attribute_parents, some_attribute_codes, some_attribute_type_codes: detachable ARRAY [INTEGER]
+			some_attribute_values: detachable ARRAY [detachable STRING]
 		do
 
 			-- If there is more than one tree in the forest,
@@ -808,25 +821,61 @@ feature -- Element change
 
 			if root_index < 2 then
 				if number_of_nodes * 3 < node_kinds.count or else node_kinds.count - number_of_nodes > 20000 then
-					create some_node_kinds.make_filled (0, 1, number_of_nodes); copy_integer_array (node_kinds, some_node_kinds); node_kinds := some_node_kinds; some_node_kinds := Void
-					create some_name_codes.make_filled (0, 1, number_of_nodes); copy_integer_array (name_codes, some_name_codes); name_codes := some_name_codes; some_name_codes := Void
-					create some_next_siblings.make_filled (0, 1, number_of_nodes); copy_integer_array (next_sibling_indices, some_next_siblings); next_sibling_indices := some_next_siblings; some_next_siblings := Void
-					create an_alpha.make_filled (0, 1, number_of_nodes); copy_integer_array (alpha, an_alpha); alpha := an_alpha; an_alpha := Void
-					create a_beta.make_filled (0, 1, number_of_nodes); copy_integer_array (beta, a_beta); beta := a_beta; a_beta := Void
-					create a_depth.make_filled (0, 1, number_of_nodes); copy_integer_array (depth, a_depth); depth := a_depth; a_depth := Void
+					create some_node_kinds.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (node_kinds, some_node_kinds)
+					node_kinds := some_node_kinds
+					some_node_kinds := Void
+					create some_name_codes.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (name_codes, some_name_codes)
+					name_codes := some_name_codes
+					some_name_codes := Void
+					create some_next_siblings.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (next_sibling_indices, some_next_siblings)
+					next_sibling_indices := some_next_siblings
+					some_next_siblings := Void
+					create an_alpha.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (alpha, an_alpha)
+					alpha := an_alpha
+					an_alpha := Void
+					create a_beta.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (beta, a_beta)
+					beta := a_beta
+					a_beta := Void
+					create a_depth.make_filled (0, 1, number_of_nodes)
+					copy_integer_array (depth, a_depth)
+					depth := a_depth
+					a_depth := Void
 					-- TODO: type codes when schema-aware
 				end
 				if number_of_attributes * 3 < attribute_parents.count or else attribute_parents.count - number_of_attributes > 1000 then
-					create some_attribute_parents.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_parents, some_attribute_parents); attribute_parents := some_attribute_parents; some_attribute_parents := Void
-					create some_attribute_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_codes, some_attribute_codes); attribute_codes := some_attribute_codes; some_attribute_codes := Void
-					create some_attribute_values.make_filled (Void, 1, number_of_attributes); copy_string_array (attribute_values, some_attribute_values); attribute_values := some_attribute_values; some_attribute_values := Void
-					if attribute_type_codes /= Void then
-						create some_attribute_type_codes.make_filled (0, 1, number_of_attributes); copy_integer_array (attribute_type_codes, some_attribute_type_codes); attribute_type_codes := some_attribute_type_codes; some_attribute_type_codes := Void
+					create some_attribute_parents.make_filled (0, 1, number_of_attributes)
+					copy_integer_array (attribute_parents, some_attribute_parents)
+					attribute_parents := some_attribute_parents
+					some_attribute_parents := Void
+					create some_attribute_codes.make_filled (0, 1, number_of_attributes)
+					copy_integer_array (attribute_codes, some_attribute_codes)
+					attribute_codes := some_attribute_codes
+					some_attribute_codes := Void
+					create some_attribute_values.make_filled (Void, 1, number_of_attributes)
+					copy_string_array (attribute_values, some_attribute_values)
+					attribute_values := some_attribute_values
+					some_attribute_values := Void
+					if attached attribute_type_codes as l_attribute_type_codes then
+						create some_attribute_type_codes.make_filled (0, 1, number_of_attributes)
+						copy_integer_array (l_attribute_type_codes, some_attribute_type_codes)
+						attribute_type_codes := some_attribute_type_codes
+						some_attribute_type_codes := Void
 					end
 				end
 				if number_of_namespaces * 3 < namespace_parents.count then
-					create some_namespace_parents.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_parents, some_namespace_parents); namespace_parents := some_namespace_parents; some_namespace_parents := Void
-					create some_namespace_codes.make_filled (0, 1, number_of_namespaces); copy_integer_array (namespace_codes, some_namespace_codes); namespace_codes := some_namespace_codes; some_namespace_codes := Void
+					create some_namespace_parents.make_filled (0, 1, number_of_namespaces)
+					copy_integer_array (namespace_parents, some_namespace_parents)
+					namespace_parents := some_namespace_parents
+					some_namespace_parents := Void
+					create some_namespace_codes.make_filled (0, 1, number_of_namespaces)
+					copy_integer_array (namespace_codes, some_namespace_codes)
+					namespace_codes := some_namespace_codes
+					some_namespace_codes := Void
 				end
 				character_buffer := character_buffer.substring (1, character_buffer.count)
 			end
@@ -850,17 +899,20 @@ feature -- Element change
 			system_id_map.set_system_id (a_node_number, a_system_id)
 		end
 
-	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING)
+	set_unparsed_entity (a_name: STRING; a_system_id, a_public_id: detachable STRING)
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
 			entity_name_not_void: a_name /= Void
 		local
-			an_id_list: DS_ARRAYED_LIST [STRING]
+			an_id_list: DS_ARRAYED_LIST [detachable STRING]
+			l_entity_table: like entity_table
 		do
-			if entity_table = Void then
-				create entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+			l_entity_table := entity_table
+			if l_entity_table = Void then
+				create l_entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+				entity_table := l_entity_table
 			end
-			if entity_table.has (a_name) then
+			if l_entity_table.has (a_name) then
 				-- Validation error - we will ignore duplicates
 			else
 				create an_id_list.make (2)
@@ -898,7 +950,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
+	entity_table: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
 
 	document_list: DS_ARRAYED_LIST [XM_XPATH_TINY_DOCUMENT]
@@ -913,10 +965,10 @@ feature {NONE} -- Implementation
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids
 
-	line_number_map: XM_XPATH_LINE_NUMBER_MAP
+	line_number_map: detachable XM_XPATH_LINE_NUMBER_MAP
 			-- Maps sequence numbers to line numbers
 
-	element_type_map: DS_HASH_TABLE [INTEGER, INTEGER]
+	element_type_map: detachable DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Maps Element types to node numbers
 
 	node_kinds: ARRAY [INTEGER]
@@ -956,14 +1008,14 @@ feature {NONE} -- Implementation
 	attribute_codes: ARRAY [INTEGER]
 			-- Name of attribute, as an index into the name pool
 
-	attribute_values: ARRAY [STRING]
+	attribute_values: ARRAY [detachable STRING]
 			-- Value of attribute
 
-	attribute_type_codes: ARRAY [INTEGER]
+	attribute_type_codes: detachable ARRAY [INTEGER]
 			-- Type annotations;
 			-- Only created if at least one attribute actually has a type
 
-	prior_nodes_index: ARRAY [INTEGER]
+	prior_nodes_index: detachable ARRAY [INTEGER]
 			-- Index of preceding-siblings
 			-- Constructed only when required
 
@@ -995,7 +1047,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	copy_string_array (a_source, a_target: ARRAY [STRING])
+	copy_string_array (a_source, a_target: ARRAY [detachable STRING])
 			-- Copy contents of `a_source' to `a_target'.
 		require
 			source_not_void: a_source /= Void

@@ -5,7 +5,7 @@ note
 		"Objects that can act as parents of XPath Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,7 @@ feature -- Access
 		require
 			computed_expression: is_computed_expression
 		do
+			check precondition_computed_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

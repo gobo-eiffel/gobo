@@ -5,7 +5,7 @@ note
 		"Objects that provide a context for parsing an expression appearing in a context other than a stylesheet"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			-- TODO
 		do
 			print ("{XM_XPATH_STAND_ALONE_CONTEXT}.make_upon_node not implemented!%N")
+			check False then end
 		end
 
 feature -- Access
@@ -87,9 +88,11 @@ feature -- Access
 			-- This routine MUST be redefined for a custom-host language
 
 			if customized_host_language then
-				Result := Void
+				Result := ""
 			elseif basic_xslt_processor or else schema_aware_processor then
 				Result := "Stand-alone XPath evaluator"
+			else
+				Result := ""
 			end
 		end
 
@@ -133,7 +136,7 @@ feature -- Access
 			Result := namespaces.item (an_xml_prefix)
 		end
 
-	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): detachable STRING
 			-- Namespace URI corresponding to a given prefix
 		do
 			if a_prefix.count = 0 and then not use_default_namespace then
@@ -337,7 +340,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	namespaces /= Void
+	namespaces_not_void: namespaces /= Void
 	default_collation_name: default_collation_name /= Void
 	variables: variables /= Void
 	warnings_implies_backwards_compatibility: warnings_to_std_error implies is_backwards_compatible_mode

@@ -5,7 +5,7 @@ note
 		"Objects that enumerate a nodeset that is the difference of two other nodesets."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,9 @@ feature -- Access
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
 		do
-			Result := current_node
+			check precondition_not_off: attached current_node as l_current_node then
+				Result := l_current_node
+			end
 		end
 
 	is_node_iterator: BOOLEAN
@@ -58,7 +60,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -94,7 +96,7 @@ feature {NONE} -- Implementation
 	first_iterator, second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterators across the two sets
 
-	current_node: like item
+	current_node: detachable like item
 			-- Current item
 
 	advance
@@ -109,13 +111,15 @@ feature {NONE} -- Implementation
 				first_iterator.forth
 			end
 
-			if first_iterator.is_error then
-				set_last_error (first_iterator.error_value)
+			if attached first_iterator.error_value as l_error_value then
+				check is_error: first_iterator.is_error end
+				set_last_error (l_error_value)
 				current_node := Void
 			elseif first_iterator.after then
 				current_node := Void
-			elseif second_iterator.is_error then
-				set_last_error (second_iterator.error_value)
+			elseif attached second_iterator.error_value as l_error_value then
+				check is_error: second_iterator.is_error end
+				set_last_error (l_error_value)
 				current_node := Void
 			elseif second_iterator.after then
 				current_node := first_iterator.item
@@ -147,8 +151,9 @@ feature {NONE} -- Implementation
 					current_node := first_node
 				elseif comparison = 0 then
 					first_iterator.forth
-					if first_iterator.is_error then
-						set_last_error (first_iterator.error_value)
+					if attached first_iterator.error_value as l_error_value then
+						check is_error: first_iterator.is_error end
+						set_last_error (l_error_value)
 						finished := True
 						current_node := Void
 					elseif first_iterator.after then
@@ -156,8 +161,9 @@ feature {NONE} -- Implementation
 						current_node := Void
 					else
 						second_iterator.forth
-						if second_iterator.is_error then
-							set_last_error (second_iterator.error_value)
+						if attached second_iterator.error_value as l_error_value then
+							check is_error: second_iterator.is_error end
+							set_last_error (l_error_value)
 							finished := True
 							current_node := Void
 						elseif second_iterator.after then
@@ -167,8 +173,9 @@ feature {NONE} -- Implementation
 					end
 				else
 					second_iterator.forth
-					if second_iterator.is_error then
-						set_last_error (second_iterator.error_value)
+					if attached second_iterator.error_value as l_error_value then
+						check is_error: second_iterator.is_error end
+						set_last_error (l_error_value)
 						finished := True
 						current_node := Void
 					elseif second_iterator.after then

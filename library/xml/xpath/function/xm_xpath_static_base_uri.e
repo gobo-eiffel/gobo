@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath static-base-uri() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,11 +55,12 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- no arguments
+			check False then end
 		end
 
 feature -- Evaluation
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			set_replacement (a_replacement, create {XM_XPATH_ANY_URI_VALUE}.make (a_context.base_uri.full_reference))

@@ -5,7 +5,7 @@ note
 		"Objects that indicate the type of a list item"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SIMPLE_TYPE
 		redefine
-
+			base_type
 		end
 
 	XM_XPATH_TYPE
@@ -29,7 +29,10 @@ feature -- Access
 			-- TODO
 		end
 
-	super_type: XM_XPATH_ITEM_TYPE
+	base_type: XM_XPATH_SCHEMA_TYPE
+			-- Base type
+
+	super_type: detachable XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction
 		do
 			-- TODO
@@ -66,6 +69,7 @@ feature -- Conversion
 			-- Representation of this type name for use in error messages;
 			-- Where this is a QName, it will use conventional prefixes.
 		do
+			check not_implemented_yet: False then end
 			-- TODO
 		end
 

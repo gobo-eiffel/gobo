@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath string-to-codepoints() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			check
@@ -76,20 +76,21 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
-			l_item: XM_XPATH_ITEM
+			l_item: detachable XM_XPATH_ITEM
 			l_string: STRING
 			l_array: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE]
 			l_index, l_count: INTEGER
 			l_integer: XM_XPATH_INTEGER_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			arguments.item (1).evaluate_item (l_result, a_context)
 			l_item := l_result.item
 			if l_item = Void then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif l_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
+			elseif attached l_item.error_value as l_error_value then
+				check is_error: l_item.is_error end
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 			else
 				l_string := l_item.string_value
 				if l_string.is_empty then

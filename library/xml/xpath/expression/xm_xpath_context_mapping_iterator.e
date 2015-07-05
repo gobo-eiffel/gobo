@@ -8,7 +8,7 @@ note
 	%a series of such items, which each in turn become the context item."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,9 @@ feature {NONE} -- Initialization
 		do
 			mapping_function := a_mapping_function
 			context := a_context
-			base_iterator := context.current_iterator
+			check precondition_current_iterator_not_void: attached a_context.current_iterator as l_context_current_iterator then
+				base_iterator := l_context_current_iterator
+			end
 		ensure
 			mapping_function_set: mapping_function = a_mapping_function
 			context_set: context = a_context
@@ -44,13 +46,18 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value at `index'
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := (item = Void)
+			Result := (internal_item = Void)
 		end
 
 feature -- Cursor movement
@@ -65,21 +72,22 @@ feature -- Cursor movement
 			until
 				l_finished
 			loop
-				if results_iterator /= Void then
-					if results_iterator.after then
-						item := Void
+				if attached results_iterator as l_results_iterator then
+					if l_results_iterator.after then
+						internal_item := Void
 						results_iterator := Void
 						l_finished := base_iterator.after
 					else
-						results_iterator.forth
-						if results_iterator.is_error then
-							set_last_error (results_iterator.error_value)
+						l_results_iterator.forth
+						if attached l_results_iterator.error_value as l_error_value then
+							check is_error: l_results_iterator.is_error end
+							set_last_error (l_error_value)
 							l_finished := True
-						elseif results_iterator.after then
-							item := Void
+						elseif l_results_iterator.after then
+							internal_item := Void
 							l_finished := base_iterator.after
 						else
-							item := results_iterator.item
+							internal_item := l_results_iterator.item
 							l_finished := True
 						end
 					end
@@ -91,27 +99,31 @@ feature -- Cursor movement
 					else
 						base_iterator.forth
 					end
-					if base_iterator.is_error then
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
 						l_finished := True
-						set_last_error (base_iterator.error_value)
+						set_last_error (l_error_value)
 					elseif base_iterator.after then
 						results_iterator := Void
-						item := Void
+						internal_item := Void
 						l_finished := True
 					else
 						mapping_function.map (context)
-						results_iterator := mapping_function.last_mapped_sequence
-						if results_iterator.is_error then
-							l_finished := True
-							set_last_error (results_iterator.error_value)
-						else
-							results_iterator.start
-							if results_iterator.after then
-								item := Void
-								-- this is the only branch which the loop will continue
-							else
-								item := results_iterator.item
+						check postcondition_of_map: attached mapping_function.last_mapped_sequence as l_results_iterator then
+							results_iterator := l_results_iterator
+							if attached l_results_iterator.error_value as l_error_value then
+								check is_error: l_results_iterator.is_error end
 								l_finished := True
+								set_last_error (l_error_value)
+							else
+								l_results_iterator.start
+								if l_results_iterator.after then
+									internal_item := Void
+									-- this is the only branch which the loop will continue
+								else
+									internal_item := l_results_iterator.item
+									l_finished := True
+								end
 							end
 						end
 					end
@@ -147,8 +159,11 @@ feature {NONE} -- Implementation
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator from `context'
 
-	results_iterator: like base_iterator
+	results_iterator: detachable like base_iterator
 			-- Sequence from `mapping_function'
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value at `index'
 
 invariant
 

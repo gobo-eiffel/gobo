@@ -5,7 +5,7 @@ note
 		"XPath range expressons"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,83 +80,99 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			l_type_checker: XM_XPATH_TYPE_CHECKER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error then
-					set_replacement (a_replacement, second_operand)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error then
+					set_replacement (a_replacement, first_operand)
 				else
-					create l_sequence_type.make_optional_integer
-					create l_role.make (Binary_expression_role, "to", 1, Xpath_errors_uri, "XPTY0004")
-					create l_type_checker
-					l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
-					if l_type_checker.is_static_type_check_error then
-						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-					else
-						set_first_operand (l_type_checker.checked_expression)
-						create l_other_role.make (Binary_expression_role, "to", 2, Xpath_errors_uri, "XPTY0004")
-						l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, l_other_role)
-						if l_type_checker.is_static_type_check_error then
-							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+					l_replacement.put (Void)
+					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error then
+							set_replacement (a_replacement, second_operand)
 						else
-							set_second_operand (l_type_checker.checked_expression)
-							a_replacement.put (Current)
+							create l_sequence_type.make_optional_integer
+							create l_role.make (Binary_expression_role, "to", 1, Xpath_errors_uri, "XPTY0004")
+							create l_type_checker
+							l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
+							if l_type_checker.is_static_type_check_error then
+								check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+									set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+								end
+							else
+								check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+									set_first_operand (l_checked_expression)
+									create l_other_role.make (Binary_expression_role, "to", 2, Xpath_errors_uri, "XPTY0004")
+									l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, l_other_role)
+									if l_type_checker.is_static_type_check_error then
+										check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error_2 then
+											set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error_2))
+										end
+									else
+										check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression_2 then
+											set_second_operand (l_checked_expression_2)
+											a_replacement.put (Current)
+										end
+									end
+								end
+							end
 						end
 					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_integer, l_other_integer: INTEGER_64
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_integer_range: XM_XPATH_INTEGER_RANGE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.optimize (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.optimize (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error then
-					set_replacement (a_replacement, second_operand)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error then
+					set_replacement (a_replacement, first_operand)
 				else
-					if first_operand.is_machine_integer_value and second_operand.is_machine_integer_value then
-						l_integer := first_operand.as_machine_integer_value.as_integer
-						l_other_integer := second_operand.as_machine_integer_value.as_integer
-						if l_integer > l_other_integer then
-							set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
-						elseif l_integer = l_other_integer then
-							create l_integer_value.make (l_integer)
-							set_replacement (a_replacement, l_integer_value)
-						elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then
-							create l_integer_range.make (l_integer.to_integer_32, l_other_integer.to_integer_32)
-							set_replacement (a_replacement, l_integer_range)
+					l_replacement.put (Void)
+					second_operand.optimize (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error then
+							set_replacement (a_replacement, second_operand)
 						else
-							a_replacement.put (Current)
+							if first_operand.is_machine_integer_value and second_operand.is_machine_integer_value then
+								l_integer := first_operand.as_machine_integer_value.as_integer
+								l_other_integer := second_operand.as_machine_integer_value.as_integer
+								if l_integer > l_other_integer then
+									set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+								elseif l_integer = l_other_integer then
+									create l_integer_value.make (l_integer)
+									set_replacement (a_replacement, l_integer_value)
+								elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then
+									create l_integer_range.make (l_integer.to_integer_32, l_other_integer.to_integer_32)
+									set_replacement (a_replacement, l_integer_range)
+								else
+									a_replacement.put (Current)
+								end
+							else
+								a_replacement.put (Current)
+							end
 						end
-					else
-						a_replacement.put (Current)
 					end
 				end
 			end
@@ -168,28 +184,30 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			l_integer_value, l_other_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 		do
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 			else
-				if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
+				if not (l_result_item.is_machine_integer_value or l_result_item.is_integer_value) then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
-					l_item := l_result.item
+					l_item := l_result_item
 					create l_result.make (Void)
 					second_operand.evaluate_item (l_result, a_context)
-					if l_result.item = Void then
+					if not attached l_result.item as l_result_item_2 then
 						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-					elseif l_result.item /= Void and then l_result.item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
+					elseif attached l_result_item_2.error_value as l_error_value then
+						check is_error: l_result_item_2.is_error end
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 					else
-						if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
+						if not (l_result_item_2.is_machine_integer_value or l_result_item_2.is_integer_value) then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						else
 							if l_item.is_integer_value then
@@ -197,14 +215,14 @@ feature -- Evaluation
 									create {XM_XPATH_MACHINE_INTEGER_VALUE} l_item.make (l_item.as_integer_value.as_integer)
 								end
 							end
-							if l_result.item.is_integer_value then
-								if l_result.item.as_integer_value.is_platform_integer then
-									l_result.put (create {XM_XPATH_MACHINE_INTEGER_VALUE}.make (l_result.item.as_integer_value.as_integer))
+							if l_result_item_2.is_integer_value then
+								if l_result_item_2.as_integer_value.is_platform_integer then
+									l_result.put (create {XM_XPATH_MACHINE_INTEGER_VALUE}.make (l_result_item_2.as_integer_value.as_integer))
 								end
 							end
-							if l_item.is_machine_integer_value and l_result.item.is_machine_integer_value then
+							if l_item.is_machine_integer_value and l_result_item_2.is_machine_integer_value then
 								l_integer_value := l_item.as_machine_integer_value
-								l_other_integer_value := l_result.item.as_machine_integer_value
+								l_other_integer_value := l_result_item_2.as_machine_integer_value
 								if l_integer_value.value > l_other_integer_value.value then
 									create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 								else

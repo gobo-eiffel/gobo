@@ -28,7 +28,11 @@ feature {NONE} -- Initialization
 			parser_not_void: a_parser /= Void
 		do
 			parser := a_parser
-			resolver ?= parser.entity_resolver
+			if attached {XM_URI_EXTERNAL_RESOLVER} parser.entity_resolver as l_resolver then
+				resolver := l_resolver
+			else
+				resolver := Void
+			end
 		ensure
 			parser_set: parser = a_parser
 		end
@@ -39,10 +43,10 @@ feature -- Access
 			-- Current SYSTEM ID;
 			-- If this is a URL, then it must be fully resolved
 		do
-			if resolver = Void then
-				Result := ""
+			if attached resolver as l_resolver then
+				Result := l_resolver.uri.full_reference
 			else
-				Result := resolver.uri.full_reference
+				Result := ""
 			end
 		end
 
@@ -57,7 +61,7 @@ feature {NONE} -- Implementation
 	parser: XM_PARSER
 			-- XML parser
 
-	resolver: XM_URI_EXTERNAL_RESOLVER
+	resolver: detachable XM_URI_EXTERNAL_RESOLVER
 			-- Entity resolver
 
 invariant

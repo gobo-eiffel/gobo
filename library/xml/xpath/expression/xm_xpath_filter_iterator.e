@@ -5,7 +5,7 @@ note
 		"Objects that filter a sequence using a filter expression."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,9 @@ feature -- Access
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
-			Result := current_item
+			check precondition_not_off: attached current_item as l_current_item then
+				Result := l_current_item
+			end
 		end
 
 feature -- Status report
@@ -105,13 +107,13 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	current_item: like item
+	current_item: detachable like item
 			-- Current item
 
 	advance
 			-- Move to next matching node.
 		local
-			l_item: like item
+			l_item: detachable like item
 			l_matched: BOOLEAN
 		do
 			from
@@ -124,8 +126,9 @@ feature {NONE} -- Implementation
 				else
 					base_iterator.forth
 				end
-				if	base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
+				if attached base_iterator.error_value as l_error_value then
+					check is_error: base_iterator.is_error end
+					set_last_error (l_error_value)
 				elseif not base_iterator.after then
 					l_item := base_iterator.item
 					test_match
@@ -133,9 +136,11 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if is_error then
-				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
-				current_item.set_last_error (error_value)
+			if attached error_value as l_error_value then
+				check is_error: is_error end
+				create {XM_XPATH_BOOLEAN_VALUE} l_item.make (False) -- we need SOMETHING to set an error upon!
+				l_item.set_last_error (l_error_value)
+				current_item := l_item
 			elseif last_match_test then
 				current_item := l_item
 			else

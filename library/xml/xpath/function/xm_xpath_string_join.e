@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath string-join() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_expression: XM_XPATH_EXPRESSION
@@ -82,7 +82,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context:  XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -93,49 +93,56 @@ feature -- Evaluation
 			--  separator argument unless there are at least two items in the sequence.
 
 			arguments.item (1).create_iterator (a_context)
-			l_iterator := arguments.item (1).last_iterator
-			if l_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-			else
-				l_iterator.start
-				if l_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-				elseif l_iterator.after then
-					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 				else
-					l_string := l_iterator.item.string_value
-					l_iterator.forth
-					if l_iterator.is_error then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+					l_iterator.start
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 					elseif l_iterator.after then
-						a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
+						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 					else
-
-						-- Type checking ensured that the separator was not an empty sequence.
-
-						arguments.item (2).evaluate_item (a_result, a_context)
-						check
-							second_string_not_void: a_result.item /= Void
-							-- static typing
-						end
-						if a_result.item.is_error then
-							-- nothing to do
+						l_string := l_iterator.item.string_value
+						l_iterator.forth
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+						elseif l_iterator.after then
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
 						else
-							l_separator := a_result.item.string_value
-							l_result := STRING_.cloned_string (l_string)
-							from
-							until
-								l_iterator.is_error or else l_iterator.after
-							loop
-								l_string := l_iterator.item.string_value
-								l_result := STRING_.appended_string (l_result, l_separator)
-								l_result := STRING_.appended_string (l_result, l_string)
-								l_iterator.forth
-							end
-							if l_iterator.is_error then
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-							else
-								a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_result))
+
+							-- Type checking ensured that the separator was not an empty sequence.
+
+							arguments.item (2).evaluate_item (a_result, a_context)
+							check
+								second_string_not_void: attached a_result.item as a_result_item_2
+								-- static typing
+							then
+								if a_result_item_2.is_error then
+									-- nothing to do
+								else
+									l_separator := a_result_item_2.string_value
+									l_result := STRING_.cloned_string (l_string)
+									from
+									until
+										l_iterator.is_error or else l_iterator.after
+									loop
+										l_string := l_iterator.item.string_value
+										l_result := STRING_.appended_string (l_result, l_separator)
+										l_result := STRING_.appended_string (l_result, l_string)
+										l_iterator.forth
+									end
+									if attached l_iterator.error_value as l_error_value then
+										check is_error: l_iterator.is_error end
+										a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+									else
+										a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_result))
+									end
+								end
 							end
 						end
 					end

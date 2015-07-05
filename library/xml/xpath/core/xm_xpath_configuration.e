@@ -5,7 +5,7 @@ note
 		"Objects that provide system configuration information"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			create system_properties.make_with_equality_testers (3, Void, string_equality_tester)
 			create l_property_table.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
 			register_property_namespace_table (l_property_table, Gexslt_eiffel_type_uri)
-			create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} collection_resolver.make (Current)
 			shared_decimal_context.set_digits (18)
 			initialized := True
 		ensure
@@ -60,17 +59,29 @@ feature -- Access
 
 	collection_resolver: XM_XPATH_COLLECTION_RESOLVER
 			-- URI resolver for fn:collection()
+		local
+			l_cache_collection_resolver: like cache_collection_resolver
+		do
+			l_cache_collection_resolver := cache_collection_resolver
+			if l_cache_collection_resolver = Void then
+				create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} l_cache_collection_resolver.make (Current)
+				cache_collection_resolver := l_cache_collection_resolver
+			end
+			Result := l_cache_collection_resolver
+		ensure
+			collection_resolver_not_void: Result /= Void
+		end
 
-	product_name: STRING
+	product_name: detachable STRING
 			-- Product name (e.g. "Gexslt" or "Gestalt")
 
-	product_version: STRING
+	product_version: detachable STRING
 			-- Product version number (e.g. Gobo version number or Gestalt version number)
 
-	vendor_name: STRING
+	vendor_name: detachable STRING
 			-- Name of organization or individual responsible for this configuration (e.g. "Gobo" or "Colin Adams")
 
-	vendor_url: STRING
+	vendor_url: detachable STRING
 			-- Web page for `vendor_name'
 
 	system_properties: DS_HASH_TABLE [DS_HASH_TABLE [STRING, STRING], STRING]
@@ -123,7 +134,7 @@ feature -- Setting
 			collection_resolver_not_void: a_collection_resolver /= Void
 		do
 			clear_resolver_properties
-			collection_resolver := a_collection_resolver
+			cache_collection_resolver := a_collection_resolver
 		ensure
 			collection_resolver_set: collection_resolver = a_collection_resolver
 		end
@@ -223,6 +234,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	cache_collection_resolver: detachable like collection_resolver
+			-- Cache for `collection_resolver'
 
 invariant
 

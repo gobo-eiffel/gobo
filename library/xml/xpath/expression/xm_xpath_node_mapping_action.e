@@ -7,7 +7,7 @@ note
 	% mapping iterator"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from `map_nodes'
 
 feature -- Evaluation

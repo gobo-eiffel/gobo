@@ -8,7 +8,7 @@ note
 	%a series of such items."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ deferred class XM_XPATH_MAPPING_FUNCTION
 
 feature -- Access
 
-	last_mapped_item: XM_XPATH_MAPPED_ITEM
+	last_mapped_item: detachable XM_XPATH_MAPPED_ITEM
 			-- Result from `map'
 
 feature -- Evaluation
@@ -26,11 +26,12 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
+			a_context_not_void: a_context /= Void
 		deferred
 
 			-- If an error is detected, then this function should do: create last_mapped_item.make_item
 			--  passing it an item in error.
-			-- Note that XM_XPATH_CARDINALITY_CHECKER can set `last_mapped_item' to  `Void'
+			-- Note that XM_XPATH_CARDINALITY_CHECKER can set `last_mapped_item' to `Void'
 
 		end
 

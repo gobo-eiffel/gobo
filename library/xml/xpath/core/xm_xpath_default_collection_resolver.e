@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs passed to the XPath fn:collection() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,10 +54,10 @@ feature -- Status report
 			Result := True
 		end
 
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_collection: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve'
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 
 feature -- Element change
@@ -67,8 +67,8 @@ feature -- Element change
 		local
 			a_resolver: XM_XPATH_COLLECTION_SCHEME_RESOLVER
 		do
-			if a_context.available_documents.is_collection_mapped (a_uri.full_reference) then
-				last_collection := a_context.available_documents.collection (a_uri.full_reference)
+			if attached a_context.available_documents as l_available_documents and then l_available_documents.is_collection_mapped (a_uri.full_reference) then
+				last_collection := l_available_documents.collection (a_uri.full_reference)
 			elseif schemes.has (a_uri.scheme) then
 				a_resolver := schemes.item (a_uri.scheme)
 				a_resolver.resolve (a_uri, a_context)
@@ -90,7 +90,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	schemes: DS_HASH_TABLE [XM_XPATH_COLLECTION_SCHEME_RESOLVER, STRING]
+	schemes: DS_HASH_TABLE [XM_XPATH_COLLECTION_SCHEME_RESOLVER, detachable STRING]
 			-- Registered scheme resolvers.
 
 invariant

@@ -5,7 +5,7 @@ note
 		"Numeric XPath values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,14 +75,14 @@ feature -- Comparison
 					end
 					Result := l_first.is_equal (l_second)
 				elseif is_decimal_value and then other.is_decimal_value then
-						Result := as_decimal_value.value.is_equal (other.as_decimal_value.value)
+					Result := (attached as_decimal_value.value as l_value and attached other.as_decimal_value.value as l_other_value) and then l_value.is_equal (l_other_value)
 				else
 					Result := as_double.is_equal (other.as_numeric_value.as_double)
 				end
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
 			a_double_value, another_double_value: DOUBLE

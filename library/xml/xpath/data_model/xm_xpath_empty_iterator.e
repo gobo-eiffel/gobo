@@ -5,7 +5,7 @@ note
 		"Iterators over a sequence of zero items"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ feature -- Access
 	item: G
 			-- Value or node at the current position
 		do
+			check preocndition_not_off: False then end
 		end
 
 	last_position: INTEGER

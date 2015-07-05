@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the descendant:: and descendant-or-self Axes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,11 +49,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Does `Current' yield a node_sequence?
-		local
-			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			a_tree_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tree_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -89,7 +86,9 @@ feature {NONE} -- Implementation
 	advance_one_step
 			-- Move to the next candidate node
 		do
-			next_node := next_node.next_node_in_document_order (starting_node)
+			check precondition_next_node_not_void: attached next_node as l_next_node then
+				next_node := l_next_node.next_node_in_document_order (starting_node)
+			end
 		end
 
 end

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPointer element scheme"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Access
 	expanded_name: STRING = "element"
 			-- Expanded name of implemented scheme;
 
-	value: XM_XPATH_VALUE
+	value: detachable XM_XPATH_VALUE
 			-- Result of last call to `evaluate'
 
 feature -- Status report
@@ -61,64 +61,66 @@ feature -- Element change
 			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
 		local
 			an_index, a_counter, a_child_number: INTEGER
-			an_element: XM_XPATH_ELEMENT
+			an_element: detachable XM_XPATH_ELEMENT
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			evaluated := True
 			were_resources_found := False
 			parse (some_data)
-			is_error := False
-			if not is_error then
-				from
-					an_index := 1
-				until
-					is_error or else an_index > components.count
-				loop
-					if is_shorthand and then an_index = 1 then
-						an_element := a_resource.selected_id (components.item (1))
-						if an_element = Void then
-							is_error := True
-							create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Element not located by shorthand", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
-						end
-					else
-						a_child_number := components.item (an_index).to_integer
-						if an_element = Void then
-							an_iterator := a_resource.new_axis_iterator_with_node_test (Child_axis, element_node_kind_test)
+			check postcondition_of_parse: attached components as l_components then
+				is_error := False
+				if not is_error then
+					from
+						an_index := 1
+					until
+						is_error or else an_index > l_components.count
+					loop
+						if is_shorthand and then an_index = 1 then
+							an_element := a_resource.selected_id (l_components.item (1))
+							if an_element = Void then
+								is_error := True
+								create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Element not located by shorthand", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
+							end
 						else
-							an_iterator := an_element.new_axis_iterator_with_node_test (Child_axis, element_node_kind_test)
-						end
-						from
-							a_counter := 0; an_iterator.start
-						until
-							a_counter = a_child_number or else an_iterator.after
-						loop
-							a_counter := a_counter + 1
-							if a_counter = a_child_number then
-								an_element ?= an_iterator.item
+							a_child_number := l_components.item (an_index).to_integer
+							if an_element = Void then
+								an_iterator := a_resource.new_axis_iterator_with_node_test (Child_axis, element_node_kind_test)
 							else
-								an_iterator.forth
+								an_iterator := an_element.new_axis_iterator_with_node_test (Child_axis, element_node_kind_test)
+							end
+							from
+								a_counter := 0; an_iterator.start
+							until
+								a_counter = a_child_number or else an_iterator.after
+							loop
+								a_counter := a_counter + 1
+								if a_counter = a_child_number then
+									an_element ?= an_iterator.item
+								else
+									an_iterator.forth
+								end
+							end
+							if a_counter /= a_child_number then
+								is_error := True
+								create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Element not located by child sequence", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
 							end
 						end
-						if a_counter /= a_child_number then
-							is_error := True
-							create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Element not located by child sequence", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
+						an_index := an_index + 1
+					variant
+						l_components.count + 1 - an_index
+					end
+					if an_element /= Void then
+						were_resources_found := True
+						create {XM_XPATH_SINGLETON_NODE} value.make (an_element)
+					else
+						check
+							in_error: is_error
+							-- As every step failure sets an error
 						end
 					end
-					an_index := an_index + 1
-				variant
-					components.count + 1 - an_index
-				end
-				if an_element /= Void then
-					were_resources_found := True
-					create {XM_XPATH_SINGLETON_NODE} value.make (an_element)
 				else
-					check
-						in_error: is_error
-						-- As every step failure sets an error
-					end
+					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Parse error in scheme data", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
 				end
-			else
-				create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Parse error in scheme data", Gexslt_eiffel_type_uri, "XPOINTER_ELEMENT", Static_error)
 			end
 		end
 
@@ -127,7 +129,7 @@ feature {NONE} -- Implementation
 	is_shorthand: BOOLEAN
 			-- Does `components' start with a shorthand pointer?
 
-	components: DS_LIST [STRING]
+	components: detachable DS_LIST [STRING]
 			-- Components of scheme data
 
 	parse (some_data: STRING)
@@ -138,21 +140,23 @@ feature {NONE} -- Implementation
 		local
 			a_splitter: ST_SPLITTER
 			an_index: INTEGER
+			l_components: like components
 		do
 			is_shorthand := False
 			create a_splitter.make
 			a_splitter.set_separators ("/")
-			components := a_splitter.split (some_data)
-			if components.count = 0 then
+			l_components := a_splitter.split (some_data)
+			components := l_components
+			if l_components.count = 0 then
 				is_error := True
 			else
 				from
 					an_index := 1
 				until
-					is_error or else an_index > components.count
+					is_error or else an_index > l_components.count
 				loop
-					if not components.item (an_index).is_integer then
-						if an_index = 1 and then is_ncname (components.item (1)) then
+					if not l_components.item (an_index).is_integer then
+						if an_index = 1 and then is_ncname (l_components.item (1)) then
 							is_shorthand := True
 						else
 							is_error := True
@@ -160,7 +164,7 @@ feature {NONE} -- Implementation
 					end
 					an_index := an_index + 1
 				variant
-					components.count + 1 - an_index
+					l_components.count + 1 - an_index
 				end
 			end
 		ensure

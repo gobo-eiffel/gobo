@@ -5,7 +5,7 @@ note
 		"Standard tree document nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,7 @@ feature -- Access
 			Result := Current
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI
 
 	system_id: STRING
@@ -86,17 +86,17 @@ feature -- Access
 			Result := 0
 		end
 
-	document_element: XM_XPATH_TREE_ELEMENT
+	document_element: detachable XM_XPATH_TREE_ELEMENT
 			-- Document element
 
-	previous_sibling: XM_XPATH_NODE
+	previous_sibling: detachable XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
 
-	next_sibling: XM_XPATH_NODE
+	next_sibling: detachable XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
@@ -123,13 +123,16 @@ feature -- Access
 			--  element type, it remembers the result for next time.
 		local
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
-			a_node: XM_XPATH_TREE_NODE
+			a_node: detachable XM_XPATH_TREE_NODE
+			l_element_list: like element_list
 		do
-			if element_list = Void then
-				create element_list.make_map (10)
+			l_element_list := element_list
+			if l_element_list = Void then
+				create l_element_list.make_map (10)
+				element_list := l_element_list
 			end
-			if element_list.has (a_fingerprint) then
-				Result := element_list.item (a_fingerprint)
+			if l_element_list.has (a_fingerprint) then
+				Result := l_element_list.item (a_fingerprint)
 			else
 				create a_list.make_default
 				from
@@ -151,23 +154,23 @@ feature -- Access
 					a_node := a_node.next_node_in_document_order (Current)
 				end
 				Result := a_list
-				element_list.force_new (a_list, a_fingerprint)
+				l_element_list.force_new (a_list, a_fingerprint)
 			end
 		ensure then
-			all_elements_cached: element_list.has (a_fingerprint)
+			all_elements_cached: attached element_list as l_element_list_2 and then l_element_list_2.has (a_fingerprint)
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING
+	unparsed_entity_system_id (an_entity_name: STRING): detachable STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
-			if entity_table = Void then
+			if not attached entity_table as l_entity_table then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -176,17 +179,17 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING
+	unparsed_entity_public_id (an_entity_name: STRING): detachable STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
-			if entity_table = Void then
+			if not attached entity_table as l_entity_table then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -195,10 +198,10 @@ feature -- Access
 			end
 		end
 
-	document_uri: UT_URI
+	document_uri: detachable UT_URI
 			-- Absolute URI of the source from which the document was constructed
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT
+	selected_id (an_id: STRING): detachable XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
 			if id_table.has (an_id) then
@@ -221,16 +224,16 @@ feature -- Access
 	line_number_for_node (a_node_number: INTEGER): INTEGER
 			-- Line number of `a_node_number' in original source document, or 0 if not known
 		do
-			if line_number_map /= Void then
-				Result := line_number_map.line_number (a_node_number)
+			if attached line_number_map as l_line_number_map then
+				Result := l_line_number_map.line_number (a_node_number)
 			end
 		end
 
 	closing_line_number_for_node (a_node_number: INTEGER): INTEGER
 			-- Line number of end of `a_node_number' in original source document, or 0 if not known
 		do
-			if closing_line_number_map /= Void then
-				Result := closing_line_number_map.item (a_node_number)
+			if attached closing_line_number_map as l_closing_line_number_map then
+				Result := l_closing_line_number_map.item (a_node_number)
 			end
 		end
 
@@ -286,8 +289,8 @@ feature -- Element change
 			valid_node_number: a_node_number > 0
 			positive_line_number: a_line_number >= 0
 		do
-			if line_number_map /= Void then
-				line_number_map.set_line_number(a_node_number, a_line_number)
+			if attached line_number_map as l_line_number_map then
+				l_line_number_map.set_line_number(a_node_number, a_line_number)
 			end
 		end
 
@@ -297,8 +300,8 @@ feature -- Element change
 			valid_node_number: a_node_number > 0
 			positive_line_number: a_line_number >= 0
 		do
-			if closing_line_number_map /= Void then
-				closing_line_number_map.force_new (a_line_number, a_node_number)
+			if attached closing_line_number_map as l_closing_line_number_map then
+				l_closing_line_number_map.force_new (a_line_number, a_node_number)
 			end
 		end
 
@@ -318,11 +321,14 @@ feature -- Element change
 			entity_name_not_void: a_name /= Void
 		local
 			an_id_list: DS_ARRAYED_LIST [STRING]
+			l_entity_table: like entity_table
 		do
-			if entity_table = Void then
-				create entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+			l_entity_table := entity_table
+			if l_entity_table = Void then
+				create l_entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+				entity_table := l_entity_table
 			end
-			if entity_table.has (a_name) then
+			if l_entity_table.has (a_name) then
 				-- Validation error - we will ignore duplicates
 			else
 				create an_id_list.make (2)
@@ -337,7 +343,7 @@ feature -- Duplication
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN)
 			-- Copy `Current' to `a_receiver'.
 		local
-			a_node: XM_XPATH_NODE
+			a_node: detachable XM_XPATH_NODE
 		do
 			from
 				a_node := first_child
@@ -351,27 +357,29 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	element_list: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT], INTEGER]
+	element_list: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT], INTEGER]
 			-- Lists of elements with the same name.
 
-	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
+	entity_table: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 		-- Maps unparsed entity names to their URI/PUBLIC-ID pairs
 
-	cached_id_table: like id_table
+	cached_id_table: detachable like id_table
 			-- Cache for `id_table'
 
-	cached_attribute_idref_table: like attribute_idref_table
+	cached_attribute_idref_table: detachable like attribute_idref_table
 			-- Cache for `attribute_idref_table'
 
 	attribute_idref_table: XM_XPATH_TREE_ATTRIBUTE_IDREF_TABLE
 			-- Mapping of IDREFs to attributes
+		local
+			l_cached_attribute_idref_table: like cached_attribute_idref_table
 		do
-			if cached_attribute_idref_table = Void then
-				create Result.make (Current)
-				cached_attribute_idref_table := Result
-			else
-				Result := cached_attribute_idref_table
+			l_cached_attribute_idref_table := cached_attribute_idref_table
+			if l_cached_attribute_idref_table = Void then
+				create l_cached_attribute_idref_table.make (Current)
+				cached_attribute_idref_table := l_cached_attribute_idref_table
 			end
+			Result := l_cached_attribute_idref_table
 		ensure
 			attribute_idref_table_not_void: Result /= Void
 		end
@@ -380,13 +388,16 @@ feature {NONE} -- Implementation
 			-- Mapping of IDs to elements.
 			-- Implemented as a memo function
 		local
-			l_node: XM_XPATH_TREE_NODE
+			l_node: detachable XM_XPATH_TREE_NODE
 			l_element: XM_XPATH_TREE_ELEMENT
 			l_index: INTEGER
 			l_value: STRING
+			l_cached_id_table: like cached_id_table
 		do
-			if cached_id_table = Void then
-				create cached_id_table.make_with_equality_testers (10, Void, string_equality_tester)
+			l_cached_id_table := cached_id_table
+			if l_cached_id_table = Void then
+				create l_cached_id_table.make_with_equality_testers (10, Void, string_equality_tester)
+				cached_id_table := l_cached_id_table
 				from
 					l_node := Current
 				until
@@ -404,8 +415,8 @@ feature {NONE} -- Implementation
 								STRING_.left_adjust (l_value)
 								STRING_.right_adjust (l_value)
 								if is_ncname (l_value) then
-									if not cached_id_table.has (l_value) then
-										cached_id_table.force_new (l_element, l_value)
+									if not l_cached_id_table.has (l_value) then
+										l_cached_id_table.force_new (l_element, l_value)
 									end
 								end
 							end
@@ -417,7 +428,7 @@ feature {NONE} -- Implementation
 					l_node := l_node.next_node_in_document_order (Current)
 				end
 			end
-			Result := cached_id_table
+			Result := l_cached_id_table
 		ensure
 			id_table_not_void: Result /= Void
 			result_cached: Result = cached_id_table
@@ -426,10 +437,10 @@ feature {NONE} -- Implementation
 	system_id_map: XM_XPATH_SYSTEM_ID_MAP
 			-- Maps element or processing-instruction sequence numbers to system-ids
 
-	line_number_map: XM_XPATH_LINE_NUMBER_MAP
+	line_number_map: detachable XM_XPATH_LINE_NUMBER_MAP
 			-- Maps sequence numbers to line numbers
 
-	closing_line_number_map: DS_HASH_TABLE [INTEGER, INTEGER]
+	closing_line_number_map: detachable DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Maps sequence numbers to closing line numbers
 
 invariant

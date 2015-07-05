@@ -5,7 +5,7 @@ note
 		"XPath value comparisons"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 			operand_2_not_void: an_operand_two /= Void
 			value_comparison_operator: is_value_comparison_operator (a_token)
 		do
-			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -72,46 +72,54 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error or else first_operand.is_empty_sequence then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error or else second_operand.is_empty_sequence then
-					set_replacement (a_replacement, second_operand)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error or else first_operand.is_empty_sequence then
+					set_replacement (a_replacement, first_operand)
 				else
-					check_atomic_types (a_replacement, a_context)
+					l_replacement.put (Void)
+					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error or else second_operand.is_empty_sequence then
+							set_replacement (a_replacement, second_operand)
+						else
+							check_atomic_types (a_replacement, a_context)
+						end
+					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.optimize (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error or else first_operand.is_empty_sequence then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.optimize (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error or else second_operand.is_empty_sequence then
-					set_replacement (a_replacement, second_operand)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error or else first_operand.is_empty_sequence then
+					set_replacement (a_replacement, first_operand)
 				else
-					optimize_stage_2 (a_replacement, a_context, a_context_item_type)
+					l_replacement.put (Void)
+					second_operand.optimize (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error or else second_operand.is_empty_sequence then
+							set_replacement (a_replacement, second_operand)
+						else
+							optimize_stage_2 (a_replacement, a_context, a_context_item_type)
+						end
+					end
 				end
 			end
 			if a_replacement.item = Void then
@@ -125,9 +133,10 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
-			l_item, l_other_item: XM_XPATH_ITEM
+			l_item, l_other_item: detachable XM_XPATH_ITEM
 			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_last_boolean_value: like last_boolean_value
 		do
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
@@ -137,41 +146,53 @@ feature -- Evaluation
 				-- empty sequence
 
 				create last_boolean_value.make (False)
-			elseif l_item.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (l_item.error_value)
+			elseif attached l_item.error_value as l_error_value then
+				check is_error: l_item.is_error end
+				create l_last_boolean_value.make (False)
+				l_last_boolean_value.set_last_error (l_error_value)
+				last_boolean_value := l_last_boolean_value
 			else
 				create l_result.make (Void)
 				second_operand.evaluate_item (l_result, a_context)
 				l_other_item := l_result.item
 				if l_other_item = Void then
 					create last_boolean_value.make (False)
-				elseif l_other_item.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (l_other_item.error_value)
+				elseif attached l_other_item.error_value as l_error_value then
+					check is_error: l_other_item.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
 				else
 					if not l_item.is_atomic_value then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						create l_last_boolean_value.make (False)
+						l_last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						last_boolean_value := l_last_boolean_value
 					elseif not l_other_item.is_atomic_value then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						create l_last_boolean_value.make (False)
+						l_last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						last_boolean_value := l_last_boolean_value
 					else
 						l_atomic_value := l_item.as_atomic_value
 						if l_atomic_value.is_untyped_atomic then
 							l_atomic_value.convert_to_type (type_factory.string_type)
-							l_atomic_value := l_atomic_value.converted_value
+							check postcondition_of_convert_to_type: attached l_atomic_value.converted_value as l_converted_value then
+								l_atomic_value := l_converted_value
+							end
 						end
 						l_other_atomic_value := l_other_item.as_atomic_value
 						if l_other_atomic_value.is_untyped_atomic then
 							l_other_atomic_value.convert_to_type (type_factory.string_type)
-							l_other_atomic_value := l_other_atomic_value.converted_value
+							check postcondition_of_convert_to_type: attached l_other_atomic_value.converted_value as l_converted_value then
+								l_other_atomic_value := l_converted_value
+							end
 						end
 						if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 						check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
-						if is_error then
-							create last_boolean_value.make (False)
-							last_boolean_value.set_last_error (error_value)
+						if attached error_value as l_error_value then
+							check is_error: is_error end
+							create l_last_boolean_value.make (False)
+							l_last_boolean_value.set_last_error (l_error_value)
+							last_boolean_value := l_last_boolean_value
 						elseif last_check_result then
 							create last_boolean_value.make (True)
 						else
@@ -182,38 +203,43 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
+			if attached a_result.item as l_result_item and then not l_result_item.is_error then
 				check
-					atomic_value: a_result.item.is_atomic_value
+					atomic_value: l_result_item.is_atomic_value
 				end
-				l_atomic_value := a_result.item.as_atomic_value
+				l_atomic_value := l_result_item.as_atomic_value
 				if l_atomic_value.is_untyped_atomic then
 					l_atomic_value.convert_to_type (type_factory.string_type)
-					l_atomic_value := l_atomic_value.converted_value
+					check postcondition_of_convert_to_type: attached l_atomic_value.converted_value as l_converted_value then
+						l_atomic_value := l_converted_value
+					end
 				end
 				a_result.put (Void)
 				second_operand.evaluate_item (a_result, a_context)
-				if a_result.item /= Void and then not a_result.item.is_error then
+				if attached a_result.item as l_result_item_2 and then not l_result_item_2.is_error then
 					check
-						second_atomic_value: a_result.item.is_atomic_value
+						second_atomic_value: l_result_item_2.is_atomic_value
 					end
-					l_other_atomic_value := a_result.item.as_atomic_value
+					l_other_atomic_value := l_result_item_2.as_atomic_value
 					if l_other_atomic_value.is_untyped_atomic then
 						l_other_atomic_value.convert_to_type (type_factory.string_type)
-						l_other_atomic_value := l_other_atomic_value.converted_value
+						check postcondition_of_convert_to_type: attached l_other_atomic_value.converted_value as l_converted_value then
+							l_other_atomic_value := l_converted_value
+						end
 					end
 					if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 					check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
-					if is_error then
+					if attached error_value as l_error_value then
+						check is_error: is_error end
 						create l_boolean_value.make (False)
-						l_boolean_value.set_last_error (error_value)
+						l_boolean_value.set_last_error (l_error_value)
 					elseif last_check_result then
 						create l_boolean_value.make (True)
 					else
@@ -242,12 +268,14 @@ feature {NONE} -- Implementation
 					Result := an_atomic_value.as_numeric_value.is_zero
 				elseif an_atomic_value.is_convertible (type_factory.integer_type) then
 					an_atomic_value.convert_to_type (type_factory.integer_type)
-					Result := an_atomic_value.converted_value.as_integer_value.is_zero
+					check postcondition_of_convert_to_type: attached an_atomic_value.converted_value as l_converted_value then
+						Result := l_converted_value.as_integer_value.is_zero
+					end
 				end
 			end
 		end
 
-	check_atomic_types (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_atomic_types (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check static typing for two atomic types.
 		require
 			a_context_not_void: a_context /= Void
@@ -261,26 +289,36 @@ feature {NONE} -- Implementation
 		do
 			create l_type_checker
 			create l_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_optional)
-			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-			l_type_checker.static_type_check (a_context, first_operand, l_atomic_type, False, l_role)
-			if l_type_checker.is_static_type_check_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-			else
-				set_first_operand (l_type_checker.checked_expression)
-				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (a_context, second_operand, l_atomic_type, False, l_role)
+			check attached token_name (operator) as l_token_name then
+				create l_role.make (Binary_expression_role, l_token_name, 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (a_context, first_operand, l_atomic_type, False, l_role)
 				if l_type_checker.is_static_type_check_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+					check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+					end
 				else
-					set_second_operand (l_type_checker.checked_expression)
-					check_type_comparison (a_replacement, a_context, first_operand.item_type.atomized_item_type, second_operand.item_type.atomized_item_type)
+					check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+						set_first_operand (l_checked_expression)
+						create l_other_role.make (Binary_expression_role, l_token_name, 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_atomic_type, False, l_role)
+						if l_type_checker.is_static_type_check_error then
+							check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error_2 then
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error_2))
+							end
+						else
+							check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression_2 then
+								set_second_operand (l_checked_expression_2)
+								check_type_comparison (a_replacement, a_context, first_operand.item_type.atomized_item_type, second_operand.item_type.atomized_item_type)
+							end
+						end
+					end
 				end
 			end
 		ensure
 			replaced: a_replacement.item /= Void
 		end
 
-	check_type_comparison (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT
+	check_type_comparison (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT
 		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE)
 			-- Check types are comparable.
 		require
@@ -335,7 +373,7 @@ feature {NONE} -- Implementation
 			replaced: a_replacement.item /= Void
 		end
 
-	optimize_stage_2 (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_stage_2 (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform context-dependent optimizations.
 		require
 			context_not_void: a_context /= Void
@@ -379,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_generate_id (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_generate_id (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimize generate-id(X) eq generate-id(Y) as "X is Y".
 			-- This construct is often used in XSLT 1.0 stylesheets.
 			-- Only do this if we know the arguments are singletons, because "is" doesn't
@@ -394,7 +432,7 @@ feature {NONE} -- Implementation
 			l_function, l_other_function: XM_XPATH_SYSTEM_FUNCTION
 			l_identity_comparison: XM_XPATH_IDENTITY_COMPARISON
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if operator = Fortran_equal_token then
 				if first_operand.is_generate_id_function and then second_operand.is_generate_id_function then
@@ -407,19 +445,25 @@ feature {NONE} -- Implementation
 						l_identity_comparison.set_generate_id_emulation
 						create l_replacement.make (Void)
 						l_identity_comparison.simplify (l_replacement)
-						l_expression := l_replacement.item
-						l_replacement.put (Void)
-						l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-						l_expression := l_replacement.item
-						l_replacement.put (Void)
-						l_expression.optimize (l_replacement, a_context, a_context_item_type)
-						set_replacement (a_replacement, l_expression)
+						check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+							l_expression := l_replacement_item
+							l_replacement.put (Void)
+							l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+							check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+								l_expression := l_replacement_item_2
+								l_replacement.put (Void)
+								l_expression.optimize (l_replacement, a_context, a_context_item_type)
+								check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_3 then
+									set_replacement (a_replacement, l_expression)
+								end
+							end
+						end
 					end
 				end
 			end
 		end
 
-	optimize_count (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_count (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).
 		require
 			context_not_void: a_context /= Void
@@ -429,9 +473,9 @@ feature {NONE} -- Implementation
 			not_replaced: a_replacement.item = Void
 		local
 			l_count_function: XM_XPATH_COUNT
-			l_expression: XM_XPATH_EXPRESSION
+			l_expression: detachable XM_XPATH_EXPRESSION
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if first_operand.is_count_function and second_operand.is_atomic_value then
 				l_count_function := first_operand.as_count_function
@@ -447,10 +491,14 @@ feature {NONE} -- Implementation
 					if l_expression /= Void then
 						create l_replacement.make (Void)
 						l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-						l_expression := l_replacement.item
-						l_replacement.put (Void)
-						l_expression.optimize (l_replacement, a_context, a_context_item_type)
-						set_replacement (a_replacement, l_replacement.item)
+						check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+							l_expression := l_replacement_item
+							l_replacement.put (Void)
+							l_expression.optimize (l_replacement, a_context, a_context_item_type)
+							check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+								set_replacement (a_replacement, l_replacement_item_2)
+							end
+						end
 					end
 				end
 			end
@@ -465,11 +513,15 @@ feature {NONE} -- Implementation
 			if operator = Fortran_equal_token or operator = Fortran_less_equal_token then
 				-- Rewrite count(x)=0 as empty(x).
 				a_function_library.bind_function (Empty_function_type_code, a_count_function.arguments, False)
-				Result := a_function_library.last_bound_function.as_empty_function
+				check postcondition_of_bind_function: attached a_function_library.last_bound_function as l_last_bound_function then
+					Result := l_last_bound_function.as_empty_function
+				end
 			elseif operator = Fortran_not_equal_token or operator = Fortran_greater_than_token then
 				-- Rewrite count(x)!=0, count(x)>0 as exists(x)
 				a_function_library.bind_function (Exists_function_type_code, a_count_function.arguments, False)
-				Result := a_function_library.last_bound_function.as_exists_function
+				check postcondition_of_bind_function: attached a_function_library.last_bound_function as l_last_bound_function then
+					Result := l_last_bound_function.as_exists_function
+				end
 			elseif operator = Fortran_greater_equal_token then
 				-- Rewrite count(x)>=0 as true()
 				create {XM_XPATH_BOOLEAN_VALUE} Result.make (True)
@@ -503,13 +555,15 @@ feature {NONE} -- Implementation
 			create l_filter_expression.make (a_count_function.arguments.item(1), l_integer_value)
 			l_new_arguments.put (l_filter_expression, 1)
 			a_function_library.bind_function (Exists_function_type_code, l_new_arguments, False)
-			Result := a_function_library.last_bound_function.as_exists_function
+			check postcondition_of_bind_function: attached a_function_library.last_bound_function as l_last_bound_function then
+				Result := l_last_bound_function.as_exists_function
+			end
 		ensure
 			count_greater_expression_not_void: Result /= Void
 		end
 
-	optimize_count_second_operand (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_count_function: XM_XPATH_COUNT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_count_second_operand (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_count_function: XM_XPATH_COUNT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimise (0 eq count(x)), etc. by inversion.
 		require
 			context_not_void: a_context /= Void
@@ -519,20 +573,24 @@ feature {NONE} -- Implementation
 			not_replaced: a_replacement.item = Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create {XM_XPATH_VALUE_COMPARISON} l_expression.make (a_count_function, inverse_operator (operator), first_operand, atomic_comparer.collator)
 			create l_replacement.make (Void)
 			l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			l_expression := l_replacement.item
-			l_replacement.put (Void)
-			l_expression.optimize (l_replacement, a_context, a_context_item_type)
-			set_replacement (a_replacement, l_replacement.item)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				l_expression := l_replacement_item
+				l_replacement.put (Void)
+				l_expression.optimize (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+					set_replacement (a_replacement, l_replacement_item_2)
+				end
+			end
 		ensure
 			replaced: a_replacement.item /= Void
 		end
 
-	optimize_position (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	optimize_position (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Optimise position() < n etc.
 		require
 			context_not_void: a_context /= Void
@@ -542,7 +600,7 @@ feature {NONE} -- Implementation
 		local
 			l_position: INTEGER_64
 			l_integer: INTEGER
-			l_expression: XM_XPATH_EXPRESSION
+			l_expression: detachable XM_XPATH_EXPRESSION
 		do
 			if first_operand.is_position_function and second_operand.is_machine_integer_value then
 				l_position := second_operand.as_machine_integer_value.value
@@ -562,7 +620,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	second_position_range_expression (a_integer: INTEGER): XM_XPATH_POSITION_RANGE
+	second_position_range_expression (a_integer: INTEGER): detachable XM_XPATH_POSITION_RANGE
 			-- Second argument position range expression for `a_integer'
 		require
 			a_integer_non_negative: a_integer >= 0
@@ -586,7 +644,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	first_position_range_expression (a_integer: INTEGER): XM_XPATH_POSITION_RANGE
+	first_position_range_expression (a_integer: INTEGER): detachable XM_XPATH_POSITION_RANGE
 			-- First argument position range expression for `a_integer'
 		require
 			a_integer_non_negative: a_integer >= 0
@@ -610,7 +668,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_last (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	optimize_last (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Optimize position()=last(), last()=position(), etc.
 		require
 			context_not_void: a_context /= Void
@@ -655,14 +713,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_now (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	evaluate_now (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Evaluate the expression now if both arguments are constant.
 		require
 			a_context_not_void: a_context /= Void
 			a_replacement_not_void: a_replacement /= Void
 			not_replaced: a_replacement.item = Void
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 			l_invalid_value: XM_XPATH_INVALID_VALUE
 		do
 			if first_operand.is_value and not first_operand.depends_upon_implicit_timezone and
@@ -670,14 +728,16 @@ feature {NONE} -- Implementation
 				create l_result.make (Void)
 				evaluate_item (l_result, a_context.new_compile_time_context)
 				check
-					empty_sequence_not_possible: l_result.item /= Void
+					empty_sequence_not_possible: attached l_result.item as l_result_item
 					-- boolean comparison
-				end
-				if l_result.item.is_error then
-					create l_invalid_value.make (l_result.item.error_value)
-					set_replacement (a_replacement, l_invalid_value)
-				else
-					set_replacement (a_replacement, l_result.item.as_boolean_value)
+				then
+					if attached l_result_item.error_value as l_error_value then
+						check is_error: l_result_item.is_error end
+						create l_invalid_value.make (l_error_value)
+						set_replacement (a_replacement, l_invalid_value)
+					else
+						set_replacement (a_replacement, l_result_item.as_boolean_value)
+					end
 				end
 			end
 			if a_replacement.item = Void then

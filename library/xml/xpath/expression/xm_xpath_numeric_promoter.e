@@ -5,7 +5,7 @@ note
 	"Objects that promote numeric types"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,75 +90,86 @@ feature -- Comparison
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			if base_expression /= l_replacement.item then
-				set_base_expression (l_replacement.item)
-			end
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			elseif base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
-				-- TODO: need a compile-time context
-				create_iterator (Void)
-				if last_iterator.is_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
-				else
-					expression_factory.create_sequence_extent (last_iterator)
-					set_replacement (a_replacement, expression_factory.last_created_closure)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if base_expression /= l_replacement_item then
+					set_base_expression (l_replacement_item)
 				end
-			else
-				a_replacement.put (Current)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				elseif base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
+					-- TODO: need a compile-time context
+					create_iterator (new_dummy_context)
+					check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+						if attached l_last_iterator.error_value as l_error_value then
+							check is_error: l_last_iterator.is_error end
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+						else
+							expression_factory.create_sequence_extent (l_last_iterator)
+							check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+								set_replacement (a_replacement, l_last_created_closure)
+							end
+						end
+					end
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			if base_expression /= l_replacement.item then
-				set_base_expression (l_replacement.item)
-			end
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				if base_expression /= l_replacement_item then
+					set_base_expression (l_replacement_item)
+				end
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.optimize (l_replacement, a_context, a_context_item_type)
-			if base_expression /= l_replacement.item then
-				set_base_expression (l_replacement.item)
-			end
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				if base_expression /= l_replacement_item then
+					set_base_expression (l_replacement_item)
+				end
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
-			elseif a_result.item.is_atomic_value then
+			elseif l_result_item.is_atomic_value then
 				promote_number (a_result)
 			else
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot numerically promote a node",
@@ -172,11 +183,13 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
+				else
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+				end
 			end
 		end
 
@@ -207,21 +220,25 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	promote_number (a_result: DS_CELL [XM_XPATH_ITEM])
+	promote_number (a_result: DS_CELL [detachable XM_XPATH_ITEM])
 			-- Promote of `an_atomic_value'.
 		require
 			a_result_not_void: a_result /= Void
-			a_result_contains_atomic_value: a_result.item.is_atomic_value
+			a_result_contains_atomic_value: attached a_result.item as l_result_item and then l_result_item.is_atomic_value
 		local
 			l_primitive_value: XM_XPATH_ATOMIC_VALUE
 		do
-			l_primitive_value := a_result.item.as_atomic_value.primitive_value
-			if l_primitive_value.is_convertible (item_type) then
-				l_primitive_value.convert_to_type (item_type)
-				a_result.put (l_primitive_value.converted_value)
-			else
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
-					Xpath_errors_uri, "XPTY0004", Dynamic_error))
+			check precondition_a_result_contains_atomic_value: attached a_result.item as l_result_item then
+				l_primitive_value := l_result_item.as_atomic_value.primitive_value
+				if l_primitive_value.is_convertible (item_type) then
+					l_primitive_value.convert_to_type (item_type)
+					check postcondition_of_convert_to_type: attached l_primitive_value.converted_value as l_converted_value then
+						a_result.put (l_converted_value)
+					end
+				else
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
+						Xpath_errors_uri, "XPTY0004", Dynamic_error))
+				end
 			end
 		ensure
 			promotion_not_void: a_result.item /= Void

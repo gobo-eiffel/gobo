@@ -4,7 +4,7 @@ note
 
 	"Objects that implement type checking for a homogeneuous sequence."
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
+	mapped_item (a_item: XM_XPATH_ITEM): detachable XM_XPATH_ITEM
 			-- `a_item' mapped to zero or one items
 		do
 			check

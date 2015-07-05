@@ -5,7 +5,7 @@ note
 		"XPath items in error"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,7 @@ feature -- Access
 			--Value of the item as a string
 		do
 			-- pre-condition cannot be met
+			check False then end
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE
@@ -62,7 +63,7 @@ feature -- Access
 			check
 				not_called: False
 				-- precondition is never met
-			end
+			then end
 		end
 
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
@@ -71,7 +72,7 @@ feature -- Access
 			check
 				not_called: False
 				-- precondition is never met
-			end
+			then end
 		end
 
 	type_name: STRING
@@ -86,7 +87,7 @@ feature -- Access
 			check
 				not_called: False
 				-- precondition is never met
-			end
+			then end
 		end
 
 feature -- Status report

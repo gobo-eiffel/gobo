@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the child:: and following-sibling:: Axes"
 
 	library: "Gobo Eiffel XPATH Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN)
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: detachable XM_XPATH_NODE_TEST; children: BOOLEAN)
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 
 			-- check if this matches the conditions
 
-			if next_node_number > 0 and then node_test /= Void then
-				if not node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
+			if next_node_number > 0 and then attached node_test as l_node_test then
+				if not l_node_test.matches_node (a_document.retrieve_node_kind (next_node_number), a_document.name_code_for_node (next_node_number), a_document.element_annotation (next_node_number)) then
 					need_to_advance := True
 				end
 			end
@@ -66,11 +66,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
-		local
-			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
 		do
-			a_tiny_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tiny_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -104,10 +101,10 @@ feature {NONE} -- Implementation
 	starting_node: XM_XPATH_TINY_NODE
 			-- The starting node for the enumeration
 
-	parent_node: XM_XPATH_TINY_NODE
+	parent_node: detachable XM_XPATH_TINY_NODE
 			-- The parent node
 
-	node_test: XM_XPATH_NODE_TEST
+	node_test: detachable XM_XPATH_NODE_TEST
 			-- The node test to apply when selecting nodes
 
 	get_children: BOOLEAN
@@ -128,7 +125,7 @@ feature {NONE} -- Implementation
 			this_node: INTEGER
 		do
 			this_node := next_node_number
-			if node_test = Void then
+			if not attached node_test as l_node_test then
 				next_node_number := document.retrieve_next_sibling (next_node_number)
 			else
 				from
@@ -137,7 +134,7 @@ feature {NONE} -- Implementation
 				loop
 					next_node_number := document.retrieve_next_sibling (next_node_number)
 					if next_node_number < this_node or else
-						node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
+						l_node_test.matches_node (document.retrieve_node_kind (next_node_number), document.name_code_for_node (next_node_number), document.element_annotation (next_node_number)) then
 						finished := True
 					end
 				end

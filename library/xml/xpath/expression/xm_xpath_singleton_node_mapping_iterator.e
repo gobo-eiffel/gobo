@@ -3,12 +3,12 @@ note
 	description:
 
 		"[
-        Objects that merge a sequence of node sequences into a single flat sequence.
-        The resulting sequence is never longer than the number of input sequences.
-      ]"
+        	Objects that merge a sequence of node sequences into a single flat sequence.
+        	The resulting sequence is never longer than the number of input sequences.
+        ]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,11 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
@@ -67,9 +72,9 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			from
-				item := Void
+				internal_item := Void
 			until
-				item /= Void or (not base_iterator.before and then base_iterator.after)
+				internal_item /= Void or (not base_iterator.before and then base_iterator.after)
 			loop
 				if base_iterator.before then
 					base_iterator.start
@@ -77,7 +82,7 @@ feature -- Cursor movement
 					base_iterator.forth
 				end
 				if not base_iterator.after then
-					item := mapping_function.mapped_node (base_iterator.item)
+					internal_item := mapping_function.mapped_node (base_iterator.item)
 				end
 			end
 		end
@@ -87,7 +92,7 @@ feature -- Conversion
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Duplication
@@ -105,6 +110,9 @@ feature {NONE} -- Implementation
 
 	mapping_function: XM_XPATH_SINGLETON_NODE_MAPPING_FUNCTION
 			-- The mapping function
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Node at the current position
 
 invariant
 

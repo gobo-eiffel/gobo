@@ -5,7 +5,7 @@ note
 		"Sequences of zero or one nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,7 @@ feature -- Evaluation
 			create last_boolean_value.make (node /= Void)
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (node)
@@ -161,8 +161,10 @@ feature -- Evaluation
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			if node /= Void then
-				a_context.current_receiver.append_item (node)
+			if attached node as l_node then
+				check precondition_push_processing: attached a_context.current_receiver as l_current_receiver then
+					l_current_receiver.append_item (l_node)
+				end
 			end
 		end
 

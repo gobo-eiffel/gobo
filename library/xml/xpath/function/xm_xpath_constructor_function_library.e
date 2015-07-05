@@ -5,7 +5,7 @@ note
 		"Objects that provide access to built-in type constructors."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,11 +56,13 @@ feature -- Element change
 	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
 		do
-			check
-				atomic_type: type_factory.schema_type (a_fingerprint).is_atomic_type
-				-- ensured by implementation of `is_function_available'
+			check schema_type_not_void: attached type_factory.schema_type (a_fingerprint) as l_schema_type then
+				check
+					atomic_type: l_schema_type.is_atomic_type
+					-- ensured by implementation of `is_function_available'
+				end
+				create {XM_XPATH_CAST_EXPRESSION} last_bound_function.make (some_arguments.item (1), l_schema_type.as_atomic_type, True)
 			end
-			create {XM_XPATH_CAST_EXPRESSION} last_bound_function.make (some_arguments.item (1), type_factory.schema_type (a_fingerprint).as_atomic_type, True)
 		end
 
 end

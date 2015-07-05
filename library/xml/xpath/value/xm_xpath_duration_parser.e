@@ -5,7 +5,7 @@ note
 		"Parser for ISO 8601 extended format duration values, and XPath specializations"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,9 +26,10 @@ create
 feature {NONE} -- Implementation
 
 	make
-			-- Establish invariant..
+			-- Establish invariant.
 		do
 			last_parsed_duration := ""
+			create last_cached_duration.make (0, 0, 0, 0, 0, 0)
 		end
 
 feature -- Access
@@ -179,7 +180,7 @@ feature {NONE} -- Implementation
 			-- Last sucessfully parsed duration
 
 	last_cached_duration: DT_DATE_TIME_DURATION
-			-- Cached result from sucessfull call to `is_duration', `is_months_duration' or `is_seconds_duration'
+			-- Cached result from sucessful call to `is_duration', `is_months_duration' or `is_seconds_duration'
 
 	is_negative: BOOLEAN
 			-- is current parsed-duration negative
@@ -500,6 +501,7 @@ feature {NONE} -- Implementation
 invariant
 
 	last_parsed_duration_not_void: last_parsed_duration /= Void
+	last_cached_duration_not_void: last_cached_duration /= Void
 
 end
 

@@ -5,7 +5,7 @@ note
 		"XPath Single Node Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 			end
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
+	node (a_context: XM_XPATH_CONTEXT): detachable XM_XPATH_NODE
 			-- The single node
 		require
 			dynamic_context: is_valid_context_for_node (a_context)
@@ -61,7 +61,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if a_context_item_type = Void then
@@ -75,7 +75,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- Repeat the check: in XSLT insufficient information is available the first time.
@@ -87,16 +87,19 @@ feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
+		local
+			l_last_boolean_value: like last_boolean_value
 		do
 			if is_valid_context_for_node (a_context) then
 				create last_boolean_value.make (node (a_context) /= Void)
 			else
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (dynamic_error_value (a_context))
+				create l_last_boolean_value.make (False)
+				l_last_boolean_value.set_last_error (dynamic_error_value (a_context))
+				last_boolean_value := l_last_boolean_value
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			if is_valid_context_for_node (a_context) then

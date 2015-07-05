@@ -5,7 +5,7 @@ note
 		"XPath expression"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,8 +89,8 @@ feature -- Access
 		local
 			a_base_type: XM_XPATH_ITEM_TYPE
 			a_node_kind_mask: INTEGER
-			finished: BOOLEAN
 			a_content_type: XM_XPATH_SCHEMA_TYPE
+			l_result: detachable XM_XPATH_ITEM_TYPE
 		do
 			a_base_type := item_type
 			if a_base_type.is_atomic_type then
@@ -98,7 +98,6 @@ feature -- Access
 			elseif a_base_type.is_node_test then
 				if a_base_type.is_no_node_test then
 					Result := a_base_type
-					finished := True
 				else
 					a_node_kind_mask := a_base_type.as_node_test.node_kind_mask
 					if always_untyped then
@@ -106,22 +105,21 @@ feature -- Access
 						-- Some node-kinds always have a typed value that's a string
 
 						if INTEGER_.bit_or (a_node_kind_mask, string_kinds) = string_kinds then
-							Result := type_factory.string_type
-							finished := True
+							l_result := type_factory.string_type
 
 							-- Some node-kinds are always untypedAtomic; some are conditionally so:
 
 						elseif INTEGER_.bit_or (a_node_kind_mask, untyped_if_untyped_kinds) = untyped_if_untyped_kinds then
-							Result := type_factory.untyped_atomic_type
-							finished := True
+							l_result := type_factory.untyped_atomic_type
 						end
 					else
 						if INTEGER_.bit_or (a_node_kind_mask, untyped_kinds) = untyped_kinds then
-							Result := type_factory.untyped_atomic_type
-							finished := True
+							l_result := type_factory.untyped_atomic_type
 						end
 					end
-					if not finished then
+					if l_result /= Void then
+						Result := l_result
+					else
 						a_content_type := a_base_type.as_node_test.content_type
 						if a_content_type.is_simple_type then
 							Result := a_content_type.as_simple_type.common_atomic_type
@@ -149,10 +147,10 @@ feature -- Access
 			--       XSLT compiles to expressions, there could be a lot of array
 			--       copying going on
 		ensure
-			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
+			expression_tester: Result /= Void and then attached Result.equality_tester as l_equality_tester and then l_equality_tester.is_equal (expression_tester)
 		end
 
-	container: XM_XPATH_EXPRESSION_CONTAINER
+	container: detachable XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent;
 			-- `Void' for top-level expressions and literal values.
 			-- Within an XSLT stylesheet, returns the XSLT instruction.
@@ -239,19 +237,19 @@ feature -- Status report
 			Result := INTEGER_.bit_and (native_implementations, Supports_process) /= 0
 		end
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Last error value
 
-	last_evaluated_string: XM_XPATH_STRING_VALUE
+	last_evaluated_string: detachable XM_XPATH_STRING_VALUE
 			-- Value from last call to `evaluate_as_string'
 
-	last_boolean_value: XM_XPATH_BOOLEAN_VALUE
+	last_boolean_value: detachable XM_XPATH_BOOLEAN_VALUE
 			-- Value from last call to `calculate_effective_boolean_value'
 
-	last_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	last_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Result from last call to `create_iterator'
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from last call to `create_node_iterator'
 
 	last_slot_number: INTEGER
@@ -861,12 +859,12 @@ feature -- Status setting
 		do
 			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 		ensure
-			valid_error: error_value /= Void
-				and then STRING_.same_string (error_value.code, a_code)
+			valid_error: attached error_value as l_error_value
+				and then STRING_.same_string (l_error_value.code, a_code)
 			in_error: is_error
 		end
 
-	set_replacement (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_expression: XM_XPATH_EXPRESSION)
+	set_replacement (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_expression: XM_XPATH_EXPRESSION)
 			-- Set replacement for `Current'.
 		require
 			not_in_error: not is_error
@@ -897,7 +895,7 @@ feature -- Status setting
 			replacement_set: a_replacement.item = a_expression
 		end
 
-	resolve_calls_to_current_function (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	resolve_calls_to_current_function (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Resolve calls to "fn:current()".
 		require
 			a_replacement_not_void: a_replacement /= Void
@@ -933,8 +931,10 @@ feature -- Status setting
 				create l_let_expression.make (l_range_variable, l_sequence_expression, Current)
 				create l_offer.make (Replace_current, Void, l_let_expression, False, False)
 				promote (a_replacement, l_offer)
-				l_let_expression.set_action (a_replacement.item)
-				a_replacement.put (l_let_expression)
+				check postcondition_of_promote: attached a_replacement.item as l_replacement_item then
+					l_let_expression.set_action (l_replacement_item)
+					a_replacement.put (l_let_expression)
+				end
 			else
 				a_replacement.put (Current)
 			end
@@ -950,7 +950,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		require
 			no_previous_error: not is_error
@@ -962,7 +962,7 @@ feature -- Optimization
 			simplified_expression_not_void: a_replacement.item /= Void
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 			-- This checks statically that the operands of the expression have the correct type.
 			-- If necessary it generates code to do run-time type checking or type conversion.
@@ -983,7 +983,7 @@ feature -- Optimization
 			replaced: a_replacement.item /= Void
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 			-- This routine is called after all references to functions and variables have been resolved
 			--  to the declaration of the function or variable, and after static type-checking.
@@ -1000,7 +1000,7 @@ feature -- Optimization
 			may_be_in_error: True -- even if there was no replacement, early evaluation can cause this
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 			-- The offer will be accepted if the subexpression is not dependent on
 			--  the factors (e.g. the context item) identified in `a_offer'.
@@ -1015,15 +1015,15 @@ feature -- Optimization
 			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
-			replaced: a_replacement.item /= Void
-			no_error: not a_replacement.item.is_error
+			replaced: attached a_replacement.item as l_replacement_item
+			no_error: not l_replacement_item.is_error
 		end
 
 feature -- Evaluation
 
 		-- TODO: make a_context be non-Void in all these
 
-	evaluate (a_result: DS_CELL [XM_XPATH_VALUE]; a_mode, a_reference_count: INTEGER; a_context: XM_XPATH_CONTEXT)
+	evaluate (a_result: DS_CELL [detachable XM_XPATH_VALUE]; a_mode, a_reference_count: INTEGER; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' according to `a_mode'.
 		require
 			context_may_be_void: True
@@ -1035,7 +1035,7 @@ feature -- Evaluation
 		local
 			l_reference_count: INTEGER
 			l_value: XM_XPATH_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			inspect
 				a_mode
@@ -1067,30 +1067,37 @@ feature -- Evaluation
 				a_result.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 			when Evaluate_and_materialize_variable then
 				as_variable_reference.evaluate_variable (a_context)
-				l_value := as_variable_reference.last_evaluated_binding
-				if l_value.is_closure and not l_value.is_error then
-					l_value.create_iterator (a_context)
-					expression_factory.create_sequence_extent (l_value.last_iterator)
-					a_result.put (expression_factory.last_created_closure)
-				else
-					a_result.put (l_value)
+				check postcondition_of_evaluate_variable: attached as_variable_reference.last_evaluated_binding as l_last_evaluated_binding then
+					l_value := l_last_evaluated_binding
+					if l_value.is_closure and not l_value.is_error then
+						l_value.create_iterator (a_context)
+						check postcondition_of_create_iterator: attached l_value.last_iterator as l_last_iterator then
+							expression_factory.create_sequence_extent (l_last_iterator)
+							a_result.put (expression_factory.last_created_closure)
+						end
+					else
+						a_result.put (l_value)
+					end
 				end
 			when Call_evaluate_item then
 				create l_result.make (Void)
 				evaluate_item (l_result, a_context)
-				if l_result.item = Void then
+				if not attached l_result.item as l_result_item then
 					a_result.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-				elseif l_result.item.is_error then
-					a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_result.item.error_value))
-				elseif l_result.item.is_node then
-					a_result.put (create {XM_XPATH_SINGLETON_NODE} .make (l_result.item.as_node))
+				elseif attached l_result_item.error_value as l_error_value then
+					check is_error: l_result_item.is_error end
+					a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+				elseif l_result_item.is_node then
+					a_result.put (create {XM_XPATH_SINGLETON_NODE}.make (l_result_item.as_node))
 				else
-					a_result.put (l_result.item.as_atomic_value)
+					a_result.put (l_result_item.as_atomic_value)
 				end
 			when Evaluation_method_undecided, Iterate_and_materialize then
 				create_iterator (a_context)
-				expression_factory.create_sequence_extent (last_iterator)
-				a_result.put (expression_factory.last_created_closure)
+				check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+					expression_factory.create_sequence_extent (l_last_iterator)
+					a_result.put (expression_factory.last_created_closure)
+				end
 			when Call_generate_events then
 				evaluate_by_generating_events (a_result, a_context)
 			when Evaluate_as_lazy_tail_expression then
@@ -1113,74 +1120,87 @@ feature -- Evaluation
 			not_in_error: not is_error
 		local
 			l_item: XM_XPATH_ITEM
+			l_last_boolean_value: like last_boolean_value
 		do
 			last_boolean_value := Void
 			create_iterator (a_context)
-			if not last_iterator.is_error then
-				last_iterator.start
-				if last_iterator.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (last_iterator.error_value)
-					set_last_error (last_iterator.error_value)
-				elseif not last_iterator.after then
-					l_item := last_iterator.item
-					if l_item.is_node then
-						create last_boolean_value.make (True)
-					else
-						if l_item.is_boolean_value then
-							last_iterator.forth
-							if last_iterator.is_error then
-								create last_boolean_value.make (False)
-								last_boolean_value.set_last_error (last_iterator.error_value)
-								set_last_error (last_iterator.error_value)
-							elseif last_iterator.after then
-								create last_boolean_value.make (l_item.as_boolean_value.value)
-							else
-								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
-							end
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if not attached l_last_iterator.error_value as l_error_value then
+					l_last_iterator.start
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						create l_last_boolean_value.make (False)
+						last_boolean_value := l_last_boolean_value
+						l_last_boolean_value.set_last_error (l_error_value)
+						set_last_error (l_error_value)
+					elseif not l_last_iterator.after then
+						l_item := l_last_iterator.item
+						if l_item.is_node then
+							create last_boolean_value.make (True)
 						else
-							if l_item.is_string_value or l_item.is_untyped_atomic then -- includes URI
-								last_iterator.forth
-								if last_iterator.is_error then
-									create last_boolean_value.make (False)
-									last_boolean_value.set_last_error (last_iterator.error_value)
-									set_last_error (last_boolean_value.error_value)
-								elseif last_iterator.after then
-									create last_boolean_value.make (l_item.string_value.count /= 0)
+							if l_item.is_boolean_value then
+								l_last_iterator.forth
+								if attached l_last_iterator.error_value as l_error_value then
+									check is_error: l_last_iterator.is_error end
+									create l_last_boolean_value.make (False)
+									last_boolean_value := l_last_boolean_value
+									l_last_boolean_value.set_last_error (l_error_value)
+									set_last_error (l_error_value)
+								elseif l_last_iterator.after then
+									create last_boolean_value.make (l_item.as_boolean_value.value)
 								else
 									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 								end
 							else
-								if l_item.is_numeric_value then
-									last_iterator.forth
-									if last_iterator.is_error then
-										create last_boolean_value.make (False)
-										last_boolean_value.set_last_error (last_iterator.error_value)
-										set_last_error (last_boolean_value.error_value)
-									elseif last_iterator.after then
-										l_item.as_numeric_value.calculate_effective_boolean_value (a_context)
-										last_boolean_value := l_item.as_numeric_value.last_boolean_value
+								if l_item.is_string_value or l_item.is_untyped_atomic then -- includes URI
+									l_last_iterator.forth
+									if attached l_last_iterator.error_value as l_error_value then
+										check is_error: l_last_iterator.is_error end
+										create l_last_boolean_value.make (False)
+										last_boolean_value := l_last_boolean_value
+										l_last_boolean_value.set_last_error (l_error_value)
+										set_last_error (l_error_value)
+									elseif l_last_iterator.after then
+										create last_boolean_value.make (l_item.string_value.count /= 0)
 									else
 										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 									end
 								else
-									last_boolean_value := effective_boolean_value_in_error ("sequence starting with a typed atomic value other than a boolean, number, URI or string")
+									if l_item.is_numeric_value then
+										l_last_iterator.forth
+										if attached l_last_iterator.error_value as l_error_value then
+											check is_error: l_last_iterator.is_error end
+											create l_last_boolean_value.make (False)
+											last_boolean_value := l_last_boolean_value
+											l_last_boolean_value.set_last_error (l_error_value)
+											set_last_error (l_error_value)
+										elseif l_last_iterator.after then
+											l_item.as_numeric_value.calculate_effective_boolean_value (a_context)
+											last_boolean_value := l_item.as_numeric_value.last_boolean_value
+										else
+											last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+										end
+									else
+										last_boolean_value := effective_boolean_value_in_error ("sequence starting with a typed atomic value other than a boolean, number, URI or string")
+									end
 								end
 							end
 						end
 					end
+					if last_boolean_value = Void then create last_boolean_value.make (False) end
+				else
+					check is_error: l_last_iterator.is_error end
+					create l_last_boolean_value.make (False)
+					last_boolean_value := l_last_boolean_value
+					l_last_boolean_value.set_last_error (l_error_value)
+					set_last_error (l_error_value)
 				end
-				if last_boolean_value = Void then create last_boolean_value.make (False) end
-			else
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (last_iterator.error_value)
-				set_last_error (last_boolean_value.error_value)
 			end
 		ensure
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- This always sets `a_result.item' to either a single Item or Void (denoting the empty sequence). No conversion is done.
 			-- This routine should not be used unless the static type of the expression is a subtype of "item" or "item?":
@@ -1219,8 +1239,8 @@ feature -- Evaluation
 			context_may_be_void: True
 		deferred
 		ensure
-			iterator_not_void_but_may_be_error: last_iterator /= Void
-			iterator_before: not last_iterator.is_error implies last_iterator.before
+			iterator_not_void_but_may_be_error: attached last_iterator as l_last_iterator
+			iterator_before: not l_last_iterator.is_error implies l_last_iterator.before
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
@@ -1231,8 +1251,8 @@ feature -- Evaluation
 			node_sequence: is_node_sequence
 		deferred
 		ensure
-			iterator_not_void_but_may_be_error: last_node_iterator /= Void
-			iterator_before: not last_node_iterator.is_error implies last_node_iterator.before
+			iterator_not_void_but_may_be_error: attached last_node_iterator as l_last_node_iterator
+			iterator_before: not l_last_node_iterator.is_error implies l_last_node_iterator.before
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT)
@@ -1259,8 +1279,8 @@ feature -- Evaluation
 
 feature -- Element change
 
-	allocate_slots (a_next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER)
-			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
+	allocate_slots (a_next_free_slot: INTEGER; a_slot_manager: detachable XM_XPATH_SLOT_MANAGER)
+			-- Allocate slot numbers for all range variable in `Current' and its sub-expresions.
 		require
 			strictly_positive_slot_number: a_next_free_slot > 0
 			a_next_free_slot_large_enough: a_next_free_slot >= last_slot_number
@@ -1305,6 +1325,7 @@ feature -- Conversion
 		require
 			position_range: is_position_range
 		do
+			check is_position_range: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1314,6 +1335,7 @@ feature -- Conversion
 		require
 			binary_expression: is_binary_expression
 		do
+			check is_binary_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1323,6 +1345,7 @@ feature -- Conversion
 		require
 			boolean_expression: is_boolean_expression
 		do
+			check is_boolean_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1332,6 +1355,7 @@ feature -- Conversion
 		require
 			tail_expression: is_tail_expression
 		do
+			check is_tail_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1341,6 +1365,7 @@ feature -- Conversion
 		require
 			root_expression: is_root_expression
 		do
+			check is_root_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1350,6 +1375,7 @@ feature -- Conversion
 		require
 			parent_node_expression: is_parent_node_expression
 		do
+			check is_parent_node_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1359,6 +1385,7 @@ feature -- Conversion
 		require
 			path_expression: is_path_expression
 		do
+			check is_path_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1368,6 +1395,7 @@ feature -- Conversion
 		require
 			filter_expression: is_filter_expression
 		do
+			check is_filter_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1377,6 +1405,7 @@ feature -- Conversion
 		require
 			context_item: is_context_item
 		do
+			check is_context_item: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1386,6 +1415,7 @@ feature -- Conversion
 		require
 			last_expression: is_last_expression
 		do
+			check is_last_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1395,6 +1425,7 @@ feature -- Conversion
 		require
 			item_checker: is_item_checker
 		do
+			check is_item_checker: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1404,6 +1435,7 @@ feature -- Conversion
 		require
 			variable_reference: is_variable_reference
 		do
+			check is_variable_reference: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1413,6 +1445,7 @@ feature -- Conversion
 		require
 			numeric_promoter: is_numeric_promoter
 		do
+			check is_numeric_promoter: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1422,6 +1455,7 @@ feature -- Conversion
 		require
 			document_sorter: is_document_sorter
 		do
+			check is_document_sorter: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1431,6 +1465,7 @@ feature -- Conversion
 		require
 			reverser: is_reverser
 		do
+			check is_reverser: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1440,6 +1475,7 @@ feature -- Conversion
 		require
 			assignation: is_assignation
 		do
+			check is_assignation: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1449,6 +1485,7 @@ feature -- Conversion
 		require
 			axis_expression: is_axis_expression
 		do
+			check is_axis_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1458,6 +1495,7 @@ feature -- Conversion
 		require
 			let_expression: is_let_expression
 		do
+			check is_let_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1467,6 +1505,7 @@ feature -- Conversion
 		require
 			lazy_expression: is_lazy_expression
 		do
+			check is_lazy_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1476,6 +1515,7 @@ feature -- Conversion
 		require
 			atomizer_expression: is_atomizer_expression
 		do
+			check is_atomizer_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1485,6 +1525,7 @@ feature -- Conversion
 		require
 			arithmetic_expression: is_arithmetic_expression
 		do
+			check is_arithmetic_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1494,6 +1535,7 @@ feature -- Conversion
 		require
 			unary_expression: is_unary_expression
 		do
+			check is_unary_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1503,6 +1545,7 @@ feature -- Conversion
 		require
 			cast_expression: is_cast_expression
 		do
+			check is_cast_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1512,6 +1555,7 @@ feature -- Conversion
 		require
 			castable_expression: is_castable_expression
 		do
+			check is_castable_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1521,6 +1565,7 @@ feature -- Conversion
 		require
 			instance_of_expression: is_instance_of_expression
 		do
+			check is_instance_of_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1530,6 +1575,7 @@ feature -- Conversion
 		require
 			invalid_value: is_invalid_value
 		do
+			check is_invalid_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1539,6 +1585,7 @@ feature -- Conversion
 		require
 			boolean_value: is_boolean_value
 		do
+			check is_boolean_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1548,6 +1595,7 @@ feature -- Conversion
 		require
 			closure: is_closure
 		do
+			check is_closure: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1557,6 +1605,7 @@ feature -- Conversion
 		require
 			memo_closure: is_memo_closure
 		do
+			check is_memo_closure: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1566,6 +1615,7 @@ feature -- Conversion
 		require
 			empty_sequence: is_empty_sequence
 		do
+			check is_empty_sequence: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1575,6 +1625,7 @@ feature -- Conversion
 		require
 			singleton_node: is_singleton_node
 		do
+			check is_singleton_node: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1584,6 +1635,7 @@ feature -- Conversion
 		require
 			sequence_extent: is_sequence_extent
 		do
+			check is_sequence_extent: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1593,6 +1645,7 @@ feature -- Conversion
 		require
 			sequence_expression: is_sequence_expression
 		do
+			check is_sequence_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1602,6 +1655,7 @@ feature -- Conversion
 		require
 			sequence_value: is_sequence_value
 		do
+			check is_sequence_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1611,6 +1665,7 @@ feature -- Conversion
 		require
 			computed_expression: is_computed_expression
 		do
+			check is_computed_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1620,6 +1675,7 @@ feature -- Conversion
 		require
 			range_expression: is_range_expression
 		do
+			check is_range_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1629,6 +1685,7 @@ feature -- Conversion
 		require
 			duration_value: is_duration_value
 		do
+			check is_duration_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1638,6 +1695,7 @@ feature -- Conversion
 		require
 			seconds_duration_value: is_seconds_duration
 		do
+			check is_seconds_duration: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1647,6 +1705,7 @@ feature -- Conversion
 		require
 			months_duration_value: is_months_duration
 		do
+			check is_months_duration: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1656,6 +1715,7 @@ feature -- Conversion
 		require
 			string_value: is_string_value
 		do
+			check is_string_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			string: Result.is_string_value
@@ -1666,6 +1726,7 @@ feature -- Conversion
 		require
 			any_uri_value: is_any_uri
 		do
+			check is_any_uri: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1675,6 +1736,7 @@ feature -- Conversion
 		require
 			untyped_atomic_value: is_untyped_atomic
 		do
+			check is_untyped_atomic: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			untyped_atomic: Result.is_untyped_atomic
@@ -1685,6 +1747,7 @@ feature -- Conversion
 		require
 			qname_value: is_qname_value
 		do
+			check is_qname_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1694,6 +1757,7 @@ feature -- Conversion
 		require
 			integer_range: is_integer_range
 		do
+			check is_integer_range: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1703,6 +1767,7 @@ feature -- Conversion
 		require
 			decimal_value: is_decimal_value
 		do
+			check is_decimal_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1712,6 +1777,7 @@ feature -- Conversion
 		require
 			calendar_value: is_calendar_value
 		do
+			check is_calendar_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			atomic_value: Result.is_atomic_value
@@ -1722,6 +1788,7 @@ feature -- Conversion
 		require
 			date_value: is_date_value
 		do
+			check is_date_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			calendar_value: Result.is_calendar_value
@@ -1732,6 +1799,7 @@ feature -- Conversion
 		require
 			time_value: is_time_value
 		do
+			check is_time_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			calendar_value: Result.is_calendar_value
@@ -1742,6 +1810,7 @@ feature -- Conversion
 		require
 			date_time_value: is_date_time_value
 		do
+			check is_date_time_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			calendar_value: Result.is_calendar_value
@@ -1752,6 +1821,7 @@ feature -- Conversion
 		require
 			month_day_value: is_month_day_value
 		do
+			check is_month_day_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1761,6 +1831,7 @@ feature -- Conversion
 		require
 			year_month_value: is_year_month_value
 		do
+			check is_year_month_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1770,6 +1841,7 @@ feature -- Conversion
 		require
 			year_value: is_year_value
 		do
+			check is_year_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1779,6 +1851,7 @@ feature -- Conversion
 		require
 			month_value: is_month_value
 		do
+			check is_month_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1788,6 +1861,7 @@ feature -- Conversion
 		require
 			day_value: is_day_value
 		do
+			check is_day_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1797,6 +1871,7 @@ feature -- Conversion
 		require
 			function_call: is_function_call
 		do
+			check is_function_call: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1806,6 +1881,7 @@ feature -- Conversion
 		require
 			mapped_path_expression: is_mapped_path_expression
 		do
+			check is_mapped_path_expression: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1815,6 +1891,7 @@ feature -- Conversion
 		require
 			tail_call: is_tail_call
 		do
+			check is_tail_call: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1824,6 +1901,7 @@ feature -- Conversion
 		require
 			system_function: is_system_function
 		do
+			check is_system_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1833,6 +1911,7 @@ feature -- Conversion
 		require
 			unordered_function: is_unordered_function
 		do
+			check is_unordered_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1842,6 +1921,7 @@ feature -- Conversion
 		require
 			not_function: is_not_function
 		do
+			check is_not_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1851,6 +1931,7 @@ feature -- Conversion
 		require
 			count_function: is_count_function
 		do
+			check is_count_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1860,6 +1941,7 @@ feature -- Conversion
 		require
 			empty_function: is_empty_function
 		do
+			check is_empty_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1869,6 +1951,7 @@ feature -- Conversion
 		require
 			exists_function: is_exists_function
 		do
+			check is_exists_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1878,6 +1961,7 @@ feature -- Conversion
 		require
 			string_length_function: is_string_length_function
 		do
+			check is_string_length_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1887,6 +1971,7 @@ feature -- Conversion
 		require
 			string_function: is_string_function
 		do
+			check is_string_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1896,6 +1981,7 @@ feature -- Conversion
 		require
 			number_function: is_number_function
 		do
+			check is_number_function: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1905,6 +1991,7 @@ feature -- Conversion
 		require
 			value: is_value
 		do
+			check is_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1914,6 +2001,7 @@ feature -- Conversion
 		require
 			atomic_value: is_atomic_value
 		do
+			check is_atomic_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1923,6 +2011,7 @@ feature -- Conversion
 		require
 			hex_binary_value: is_hex_binary
 		do
+			check is_hex_binary: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1932,6 +2021,7 @@ feature -- Conversion
 		require
 			base64_binary_value: is_base64_binary
 		do
+			check is_base64_binary: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1941,6 +2031,7 @@ feature -- Conversion
 		require
 			numeric_value: is_numeric_value
 		do
+			check is_numeric_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1950,6 +2041,7 @@ feature -- Conversion
 		require
 			integer_value: is_integer_value
 		do
+			check is_integer_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1959,6 +2051,7 @@ feature -- Conversion
 		require
 			machine_integer_value: is_machine_integer_value
 		do
+			check is_machine_integer_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -1981,7 +2074,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			bit_set: Result < 8 and then Result > 0 and then INTEGER_.bit_and (Result, INTEGER_.bit_or (INTEGER_.bit_or (Supports_evaluate, Supports_iterator), Supports_process)) /= 0
 		end
 
-	set_unsorted (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN)
+	set_unsorted (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN)
 			-- Remove unwanted sorting from an expression, at compile time.
 		require
 			not_in_error: not is_error
@@ -1993,11 +2086,11 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			create l_offer.make (Unordered, Void, Void, a_eliminate_duplicates, False)
 			promote (a_replacement, l_offer)
 		ensure
-			replaced: a_replacement.item /= Void
-			not_in_error: not a_replacement.item.is_error
+			replaced: attached a_replacement.item as l_replacement_item
+			not_in_error: not l_replacement_item.is_error
 		end
 
-	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN)
+	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN)
 			-- Remove unwanted sorting from an expression, at compile time,
 			--  but only if all nodes or all atomic values.
 		require
@@ -2014,8 +2107,8 @@ feature {XM_XPATH_EXPRESSION} -- Local
 				a_replacement.put (Current)
 			end
 		ensure
-			replaced: a_replacement.item /= Void
-			not_in_error: not a_replacement.item.is_error
+			replaced: attached a_replacement.item as l_replacement_item
+			not_in_error: not l_replacement_item.is_error
 		end
 
 	indentation (a_level: INTEGER): STRING
@@ -2045,12 +2138,14 @@ feature {XM_XPATH_EXPRESSION} -- Local
 		do
 			create Result.make (False)
 			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Xpath_errors_uri, "FORG0006", Type_error)
-			set_last_error (Result.error_value)
+			check postcondition_of_set_last_error_from_string: attached Result.error_value as l_error_value then
+				set_last_error (l_error_value)
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 
-	evaluate_lazy_tail_expression (a_result: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER)
+	evaluate_lazy_tail_expression (a_result: DS_CELL [detachable XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER)
 			-- Evaluate `Current' as a lazy tail expression.
 		require
 			context_may_be_void: True
@@ -2061,7 +2156,7 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 		local
 			l_tail: XM_XPATH_TAIL_EXPRESSION
 			l_var: XM_XPATH_VARIABLE_REFERENCE
-			l_value: XM_XPATH_VALUE
+			l_value: detachable XM_XPATH_VALUE
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
 			l_start, l_end, l_length: INTEGER
@@ -2073,23 +2168,26 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 			l_value := a_result.item
 			if l_value  /= Void then
 				if l_value.is_memo_closure then
-					from
-						l_value.create_iterator (a_context)
-						l_iterator := l_value.last_iterator
-						l_iterator.start
-					until
-						l_iterator.is_error or else l_iterator.after
-					loop
-						l_iterator.forth
-					end
-					if l_iterator.is_error then
-						l_finished := True
-						a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_iterator.error_value))
-					else
-						if l_value.as_memo_closure.state = l_value.as_memo_closure.Maybe_more_state then
-							l_value.as_memo_closure.mark_as_all_read
+					l_value.create_iterator (a_context)
+					check postcondition_of_create_iterator: attached l_value.last_iterator as l_last_iterator then
+						from
+							l_iterator := l_last_iterator
+							l_iterator.start
+						until
+							l_iterator.is_error or else l_iterator.after
+						loop
+							l_iterator.forth
 						end
-						l_value := l_value.as_memo_closure.materialized
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							l_finished := True
+							a_result.put (create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+						else
+							if l_value.as_memo_closure.state = l_value.as_memo_closure.Maybe_more_state then
+								l_value.as_memo_closure.mark_as_all_read
+							end
+							l_value := l_value.as_memo_closure.materialized
+						end
 					end
 				end
 				if not l_finished then
@@ -2117,7 +2215,7 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 
 feature {NONE} -- Implementation
 
-	evaluate_by_generating_events (a_result: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT)
+	evaluate_by_generating_events (a_result: DS_CELL [detachable XM_XPATH_VALUE]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate via `generate_events'.
 		require
 			context_may_be_void: True
@@ -2128,6 +2226,17 @@ feature {NONE} -- Implementation
 			-- TODO: probably we can inline this, and drop `processed_eager_evaluation'.
 			-- (assuming we drop `eagerly_evaluate')
 			a_result.put (processed_eager_evaluation (a_context))
+		end
+
+	new_dummy_context: XM_XPATH_CONTEXT
+			-- New dummy context
+		local
+			l_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+		do
+			create l_function_library.make
+			create {XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT} Result.make_restricted (l_function_library)
+		ensure
+			new_dummy_context_not_void: Result /= Void
 		end
 
 invariant

@@ -6,7 +6,7 @@ note
 % of items that have already been read, and a base iterator, "
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,12 +54,12 @@ feature -- Access
 	last_position: INTEGER
 			-- Last position (= number of items in sequence)
 		do
-			if closure /= Void and then closure.is_all_read then
-					Result := closure.count
+			if attached closure as l_closure and then l_closure.is_all_read then
+				Result := l_closure.count
 			else
 				fill_reservoir
-				if closure /= Void then
-					Result := closure.count
+				if attached closure as l_closure then
+					Result := l_closure.count
 				end
 			end
 		end
@@ -88,7 +88,7 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		do
 			if index > reservoir.count and then not base_iterator.is_error then
-				if closure /= Void  and then closure.is_all_read then
+				if attached closure as l_closure and then l_closure.is_all_read then
 					Result := True
 				else
 					Result := not base_iterator.before and then base_iterator.after
@@ -103,9 +103,10 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if index > reservoir.count then
-				if closure = Void or else not closure.is_all_read then
-					if base_iterator.is_error then
-						set_last_error (base_iterator.error_value)
+				if not attached closure as l_closure or else not l_closure.is_all_read then
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
+						set_last_error (l_error_value)
 					else
 						if base_iterator.before then
 							base_iterator.start
@@ -113,8 +114,9 @@ feature -- Cursor movement
 							base_iterator.forth
 						end
 					end
-					if base_iterator.is_error then
-						set_last_error (base_iterator.error_value)
+					if attached base_iterator.error_value as l_error_value then
+						check is_error: base_iterator.is_error end
+						set_last_error (l_error_value)
 					elseif not base_iterator.after then
 						reservoir.force_last (base_iterator.item)
 					end
@@ -127,8 +129,9 @@ feature -- Evaluation
 	realize
 			-- Realize the sequence as a value.
 		do
-			if base_iterator.is_error then
-				create {XM_XPATH_INVALID_VALUE} last_realized_value.make (base_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				create {XM_XPATH_INVALID_VALUE} last_realized_value.make (l_error_value)
 			elseif not base_iterator.before and then base_iterator.after then
 				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (reservoir)
 			else
@@ -142,7 +145,7 @@ feature -- Conversion
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Duplication
@@ -162,7 +165,7 @@ feature {NONE} -- Implementation
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Source of unread nodes
 
-	closure: XM_XPATH_MEMO_CLOSURE
+	closure: detachable XM_XPATH_MEMO_CLOSURE
 			-- Closure over which `Current' iterates
 
 	fill_reservoir
@@ -185,8 +188,8 @@ feature {NONE} -- Implementation
 					reservoir.force_last (base_iterator.item)
 				end
 			end
-			if closure /= Void then
-				closure.mark_as_all_read
+			if attached closure as l_closure then
+				l_closure.mark_as_all_read
 			end
 		ensure
 			filled: base_iterator.after

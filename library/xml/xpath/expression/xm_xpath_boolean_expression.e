@@ -5,7 +5,7 @@ note
 		"XPath Boolean Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,31 +76,33 @@ feature -- Evaluation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			first_operand.calculate_effective_boolean_value (a_context)
-			a_boolean_value := first_operand.last_boolean_value
-			if a_boolean_value.is_error then
-				last_boolean_value := a_boolean_value
-			else
-				inspect
-					operator
-				when And_token then
-					if a_boolean_value.value then
-						second_operand.calculate_effective_boolean_value (a_context)
-						last_boolean_value := second_operand.last_boolean_value
-					else
-						last_boolean_value := a_boolean_value
-					end
-				when Or_token then
-					if a_boolean_value.value then
-						last_boolean_value := a_boolean_value
-					else
-						second_operand.calculate_effective_boolean_value (a_context)
-						last_boolean_value := second_operand.last_boolean_value
+			check postcondition_of_calculate_effective_boolean_value: attached first_operand.last_boolean_value as l_last_boolean_value then
+				a_boolean_value := l_last_boolean_value
+				if a_boolean_value.is_error then
+					last_boolean_value := a_boolean_value
+				else
+					inspect
+						operator
+					when And_token then
+						if a_boolean_value.value then
+							second_operand.calculate_effective_boolean_value (a_context)
+							last_boolean_value := second_operand.last_boolean_value
+						else
+							last_boolean_value := a_boolean_value
+						end
+					when Or_token then
+						if a_boolean_value.value then
+							last_boolean_value := a_boolean_value
+						else
+							second_operand.calculate_effective_boolean_value (a_context)
+							last_boolean_value := second_operand.last_boolean_value
+						end
 					end
 				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)

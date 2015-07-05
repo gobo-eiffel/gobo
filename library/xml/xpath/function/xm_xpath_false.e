@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath false() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- do nothing
+			check False then end
 		end
 
 feature -- Evaluation
@@ -65,7 +66,7 @@ feature -- Evaluation
 			create last_boolean_value.make (False)
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)

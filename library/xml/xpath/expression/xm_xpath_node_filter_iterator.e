@@ -5,7 +5,7 @@ note
 		"Objects that filter a node-sequence using a filter expression."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,7 +81,9 @@ feature -- Access
 	item: XM_XPATH_NODE
 			-- Node at the current position
 		do
-			Result := current_item
+			check precondition_not_off: attached current_item as l_current_item then
+				Result := l_current_item
+			end
 		end
 
 	is_node_iterator: BOOLEAN
@@ -93,7 +95,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -127,13 +129,13 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	current_item: like item
+	current_item: detachable like item
 			-- Current item
 
 	advance
 			-- Move to next matching node.
 		local
-			l_item: like item
+			l_item: detachable like item
 			l_matched: BOOLEAN
 		do
 			from
@@ -146,8 +148,9 @@ feature {NONE} -- Implementation
 				else
 					base_iterator.forth
 				end
-				if	base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
+				if attached base_iterator.error_value as l_error_value then
+					check is_error: base_iterator.is_error end
+					set_last_error (l_error_value)
 				elseif not base_iterator.after then
 					l_item := base_iterator.item
 					test_match
@@ -155,9 +158,11 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if is_error then
-				create {XM_XPATH_ORPHAN} current_item.make (Text_node, "") -- we need SOMETHING to set an error upon!
-				current_item.set_last_error (error_value)
+			if attached error_value as l_error_value then
+				check is_error: is_error end
+				create {XM_XPATH_ORPHAN} l_item.make (Text_node, "") -- we need SOMETHING to set an error upon!
+				l_item.set_last_error (l_error_value)
+				current_item := l_item
 			elseif last_match_test then
 				current_item := l_item
 			else

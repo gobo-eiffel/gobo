@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath unordered() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,54 +63,62 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
-			if a_replacement.item = Current then
-				create l_replacement.make (Void)
-				arguments.item (1).set_unsorted (l_replacement, True)
-				if arguments.item (1) /= l_replacement.item then
-					arguments.replace (l_replacement.item, 1)
+			check postcondition_of_precursor: attached a_replacement.item as a_replacement_item_1 then
+				if a_replacement_item_1 = Current then
+					create l_replacement.make (Void)
+					arguments.item (1).set_unsorted (l_replacement, True)
+					check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item_2 then
+						if arguments.item (1) /= l_replacement_item_2 then
+							arguments.replace (l_replacement_item_2, 1)
+						end
+					end
+				elseif a_replacement_item_1.is_unordered_function then
+					a_replacement_item_1.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 				end
-			elseif a_replacement.item.is_unordered_function then
-				a_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
-			end
-			if a_replacement.item /= Void then
-				a_replacement.put (Void)
-				set_replacement (a_replacement, arguments.item (1))
-			else
-				a_replacement.put (Current)
+				if a_replacement.item /= Void then
+					a_replacement.put (Void)
+					set_replacement (a_replacement, arguments.item (1))
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
-			if not is_error and a_replacement.item = Current then
-				create l_replacement.make (Void)
-				arguments.item (1).set_unsorted (l_replacement, True)
-				if arguments.item (1) /= l_replacement.item then
-					arguments.replace (l_replacement.item, 1)
+			check postcondition_of_precursor: attached a_replacement.item as a_replacement_item_1 then
+				if not is_error and a_replacement_item_1 = Current then
+					create l_replacement.make (Void)
+					arguments.item (1).set_unsorted (l_replacement, True)
+					check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item_2 then
+						if arguments.item (1) /= l_replacement_item_2 then
+							arguments.replace (l_replacement_item_2, 1)
+						end
+					end
+				elseif a_replacement_item_1.is_unordered_function then
+					a_replacement_item_1.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 				end
-			elseif a_replacement.item.is_unordered_function then
-				a_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
-			end
-			if a_replacement.item /= Void then
-				set_replacement (a_replacement, arguments.item (1))
-			else
-				a_replacement.put (Current)
+				if a_replacement.item /= Void then
+					set_replacement (a_replacement, arguments.item (1))
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			set_replacement (a_replacement, arguments.item (1))

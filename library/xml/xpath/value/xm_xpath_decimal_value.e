@@ -5,7 +5,7 @@ note
 		"Objects that represent XPath decimal value"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: MA_DECIMAL
+	value: detachable MA_DECIMAL
 
 
 	is_decimal_value: BOOLEAN
@@ -96,19 +96,25 @@ feature -- Access
 			if is_double then
 				Result := as_double.hash_code
 			else
-				Result := value.to_scientific_string.hash_code
+				check attached value as l_value then
+					Result := l_value.to_scientific_string.hash_code
+				end
 			end
 		end
 
 	as_integer: INTEGER
 		do
-			Result := value.to_integer
+			check attached value as l_value then
+				Result := l_value.to_integer
+			end
 		end
 
 	as_double: DOUBLE
 			-- Value converted to a double
 		do
-			Result := value.to_double
+			check attached value as l_value then
+				Result := l_value.to_double
+			end
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE
@@ -128,81 +134,84 @@ feature -- Access
 			l_coefficient, l_pad: STRING
 			l_index, l_count: INTEGER
 		do
-			if is_whole_number then
-				Result := as_integer.out
-			else
-				l_value := value
-				create Result.make (0)
-				if is_negative then
-					Result.append_string ("-")
-				end
-				create l_coefficient.make (l_value.count)
-				from
-					l_index := l_value.count - 1
-				until
-					l_index < 0
-				loop
-					l_coefficient.append_character (INTEGER_.to_character (('0').code + l_value.coefficient.item (l_index)))
-					l_index := l_index - 1
-				end
-				if l_value.exponent < 0 then
-					l_count := l_value.exponent.abs
-					if l_count > l_coefficient.count then
-						create l_pad.make_filled ('0', l_count - l_coefficient.count)
-						Result.append_string ("0.")
-						Result.append_string (l_pad)
-						Result.append_string (l_coefficient)
-					elseif l_count = l_coefficient.count then
-						Result.append_string ("0.")
-						if l_coefficient.is_empty then
-							l_coefficient := "0"
+			check attached value as l_value2 then
+				if is_whole_number then
+					Result := as_integer.out
+				else
+					l_value := l_value2
+					create Result.make (0)
+					if is_negative then
+						Result.append_string ("-")
+					end
+					create l_coefficient.make (l_value.count)
+					from
+						l_index := l_value.count - 1
+					until
+						l_index < 0
+					loop
+						l_coefficient.append_character (INTEGER_.to_character (('0').code + l_value.coefficient.item (l_index)))
+						l_index := l_index - 1
+					end
+					if l_value.exponent < 0 then
+						l_count := l_value.exponent.abs
+						if l_count > l_coefficient.count then
+							create l_pad.make_filled ('0', l_count - l_coefficient.count)
+							Result.append_string ("0.")
+							Result.append_string (l_pad)
+							Result.append_string (l_coefficient)
+						elseif l_count = l_coefficient.count then
+							Result.append_string ("0.")
+							if l_coefficient.is_empty then
+								l_coefficient := "0"
+							else
+								STRING_.prune_all_trailing (l_coefficient, '0')
+							end
+							Result.append_string (l_coefficient)
 						else
-							STRING_.prune_all_trailing (l_coefficient, '0')
+							Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
+							Result.append_string (".")
+							l_coefficient := l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count)
+							if l_coefficient.is_empty then
+								l_coefficient := "0"
+							else
+								STRING_.prune_all_trailing (l_coefficient, '0')
+							end
+							Result.append_string (l_coefficient)
 						end
-						Result.append_string (l_coefficient)
 					else
-						Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
-						Result.append_string (".")
-						l_coefficient := l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count)
-						if l_coefficient.is_empty then
-							l_coefficient := "0"
-						else
-							STRING_.prune_all_trailing (l_coefficient, '0')
-						end
 						Result.append_string (l_coefficient)
 					end
-				else
-					Result.append_string (l_coefficient)
 				end
 			end
 		end
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
-			is_a_decimal: BOOLEAN
-			a_value: like value
+			a_value: detachable like value
 		do
-			if other.is_integer_value then
-				other.as_integer_value.convert_to_type (type_factory.decimal_type)
-				a_value := other.as_integer_value.converted_value.as_decimal_value.value
-				is_a_decimal := True
-			elseif other.is_decimal_value then
-				a_value := other.as_decimal_value.value
-				is_a_decimal := True
-			end
-			if is_a_decimal then
-				if value.is_equal (a_value) then
-					Result := 0
-				elseif value > a_value then
-					Result := 1
-				else
-					Result := -1
+			check attached value as l_value then
+				if other.is_integer_value then
+					other.as_integer_value.convert_to_type (type_factory.decimal_type)
+					check postcondition_of_convert_to_type: attached other.as_integer_value.converted_value as l_converted_value then
+						a_value := l_converted_value.as_decimal_value.value
+					end
+				elseif other.is_decimal_value then
+					a_value := other.as_decimal_value.value
 				end
-			else
-				Result := Precursor (other, a_context)
+				if a_value /= Void then
+					if l_value.is_equal (a_value) then
+						Result := 0
+					elseif l_value > a_value then
+						Result := 1
+					else
+						Result := -1
+					end
+				else
+					Result := Precursor (other, a_context)
+				end
 			end
 		end
 
@@ -261,46 +270,58 @@ feature -- Status report
 	is_platform_integer: BOOLEAN
 			-- Can value be represented by an `INTEGER'?
 		do
-			Result := value.is_integer and then
-			value <= decimal.maximum_integer and then
-			value >= decimal.minimum_integer
+			check attached value as l_value then
+				Result := l_value.is_integer and then
+					l_value <= decimal.maximum_integer and then
+					l_value >= decimal.minimum_integer
+			end
 		end
 
 	is_double: BOOLEAN
 			-- Can value be converted to a `DOUBLE'?
 		do
-			Result := value.is_double
+			check attached value as l_value then
+				Result := l_value.is_double
+			end
 		end
 
 	is_nan: BOOLEAN
 			-- Is value Not-a-number?
 		do
-			Result := False
-			check
-				not_nan: not value.is_nan
-				-- because xs:decimal cannot become NaN
+			check attached value as l_value then
+				Result := False
+				check
+					not_nan: not l_value.is_nan
+					-- because xs:decimal cannot become NaN
+				end
 			end
 		end
 
 	is_zero: BOOLEAN
 			-- Is value zero?
 		do
-			Result := value.is_zero
+			check attached value as l_value then
+				Result := l_value.is_zero
+			end
 		end
 
 	is_negative: BOOLEAN
 			-- Is value less than zero?
 		do
-			Result := value.is_negative
+			check attached value as l_value then
+				Result := l_value.is_negative
+			end
 		end
 
 	is_infinite: BOOLEAN
 			-- Is value infinite?
 		do
-			Result := False
-			check
-				not_infinite: not value.is_infinity
-				-- because xs:decimal cannot become infinite
+			check attached value as l_value then
+				Result := False
+				check
+					not_infinite: not l_value.is_infinity
+					-- because xs:decimal cannot become infinite
+				end
 			end
 		end
 
@@ -309,38 +330,40 @@ feature -- Conversion
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
 			-- Convert `Current' to `a_required_type'
 		do
-			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} converted_value.make (not value.is_zero)
-			elseif a_required_type = type_factory.any_atomic_type  then
-				converted_value := Current
-			elseif a_required_type = any_item  then
-				converted_value := Current
-			elseif  a_required_type = type_factory.integer_type then
-				if is_platform_integer then
-					create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (value.to_integer.to_integer_64)
-				else
-					create {XM_XPATH_INTEGER_VALUE} converted_value.make (value)
+			check attached value as l_value then
+				if a_required_type = type_factory.boolean_type  then
+					create {XM_XPATH_BOOLEAN_VALUE} converted_value.make (not l_value.is_zero)
+				elseif a_required_type = type_factory.any_atomic_type  then
+					converted_value := Current
+				elseif a_required_type = any_item  then
+					converted_value := Current
+				elseif  a_required_type = type_factory.integer_type then
+					if is_platform_integer then
+						create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (l_value.to_integer.to_integer_64)
+					else
+						create {XM_XPATH_INTEGER_VALUE} converted_value.make (l_value)
+					end
+				elseif  a_required_type = type_factory.double_type then
+					if is_nan then
+						create {XM_XPATH_DOUBLE_VALUE} converted_value.make_nan
+					else
+						create {XM_XPATH_DOUBLE_VALUE} converted_value.make (l_value.to_double)
+					end
+				elseif  a_required_type = type_factory.float_type then
+					if is_nan then
+						create {XM_XPATH_FLOAT_VALUE} converted_value.make_nan
+					else
+						create {XM_XPATH_FLOAT_VALUE} converted_value.make (l_value.to_double)
+					end
+				elseif  a_required_type = type_factory.decimal_type then
+					converted_value := Current
+				elseif  a_required_type = type_factory.numeric_type then
+					converted_value := Current
+				elseif  a_required_type = type_factory.string_type then
+					create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
+				elseif a_required_type = type_factory.untyped_atomic_type then
+					create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 				end
-			elseif  a_required_type = type_factory.double_type then
-				if is_nan then
-					create {XM_XPATH_DOUBLE_VALUE} converted_value.make_nan
-				else
-					create {XM_XPATH_DOUBLE_VALUE} converted_value.make (value.to_double)
-				end
-			elseif  a_required_type = type_factory.float_type then
-				if is_nan then
-					create {XM_XPATH_FLOAT_VALUE} converted_value.make_nan
-				else
-					create {XM_XPATH_FLOAT_VALUE} converted_value.make (value.to_double)
-				end
-			elseif  a_required_type = type_factory.decimal_type then
-				converted_value := Current
-			elseif  a_required_type = type_factory.numeric_type then
-				converted_value := Current
-			elseif  a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
-			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 
@@ -349,13 +372,15 @@ feature -- Conversion
 		local
 			a_decimal: MA_DECIMAL
 		do
-			create a_decimal.make_copy (value)
-			if a_decimal.is_negative then
-				a_decimal := a_decimal.round_to_integer (shared_negative_round_context)
-			else
-				a_decimal := a_decimal.round_to_integer (shared_round_context)
+			check attached value as l_value then
+				create a_decimal.make_copy (l_value)
+				if a_decimal.is_negative then
+					a_decimal := a_decimal.round_to_integer (shared_negative_round_context)
+				else
+					a_decimal := a_decimal.round_to_integer (shared_round_context)
+				end
+				create Result.make (a_decimal)
 			end
-			create Result.make (a_decimal)
 		end
 
 	rounded_half_even (a_scale: INTEGER): like Current
@@ -363,8 +388,10 @@ feature -- Conversion
 		local
 			a_decimal: MA_DECIMAL
 		do
-			a_decimal := value.rescale (0 - a_scale, shared_half_even_context)
-			create Result.make (a_decimal)
+			check attached value as l_value then
+				a_decimal := l_value.rescale (0 - a_scale, shared_half_even_context)
+				create Result.make (a_decimal)
+			end
 		end
 
 	floor: like Current
@@ -372,9 +399,11 @@ feature -- Conversion
 		local
 			a_decimal: MA_DECIMAL
 		do
-			create a_decimal.make_copy (value)
-			a_decimal := a_decimal.round_to_integer (shared_floor_context)
-			create Result.make (a_decimal)
+			check attached value as l_value then
+				create a_decimal.make_copy (l_value)
+				a_decimal := a_decimal.round_to_integer (shared_floor_context)
+				create Result.make (a_decimal)
+			end
 		end
 
 	ceiling: like Current
@@ -382,15 +411,19 @@ feature -- Conversion
 		local
 			a_decimal: MA_DECIMAL
 		do
-			create a_decimal.make_copy (value)
-			a_decimal := a_decimal.round_to_integer (shared_ceiling_context)
-			create Result.make (a_decimal)
+			check attached value as l_value then
+				create a_decimal.make_copy (l_value)
+				a_decimal := a_decimal.round_to_integer (shared_ceiling_context)
+				create Result.make (a_decimal)
+			end
 		end
 
 	negated_value: like Current
 			-- Same abaolute value but opposite sign
 		do
-			create Result.make (-value)
+			check attached value as l_value then
+				create Result.make (-l_value)
+			end
 		end
 
 feature -- Basic operations
@@ -402,49 +435,55 @@ feature -- Basic operations
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_decimal: MA_DECIMAL
 		do
-			if other.is_decimal_value then
-				inspect
-					an_operator
-				when Plus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value + other.as_decimal_value.value)
-				when Minus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value - other.as_decimal_value.value)
-				when Multiply_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value * other.as_decimal_value.value)
-				when Division_token then
-					l_other_decimal := other.as_decimal_value
-					if l_other_decimal.value.is_zero then
-						create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
-					else
-						l_decimal := value / l_other_decimal.value
-						create {XM_XPATH_DECIMAL_VALUE} Result.make (l_decimal)
-					end
-				when Integer_division_token then
-					l_other_decimal := other.as_decimal_value
-					if l_other_decimal.value.is_zero then
-						create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
-					else
-						l_decimal := value // other.as_decimal_value.value
-						if l_decimal.is_integer then
-							create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (l_decimal.to_integer)
-						else
-							create {XM_XPATH_INTEGER_VALUE} Result.make (l_decimal)
+			check attached value as l_value then
+				if other.is_decimal_value then
+					check attached other.as_decimal_value.value as l_other_value then
+						inspect
+							an_operator
+						when Plus_token then
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (l_value + l_other_value)
+						when Minus_token then
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (l_value - l_other_value)
+						when Multiply_token then
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (l_value * l_other_value)
+						when Division_token then
+							if l_other_value.is_zero then
+								create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+							else
+								l_decimal := l_value / l_other_value
+								create {XM_XPATH_DECIMAL_VALUE} Result.make (l_decimal)
+							end
+						when Integer_division_token then
+							if l_other_value.is_zero then
+								create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+							else
+								l_decimal := l_value // l_other_value
+								if l_decimal.is_integer then
+									create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (l_decimal.to_integer)
+								else
+									create {XM_XPATH_INTEGER_VALUE} Result.make (l_decimal)
+								end
+							end
+						when Modulus_token then
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (l_value \\ l_other_value)
 						end
 					end
-				when Modulus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ other.as_decimal_value.value)
-				end
-			elseif other.is_integer_value or other.is_machine_integer_value then
-				other.convert_to_type (type_factory.decimal_type)
-				l_other_decimal := other.converted_value.as_decimal_value
-				Result := arithmetic (an_operator, l_other_decimal)
-			else
-				convert_to_type (other.item_type)
-				l_atomic_value := converted_value
-				if l_atomic_value.is_numeric_value then
-					Result := l_atomic_value.as_numeric_value.arithmetic (an_operator, other)
+				elseif other.is_integer_value or other.is_machine_integer_value then
+					other.convert_to_type (type_factory.decimal_type)
+					check postcondition_of_convert_to_type: attached other.converted_value as l_converted_value then
+						l_other_decimal := l_converted_value.as_decimal_value
+						Result := arithmetic (an_operator, l_other_decimal)
+					end
 				else
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
+					convert_to_type (other.item_type)
+					check postcondition_of_convert_to_type: attached converted_value as l_converted_value then
+						l_atomic_value := l_converted_value
+						if l_atomic_value.is_numeric_value then
+							Result := l_atomic_value.as_numeric_value.arithmetic (an_operator, other)
+						else
+							create {XM_XPATH_DECIMAL_VALUE} Result.make (l_value.nan)
+						end
+					end
 				end
 			end
 		end

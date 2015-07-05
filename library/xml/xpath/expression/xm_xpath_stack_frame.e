@@ -5,7 +5,7 @@ note
 		"Stack frames for local variables"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Create empty stack frame.
 		do
 			create slot_manager.make
-			create variables.make_filled (Void, 1, 0)
+			create variables.make_empty
 		end
 
 	make_fixed_size (a_variable_count: INTEGER)
@@ -53,12 +53,12 @@ feature -- Access
 	slot_manager: XM_XPATH_SLOT_MANAGER
 			-- Slot manager
 
-	variables: ARRAY [XM_XPATH_VALUE]
+	variables: ARRAY [detachable XM_XPATH_VALUE]
 			-- Local variables
 
 feature -- Element change
 
-	set_variable (a_value: XM_XPATH_VALUE;  a_slot_number: INTEGER)
+	set_variable (a_value: detachable XM_XPATH_VALUE; a_slot_number: INTEGER)
 			-- Set a variable's value.
 		require
 			valid_local_variable: a_slot_number > 0

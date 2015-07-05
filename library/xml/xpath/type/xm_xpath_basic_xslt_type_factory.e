@@ -5,7 +5,7 @@ note
 		"Objects that create built-in types for a Basic XSLT processor, and make them accessible"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,151 +22,151 @@ create
 
 feature -- Access
 
-	notation_type: XM_XPATH_ATOMIC_TYPE
+	notation_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:NOTATION
 		once
 			Result := Void
 		end
 
-	non_positive_integer_type: XM_XPATH_ATOMIC_TYPE
+	non_positive_integer_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:nonPositiveInteger
 		once
 			Result := Void
 		end
 
-	negative_integer_type: XM_XPATH_ATOMIC_TYPE
+	negative_integer_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:negativeInteger
 		once
 			Result := Void
 		end
 
-	long_type: XM_XPATH_ATOMIC_TYPE
+	long_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:long
 		once
 			Result := Void
 		end
 
-	int_type: XM_XPATH_ATOMIC_TYPE
+	int_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:int
 		once
 			Result := Void
 		end
 
-	short_type: XM_XPATH_ATOMIC_TYPE
+	short_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:short
 		once
 			Result := Void
 		end
 
-	byte_type: XM_XPATH_ATOMIC_TYPE
+	byte_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:byte
 		once
 			Result := Void
 		end
 
-	non_negative_integer_type: XM_XPATH_ATOMIC_TYPE
+	non_negative_integer_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:nonNegativeInteger
 		once
 			Result := Void
 		end
 
-	positive_integer_type: XM_XPATH_ATOMIC_TYPE
+	positive_integer_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:positiveInteger
 		once
 			Result := Void
 		end
 
-	unsigned_long_type: XM_XPATH_ATOMIC_TYPE
+	unsigned_long_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:unsignedLong
 		once
 			Result := Void
 		end
 
-	unsigned_int_type: XM_XPATH_ATOMIC_TYPE
+	unsigned_int_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:unsignedInt
 		once
 			Result := Void
 		end
 
-	unsigned_short_type: XM_XPATH_ATOMIC_TYPE
+	unsigned_short_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:unsignedShort
 		once
 			Result := Void
 		end
 
-	unsigned_byte_type: XM_XPATH_ATOMIC_TYPE
+	unsigned_byte_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:unsignedByte
 		once
 			Result := Void
 		end
 
-	normalized_string_type: XM_XPATH_ATOMIC_TYPE
+	normalized_string_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:normalizedString
 		once
 			Result := Void
 		end
 
-	token_type: XM_XPATH_ATOMIC_TYPE
+	token_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:token
 		once
 			Result := Void
 		end
 
-	language_type: XM_XPATH_ATOMIC_TYPE
+	language_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:language
 		once
 			Result := Void
 		end
 
-	nmtoken_type: XM_XPATH_ATOMIC_TYPE
+	nmtoken_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:NMTOKEN
 		once
 			Result := Void
 		end
 
-	name_type: XM_XPATH_ATOMIC_TYPE
+	name_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:Name
 		once
 			Result := Void
 		end
 
-	ncname_type: XM_XPATH_ATOMIC_TYPE
+	ncname_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:NCName
 		once
 			Result := Void
 		end
 
-	id_type: XM_XPATH_ATOMIC_TYPE
+	id_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:ID
 		once
 			Result := Void
 		end
 
-	idref_type: XM_XPATH_ATOMIC_TYPE
+	idref_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:IDREF
 		once
 			Result := Void
 		end
 
-	entity_type: XM_XPATH_ATOMIC_TYPE
+	entity_type: detachable XM_XPATH_ATOMIC_TYPE
 			-- xs:ENTITY
 		once
 			Result := Void
 		end
 
-	idrefs_type: XM_XPATH_LIST_TYPE
+	idrefs_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:IDREFS
 		once
 			Result := Void
 		end
 
-	entities_type: XM_XPATH_LIST_TYPE
+	entities_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:ENTITIES
 		once
 			Result := Void
 		end
 
-	nmtokens_type: XM_XPATH_LIST_TYPE
+	nmtokens_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:NMTOKENS
 		once
 			Result := Void

@@ -5,7 +5,7 @@ note
 		"Objects that prepend a node to an XPath node axis iterator"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,12 +29,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			starting_node_not_void: a_node /= Void
-			base_iterator_before: base_iterator /= Void and then base_iterator.before
+			base_iterator_before: a_base_iterator /= Void and then a_base_iterator.before
 		do
 			starting_node := a_node
 			base_iterator := a_base_iterator
-			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				set_last_error (l_error_value)
 			else
 				base_iterator.start
 			end
@@ -63,15 +64,16 @@ feature -- Cursor movement
 	forth
 			-- Move to next position
 		local
-			l_default: G
+			l_default: detachable G
 		do
 			index := index + 1
 			if index > 2 then
 				base_iterator.forth
 			end
-			if base_iterator.is_error then
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
 				current_item := l_default
-				set_last_error (base_iterator.error_value)
+				set_last_error (l_error_value)
 			elseif base_iterator.after then
 				current_item := l_default
 			else

@@ -5,7 +5,7 @@ note
 		"XPath item - a member of a sequence"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature -- Access
 			type_name_not_void: Result /= Void
 		end
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value
 		deferred
 		end
@@ -192,8 +192,8 @@ feature -- Status setting
 		deferred
 		ensure
 			item_in_error: is_error
-			valid_error: error_value /= Void
-				and then STRING_.same_string (error_value.code , a_code)
+			valid_error: attached error_value as l_error_value
+				and then STRING_.same_string (l_error_value.code , a_code)
 		end
 
 feature -- Conversion
@@ -212,6 +212,7 @@ feature -- Conversion
 		require
 			node: is_node
 		do
+			check is_node: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -221,6 +222,7 @@ feature -- Conversion
 		require
 			atomic_value: is_atomic_value
 		do
+			check is_atomic_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -230,6 +232,7 @@ feature -- Conversion
 		require
 			element: is_element
 		do
+			check is_element: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -239,6 +242,7 @@ feature -- Conversion
 		require
 			document: is_document
 		do
+			check is_document: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -248,6 +252,7 @@ feature -- Conversion
 		require
 			untyped_atomic_value: is_untyped_atomic
 		do
+			check is_untyped_atomic: False then end
 		ensure
 			as_untyped_atomic_not_void: Result /= Void
 			untyped_atomic: Result.is_untyped_atomic
@@ -259,6 +264,7 @@ feature -- Conversion
 		require
 			numeric_value: is_numeric_value
 		do
+			check is_numeric_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -268,6 +274,7 @@ feature -- Conversion
 		require
 			integer_value: is_integer_value
 		do
+			check is_integer_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -277,6 +284,7 @@ feature -- Conversion
 		require
 			machine_integer_value: is_machine_integer_value
 		do
+			check is_machine_integer_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -286,6 +294,7 @@ feature -- Conversion
 		require
 			double_value: is_double_value
 		do
+			check is_double_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -301,6 +310,7 @@ feature -- Conversion
 		require
 			float_value: is_float_value
 		do
+			check is_float_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -310,6 +320,7 @@ feature -- Conversion
 		require
 			decimal_value: is_decimal_value
 		do
+			check is_decimal_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -319,6 +330,7 @@ feature -- Conversion
 		require
 			string_value: is_string_value
 		do
+			check is_string_value: False then end
 		ensure
 			as_string_not_void: Result /= Void
 			string_value: Result.is_string_value
@@ -330,6 +342,7 @@ feature -- Conversion
 		require
 			boolean_value: is_boolean_value
 		do
+			check is_boolean_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -339,6 +352,7 @@ feature -- Conversion
 		require
 			qname_value: is_qname_value
 		do
+			check is_qname_value: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -348,6 +362,7 @@ feature -- Conversion
 		require
 			any_uri_value: is_any_uri
 		do
+			check is_any_uri: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

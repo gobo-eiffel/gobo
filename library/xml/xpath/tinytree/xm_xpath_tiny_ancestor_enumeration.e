@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the ancestor:: or ancestor-or-self:: Axes"
 
 	library: "Gobo Eiffel XPATH Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,11 +46,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
-		local
-			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
 		do
-			a_tiny_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tiny_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -64,17 +61,19 @@ feature -- Cursor movement
 				forth
 			end
 		ensure then
-			not_same_node: current_item /= Void and not include_self implies not starting_node.is_same_node (current_item)
+			not_same_node: attached current_item as l_current_item and not include_self implies not starting_node.is_same_node (l_current_item)
 		end
 
 	forth
 			-- Move to next position
 		local
-			l_node: XM_XPATH_TINY_NODE
+			l_node: detachable XM_XPATH_TINY_NODE
 		do
 			index := index + 1
 			from
-				l_node := current_item.parent
+				if attached current_item as l_current_item then
+					l_node := l_current_item.parent
+				end
 				if l_node = Void then
 					current_item := Void
 				elseif node_test.matches_item (l_node, False) then
@@ -91,7 +90,7 @@ feature -- Cursor movement
 				current_item := l_node
 			end
 		ensure then
-			not_same_node: current_item /= Void implies not starting_node.is_same_node (current_item)
+			not_same_node: attached current_item as l_current_item implies not starting_node.is_same_node (l_current_item)
 		end
 
 feature -- Duplication

@@ -5,7 +5,7 @@ note
 		"XPath Attribute nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,9 +36,11 @@ feature -- Access
 			-- XPath expression for location within document;
 			-- Used for reporting purposes.
 		do
-			Result := STRING_.concat ("/@", node_name)
-			if parent /= Void then
-				Result := STRING_.appended_string (parent.path, Result)
+			check attached node_name as l_node_name then
+				Result := STRING_.concat ("/@", l_node_name)
+				if attached parent as l_parent then
+					Result := STRING_.appended_string (l_parent.path, Result)
+				end
 			end
 		end
 

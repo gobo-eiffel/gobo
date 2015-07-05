@@ -5,7 +5,7 @@ note
 		"Iterators over a sequence of zero or one items"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: G)
+	make (a_value: detachable G)
 		do
 			value := a_value
 			gone := (a_value = Void)
@@ -43,8 +43,8 @@ feature -- Access
 	item: G
 			-- Value or node at the current position
 		do
-			if index = 1 then
-				Result := value
+			check precondition_not_off: index = 1 and attached value as l_value then
+				Result := l_value
 			end
 		end
 
@@ -117,13 +117,15 @@ feature -- Evaluation
 	realize
 			-- Realize the sequence as a value.
 		do
-			if value.is_atomic_value then
-				last_realized_value := value.as_atomic_value
-			else
-				check
-					node: item.is_node
+			check attached value as l_value then
+				if l_value.is_atomic_value then
+					last_realized_value := l_value.as_atomic_value
+				else
+					check
+						node: item.is_node
+					end
+					create {XM_XPATH_SINGLETON_NODE} last_realized_value.make (item.as_node)
 				end
-				create {XM_XPATH_SINGLETON_NODE} last_realized_value.make (item.as_node)
 			end
 		end
 
@@ -146,7 +148,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	value: like item
+	value: detachable like item
 			-- Possibly void item
 
 	gone: BOOLEAN

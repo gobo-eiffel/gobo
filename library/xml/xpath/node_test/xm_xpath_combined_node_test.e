@@ -5,7 +5,7 @@ note
 		"Objects that combine two node tests with a set operator"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,9 @@ feature {NONE} -- Initialization
 			operator := a_operator
 			a_string := STRING_.appended_string ("(", node_test_one.original_text)
 			a_string := STRING_.appended_string (a_string, " ")
-			a_string := STRING_.appended_string (a_string, token_name (operator))
+			if attached token_name (operator) as l_token_name then
+				a_string := STRING_.appended_string (a_string, l_token_name)
+			end
 			a_string := STRING_.appended_string (a_string, " ")
 			a_string := STRING_.appended_string (a_string, node_test_two.original_text)
 			a_string := STRING_.appended_string (a_string, ")")
@@ -76,7 +78,7 @@ feature -- Access
 			Result := INTEGER_.bit_and (node_test_one.node_kind_mask, node_test_two.node_kind_mask)
 		end
 
-	constraining_node_names: DS_SET [INTEGER]
+	constraining_node_names: detachable DS_SET [INTEGER]
 			-- Set of fingerprints of node names allowed
 		do
 			if node_test_one.constraining_node_names = Void then

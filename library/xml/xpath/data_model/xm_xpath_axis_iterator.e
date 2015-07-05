@@ -5,7 +5,7 @@ note
 		"Objects that iterate over an XPath node axis"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,9 @@ feature -- Access
 	item: G
 			-- Value or node at the current position
 		do
-			Result := current_item
+			check precondition_not_off: attached current_item as l_current_item then
+				Result := l_current_item
+			end
 		end
 
 feature -- Status report
@@ -59,18 +61,18 @@ feature -- Conversion
 	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as an axis iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature {NONE} -- Implementation
 
-	current_item: like item
+	current_item: detachable like item
 			-- The item that the iterator is currently pointing to
 
 	advance

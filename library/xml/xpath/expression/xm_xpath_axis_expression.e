@@ -5,7 +5,7 @@ note
 		"XPath Axis Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST)
+	make (an_axis_type: INTEGER; a_node_test: detachable XM_XPATH_NODE_TEST)
 		require
 			valid_axis_type: is_axis_valid (an_axis_type)
 		do
@@ -54,7 +54,7 @@ feature -- Access
 	axis: INTEGER
 			-- Type of axis
 
-	node_test: XM_XPATH_NODE_TEST
+	node_test: detachable XM_XPATH_NODE_TEST
 			-- Node test
 
 	is_axis_expression: BOOLEAN
@@ -74,18 +74,22 @@ feature -- Access
 		local
 			principal_axis: INTEGER
 		do
-			if known_item_type /= Void then
-				Result := known_item_type
+			if attached known_item_type as l_known_item_type then
+				Result := l_known_item_type
 			else
 				principal_axis := axis_principal_node_type (axis)
 				if principal_axis = Attribute_node then
-					create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_attribute_test, intersect_token, node_test)
+					check attached node_test as l_node_test then
+						create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_attribute_test, intersect_token, l_node_test)
+					end
 				elseif principal_axis = Namespace_node then
-					create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_namespace_test, intersect_token, node_test)
-				elseif node_test = Void then
+					check attached node_test as l_node_test then
+						create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_namespace_test, intersect_token, l_node_test)
+					end
+				elseif not attached node_test as l_node_test then
 					Result := any_node_test
 				else
-					Result := node_test
+					Result := l_node_test
 				end
 			end
 		end
@@ -103,10 +107,10 @@ feature -- Comparison
 				an_axis_expression := other.as_axis_expression
 				if axis /= an_axis_expression.axis then
 					Result := False
-				elseif node_test = Void and then an_axis_expression.node_test = Void then
+				elseif not attached node_test as l_node_test or not attached an_axis_expression.node_test as l_other_node_test then
 					Result := True
 				else
-					Result := STRING_.same_string (node_test.original_text, an_axis_expression.node_test.original_text)
+					Result := STRING_.same_string (l_node_test.original_text, l_other_node_test.original_text)
 				end
 			end
 		end
@@ -139,7 +143,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
@@ -152,7 +156,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_message: STRING
@@ -174,7 +178,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -185,7 +189,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
-			an_item: XM_XPATH_ITEM
+			an_item: detachable XM_XPATH_ITEM
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
@@ -193,10 +197,10 @@ feature -- Evaluation
 			else
 				if not an_item.is_node then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XPTY0020", Type_error)
-				elseif node_test = Void then
+				elseif not attached node_test as l_node_test then
 					last_iterator := an_item.as_node.new_axis_iterator (axis)
 				else
-					last_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, node_test)
+					last_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, l_node_test)
 				end
 			end
 		end
@@ -204,7 +208,7 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
-			an_item: XM_XPATH_ITEM
+			an_item: detachable XM_XPATH_ITEM
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
@@ -212,10 +216,10 @@ feature -- Evaluation
 			else
 				if not an_item.is_node then
 					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XPTY0020", Type_error)
-				elseif node_test = Void then
+				elseif not attached node_test as l_node_test then
 					last_node_iterator := an_item.as_node.new_axis_iterator (axis)
 				else
-					last_node_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, node_test)
+					last_node_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, l_node_test)
 				end
 			end
 		end
@@ -227,7 +231,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			if axis = Self_axis then
 				set_cardinality_optional
-			elseif axis = Attribute_axis and then node_test.is_name_test then
+			elseif axis = Attribute_axis and then attached node_test as l_node_test and then l_node_test.is_name_test then
 				set_cardinality_optional
 			else
 				set_cardinality_zero_or_more
@@ -259,7 +263,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	known_item_type: XM_XPATH_ITEM_TYPE
+	known_item_type: detachable XM_XPATH_ITEM_TYPE
 			--  Data type of the expression, when known
 
 	axis_description: STRING
@@ -267,10 +271,10 @@ feature {NONE} -- Implementation
 		local
 			a_test_string: STRING
 		do
-			if node_test = Void then
+			if not attached node_test as l_node_test then
 				a_test_string := "node()"
 			else
-				a_test_string := node_test.original_text
+				a_test_string := l_node_test.original_text
 			end
 			Result := STRING_.concat (axis_name (axis), "::")
 			Result := STRING_.appended_string (Result, a_test_string)
@@ -278,7 +282,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	check_node_test_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST)
+	check_node_test_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST)
 			-- Check static type when context item is a node test.
 		require
 			context_not_void: a_context /= Void
@@ -289,7 +293,7 @@ feature {NONE} -- Implementation
 			l_origin, l_kind: INTEGER
 			l_message, l_article: STRING
 			l_element_test: XM_XPATH_NODE_TEST
-			l_names, l_selected_names: DS_SET [INTEGER]
+			l_names, l_selected_names: detachable DS_SET [INTEGER]
 		do
 			l_origin := a_node_test.primitive_type
 			if l_origin /= Any_node and then is_axis_always_empty (axis, l_origin) then
@@ -305,8 +309,8 @@ feature {NONE} -- Implementation
 				l_message := STRING_.appended_string (l_message, node_kind_description (l_origin))
 				l_message := STRING_.appended_string (l_message, " will never select anything")
 				a_context.issue_warning (l_message)
-			elseif node_test /= Void then
-				l_kind := node_test.primitive_type
+			elseif attached node_test as l_node_test then
+				l_kind := l_node_test.primitive_type
 				if l_kind /= Any_node and not axis_contains_node_kind (axis, l_kind) then
 					set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					l_message := STRING_.concat ("The ", axis_name (axis))
@@ -328,13 +332,13 @@ feature {NONE} -- Implementation
 					a_context.issue_warning (l_message)
 				else
 					if axis = Self_axis then
-						create {XM_XPATH_COMBINED_NODE_TEST} known_item_type.make (a_node_test, Intersect_token, node_test)
+						create {XM_XPATH_COMBINED_NODE_TEST} known_item_type.make (a_node_test, Intersect_token, l_node_test)
 					end
 					if a_node_test.is_document_node_test and axis = Child_axis and l_kind = Element_node then
 						l_element_test := a_node_test.as_document_node_test.element_test
 						l_names := l_element_test.constraining_node_names
 						if l_names /= Void then
-							l_selected_names := node_test.constraining_node_names
+							l_selected_names := l_node_test.constraining_node_names
 							if l_selected_names /= Void and then l_selected_names.intersection (l_names).is_empty then
 								set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 								a_context.issue_warning ("Step from document node selects only invalid element names.")

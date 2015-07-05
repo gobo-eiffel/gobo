@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Objects that handle addition and subtraction of XPath Date, Date-time and Time and a duration"
+		"Objects that handle addition and subtraction of XPath Date, Date-time and Time and a duration"
 
-library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_DATE_AND_DURATION
 
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -50,17 +50,17 @@ feature -- Evaluation
 			l_item: XM_XPATH_ITEM
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
 			else
-				l_item := a_result.item
+				l_item := l_result_item
 				a_result.put (Void)
 				second_operand.evaluate_item (a_result, a_context)
-				if a_result.item = Void or else a_result.item.is_error then
+				if not attached a_result.item as l_result_item_2 or else l_result_item_2.is_error then
 					-- nothing to do
 				else
 					l_calendar_value := l_item.as_atomic_value.as_calendar_value
-					l_duration := a_result.item.as_atomic_value.as_duration_value
+					l_duration := l_result_item_2.as_atomic_value.as_duration_value
 					if operator = Plus_token then
 						a_result.put (l_calendar_value.plus (l_duration))
 					else

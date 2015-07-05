@@ -5,7 +5,7 @@ note
 		"Objects that support the default collection and file: collections"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ inherit
 
 feature -- Status report
 
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_collection: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve_directory'
 
 feature {NONE} -- Implementation
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			dynamic_context_not_void: a_context /= Void
 			directory_not_void: a_directory /= Void
 		local
-			l_files, l_directories: ARRAY [STRING]
+			l_files, l_directories: detachable ARRAY [STRING]
 			l_extent: XM_XPATH_SEQUENCE_EXTENT
 			l_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			l_count: INTEGER
@@ -365,12 +365,18 @@ feature {NONE} -- Implementation
 					l_count := l_count + l_directories.count
 				end
 				create l_list.make (l_count)
-				l_files.do_all (agent add_file (l_list, ?, a_uri))
-				l_directories.do_all (agent add_directory (l_list, ?, a_uri))
+				if l_files /= Void then
+					l_files.do_all (agent add_file (l_list, ?, a_uri))
+				end
+				if l_directories /= Void then
+					l_directories.do_all (agent add_directory (l_list, ?, a_uri))
+				end
 				if last_collection = Void then
 					create l_extent.make_from_list (l_list)
-					a_context.available_documents.add_collection (l_extent, a_uri.full_uri)
-					last_collection := a_context.available_documents.collection (a_uri.full_uri)
+					check attached a_context.available_documents as l_available_documents then
+						l_available_documents.add_collection (l_extent, a_uri.full_uri)
+						last_collection := l_available_documents.collection (a_uri.full_uri)
+					end
 				end
 			end
 		end
@@ -397,7 +403,9 @@ feature {NONE} -- Implementation
 			l_builder.end_element
 			l_builder.end_document
 			l_builder.close
-			a_list.put_last (l_builder.tiny_document)
+			check postcondition_of_start_document: attached l_builder.tiny_document as l_tiny_document then
+				a_list.put_last (l_tiny_document)
+			end
 		ensure
 			one_more: a_list.count = old a_list.count + 1
 		end
@@ -424,7 +432,9 @@ feature {NONE} -- Implementation
 			l_builder.end_element
 			l_builder.end_document
 			l_builder.close
-			a_list.put_last (l_builder.tiny_document)
+			check postcondition_of_start_document: attached l_builder.tiny_document as l_tiny_document then
+				a_list.put_last (l_tiny_document)
+			end
 		ensure
 			one_more: a_list.count = old a_list.count + 1
 		end
@@ -439,8 +449,8 @@ feature {NONE} -- Implementation
 			l_info: UNIX_FILE_INFO
 		do
 			a_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, a_uri.full_uri, 0)
-			create l_file.make (File_uri.uri_to_filename (a_uri))
-			if l_file /= Void then
+			check attached File_uri.uri_to_filename (a_uri) as l_uri_to_filename then
+				create l_file.make (l_uri_to_filename)
 				l_info := l_file.file_info
 				ensure_protection_code
 				a_builder.notify_attribute (protection_code, Untyped_atomic_type_code, l_info.protection.out, 0)

@@ -5,7 +5,7 @@ note
 		"XPath Expressions, other than values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,8 +58,8 @@ feature -- Access
 			-- Line number of `Current' within source document
 		do
 			if location_identifier = 0 then
-				if parent /= Void then
-					Result := parent.line_number
+				if attached parent as l_parent then
+					Result := l_parent.line_number
 				end
 			else
 				Result := INTEGER_.bit_and (location_identifier, line_number_mask)
@@ -75,15 +75,15 @@ feature -- Access
 				a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
 				if a_module_number > 0 then
 					Result := system_id_from_module_number (a_module_number)
-				elseif container = Void then
+				elseif not attached container as l_container then
 					Result := ""
 				else
-					Result := container.system_id
+					Result := l_container.system_id
 				end
-			elseif container = Void then
+			elseif not attached container as l_container then
 				Result := ""
 			else
-				Result := container.system_id
+				Result := l_container.system_id
 			end
 		end
 
@@ -93,10 +93,10 @@ feature -- Access
 
 			-- Default implementation - redefined by top-level containers
 
-			if container = Void then
+			if not attached container as l_container then
 				Result := ""
 			else
-				Result := container.system_id_from_module_number (a_module_number)
+				Result := l_container.system_id_from_module_number (a_module_number)
 			end
 		end
 
@@ -120,7 +120,7 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
-	container: XM_XPATH_EXPRESSION_CONTAINER
+	container: detachable XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 		do
 			Result := parent
@@ -216,7 +216,6 @@ feature -- Status setting
 			not_in_error: not is_error
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if not are_dependencies_computed then
 				from
@@ -224,8 +223,7 @@ feature -- Status setting
 				until
 					a_cursor.after
 				loop
-					an_expression ?= a_cursor.item
-					if an_expression /= Void and then not an_expression.are_dependencies_computed then
+					if attached {XM_XPATH_COMPUTED_EXPRESSION} a_cursor.item as an_expression and then not an_expression.are_dependencies_computed then
 						an_expression.compute_dependencies
 					end
 					a_cursor.forth
@@ -238,8 +236,7 @@ feature -- Status setting
 				until
 					a_cursor.after
 				loop
-					an_expression ?= a_cursor.item
-					if an_expression /= Void and then not an_expression.are_cardinalities_computed then
+					if attached {XM_XPATH_COMPUTED_EXPRESSION} a_cursor.item as an_expression and then not an_expression.are_cardinalities_computed then
 						an_expression.compute_cardinality
 					end
 					a_cursor.forth
@@ -252,8 +249,7 @@ feature -- Status setting
 				until
 					a_cursor.after
 				loop
-					an_expression ?= a_cursor.item
-					if an_expression /= Void and then not an_expression.are_special_properties_computed then
+					if attached {XM_XPATH_COMPUTED_EXPRESSION} a_cursor.item as an_expression and then not an_expression.are_special_properties_computed then
 						an_expression.compute_special_properties
 					end
 					a_cursor.forth
@@ -328,10 +324,10 @@ feature -- Status setting
 		do
 			reinitialize_all_static_properties
 			compute_static_properties
-			if container /= Void and then container.is_computed_expression
-				and then container.as_computed_expression.are_static_properties_computed
-				and then not container.as_computed_expression.is_error then
-				container.as_computed_expression.reset_static_properties
+			if attached container as l_container and then l_container.is_computed_expression
+				and then l_container.as_computed_expression.are_static_properties_computed
+				and then not l_container.as_computed_expression.is_error then
+				l_container.as_computed_expression.reset_static_properties
 			end
 		ensure
 			recomputed: are_static_properties_computed
@@ -344,22 +340,24 @@ feature -- Status setting
 		local
 			l_id: like system_id
 		do
-			l_id := system_id
-			if l_id /= Void and then not l_id.is_empty then
-				error_value.set_location (l_id, line_number)
+			check precondition: attached error_value as l_error_value then
+				l_id := system_id
+				if l_id /= Void and then not l_id.is_empty then
+					l_error_value.set_location (l_id, line_number)
+				end
 			end
 		end
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			-- do nothing
 			a_replacement.put (Current)
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			-- do nothing
@@ -368,20 +366,24 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
-			if last_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-			else
-				last_iterator.start
-				if last_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-				elseif last_iterator.after then
-					a_result.put (Void) -- Empty sequence
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if attached l_last_iterator.error_value as l_error_value then
+					check is_error: l_last_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 				else
-					a_result.put (last_iterator.item) -- the assumption in cardinality is zero-or-one
+					l_last_iterator.start
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+					elseif l_last_iterator.after then
+						a_result.put (Void) -- Empty sequence
+					else
+						a_result.put (l_last_iterator.item) -- the assumption in cardinality is zero-or-one
+					end
 				end
 			end
 		end
@@ -389,26 +391,29 @@ feature -- Evaluation
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate `Current' as a String
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_last_evaluated_string: like last_evaluated_string
 		do
 			create l_result.make (Void)
 			evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create last_evaluated_string.make ("")
-			elseif l_result.item.is_error then
-				create last_evaluated_string.make ("")
-				last_evaluated_string.set_last_error (l_result.item.error_value)
-			elseif not l_result.item.is_string_value then
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create l_last_evaluated_string.make ("")
+				l_last_evaluated_string.set_last_error (l_error_value)
+				last_evaluated_string := l_last_evaluated_string
+			elseif not l_result_item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
-				last_evaluated_string := l_result.item.as_string_value
+				last_evaluated_string := l_result_item.as_string_value
 			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 
@@ -422,21 +427,22 @@ feature -- Evaluation
 				singleton_expression: not cardinality_allows_many
 			end
 			evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
-			elseif l_result.item.is_node then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_result.item.as_node)
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+			elseif l_result_item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_result_item.as_node)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result_item)
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 
@@ -450,54 +456,61 @@ feature -- Evaluation
 					singleton_expression: not cardinality_allows_many
 			end
 			evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
-			elseif l_result.item.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
 			else
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_result.item.as_node)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_result_item.as_node)
 			end
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
-			l_error_value: XM_XPATH_ERROR_VALUE
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			if is_evaluate_supported then
 				create l_result.make (Void)
 				evaluate_item (l_result, a_context)
-				if l_result.item /= Void then
-					if l_result.item.is_error then
-						a_context.report_fatal_error (l_result.item.error_value)
+				if attached l_result.item as l_result_item then
+					if attached l_result_item.error_value as l_error_value then
+						check is_error: l_result_item.is_error end
+						a_context.report_fatal_error (l_error_value)
 					else
-						l_result.item.send (a_context.current_receiver)
+						check precondition_has_push_processing: attached a_context.current_receiver as l_current_receiver then
+							l_result_item.send (l_current_receiver)
+						end
 					end
 				end
 			elseif is_iterator_supported then
 				create_iterator (a_context)
-				if last_iterator.is_error then
-					l_error_value := last_iterator.error_value
-					if not l_error_value.is_location_known and then not system_id.is_empty then
-						l_error_value.set_location (system_id, line_number)
-					end
-					a_context.report_fatal_error (l_error_value)
-				else
-					from
-						last_iterator.start
-					until
-						last_iterator.is_error or else last_iterator.after
-					loop
-						last_iterator.item.send (a_context.current_receiver)
-						last_iterator.forth
-					end
-					if last_iterator.is_error then
-						l_error_value := last_iterator.error_value
+				check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
 						if not l_error_value.is_location_known and then not system_id.is_empty then
 							l_error_value.set_location (system_id, line_number)
 						end
 						a_context.report_fatal_error (l_error_value)
+					else
+						from
+							l_last_iterator.start
+						until
+							l_last_iterator.is_error or else l_last_iterator.after
+						loop
+							check precondition_has_push_processing: attached a_context.current_receiver as l_current_receiver then
+								l_last_iterator.item.send (l_current_receiver)
+							end
+							l_last_iterator.forth
+						end
+						if attached l_last_iterator.error_value as l_error_value then
+							check is_error: l_last_iterator.is_error end
+							if not l_error_value.is_location_known and then not system_id.is_empty then
+								l_error_value.set_location (system_id, line_number)
+							end
+							a_context.report_fatal_error (l_error_value)
+						end
 					end
 				end
 			else
@@ -515,6 +528,7 @@ feature -- Evaluation
 				-- Precondition assumed not met for this implementation.
 				-- Descendants must redefine if this is not the case
 			end
+			check False then end
 		end
 
 feature -- Element change
@@ -546,7 +560,7 @@ feature -- Element change
 			end
 		end
 
-	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER)
+	set_parent (a_container: detachable XM_XPATH_EXPRESSION_CONTAINER)
 			-- Set `a_container' to be parent of `Current'.
 		require
 			not_self: a_container /= Current
@@ -649,15 +663,13 @@ feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
 			set_not_void: a_set /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			from
 				a_cursor := sub_expressions.new_cursor; a_cursor.start
 			until
 				a_cursor.after
 			loop
-				a_computed_expression ?= a_cursor.item
-				if a_computed_expression /= Void then
+				if attached {XM_XPATH_COMPUTED_EXPRESSION} a_cursor.item as a_computed_expression then
 					a_computed_expression.accumulate_slots_used (a_set)
 				end
 				a_cursor.forth
@@ -678,34 +690,37 @@ feature {XM_XPATH_CLOSURE} -- Restricted
 			a_cursor: DS_HASH_SET_CURSOR [INTEGER]
 			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_QUICK_SORTER [INTEGER]
+			l_cached_slots_used: like cached_slots_used
 		do
-			if cached_slots_used = Void then
+			l_cached_slots_used := cached_slots_used
+			if l_cached_slots_used = Void then
 				create a_set.make_default
 				accumulate_slots_used (a_set)
-				create cached_slots_used.make (a_set.count)
+				create l_cached_slots_used.make (a_set.count)
 				from
 					a_cursor := a_set.new_cursor; a_cursor.start
 				until
 					a_cursor.after
 				loop
-					cached_slots_used.put_last (a_cursor.item)
+					l_cached_slots_used.put_last (a_cursor.item)
 					a_cursor.forth
 				end
 				create a_comparator.make
 				create a_sorter.make (a_comparator)
-				cached_slots_used.sort (a_sorter)
+				l_cached_slots_used.sort (a_sorter)
+				cached_slots_used := l_cached_slots_used
 			end
-			Result := cached_slots_used
+			Result := l_cached_slots_used
 		ensure
 			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
 
-	parent: XM_XPATH_EXPRESSION_CONTAINER
+	parent: detachable XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 
-	cached_slots_used: DS_ARRAYED_LIST [INTEGER]
+	cached_slots_used: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Cached result of `slots_used'
 
 	line_number_mask: INTEGER
@@ -720,7 +735,7 @@ feature {NONE} -- Implementation
 invariant
 
 		positive_location_identifier: location_identifier >= 0
-		parent_not_current: parent /= Void implies not (ANY_.same_objects (Current, parent))
+		parent_not_current: attached parent as l_parent implies not (ANY_.same_objects (Current, l_parent))
 
 end
 

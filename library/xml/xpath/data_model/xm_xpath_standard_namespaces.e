@@ -5,7 +5,7 @@ note
 		"Standard namespace URIs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #8 $"
@@ -441,17 +441,12 @@ feature -- Access
 	Unparsed_text_function_type_code: INTEGER = 1937
 	Unparsed_text_available_function_type_code: INTEGER = 1938
 
-
-
-
-
-
 			-- XSLT Attribute names
 
 	Xslt_default_collation_attribute: STRING
 			-- "default-collation" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Default_collation_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Default_collation_attribute)
 		ensure
 			xslt_default_collation_attribute_not_void: Result /= Void
 		end
@@ -459,7 +454,7 @@ feature -- Access
 	Xslt_extension_element_prefixes_attribute: STRING
 			-- "extension-element-prefixes" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Extension_element_prefixes_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Extension_element_prefixes_attribute)
 		ensure
 			xslt_extension_element_prefixes_attribute_not_void: Result /= Void
 		end
@@ -467,7 +462,7 @@ feature -- Access
 	Xslt_exclude_result_prefixes_attribute: STRING
 			-- "exclude-result-prefixes" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Exclude_result_prefixes_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Exclude_result_prefixes_attribute)
 		ensure
 			xslt_exclude_result_prefixes_attribute_not_void: Result /= Void
 		end
@@ -475,7 +470,7 @@ feature -- Access
 	Xslt_use_when_attribute: STRING
 			-- "use-when" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Use_when_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Use_when_attribute)
 		ensure
 			xslt_use_when_attribute_not_void: Result /= Void
 		end
@@ -483,7 +478,7 @@ feature -- Access
 	Xslt_version_attribute: STRING
 			-- "version" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Version_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Version_attribute)
 		ensure
 			xslt_version_attribute_not_void: Result /= Void
 		end
@@ -491,7 +486,7 @@ feature -- Access
 	Xslt_xpath_default_namespace_attribute: STRING
 			-- "xpath-default-namespace" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.Xpath_default_namespace_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.Xpath_default_namespace_attribute)
 		ensure
 			xslt_xpath_default_namespace_attribute_not_void: Result /= Void
 		end
@@ -499,7 +494,7 @@ feature -- Access
 	Xslt_inherit_namespaces_attribute: STRING
 			-- "inherit-namespaces" attribute name prefixed with the XSLT namespace
 		once
-			Result := expanded_name_from_components (Xslt_uri, {XM_XSLT_STYLE_CONSTANTS}.inherit_namespaces_attribute)
+			Result := expanded_name_from_components (Xslt_uri, {XM_XPATH_XSLT_STYLE_CONSTANTS}.inherit_namespaces_attribute)
 		ensure
 			xslt_inherit_namespaces_attribute_not_void: Result /= Void
 		end

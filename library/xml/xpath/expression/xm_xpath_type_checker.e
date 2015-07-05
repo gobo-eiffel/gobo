@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Objects that perform static type checking of expressions"
+		"Objects that perform static type checking of expressions"
 
-library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_TYPE_CHECKER
 
@@ -61,7 +61,7 @@ inherit
 
 feature -- Access
 
-	checked_expression: XM_XPATH_EXPRESSION
+	checked_expression: detachable XM_XPATH_EXPRESSION
 			-- Type-checked expression set by `static_type_check'
 
 feature -- Status_report
@@ -69,7 +69,7 @@ feature -- Status_report
 	is_static_type_check_error: BOOLEAN
 			-- Has a static typing error occurred?
 
-	static_type_check_error: XM_XPATH_ERROR_VALUE
+	static_type_check_error: detachable XM_XPATH_ERROR_VALUE
 			-- Error value from `static_type_check'
 
 feature -- Optimization
@@ -90,8 +90,8 @@ feature -- Optimization
 			an_item_checker: XM_XPATH_ITEM_CHECKER
 		do
 			static_context := a_context
-			if static_context /= Void then
-				function_library := static_context.available_functions
+			if a_context /= Void then
+				function_library := a_context.available_functions
 			end
 			a_required_cardinality := a_required_type.cardinality
 			initialize (a_supplied_expression, a_required_type)
@@ -108,7 +108,11 @@ feature -- Optimization
 
 				-- If we haven't evaluated the cardinality of the supplied expression, do it now
 
-				if supplied_cardinality = -1 then supplied_cardinality := checked_expression.cardinality	end
+				if supplied_cardinality = -1 then
+					check attached checked_expression as l_checked_expression then
+						supplied_cardinality := l_checked_expression.cardinality
+					end
+				end
 				if not cardinality_ok then
 					cardinality_ok := a_required_type.cardinality_subsumes (supplied_cardinality)
 				end
@@ -122,7 +126,11 @@ feature -- Optimization
 
 					-- If we haven't evaluated the item type of the supplied expression, do it now
 
-					if supplied_item_type = Void then supplied_item_type := checked_expression.item_type end
+					if supplied_item_type = Void then
+						check attached checked_expression as l_checked_expression then
+							supplied_item_type := l_checked_expression.item_type
+						end
+					end
 
 					-- If the supplied value is () and () isn't allowed, fail now
 
@@ -132,27 +140,35 @@ feature -- Optimization
 
 						-- Try a static type check. We only throw it out if the call cannot possibly succeed.
 
-						if conformance.customized_host_language and then static_context /= Void and then static_context.is_data_type_valid (supplied_item_type.as_atomic_type.fingerprint) then
+						if conformance.customized_host_language and then attached static_context as l_static_context and then attached supplied_item_type as l_supplied_item_type and then l_static_context.is_data_type_valid (l_supplied_item_type.as_atomic_type.fingerprint) then
 							report_type_check_error (a_role_locator)
 						else
-							a_relationship := type_relationship (supplied_item_type, required_item_type)
-							if a_relationship = Disjoint_types then
+							check attached supplied_item_type as l_supplied_item_type and attached required_item_type as l_required_item_type then
+								a_relationship := type_relationship (l_supplied_item_type, l_required_item_type)
+								if a_relationship = Disjoint_types then
 
-								-- The item types may be disjoint, but if both the supplied and required types permit
-								--  an empty sequence, we can't raise a static error. Raise a warning instead.
+									-- The item types may be disjoint, but if both the supplied and required types permit
+									--  an empty sequence, we can't raise a static error. Raise a warning instead.
 
-								if is_cardinality_allows_zero (supplied_cardinality) and then is_cardinality_allows_zero (a_required_cardinality) then
-									if supplied_cardinality /= Required_cardinality_empty then
-										a_message := STRING_.concat ("Required item type of ", a_role_locator.message)
-										a_message := STRING_.appended_string (a_message, " is ")
-										a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
-										a_message := STRING_.appended_string (a_message, "; supplied value has item type ")
-										a_message := STRING_.appended_string (a_message, supplied_item_type.conventional_name)
-										a_message := STRING_.appended_string (a_message, ". The expression can succeed only if the supplied value is an empty sequence.")
-										static_context.issue_warning (a_message)
+									if is_cardinality_allows_zero (supplied_cardinality) and then is_cardinality_allows_zero (a_required_cardinality) then
+										if supplied_cardinality /= Required_cardinality_empty then
+											a_message := STRING_.concat ("Required item type of ", a_role_locator.message)
+											a_message := STRING_.appended_string (a_message, " is ")
+											if attached required_item_type as l_required_item_type2 then
+												a_message := STRING_.appended_string (a_message, l_required_item_type2.conventional_name)
+											end
+											a_message := STRING_.appended_string (a_message, "; supplied value has item type ")
+											if attached supplied_item_type as l_supplied_item_type2 then
+												a_message := STRING_.appended_string (a_message, l_supplied_item_type2.conventional_name)
+											end
+											a_message := STRING_.appended_string (a_message, ". The expression can succeed only if the supplied value is an empty sequence.")
+											check attached static_context as l_static_context then
+												l_static_context.issue_warning (a_message)
+											end
+										end
+									else
+										report_type_check_error (a_role_locator)
 									end
-								else
-									report_type_check_error (a_role_locator)
 								end
 							end
 						end
@@ -164,19 +180,23 @@ feature -- Optimization
 							--  as well report the error now.
 
 							if a_relationship /= Same_item_type and then a_relationship /= Subsumed_type then
-								an_expression := checked_expression
-								create an_item_checker.make (an_expression, required_item_type, a_role_locator)
-								an_item_checker.adopt_child_expression (an_expression)
-								checked_expression := an_item_checker
+								check attached checked_expression as l_checked_expression and attached required_item_type as l_required_item_type then
+									an_expression := l_checked_expression
+									create an_item_checker.make (an_expression, l_required_item_type, a_role_locator)
+									an_item_checker.adopt_child_expression (an_expression)
+									checked_expression := an_item_checker
+								end
 							end
 							if not cardinality_ok then
-								if checked_expression.is_value then
-									report_type_check_error (a_role_locator)
-								else
-									an_expression := checked_expression
-									a_computed_expression := expression_factory.created_cardinality_checker (an_expression, a_required_type.cardinality, a_role_locator)
-									a_computed_expression.adopt_child_expression (an_expression)
-									checked_expression := a_computed_expression
+								check attached checked_expression as l_checked_expression then
+									if l_checked_expression.is_value then
+										report_type_check_error (a_role_locator)
+									else
+										an_expression := l_checked_expression
+										a_computed_expression := expression_factory.created_cardinality_checker (an_expression, a_required_type.cardinality, a_role_locator)
+										a_computed_expression.adopt_child_expression (an_expression)
+										checked_expression := a_computed_expression
+									end
 								end
 							end
 						end
@@ -190,16 +210,16 @@ feature -- Optimization
 
 feature {NONE} -- Implementation
 
-	required_item_type: XM_XPATH_ITEM_TYPE
+	required_item_type: detachable XM_XPATH_ITEM_TYPE
 			-- Required item type
 
-	required_type: XM_XPATH_SEQUENCE_TYPE
+	required_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Required sequence type
 
 	supplied_cardinality: INTEGER
 			-- Cardinality of supplied expression
 
-	supplied_item_type: XM_XPATH_ITEM_TYPE
+	supplied_item_type: detachable XM_XPATH_ITEM_TYPE
 			-- Item type of supplied expression.
 
 	allows_many: BOOLEAN
@@ -239,7 +259,9 @@ feature {NONE} -- Implementation
 
 			if not item_type_ok then
 				supplied_item_type := a_supplied_expression.item_type
-				item_type_ok := is_sub_type (supplied_item_type, required_item_type)
+				check attached required_item_type as l_required_item_type then
+					item_type_ok := is_sub_type (supplied_item_type, l_required_item_type)
+				end
 			end
 		ensure
 			supplied_item_type: not item_type_ok implies supplied_item_type /= Void
@@ -267,12 +289,16 @@ feature {NONE} -- Implementation
 		do
 			if backwards_compatible and not allows_many then
 				if is_cardinality_allows_many (supplied_cardinality) then -- Rule 1
-					an_expression := checked_expression
-					create {XM_XPATH_FIRST_ITEM_EXPRESSION} a_computed_expression.make (an_expression)
-					a_computed_expression.adopt_child_expression (an_expression)
-					checked_expression := a_computed_expression
-					supplied_cardinality := Required_cardinality_optional
-					cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
+					check attached checked_expression as l_checked_expression then
+						an_expression := l_checked_expression
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} a_computed_expression.make (an_expression)
+						a_computed_expression.adopt_child_expression (an_expression)
+						checked_expression := a_computed_expression
+						supplied_cardinality := Required_cardinality_optional
+						check attached required_type as l_required_type then
+							cardinality_ok := l_required_type.cardinality_subsumes (supplied_cardinality)
+						end
+					end
 				end
 				if not item_type_ok then
 					if required_item_type = type_factory.string_type then -- Rule 2
@@ -295,10 +321,12 @@ feature {NONE} -- Implementation
 			is_static_type_check_error := True
 			a_message := STRING_.concat ("Required type of ", a_role_locator.message)
 			a_message := STRING_.appended_string (a_message, " is ")
-			a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
+			if attached required_item_type as l_required_item_type then
+				a_message := STRING_.appended_string (a_message, l_required_item_type.conventional_name)
+			end
 			a_message := STRING_.appended_string (a_message, "; supplied value has type ")
-			if supplied_item_type /= Void then
-				a_message := STRING_.appended_string (a_message, supplied_item_type.conventional_name)
+			if attached supplied_item_type as l_supplied_item_type then
+				a_message := STRING_.appended_string (a_message, l_supplied_item_type.conventional_name)
 			end
 
 			-- TODO add location info
@@ -313,23 +341,33 @@ feature {NONE} -- Implementation
 			l_string_function: XM_XPATH_STRING
 			l_new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if function_library /= Void then
+			if attached function_library as l_function_library and attached checked_expression as l_checked_expression then
 				create l_new_arguments.make (1)
-				l_new_arguments.put_last (checked_expression)
-				function_library.bind_function (String_function_type_code, l_new_arguments, False)
-				l_string_function := function_library.last_bound_function.as_string_function
-				create l_replacement.make (Void)
-				l_string_function.simplify (l_replacement)
-				l_expression := l_replacement.item
-				l_replacement.put (Void)
-				l_expression.check_static_type (l_replacement, static_context, any_item)
-				checked_expression := l_replacement.item
-				supplied_item_type := type_factory.string_type
-				supplied_cardinality := Required_cardinality_exactly_one
-				cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
-				item_type_ok := True
+				l_new_arguments.put_last (l_checked_expression)
+				l_function_library.bind_function (String_function_type_code, l_new_arguments, False)
+				check postcondition_of_bind_function: attached l_function_library.last_bound_function as l_last_bound_function then
+					l_string_function := l_last_bound_function.as_string_function
+					create l_replacement.make (Void)
+					l_string_function.simplify (l_replacement)
+					check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+						l_expression := l_replacement_item
+						l_replacement.put (Void)
+						check attached static_context as l_static_context then
+							l_expression.check_static_type (l_replacement, l_static_context, any_item)
+							check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item2 then
+								checked_expression := l_replacement_item2
+								supplied_item_type := type_factory.string_type
+								supplied_cardinality := Required_cardinality_exactly_one
+								check attached required_type as l_required_type then
+									cardinality_ok := l_required_type.cardinality_subsumes (supplied_cardinality)
+								end
+								item_type_ok := True
+							end
+						end
+					end
+				end
 			else
 				check
 					False
@@ -345,23 +383,33 @@ feature {NONE} -- Implementation
 			l_number_function: XM_XPATH_NUMBER
 			l_new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if function_library /= Void then
+			if attached function_library as l_function_library and then attached checked_expression as l_checked_expression then
 				create l_new_arguments.make (1)
-				l_new_arguments.put_last (checked_expression)
-				function_library.bind_function (Number_function_type_code, l_new_arguments, False)
-				l_number_function := function_library.last_bound_function.as_number_function
-				create l_replacement.make (Void)
-				l_number_function.simplify (l_replacement)
-				l_expression := l_replacement.item
-				l_replacement.put (Void)
-				l_expression.check_static_type (l_replacement, static_context, any_item)
-				checked_expression := l_replacement.item
-				supplied_item_type := type_factory.double_type
-				supplied_cardinality := Required_cardinality_exactly_one
-				cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
-				item_type_ok := True
+				l_new_arguments.put_last (l_checked_expression)
+				l_function_library.bind_function (Number_function_type_code, l_new_arguments, False)
+				check postcondition_of_bind_function: attached l_function_library.last_bound_function as l_last_bound_function then
+					l_number_function := l_last_bound_function.as_number_function
+					create l_replacement.make (Void)
+					l_number_function.simplify (l_replacement)
+					check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+						l_expression := l_replacement_item
+						l_replacement.put (Void)
+						check attached static_context as l_static_context then
+							l_expression.check_static_type (l_replacement, l_static_context, any_item)
+							check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item2 then
+								checked_expression := l_replacement_item2
+								supplied_item_type := type_factory.double_type
+								supplied_cardinality := Required_cardinality_exactly_one
+								check attached required_type as l_required_type then
+									cardinality_ok := l_required_type.cardinality_subsumes (supplied_cardinality)
+								end
+								item_type_ok := True
+							end
+						end
+					end
+				end
 			else
 				check
 					False
@@ -379,9 +427,10 @@ feature {NONE} -- Implementation
 		local
 			l_required_item_type_fingerprint: INTEGER
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_checked_expression: like checked_expression
 		do
-			if required_item_type.is_atomic_type then
+			if attached required_item_type as l_required_item_type and then l_required_item_type.is_atomic_type then
 
 				-- Rule 1: Atomize
 
@@ -393,31 +442,37 @@ feature {NONE} -- Implementation
 
 				-- Rule 3: numeric promotion decimal -> float -> double
 
-				l_required_item_type_fingerprint := required_item_type.as_atomic_type.fingerprint
-				if l_required_item_type_fingerprint = Float_type_code or else
-					l_required_item_type_fingerprint = Double_type_code then
-					if type_relationship (supplied_item_type, type_factory.numeric_type) /= Disjoint_types then
-						l_expression := checked_expression
+				l_required_item_type_fingerprint := l_required_item_type.as_atomic_type.fingerprint
+				if l_required_item_type_fingerprint = Float_type_code or else l_required_item_type_fingerprint = Double_type_code then
+					l_checked_expression := checked_expression
+					if attached supplied_item_type as l_supplied_item_type and then type_relationship (l_supplied_item_type, type_factory.numeric_type) /= Disjoint_types and l_checked_expression /= Void then
+						l_expression := l_checked_expression
 						create {XM_XPATH_NUMERIC_PROMOTER} l_expression.make (l_expression, l_required_item_type_fingerprint)
 						create l_replacement.make (Void)
 						l_expression.simplify (l_replacement)
-						l_expression := l_replacement.item
-						l_replacement.put (Void)
-						l_expression.check_static_type (l_replacement, static_context, any_item)
-						checked_expression := l_replacement.item
-						if l_required_item_type_fingerprint = Double_type_code then
-							supplied_item_type := type_factory.double_type
-						else
-							supplied_item_type := type_factory.float_type
+						check postcondition_of_simply: attached l_replacement.item as l_replacement_item then
+							l_expression := l_replacement_item
+							l_replacement.put (Void)
+							check attached static_context as l_static_context then
+								l_expression.check_static_type (l_replacement, l_static_context, any_item)
+								check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item2 then
+									checked_expression := l_replacement_item2
+									if l_required_item_type_fingerprint = Double_type_code then
+										supplied_item_type := type_factory.double_type
+									else
+										supplied_item_type := type_factory.float_type
+									end
+								end
+							end
 						end
 					end
 				end
 
 				-- Rule 4: anyURI promotion anyURI -> string
 
-				if l_required_item_type_fingerprint = String_type_code
-				 and then is_sub_type (supplied_item_type, type_factory.any_uri_type) then
-				 supplied_item_type := type_factory.string_type; item_type_ok := True
+				if l_required_item_type_fingerprint = String_type_code and then is_sub_type (supplied_item_type, type_factory.any_uri_type) then
+					supplied_item_type := type_factory.string_type
+					item_type_ok := True
 
 				 -- We don't generate code to do a run-time type conversion; rather, we rely on
 				 --  operators and functions that accept a string to also accept an xs:anyURI.
@@ -432,16 +487,23 @@ feature {NONE} -- Implementation
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_supplied_item_type: like supplied_item_type
+			l_checked_expression: like checked_expression
+			l_static_context: like static_context
 		do
-			if not supplied_item_type.is_atomic_type then
+			l_supplied_item_type := supplied_item_type
+			l_checked_expression := checked_expression
+			l_static_context := static_context
+			if l_supplied_item_type /= Void and then not l_supplied_item_type.is_atomic_type and l_checked_expression /= Void and l_static_context /= Void then
 				if supplied_cardinality /= Required_cardinality_empty then
-					l_expression := checked_expression
-					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (l_expression, static_context.configuration.are_all_nodes_untyped)
+					l_expression := l_checked_expression
+					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (l_expression, l_static_context.configuration.are_all_nodes_untyped)
 					a_computed_expression.adopt_child_expression (l_expression)
-					checked_expression := a_computed_expression
-					supplied_item_type := checked_expression.item_type
-					supplied_cardinality := checked_expression.cardinality
-					cardinality_ok := required_type.cardinality_subsumes (supplied_cardinality)
+					l_checked_expression := a_computed_expression
+					checked_expression := l_checked_expression
+					supplied_item_type := l_checked_expression.item_type
+					supplied_cardinality := l_checked_expression.cardinality
+					cardinality_ok := attached required_type as l_required_type and then l_required_type.cardinality_subsumes (supplied_cardinality)
 				end
 			end
 		end
@@ -455,32 +517,45 @@ feature {NONE} -- Implementation
 			l_expression: XM_XPATH_EXPRESSION
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_converter: XM_XPATH_UNTYPED_ATOMIC_CONVERTER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_checked_expression: like checked_expression
+			l_required_item_type: like required_item_type
 		do
 
 			-- Rule 2a: all supplied values are untyped atomic. Convert if necessary, and we're finished.
 			-- Rule 2b: some supplied values are untyped atomic. Convert these to the required type; but
 			--   there may be other values in the sequence that won't convert and still need to be checked
-
-			if (supplied_item_type = type_factory.untyped_atomic_type or else supplied_item_type = type_factory.any_atomic_type) and then
-				required_item_type /= type_factory.untyped_atomic_type and then
-				required_item_type /= type_factory.any_atomic_type and then not checked_expression.is_untyped_atomic_converter then
-				l_expression := checked_expression
-				create l_converter.make (l_expression, required_item_type)
+			l_checked_expression := checked_expression
+			l_required_item_type := required_item_type
+			if
+				(supplied_item_type = type_factory.untyped_atomic_type or else supplied_item_type = type_factory.any_atomic_type) and then
+				l_required_item_type /= Void and then
+				l_required_item_type /= type_factory.untyped_atomic_type and then
+				l_required_item_type /= type_factory.any_atomic_type and then l_checked_expression /= Void and then not l_checked_expression.is_untyped_atomic_converter
+			then
+				l_expression := l_checked_expression
+				create l_converter.make (l_expression, l_required_item_type)
 				if STRING_.same_string (a_role_locator.error_code, "XTTE0505") then
 					l_converter.set_error_code (a_role_locator.error_code)
 				end
-				checked_expression := l_converter
+				l_checked_expression := l_converter
+				checked_expression := l_checked_expression
 				if l_expression.is_value and then not l_expression.depends_upon_implicit_timezone then
-					checked_expression.create_iterator (a_context.new_compile_time_context)
-					l_iterator := checked_expression.last_iterator
-					if l_iterator.is_error then
-						checked_expression.set_last_error (l_iterator.error_value)
-					else
-						create {XM_XPATH_SEQUENCE_EXTENT} checked_expression.make (l_iterator)
-						create l_replacement.make (Void)
-						checked_expression.simplify (l_replacement)
-						checked_expression := l_replacement.item
+					l_checked_expression.create_iterator (a_context.new_compile_time_context)
+					check postcondition_of_create_iterator: attached l_checked_expression.last_iterator as l_checked_expression_last_iterator then
+						l_iterator := l_checked_expression_last_iterator
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							l_checked_expression.set_last_error (l_error_value)
+						else
+							create {XM_XPATH_SEQUENCE_EXTENT} l_checked_expression.make (l_iterator)
+							checked_expression := l_checked_expression
+							create l_replacement.make (Void)
+							l_checked_expression.simplify (l_replacement)
+							check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+								checked_expression := l_replacement_item
+							end
+						end
 					end
 				end
 				if supplied_item_type = type_factory.untyped_atomic_type then
@@ -490,10 +565,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	function_library: XM_XPATH_FUNCTION_LIBRARY
+	function_library: detachable XM_XPATH_FUNCTION_LIBRARY
 			-- Function library
 
-	static_context: XM_XPATH_STATIC_CONTEXT
+	static_context: detachable XM_XPATH_STATIC_CONTEXT
 			-- Static context
 
 invariant

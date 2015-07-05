@@ -5,7 +5,7 @@ note
 		"XPath Unary Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,96 +91,110 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-
-				-- If operand is a value, pre-evaluate the expression
-
-				if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
-					create_iterator (a_context.new_compile_time_context)
-					expression_factory.create_sequence_extent (last_iterator)
-
-					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
-
-					if is_error or expression_factory.last_created_closure.is_error then
-						error_value := Void
-						if base_expression.is_error then
-							base_expression.clear_error
-						end
-						a_replacement.put (Current)
-					else
-						set_replacement (a_replacement, expression_factory.last_created_closure)
-					end
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
 				else
-					a_replacement.put (Current)
+
+					-- If operand is a value, pre-evaluate the expression
+
+					if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
+						create_iterator (a_context.new_compile_time_context)
+						check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+							expression_factory.create_sequence_extent (l_last_iterator)
+
+							-- if early evaluation fails, suppress the error: the value might not be needed at run-time
+
+							check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+								if is_error or l_last_created_closure.is_error then
+									error_value := Void
+									if base_expression.is_error then
+										base_expression.clear_error
+									end
+									a_replacement.put (Current)
+								else
+									set_replacement (a_replacement, l_last_created_closure)
+								end
+							end
+						end
+					else
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.optimize (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-
-				-- If  operand value is, pre-evaluate the expression
-
-				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					create_iterator (a_context.new_compile_time_context)
-					expression_factory.create_sequence_extent (last_iterator)
-
-					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
-
-					if is_error or expression_factory.last_created_closure.is_error then
-						error_value := Void
-						if base_expression.is_error then
-							base_expression.clear_error
-						end
-						a_replacement.put (Current)
-					else
-						set_replacement (a_replacement, expression_factory.last_created_closure)
-					end
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
 				else
-					a_replacement.put (Current)
+
+					-- If  operand value is, pre-evaluate the expression
+
+					if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
+						create_iterator (a_context.new_compile_time_context)
+						check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+							expression_factory.create_sequence_extent (l_last_iterator)
+
+							-- if early evaluation fails, suppress the error: the value might not be needed at run-time
+
+							check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+								if is_error or l_last_created_closure.is_error then
+									error_value := Void
+									if base_expression.is_error then
+										base_expression.clear_error
+									end
+									a_replacement.put (Current)
+								else
+									set_replacement (a_replacement, l_last_created_closure)
+								end
+							end
+						end
+					else
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -190,8 +204,10 @@ feature -- Optimization
 				a_replacement.put (Current)
 				create l_replacement.make (Void)
 				base_expression.promote (l_replacement, a_offer)
-				set_base_expression (l_replacement.item)
-				reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					set_base_expression (l_replacement_item)
+					reset_static_properties
+				end
 			end
 		end
 

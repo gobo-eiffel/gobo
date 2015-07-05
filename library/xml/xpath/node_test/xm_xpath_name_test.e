@@ -5,7 +5,7 @@ note
 		"Objects that implement XPath's NameTest production"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 		do
 			node_kind := a_node.node_type
 			fingerprint := a_node.fingerprint
+			original_text := ""
 		ensure
 			same_type: node_kind = a_node.node_type
 			same_fingerprint: fingerprint = a_node.fingerprint

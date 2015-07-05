@@ -5,7 +5,7 @@ note
 		"Namespace pool"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -249,7 +249,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	suggested_prefix_for_uri (a_uri: STRING): STRING
+	suggested_prefix_for_uri (a_uri: STRING): detachable STRING
 			-- Suggested prefix for a given `uri';
 			-- If there are several, it's undefined which one is returned.;
 			-- If there are no prefixes registered for this `uri', return `Void'
@@ -292,7 +292,7 @@ feature -- Access
 			valid_prefix_index: Result >= 0 and Result < 255
 		end
 
-	prefix_with_index (a_uri_code: INTEGER; an_index: INTEGER): STRING
+	prefix_with_index (a_uri_code: INTEGER; an_index: INTEGER): detachable STRING
 			-- Get a prefix among all the prefixes used with a given URI, given its index
 		require
 			valid_code: a_uri_code >= 0 and a_uri_code <= 32000
@@ -400,7 +400,8 @@ feature -- Access
 			a_hash_code, a_depth: INTEGER
 			a_uri_code, a_counter: INTEGER -- should be INTEGER_16
 			found, finished: BOOLEAN
-			an_entry, next_entry: XM_XPATH_NAME_ENTRY
+			an_entry: XM_XPATH_NAME_ENTRY
+			next_entry: detachable XM_XPATH_NAME_ENTRY
 		do
 			Result := -1
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
@@ -427,10 +428,10 @@ feature -- Access
 				else
 					a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
 
-					if hash_slots.item (a_hash_code) = Void then
+					if not attached hash_slots.item (a_hash_code) as l_entry2 then
 						Result := -1
 					else
-						an_entry :=	hash_slots.item (a_hash_code)
+						an_entry :=	l_entry2
 						from
 							a_depth := 1
 						until
@@ -515,7 +516,6 @@ feature -- Status report
 	is_valid_name_code (a_name_code: INTEGER): BOOLEAN
 			-- Does `a_name_code' represent a name in `Current'?
 		local
-			an_entry: XM_XPATH_NAME_ENTRY
 			a_prefix_index: INTEGER
 		do
 			if a_name_code < 0 then
@@ -526,8 +526,7 @@ feature -- Status report
 					Result := a_prefix_index >= 0 and then a_prefix_index <= prefixes_used
 				end
 				if Result = False then
-					an_entry := name_entry (a_name_code)
-					Result :=  an_entry /= Void
+					Result :=  name_entry (a_name_code) /= Void
 				end
 			end
 		end
@@ -657,11 +656,10 @@ feature -- Status report
 			-- Has a namespace code been allocated corresponding to `a_name_code'?
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
-		local
-			a_prefix: STRING
 		do
-			a_prefix := prefix_from_name_code (a_name_code)
-			Result := is_code_for_prefix_allocated (a_prefix)
+			check attached prefix_from_name_code (a_name_code) as a_prefix then
+				Result := is_code_for_prefix_allocated (a_prefix)
+			end
 		end
 
 	is_name_code_allocated (a_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN
@@ -696,7 +694,7 @@ feature -- Status report
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_hash_code, a_depth, a_prefix_index: INTEGER
-			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
+			a_name_entry, next_entry: detachable XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 			a_uri: STRING
 		do
@@ -774,7 +772,7 @@ feature -- Status report
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
 			a_hash_code, a_depth: INTEGER
-			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
+			a_name_entry, next_entry: detachable XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
 			a_name_entry := hash_slots.item (a_hash_code)
@@ -879,7 +877,7 @@ feature -- Status report
 			-- Diagnostic print of the namepool contents
 		local
 			a_hash_code, a_depth, prefix_count, a_uri_count: INTEGER
-			an_entry: XM_XPATH_NAME_ENTRY
+			an_entry: detachable XM_XPATH_NAME_ENTRY
 		do
 			std.error.put_string ("Contents of NamePool ")
 			std.error.put_string (out)
@@ -1026,13 +1024,12 @@ feature -- Element change
 			-- Allocate a namespace code for a given name code.
 		require
 			namespace_code_not_allocated: not is_namespace_code_allocated_for_name_code (a_name_code)
-		local
-			a_prefix: STRING
 		do
-			a_prefix := prefix_from_name_code (a_name_code)
-			allocate_code_for_prefix (a_prefix)
+			check attached prefix_from_name_code (a_name_code) as a_prefix then
+				allocate_code_for_prefix (a_prefix)
+			end
 		ensure
-			namespace_code_allocated: is_namespace_code_allocated_for_name_code (a_name_code)
+			namespace_code_allocated: attached prefix_from_name_code (a_name_code) implies is_namespace_code_allocated_for_name_code (a_name_code)
 		end
 
 	allocate_code_for_uri (a_uri: STRING)
@@ -1172,7 +1169,8 @@ feature -- Element change
 			name_pool_not_full: not is_name_pool_full_using_uri_code (a_uri_code, a_local_name)
 		local
 			a_hash_code, a_depth, a_prefix_index: INTEGER
-			a_name_entry, next_entry, new_entry: XM_XPATH_NAME_ENTRY
+			a_name_entry, new_entry: XM_XPATH_NAME_ENTRY
+			next_entry: detachable XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
 		do
 			a_depth := 1
@@ -1191,11 +1189,11 @@ feature -- Element change
 						valid_prefix_index2: a_prefix_index > 0 and a_prefix_index < 255
 					end
 			end
-			if hash_slots.item (a_hash_code) = Void then
+			if not attached hash_slots.item (a_hash_code) as l_name_entry2 then
 				create a_name_entry.make (a_uri_code, a_local_name)
 				hash_slots.put (a_name_entry, a_hash_code)
 			else
-				a_name_entry := hash_slots.item (a_hash_code)
+				a_name_entry := l_name_entry2
 				from
 				until
 					finished = True
@@ -1249,9 +1247,11 @@ feature -- Conversion
 		local
 			a_uri_code, a_prefix_code: INTEGER --_16
 		do
-			a_uri_code := uri_code_from_name_code (a_name_code)
-			a_prefix_code := code_for_prefix (prefix_from_name_code (a_name_code))
-			Result := (a_prefix_code * bits_16) + a_uri_code
+			check attached prefix_from_name_code (a_name_code) as l_prefix then
+				a_uri_code := uri_code_from_name_code (a_name_code)
+				a_prefix_code := code_for_prefix (l_prefix)
+				Result := (a_prefix_code * bits_16) + a_uri_code
+			end
 		end
 
 	namespace_uri_from_name_code (a_name_code: INTEGER): STRING
@@ -1259,19 +1259,15 @@ feature -- Conversion
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
-			an_entry: XM_XPATH_NAME_ENTRY
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if type_factory.is_built_in_fingerprint (a_fingerprint) then
 				Result := type_factory.standard_uri (a_fingerprint)
 			else
-				an_entry := name_entry (a_name_code)
-					check
-						entry_not_void: an_entry /= Void
-						-- because of pre-condition
-					end
-				Result := uris.item (an_entry.uri_code + 1)
+				check precondition_valid_name_code: attached name_entry (a_name_code) as an_entry then
+					Result := uris.item (an_entry.uri_code + 1)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -1279,22 +1275,18 @@ feature -- Conversion
 
 	uri_code_from_name_code (a_name_code: INTEGER): INTEGER  -- should be INTEGER_16
 			-- URI code of a name, given its name code or fingerprint
-	require
-		valid_name_code: is_valid_name_code (a_name_code)
+		require
+			valid_name_code: is_valid_name_code (a_name_code)
 		local
-			an_entry: XM_XPATH_NAME_ENTRY
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if type_factory.is_built_in_fingerprint (a_fingerprint) then
 				Result := type_factory.standard_uri_code (a_fingerprint)
 			else
-				an_entry := name_entry (a_name_code)
-					check
-						entry_not_void: an_entry /= Void
-						-- because of pre-condition
-					end
-				Result := an_entry.uri_code
+				check precondition_valid_name_code: attached name_entry (a_name_code) as an_entry then
+					Result := an_entry.uri_code
+				end
 			end
 		end
 
@@ -1303,25 +1295,21 @@ feature -- Conversion
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
-			an_entry: XM_XPATH_NAME_ENTRY
 			a_fingerprint: INTEGER
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if type_factory.is_built_in_fingerprint (a_fingerprint) then
 				Result := type_factory.standard_local_name (a_fingerprint)
 			else
-				an_entry := name_entry (a_name_code)
-					check
-						entry_not_void: an_entry /= Void
-						-- because of pre-condition
-					end
-				Result := an_entry.local_name
+				check precondition_valid_name_code: attached name_entry (a_name_code) as an_entry then
+					Result := an_entry.local_name
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	prefix_from_name_code (a_name_code: INTEGER): STRING
+	prefix_from_name_code (a_name_code: INTEGER): detachable STRING
 			-- Xml prefix, given its name code
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
@@ -1348,7 +1336,6 @@ feature -- Conversion
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
-			l_entry: XM_XPATH_NAME_ENTRY
 			l_prefix_index: INTEGER
 			l_fingerprint, l_uri_code: INTEGER
 		do
@@ -1356,23 +1343,23 @@ feature -- Conversion
 			l_uri_code := uri_code_from_name_code (a_name_code)
 			l_prefix_index := name_code_to_prefix_index (a_name_code)
 			if not type_factory.is_built_in_fingerprint (l_fingerprint) then
-				l_entry := name_entry (a_name_code)
-				check
-					entry_not_void: l_entry /= Void
-					-- because of pre-condition
-				end
-				if l_prefix_index = 0 then
-					Result := l_entry.local_name
-				else
-					Result := prefix_with_index (l_entry.uri_code, l_prefix_index)
-					Result := STRING_.appended_string (Result, ":")
-					Result := STRING_.appended_string (Result, l_entry.local_name)
+				check precondition_valid_name_code: attached name_entry (a_name_code) as l_entry then
+					if l_prefix_index = 0 then
+						Result := l_entry.local_name
+					else
+						check attached prefix_with_index (l_entry.uri_code, l_prefix_index) as l_prefix then
+							Result := STRING_.appended_string (l_prefix, ":")
+							Result := STRING_.appended_string (Result, l_entry.local_name)
+						end
+					end
 				end
 			else
 				if l_prefix_index = 0 then
 					Result := type_factory.standard_prefix (l_fingerprint)
 				else
-					Result := prefix_with_index (l_uri_code, l_prefix_index)
+					check attached prefix_with_index (l_uri_code, l_prefix_index) as l_prefix then
+						Result := l_prefix
+					end
 				end
 				Result := STRING_.appended_string (Result, ":")
 				Result := STRING_.appended_string (Result, type_factory.standard_local_name (l_fingerprint))
@@ -1432,7 +1419,7 @@ feature -- Conversion
 			positive_name_code: a_name_code >= 0
 		local
 			a_fingerprint: INTEGER
-			a_name_entry: XM_XPATH_NAME_ENTRY
+			a_name_entry: detachable XM_XPATH_NAME_ENTRY
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
 			if a_fingerprint <= Maximum_built_in_fingerprint then
@@ -1453,14 +1440,14 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	name_entry (a_name_code: INTEGER): XM_XPATH_NAME_ENTRY
+	name_entry (a_name_code: INTEGER): detachable XM_XPATH_NAME_ENTRY
 			-- Name entry corresponding to `a_name_code'
 		require
 			positive_name_code: a_name_code >= 0
 		local
 			a_hash_code, a_depth, a_counter: INTEGER
 			end_of_chain: BOOLEAN
-			an_entry: XM_XPATH_NAME_ENTRY
+			an_entry: detachable XM_XPATH_NAME_ENTRY
 		do
 			a_depth := name_code_to_depth (a_name_code)
 			a_hash_code := name_code_to_hash_code (a_name_code)

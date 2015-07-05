@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the preceding-sibling:: Axis"
 
 	library: "Gobo Eiffel XPATH Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,23 +48,23 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
-		local
-			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
 		do
-			a_tiny_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tiny_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
 
 	forth
 			-- Move to next position
+		local
+			l_current_item: like current_item
 		do
 			index := index + 1
 			advance
 			if document.is_node_number_valid (next_node_number) then
-				current_item := document.retrieve_node (next_node_number)
-				current_item.set_parent_node (parent_node) -- caching the parent node, so a future search need not be done
+				l_current_item := document.retrieve_node (next_node_number)
+				current_item := l_current_item
+				l_current_item.set_parent_node (parent_node) -- caching the parent node, so a future search need not be done
 			else
 				current_item := Void
 			end
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 	starting_node: XM_XPATH_TINY_NODE
 			-- The starting node for the enumeration
 
-	parent_node: XM_XPATH_TINY_COMPOSITE_NODE
+	parent_node: detachable XM_XPATH_TINY_COMPOSITE_NODE
 			-- The parent node
 
 	node_test: XM_XPATH_NODE_TEST

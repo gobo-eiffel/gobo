@@ -5,7 +5,7 @@ note
 		"Objects that support lookup of a lexical QName to get the expanded QName"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
+	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): detachable STRING
 			-- Namespace URI corresponding to a given prefix
 		require
 			prefix_not_void: a_prefix /= Void

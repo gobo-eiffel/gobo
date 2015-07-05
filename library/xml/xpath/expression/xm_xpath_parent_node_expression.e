@@ -50,16 +50,18 @@ feature -- Access
 			Result := Current
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
+	node (a_context: XM_XPATH_CONTEXT): detachable XM_XPATH_NODE
 			-- The single node
 		local
-			an_item: XM_XPATH_ITEM
+			an_item: detachable XM_XPATH_ITEM
 		do
 			an_item := a_context.context_item
-			if not an_item.is_node then
-				Result := Void
-			else
-				Result := an_item.as_node.parent
+			check attached an_item then
+				if not an_item.is_node then
+					Result := Void
+				else
+					Result := an_item.as_node.parent
+				end
 			end
 		end
 

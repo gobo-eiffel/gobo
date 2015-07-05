@@ -5,7 +5,7 @@ note
 		"Standard pipe of callbacks filter leading to construction of an XM_XPATH_TINY_DOCUMENT"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: UT_URI)
+	make (a_parser: XM_PARSER; is_line_numbering: BOOLEAN; a_base_uri: STRING; a_document_uri: detachable UT_URI)
 			-- Create a new pipe.
 		require
 			a_parser_not_void: a_parser /= Void
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 			tree.set_line_numbering (is_line_numbering)
 			error := a_parser.new_stop_on_error_filter
 			create emitter.make (tree, error)
-			create namespace_resolver.set_next (emitter)
+			create namespace_resolver.make_next (emitter)
 			namespace_resolver.set_forward_xmlns (True)
-			create attributes.set_next (namespace_resolver)
+			create attributes.make_next (namespace_resolver)
 			attributes.set_next_dtd (emitter)
-			create content.set_next (attributes)
-			create whitespace.set_next (content)
-			create start.set_next (whitespace)
+			create content.make_next (attributes)
+			create whitespace.make_next (content)
+			create start.make_next (whitespace)
 		end
 
 feature -- Access
@@ -79,7 +79,7 @@ feature -- Access
 	tree: XM_XPATH_TINY_BUILDER
 			-- Tree construction
 
-	document: XM_XPATH_TINY_DOCUMENT
+	document: detachable XM_XPATH_TINY_DOCUMENT
 			-- Document (from tree building filter)
 		require
 			not_error: not error.has_error
@@ -92,7 +92,9 @@ feature -- Access
 		require
 			error: error.has_error
 		do
-			Result := error.last_error
+			check invariant_XM_STOP_ON_ERROR_FILTER_last_error_not_void: attached error.last_error as l_last_error then
+				Result := l_last_error
+			end
 		ensure
 			last_error_not_void: Result /= Void
 		end

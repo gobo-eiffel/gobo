@@ -5,7 +5,7 @@ note
 		"Callbacks filter producing an instance of the data model"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	current_root: XM_XPATH_NODE
+	current_root: detachable XM_XPATH_NODE
 			-- Resulting document node or root element node
 
 feature -- Status report
@@ -35,7 +35,7 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Has an error occurred?
 
-	last_error: STRING
+	last_error: detachable STRING
 			-- Error message
 
 	is_timing: BOOLEAN
@@ -83,8 +83,8 @@ feature -- Events
 		do
 			is_open := True
 			if is_timing then
-				if document_uri /= Void then
-					l_uri := document_uri.full_reference
+				if attached document_uri as l_document_uri then
+					l_uri := l_document_uri.full_reference
 				elseif base_uri /= Void then
 					l_uri := base_uri
 				else
@@ -104,15 +104,17 @@ feature -- Events
 		do
 			is_open := False
 			if is_timing then
-				if document_uri /= Void then
-					l_uri := document_uri.full_reference
+				if attached document_uri as l_document_uri then
+					l_uri := l_document_uri.full_reference
 				elseif base_uri /= Void then
 					l_uri := base_uri
 				else
 					l_uri := "unknown document"
 				end
-				std.error.put_string ("Tree build for " + l_uri + " took " + utc_system_clock.time_now.canonical_duration (start_time).precise_time_out)
-				std.error.put_new_line
+				check attached start_time as l_start_time then
+					std.error.put_string ("Tree build for " + l_uri + " took " + utc_system_clock.time_now.canonical_duration (l_start_time).precise_time_out)
+					std.error.put_new_line
+				end
 				show_size
 			end
 		end
@@ -140,13 +142,13 @@ feature {NONE} -- Implementation
 	locator: XM_XPATH_LOCATOR
 			-- Event locator
 
-	start_time: DT_TIME
+	start_time: detachable DT_TIME
 			-- Start of timed period
 
 invariant
 
 	locator_not_void: locator /= Void
-	document_or_element_root: current_root /= Void implies current_root.is_document or else current_root.is_element
+	document_or_element_root: attached current_root as l_current_root implies l_current_root.is_document or else l_current_root.is_element
 
 end
 

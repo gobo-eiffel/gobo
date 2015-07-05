@@ -5,7 +5,7 @@ note
 		"XPath identity comparisons"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,41 +53,55 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_single_node: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_first_operand (l_replacement.item)
-			if first_operand.is_error then
-				set_replacement (a_replacement, first_operand)
-			else
-				l_replacement.put (Void)
-				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_second_operand (l_replacement.item)
-				if second_operand.is_error then
-					set_replacement (a_replacement, second_operand)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_first_operand (l_replacement_item)
+				if first_operand.is_error then
+					set_replacement (a_replacement, first_operand)
 				else
-					create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-					create l_type_checker
-					create l_single_node.make_optional_node
-					l_type_checker.static_type_check (a_context, first_operand, l_single_node, False, l_role)
-					if l_type_checker.is_static_type_check_error then
-						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-					else
-						set_first_operand (l_type_checker.checked_expression)
-						create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-						l_type_checker.static_type_check (a_context, second_operand, l_single_node, False, l_other_role)
-						if l_type_checker.is_static_type_check_error then
-							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+					l_replacement.put (Void)
+					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+						set_second_operand (l_replacement_item_2)
+						if second_operand.is_error then
+							set_replacement (a_replacement, second_operand)
 						else
-							set_second_operand (l_type_checker.checked_expression)
-							a_replacement.put (Current)
+							check attached token_name (operator) as l_token_name then
+								create l_role.make (Binary_expression_role, l_token_name, 1, Xpath_errors_uri, "XPTY0004")
+								create l_type_checker
+								create l_single_node.make_optional_node
+								l_type_checker.static_type_check (a_context, first_operand, l_single_node, False, l_role)
+								if l_type_checker.is_static_type_check_error then
+									check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+										set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+									end
+								else
+									check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+										set_first_operand (l_checked_expression)
+										create l_other_role.make (Binary_expression_role, l_token_name, 2, Xpath_errors_uri, "XPTY0004")
+										l_type_checker.static_type_check (a_context, second_operand, l_single_node, False, l_other_role)
+										if l_type_checker.is_static_type_check_error then
+											check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error_2 then
+												set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error_2))
+											end
+										else
+											check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression_2 then
+												set_second_operand (l_checked_expression_2)
+												a_replacement.put (Current)
+											end
+										end
+									end
+								end
+							end
 						end
 					end
 				end
@@ -99,71 +113,76 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Effective boolean value
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 			l_node: XM_XPATH_NODE
+			l_last_boolean_value: like last_boolean_value
 		do
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
-			if l_result.item /= Void and then l_result.item.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (l_result.item.error_value)
+			if attached l_result.item as l_result_item and then attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create l_last_boolean_value.make (False)
+				l_last_boolean_value.set_last_error (l_error_value)
+				last_boolean_value := l_last_boolean_value
 			else
-				if l_result.item = Void or else not l_result.item.is_node then
+				if not attached l_result.item as l_result_item or else not l_result_item.is_node then
 					if generate_id_emulation_mode then
 						create l_result.make (Void)
 						second_operand.evaluate_item (l_result, a_context)
-						create last_boolean_value.make (l_result.item = Void or else not l_result.item.is_node)
+						create last_boolean_value.make (not attached l_result.item as l_result_item or else not l_result_item.is_node)
 					else
 						create last_boolean_value.make (False)
 					end
 				else
-					l_node := l_result.item.as_node
+					l_node := l_result_item.as_node
 					create l_result.make (Void)
 					second_operand.evaluate_item (l_result, a_context)
-					if l_result.item /= Void and then l_result.item.is_error then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (l_result.item.error_value)
+					if attached l_result.item as l_result_item_2 and then attached l_result_item_2.error_value as l_error_value then
+						check is_error: l_result_item_2.is_error end
+						create l_last_boolean_value.make (False)
+						l_last_boolean_value.set_last_error (l_error_value)
+						last_boolean_value := l_last_boolean_value
 					else
-						if l_result.item = Void or else not l_result.item.is_node then
+						if not attached l_result.item as l_result_item_2 or else not l_result_item_2.is_node then
 							create last_boolean_value.make (False)
 						else
-							create last_boolean_value.make (identity_comparison (l_node, l_result.item.as_node))
+							create last_boolean_value.make (identity_comparison (l_node, l_result_item_2.as_node))
 						end
 					end
 				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then a_result.item.is_error then
+			if attached a_result.item as l_result_item and then l_result_item.is_error then
 				-- nothing to do
 			else
-				if a_result.item = Void or else not a_result.item.is_node then
+				if not attached a_result.item as l_result_item or else not l_result_item.is_node then
 					a_result.put (Void)
 					if	generate_id_emulation_mode	then
 						second_operand.evaluate_item (a_result, a_context)
-						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (a_result.item = Void or else not a_result.item.is_node))
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (not attached a_result.item as l_result_item or else not l_result_item.is_node))
 					end
 				else
-					l_node := a_result.item.as_node
+					l_node := l_result_item.as_node
 					a_result.put (Void)
 					second_operand.evaluate_item (a_result, a_context)
-					if a_result.item /= Void and then a_result.item.is_error then
+					if attached a_result.item as l_result_item_2 and then l_result_item_2.is_error then
 						-- nothing to do
 					else
-						if a_result.item = Void or else not a_result.item.is_node then
+						if not attached a_result.item as l_result_item_2 or else not l_result_item_2.is_node then
 							if	generate_id_emulation_mode	then
 								a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 							else
 								a_result.put (Void)
 							end
 						else
-							a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (identity_comparison (l_node, a_result.item.as_node)))
+							a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (identity_comparison (l_node, l_result_item_2.as_node)))
 						end
 					end
 				end

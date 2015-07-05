@@ -5,7 +5,7 @@ note
 		"Standard tree composite nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,11 +44,15 @@ feature -- Access
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
 			-- Node sequence number (in document order)
+		local
+			l_saved_sequence_number: like saved_sequence_number
 		do
-			if saved_sequence_number = Void then
-				create saved_sequence_number.make (sequence_number_high_word, 0)
+			l_saved_sequence_number := saved_sequence_number
+			if l_saved_sequence_number = Void then
+				create l_saved_sequence_number.make (sequence_number_high_word, 0)
+				saved_sequence_number := l_saved_sequence_number
 			end
-			Result := saved_sequence_number
+			Result := l_saved_sequence_number
 		ensure then
 			saved_sequence_number_not_void: saved_sequence_number /= Void
 		end
@@ -56,8 +60,8 @@ feature -- Access
 	string_value: STRING
 			-- String-value
 		local
-			l_node: XM_XPATH_NODE
-			l_string: ST_COPY_ON_WRITE_STRING
+			l_node: detachable XM_XPATH_NODE
+			l_string: detachable ST_COPY_ON_WRITE_STRING
 		do
 			-- TODO: review why copy-on-write is being used. The string value
 			--       should be read-only, in which case we might be able to
@@ -87,7 +91,7 @@ feature -- Access
 			end
 		end
 
-	first_child: XM_XPATH_NODE
+	first_child: detachable XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		do
@@ -101,10 +105,10 @@ feature -- Access
 		require
 			valid_index: is_valid_child_index (an_index)
 		do
-				Result := children.item (an_index)
+			Result := children.item (an_index)
 		end
 
-	last_child: XM_XPATH_NODE
+	last_child: detachable XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		do
@@ -210,7 +214,7 @@ feature {NONE} -- Implementation
 	children: DS_ARRAYED_LIST [XM_XPATH_TREE_NODE]
 			-- Child_nodes
 
-	saved_sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
+	saved_sequence_number: detachable XM_XPATH_64BIT_NUMERIC_CODE
 			-- Cache for `sequence_number'
 
 	update_indices

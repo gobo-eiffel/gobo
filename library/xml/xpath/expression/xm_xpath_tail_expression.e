@@ -5,7 +5,7 @@ note
 		"Objects that represent a filter of the form EXPR[position() > n]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,28 +108,30 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
-			base_expression.optimize (l_replacement,a_context, a_context_item_type)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
 			if base_expression.is_error then
 				set_replacement (a_replacement, base_expression)
 			else
@@ -138,11 +140,11 @@ feature -- Optimization
 		end
 
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -153,8 +155,10 @@ feature -- Optimization
 				if not (a_offer.action = Unordered) then
 					create l_replacement.make (Void)
 					base_expression.promote (l_replacement, a_offer)
-					set_base_expression (l_replacement.item)
-					reset_static_properties
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						set_base_expression (l_replacement_item)
+						reset_static_properties
+					end
 				end
 			end
 		end
@@ -167,19 +171,21 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_iterator
-			if l_iterator.is_error then
-				last_iterator := l_iterator
-			elseif l_iterator.is_array_iterator then
-				if start > l_iterator.as_array_iterator.last_item then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if l_iterator.is_error then
+					last_iterator := l_iterator
+				elseif l_iterator.is_array_iterator then
+					if start > l_iterator.as_array_iterator.last_item then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+					else
+						last_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+					end
+				elseif l_iterator.is_node_iterator then
+					create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (l_iterator.as_node_iterator, start)
 				else
-					last_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+					create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (l_iterator, start)
 				end
-			elseif l_iterator.is_node_iterator then
-				create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (l_iterator.as_node_iterator, start)
-			else
-				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (l_iterator, start)
 			end
 		end
 
@@ -189,17 +195,19 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_node_iterator
-			if l_iterator.is_error then
-				last_node_iterator := l_iterator
-			elseif l_iterator.is_array_iterator then
-				if start > l_iterator.as_array_iterator.last_item then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+			check postcondition_of_create_iterator: attached base_expression.last_node_iterator as l_last_node_iterator then
+				l_iterator := l_last_node_iterator
+				if l_iterator.is_error then
+					last_node_iterator := l_iterator
+				elseif l_iterator.is_array_iterator then
+					if start > l_iterator.as_array_iterator.last_item then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+					else
+						last_node_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+					end
 				else
-					last_node_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+					create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (l_iterator, start)
 				end
-			else
-				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (l_iterator, start)
 			end
 		end
 

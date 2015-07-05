@@ -5,7 +5,7 @@ note
 		"Objects that support implementation of the XPath index-of() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,13 +47,18 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := base_sequence.after or else item = Void
+			Result := base_sequence.after or else internal_item = Void
 		end
 feature -- Cursor movement
 
@@ -69,18 +74,19 @@ feature -- Cursor movement
 			else
 				base_sequence.forth -- can't be after - see `after'
 			end
-			item := Void
-			if base_sequence.is_error then
-				set_last_error (base_sequence.error_value)
+			internal_item := Void
+			if attached base_sequence.error_value as l_error_value then
+				check is_error: base_sequence.is_error end
+				set_last_error (l_error_value)
 			else
 				from
 				until
-					base_sequence.is_error or else base_sequence.after or else item /= Void
+					base_sequence.is_error or else base_sequence.after or else internal_item /= Void
 				loop
 					last_position_index := last_position_index + 1
 					an_item := base_sequence.item
 					if an_item.is_error then
-						item := an_item
+						internal_item := an_item
 					else
 						check
 							item_is_atomic: an_item.is_atomic_value
@@ -88,14 +94,15 @@ feature -- Cursor movement
 						end
 						an_atomic_value := an_item.as_atomic_value
 						if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
-							create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
+							create {XM_XPATH_INVALID_ITEM} internal_item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
 						elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then
-							create {XM_XPATH_MACHINE_INTEGER_VALUE} item.make (last_position_index)
+							create {XM_XPATH_MACHINE_INTEGER_VALUE} internal_item.make (last_position_index)
 						else
 							if not base_sequence.after then
 								base_sequence.forth
-								if base_sequence.is_error then
-									set_last_error (base_sequence.error_value)
+								if attached base_sequence.error_value as l_error_value then
+									check is_error: base_sequence.is_error end
+									set_last_error (l_error_value)
 								end
 							end
 						end
@@ -125,6 +132,9 @@ feature {NONE} -- Implementation
 
 	last_position_index: INTEGER
 			-- Position within `base_sequence' of currently matched value
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

@@ -5,7 +5,7 @@ note
 		"Objects that mediate between eiffel parser events and XPath receiver events"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 
 feature -- Document type definition callbacks
 
-	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
+	on_doctype (a_name: STRING; an_id: detachable XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN)
 			-- Document type declaration.
 		do
 			before_dtd := False
@@ -121,8 +121,8 @@ feature -- Document type definition callbacks
 			end
 		end
 
-	on_entity_declaration (an_entity_name: STRING; is_parameter: BOOLEAN; a_value: STRING;
-		an_id: XM_DTD_EXTERNAL_ID; a_notation_name: STRING)
+	on_entity_declaration (an_entity_name: STRING; is_parameter: BOOLEAN; a_value: detachable STRING;
+		an_id: detachable XM_DTD_EXTERNAL_ID; a_notation_name: detachable STRING)
 			-- Entity declaration.
 		do
 			if an_id /= Void and then a_notation_name /= Void then
@@ -240,7 +240,7 @@ feature -- Meta
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; an_ns_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		local
 			a_name_code: INTEGER
@@ -253,8 +253,10 @@ feature -- Tag
 					std.error.put_string (", prefix is ")
 					std.error.put_string (an_ns_prefix)
 				end
-				std.error.put_string (", namespace is ")
-				std.error.put_string (a_namespace)
+				if a_namespace /= Void then
+					std.error.put_string (", namespace is ")
+					std.error.put_string (a_namespace)
+				end
 				std.error.put_new_line
 			end
 			before_dtd := False
@@ -264,41 +266,43 @@ feature -- Tag
 			if a_local_part = Void then
 				on_error ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
 			end
-			if an_ns_prefix = Void then
-				a_prefix := ""
-			else
-				a_prefix := an_ns_prefix
-			end
-			if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
-					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-					a_name_code := shared_name_pool.last_name_code
+			check a_namespace /= Void then
+				if an_ns_prefix = Void then
+					a_prefix := ""
 				else
-					a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
-					a_message := STRING_.appended_string (a_message, "#")
-					a_message := STRING_.appended_string (a_message, a_local_part)
-					on_error (a_message)
+					a_prefix := an_ns_prefix
 				end
-			else
-				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
+				if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
+					if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
+						shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+						a_name_code := shared_name_pool.last_name_code
+					else
+						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
+						a_message := STRING_.appended_string (a_message, "#")
+						a_message := STRING_.appended_string (a_message, a_local_part)
+						on_error (a_message)
+					end
+				else
+					a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
+				end
+
+				-- Element typing is not yet supported
+				receiver.start_element (a_name_code, 0, 0)
+
+				if a_prefix.count = 0 then
+					an_element_qname := a_local_part
+				else
+					an_element_qname := STRING_.cloned_string (a_prefix)
+					an_element_qname := STRING_.appended_string (an_element_qname, ":")
+					an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
+				end
+
+				current_element_name := an_element_qname
 			end
-
-			-- Element typing is not yet supported
-			receiver.start_element (a_name_code, 0, 0)
-
-			if a_prefix.count = 0 then
-				an_element_qname := a_local_part
-			else
-				an_element_qname := STRING_.cloned_string (a_prefix)
-				an_element_qname := STRING_.appended_string (an_element_qname, ":")
-				an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
-			end
-
-			current_element_name := an_element_qname
 			Precursor (a_namespace, an_ns_prefix, a_local_part)
 		end
 
-	on_attribute (a_namespace: STRING; an_ns_prefix: STRING; a_local_part: STRING; a_value: STRING)
+	on_attribute (a_namespace: detachable STRING; an_ns_prefix: detachable STRING; a_local_part: STRING; a_value: STRING)
 			-- Start of attribute or namespace declaration
 		local
 			a_name_code, a_namespace_code: INTEGER
@@ -306,7 +310,9 @@ feature -- Tag
 		do
 			debug ("XPath content emitter")
 				std.error.put_string ("On_attribute: namespace is ")
-				std.error.put_string (a_namespace)
+				if a_namespace /= Void then
+					std.error.put_string (a_namespace)
+				end
 				if an_ns_prefix /= Void then
 					std.error.put_string (", prefix is ")
 					std.error.put_string (an_ns_prefix)
@@ -323,47 +329,47 @@ feature -- Tag
 			if a_namespace = Void then
 				on_error ("XM_XPATH_RECEIVER requires namespace to be resolved")
 			end
-			if an_ns_prefix = Void then
-				a_prefix := ""
-			else
-				a_prefix := an_ns_prefix
-			end
-
-			if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
-				if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
-					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
-					a_name_code := shared_name_pool.last_name_code
+			check a_namespace /= Void then
+				if an_ns_prefix = Void then
+					a_prefix := ""
 				else
-					a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
-					a_message := STRING_.appended_string (a_message, "#")
-					a_message := STRING_.appended_string (a_message, a_local_part)
-					on_error (a_message)
+					a_prefix := an_ns_prefix
 				end
-			else
-				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
-			end
-			if is_namespace_declaration (a_prefix, a_local_part) then
 
-				-- Notify a namespace declaration
-
-				if STRING_.same_string (a_local_part, "xmlns") then
-					a_namespace_prefix := "" -- default namespace
+				if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
+					if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
+						shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
+						a_name_code := shared_name_pool.last_name_code
+					else
+						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
+						a_message := STRING_.appended_string (a_message, "#")
+						a_message := STRING_.appended_string (a_message, a_local_part)
+						on_error (a_message)
+					end
 				else
-					a_namespace_prefix := a_local_part
+					a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
 				end
-				if shared_name_pool.is_namespace_code_allocated (a_namespace_prefix, a_value) then
-					a_namespace_code := shared_name_pool.namespace_code (a_namespace_prefix, a_value)
+				if is_namespace_declaration (a_prefix, a_local_part) then
+
+					-- Notify a namespace declaration
+
+					if STRING_.same_string (a_local_part, "xmlns") then
+						a_namespace_prefix := "" -- default namespace
+					else
+						a_namespace_prefix := a_local_part
+					end
+					if shared_name_pool.is_namespace_code_allocated (a_namespace_prefix, a_value) then
+						a_namespace_code := shared_name_pool.namespace_code (a_namespace_prefix, a_value)
+					else
+						shared_name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
+						a_namespace_code := shared_name_pool.last_namespace_code
+					end
+					receiver.notify_namespace (a_namespace_code, 0)
 				else
-					shared_name_pool.allocate_namespace_code (a_namespace_prefix, a_value)
-					a_namespace_code := shared_name_pool.last_namespace_code
+					notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
+					Precursor (a_namespace, an_ns_prefix, a_local_part, a_value)
 				end
-				receiver.notify_namespace (a_namespace_code, 0)
-			else
-				notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
-				Precursor (a_namespace, an_ns_prefix, a_local_part, a_value)
 			end
-
-
 		end
 
 	on_start_tag_finish
@@ -376,7 +382,7 @@ feature -- Tag
 			Precursor
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_end_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			debug ("XPath content emitter")
@@ -386,8 +392,10 @@ feature -- Tag
 					std.error.put_string (", prefix is ")
 					std.error.put_string (a_prefix)
 				end
-				std.error.put_string (", namespace is ")
-				std.error.put_string (a_namespace)
+				if a_namespace /= Void then
+					std.error.put_string (", namespace is ")
+					std.error.put_string (a_namespace)
+				end
 				std.error.put_new_line
 			end
 			receiver.end_element
@@ -416,11 +424,11 @@ feature {NONE} -- Implementation
 	receiver: XM_XPATH_RECEIVER
 			-- The receiver to which we forward events
 
-	current_element_name: STRING
+	current_element_name: detachable STRING
 			-- QName of the current element;
 			-- Used for tracking attribute types
 
-	attribute_types: DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], STRING]
+	attribute_types: DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], detachable STRING]
 			-- Stored attribute-type definitions per element name
 
 	before_dtd: BOOLEAN
@@ -456,6 +464,7 @@ feature {NONE} -- Implementation
 		require
 			prefix_not_void: a_prefix /= Void
 			local_part_not_empty: a_local_part /= Void and then not a_local_part.is_empty
+			a_value_not_void: a_value /= Void
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
 			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath string-length() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default
@@ -96,32 +96,34 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value: detachable XM_XPATH_ATOMIC_VALUE
 			l_string: STRING
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as a_result_item then
 				create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
-			elseif a_result.item.is_error then
+			elseif a_result_item.is_error then
 				-- nothing to do
-			elseif  not a_result.item.is_atomic_value then
+			elseif  not a_result_item.is_atomic_value then
 				create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
 			else
-				l_atomic_value := a_result.item.as_atomic_value
+				l_atomic_value := a_result_item.as_atomic_value
 			end
-			if a_result.item = Void or else not a_result.item.is_error then
-				l_string := l_atomic_value.string_value
-				if is_test_for_zero then
-					if l_string.count = 0 then
-						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (0))
+			if not attached a_result.item as a_result_item or else not a_result_item.is_error then
+				check attached l_atomic_value then
+					l_string := l_atomic_value.string_value
+					if is_test_for_zero then
+						if l_string.count = 0 then
+							a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (0))
+						else
+							a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (1))
+						end
 					else
-						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (1))
+						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (l_string.count))
 					end
-				else
-					a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (l_string.count))
 				end
 			end
 		end

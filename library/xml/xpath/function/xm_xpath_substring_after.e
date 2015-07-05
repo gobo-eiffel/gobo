@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath substring-after() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,10 +71,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_collator: ST_COLLATOR
+			l_collator: detachable ST_COLLATOR
 			l_atomic_value, l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_s1, l_s2: STRING
 		do
@@ -83,17 +83,21 @@ feature -- Evaluation
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else
 				arguments.item (1).evaluate_item (a_result, a_context)
-				if not a_result.item.is_atomic_value then
-					create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
-				else
-					l_atomic_value := a_result.item.as_atomic_value
+				check attached a_result.item as a_result_item_1 then
+					if not a_result_item_1.is_atomic_value then
+						create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
+					else
+						l_atomic_value := a_result_item_1.as_atomic_value
+					end
 				end
 				a_result.put (Void)
 				arguments.item (2).evaluate_item (a_result, a_context)
-				if not a_result.item.is_atomic_value then
-					create {XM_XPATH_STRING_VALUE} l_other_atomic_value.make ("")
-				else
-					l_other_atomic_value := a_result.item.as_atomic_value
+				check attached a_result.item as a_result_item_2 then
+					if not a_result_item_2.is_atomic_value then
+						create {XM_XPATH_STRING_VALUE} l_other_atomic_value.make ("")
+					else
+						l_other_atomic_value := a_result_item_2.as_atomic_value
+					end
 				end
 				l_s1 := l_atomic_value.string_value
 				l_s2 := l_other_atomic_value.string_value
@@ -129,6 +133,7 @@ feature {NONE} -- Implementation
 			found: BOOLEAN
 		do
 			from
+				Result := ""
 				an_index := 1
 			until
 				found or else an_index > s1.count - s2.count
@@ -146,7 +151,6 @@ feature {NONE} -- Implementation
 			variant
 				s1.count - s2.count + 1 - an_index
 			end
-			if not found then Result := "" end
 		end
 
 end

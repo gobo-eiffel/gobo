@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath compare() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,10 +68,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_collator: ST_COLLATOR
+			l_collator: detachable ST_COLLATOR
 			l_s1, l_s2: STRING
 			l_comparison_result: INTEGER
 		do
@@ -80,20 +80,20 @@ feature -- Evaluation
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error))
 			else
 				arguments.item (1).evaluate_item (a_result, a_context)
-				if a_result.item = Void then
+				if not attached a_result.item as a_result_item_1 then
 					-- nothing to do
-				elseif not a_result.item.is_atomic_value then
+				elseif not a_result_item_1.is_atomic_value then
 					a_result.put (Void)
 				else
-					l_s1 := a_result.item.as_atomic_value.string_value
+					l_s1 := a_result_item_1.as_atomic_value.string_value
 					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
-					if a_result.item = Void then
+					if not attached a_result.item as a_result_item_2 then
 						-- nothing to do
-					elseif not a_result.item.is_atomic_value then
+					elseif not a_result_item_2.is_atomic_value then
 						a_result.put (Void)
 					else
-						l_s2 := a_result.item.as_atomic_value.string_value
+						l_s2 := a_result_item_2.as_atomic_value.string_value
 						l_comparison_result := l_collator.three_way_comparison (l_s1, l_s2)
 						a_result.put (create {XM_XPATH_INTEGER_VALUE}.make_from_integer (l_comparison_result))
 					end

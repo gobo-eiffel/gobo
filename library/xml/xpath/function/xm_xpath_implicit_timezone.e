@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath implicit-timezone function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,11 +56,12 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- never called
+			check False then end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_tz: DT_FIXED_OFFSET_TIME_ZONE
@@ -74,10 +75,10 @@ feature -- Evaluation
 			create l_duration.make_from_date_time_duration (l_dd, l_td)
 			a_result.put (create {XM_XPATH_SECONDS_DURATION_VALUE}.make_from_duration (l_duration))
 		ensure then
-			good_result: a_result.item /= Void and then not a_result.item.is_error
+			good_result: attached a_result.item as a_result_item and then not a_result_item.is_error
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

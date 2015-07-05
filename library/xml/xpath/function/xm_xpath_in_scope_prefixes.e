@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath in-scope-prefixes() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,16 +65,17 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			arguments.item (1).evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
-			elseif l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
-			elseif l_result.item.is_element then
-				last_iterator := l_result.item.as_element.prefixes_in_scope
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+			elseif l_result_item.is_element then
+				last_iterator := l_result_item.as_element.prefixes_in_scope
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 			end

@@ -5,7 +5,7 @@ note
 		"Objects that create built-in types for a schema-aware processor, and make them accessible"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -154,19 +154,19 @@ feature -- Access
 			create Result.make (Xml_schema_uri, "ENTITY", ncname_type, Entity_type_code)
 		end
 
-	idrefs_type: XM_XPATH_LIST_TYPE
+	idrefs_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:IDREFS
 		once
 			-- TODO			create Result.make ("IDREFS", any_simple_type, Idrefs_type_code)
 		end
 
-	entities_type: XM_XPATH_LIST_TYPE
+	entities_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:ENTITIES
 		once
 			-- TODO create Result.make ("ENTITIES", any_simple_type, Entities_type_code)
 		end
 
-	nmtokens_type: XM_XPATH_LIST_TYPE
+	nmtokens_type: detachable XM_XPATH_LIST_TYPE
 			-- xs:NMTOKENS
 		once
 			-- TODO create Result.make ("NMTOKENS", any_simple_type, Nmtokens_type_code)

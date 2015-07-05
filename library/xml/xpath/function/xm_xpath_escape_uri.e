@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath functions encode-for-uri(), iri-to-uri() and escape-html-uri()"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,18 +89,18 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_uri_string: STRING
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as a_result_item then
 				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
-			elseif a_result.item.is_error then
+			elseif a_result_item.is_error then
 				-- nothing to do
 			else
-				l_uri_string := a_result.item.string_value
+				l_uri_string := a_result_item.string_value
 				a_result.put (create {XM_XPATH_STRING_VALUE}.make (escaped_uri (l_uri_string)))
 			end
 		end

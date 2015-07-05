@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath concat() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			evaluate_as_string (a_context)
@@ -79,7 +79,7 @@ feature -- Evaluation
 		local
 			l_string: STRING
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			from
 				create l_string.make (0)
@@ -89,12 +89,13 @@ feature -- Evaluation
 			loop
 				create l_result.make (Void)
 				l_cursor.item.evaluate_item (l_result, a_context)
-				if l_result.item /= Void then
-					if l_result.item.is_error then
+				if attached l_result.item as l_result_item then
+					if attached l_result_item.error_value as l_error_value then
+						check is_error: l_result_item.is_error end
 						l_string := ""
-						set_last_error (l_result.item.error_value)
+						set_last_error (l_error_value)
 					else
-						l_string := STRING_.appended_string (l_string, l_result.item.string_value)
+						l_string := STRING_.appended_string (l_string, l_result_item.string_value)
 					end
 				end
 				l_cursor.forth

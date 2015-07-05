@@ -5,7 +5,7 @@ note
 		"Standard tree nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +65,7 @@ feature -- Access
 		require
 			tree_composite: is_tree_composite_node
 		do
+			check is_tree_composite: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -80,6 +81,7 @@ feature -- Access
 		require
 			document: is_tree_document
 		do
+			check is_tree_document: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -95,6 +97,7 @@ feature -- Access
 		require
 			element: is_tree_element
 		do
+			check is_tree_element: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -110,6 +113,7 @@ feature -- Access
 		require
 			is_attribute: is_tree_attribute
 		do
+			check is_tree_attribute: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -125,6 +129,7 @@ feature -- Access
 		require
 			text: is_tree_text
 		do
+			check is_tree_text: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -135,10 +140,10 @@ feature -- Access
 
 			-- default implementation for child nodes
 
-			if parent = Void then
+			if not attached parent as l_parent then
 				Result := ""
 			else
-				Result := parent.system_id
+				Result := l_parent.system_id
 			end
 		end
 
@@ -148,7 +153,9 @@ feature -- Access
 
 			-- default implementation for child nodes
 
-			Result := parent.line_number
+			if attached parent as l_parent then
+				Result := l_parent.line_number
+			end
 		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
@@ -161,35 +168,40 @@ feature -- Access
 			-- This is the default implementation for child nodes.
 		local
 			a_previous_node: XM_XPATH_TREE_NODE
-			finished: BOOLEAN
 			counter: INTEGER
+			l_result: detachable XM_XPATH_64BIT_NUMERIC_CODE
 		do
 			from
 				a_previous_node := Current
 			until
-				finished
+				l_result /= Void
 			loop
 				if a_previous_node.is_tree_composite_node then
-					finished := True
 
 					-- N.B. the large offset is to leave room for namespace and attribute nodes.
 
-					create Result.make_with_large_offset (a_previous_node.sequence_number.high_word, counter)
+					create l_result.make_with_large_offset (a_previous_node.sequence_number.high_word, counter)
 				else
-					a_previous_node := a_previous_node.previous_node_in_document_order
+					check attached a_previous_node.previous_node_in_document_order as l_previous_node_in_document_order then
+						a_previous_node := l_previous_node_in_document_order
+					end
 				end
 				counter := counter + 1
 			end
-
+			Result := l_result
 		end
 
-	document_element: XM_XPATH_TREE_ELEMENT
+	document_element: detachable XM_XPATH_TREE_ELEMENT
 			-- The top-level element
 		local
-			an_element: XM_XPATH_ELEMENT
+			an_element: detachable XM_XPATH_ELEMENT
 		do
-			an_element := document_root.document_element
-			if an_element /= Void then	Result := an_element.as_tree_node.as_tree_element end
+			if attached document_root as l_document_root then
+				an_element := l_document_root.document_element
+				if an_element /= Void then
+					Result := an_element.as_tree_node.as_tree_element
+				end
+			end
 		end
 
 	document_number: INTEGER
@@ -223,43 +235,47 @@ feature -- Access
 			end
 		end
 
-	parent: XM_XPATH_TREE_COMPOSITE_NODE
+	parent: detachable XM_XPATH_TREE_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
 		do
 			Result := parent_node
 		end
 
-	previous_sibling: XM_XPATH_NODE
+	previous_sibling: detachable XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
-			if parent_node.is_valid_child_index (child_index - 1) then
-				Result := parent_node.nth_child (child_index - 1)
+			if attached parent_node as l_parent_node and then l_parent_node.is_valid_child_index (child_index - 1) then
+				Result := l_parent_node.nth_child (child_index - 1)
 			end
 		end
 
-	next_sibling: XM_XPATH_NODE
+	next_sibling: detachable XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
-			if parent_node.is_valid_child_index (child_index + 1) then
-				Result := parent_node.nth_child (child_index + 1)
+			if attached parent_node as l_parent_node and then l_parent_node.is_valid_child_index (child_index + 1) then
+				Result := l_parent_node.nth_child (child_index + 1)
 			end
 		end
 
 	root: XM_XPATH_NODE
 			-- The root node for `Current'
 		do
-			Result := document_root
+			if attached document_root as l_document_root then
+				Result := l_document_root
+			else
+				Result := Current
+			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
-			if parent /= Void then
-				Result := parent.document_root
+			if attached parent as l_parent then
+				Result := l_parent.document_root
 			end
 		end
 
@@ -382,10 +398,10 @@ feature {XM_XPATH_TREE_COMPOSITE_NODE} -- Element change
 
 feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 
-	previous_node_in_document_order: XM_XPATH_TREE_NODE
+	previous_node_in_document_order: detachable XM_XPATH_TREE_NODE
 			-- Previous node within the document
 		local
-			a_previous_node: XM_XPATH_NODE
+			a_previous_node: detachable XM_XPATH_NODE
 		do
 
 			-- Find the last child of the previous sibling if there is one;
@@ -401,14 +417,14 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 			end
 		end
 
-	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE
+	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): detachable XM_XPATH_TREE_NODE
 			-- Next node within the document;
 			-- The scan stops if it encounters `an_anchor'
 		require
 			anchor_not_void: an_anchor /= Void -- and then `an_anchor' is an ancestor-or-self of `Current'
 		local
-			a_parent: XM_XPATH_TREE_NODE
-			a_node: XM_XPATH_NODE
+			a_parent: detachable XM_XPATH_TREE_NODE
+			a_node: detachable XM_XPATH_NODE
 			finished: BOOLEAN
 		do
 			a_node := first_child
@@ -425,7 +441,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 						from
 							a_parent := Current
 						until
-							finished
+							finished or else a_parent = Void
 						loop
 							a_parent := a_parent.parent
 							if a_parent = Void then
@@ -448,7 +464,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 	last_descendant_or_self: XM_XPATH_TREE_NODE
 			-- Last descendant or `Current' if no descendants
 		local
-			a_last_descendant: XM_XPATH_NODE
+			a_last_descendant: detachable XM_XPATH_NODE
 		do
 			a_last_descendant := last_child
 			if a_last_descendant = Void then
@@ -462,7 +478,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 
 feature {XM_XPATH_TREE_NODE} -- Local
 
-	parent_node: XM_XPATH_TREE_COMPOSITE_NODE
+	parent_node: like parent
 			-- Possible parent
 
 feature {NONE} -- Implementation
@@ -603,7 +619,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		local
-			a_parent_node: XM_XPATH_TREE_NODE
+			a_parent_node: detachable XM_XPATH_TREE_NODE
 		do
 			a_parent_node := parent
 			if a_parent_node = Void then

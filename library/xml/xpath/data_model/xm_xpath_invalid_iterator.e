@@ -5,7 +5,7 @@ note
 		"Invalid iterators"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,9 +53,10 @@ feature {NONE} -- Initialization
 			create error_value.make_from_string (a_string, a_namespace_uri, a_error_code, a_error_type)
 			is_error := True
 		ensure
-			description_set: STRING_.same_string (error_value.description, a_string)
-			code_set: error_value.code = a_error_code
-			type_set: error_value.type = a_error_type
+			error_value_not_void: attached error_value as l_error_value
+			description_set: STRING_.same_string (l_error_value.description, a_string)
+			code_set: l_error_value.code = a_error_code
+			type_set: l_error_value.type = a_error_type
 		end
 
 feature -- Access
@@ -66,7 +67,7 @@ feature -- Access
 			check
 				not_called: False
 				-- precondition is never met
-			end
+			then end
 		end
 
 feature -- Status report
@@ -99,7 +100,7 @@ feature -- Duplication
 			check
 				not_called: False
 				-- precondition is never met
-			end
+			then end
 		end
 
 invariant

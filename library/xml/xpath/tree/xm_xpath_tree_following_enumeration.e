@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the following:: Axis"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,37 +36,39 @@ feature {NONE} -- Initialization
 			starting_node_not_void: a_starting_node /= Void
 			node_test_not_void: a_node_test /= Void
 		local
-			a_tree_node: XM_XPATH_TREE_NODE
-			a_node: XM_XPATH_NODE
+			a_tree_node: detachable XM_XPATH_TREE_NODE
+			a_node: detachable XM_XPATH_NODE
 		do
 			make_enumeration (a_starting_node, a_node_test)
 			check
-				root_not_void: starting_node.document_root /= Void and then starting_node.document_root.is_document
-			end
-			root := starting_node.document_root.as_tree_node.as_tree_document
-			if a_starting_node.node_type = Attribute_node then
-				next_node := starting_node.parent.next_node_in_document_order (root)
-			else
-				from
-					a_tree_node := a_starting_node
-				until
-					next_node /= Void or else a_tree_node = Void
-				loop
-					a_node := a_tree_node.next_sibling
-					if a_node = Void then
-						a_tree_node := a_tree_node.parent
-					else
-						next_node := a_node.as_tree_node
+				root_not_void: attached starting_node.document_root as l_starting_node_document_root and then l_starting_node_document_root.is_document
+			then
+				root := l_starting_node_document_root.as_tree_node.as_tree_document
+				if a_starting_node.node_type = Attribute_node then
+					check attached starting_node.parent as l_starting_node_parent then
+						next_node := l_starting_node_parent.next_node_in_document_order (root)
+					end
+				else
+					from
+						a_tree_node := a_starting_node
+					until
+						next_node /= Void or else a_tree_node = Void
+					loop
+						a_node := a_tree_node.next_sibling
+						if a_node = Void then
+							a_tree_node := a_tree_node.parent
+						else
+							next_node := a_node.as_tree_node
+						end
 					end
 				end
+				from
+				until
+					is_conforming (next_node)
+				loop
+					advance_one_step
+				end
 			end
-			from
-			until
-				is_conforming (next_node)
-			loop
-				advance_one_step
-			end
-
 		ensure
 			starting_node_set: starting_node = a_starting_node
 			test_set: node_test = a_node_test
@@ -76,11 +78,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Does `Current' yield a node_sequence?
-		local
-			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			a_tree_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tree_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -116,7 +115,9 @@ feature {NONE} -- Implmenentation
 	advance_one_step
 			-- Move to the next candidate node
 		do
-			next_node := next_node.next_node_in_document_order (root)
+			check precondition_next_node_not_void: attached next_node as l_next_node then
+				next_node := l_next_node.next_node_in_document_order (root)
+			end
 		end
 
 end

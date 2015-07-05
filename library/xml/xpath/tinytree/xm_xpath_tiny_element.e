@@ -5,7 +5,7 @@ note
 		"Tiny tree Element nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,13 +64,13 @@ feature -- Access
 			Result := Current
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): detachable STRING
 			-- Value of named attribute
 		do
 			Result := attribute_value (shared_name_pool.fingerprint (a_uri, a_local_name))
 		end
 
-	attribute_value (a_fingerprint: INTEGER): STRING
+	attribute_value (a_fingerprint: INTEGER): detachable STRING
 			-- Value of attribute identified by `a_fingerprint'
 		local
 			an_alpha_value, a_name_code: INTEGER
@@ -102,7 +102,7 @@ feature -- Access
 			-- URI code for `a_prefix_code'
 		local
 			a_namespace_node, a_namespace_code: INTEGER
-			a_composite: XM_XPATH_TINY_COMPOSITE_NODE
+			a_composite: detachable XM_XPATH_TINY_COMPOSITE_NODE
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -128,15 +128,17 @@ feature -- Access
 
 			if Result = -1 then
 				a_composite := parent
-				if not a_composite.is_element then
+				check a_composite /= Void then
+					if not a_composite.is_element then
 
-					-- Document node
+						-- Document node
 
-					if a_prefix_code = 0 then
-						Result := Default_uri_code
+						if a_prefix_code = 0 then
+							Result := Default_uri_code
+						end
+					else
+						Result := a_composite.as_element.uri_code_for_prefix_code (a_prefix_code)
 					end
-				else
-					Result := a_composite.as_element.uri_code_for_prefix_code (a_prefix_code)
 				end
 			end
 		end
@@ -190,7 +192,7 @@ feature -- Element change
 			-- Output all namespace nodes associated with this element.
 		local
 			a_namespace_node: INTEGER
-			a_node: XM_XPATH_TINY_COMPOSITE_NODE
+			a_node: detachable XM_XPATH_TINY_COMPOSITE_NODE
 		do
 			if tree.are_namespaces_used then
 				a_namespace_node := tree.beta_value (node_number)
@@ -262,7 +264,9 @@ feature -- Duplication
 				when Comment_node then
 					close_pending := False
 					a_start_index := tree.alpha_value (a_next_node)
-					a_receiver.notify_comment (tree.comment_buffer.substring (a_start_index, a_start_index + tree.beta_value (a_next_node) - 1), 0)
+					check attached tree.comment_buffer as l_comment_buffer then
+						a_receiver.notify_comment (l_comment_buffer.substring (a_start_index, a_start_index + tree.beta_value (a_next_node) - 1), 0)
+					end
 				when Processing_instruction_node then
 					close_pending := False
 					a_node := tree.retrieve_node (a_next_node)

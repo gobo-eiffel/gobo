@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath trace() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,34 +67,38 @@ feature -- Status report
 feature -- Evaluation
 
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
 			-- Suppress compile-time evaluation
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
-			l_label: STRING
+			l_label: detachable STRING
 			l_is_suppressed: BOOLEAN
 		do
 			l_is_suppressed :=  a_context.configuration.is_tracing_suppressed
 			if not l_is_suppressed then
 				arguments.item (2).evaluate_as_string (a_context)
-				l_string_value := arguments.item (2).last_evaluated_string
-				if l_string_value.is_error then
-					a_result.put (l_string_value)
-				else
-					l_label := l_string_value.string_value
+				check postcondition_of_evaluate_as_string: attached arguments.item (2).last_evaluated_string as l_last_evaluated_string then
+					l_string_value := l_last_evaluated_string
+					if l_string_value.is_error then
+						a_result.put (l_string_value)
+					else
+						l_label := l_string_value.string_value
+					end
 				end
 			end
 			if a_result.item = Void then
 				arguments.item (1).evaluate_item (a_result, a_context)
 				if not l_is_suppressed then
-					trace_item (l_label, a_result.item, a_context)
+					check attached l_label then
+						trace_item (l_label, a_result.item, a_context)
+					end
 				end
 			end
 		end
@@ -107,27 +111,34 @@ feature -- Evaluation
 			a_label: STRING
 		do
 			arguments.item (1).create_iterator (a_context)
-			last_iterator := arguments.item (1).last_iterator
-			if not  a_context.configuration.is_tracing_suppressed then
-				if not last_iterator.is_error then
-					arguments.item (2).evaluate_as_string (a_context)
-					a_string_value := arguments.item (2).last_evaluated_string
-					if not a_string_value.is_error then
-						a_label := a_string_value.string_value
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+				last_iterator := l_last_iterator
+				if not  a_context.configuration.is_tracing_suppressed then
+					if not attached l_last_iterator.error_value as l_error_value then
+						arguments.item (2).evaluate_as_string (a_context)
+						check postcondition_of_evaluate_as_string: attached arguments.item (2).last_evaluated_string as l_last_evaluated_string then
+							a_string_value := l_last_evaluated_string
+							if not a_string_value.is_error then
+								a_label := a_string_value.string_value
+							else
+								a_label := ""
+							end
+							create {XM_XPATH_TRACING_ITERATOR} last_iterator.make (l_last_iterator, a_label, a_context)
+						end
 					else
-						a_label := ""
+						check is_error: l_last_iterator.is_error end
+						arguments.item (2).evaluate_as_string (a_context)
+						check postcondition_of_evaluate_as_string: attached arguments.item (2).last_evaluated_string as l_last_evaluated_string then
+							a_string_value := l_last_evaluated_string
+							if not a_string_value.is_error then
+								a_label := a_string_value.string_value
+							else
+								a_label := ""
+							end
+							create {XM_XPATH_INVALID_ITEM} an_item.make (l_error_value)
+							trace_item (a_label, an_item, a_context)
+						end
 					end
-					create {XM_XPATH_TRACING_ITERATOR} last_iterator.make (last_iterator, a_label, a_context)
-				else
-					arguments.item (2).evaluate_as_string (a_context)
-					a_string_value := arguments.item (2).last_evaluated_string
-					if not a_string_value.is_error then
-						a_label := a_string_value.string_value
-					else
-						a_label := ""
-					end
-					create {XM_XPATH_INVALID_ITEM} an_item.make (last_iterator.error_value)
-					trace_item (a_label, an_item, a_context)
 				end
 			end
 		end
@@ -140,27 +151,34 @@ feature -- Evaluation
 			a_label: STRING
 		do
 			arguments.item (1).create_node_iterator (a_context)
-			last_node_iterator := arguments.item (1).last_node_iterator
-			if not a_context.configuration.is_tracing_suppressed then
-				if not last_node_iterator.is_error then
-					arguments.item (2).evaluate_as_string (a_context)
-					a_string_value := arguments.item (2).last_evaluated_string
-					if not a_string_value.is_error then
-						a_label := a_string_value.string_value
+			check postcondition_of_create_node_iterator: attached arguments.item (1).last_node_iterator as l_last_node_iterator then
+				last_node_iterator := l_last_node_iterator
+				if not a_context.configuration.is_tracing_suppressed then
+					if not attached l_last_node_iterator.error_value as l_error_value then
+						arguments.item (2).evaluate_as_string (a_context)
+						check postcondition_of_evaluate_as_string: attached arguments.item (2).last_evaluated_string as l_last_evaluated_string then
+							a_string_value := l_last_evaluated_string
+							if not a_string_value.is_error then
+								a_label := a_string_value.string_value
+							else
+								a_label := ""
+							end
+							create {XM_XPATH_TRACING_NODE_ITERATOR} last_node_iterator.make (l_last_node_iterator, a_label, a_context)
+						end
 					else
-						a_label := ""
+						check is_error: l_last_node_iterator.is_error end
+						arguments.item (2).evaluate_as_string (a_context)
+						check postcondition_of_evaluate_as_string: attached arguments.item (2).last_evaluated_string as l_last_evaluated_string then
+							a_string_value := l_last_evaluated_string
+							if not a_string_value.is_error then
+								a_label := a_string_value.string_value
+							else
+								a_label := ""
+							end
+							create {XM_XPATH_INVALID_ITEM} an_item.make (l_error_value)
+							trace_item (a_label, an_item, a_context)
+						end
 					end
-					create {XM_XPATH_TRACING_NODE_ITERATOR} last_node_iterator.make (last_node_iterator, a_label, a_context)
-				else
-					arguments.item (2).evaluate_as_string (a_context)
-					a_string_value := arguments.item (2).last_evaluated_string
-					if not a_string_value.is_error then
-						a_label := a_string_value.string_value
-					else
-						a_label := ""
-					end
-					create {XM_XPATH_INVALID_ITEM} an_item.make (last_node_iterator.error_value)
-					trace_item (a_label, an_item, a_context)
 				end
 			end
 		end

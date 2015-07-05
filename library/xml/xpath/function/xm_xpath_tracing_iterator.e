@@ -5,7 +5,7 @@ note
 		"Iterators that support the XPath trace() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,11 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
@@ -71,11 +76,12 @@ feature -- Cursor movement
 				base_iterator.forth
 			end
 			index := index + 1
-			if base_iterator.is_error then
-				set_last_error (base_iterator.error_value)
+			if attached base_iterator.error_value as l_error_value then
+				check is_error: base_iterator.is_error end
+				set_last_error (l_error_value)
 			elseif not base_iterator.after then
 				is_empty_sequence := False
-				item := base_iterator.item
+				internal_item := base_iterator.item
 				a_label := STRING_.concat (label, " [")
 				a_label := STRING_.appended_string (a_label, index.out)
 				a_label := STRING_.appended_string (a_label, "]")
@@ -103,6 +109,9 @@ feature {NONE} -- Implementation
 
 	context: XM_XPATH_CONTEXT
 			-- Saved dynamic context
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

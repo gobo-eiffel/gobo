@@ -5,7 +5,7 @@ note
 		"Objects that support XPath functions which take a collator as an argument"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,35 +23,39 @@ inherit
 
 feature -- Access
 
-	default_collation_name: STRING
+	default_collation_name: detachable STRING
 			-- Default_collation_name
 
-	collator (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT; use_default_collator: BOOLEAN): ST_COLLATOR
+	collator (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT; use_default_collator: BOOLEAN): detachable ST_COLLATOR
 			-- Collator to be used
 		require
 			context_not_void: a_context /= Void
 			default_collation_name_not_void: default_collation_name /= Void
 		local
-			l_item: XM_XPATH_ITEM
+			l_item: detachable XM_XPATH_ITEM
 			l_collation_name: STRING
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			if arguments.count >= a_argument_number then
 				create l_result.make (Void)
 				arguments.item (a_argument_number).evaluate_item (l_result, a_context)
 				l_item := l_result.item
 				check
+					attached l_item
 					atomic_value: l_item.is_atomic_value
 					string_value: l_item.as_atomic_value.primitive_value.is_string_value
 					-- it's statically typed as a string
-				end
-				l_collation_name := l_item.as_atomic_value.primitive_value.as_string_value.string_value
-				if a_context.is_known_collation (l_collation_name) then
-					Result := a_context.collator (l_collation_name)
-					-- otherwise `Result' = `Void' and a FOCH0002 error will be reported by the caller
+				then
+					l_collation_name := l_item.as_atomic_value.primitive_value.as_string_value.string_value
+					if a_context.is_known_collation (l_collation_name) then
+						Result := a_context.collator (l_collation_name)
+						-- otherwise `Result' = `Void' and a FOCH0002 error will be reported by the caller
+					end
 				end
 			elseif use_default_collator then
-				Result := a_context.collator (default_collation_name)
+				check precondition_default_collation_name_not_void: attached default_collation_name as l_default_collation_name then
+					Result := a_context.collator (l_default_collation_name)
+				end
 			else
 
 				-- We use the Unicode codepoint collator
@@ -62,13 +66,13 @@ feature -- Access
 			Maybe_unsupported_collation: True
 		end
 
-	atomic_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_COMPARER
+	atomic_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): detachable XM_XPATH_ATOMIC_COMPARER
 			-- Atomic comparer to be used
 		require
 			context_not_void: a_context /= Void
 			default_collation_name_not_void: default_collation_name /= Void
 		local
-			a_collator: ST_COLLATOR
+			a_collator: detachable ST_COLLATOR
 		do
 			a_collator := collator (a_argument_number, a_context, True)
 			if a_collator /= Void then
@@ -79,13 +83,13 @@ feature -- Access
 			Maybe_unsupported_collation: True
 		end
 
-	atomic_sort_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): XM_XPATH_ATOMIC_SORT_COMPARER
+	atomic_sort_comparer (a_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT): detachable XM_XPATH_ATOMIC_SORT_COMPARER
 			-- Atomic sort comparer to be used
 		require
 			context_not_void: a_context /= Void
 			default_collation_name_not_void: default_collation_name /= Void
 		local
-			a_collator: ST_COLLATOR
+			a_collator: detachable ST_COLLATOR
 		do
 			a_collator := collator (a_argument_number, a_context, True)
 			if a_collator /= Void then
@@ -98,7 +102,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
@@ -112,7 +116,7 @@ feature -- Evaluation
 
 	-- Since collations aren't avaialble statically: (maybe we can change this?)
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

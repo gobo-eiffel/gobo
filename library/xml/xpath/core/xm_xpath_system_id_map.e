@@ -5,7 +5,7 @@ note
 		"Map of element sequence numbers to system-ids"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +53,7 @@ feature -- Access
 			at_least_one_system_id_allocated: number_allocated_uris > 0
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_result: detachable STRING
 		do
 			from
 				a_cursor := sequence_numbers.new_cursor
@@ -63,11 +64,14 @@ feature -- Access
 				if a_cursor.item > a_node_number then
 					a_cursor.go_after
 				else
-					Result := uris.item (a_cursor.index)
+					l_result := uris.item (a_cursor.index)
 					a_cursor.forth
 				end
 			variant
 				sequence_numbers.count + 1 - a_cursor.index
+			end
+			check precondition_valid_node_number: l_result /= Void then
+				Result := l_result
 			end
 		ensure
 			system_id_not_void: Result /= Void
@@ -99,7 +103,7 @@ feature -- Element change
 		local
 			a_size: INTEGER
 		do
-			if uris.count > 0 and then STRING_.same_string(uris.item (uris.count), a_uri) then
+			if uris.count > 0 and then STRING_.same_string (uris.item (uris.count), a_uri) then
 
 				-- Ignore, if it is the same as the previous one
 

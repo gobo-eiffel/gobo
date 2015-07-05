@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"XPath general comparisons"
+		"XPath general comparisons"
 
-library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_GENERAL_COMPARISON
 
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			operand_2_not_void: an_operand_two /= Void
 			general_comparison_operator: is_general_comparison_operator (a_token)
 		do
-			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			singleton_operator := singleton_value_operator (operator)
 			initialized := True
 		ensure
@@ -69,24 +69,28 @@ feature -- Access
 feature -- Optimization
 
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-			if first_operand /= l_replacement.item then
-				set_first_operand (l_replacement.item)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				if first_operand /= l_replacement_item then
+					set_first_operand (l_replacement_item)
+				end
 			end
 			if first_operand.is_error then
 				set_replacement (a_replacement, first_operand)
 			else
 				l_replacement.put (Void)
 				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				if second_operand /= l_replacement.item then
-					set_second_operand (l_replacement.item)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					if second_operand /= l_replacement_item then
+						set_second_operand (l_replacement_item)
+					end
 				end
 				if second_operand.is_error then
 					set_replacement (a_replacement, second_operand)
@@ -99,37 +103,45 @@ feature -- Optimization
 				else
 					l_replacement.put (Void)
 					first_operand.set_unsorted (l_replacement, False)
-					if first_operand /= l_replacement.item then
-						set_first_operand (l_replacement.item)
+					check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+						if first_operand /= l_replacement_item then
+							set_first_operand (l_replacement_item)
+						end
 					end
 					l_replacement.put (Void)
 					second_operand.set_unsorted (l_replacement, False)
-					if second_operand /= l_replacement.item then
-						set_second_operand (l_replacement.item)
+					check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+						if second_operand /= l_replacement_item then
+							set_second_operand (l_replacement_item)
+						end
 					end
 					operands_not_in_error_so_type_check (a_replacement, a_context, a_context_item_type)
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.optimize (l_replacement, a_context, a_context_item_type)
-			if first_operand /= l_replacement.item then
-				set_first_operand (l_replacement.item)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				if first_operand /= l_replacement_item then
+					set_first_operand (l_replacement_item)
+				end
 			end
 			if first_operand.is_error then
 				set_replacement (a_replacement, first_operand)
 			else
 				l_replacement.put (Void)
 				second_operand.optimize (l_replacement, a_context, a_context_item_type)
-				if second_operand /= l_replacement.item then
-					set_second_operand (l_replacement.item)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					if second_operand /= l_replacement_item then
+						set_second_operand (l_replacement_item)
+					end
 				end
 				if second_operand.is_error then
 					set_replacement (a_replacement, second_operand)
@@ -143,13 +155,17 @@ feature -- Optimization
 					else
 						l_replacement.put (Void)
 						first_operand.set_unsorted (l_replacement, False)
-						if first_operand /= l_replacement.item then
-							set_first_operand (l_replacement.item)
+						check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+							if first_operand /= l_replacement_item then
+								set_first_operand (l_replacement_item)
+							end
 						end
 						l_replacement.put (Void)
 						second_operand.set_unsorted (l_replacement, False)
-						if second_operand /= l_replacement.item then
-							set_second_operand (l_replacement.item)
+						check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+							if second_operand /= l_replacement_item then
+								set_second_operand (l_replacement_item)
+							end
 						end
 						operands_not_in_error_so_optimize (a_replacement, a_context, a_context_item_type)
 					end
@@ -167,81 +183,115 @@ feature -- Evaluation
 			a_value: XM_XPATH_VALUE
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_last_boolean_value: like last_boolean_value
 		do
 			last_boolean_value := Void
 			atomic_comparer.set_dynamic_context (a_context)
 			first_operand.create_iterator (a_context)
-			an_iterator := first_operand.last_iterator
-			if an_iterator.is_error then
-				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (an_iterator.error_value)
-			else
-				second_operand.create_iterator (a_context)
-				another_iterator := second_operand.last_iterator
-				if another_iterator.is_error then
-					create last_boolean_value.make (False); last_boolean_value.set_last_error (another_iterator.error_value); set_last_error (another_iterator.error_value)
+			check postcondition_of_create_iterator: attached first_operand.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if attached an_iterator.error_value as l_error_value then
+					check is_error: an_iterator.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
+					set_last_error (l_error_value)
 				else
+					second_operand.create_iterator (a_context)
+					check postcondition_of_create_iterator: attached second_operand.last_iterator as l_last_iterator_2 then
+						another_iterator := l_last_iterator_2
+						if attached another_iterator.error_value as l_error_value then
+							check is_error: another_iterator.is_error end
+							create l_last_boolean_value.make (False)
+							l_last_boolean_value.set_last_error (l_error_value)
+							last_boolean_value := l_last_boolean_value
+							set_last_error (l_error_value)
+						else
 
-					-- The second operand is more likely to be a singleton than the first so:
+							-- The second operand is more likely to be a singleton than the first so:
 
-					expression_factory.create_sequence_extent (another_iterator)
-					a_value := expression_factory.last_created_closure
-					a_count := a_value.count
-					if a_count = 0 then
-						create last_boolean_value.make (False)
-					elseif a_count = 1 then
-						calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_value.item_at (1), an_iterator)
-					else -- a_count > 1 - so nested loop comparison
-						from
-							an_iterator.start
-						until
-							finished or else is_error or else an_iterator.after
-						loop
-							if an_iterator.is_error then
-								create last_boolean_value.make (False)
-								last_boolean_value.set_last_error (an_iterator.error_value)
-								set_last_error (an_iterator.error_value)
-							elseif not an_iterator.item.is_atomic_value then
-								create last_boolean_value.make (False)
-								last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-								set_last_error (last_boolean_value.error_value)
-								finished := True
-							else
-								from
-									a_value.create_iterator (a_context)
-									a_third_iterator := a_value.last_iterator
-									if not a_third_iterator.is_error then a_third_iterator.start end
-								until
-									finished or else a_third_iterator.is_error or else a_third_iterator.after
-								loop
-									if not a_third_iterator.item.is_atomic_value then
-										create last_boolean_value.make (False)
-										last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-										set_last_error (last_boolean_value.error_value)
-										finished := True
-									else
-										create a_comparison_checker
-										a_comparison_checker.check_correct_general_relation_xpath2 (an_iterator.item.as_atomic_value, singleton_operator,
-																											  atomic_comparer, a_third_iterator.item.as_atomic_value)
-										if a_comparison_checker.is_comparison_type_error then
-											create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
-											finished := True
-										elseif a_comparison_checker.last_check_result then
-											create last_boolean_value.make (True)
-											finished := True
-										end
+							expression_factory.create_sequence_extent (another_iterator)
+							check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+								a_value := l_last_created_closure
+								a_count := a_value.count
+								if a_count = 0 then
+									create last_boolean_value.make (False)
+								elseif a_count = 1 then
+									check attached a_value.item_at (1) as l_value_item then
+										calculate_effective_boolean_value_with_second_operand_singleton (a_context, l_value_item, an_iterator)
 									end
-									a_third_iterator.forth
+								else -- a_count > 1 - so nested loop comparison
+									from
+										an_iterator.start
+									until
+										finished or else is_error or else an_iterator.after
+									loop
+										if attached an_iterator.error_value as l_error_value then
+											check is_error: an_iterator.is_error end
+											create l_last_boolean_value.make (False)
+											l_last_boolean_value.set_last_error (l_error_value)
+											last_boolean_value := l_last_boolean_value
+											set_last_error (l_error_value)
+										elseif not an_iterator.item.is_atomic_value then
+											create l_last_boolean_value.make (False)
+											l_last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+											last_boolean_value := l_last_boolean_value
+											check postcondition_of_set_last_error_from_string: attached l_last_boolean_value.error_value as l_error_value then
+												set_last_error (l_error_value)
+											end
+											finished := True
+										else
+											a_value.create_iterator (a_context)
+											check postcondition_create_iterator: attached a_value.last_iterator as l_last_iterator_3 then
+												from
+													a_third_iterator := l_last_iterator_3
+													if not a_third_iterator.is_error then a_third_iterator.start end
+												until
+													finished or else a_third_iterator.is_error or else a_third_iterator.after
+												loop
+													if not a_third_iterator.item.is_atomic_value then
+														create l_last_boolean_value.make (False)
+														l_last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+														last_boolean_value := l_last_boolean_value
+														check postcondition_of_set_last_error_from_string: attached l_last_boolean_value.error_value as l_error_value then
+															set_last_error (l_error_value)
+														end
+														finished := True
+													else
+														create a_comparison_checker
+														a_comparison_checker.check_correct_general_relation_xpath2 (an_iterator.item.as_atomic_value, singleton_operator,
+																															  atomic_comparer, a_third_iterator.item.as_atomic_value)
+														if a_comparison_checker.is_comparison_type_error then
+															create l_last_boolean_value.make (False)
+															check attached a_comparison_checker.last_type_error as l_last_type_error then
+																l_last_boolean_value.set_last_error (l_last_type_error)
+															end
+															last_boolean_value := l_last_boolean_value
+															check postcondition_of_set_last_error: attached l_last_boolean_value.error_value as l_error_value then
+																set_last_error (l_error_value)
+															end
+															finished := True
+														elseif a_comparison_checker.last_check_result then
+															create last_boolean_value.make (True)
+															finished := True
+														end
+													end
+													a_third_iterator.forth
+												end
+											end
+										end
+										an_iterator.forth
+									end
 								end
+								if last_boolean_value = Void then create last_boolean_value.make (False) end
 							end
-							an_iterator.forth
 						end
 					end
-					if last_boolean_value = Void then create last_boolean_value.make (False) end
 				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -275,12 +325,16 @@ feature {NONE} -- Implementation
 		local
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_last_boolean_value: like last_boolean_value
 		do
 			last_boolean_value := Void
 			if not an_item.is_atomic_value then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-				set_last_error (last_boolean_value.error_value)
+				create l_last_boolean_value.make (False)
+				l_last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+				last_boolean_value := l_last_boolean_value
+				check postcondition_of_set_last_error_from_string: attached l_last_boolean_value.error_value as l_error_value then
+					set_last_error (l_error_value)
+				end
 			else
 				from
 					an_iterator.forth
@@ -288,16 +342,22 @@ feature {NONE} -- Implementation
 					finished or else an_iterator.is_error or else an_iterator.after
 				loop
 					if not an_iterator.item.is_atomic_value then
-						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-						set_last_error (last_boolean_value.error_value)
+						create l_last_boolean_value.make (False)
+						l_last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						last_boolean_value := l_last_boolean_value
+						check postcondition_of_set_last_error_from_string: attached l_last_boolean_value.error_value as l_error_value then
+							set_last_error (l_error_value)
+						end
 						finished := True
 					else
 						create a_comparison_checker
 						a_comparison_checker.check_correct_general_relation_xpath2 (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value)
 						if a_comparison_checker.is_comparison_type_error then
-							create last_boolean_value.make (False)
-							last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
+							create l_last_boolean_value.make (False)
+							check attached a_comparison_checker.last_type_error as l_last_type_error then
+								l_last_boolean_value.set_last_error (l_last_type_error)
+							end
+							last_boolean_value := l_last_boolean_value
 						elseif a_comparison_checker.last_check_result then
 							create last_boolean_value.make (True)
 							finished := True
@@ -305,9 +365,11 @@ feature {NONE} -- Implementation
 					end
 					an_iterator.forth
 				end
-				if an_iterator.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (an_iterator.error_value)
+				if attached an_iterator.error_value as l_error_value then
+					check is_error: an_iterator.is_error end
+					create l_last_boolean_value.make (False)
+					l_last_boolean_value.set_last_error (l_error_value)
+					last_boolean_value := l_last_boolean_value
 				elseif last_boolean_value = Void then
 					create last_boolean_value.make (False)
 				end
@@ -316,8 +378,8 @@ feature {NONE} -- Implementation
 			last_boolean_value_not_void: last_boolean_value /= Void
 		end
 
-	type_check_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check_two_singletons (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -328,7 +390,7 @@ feature {NONE} -- Implementation
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if a_type = type_factory.untyped_atomic_type then
 				if a_other_type = type_factory.untyped_atomic_type then
@@ -356,16 +418,18 @@ feature {NONE} -- Implementation
 			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
 			l_computed_expression.set_parent (container)
 			l_computed_expression.simplify (l_replacement)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				l_expression := l_replacement.item
-				l_expression.check_static_type (a_replacement, a_context, a_context_item_type)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
+				else
+					l_expression := l_replacement_item
+					l_expression.check_static_type (a_replacement, a_context, a_context_item_type)
+				end
 			end
 		end
 
-	optimize_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
-		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_two_singletons (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -376,7 +440,7 @@ feature {NONE} -- Implementation
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if a_type = type_factory.untyped_atomic_type then
 				if a_other_type = type_factory.untyped_atomic_type then
@@ -404,17 +468,19 @@ feature {NONE} -- Implementation
 			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
 			l_computed_expression.set_parent (container)
 			l_computed_expression.simplify (l_replacement)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				l_expression := l_replacement.item
-				l_expression.optimize (a_replacement, a_context, a_context_item_type)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
+				else
+					l_expression := l_replacement_item
+					l_expression.optimize (a_replacement, a_context, a_context_item_type)
+				end
 			end
 		end
 
 
-	operands_not_in_error_so_type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	operands_not_in_error_so_type_check (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Type check after operands have been checked.
 		require
 			context_not_void: a_context /= Void
@@ -430,50 +496,60 @@ feature {NONE} -- Implementation
 		do
 			create l_type_checker
 			create l_atomic_sequence.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
-			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-			l_type_checker.static_type_check (a_context, first_operand, l_atomic_sequence, False, l_role)
-			if l_type_checker.is_static_type_check_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-			else
-				set_first_operand (l_type_checker.checked_expression)
-				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (a_context, second_operand, l_atomic_sequence, False, l_other_role)
-				if l_type_checker.is_static_type_check_error	then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+			check attached token_name (operator) as l_token_name then
+				create l_role.make (Binary_expression_role, l_token_name, 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (a_context, first_operand, l_atomic_sequence, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+					end
 				else
-					set_second_operand (l_type_checker.checked_expression)
-					if first_operand.cardinality_is_empty or second_operand.cardinality_is_empty then
-						create l_boolean_value.make (False)
-						set_replacement (a_replacement, l_boolean_value)
-					else
-						l_type := first_operand.item_type
-						l_other_type := second_operand.item_type
-						if not (l_type = type_factory.any_atomic_type or l_type = type_factory.untyped_atomic_type or
-							l_other_type = type_factory.any_atomic_type or l_other_type = type_factory.untyped_atomic_type) then
-							if l_type.primitive_type /= l_other_type.primitive_type and then
-								not are_types_comparable (l_type.primitive_type, l_other_type.primitive_type) then
-								l_message := STRING_.appended_string ("Cannot compare ", l_type.conventional_name)
-								l_message := STRING_.appended_string (l_message, " with ")
-								l_message := STRING_.appended_string (l_message, l_other_type.conventional_name)
-								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error))
+					check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+						set_first_operand (l_checked_expression)
+						create l_other_role.make (Binary_expression_role, l_token_name, 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_atomic_sequence, False, l_other_role)
+						if l_type_checker.is_static_type_check_error then
+							check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error_2 then
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error_2))
 							end
-						end
-						if a_replacement.item = Void then
-							if first_operand.cardinality_exactly_one and second_operand.cardinality_exactly_one and
-								l_type /= type_factory.any_atomic_type and l_other_type /= type_factory.any_atomic_type and
-								l_type.is_atomic_type and l_other_type.is_atomic_type then
-								type_check_two_singletons (a_replacement, a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
-							elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-								type_check_singleton_and_empty_sequence (a_replacement, a_context, a_context_item_type)
-							elseif not first_operand.cardinality_allows_many then
-								type_check_first_operand_single (a_replacement, a_context, a_context_item_type)
-							else
-								if operator /= Equals_token and operator /= Not_equal_token	and (is_sub_type (l_type, type_factory.numeric_type)
-									or is_sub_type (l_other_type, type_factory.numeric_type)) then
-									type_check_inequalities (a_replacement, a_context, l_type, l_other_type, a_context_item_type)
-								end
-								if a_replacement.item = Void then
-									evaluate_two_constants (a_replacement, a_context)
+						else
+							check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression_2 then
+								set_second_operand (l_checked_expression_2)
+								if first_operand.cardinality_is_empty or second_operand.cardinality_is_empty then
+									create l_boolean_value.make (False)
+									set_replacement (a_replacement, l_boolean_value)
+								else
+									l_type := first_operand.item_type
+									l_other_type := second_operand.item_type
+									if not (l_type = type_factory.any_atomic_type or l_type = type_factory.untyped_atomic_type or
+										l_other_type = type_factory.any_atomic_type or l_other_type = type_factory.untyped_atomic_type) then
+										if l_type.primitive_type /= l_other_type.primitive_type and then
+											not are_types_comparable (l_type.primitive_type, l_other_type.primitive_type) then
+											l_message := STRING_.appended_string ("Cannot compare ", l_type.conventional_name)
+											l_message := STRING_.appended_string (l_message, " with ")
+											l_message := STRING_.appended_string (l_message, l_other_type.conventional_name)
+											set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error))
+										end
+									end
+									if a_replacement.item = Void then
+										if first_operand.cardinality_exactly_one and second_operand.cardinality_exactly_one and
+											l_type /= type_factory.any_atomic_type and l_other_type /= type_factory.any_atomic_type and
+											l_type.is_atomic_type and l_other_type.is_atomic_type then
+											type_check_two_singletons (a_replacement, a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
+										elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
+											type_check_singleton_and_empty_sequence (a_replacement, a_context, a_context_item_type)
+										elseif not first_operand.cardinality_allows_many then
+											type_check_first_operand_single (a_replacement, a_context, a_context_item_type)
+										else
+											if operator /= Equals_token and operator /= Not_equal_token	and (is_sub_type (l_type, type_factory.numeric_type)
+												or is_sub_type (l_other_type, type_factory.numeric_type)) then
+												type_check_inequalities (a_replacement, a_context, l_type, l_other_type, a_context_item_type)
+											end
+											if a_replacement.item = Void then
+												evaluate_two_constants (a_replacement, a_context)
+											end
+										end
+									end
 								end
 							end
 						end
@@ -485,8 +561,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	operands_not_in_error_so_optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	operands_not_in_error_so_optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimize after operands have been optimized.
 		require
 			context_not_void: a_context /= Void
@@ -521,8 +597,8 @@ feature {NONE} -- Implementation
 			replaced: a_replacement.item /= Void
 		end
 
-	type_check_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check_singleton_and_empty_sequence (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Type check when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -535,8 +611,8 @@ feature {NONE} -- Implementation
 			l_singleton_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_singleton_and_empty_sequence (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Optimize when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -549,8 +625,8 @@ feature {NONE} -- Implementation
 			l_singleton_comparison.optimize (a_replacement, a_context, a_context_item_type)
 		end
 
-	type_check_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check_first_operand_single (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -563,8 +639,8 @@ feature {NONE} -- Implementation
 			l_general_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize_first_operand_single (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -577,7 +653,7 @@ feature {NONE} -- Implementation
 			l_general_comparison.optimize (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_n_to_m_equals_i (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+	optimize_n_to_m_equals_i (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
 		a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION)
 			-- Look for (N to M = I)
 		require
@@ -598,7 +674,7 @@ feature {NONE} -- Implementation
 			set_replacement (a_replacement, l_expression)
 		end
 
-	optimize_n_to_m_equals_i_two (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+	optimize_n_to_m_equals_i_two (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
 		a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE)
 			-- Look for (N to M = I)
 		require
@@ -618,8 +694,8 @@ feature {NONE} -- Implementation
 			set_replacement (a_replacement, l_expression)
 		end
 
-	type_check_inequalities (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_type, a_other_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check_inequalities (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_type, a_other_type: XM_XPATH_ITEM_TYPE; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -641,23 +717,35 @@ feature {NONE} -- Implementation
 			create l_type_checker
 			if not is_sub_type (a_type, type_factory.numeric_type) then
 				create l_numeric_type.make_numeric_sequence
-				create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (a_context, first_operand, l_numeric_type, False, l_role)
-				if l_type_checker.is_static_type_check_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-				else
-					set_first_operand (l_type_checker.checked_expression)
+				check attached token_name (operator) as l_token_name then
+					create l_role.make (Binary_expression_role, l_token_name, 1, Xpath_errors_uri, "XPTY0004")
+					l_type_checker.static_type_check (a_context, first_operand, l_numeric_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+						end
+					else
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+							set_first_operand (l_checked_expression)
+						end
+					end
 				end
 			end
 			if a_replacement.item = Void and not is_sub_type (a_other_type, type_factory.numeric_type) then
 				create l_type_checker
-				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				create l_numeric_type.make_numeric_sequence
-				l_type_checker.static_type_check (a_context, second_operand, l_numeric_type, False, l_other_role)
-				if l_type_checker.is_static_type_check_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-				else
-					set_second_operand (l_type_checker.checked_expression)
+				check attached token_name (operator) as l_token_name then
+					create l_other_role.make (Binary_expression_role, l_token_name, 2, Xpath_errors_uri, "XPTY0004")
+					create l_numeric_type.make_numeric_sequence
+					l_type_checker.static_type_check (a_context, second_operand, l_numeric_type, False, l_other_role)
+					if l_type_checker.is_static_type_check_error then
+						check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+						end
+					else
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+							set_second_operand (l_checked_expression)
+						end
+					end
 				end
 			end
 			if a_replacement.item = Void then
@@ -666,24 +754,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_two_constants (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	evaluate_two_constants (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Evaluate the expression now if both arguments are constant
 		require
 			a_context_not_void: a_context /= Void
 			a_replacement_not_void: a_replacement /= Void
 			not_replaced: a_replacement.item = Void
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 				create l_result.make (Void)
 				evaluate_item (l_result, a_context.new_compile_time_context)
 				check
-					boolean_value: l_result.item.is_boolean_value
+					boolean_value: attached l_result.item as l_result_item and then l_result_item.is_boolean_value
 					-- We are guarenteed a boolean value
+				then
+					set_replacement (a_replacement, l_result_item.as_boolean_value)
 				end
-				set_replacement (a_replacement, l_result.item.as_boolean_value)
 			end
 		end
 

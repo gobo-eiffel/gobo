@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath insert-before() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,40 +76,46 @@ feature -- Evaluation
 			l_base_iterator, l_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_insert_position: INTEGER
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			arguments.item (1).create_iterator (a_context)
-			l_base_iterator := arguments.item (1).last_iterator
-			if l_base_iterator.is_error then
-				last_iterator := l_base_iterator
-			else
-				arguments.item (3).create_iterator (a_context)
-				l_insertion_iterator := arguments.item (3).last_iterator
-				if l_insertion_iterator.is_error then
-					last_iterator := l_insertion_iterator
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator_1 then
+				l_base_iterator := l_last_iterator_1
+				if l_base_iterator.is_error then
+					last_iterator := l_base_iterator
 				else
-					create l_result.make (Void)
-					arguments.item (2).evaluate_item (l_result, a_context)
-					check
-						item_not_void: l_result.item /= Void
-						-- static typing
-					end
-					if l_result.item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
-					else
-						check
-							insertion_position_is_integer: l_result.item.is_machine_integer_value
-							-- Static typing
-						end
-						l_integer_value := l_result.item.as_machine_integer_value
-						if l_integer_value.is_platform_integer then
-							l_insert_position := l_integer_value.value.to_integer
-							if l_insert_position < 1 then
-								l_insert_position := 1
-							end
-							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (l_base_iterator, l_insertion_iterator, l_insert_position)
+					arguments.item (3).create_iterator (a_context)
+					check postcondition_of_create_iterator: attached arguments.item (3).last_iterator as l_last_iterator_3 then
+						l_insertion_iterator := l_last_iterator_3
+						if l_insertion_iterator.is_error then
+							last_iterator := l_insertion_iterator
 						else
-							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
+							create l_result.make (Void)
+							arguments.item (2).evaluate_item (l_result, a_context)
+							check
+								item_not_void: attached l_result.item as l_result_item
+								-- static typing
+							then
+								if attached l_result_item.error_value as l_error_value then
+									check is_error: l_result_item.is_error end
+									create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+								else
+									check
+										insertion_position_is_integer: l_result_item.is_machine_integer_value
+										-- Static typing
+									end
+									l_integer_value := l_result_item.as_machine_integer_value
+									if l_integer_value.is_platform_integer then
+										l_insert_position := l_integer_value.value.to_integer
+										if l_insert_position < 1 then
+											l_insert_position := 1
+										end
+										create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (l_base_iterator, l_insertion_iterator, l_insert_position)
+									else
+										create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
+									end
+								end
+							end
 						end
 					end
 				end
@@ -122,40 +128,46 @@ feature -- Evaluation
 			l_base_iterator, l_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			l_insert_position: INTEGER
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			arguments.item (1).create_node_iterator (a_context)
-			l_base_iterator := arguments.item (1).last_node_iterator
-			if l_base_iterator.is_error then
-				last_node_iterator := l_base_iterator
-			else
-				arguments.item (3).create_node_iterator (a_context)
-				l_insertion_iterator := arguments.item (3).last_node_iterator
-				if l_insertion_iterator.is_error then
-					last_node_iterator := l_insertion_iterator
+			check postcondition_of_create_node_iterator: attached arguments.item (1).last_node_iterator as l_last_node_iterator_1 then
+				l_base_iterator := l_last_node_iterator_1
+				if l_base_iterator.is_error then
+					last_node_iterator := l_base_iterator
 				else
-					create l_result.make (Void)
-					arguments.item (2).evaluate_item (l_result, a_context)
-					check
-						item_not_void: l_result.item /= Void
-						-- static typing
-					end
-					if l_result.item.is_error then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
-					else
-						check
-							insertion_position_is_integer: l_result.item.is_machine_integer_value
-							-- Static typing
-						end
-						l_integer_value := l_result.item.as_machine_integer_value
-						if l_integer_value.is_platform_integer then
-							l_insert_position := l_integer_value.value.to_integer
-							if l_insert_position < 1 then
-								l_insert_position := 1
-							end
-							last_node_iterator := (create {XM_XPATH_INSERT_NODE_ITERATOR}.make (l_base_iterator, l_insertion_iterator, l_insert_position)).as_node_iterator
+					arguments.item (3).create_node_iterator (a_context)
+					check postcondition_of_create_node_iterator: attached arguments.item (3).last_node_iterator as l_last_node_iterator_3 then
+						l_insertion_iterator := l_last_node_iterator_3
+						if l_insertion_iterator.is_error then
+							last_node_iterator := l_insertion_iterator
 						else
-							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
+							create l_result.make (Void)
+							arguments.item (2).evaluate_item (l_result, a_context)
+							check
+								item_not_void: attached l_result.item as l_result_item
+								-- static typing
+							then
+								if attached l_result_item.error_value as l_error_value then
+									check is_error: l_result_item.is_error end
+									create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+								else
+									check
+										insertion_position_is_integer: l_result_item.is_machine_integer_value
+										-- Static typing
+									end
+									l_integer_value := l_result_item.as_machine_integer_value
+									if l_integer_value.is_platform_integer then
+										l_insert_position := l_integer_value.value.to_integer
+										if l_insert_position < 1 then
+											l_insert_position := 1
+										end
+										last_node_iterator := (create {XM_XPATH_INSERT_NODE_ITERATOR}.make (l_base_iterator, l_insertion_iterator, l_insert_position)).as_node_iterator
+									else
+										create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
+									end
+								end
+							end
 						end
 					end
 				end

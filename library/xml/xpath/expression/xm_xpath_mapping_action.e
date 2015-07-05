@@ -7,7 +7,7 @@ note
 	% mapping iterator"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,9 @@ feature -- Evaluation
 		do
 			context.set_local_variable (an_item.as_item_value, slot_number)
 			action.create_iterator (context)
-			create last_mapped_item.make_sequence (action.last_iterator)
+			check postcondition_of_create_iterator: attached action.last_iterator as l_action_last_iterator then
+				create last_mapped_item.make_sequence (l_action_last_iterator)
+			end
 		end
 
 feature {NONE} -- Implementation

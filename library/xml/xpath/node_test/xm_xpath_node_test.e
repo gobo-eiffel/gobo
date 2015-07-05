@@ -5,7 +5,7 @@ note
 		"Objects that represent the XPath NodeTest production"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,7 @@ feature -- Access
 		deferred
 		end
 
-	constraining_node_names: DS_SET [INTEGER]
+	constraining_node_names: detachable DS_SET [INTEGER]
 			-- Set of fingerprints of node names allowed
 		require
 			at_most_one_name_constraint: is_at_most_one_name_constraint

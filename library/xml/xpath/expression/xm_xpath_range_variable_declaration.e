@@ -8,7 +8,7 @@ note
 	% This object is used	only at compile-time."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103,7 +103,7 @@ feature -- Element change
 			references.do_all (agent fix_up_reference (a_binding, ?))
 		end
 
-	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_constant_value: XM_XPATH_VALUE;
+	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_constant_value: detachable XM_XPATH_VALUE;
 									 a_properties: XM_XPATH_STATIC_PROPERTY)
 			-- Set static type in the binding reference more accurately.
 		require
@@ -114,7 +114,7 @@ feature -- Element change
 		end
 
 	refine_type (a_variable_reference: XM_XPATH_VARIABLE_REFERENCE; a_type: XM_XPATH_ITEM_TYPE;
-		a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY)
+		a_constant_value: detachable XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY)
 			-- Set static type in the binding reference more accurately.
 		require
 			a_variable_reference_not_void: a_variable_reference /= Void

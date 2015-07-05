@@ -8,7 +8,7 @@ note
       ]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,11 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_item then
+				Result := l_item
+			end
+		end
 
 feature -- Status report
 
@@ -54,26 +59,30 @@ feature -- Status report
 feature -- Cursor movement
 
 	forth
-			-- Move to next position
+			-- Move to next position.
+		local
+			l_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			index := index + 1
 			from
-				item := Void
+				internal_item := Void
 			until
-				item /= Void or after
+				internal_item /= Void or after
 			loop
 				if base_iterator.before then
 					base_iterator.start
 				else
 					base_iterator.forth
 				end
-				if base_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
-					set_last_error (item.error_value)
+				if attached base_iterator.error_value as l_error_value then
+					check is_error: base_iterator.is_error end
+					create l_invalid_item.make (l_error_value)
+					internal_item := l_invalid_item
+					set_last_error (l_invalid_item.error_value)
 				elseif base_iterator.after then
-					item := Void
+					internal_item := Void
 				else
-					item := mapping_function.mapped_item (base_iterator.item)
+					internal_item := mapping_function.mapped_item (base_iterator.item)
 				end
 			end
 		end
@@ -93,6 +102,9 @@ feature {NONE} -- Implementation
 
 	mapping_function: XM_XPATH_ITEM_MAPPING_FUNCTION
 			-- The mapping function
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

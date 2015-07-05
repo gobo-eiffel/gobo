@@ -5,12 +5,12 @@ note
 		"Objects that receive XPath events and forward them to another XM_XPATH_RECEIVER"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XPATH_PROXY_RECEIVER
+deferred class XM_XPATH_PROXY_RECEIVER
 
 inherit
 
@@ -111,7 +111,7 @@ feature -- Events
 			-- Notify character data.
 		do
 			mark_as_written
-			base_receiver.	notify_characters (chars, properties)
+			base_receiver.notify_characters (chars, properties)
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER)

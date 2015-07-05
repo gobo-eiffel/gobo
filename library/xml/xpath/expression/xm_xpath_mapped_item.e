@@ -5,7 +5,7 @@ note
 	"Objects that can be returned from {XM_XPATH_MAPPING_FUNCTION}.map"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,9 @@ feature -- Access
 		require
 			item_result: not is_sequence
 		do
-			Result := item_result
+			check precondition_not_is_sequence: attached item_result as l_item_result then
+				Result := l_item_result
+			end
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -56,7 +58,9 @@ feature -- Access
 		require
 			sequence_result: is_sequence
 		do
-			Result := sequence_result
+			check precondition_is_sequence: attached sequence_result as l_sequence_result then
+				Result := l_sequence_result
+			end
 		ensure
 			sequence_not_void: Result /= Void
 		end
@@ -68,9 +72,9 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	item_result: XM_XPATH_ITEM
+	item_result: detachable XM_XPATH_ITEM
 
-	sequence_result: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	sequence_result: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
 invariant
 

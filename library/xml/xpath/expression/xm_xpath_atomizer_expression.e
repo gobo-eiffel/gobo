@@ -5,7 +5,7 @@ note
 		"Objects that map a sequence by replacing nodes with their typed values. Corresponds to fn:data()"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,99 +128,108 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				set_base_expression (l_replacement.item)
-				if base_expression.is_atomic_value then
-					set_replacement (a_replacement, base_expression.as_atomic_value)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
 				else
-					if base_expression.is_value then
-						from
-							base_expression.create_iterator (Void)
-							l_iterator := base_expression.last_iterator
-							if l_iterator.is_error then
-								l_finished := True
-								set_last_error (l_iterator.error_value)
+					set_base_expression (l_replacement_item)
+					if base_expression.is_atomic_value then
+						set_replacement (a_replacement, base_expression.as_atomic_value)
+					else
+						if base_expression.is_value then
+							from
+								base_expression.create_iterator (new_dummy_context)
+								check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+									l_iterator := l_last_iterator
+									if attached l_iterator.error_value as l_error_value then
+										check is_error: l_iterator.is_error end
+										l_finished := True
+										set_last_error (l_error_value)
+										a_replacement.put (Current)
+									else
+										l_iterator.start
+									end
+								end
+							until
+								l_finished or l_iterator.after
+							loop
+
+								-- If all items in the sequence are atomic (they generally will be, since this is
+								--  done at compile time), then return the sequence.
+
+								if l_iterator.item.is_node then
+									l_finished := True
+								else
+									l_iterator.forth
+								end
+							end
+							if not l_finished then
+								set_replacement (a_replacement, base_expression)
+							else
 								a_replacement.put (Current)
-							else
-								l_iterator.start
 							end
-						until
-							l_finished or l_iterator.after
-						loop
-
-							-- If all items in the sequence are atomic (they generally will be, since this is
-							--  done at compile time), then return the sequence.
-
-							if l_iterator.item.is_node then
-								l_finished := True
-							else
-								l_iterator.forth
-							end
-						end
-						if not l_finished then
-							set_replacement (a_replacement, base_expression)
 						else
 							a_replacement.put (Current)
 						end
-					else
-						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			is_always_untyped := a_context.configuration.are_all_nodes_untyped
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_base_expression (l_replacement.item)
-				reset_static_properties
-				if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
-					set_replacement (a_replacement, base_expression)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
+				else
+					set_base_expression (l_replacement_item)
+					reset_static_properties
+					if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
+						set_replacement (a_replacement, base_expression)
+					end
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
 			else
-				if a_result.item.is_node then
-					l_iterator := a_result.item.as_node.typed_value
-					if l_iterator.is_error then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+				if l_result_item.is_node then
+					l_iterator := l_result_item.as_node.typed_value
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 					else
 						l_iterator.start
-						if l_iterator.is_error then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 						else
 							a_result.put (l_iterator.item)
 						end
@@ -237,11 +246,13 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_iterator
-			if l_iterator.is_error then
-				last_iterator := l_iterator
-			else
-				last_iterator := shared_atomizing_function.new_atomizing_iterator (l_iterator)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if l_iterator.is_error then
+					last_iterator := l_iterator
+				else
+					last_iterator := shared_atomizing_function.new_atomizing_iterator (l_iterator)
+				end
 			end
 		end
 

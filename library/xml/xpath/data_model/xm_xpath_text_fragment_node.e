@@ -5,7 +5,7 @@ note
 		"Objects which represent the sole node in a text document fragment."
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ feature -- Access
 	string_value: STRING
 			-- String value of `Current'
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI as per XML:Base recommendation
 		do
 			if system_id.count > 0 then
@@ -110,7 +110,7 @@ feature -- Access
 			end
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := Void
@@ -126,6 +126,7 @@ feature -- Access
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			todo ("new_axis_iterator", False)
+			check False then end
 		end
 
 	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
@@ -133,6 +134,7 @@ feature -- Access
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
 			todo ("new_axis_iterator with node test", False)
+			check False then end
 		end
 
 	atomized_value: XM_XPATH_VALUE

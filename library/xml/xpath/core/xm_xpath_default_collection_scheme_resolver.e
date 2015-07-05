@@ -5,7 +5,7 @@ note
 		"Objects that resolve the default collection"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 
 feature -- Element change

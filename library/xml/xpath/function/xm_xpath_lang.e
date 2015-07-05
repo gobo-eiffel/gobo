@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath lang() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,10 +71,10 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_item, l_other_item: XM_XPATH_ITEM
+			l_item, l_other_item: detachable XM_XPATH_ITEM
 			l_language: STRING
 		do
 			if arguments.count = 2 then
@@ -99,15 +99,15 @@ feature -- Evaluation
 						l_language := ""
 					elseif not l_other_item.is_error then
 						l_language := l_other_item.string_value
+					else
+						l_language := ""
 					end
-				end
-				if a_result.item = Void then -- no error
 					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (is_lang (l_language, l_item.as_node)))
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -129,9 +129,9 @@ feature {NONE} -- Implementation
 			language_not_void: a_language /= Void
 			target_node_not_void: a_target /= Void
 		local
-			a_node: XM_XPATH_NODE
+			a_node: detachable XM_XPATH_NODE
 			found: BOOLEAN
-			a_language_attribute: STRING
+			a_language_attribute: detachable STRING
 			a_hyphen: INTEGER
 		do
 			from
@@ -150,12 +150,14 @@ feature {NONE} -- Implementation
 				end
 			end
 			if found then
-				if STRING_.same_case_insensitive (a_language_attribute, a_language) then
-					Result := True
-				else
-					a_hyphen := a_language_attribute.index_of ('-', 1)
-					if a_hyphen > 0 and then STRING_.same_case_insensitive (a_language_attribute.substring (1, a_hyphen - 1), a_language) then
+				check attached a_language_attribute then
+					if STRING_.same_case_insensitive (a_language_attribute, a_language) then
 						Result := True
+					else
+						a_hyphen := a_language_attribute.index_of ('-', 1)
+						if a_hyphen > 0 and then STRING_.same_case_insensitive (a_language_attribute.substring (1, a_hyphen - 1), a_language) then
+							Result := True
+						end
 					end
 				end
 			end

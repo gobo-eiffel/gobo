@@ -5,7 +5,7 @@ note
 		"Tiny tree Processing-instruction nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,14 +54,16 @@ feature -- Access
 		do
 			length := tree.beta_value (node_number)
 			start := tree.alpha_value (node_number)
-			Result := tree.comment_buffer.substring (start, start + length - 1)
+			check attached tree.comment_buffer as l_comment_buffer then
+				Result := l_comment_buffer.substring (start, start + length - 1)
+			end
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI
 		local
 			l_initial_system_id: STRING
-			l_parent: XM_XPATH_COMPOSITE_NODE
+			l_parent: detachable XM_XPATH_COMPOSITE_NODE
 		do
 			l_initial_system_id := tree.system_id_for_node (node_number)
 			l_parent := parent

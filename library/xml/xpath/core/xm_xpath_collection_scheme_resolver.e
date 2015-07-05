@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs of a particular scheme, when XPath fn:collection() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Status report
 			error: Result implies last_error /= Void
 		end
 
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_collection: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve'
 		require
 			no_error: not was_error
@@ -43,7 +43,7 @@ feature -- Status report
 			collection_at_start: Result /= Void and then Result.before
 		end
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 		deferred
 		ensure
@@ -59,7 +59,7 @@ feature -- Element change
 		require
 			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute
 			dynamic_context_not_void: a_context /= Void
-			correct_scheme: a_uri.has_valid_scheme and then STRING_.same_string (scheme, a_uri.scheme)
+			correct_scheme: a_uri.has_valid_scheme and then attached a_uri.scheme as l_uri_scheme and then STRING_.same_string (scheme, l_uri_scheme)
 		deferred
 		ensure
 			error_or_collection: not was_error implies last_collection /= Void

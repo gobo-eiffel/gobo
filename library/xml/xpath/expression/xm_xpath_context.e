@@ -5,7 +5,7 @@ note
 		"XPath dynamic contexts for an expression"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		local
 			a_date_time: DT_DATE_TIME
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			l_current_iterator2: like current_iterator
 		do
 			create a_date_time.make_from_epoch (0)
 			utc_system_clock.set_date_time_to_now (a_date_time)
@@ -44,21 +45,22 @@ feature {NONE} -- Initialization
 			create internal_date_time.make (a_date_time, a_time_zone)
 			clear_last_cache
 			if a_context_item.is_node then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} current_iterator.make (a_context_item.as_node)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} l_current_iterator2.make (a_context_item.as_node)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} l_current_iterator2.make (a_context_item)
 			end
-			current_iterator.start
+			current_iterator := l_current_iterator2
+			l_current_iterator2.start
 		ensure
-			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
+			context_item_set: attached current_iterator as l_current_iterator and then l_current_iterator.item = a_context_item
 		end
 
 feature -- Access
 
-	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	current_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
 
-	current_receiver: XM_XPATH_SEQUENCE_RECEIVER
+	current_receiver: detachable XM_XPATH_SEQUENCE_RECEIVER
 			-- Receiver to which output is currently being written.
 
 	configuration: XM_XPATH_CONFIGURATION
@@ -68,7 +70,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	local_variable_frame: XM_XPATH_STACK_FRAME
+	local_variable_frame: detachable XM_XPATH_STACK_FRAME
 			-- Local variables in scope
 		deferred
 		end
@@ -78,7 +80,9 @@ feature -- Access
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
 		do
-			Result := local_variable_frame.slot_manager.number_of_variables + 1
+			check precondition_local_variables_frame_not_void: attached local_variable_frame as l_local_variable_frame then
+				Result := l_local_variable_frame.slot_manager.number_of_variables + 1
+			end
 		ensure
 			strictly_positive_result: Result > 0
 		end
@@ -90,7 +94,7 @@ feature -- Access
 			available_functions_not_void: Result /= Void
 		end
 
-	available_documents: XM_XPATH_DOCUMENT_POOL
+	available_documents: detachable XM_XPATH_DOCUMENT_POOL
 			-- Available documents
 		deferred
 		ensure
@@ -108,7 +112,9 @@ feature -- Access
 	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Current date-time
 		do
-			Result := internal_date_time
+			check attached internal_date_time as l_internal_date_time then
+				Result := l_internal_date_time
+			end
 		end
 
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
@@ -118,15 +124,16 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	context_item: XM_XPATH_ITEM
+	context_item: detachable XM_XPATH_ITEM
 			-- The context item (".")
 		do
-			if current_iterator /= Void then
-				if current_iterator.before then current_iterator.start end
-				if current_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} Result.make (current_iterator.error_value)
-				elseif not current_iterator.after then
-					Result := current_iterator.item
+			if attached current_iterator as l_current_iterator then
+				if l_current_iterator.before then l_current_iterator.start end
+				if attached l_current_iterator.error_value as l_error_value then
+					check is_error: l_current_iterator.is_error end
+					create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
+				elseif not l_current_iterator.after then
+					Result := l_current_iterator.item
 				end
 			end
 		ensure
@@ -139,7 +146,9 @@ feature -- Access
 		require
 			context_position_set: is_context_position_set
 		do
-			 Result := current_iterator.index
+			check precondition_context_position_set: attached current_iterator as l_current_iterator then
+				Result := l_current_iterator.index
+			end
 		ensure
 			positive_result: Result >= 0 -- But it is a Dynamic error, XPDY0002, if Result = 0
 			restricted_implies_undefined: is_restricted implies Result = 0
@@ -153,25 +162,27 @@ feature -- Access
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			if cached_last = -1 then
-				if not current_iterator.is_error then
-					if current_iterator.is_last_position_finder then
-						cached_last := current_iterator.last_position
-					else
-						l_iterator := current_iterator.another
-						from
-							cached_last := 0
-							l_iterator.start
-						until
-							l_iterator.is_error or else l_iterator.after
-						loop
-							cached_last := cached_last + 1
-							l_iterator.forth
+			check precondition_context_position_set: attached current_iterator as l_current_iterator then
+				if cached_last = -1 then
+					if not l_current_iterator.is_error then
+						if l_current_iterator.is_last_position_finder then
+							cached_last := l_current_iterator.last_position
+						else
+							l_iterator := l_current_iterator.another
+							from
+								cached_last := 0
+								l_iterator.start
+							until
+								l_iterator.is_error or else l_iterator.after
+							loop
+								cached_last := cached_last + 1
+								l_iterator.forth
+							end
 						end
 					end
 				end
+				Result := cached_last
 			end
-			Result := cached_last
 		ensure
 			positive_size: Result >= 0
 			restricted_implies_undefined: is_restricted implies Result = 0
@@ -193,16 +204,14 @@ feature -- Access
 			unicode_codepoint_collator_available: Result /= Void
 		end
 
-	last_parsed_document: XM_XPATH_DOCUMENT
+	last_parsed_document: detachable XM_XPATH_DOCUMENT
 			-- Result from last call to `build_document'
 		require
 			no_build_error: not is_build_document_error
 		deferred
-		ensure
-			last_parsed_document_not_void: Result /= Void
 		end
 
-	last_parsed_media_type: UT_MEDIA_TYPE
+	last_parsed_media_type: detachable UT_MEDIA_TYPE
 			-- Auxiliary result from last call to `build_document'
 		require
 			no_build_error: not is_build_document_error
@@ -240,7 +249,7 @@ feature -- Status report
 	is_context_position_set: BOOLEAN
 			-- Is the context position available?
 		do
-			Result := current_iterator /= Void and then not current_iterator.is_error
+			Result := attached current_iterator as l_current_iterator and then not l_current_iterator.is_error
 		ensure
 			restricted_implies_false: is_restricted implies Result = False
 		end
@@ -250,7 +259,9 @@ feature -- Status report
 		require
 			local_variables_frame_not_void: local_variable_frame /= Void
 		do
-			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.variables.count
+			check precondition_local_variables_frame_not_void: attached local_variable_frame as l_local_variable_frame then
+				Result := a_slot_number > 0 and then a_slot_number <= l_local_variable_frame.variables.count
+			end
 		end
 
 	is_at_last: BOOLEAN
@@ -264,7 +275,7 @@ feature -- Status report
 	is_build_document_error: BOOLEAN
 			-- Was last call to `build_document' in error?
 
-	last_build_error: STRING
+	last_build_error: detachable STRING
 			-- Error message from last call to `build_document'
 		require
 			build_error: is_build_document_error
@@ -323,14 +334,18 @@ feature -- Evaluation
 			local_variables_frame_not_void: local_variable_frame /= Void
 			valid_local_variable: is_valid_local_variable (a_slot_number)
 		do
-			Result := local_variable_frame.variables.item (a_slot_number)
+			check precondition_local_variables_frame_not_void: attached local_variable_frame as l_local_variable_frame then
+				check attached l_local_variable_frame.variables.item (a_slot_number) as l_variable then
+					Result := l_variable
+				end
+			end
 		ensure
 			evaluation_not_void: Result /= Void
 		end
 
-feature 	-- Element change
+feature -- Element change
 
-	set_current_iterator (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
+	set_current_iterator (an_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Set `current_iterator'.
 		do
 			current_iterator := an_iterator
@@ -361,10 +376,12 @@ feature 	-- Element change
 			local_variables_frame_not_void: local_variable_frame /= Void
 			valid_local_variable: a_slot_number > 0
 		do
-			local_variable_frame.set_variable (a_value, a_slot_number)
+			check precondition_local_variables_frame_not_void: attached local_variable_frame as l_local_variable_frame then
+				l_local_variable_frame.set_variable (a_value, a_slot_number)
+			end
 		end
 
-	set_stack_frame (a_local_variable_frame: like local_variable_frame)
+	set_stack_frame (a_local_variable_frame: attached like local_variable_frame)
 			-- Set stack frame.
 		require
 			local_variable_frame_not_void: a_local_variable_frame /= Void
@@ -426,7 +443,7 @@ feature 	-- Element change
 		deferred
 		ensure
 			receiver_set: current_receiver = a_receiver
-			receiver_open: current_receiver.is_open
+			receiver_open: a_receiver.is_open
 			temporary_destination: is_temporary_destination
 		end
 
@@ -452,7 +469,7 @@ feature {XM_XPATH_CONTEXT} -- Local
 
 feature {NONE} -- Implementation
 
-	internal_date_time: like current_date_time
+	internal_date_time: detachable like current_date_time
 			-- Used by stand-alone XPath and restricted contexts
 
 	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]

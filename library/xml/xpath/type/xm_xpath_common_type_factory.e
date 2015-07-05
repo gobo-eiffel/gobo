@@ -5,7 +5,7 @@ note
 		"Objects that create common built-in types"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature -- Access
 	types_created: BOOLEAN
 			-- Have all types been created yet?
 
-	schema_type (a_fingerprint: INTEGER): XM_XPATH_SCHEMA_TYPE
+	schema_type (a_fingerprint: INTEGER): detachable XM_XPATH_SCHEMA_TYPE
 			-- Schema type with fingerprint of `a_fingerprint'
 		do
 			if type_map.has (a_fingerprint) then
@@ -274,31 +274,31 @@ feature {NONE} -- Implementation
 
 			-- Conditionally add optional types
 
-			if notation_type /= Void then Result.put_new (notation_type, Notation_type_code) end
-			if non_positive_integer_type /= Void then Result.put_new (non_positive_integer_type, Non_positive_integer_type_code) end
-			if negative_integer_type /= Void then Result.put_new (negative_integer_type, Negative_integer_type_code) end
-			if long_type /= Void then Result.put_new (long_type, Long_type_code) end
-			if int_type /= Void then Result.put_new (int_type, Int_type_code) end
-			if short_type /= Void then Result.put_new (short_type, Short_type_code) end
-			if byte_type /= Void then Result.put_new (byte_type, Byte_type_code) end
-			if non_negative_integer_type /= Void then Result.put_new (non_negative_integer_type, Non_negative_integer_type_code) end
-			if positive_integer_type /= Void then Result.put_new (positive_integer_type, Positive_integer_type_code) end
-			if unsigned_long_type /= Void then Result.put_new (unsigned_long_type, Unsigned_long_type_code) end
-			if unsigned_int_type /= Void then Result.put_new (unsigned_int_type, Unsigned_int_type_code) end
-			if unsigned_short_type /= Void then Result.put_new (unsigned_short_type, Unsigned_short_type_code) end
-			if unsigned_byte_type /= Void then Result.put_new (unsigned_byte_type, Unsigned_byte_type_code) end
-			if normalized_string_type /= Void then Result.put_new (normalized_string_type, Normalized_string_type_code) end
-			if token_type /= Void then Result.put_new (token_type, Token_type_code) end
-			if language_type /= Void then Result.put_new (language_type, Language_type_code) end
-			if nmtoken_type /= Void then Result.put_new (nmtoken_type, Nmtoken_type_code) end
-			if name_type /= Void then Result.put_new (name_type, Name_type_code) end
-			if ncname_type /= Void then Result.put_new (ncname_type, Ncname_type_code) end
-			if id_type /= Void then Result.put_new (id_type, Id_type_code) end
-			if idref_type /= Void then Result.put_new (idref_type, Idref_type_code) end
-			if entity_type /= Void then Result.put_new (entity_type, Entity_type_code) end
-			if idrefs_type /= Void then Result.put_new (idrefs_type, Idrefs_type_code) end
-			if entities_type /= Void then Result.put_new (entities_type, Entities_type_code) end
-			if nmtokens_type /= Void then Result.put_new (nmtokens_type, Nmtokens_type_code) end
+			if attached notation_type as l_notation_type then Result.put_new (l_notation_type, Notation_type_code) end
+			if attached non_positive_integer_type as l_non_positive_integer_type then Result.put_new (l_non_positive_integer_type, Non_positive_integer_type_code) end
+			if attached negative_integer_type as l_negative_integer_type then Result.put_new (l_negative_integer_type, Negative_integer_type_code) end
+			if attached long_type as l_long_type then Result.put_new (l_long_type, Long_type_code) end
+			if attached int_type as l_int_type then Result.put_new (l_int_type, Int_type_code) end
+			if attached short_type as l_short_type then Result.put_new (l_short_type, Short_type_code) end
+			if attached byte_type as l_byte_type then Result.put_new (l_byte_type, Byte_type_code) end
+			if attached non_negative_integer_type as l_non_negative_integer_type then Result.put_new (l_non_negative_integer_type, Non_negative_integer_type_code) end
+			if attached positive_integer_type as l_positive_integer_type then Result.put_new (l_positive_integer_type, Positive_integer_type_code) end
+			if attached unsigned_long_type as l_unsigned_long_type then Result.put_new (l_unsigned_long_type, Unsigned_long_type_code) end
+			if attached unsigned_int_type as l_unsigned_int_type then Result.put_new (l_unsigned_int_type, Unsigned_int_type_code) end
+			if attached unsigned_short_type as l_unsigned_short_type then Result.put_new (l_unsigned_short_type, Unsigned_short_type_code) end
+			if attached unsigned_byte_type as l_unsigned_byte_type then Result.put_new (l_unsigned_byte_type, Unsigned_byte_type_code) end
+			if attached normalized_string_type as l_normalized_string_type then Result.put_new (l_normalized_string_type, Normalized_string_type_code) end
+			if attached token_type as l_token_type then Result.put_new (l_token_type, Token_type_code) end
+			if attached language_type as l_language_type then Result.put_new (l_language_type, Language_type_code) end
+			if attached nmtoken_type as l_nmtoken_type then Result.put_new (l_nmtoken_type, Nmtoken_type_code) end
+			if attached name_type as l_name_type then Result.put_new (l_name_type, Name_type_code) end
+			if attached ncname_type as l_ncname_type then Result.put_new (l_ncname_type, Ncname_type_code) end
+			if attached id_type as l_id_type then Result.put_new (l_id_type, Id_type_code) end
+			if attached idref_type as l_idref_type then Result.put_new (l_idref_type, Idref_type_code) end
+			if attached entity_type as l_entity_type then Result.put_new (l_entity_type, Entity_type_code) end
+			if attached idrefs_type as l_idrefs_type then Result.put_new (l_idrefs_type, Idrefs_type_code) end
+			if attached entities_type as l_entities_type then Result.put_new (l_entities_type, Entities_type_code) end
+			if attached nmtokens_type as l_nmtokens_type then Result.put_new (l_nmtokens_type, Nmtokens_type_code) end
 		ensure
 			type_map_not_void: Result /= Void
 			no_void_type: not Result.has_void_item
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 		require
 			types_not_populated: not types_created
 		local
-			a_type: XM_XPATH_ITEM_TYPE
+			a_type: detachable XM_XPATH_ITEM_TYPE
 		do
 			a_type := hex_binary_type; a_type := base64_binary_type
 			a_type := float_type; a_type := non_positive_integer_type
@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 		require
 			types_not_populated: not types_created
 		local
-			a_type: XM_XPATH_ITEM_TYPE
+			a_type: detachable XM_XPATH_ITEM_TYPE
 		do
 			a_type := notation_type; a_type := normalized_string_type
 			a_type := token_type; a_type := language_type

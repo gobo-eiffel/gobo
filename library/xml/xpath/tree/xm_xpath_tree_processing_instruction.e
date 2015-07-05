@@ -5,7 +5,7 @@ note
 		"Standard tree processing-instruction nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,11 +62,11 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI
 		local
 			l_initial_system_id: STRING
-			l_parent: XM_XPATH_COMPOSITE_NODE
+			l_parent: detachable XM_XPATH_COMPOSITE_NODE
 		do
 			l_initial_system_id := system_id
 			l_parent := parent

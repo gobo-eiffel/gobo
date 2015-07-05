@@ -5,7 +5,7 @@ note
 		"XPath Comment nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,8 +52,8 @@ feature -- Access
 		do
 			Result := STRING_.concat ("/comment()[", simple_number)
 			Result := STRING_.appended_string (Result, "]")
-			if parent /= Void then
-				l_preceding_path := parent.path
+			if attached parent as l_parent then
+				l_preceding_path := l_parent.path
 				if not STRING_.same_string (l_preceding_path, "/") then
 					Result := STRING_.appended_string (l_preceding_path, Result)
 				end

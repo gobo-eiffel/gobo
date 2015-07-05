@@ -5,7 +5,7 @@ note
 		"Objects that test a filter"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature -- Access
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- The underlying iterator
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value
 		deferred
 		end
@@ -79,11 +79,14 @@ feature -- Basic operations
 			last_match_test := False
 			if non_numeric or is_singleton_boolean_filter then
 				filter.calculate_effective_boolean_value (filter_context)
-				l_boolean_value := filter.last_boolean_value
-				if l_boolean_value.is_error then
-					set_last_error (l_boolean_value.error_value)
-				else
-					last_match_test := l_boolean_value.value
+				check postcondition_of_calculate_effective_boolean_value: attached filter.last_boolean_value as l_last_boolean_value then
+					l_boolean_value := l_last_boolean_value
+					if attached l_boolean_value.error_value as l_error_value then
+						check is_error: l_boolean_value.is_error end
+						set_last_error (l_error_value)
+					else
+						last_match_test := l_boolean_value.value
+					end
 				end
 			else
 
@@ -91,61 +94,62 @@ feature -- Basic operations
 				-- iteration of the filter expression than are absolutely essential.
 
 				filter.create_iterator (filter_context)
-				l_iterator := filter.last_iterator
-				if not l_iterator.is_error then
-					l_iterator.start
-					if not l_iterator.after then
-						l_item := l_iterator.item
-						if l_item.is_node then
-							last_match_test := True
-						elseif l_item.is_boolean_value then
-							if l_item.as_boolean_value.value then
+				check postcondition_of_create_iterator: attached filter.last_iterator as l_last_iterator then
+					l_iterator := l_last_iterator
+					if not attached l_iterator.error_value as l_error_value then
+						l_iterator.start
+						if not l_iterator.after then
+							l_item := l_iterator.item
+							if l_item.is_node then
 								last_match_test := True
+							elseif l_item.is_boolean_value then
+								if l_item.as_boolean_value.value then
+									last_match_test := True
+								else
+									l_iterator.forth
+									last_match_test := not l_iterator.after
+									if last_match_test then
+										set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+											"Effective boolean value is not defined for a sequence of two or more items starting with a boolean",
+											Xpath_errors_uri, "FORG0006", Type_error))
+									end
+								end
+							elseif l_item.is_string_value or l_item.is_untyped_atomic then
+								last_match_test := not l_item.as_string_value.string_value.is_empty
+								if not last_match_test then
+									l_iterator.forth
+									last_match_test := not l_iterator.after
+									if last_match_test then
+										set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+											"Effective boolean value is not defined for a sequence of two or more items starting with a string",
+											Xpath_errors_uri, "FORG0006", Type_error))
+									end
+								end
+							elseif l_item.is_numeric_value then
+								create l_integer_value.make (base_iterator.index)
+								last_match_test := l_item.as_numeric_value.same_expression (l_integer_value)
+								if not last_match_test then
+									l_iterator.forth
+									last_match_test := not l_iterator.after
+									if last_match_test then
+										set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+											"Effective boolean value is not defined for a sequence of two or more items starting with an atomic value",
+											Xpath_errors_uri, "FORG0006", Type_error))
+									end
+								end
 							else
-								l_iterator.forth
-								last_match_test := not l_iterator.after
-								if last_match_test then
-									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
-										"Effective boolean value is not defined for a sequence of two or more items starting with a boolean",
-										Xpath_errors_uri, "FORG0006", Type_error))
-								end
+								last_match_test := False
+								set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+									"Effective boolean value is not defined for sequence starting with an atomic value other than a boolean, number, or string",
+									Xpath_errors_uri, "FORG0006", Type_error))
 							end
-						elseif l_item.is_string_value or l_item.is_untyped_atomic then
-							last_match_test := not l_item.as_string_value.string_value.is_empty
-							if not last_match_test then
-								l_iterator.forth
-								last_match_test := not l_iterator.after
-								if last_match_test then
-									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
-										"Effective boolean value is not defined for a sequence of two or more items starting with a string",
-										Xpath_errors_uri, "FORG0006", Type_error))
-								end
-							end
-						elseif l_item.is_numeric_value then
-							create l_integer_value.make (base_iterator.index)
-							last_match_test := l_item.as_numeric_value.same_expression (l_integer_value)
-							if not last_match_test then
-								l_iterator.forth
-								last_match_test := not l_iterator.after
-								if last_match_test then
-									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
-										"Effective boolean value is not defined for a sequence of two or more items starting with an atomic value",
-										Xpath_errors_uri, "FORG0006", Type_error))
-								end
-							end
-						else
-							last_match_test := False
-							set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
-								"Effective boolean value is not defined for sequence starting with an atomic value other than a boolean, number, or string",
-								Xpath_errors_uri, "FORG0006", Type_error))
 						end
+					else
+						-- We are in error
+						check is_error: l_iterator.is_error end
+						last_match_test := False
+						set_last_error (l_error_value)
 					end
-				else
-
-					-- We are in error
-
-					last_match_test := False
-					set_last_error (l_iterator.error_value)
 				end
 			end
 		end

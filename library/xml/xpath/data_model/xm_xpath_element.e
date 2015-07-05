@@ -5,7 +5,7 @@ note
 		"XPath Element nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,12 +55,13 @@ feature -- Access
 			Result := element_node_kind_test
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI as per W3C XML:Base REC
 		local
 			l_uri: UT_URI
-			l_xml_base, l_initial_system_id: STRING
-			l_parent: XM_XPATH_COMPOSITE_NODE
+			l_xml_base: detachable STRING
+			l_initial_system_id: detachable STRING
+			l_parent: detachable XM_XPATH_COMPOSITE_NODE
 			l_resolved: BOOLEAN
 		do
 			l_xml_base := attribute_value (Xml_base_type_code)
@@ -79,15 +80,19 @@ feature -- Access
 					Result := l_initial_system_id
 				end
 			end
-			if has_excluded_characters (Result) then
-				Result := escape_custom (utf8.to_utf8 (Result), unescaped_uri_characters, False)
+			check Result /= Void then
+				if has_excluded_characters (Result) then
+					Result := escape_custom (utf8.to_utf8 (Result), unescaped_uri_characters, False)
+				end
 			end
 			if not l_resolved then
 				l_parent := parent
 				if l_parent /= Void then
-					create l_uri.make (l_parent.base_uri)
-					create l_uri.make_resolve (l_uri, Result)
-					Result := l_uri.full_reference
+					check attached l_parent.base_uri as l_parent_base_uri and Result /= Void then
+						create l_uri.make (l_parent_base_uri)
+						create l_uri.make_resolve (l_uri, Result)
+						Result := l_uri.full_reference
+					end
 				elseif l_initial_system_id = Void then
 					create l_uri.make (system_id)
 					if l_uri.is_absolute then
@@ -98,7 +103,7 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
+	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): detachable STRING
 			-- Value of named attribute
 		require
 			uri_not_void: a_uri /= Void
@@ -106,7 +111,7 @@ feature -- Access
 		deferred
 		end
 
-	attribute_value (a_fingerprint: INTEGER): STRING
+	attribute_value (a_fingerprint: INTEGER): detachable STRING
 			-- Value of attribute identified by `a_fingerprint'
 		deferred
 		end
@@ -203,18 +208,20 @@ feature -- Access
 		local
 			l_preceding_path: STRING
 		do
-			if parent = Void then
-				Result := node_name
-			else
-				l_preceding_path := parent.path
-				if STRING_.same_string (l_preceding_path, "/") then
-					Result := STRING_.concat (l_preceding_path, node_name)
+			check attached node_name as l_node_name then
+				if not attached parent as l_parent then
+					Result := l_node_name
 				else
-					Result := STRING_.concat (l_preceding_path, "/")
-					Result := STRING_.appended_string (Result, node_name)
-					Result := STRING_.appended_string (Result, "[")
-					Result := STRING_.appended_string (Result, simple_number)
-					Result := STRING_.appended_string (Result, "]")
+					l_preceding_path := l_parent.path
+					if STRING_.same_string (l_preceding_path, "/") then
+						Result := STRING_.concat (l_preceding_path, l_node_name)
+					else
+						Result := STRING_.concat (l_preceding_path, "/")
+						Result := STRING_.appended_string (Result, l_node_name)
+						Result := STRING_.appended_string (Result, "[")
+						Result := STRING_.appended_string (Result, simple_number)
+						Result := STRING_.appended_string (Result, "]")
+					end
 				end
 			end
 		end

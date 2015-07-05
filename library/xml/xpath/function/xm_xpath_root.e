@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath root() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			Precursor (a_replacement)
@@ -71,16 +71,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void then
-				if not a_result.item.is_error then
-					if not a_result.item.is_node then
+			if attached a_result.item as a_result_item then
+				if not a_result_item.is_error then
+					if not a_result_item.is_node then
 						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error))
 					else
-						a_result.put (a_result.item.as_node.root)
+						a_result.put (a_result_item.as_node.root)
 					end
 				end
 			end

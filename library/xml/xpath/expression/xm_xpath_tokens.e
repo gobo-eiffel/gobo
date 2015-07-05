@@ -5,7 +5,7 @@ note
 		"Token values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	derivation: "See notice at bottom of file"
 	license: "MIT License"
 	date: "$Date$"
@@ -305,10 +305,10 @@ feature	-- Access
 			-- not actually a token, but we
 			-- use token numbers to identify operators.
 
-	token_name (a_token: INTEGER): STRING
+	token_name (a_token: INTEGER): detachable STRING
 			-- Name of `a_token'
 		require
-			valid_token: is_valid_token(a_token)
+			valid_token: is_valid_token (a_token)
 		do
 			Result := tokens.item (a_token)
 		ensure
@@ -325,7 +325,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	tokens: ARRAY [STRING]
+	tokens: ARRAY [detachable STRING]
 			-- Strings are used to represent tokens in error messages
 		once
 			create Result.make_filled (Void, 0, 199)

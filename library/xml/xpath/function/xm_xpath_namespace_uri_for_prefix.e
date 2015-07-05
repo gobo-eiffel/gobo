@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath namespace-uri-for-prefix() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_xml_prefix: STRING
@@ -74,21 +74,25 @@ feature -- Evaluation
 			l_element: XM_XPATH_ELEMENT
 		do
 			arguments.item (2).evaluate_item (a_result, a_context)
-			if not a_result.item.is_error then
-				if a_result.item.is_element then
-					l_element := a_result.item.as_element
-					a_result.put (Void)
-					arguments.item (1).evaluate_item (a_result, a_context)
-					if not a_result.item.is_error then
-						l_xml_prefix := a_result.item.string_value
+			check attached a_result.item as a_result_item_2 then
+				if not a_result_item_2.is_error then
+					if a_result_item_2.is_element then
+						l_element := a_result_item_2.as_element
 						a_result.put (Void)
-						l_uri_code := l_element.uri_code_for_prefix (l_xml_prefix)
-						if shared_name_pool.is_valid_uri_code (l_uri_code) then
-							a_result.put (create {XM_XPATH_STRING_VALUE}.make (shared_name_pool.uri_from_uri_code (l_uri_code)))
+						arguments.item (1).evaluate_item (a_result, a_context)
+						check attached a_result.item as a_result_item_1 then
+							if not a_result_item_1.is_error then
+								l_xml_prefix := a_result_item_1.string_value
+								a_result.put (Void)
+								l_uri_code := l_element.uri_code_for_prefix (l_xml_prefix)
+								if shared_name_pool.is_valid_uri_code (l_uri_code) then
+									a_result.put (create {XM_XPATH_STRING_VALUE}.make (shared_name_pool.uri_from_uri_code (l_uri_code)))
+								end
+							end
 						end
+					else
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error))
 					end
-				else
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error))
 				end
 			end
 		end

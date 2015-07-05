@@ -5,7 +5,7 @@ note
 		"Comparsion keys for use by XM_XPATH_ATOMIC_SORT_COMPARER"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,10 +75,12 @@ feature -- Access
 		do
 			if is_nan then
 				Result := 0
-			elseif collation_key /= Void then
-				Result := collation_key.hash_code
+			elseif attached collation_key as l_collation_key then
+				Result := l_collation_key.hash_code
 			else
-				Result := value.hash_code
+				check invariant_value: attached value as l_value then
+					Result := l_value.hash_code
+				end
 			end
 		end
 
@@ -91,10 +93,12 @@ feature -- Comparison
 		do
 			if is_nan then
 				Result := other.is_nan
-			elseif collation_key /= Void then
-				Result := other.collation_key /= Void and then collation_key.three_way_comparison (other.collation_key) = 0
+			elseif attached collation_key as l_collation_key then
+				Result := attached other.collation_key as l_other_collation_key and then l_collation_key.three_way_comparison (l_other_collation_key) = 0
 			elseif category = other.category then
-				Result := value.same_atomic_value (other.value)
+				check invariant_value: attached value as l_value and attached other.value as l_other_value then
+					Result := l_value.same_atomic_value (l_other_value)
+				end
 			end
 		end
 
@@ -103,10 +107,10 @@ feature {XM_XPATH_COMPARISON_KEY} -- Implementation
 	category: INTEGER
 			-- Category of keys being compared
 
-	value: XM_XPATH_ATOMIC_VALUE
+	value: detachable XM_XPATH_ATOMIC_VALUE
 			-- Value
 
-	collation_key: ST_COLLATION_KEY
+	collation_key: detachable ST_COLLATION_KEY
 			-- Collation key
 
 	is_nan: BOOLEAN

@@ -5,7 +5,7 @@ note
 		"Standard tree attribute nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,8 @@ inherit
 		redefine
 			name_code, is_same_node, sequence_number,
 			next_sibling, previous_sibling, previous_node_in_document_order, next_node_in_document_order,
-			is_tree_attribute, as_tree_attribute
+			is_tree_attribute, as_tree_attribute,
+			parent
 		end
 
 create
@@ -80,14 +81,14 @@ feature -- Access
 			create Result.make_from_sequence_number_with_double_offset (parent_node.sequence_number, child_index)
 		end
 
-	previous_sibling: XM_XPATH_NODE
+	previous_sibling: detachable XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		do
 			Result := Void
 		end
 
-	next_sibling: XM_XPATH_NODE
+	next_sibling: detachable XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		do
@@ -98,6 +99,12 @@ feature -- Access
 			-- Value of is-idrefs property
 		do
 			Result := parent_node.as_tree_element.is_idrefs (child_index)
+		end
+
+	parent: XM_XPATH_TREE_COMPOSITE_NODE
+			-- Parent of current node
+		do
+			Result := parent_node
 		end
 
 feature -- Comparison
@@ -140,7 +147,7 @@ feature {XM_XPATH_TREE_NODE} -- Restricted
 			Result := parent
 		end
 
-	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): XM_XPATH_TREE_NODE
+	next_node_in_document_order (an_anchor: XM_XPATH_TREE_NODE): detachable XM_XPATH_TREE_NODE
 			-- Next node within the document (skipping attributes);
 			-- The scan stops if it encounters `an_anchor'
 		do

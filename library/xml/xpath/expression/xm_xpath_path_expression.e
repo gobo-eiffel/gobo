@@ -5,7 +5,7 @@ note
 		"XPath Path Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -203,25 +203,29 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if analysis_state < Simplified_state then
 				analysis_state := Simplified_state
 				create l_replacement.make (Void)
 				start.simplify (l_replacement)
-				if start /= l_replacement.item then
-					set_start (l_replacement.item)
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					if start /= l_replacement_item then
+						set_start (l_replacement_item)
+					end
 				end
 				if start.is_error then
 					set_replacement (a_replacement, start)
 				else
 					l_replacement.put (Void)
 					step.simplify (l_replacement)
-					if step /= l_replacement.item then
-						set_step (l_replacement.item)
+					check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+						if step /= l_replacement_item then
+							set_step (l_replacement_item)
+						end
 					end
 					if step.is_error then
 						set_replacement (a_replacement, step)
@@ -253,30 +257,34 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_node_sequence: XM_XPATH_SEQUENCE_TYPE
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_mapped: XM_XPATH_MAPPED_PATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if analysis_state < Type_checked_state then
 				analysis_state := Type_checked_state
 				create l_type_checker
 				create l_replacement.make (Void)
 				start.check_static_type (l_replacement, a_context, a_context_item_type)
-				if start /= l_replacement.item then
-					set_start (l_replacement.item)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					if start /= l_replacement_item then
+						set_start (l_replacement_item)
+					end
 				end
 				if start.is_error then
 					set_replacement (a_replacement, start)
 				else
 					l_replacement.put (Void)
 					step.check_static_type (l_replacement, a_context, start.item_type)
-					if step /= l_replacement.item then
-						set_step (l_replacement.item)
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+						if step /= l_replacement_item then
+							set_step (l_replacement_item)
+						end
 					end
 					if step.is_error then
 						set_replacement (a_replacement, step)
@@ -287,22 +295,26 @@ feature -- Optimization
 						create l_node_sequence.make_node_sequence
 						l_type_checker.static_type_check (a_context, start, l_node_sequence, False, l_role)
 						if l_type_checker.is_static_type_check_error then
-							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+							check invariant_of_XM_XPATH_TYPE_CHECKER: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+							end
 						else
-							set_start (l_type_checker.checked_expression)
-							-- We distinguish three cases for the step:
-							--  either it is known statically to deliver nodes only (a 1.0 path expression),
-							--  or it is known statically to deliver atomic values only, or we don't yet know.
-							if is_node_sequence then
-								simplify_sorting (a_replacement, a_context, a_context_item_type)
-							elseif is_atomic_item_type (step.item_type) then
-								create l_mapped.make (start, step, False)
-								l_mapped.set_parent (parent)
-								set_replacement (a_replacement, l_mapped)
-							else
-								create l_mapped.make (start, step, True)
-								l_mapped.set_parent (parent)
-								set_replacement (a_replacement, l_mapped)
+							check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+								set_start (l_checked_expression)
+								-- We distinguish three cases for the step:
+								--  either it is known statically to deliver nodes only (a 1.0 path expression),
+								--  or it is known statically to deliver atomic values only, or we don't yet know.
+								if is_node_sequence then
+									simplify_sorting (a_replacement, a_context, a_context_item_type)
+								elseif is_atomic_item_type (step.item_type) then
+									create l_mapped.make (start, step, False)
+									l_mapped.set_parent (parent)
+									set_replacement (a_replacement, l_mapped)
+								else
+									create l_mapped.make (start, step, True)
+									l_mapped.set_parent (parent)
+									set_replacement (a_replacement, l_mapped)
+								end
 							end
 						end
 					end
@@ -313,26 +325,30 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_offer: XM_XPATH_PROMOTION_OFFER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if analysis_state < Optimized_state then
 				analysis_state := Optimized_state
 				create l_replacement.make (Void)
 				start.optimize (l_replacement, a_context, a_context_item_type)
-				if start /= l_replacement.item then
-					set_start (l_replacement.item)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					if start /= l_replacement_item then
+						set_start (l_replacement_item)
+					end
 				end
 				if start.is_error then
 					set_replacement (a_replacement, start)
 				else
 					l_replacement.put (Void)
 					step.optimize (l_replacement, a_context, start.item_type)
-					if step /= l_replacement.item then
-						set_step (l_replacement.item)
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+						if step /= l_replacement_item then
+							set_step (l_replacement_item)
+						end
 					end
 					if step.is_error then
 						set_replacement (a_replacement, step)
@@ -351,11 +367,11 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -365,9 +381,11 @@ feature -- Optimization
 				a_replacement.put (Current)
 				create l_replacement.make (Void)
 				start.promote (l_replacement, a_offer)
-				if start /= l_replacement.item then
-					set_start (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if start /= l_replacement_item then
+						set_start (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				if start.is_error then
 					set_replacement (a_replacement, start)
@@ -378,9 +396,11 @@ feature -- Optimization
 						--  outer context or the inner context.
 						l_replacement.put (Void)
 						step.promote (l_replacement, a_offer)
-						if step /= l_replacement.item then
-							set_step (l_replacement.item)
-							reset_static_properties
+						check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+							if step /= l_replacement_item then
+								set_step (l_replacement_item)
+								reset_static_properties
+							end
 						end
 					end
 				end
@@ -400,21 +420,23 @@ feature -- Evaluation
 			another_context: XM_XPATH_CONTEXT
 		do
 			start.create_iterator (a_context)
-			an_iterator := start.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			else
-				if a_context.has_push_processing then
-					another_context := a_context.new_minor_context
+			check postcondition_of_create_iterator: attached start.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
 				else
-					another_context := a_context.new_context
-				end
-				another_context.set_current_iterator (an_iterator)
+					if a_context.has_push_processing then
+						another_context := a_context.new_minor_context
+					else
+						another_context := a_context.new_context
+					end
+					another_context.set_current_iterator (an_iterator)
 
-				if is_node_sequence then
-					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
-				else
-					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
+					if is_node_sequence then
+						create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
+					else
+						create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
+					end
 				end
 			end
 		end
@@ -426,17 +448,19 @@ feature -- Evaluation
 			another_context: XM_XPATH_CONTEXT
 		do
 			start.create_node_iterator (a_context)
-			an_iterator := start.last_node_iterator
-			if an_iterator.is_error then
-				last_node_iterator := an_iterator
-			else
-				if a_context.has_push_processing then
-					another_context := a_context.new_minor_context
+			check postcondition_of_create_node_iterator: attached start.last_node_iterator as l_last_node_iterator then
+				an_iterator := l_last_node_iterator
+				if an_iterator.is_error then
+					last_node_iterator := an_iterator
 				else
-					another_context := a_context.new_context
+					if a_context.has_push_processing then
+						another_context := a_context.new_minor_context
+					else
+						another_context := a_context.new_context
+					end
+					another_context.set_current_iterator (an_iterator)
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, Current, another_context)
 				end
-				another_context.set_current_iterator (an_iterator)
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (an_iterator, Current, another_context)
 			end
 		end
 
@@ -447,15 +471,17 @@ feature -- Evaluation
 			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			step.create_iterator (a_context)
-			an_iterator := step.last_iterator
-			if an_iterator.is_error then
+			check postcondition_of_create_iterator: attached step.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if attached an_iterator.error_value as l_error_value then
 
-				-- Error occurred
-
-				create an_invalid_item.make (an_iterator.error_value)
-				create last_mapped_item.make_item (an_invalid_item)
-			else
-				create last_mapped_item.make_sequence (an_iterator)
+					-- Error occurred
+					check is_error: an_iterator.is_error end
+					create an_invalid_item.make (l_error_value)
+					create last_mapped_item.make_item (an_invalid_item)
+				else
+					create last_mapped_item.make_sequence (an_iterator)
+				end
 			end
 		end
 
@@ -463,29 +489,34 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		local
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_last_node_iterator: like last_node_iterator
 		do
 			step.create_iterator (a_context)
-			if step.last_iterator.is_singleton_iterator then
-				a_singleton_iterator := step.last_iterator.as_singleton_iterator
-				a_singleton_iterator.start
-				if a_singleton_iterator.after then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
-				else
-					check
-						single_node: a_singleton_iterator.item.is_node
+			check postcondition_of_create_iterator: attached step.last_iterator as l_last_iterator then
+				if l_last_iterator.is_singleton_iterator then
+					a_singleton_iterator := l_last_iterator.as_singleton_iterator
+					a_singleton_iterator.start
+					if a_singleton_iterator.after then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+					else
+						check
+							single_node: a_singleton_iterator.item.is_node
+						end
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_singleton_iterator.item.as_node)
 					end
-					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_singleton_iterator.item.as_node)
-				end
-			else
-				if step.last_iterator.is_error then
-					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (Void)
-					last_node_iterator.set_last_error (step.last_iterator.error_value)
 				else
-					check
-						node_iterator: step.last_iterator.is_node_iterator
-						-- from `create_iterator'
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} l_last_node_iterator.make (Void)
+						l_last_node_iterator.set_last_error (l_error_value)
+						last_node_iterator := l_last_node_iterator
+					else
+						check
+							node_iterator: l_last_iterator.is_node_iterator
+							-- from `create_iterator'
+						end
+						last_node_iterator := l_last_iterator.as_node_iterator
 					end
-					last_node_iterator := step.last_iterator.as_node_iterator
 				end
 			end
 			check
@@ -567,7 +598,7 @@ feature {NONE} -- Implementation
 		require
 			expression_not_void: exp /= Void
 		local
-			a_filter: XM_XPATH_FILTER_EXPRESSION
+			a_filter: detachable XM_XPATH_FILTER_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			if exp.is_axis_expression then
@@ -590,7 +621,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	simplify_descendant_path (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify_descendant_path (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Simplify descendant path if possible.
 		require
 			a_replacement_not_void: a_replacement /= Void
@@ -647,11 +678,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			replaced: a_replacement.item /= Void
-			possible_path_expression_replacement: a_replacement.item.is_path_expression
+			replaced: attached a_replacement.item as l_replacement_item
+			possible_path_expression_replacement: l_replacement_item.is_path_expression
 		end
 
-	simplify_non_positional_filter_path (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+	simplify_non_positional_filter_path (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
 		a_axis: XM_XPATH_AXIS_EXPRESSION; a_path: XM_XPATH_PATH_EXPRESSION)
 			-- Simplify descendant path without any positional filters.
 		require
@@ -662,7 +693,7 @@ feature {NONE} -- Implementation
 			no_positional_filters: True -- could add a routine for this
 		local
 			l_new_step: XM_XPATH_COMPUTED_EXPRESSION
-			l_filter: XM_XPATH_FILTER_EXPRESSION
+			l_filter: detachable XM_XPATH_FILTER_EXPRESSION
 			l_path: XM_XPATH_PATH_EXPRESSION
 			l_node_kind_test: XM_XPATH_NODE_KIND_TEST
 		do
@@ -702,8 +733,8 @@ feature {NONE} -- Implementation
 				a_replacement.put (Current)
 			end
 		ensure
-			replaced: a_replacement.item /= Void
-			possible_path_expression_replacement: a_replacement.item.is_path_expression
+			replaced: attached a_replacement.item as l_replacement_item
+			possible_path_expression_replacement: l_replacement_item.is_path_expression
 		end
 
 	compute_special_properties
@@ -821,7 +852,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	simplify_sorting (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	simplify_sorting (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Simplify descendant path and sorting.
 		require
 			context_not_void: a_context /= Void
@@ -830,35 +861,41 @@ feature {NONE} -- Implementation
 		local
 			l_path: XM_XPATH_PATH_EXPRESSION
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if step.non_creating then
 				-- We don't need the operands to be sorted;
 				--  any sorting that's needed will be done at the top level
 				create l_replacement.make (Void)
 				start.set_unsorted (l_replacement, False)
-				if start /= l_replacement.item then
-					set_start (l_replacement.item)
+				check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+					if start /= l_replacement_item then
+						set_start (l_replacement_item)
+					end
 				end
 				l_replacement.put (Void)
 				step.set_unsorted (l_replacement, False)
-				if step /= l_replacement.item then
-					set_step (l_replacement.item)
+				check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+					if step /= l_replacement_item then
+						set_step (l_replacement_item)
+					end
 				end
 				-- Try to simplify descendant expressions such as a//b
 				l_replacement.put (Void)
 				simplify_descendant_path (l_replacement)
-				if l_replacement.item /= Current then
-					-- Descendant expressions such as a//b were simplified
-					l_expression := l_replacement.item
-					if not l_expression.is_error then
-						check
-							path_expression: l_expression.is_path_expression
+				check postcondition_of_simplify_descendant_path: attached l_replacement.item as l_replacement_item then
+					if l_replacement_item /= Current then
+						-- Descendant expressions such as a//b were simplified
+						l_expression := l_replacement_item
+						if not l_expression.is_error then
+							check
+								path_expression: l_expression.is_path_expression
+							end
+							l_path := l_expression.as_path_expression
+							l_path.check_static_type (a_replacement, a_context, a_context_item_type)
+						else
+							set_replacement (a_replacement, l_expression)
 						end
-						l_path := l_expression.as_path_expression
-						l_path.check_static_type (a_replacement, a_context, a_context_item_type)
-					else
-						set_replacement (a_replacement, l_expression)
 					end
 				end
 			end
@@ -879,7 +916,7 @@ feature {NONE} -- Implementation
 			simplified_sorted_expression_not_void: a_replacement.item /= Void
 		end
 
-	promote_sub_expressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote_sub_expressions (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote any subexpressions within the step are not dependent on the focus.
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
@@ -888,20 +925,24 @@ feature {NONE} -- Implementation
 			not_replaced: a_replacement.item = Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			step.promote (l_replacement, a_offer)
-			if step /= l_replacement.item then
-				set_step (l_replacement.item)
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				if step /= l_replacement_item then
+					set_step (l_replacement_item)
+				end
 			end
 			reset_static_properties
-			if a_offer.containing_expression /= Current then
+			if attached a_offer.containing_expression as l_containing_expression and then l_containing_expression /= Current then
 				analysis_state := Raw_state -- allow re-analysis
 				l_replacement.put (Void)
-				a_offer.containing_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-				l_expression := l_replacement.item
-				l_expression.optimize (a_replacement, a_context, a_context_item_type)
+				l_containing_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					l_expression := l_replacement_item
+					l_expression.optimize (a_replacement, a_context, a_context_item_type)
+				end
 			else
 				a_replacement.put (Current)
 			end

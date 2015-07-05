@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs for the file scheme, when XPath fn:collection() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 
 feature -- Element change
@@ -55,7 +55,7 @@ feature -- Element change
 	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT)
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
-			l_directory_name: STRING
+			l_directory_name: detachable STRING
 			l_directory: KL_DIRECTORY
 			l_pathname: detachable KL_PATHNAME
 		do

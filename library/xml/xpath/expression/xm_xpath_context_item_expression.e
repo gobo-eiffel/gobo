@@ -5,7 +5,7 @@ note
 		"XPath Expressions representing the context item (.)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if a_context_item_type = Void then
@@ -112,7 +112,7 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 
@@ -125,13 +125,13 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
 				a_result.put (a_context.context_item)
 			else
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)				)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error))
 			end
 		end
 
@@ -139,10 +139,12 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
-				if a_context.context_item.is_node then
-					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_context.context_item.as_node)
-				else
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_context.context_item)
+				check attached a_context.context_item as l_context_item then
+					if l_context_item.is_node then
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_context_item.as_node)
+					else
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_context_item)
+					end
 				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
@@ -153,7 +155,9 @@ feature -- Evaluation
 			-- Create an iterator over a node sequence
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_context.context_item.as_node)
+				check attached a_context.context_item as l_context_item then
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_context_item.as_node)
+				end
 			else
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end

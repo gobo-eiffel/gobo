@@ -5,7 +5,7 @@ note
 		"Routines to implement the XPath doc() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,10 +30,10 @@ inherit
 
 feature -- Access
 
-	last_evaluated_document: XM_XPATH_ITEM
+	last_evaluated_document: detachable XM_XPATH_ITEM
 			-- Result from `parse_document'
 
-	last_evaluated_media_type: UT_MEDIA_TYPE
+	last_evaluated_media_type: detachable UT_MEDIA_TYPE
 			-- Possible media-type set by `parse_document'
 
 feature -- Evaluation
@@ -46,7 +46,6 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 		local
 			a_uri: UT_URI
-			a_document: XM_XPATH_DOCUMENT
 			a_message, an_iri_reference: STRING
 		do
 			an_iri_reference := escaped_uri (a_uri_reference)
@@ -56,28 +55,31 @@ feature -- Evaluation
 			elseif not a_context.security_manager.is_uri_permitted (a_uri) then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_uri),
 																												 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
-			elseif a_context.available_documents.is_document_mapped (a_uri.full_uri) then
-				last_evaluated_document := a_context.available_documents.document (a_uri.full_uri)
-				last_evaluated_media_type := a_context.available_documents.media_type (a_uri.full_uri)
+			elseif attached a_context.available_documents as l_available_documents and then l_available_documents.is_document_mapped (a_uri.full_uri) then
+				last_evaluated_document := l_available_documents.document (a_uri.full_uri)
+				last_evaluated_media_type := l_available_documents.media_type (a_uri.full_uri)
 			elseif a_context.is_uri_written (a_uri.full_uri) then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat (a_uri.full_uri, " has already been written to, so reading is not permitted"),
 																												 Xpath_errors_uri, "XTRE1500", Dynamic_error)
 			else
 				a_context.build_document (a_uri.full_uri)
 				if a_context.is_build_document_error then
-					a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
-					a_message := STRING_.appended_string (a_message, ". ")
-					a_message := STRING_.appended_string (a_message, a_context.last_build_error)
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0005", Dynamic_error)
-					if a_context.available_documents.isolation_level = Serializable then
-						a_context.available_documents.add (Void, Void, a_uri.full_uri)
+					check postcondition_of_build_document: attached a_context.last_build_error as l_last_build_error then
+						a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
+						a_message := STRING_.appended_string (a_message, ". ")
+						a_message := STRING_.appended_string (a_message, l_last_build_error)
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0005", Dynamic_error)
+						if attached a_context.available_documents as l_available_documents and then l_available_documents.isolation_level = Serializable then
+							l_available_documents.add (Void, Void, a_uri.full_uri)
+						end
 					end
 				else
-					a_document := a_context.last_parsed_document
-					last_evaluated_media_type := a_context.last_parsed_media_type
-					last_evaluated_document := a_document
-					if a_context.available_documents.isolation_level >= Repeatable_read then
-						a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
+					check postcondition_of_build_document: attached a_context.last_parsed_document as l_last_parsed_document then
+						last_evaluated_media_type := a_context.last_parsed_media_type
+						last_evaluated_document := l_last_parsed_document
+						if attached a_context.available_documents as l_available_documents and then l_available_documents.isolation_level >= Repeatable_read then
+							l_available_documents.add (l_last_parsed_document, last_evaluated_media_type, a_uri.full_uri)
+						end
 					end
 				end
 			end

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath avg() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,66 +72,74 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 			l_untyped_atomic: XM_XPATH_STRING_VALUE
-			l_numeric_value: XM_XPATH_NUMERIC_VALUE
-			l_duration_value: XM_XPATH_DURATION_VALUE
+			l_numeric_value: detachable XM_XPATH_NUMERIC_VALUE
+			l_duration_value: detachable XM_XPATH_DURATION_VALUE
 		do
 			arguments.item (1).create_iterator (a_context)
-			l_iterator := arguments.item (1).last_iterator
-			if l_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-			else
-				l_iterator.start
-				if l_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-				elseif l_iterator.after then
-					a_result.put (Void)
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 				else
-					l_item := l_iterator.item
-					if l_item.is_error then
-						a_result.put (l_item)
+					l_iterator.start
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+					elseif l_iterator.after then
+						a_result.put (Void)
 					else
-						check
-							item_is_atomic: l_item.is_atomic_value
-							-- static typing
-						end
-						l_atomic_value := l_item.as_atomic_value.primitive_value
-						if l_atomic_value.is_untyped_atomic then
-							l_untyped_atomic := l_atomic_value.as_untyped_atomic
-							if l_untyped_atomic.is_convertible (type_factory.double_type) then
-								l_untyped_atomic.convert_to_type (type_factory.double_type)
-								l_numeric_value := l_untyped_atomic.converted_value.as_numeric_value
+						l_item := l_iterator.item
+						if l_item.is_error then
+							a_result.put (l_item)
+						else
+							check
+								item_is_atomic: l_item.is_atomic_value
+								-- static typing
+							end
+							l_atomic_value := l_item.as_atomic_value.primitive_value
+							if l_atomic_value.is_untyped_atomic then
+								l_untyped_atomic := l_atomic_value.as_untyped_atomic
+								if l_untyped_atomic.is_convertible (type_factory.double_type) then
+									l_untyped_atomic.convert_to_type (type_factory.double_type)
+									check postcondition_of_convert_to_type: attached l_untyped_atomic.converted_value as l_converted_value then
+										l_numeric_value := l_converted_value.as_numeric_value
+									end
+								else
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
+										Xpath_errors_uri, "FORG0006", Dynamic_error))
+								end
+							elseif l_atomic_value.is_duration_value then
+								l_duration_value := l_atomic_value.as_duration_value
+								if not l_duration_value.is_months_duration and then not l_duration_value.is_seconds_duration then
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a duration value that is neither xs:yearMonthDuration nor xs:dayTimeDuration",
+										Xpath_errors_uri, "FORG0006", Dynamic_error))
+								end
+							elseif l_atomic_value.is_numeric_value then
+								l_numeric_value := l_atomic_value.as_numeric_value
 							else
 								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 									Xpath_errors_uri, "FORG0006", Dynamic_error))
 							end
-						elseif l_atomic_value.is_duration_value then
-							l_duration_value := l_atomic_value.as_duration_value
-							if not l_duration_value.is_months_duration and then not l_duration_value.is_seconds_duration then
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a duration value that is neither xs:yearMonthDuration nor xs:dayTimeDuration",
-									Xpath_errors_uri, "FORG0006", Dynamic_error))
-							end
-						elseif l_atomic_value.is_numeric_value then
-							l_numeric_value := l_atomic_value.as_numeric_value
-						else
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
-								Xpath_errors_uri, "FORG0006", Dynamic_error))
-						end
-						if a_result.item = Void then -- no error yet
-							if l_numeric_value /= Void then
-								if l_numeric_value.is_nan then
-									a_result.put (l_numeric_value)
+							if a_result.item = Void then -- no error yet
+								if l_numeric_value /= Void then
+									if l_numeric_value.is_nan then
+										a_result.put (l_numeric_value)
+									else
+										evaluate_numeric_average (a_result, l_numeric_value, l_iterator)
+									end
 								else
-									evaluate_numeric_average (a_result, l_numeric_value, l_iterator)
+									check attached l_duration_value then
+										evaluate_duration_average (a_result, l_duration_value, l_iterator)
+									end
 								end
-							else
-								evaluate_duration_average (a_result, l_duration_value, l_iterator)
 							end
 						end
 					end
@@ -149,24 +157,26 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context)
 			if a_replacement.item = Void then
 				create l_replacement.make (Void)
 				arguments.item (1).set_unsorted (l_replacement, True)
-				if arguments.item (1) /= l_replacement.item then
-					arguments.replace (l_replacement.item, 1)
+				check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+					if arguments.item (1) /= l_replacement_item then
+						arguments.replace (l_replacement_item, 1)
+					end
 				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	evaluate_numeric_average (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_NUMERIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
+	evaluate_numeric_average (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_first_value: XM_XPATH_NUMERIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Evaluate average of a sequence of numeric values.
 		require
 			a_result_not_void: a_result /= Void
@@ -174,7 +184,8 @@ feature {NONE} -- Implementation
 			first_value_not_void: a_first_value /= Void
 			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
 		local
-			l_sum, l_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_sum: XM_XPATH_NUMERIC_VALUE
+			l_numeric_value: detachable XM_XPATH_NUMERIC_VALUE
 			l_integer_value: XM_XPATH_INTEGER_VALUE
 			l_count: INTEGER
 			l_item: XM_XPATH_ITEM
@@ -195,7 +206,9 @@ feature {NONE} -- Implementation
 						l_untyped_atomic := l_item.as_untyped_atomic
 						if l_untyped_atomic.is_convertible (type_factory.double_type) then
 							l_untyped_atomic.convert_to_type (type_factory.double_type)
-							l_numeric_value := l_untyped_atomic.converted_value.as_numeric_value
+							check postcondition_of_convert_to_type: attached l_untyped_atomic.converted_value as l_converted_value then
+								l_numeric_value := l_converted_value.as_numeric_value
+							end
 						else
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 								Xpath_errors_uri, "FORG0006", Dynamic_error))
@@ -207,12 +220,14 @@ feature {NONE} -- Implementation
 						l_numeric_value := l_item.as_numeric_value
 					end
 					if a_result.item = Void then
-						if l_numeric_value.is_nan then
-							a_result.put (l_numeric_value)
-						else
-							l_sum := l_sum.arithmetic (Plus_token, l_numeric_value)
-							if l_sum.is_error or else l_sum.is_nan then
-								a_result.put (l_sum)
+						check attached l_numeric_value then
+							if l_numeric_value.is_nan then
+								a_result.put (l_numeric_value)
+							else
+								l_sum := l_sum.arithmetic (Plus_token, l_numeric_value)
+								if l_sum.is_error or else l_sum.is_nan then
+									a_result.put (l_sum)
+								end
 							end
 						end
 					end
@@ -220,15 +235,16 @@ feature {NONE} -- Implementation
 				l_count := l_count + 1
 				an_iterator.forth
 			end
-			if an_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (an_iterator.error_value))
+			if attached an_iterator.error_value as l_error_value then
+				check is_error: an_iterator.is_error end
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 			elseif a_result.item = Void then -- no error
 				create l_integer_value.make_from_integer (l_count)
 				a_result.put (l_sum.arithmetic (Division_token, l_integer_value))
 			end
 		end
 
-	evaluate_duration_average (a_result: DS_CELL [XM_XPATH_ITEM]; a_first_value: XM_XPATH_DURATION_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
+	evaluate_duration_average (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_first_value: XM_XPATH_DURATION_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Evaluate average of a sequence of duration values.
 		require
 			a_result_not_void: a_result /= Void
@@ -236,7 +252,8 @@ feature {NONE} -- Implementation
 			first_value_not_void: a_first_value /= Void
 			sequence_on_first_position: a_iterator /= Void and then not a_iterator.is_error and then not a_iterator.off and then a_iterator.index = 1
 		local
-			l_sum, l_duration_value: XM_XPATH_DURATION_VALUE
+			l_sum: XM_XPATH_DURATION_VALUE
+			l_duration_value: detachable XM_XPATH_DURATION_VALUE
 			l_count: INTEGER
 			l_item: XM_XPATH_ITEM
 			l_is_year_month: BOOLEAN
@@ -264,14 +281,16 @@ feature {NONE} -- Implementation
 						end
 					end
 					if a_result.item = Void then
-						l_item := l_sum.plus (l_duration_value)
-						if l_item.is_error then
-							a_result.put (l_item)
-						else
-							l_sum := l_item.as_atomic_value.as_duration_value
-							check
-								good_duration: l_sum.is_months_duration or else l_sum.is_seconds_duration
-								-- plus will return an error otherwise
+						check attached l_duration_value then
+							l_item := l_sum.plus (l_duration_value)
+							if l_item.is_error then
+								a_result.put (l_item)
+							else
+								l_sum := l_item.as_atomic_value.as_duration_value
+								check
+									good_duration: l_sum.is_months_duration or else l_sum.is_seconds_duration
+									-- plus will return an error otherwise
+								end
 							end
 						end
 					end
@@ -279,8 +298,9 @@ feature {NONE} -- Implementation
 				l_count := l_count + 1
 				a_iterator.forth
 			end
-			if a_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (a_iterator.error_value))
+			if attached a_iterator.error_value as l_error_value then
+				check is_error: a_iterator.is_error end
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 			elseif a_result.item = Void then -- no error
 				a_result.put (l_sum.multiply (1.0 / l_count))
 			end

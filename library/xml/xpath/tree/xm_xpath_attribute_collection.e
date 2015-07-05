@@ -5,7 +5,7 @@ note
 		"Attribute collection for standard tree element nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attribute_value (a_fingerprint: INTEGER): STRING
+	attribute_value (a_fingerprint: INTEGER): detachable STRING
 			-- Value of attribute identified by `a_fingerprint'
 		local
 			an_index: INTEGER
@@ -51,8 +51,11 @@ feature -- Access
 			end
 		end
 
-	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING
+	attribute_value_by_name (a_uri: STRING; a_local_name: STRING): detachable STRING
 			-- Value of named attribute
+		require
+			a_uri_not_void: a_uri /= Void
+			a_local_name_not_void: a_local_name /= Void
 		local
 			a_fingerprint: INTEGER
 		do
@@ -100,7 +103,7 @@ feature -- Access
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Id_property
+			Result := attached attribute_ids as l_attribute_ids and then l_attribute_ids.item (an_attribute_index) = Id_property
 		end
 
 	is_idrefs (an_attribute_index: INTEGER): BOOLEAN
@@ -108,7 +111,7 @@ feature -- Access
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Idrefs_property
+			Result := attached attribute_ids as l_attribute_ids and then l_attribute_ids.item (an_attribute_index) = Idrefs_property
 		end
 
 	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -149,6 +152,7 @@ feature -- Element change
 			l_type_code: like a_type_code
 			l_all_idrefs: BOOLEAN
 			l_value: STRING
+			l_attribute_ids: like attribute_ids
 		do
 			l_type_code := Untyped_atomic_type_code
 			ensure_extensible
@@ -156,13 +160,15 @@ feature -- Element change
 			attribute_type_codes.put_last (l_type_code)
 			attribute_values.put_last (a_value)
 			internal_attribute_properties.put_last (a_properties)
+			l_attribute_ids := attribute_ids
 			if a_type_code = Id_type_code or a_type_code = Idref_type_code or a_type_code = Idrefs_type_code then
-				if attribute_ids = Void then
-					create attribute_ids.make (attribute_name_codes.capacity)
+				if l_attribute_ids = Void then
+					create l_attribute_ids.make (attribute_name_codes.capacity)
 					from i:= 1 until i = attribute_name_codes.count loop
-						attribute_ids.put_last (No_dtd_property)
+						l_attribute_ids.put_last (No_dtd_property)
 						i := i + 1
 					end
+					attribute_ids := l_attribute_ids
 				end
 
 				-- The attribute is marked as being an ID/IDREF/IDREFS. But we don't trust it - it
@@ -178,15 +184,15 @@ feature -- Element change
 					a_type_code
 				when Id_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.put_last (Id_property)
+						l_attribute_ids.put_last (Id_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						l_attribute_ids.put_last (No_dtd_property)
 					end
 				when Idref_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.put_last (Idrefs_property)
+						l_attribute_ids.put_last (Idrefs_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						l_attribute_ids.put_last (No_dtd_property)
 					end
 				when Idrefs_type_code then
 					create l_splitter.make
@@ -201,13 +207,13 @@ feature -- Element change
 						l_cursor.forth
 					end
 					if l_all_idrefs then
-						attribute_ids.put_last (Idrefs_property)
+						l_attribute_ids.put_last (Idrefs_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						l_attribute_ids.put_last (No_dtd_property)
 					end
 				end
-			elseif attribute_ids /= Void then
-				attribute_ids.put_last (No_dtd_property)
+			elseif l_attribute_ids /= Void then
+				l_attribute_ids.put_last (No_dtd_property)
 			end
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
@@ -223,8 +229,8 @@ feature -- Removal
 			attribute_name_codes.wipe_out
 			attribute_type_codes.wipe_out
 			internal_attribute_properties.wipe_out
-			if attribute_ids /= Void then
-				attribute_ids.wipe_out
+			if attached attribute_ids as l_attribute_ids then
+				l_attribute_ids.wipe_out
 			end
 		end
 
@@ -239,7 +245,7 @@ feature {NONE} -- Implementation
 
 	-- The next five lists are quintuples - i.e. item number n in all four lists forms a quintuple
 
-	attribute_ids: DS_ARRAYED_LIST [INTEGER]
+	attribute_ids: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Are these ID, IDREF or IDREFS attributes?
 
 	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
@@ -265,12 +271,12 @@ feature {NONE} -- Implementation
 				attribute_type_codes.resize (l_new)
 				attribute_values.resize (l_new)
 				internal_attribute_properties.resize (l_new)
-				if attribute_ids /= Void then
-					attribute_ids.resize (l_new)
+				if attached attribute_ids as l_attribute_ids then
+					l_attribute_ids.resize (l_new)
 				end
 			end
 		ensure
-			attribute_ids_extendible: attribute_ids /= Void implies attribute_ids.extendible (1)
+			attribute_ids_extendible: attached attribute_ids as l_attribute_ids implies l_attribute_ids.extendible (1)
 			attribute_name_codes_extendible: attribute_name_codes.extendible (1)
 			attribute_type_codes_extendible: attribute_type_codes.extendible (1)
 			attribute_values_extendible: attribute_values.extendible (1)
@@ -311,7 +317,7 @@ invariant
 	same_length: attribute_name_codes.count = attribute_type_codes.count
 		and attribute_name_codes.count = attribute_values.count
 		and internal_attribute_properties.count = attribute_values.count
-	ids: attribute_ids /= Void implies attribute_name_codes.count = attribute_ids.count
+	ids: attached attribute_ids as l_attribute_ids implies attribute_name_codes.count = l_attribute_ids.count
 
 end
 

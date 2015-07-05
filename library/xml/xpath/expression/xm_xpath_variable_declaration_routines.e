@@ -5,7 +5,7 @@ note
 	"Routines for use by variable declarations"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
-			a_container: XM_XPATH_EXPRESSION_CONTAINER
+			a_container: detachable XM_XPATH_EXPRESSION_CONTAINER
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_child: XM_XPATH_EXPRESSION
 			a_depth: INTEGER

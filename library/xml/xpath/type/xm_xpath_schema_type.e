@@ -5,7 +5,7 @@ note
 		"Objects that represent an XML Schema style data type"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 	namespace_uri: STRING
 			--Namespace uri
 
-	base_type: XM_XPATH_SCHEMA_TYPE
+	base_type: detachable XM_XPATH_SCHEMA_TYPE
 			-- Base type
 
 	standard_display_name: STRING
@@ -55,6 +55,7 @@ feature -- Access
 				Result := standard_display_name
 			else
 				-- TODO
+				Result := ""
 			end
 		ensure
 			description_not_void: Result /= Void
@@ -71,6 +72,7 @@ feature -- Access
 		require
 			simple_type: is_simple_type
 		do
+			check is_simple_type: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -86,6 +88,7 @@ feature -- Access
 		require
 			complex_type: is_complex_type
 		do
+			check is_complex_type: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

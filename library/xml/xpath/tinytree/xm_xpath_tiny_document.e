@@ -5,7 +5,7 @@ note
 		"Tiny tree Document nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,8 +60,8 @@ feature {NONE} -- Initialization
 			node_type := Document_node
 			base_uri := a_base_uri
 			document_uri := a_document_uri
-			if document_uri /= Void then
-				set_system_id (document_uri.full_reference)
+			if attached document_uri as l_document_uri then
+				set_system_id (l_document_uri.full_reference)
 			end
 		ensure
 			tree_set: tree = a_tree
@@ -99,29 +99,29 @@ feature -- Access
 			Result := Current
 		end
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT
+	selected_id (an_id: STRING): detachable XM_XPATH_ELEMENT
 			-- Element with ID value of `id'
 		do
-			if id_table = Void then
+			if not attached id_table as l_id_table then
 				Result := Void
-			elseif id_table.has (an_id) then
-				Result := id_table.item (an_id)
+			elseif l_id_table.has (an_id) then
+				Result := l_id_table.item (an_id)
 			else
 				Result := Void
 			end
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING
+	unparsed_entity_system_id (an_entity_name: STRING): detachable STRING
 			-- System identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
 		do
-			if entity_table = Void then
+			if not attached entity_table as l_entity_table then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -130,17 +130,19 @@ feature -- Access
 			end
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING
+	unparsed_entity_public_id (an_entity_name: STRING): detachable STRING
 			-- Public identifier of an unparsed external entity
 		local
 			an_entity_table_entry: DS_ARRAYED_LIST [STRING]
+			l_entity_table: like entity_table
 		do
-			if entity_table = Void then
+			l_entity_table := entity_table
+			if l_entity_table = Void then
 				Result := Void
-			elseif not entity_table.has (an_entity_name) then
+			elseif not l_entity_table.has (an_entity_name) then
 				Result := Void
 			else
-				an_entity_table_entry := entity_table.item (an_entity_name)
+				an_entity_table_entry := l_entity_table.item (an_entity_name)
 					check
 						entity_present: an_entity_table_entry /= Void
 						-- Because `has' returned `True'.
@@ -149,7 +151,7 @@ feature -- Access
 			end
 		end
 
-	document_uri: UT_URI
+	document_uri: detachable UT_URI
 			-- Absolute URI of the source from which the document was constructed
 
 	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
@@ -161,16 +163,17 @@ feature -- Access
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
 			an_index, a_stored_name_code, another_fingerprint, top_bits: INTEGER
 			a_node: XM_XPATH_TINY_NODE
+			l_element_list: like element_list
 		do
-			if element_list = Void then
-				create element_list.make_map (10)
+			l_element_list := element_list
+			if l_element_list = Void then
+				create l_element_list.make_map (10)
+				element_list := l_element_list
 			end
-			if not element_list.has (a_fingerprint) then
-				create a_list.make_default
+			if l_element_list.has (a_fingerprint) then
+				Result := l_element_list.item (a_fingerprint)
 			else
-				Result := element_list.item (a_fingerprint)
-			end
-			if Result = Void then
+				create a_list.make_default
 				from
 					an_index := 1
 				until
@@ -194,10 +197,10 @@ feature -- Access
 				variant
 					tree.number_of_nodes - an_index + 1
 				end
-				if element_list.is_full then
-					element_list.resize (element_list.count * 2)
+				if l_element_list.is_full then
+					l_element_list.resize (l_element_list.count * 2)
 				end
-				element_list.put (a_list, a_fingerprint)
+				l_element_list.put (a_list, a_fingerprint)
 				Result := a_list
 			end
 		end
@@ -219,10 +222,10 @@ feature -- Access
 	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
-			if attribute_idref_table = Void then
+			if not attached attribute_idref_table as l_attribute_idref_table then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]} Result.make
 			else
-				Result := attribute_idref_table.new_iterator (some_idrefs)
+				Result := l_attribute_idref_table.new_iterator (some_idrefs)
 			end
 		end
 
@@ -232,7 +235,7 @@ feature -- Access
 			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
 			idref_not_empty: an_idref /= Void and then not an_idref.is_empty
 		do
-			Result := attribute_idref_table /= Void and then attribute_idref_table.has (an_attribute_number, an_idref)
+			Result := attached attribute_idref_table as l_attribute_idref_table and then l_attribute_idref_table.has (an_attribute_number, an_idref)
 		end
 
 feature -- Element change
@@ -249,12 +252,16 @@ feature -- Element change
 			-- Register an ID value.
 		require
 			element_not_void: an_element /= Void
+		local
+			l_id_table: like id_table
 		do
-			if id_table = Void then
-				create id_table.make_with_equality_testers (10, Void, string_equality_tester)
+			l_id_table := id_table
+			if l_id_table = Void then
+				create l_id_table.make_with_equality_testers (10, Void, string_equality_tester)
+				id_table := l_id_table
 			end
-			if not id_table.has (a_value) then
-				id_table.force_new (an_element, a_value)
+			if not l_id_table.has (a_value) then
+				l_id_table.force_new (an_element, a_value)
 			end
 		end
 
@@ -264,11 +271,15 @@ feature -- Element change
 			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
 			idref_not_empty: an_idref /= Void and then not an_idref.is_empty
 			not_already_registered: not is_idref_registered (an_attribute_number, an_idref)
+		local
+			l_attribute_idref_table: like attribute_idref_table
 		do
-			if attribute_idref_table = Void then
-				create attribute_idref_table.make (tree)
+			l_attribute_idref_table := attribute_idref_table
+			if l_attribute_idref_table = Void then
+				create l_attribute_idref_table.make (tree)
+				attribute_idref_table := l_attribute_idref_table
 			end
-			attribute_idref_table.register (an_attribute_number, an_idref)
+			l_attribute_idref_table.register (an_attribute_number, an_idref)
 		ensure
 			idref_registered: is_idref_registered (an_attribute_number, an_idref)
 		end
@@ -279,11 +290,14 @@ feature -- Element change
 			entity_name_not_void: a_name /= Void
 		local
 			an_id_list: DS_ARRAYED_LIST [STRING]
+			l_entity_table: like entity_table
 		do
-			if entity_table = Void then
-				create entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+			l_entity_table := entity_table
+			if l_entity_table = Void then
+				create l_entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+				entity_table := l_entity_table
 			end
-			if entity_table.has (a_name) then
+			if l_entity_table.has (a_name) then
 				-- Validation error - we will ignore duplicates
 			else
 				create an_id_list.make (2)
@@ -323,19 +337,19 @@ feature {XM_XPATH_NODE} -- Restricted
 
 feature {NONE} -- Implementation
 
-	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
+	id_table: detachable DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
 			-- Mapping of IDs to elements.;
 			--  created on demand
 
-	element_list: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT], INTEGER]
+	element_list: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT], INTEGER]
 			-- Lists of elements with the same name;
 			--  created on demand
 
-	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
+	entity_table: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
 			-- Mapping of unparsed entity names to their URI/PUBLIC-ID pairs;
 			--  created on demand
 
-	attribute_idref_table: XM_XPATH_TINY_ATTRIBUTE_IDREF_TABLE
+	attribute_idref_table: detachable XM_XPATH_TINY_ATTRIBUTE_IDREF_TABLE
 			-- Mapping of IDREFs to attributes;
 			--  created on demand
 

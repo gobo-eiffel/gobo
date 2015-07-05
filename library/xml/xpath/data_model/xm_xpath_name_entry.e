@@ -5,7 +5,7 @@ note
 		"Name pool entries"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,12 +39,12 @@ feature -- Access
 	uri_code: INTEGER -- TODO - should be INTEGER_16 when all compilers support it
 			-- A code representing the uri
 
-	next: XM_XPATH_NAME_ENTRY
+	next: detachable XM_XPATH_NAME_ENTRY
 			-- Chain pointer to the next entry with the same hash code
 
 feature -- Element change
 
-	set_next (a_next_entry: XM_XPATH_NAME_ENTRY)
+	set_next (a_next_entry: detachable XM_XPATH_NAME_ENTRY)
 			-- Set the `next' field to `a_next_entry'
 		do
 			next := a_next_entry

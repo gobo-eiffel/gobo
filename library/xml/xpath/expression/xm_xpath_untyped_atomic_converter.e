@@ -6,7 +6,7 @@ note
 	%to a specified type, returning all other items unchanged"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			target_type_not_void: a_required_type /= Void
 		do
 			error_code := "FORG0001"
-			make_unary (a_sequence)
 			target_type := a_required_type
+			make_unary (a_sequence)
 			compute_static_properties
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -67,58 +67,65 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_type: XM_XPATH_ITEM_TYPE
 			l_value: XM_XPATH_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			elseif base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
-				create_iterator (a_context.new_compile_time_context)
-				if last_iterator.is_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				elseif base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
+					create_iterator (a_context.new_compile_time_context)
+					check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+						if attached l_last_iterator.error_value as l_error_value then
+							check is_error: l_last_iterator.is_error end
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+						else
+							expression_factory.create_sequence_extent (l_last_iterator)
+							check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+								l_value := l_last_created_closure
+								l_value.simplify (a_replacement)
+							end
+						end
+					end
 				else
-					expression_factory.create_sequence_extent (last_iterator)
-					l_value := expression_factory.last_created_closure
-					l_value.simplify (a_replacement)
-				end
-			else
-				l_type := base_expression.item_type
-				if not is_sub_type (l_type, any_node_test) then
-					if not (l_type = any_item or else l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type) then
+					l_type := base_expression.item_type
+					if not is_sub_type (l_type, any_node_test) then
+						if not (l_type = any_item or else l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type) then
 
-						-- The base_expression can't contain any untyped atomic values,
-						--  so there's no need for a converter
+							-- The base_expression can't contain any untyped atomic values,
+							--  so there's no need for a converter
 
-						set_replacement (a_replacement, base_expression)
+							set_replacement (a_replacement, base_expression)
+						end
 					end
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_message: STRING
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
-			elseif a_result.item.is_untyped_atomic then
-				if a_result.item.as_untyped_atomic.is_convertible (target_type) then
-					a_result.item.as_untyped_atomic.convert_to_type (target_type)
-					a_result.put (a_result.item.as_atomic_value.converted_value)
+			elseif l_result_item.is_untyped_atomic then
+				if l_result_item.as_untyped_atomic.is_convertible (target_type) then
+					l_result_item.as_untyped_atomic.convert_to_type (target_type)
+					a_result.put (l_result_item.as_atomic_value.converted_value)
 				else
 					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
@@ -134,15 +141,17 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			else
-				create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
+				else
+					create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
+				end
 			end
 		end
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
+	mapped_item (a_item: XM_XPATH_ITEM): detachable XM_XPATH_ITEM
 			-- Converted version of `a_item'
 		local
 			l_untyped_atomic_value: XM_XPATH_STRING_VALUE
@@ -154,7 +163,9 @@ feature -- Evaluation
 				l_untyped_atomic_value := a_item.as_untyped_atomic
 				if l_untyped_atomic_value.is_convertible (target_type) then
 					l_untyped_atomic_value.convert_to_type (target_type)
-					Result := l_untyped_atomic_value.converted_value
+					check postcondition_of_convert_to_type: attached l_untyped_atomic_value.converted_value as l_converted_value then
+						Result := l_converted_value
+					end
 				else
 					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
 					create {XM_XPATH_INVALID_ITEM} Result.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error)

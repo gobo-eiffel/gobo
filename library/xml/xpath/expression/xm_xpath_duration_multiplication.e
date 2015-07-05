@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Objects that handle multiplication and scalar division of XPath durations"
+		"Objects that handle multiplication and scalar division of XPath durations"
 
-library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_DURATION_MULTIPLICATION
 
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 			-- We only take this path if the type could not be determined statically.
 		local
@@ -51,16 +51,16 @@ feature -- Evaluation
 			l_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
 			first_operand.evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as l_result_item or else l_result_item.is_error then
 				-- nothing to do
 			else
-				l_duration_value := a_result.item.as_atomic_value.as_duration_value
+				l_duration_value := l_result_item.as_atomic_value.as_duration_value
 				a_result.put (Void)
 				second_operand.evaluate_item (a_result, a_context)
-				if a_result.item = Void or else a_result.item.is_error then
+				if not attached a_result.item as l_result_item_2 or else l_result_item_2.is_error then
 					-- nothing to do
 				else
-					l_numeric_value := a_result.item.as_numeric_value
+					l_numeric_value := l_result_item_2.as_numeric_value
 					if operator = Multiply_token then
 						if l_numeric_value.is_nan then
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Multiplication by NaN", Xpath_errors_uri, "FOCA0005", Dynamic_error))

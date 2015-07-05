@@ -5,7 +5,7 @@ note
 		"Objects that cache compiled regular expressions and match results"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,7 +41,7 @@ feature -- Access
 			Result := regexp_cache.has (a_composed_key)
 		end
 
-	item (a_composed_key: STRING): XM_XPATH_REGEXP_CACHE_ENTRY
+	item (a_composed_key: STRING): detachable XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Possible cache entry for `a_composed_key'
 		require
 			composed_key_not_void: a_composed_key /= Void

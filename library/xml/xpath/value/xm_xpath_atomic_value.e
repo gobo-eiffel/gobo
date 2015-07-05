@@ -5,7 +5,7 @@ note
 		"Objects that are XPath values that are not a sequence (strictly, a sequence of one item)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (a_other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (a_other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `a_other'
 		require
 			comparable_a_other: a_other /= Void and then is_comparable (a_other)
@@ -137,13 +137,15 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			a_message: STRING
+			l_last_boolean_value: like last_boolean_value
 		do
-			create last_boolean_value.make (False)
+			create l_last_boolean_value.make (False)
+			last_boolean_value := l_last_boolean_value
 			a_message := STRING_.concat ("Effective boolean value is not defined for an atomic value of type ", item_type.conventional_name)
-			last_boolean_value.set_last_error_from_string (a_message, "", "XPTY0004", Type_error)
+			l_last_boolean_value.set_last_error_from_string (a_message, "", "XPTY0004", Type_error)
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (Current)
@@ -170,18 +172,20 @@ feature -- Evaluation
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			evaluate_item (l_result, a_context)
-			if l_result.item /= Void then
-				a_context.current_receiver.append_item (l_result.item)
+			if attached l_result.item as l_result_item then
+				check precondition_has_push_processing: attached a_context.current_receiver as l_current_receiver then
+					l_current_receiver.append_item (l_result_item)
+				end
 			end
 		end
 
 feature -- Conversion
 
-	converted_value: XM_XPATH_ATOMIC_VALUE
+	converted_value: detachable XM_XPATH_ATOMIC_VALUE
 		-- Result from `convert_to_type'
 
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE)
@@ -191,8 +195,8 @@ feature -- Conversion
 			convertible: is_convertible (a_required_type)
 		deferred
 		ensure
-			conversion_available: converted_value /= Void
-			correct_type: is_sub_type (converted_value.item_type, a_required_type)
+			conversion_available: attached converted_value as l_converted_value
+			correct_type: is_sub_type (l_converted_value.item_type, a_required_type)
 		end
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM

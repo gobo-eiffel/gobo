@@ -5,7 +5,7 @@ note
 		"Objects that iterate across tokens"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,13 +31,14 @@ feature {NONE} -- Initialization
 				input_string: an_input /= Void
 				regular_expression_not_in_error: a_regexp_cache_entry /= Void and then not a_regexp_cache_entry.is_error
 		local
-			a_match_record: XM_XPATH_REGEXP_MATCH_RECORD
+			a_match_record: detachable XM_XPATH_REGEXP_MATCH_RECORD
 		do
 			input := an_input
 			regexp_cache_entry := a_regexp_cache_entry
 			a_match_record := regexp_cache_entry.match_record (input)
-			if a_match_record /= Void and then a_match_record.has_split then
-				tokens := a_match_record.tokens
+			if a_match_record /= Void and then attached a_match_record.tokens as l_tokens then
+				check has_split: a_match_record.has_split end
+				tokens := l_tokens
 			else
 				regexp_cache_entry.regexp.match (input)
 				tokens := regexp_cache_entry.regexp.split
@@ -66,13 +67,18 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := item = Void
+			Result := internal_item = Void
 		end
 
 feature -- Cursor movement
@@ -82,9 +88,9 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if index > token_count then
-				item := Void
+				internal_item := Void
 			else
-				create {XM_XPATH_STRING_VALUE} item.make (new_unicode_string_from_utf8 (tokens.item (index)))
+				create {XM_XPATH_STRING_VALUE} internal_item.make (new_unicode_string_from_utf8 (tokens.item (index)))
 			end
 		end
 
@@ -109,6 +115,9 @@ feature {NONE} -- Implementation
 
 	token_count: INTEGER
 			-- Number of valid tokens
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

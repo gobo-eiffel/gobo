@@ -5,7 +5,7 @@ note
 		"XPath namespace nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,7 +94,7 @@ feature -- Access
 			Result := namespace_node_kind_test
 		end
 
-	document: XM_XPATH_DOCUMENT
+	document: detachable XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		do
 			Result := element.document
@@ -114,7 +114,7 @@ feature -- Access
 			Result := element.document_number
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI
 		do
 			Result := Void
@@ -142,7 +142,7 @@ feature -- Access
 			Result := "namespace"
 		end
 
-	node_name: STRING
+	node_name: detachable STRING
 			-- Qualified name
 		do
 			if name_code /= -1 then
@@ -170,7 +170,7 @@ feature -- Access
 			Result := ""
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current'
 		do
 			Result := element.document_root
@@ -209,6 +209,7 @@ feature -- Access
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			when Following_axis then
 				--TODO
+				check False then end
 			when Parent_axis then
 				if a_node_test.matches_item (element, False) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (element)
@@ -217,6 +218,7 @@ feature -- Access
 				end
 			when Preceding_axis then
 				--TODO
+				check False then end
 			when Self_axis then
 				if a_node_test.matches_item (Current, False) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
@@ -225,6 +227,7 @@ feature -- Access
 				end
 			when Preceding_or_ancestor_axis then
 				--TODO
+				check False then end
 			end
 		end
 

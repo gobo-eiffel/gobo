@@ -5,7 +5,7 @@ note
 	"Objects that perform a cast on each item in a sequence"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 			sequence_not_void: a_sequence /= Void
 			required_type_not_void: a_required_type /= Void
 		do
-			make_unary (a_sequence)
 			required_type := a_required_type
+			make_unary (a_sequence)
 			compute_static_properties
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -66,70 +66,77 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_base_expression (l_replacement.item)
-			end
-			if base_expression.is_value then
-				-- TODO: possible BUG - no static context available to get compile-time dynamic context
-				create_iterator (Void)
-				if last_iterator.is_error then
-					set_last_error (last_iterator.error_value)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
 				else
-					create l_sequence_extent.make (last_iterator)
-					set_replacement (a_replacement, l_sequence_extent)
+					set_base_expression (l_replacement_item)
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if base_expression.is_value then
+					-- TODO: possible BUG - no static context available to get compile-time dynamic context
+					create_iterator (new_dummy_context)
+					check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+						if attached l_last_iterator.error_value as l_error_value then
+							check is_error: l_last_iterator.is_error end
+							set_last_error (l_error_value)
+						else
+							create l_sequence_extent.make (l_last_iterator)
+							set_replacement (a_replacement, l_sequence_extent)
+						end
+					end
+				end
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 			l_cast_expression: XM_XPATH_CAST_EXPRESSION
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				if is_sub_type (base_expression.item_type, required_type) then
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
 					set_replacement (a_replacement, base_expression)
-				elseif not base_expression.cardinality_allows_many then
-					create l_cast_expression.make (base_expression, required_type, base_expression.cardinality_allows_zero)
-					l_cast_expression.set_parent (container)
-					set_replacement (a_replacement, l_cast_expression)
 				else
-					a_replacement.put (Current)
+					if is_sub_type (base_expression.item_type, required_type) then
+						set_replacement (a_replacement, base_expression)
+					elseif not base_expression.cardinality_allows_many then
+						create l_cast_expression.make (base_expression, required_type, base_expression.cardinality_allows_zero)
+						l_cast_expression.set_parent (container)
+						set_replacement (a_replacement, l_cast_expression)
+					else
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
+			if attached a_result.item as l_result_item and then not l_result_item.is_error then
 				check
-					atomic_value: a_result.item.is_atomic_value
+					atomic_value: l_result_item.is_atomic_value
 				end
-				a_result.item.as_atomic_value.convert_to_type (required_type)
-				a_result.put (a_result.item.as_atomic_value.converted_value)
+				l_result_item.as_atomic_value.convert_to_type (required_type)
+				a_result.put (l_result_item.as_atomic_value.converted_value)
 			end
 		end
 
@@ -139,11 +146,13 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			else
-				create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
+				else
+					create {XM_XPATH_ITEM_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current)
+				end
 			end
 		end
 
@@ -153,7 +162,7 @@ feature -- Evaluation
 			-- pre-condition is never met
 		end
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
+	mapped_item (a_item: XM_XPATH_ITEM): detachable XM_XPATH_ITEM
 			-- `a_item' mapped to base_expression
 		do
 			if a_item /= Void then
@@ -161,7 +170,9 @@ feature -- Evaluation
 					atomic_value: a_item.is_atomic_value
 				end
 				a_item.as_atomic_value.convert_to_type (required_type)
-				Result := a_item.as_atomic_value.converted_value
+				check postcondition_of_convert_to_type: attached a_item.as_atomic_value.converted_value as l_converted_value then
+					Result := l_converted_value
+				end
 			end
 		end
 

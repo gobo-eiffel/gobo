@@ -5,7 +5,7 @@ note
 		"Objects that represent XPath timee values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,9 +76,13 @@ feature -- Access
 		do
 			create a_date_time_parser.make_1_1
 			if zoned then
-				Result := a_date_time_parser.zoned_time_to_string (zoned_time)
+				check attached zoned_time as l_zoned_time then
+					Result := a_date_time_parser.zoned_time_to_string (l_zoned_time)
+				end
 			else
-				Result := a_date_time_parser.time_to_string (local_time)
+				check attached local_time as l_local_time then
+					Result := a_date_time_parser.time_to_string (l_local_time)
+				end
 			end
 		end
 
@@ -86,7 +90,9 @@ feature -- Access
 			-- Same value as `Current', but without a time zone
 		do
 			if zoned then
-				create Result.make_from_time (zoned_time.time)
+				check attached zoned_time as l_zoned_time then
+					create Result.make_from_time (l_zoned_time.time)
+				end
 			else
 				Result := Current
 			end
@@ -106,14 +112,18 @@ feature -- Access
 		do
 			create a_zone.make (an_offset.duration.time_duration)
 			if not zoned then
-				create a_zoned_dt.make (local_time, a_zone)
-				create Result.make_from_zoned_time (a_zoned_dt)
+				check attached local_time as l_local_time then
+					create a_zoned_dt.make (l_local_time, a_zone)
+					create Result.make_from_zoned_time (a_zoned_dt)
+				end
 			else
-				a_time := zoned_time.time
-				create a_dt.make_precise (1970, January, 1, a_time.hour, a_time.minute, a_time.second, a_time.millisecond)
-				a_time := a_zone.date_time_from (a_dt, zoned_time.time_zone).time
-				create a_zoned_dt.make (a_time, a_zone)
-				create Result.make_from_zoned_time (a_zoned_dt)
+				check attached zoned_time as l_zoned_time then
+					a_time := l_zoned_time.time
+					create a_dt.make_precise (1970, January, 1, a_time.hour, a_time.minute, a_time.second, a_time.millisecond)
+					a_time := a_zone.date_time_from (a_dt, l_zoned_time.time_zone).time
+					create a_zoned_dt.make (a_time, a_zone)
+					create Result.make_from_zoned_time (a_zoned_dt)
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -123,7 +133,9 @@ feature -- Access
 			-- Hash code value
 		do
 			if zoned_time = Void then
-				Result := local_time.hash_code
+				check attached local_time as l_local_time then
+					Result := l_local_time.hash_code
+				end
 			else
 
 				-- Equality implies same `hash_code', but
@@ -140,10 +152,12 @@ feature -- Access
 			a_date: DT_DATE
 			a_date_time: DT_DATE_TIME
 		do
-			create a_date.make (1970, 1, 1)
-			create a_date_time.make_from_date_time (a_date, zoned_time.time)
-			create a_zoned_date_time.make (a_date_time, zoned_time.time_zone)
-			Result := a_zoned_date_time.date_time_to_utc
+			check precondition_zoned: attached zoned_time as l_zoned_time then
+				create a_date.make (1970, 1, 1)
+				create a_date_time.make_from_date_time (a_date, l_zoned_time.time)
+				create a_zoned_date_time.make (a_date_time, l_zoned_time.time_zone)
+				Result := a_zoned_date_time.date_time_to_utc
+			end
 		end
 
 	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME
@@ -152,22 +166,26 @@ feature -- Access
 			a_date_time: DT_DATE_TIME
 			a_date: DT_DATE
 		do
-			create a_date.make (1970, 1, 1)
-			create a_date_time.make_from_date_time (a_date, local_time)
-			Result := a_context.implicit_timezone.date_time_to_utc (a_date_time)
+			check precondition_not_zoned: attached local_time as l_local_time then
+				create a_date.make (1970, 1, 1)
+				create a_date_time.make_from_date_time (a_date, l_local_time)
+				Result := a_context.implicit_timezone.date_time_to_utc (a_date_time)
+			end
 		end
 
 	utc_time: DT_TIME
 			-- Time adjusted to UTC;
 			-- Ignores implicit time zone.
 		do
-			if zoned_time = Void then
-				Result := local_time
-			elseif cached_utc_time /= Void then
-				Result := cached_utc_time
+			if not attached zoned_time as l_zoned_time then
+				check attached local_time as l_local_time then
+					Result := l_local_time
+				end
+			elseif attached cached_utc_time as l_cached_utc_time then
+				Result := l_cached_utc_time
 			else
-				cached_utc_time := zoned_time.time_to_utc
-				Result := cached_utc_time
+				Result := l_zoned_time.time_to_utc
+				cached_utc_time := Result
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -195,31 +213,39 @@ feature -- Comparison
 			create a_date.make (1972, December, 31)
 			if zoned = a_time.zoned then
 				if zoned then
-					create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
-					a_time.zoned_time.time_zone.convert_to_utc (dt2)
-					create a_date.make (1972, December, 31)
-					create dt1.make_from_date_time (a_date, zoned_time.time)
-					zoned_time.time_zone.convert_to_utc (dt1)
-					Result := dt1.three_way_comparison (dt2)
+					check attached zoned_time as l_zoned_time and attached a_time.zoned_time as l_time_zoned_time then
+						create dt2.make_from_date_time (a_date, l_time_zoned_time.time)
+						l_time_zoned_time.time_zone.convert_to_utc (dt2)
+						create a_date.make (1972, December, 31)
+						create dt1.make_from_date_time (a_date, l_zoned_time.time)
+						l_zoned_time.time_zone.convert_to_utc (dt1)
+						Result := dt1.three_way_comparison (dt2)
+					end
 				else
-					create dt2.make_from_date_time (a_date, a_time.local_time)
-					create dt1.make_from_date_time (a_date, local_time)
-					Result := dt1.three_way_comparison (dt2)
+					check attached local_time as l_local_time and attached a_time.local_time as l_time_local_time then
+						create dt2.make_from_date_time (a_date, l_time_local_time)
+						create dt1.make_from_date_time (a_date, l_local_time)
+						Result := dt1.three_way_comparison (dt2)
+					end
 				end
  			elseif zoned then
-				create dt2.make_from_date_time (a_date, a_time.local_time)
-				a_context.implicit_timezone.convert_to_utc (dt2)
-				create a_date.make (1972, December, 31)
-				create dt1.make_from_date_time (a_date, zoned_time.time)
-				zoned_time.time_zone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+ 				check attached zoned_time as l_zoned_time and attached a_time.local_time as l_time_local_time then
+					create dt2.make_from_date_time (a_date, l_time_local_time)
+					a_context.implicit_timezone.convert_to_utc (dt2)
+					create a_date.make (1972, December, 31)
+					create dt1.make_from_date_time (a_date, l_zoned_time.time)
+					l_zoned_time.time_zone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				end
 			else
-				create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
-				a_time.zoned_time.time_zone.convert_to_utc (dt2)
-				create a_date.make (1972, December, 31)
-				create dt1.make_from_date_time (a_date, local_time)
-				a_context.implicit_timezone.convert_to_utc (dt1)
-				Result := dt1.three_way_comparison (dt2)
+				check attached local_time as l_local_time and attached a_time.zoned_time as l_time_zoned_time then
+					create dt2.make_from_date_time (a_date, l_time_zoned_time.time)
+					l_time_zoned_time.time_zone.convert_to_utc (dt2)
+					create a_date.make (1972, December, 31)
+					create dt1.make_from_date_time (a_date, l_local_time)
+					a_context.implicit_timezone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				end
 			end
 		end
 
@@ -293,16 +319,22 @@ feature -- Basic operations
 		do
 			a_duration.duration.set_year_month_day (0, 0, 0)
 			if zoned then
-				a_time := zoned_time.time.twin
+				check attached zoned_time as l_zoned_time then
+					a_time := l_zoned_time.time.twin
+				end
 			else
-				a_time := local_time.twin
+				check attached local_time as l_local_time then
+					a_time := l_local_time.twin
+				end
 			end
 			create a_date.make (1970, 1, 1)
 			create a_dt.make_from_date_time (a_date, a_time)
 			a_dt.add_duration (a_duration.duration)
 			if zoned then
-				create a_zoned_time.make (a_dt.time, zoned_time.time_zone.twin)
-				create Result.make_from_zoned_time (a_zoned_time)
+				check attached zoned_time as l_zoned_time then
+					create a_zoned_time.make (a_dt.time, l_zoned_time.time_zone.twin)
+					create Result.make_from_zoned_time (a_zoned_time)
+				end
 			else
 				create Result.make_from_time (a_dt.time)
 			end
@@ -310,7 +342,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	cached_utc_time: DT_TIME
+	cached_utc_time: detachable DT_TIME
 			-- Cached `Result' for `utc_time'
 
 invariant

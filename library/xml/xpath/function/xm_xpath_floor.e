@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath floor() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,17 +59,17 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
 				check
-					is_atomic: a_result.item.is_atomic_value
-					is_numeric: a_result.item.as_atomic_value.primitive_value.is_numeric_value
+					is_atomic: a_result_item.is_atomic_value
+					is_numeric: a_result_item.as_atomic_value.primitive_value.is_numeric_value
 					-- static typing
 				end
-				a_result.put (a_result.item.as_atomic_value.primitive_value.as_numeric_value.floor)
+				a_result.put (a_result_item.as_atomic_value.primitive_value.as_numeric_value.floor)
 			end
 		end
 

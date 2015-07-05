@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs passed to the XPath fn:collection() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature -- Status report
 			error: Result implies last_error /= Void
 		end
 
-	last_collection: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_collection: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Last collection retrieved by `resolve'
 		require
 			no_error: not was_error
@@ -46,7 +46,7 @@ feature -- Status report
 			iterator_at_start: Result /= Void and then Result.before
 		end
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 			-- Last error set by `resolve'
 		deferred
 		ensure
@@ -62,7 +62,7 @@ feature -- Element change
 		require
 			absolute_base_uri_not_void: a_uri /= Void and then a_uri.is_absolute
 			dynamic_context_not_void: a_context /= Void
-			collection_not_known_yet: not a_context.available_documents.is_collection_mapped (a_uri.full_reference)
+			collection_not_known_yet: attached a_context.available_documents as l_available_documents and then not l_available_documents.is_collection_mapped (a_uri.full_reference)
 		deferred
 		ensure
 			error_or_collection: not was_error implies last_collection /= Void

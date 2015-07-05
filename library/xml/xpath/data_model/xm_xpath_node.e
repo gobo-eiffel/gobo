@@ -5,7 +5,7 @@ note
 		"XPath nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,7 @@ inherit
 
 feature -- Access
 
-	document: XM_XPATH_DOCUMENT
+	document: detachable XM_XPATH_DOCUMENT
 			-- Document that owns this node
 		deferred
 		end
@@ -75,13 +75,13 @@ feature -- Access
 			strictly_positive_result: Result > 0
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI as per W3C XML:base REC
 		require
 			not_in_error: not is_error
 		do
-			if parent /= Void then
-				Result := parent.base_uri
+			if attached parent as l_parent then
+				Result := l_parent.base_uri
 			end
 		ensure
 			base_uri_may_be_void: True
@@ -103,7 +103,7 @@ feature -- Access
 			node_kind_not_void: Result /= Void
 		end
 
-	node_name: STRING
+	node_name: detachable STRING
 			-- Qualified name
 		require
 			not_in_error: not is_error
@@ -112,7 +112,7 @@ feature -- Access
 			node_name_may_be_void: True
 		end
 
-	parent: XM_XPATH_COMPOSITE_NODE
+	parent: detachable XM_XPATH_COMPOSITE_NODE
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes
 		require
@@ -224,7 +224,7 @@ feature -- Access
 			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.to_integer > 0
 		end
 
-	document_root: XM_XPATH_DOCUMENT
+	document_root: detachable XM_XPATH_DOCUMENT
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		require
@@ -232,7 +232,7 @@ feature -- Access
 		deferred
 		end
 
-	first_child: XM_XPATH_NODE
+	first_child: detachable XM_XPATH_NODE
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		require
@@ -241,7 +241,7 @@ feature -- Access
 			Result := Void
 		end
 
-	last_child: XM_XPATH_NODE
+	last_child: detachable XM_XPATH_NODE
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		require
@@ -250,7 +250,7 @@ feature -- Access
 			Result := Void
 		end
 
-	previous_sibling: XM_XPATH_NODE
+	previous_sibling: detachable XM_XPATH_NODE
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'.
 		require
@@ -265,7 +265,7 @@ feature -- Access
 			end
 		end
 
-	next_sibling: XM_XPATH_NODE
+	next_sibling: detachable XM_XPATH_NODE
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'.
 		require
@@ -280,7 +280,7 @@ feature -- Access
 			end
 		end
 
-	document_element: XM_XPATH_ELEMENT
+	document_element: detachable XM_XPATH_ELEMENT
 			-- The top-level element;
 			-- If the document is not well-formed
 			-- (i.e. it is a document fragment), then
@@ -288,7 +288,7 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		local
-			l_root: XM_XPATH_DOCUMENT
+			l_root: detachable XM_XPATH_DOCUMENT
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			l_element_node_test: XM_XPATH_NODE_KIND_TEST
 		do
@@ -316,6 +316,7 @@ feature -- Access
 			else
 				-- TODO complex types should be dealt with properly for schema aware
 				todo ("typed_value", True)
+				check False then end
 			end
 		end
 
@@ -334,17 +335,21 @@ feature -- Access
 			when Document_node then
 				Result := "document-node()"
 			when Element_node then
-				Result := STRING_.concat ("element(", node_name)
-				Result := STRING_.appended_string (Result, ", ")
-				if type_annotation = type_factory.untyped_type.fingerprint then
-					Result := STRING_.appended_string (Result, "xs:untyped)")
-				else
-					-- TODO: schema-aware
-					todo ("type_name", True)
+				check attached node_name as l_node_name then
+					Result := STRING_.concat ("element(", l_node_name)
+					Result := STRING_.appended_string (Result, ", ")
+					if type_annotation = type_factory.untyped_type.fingerprint then
+						Result := STRING_.appended_string (Result, "xs:untyped)")
+					else
+						-- TODO: schema-aware
+						todo ("type_name", True)
+					end
 				end
 			when Attribute_node then
-				Result := STRING_.concat ("attribute(", node_name)
-				Result := STRING_.appended_string (Result, ")") -- TODO add type annotation
+				check attached node_name as l_node_name then
+					Result := STRING_.concat ("attribute(", l_node_name)
+					Result := STRING_.appended_string (Result, ")") -- TODO add type annotation
+				end
 			when Text_node then
 				Result := "text()"
 			when Comment_node then
@@ -380,7 +385,7 @@ feature -- Access
 			invulnerable: Result.is_invulnerable
 		end
 
-	generated_id: STRING
+	generated_id: detachable STRING
 			-- Unique identifier (across all documents)
 
 	 is_ancestor_or_self (a_node: XM_XPATH_NODE): BOOLEAN
@@ -388,7 +393,7 @@ feature -- Access
 		require
 			a_node_not_void: a_node /= Void
 		local
-			l_node: XM_XPATH_NODE
+			l_node: detachable XM_XPATH_NODE
 		do
 			from
 				l_node := a_node
@@ -436,7 +441,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Has item failed evaluation?
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value
 
 	is_nilled: BOOLEAN
@@ -523,6 +528,7 @@ feature -- Conversion
 		require
 			namespace: is_namespace
 		do
+			check False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -532,6 +538,7 @@ feature -- Conversion
 		require
 			tiny_node: is_tiny_node
 		do
+			check False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -541,6 +548,7 @@ feature -- Conversion
 		require
 			tree_node: is_tree_node
 		do
+			check False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

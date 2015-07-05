@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath base-uri() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			use_context_item_as_default
@@ -68,14 +68,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_uri: STRING
+			l_uri: detachable STRING
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_uri := a_result.item.as_node.base_uri
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
+				l_uri := a_result_item.as_node.base_uri
 				if l_uri = Void then
 					a_result.put (Void)
 				elseif l_uri.count = 0 then

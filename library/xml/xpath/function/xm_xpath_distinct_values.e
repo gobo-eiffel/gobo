@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath distinct-values() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
-			an_atomic_comparer: XM_XPATH_ATOMIC_SORT_COMPARER
+			an_atomic_comparer: detachable XM_XPATH_ATOMIC_SORT_COMPARER
 			a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_atomic_comparer := atomic_sort_comparer (2, a_context)
@@ -83,11 +83,13 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
 				arguments.item (1).create_iterator (a_context)
-				a_sequence := arguments.item (1).last_iterator
-				if a_sequence.is_error then
-					last_iterator := a_sequence
-				else
-					create {XM_XPATH_DISTINCT_ITERATOR} last_iterator.make (a_sequence, an_atomic_comparer)
+				check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+					a_sequence := l_last_iterator
+					if a_sequence.is_error then
+						last_iterator := a_sequence
+					else
+						create {XM_XPATH_DISTINCT_ITERATOR} last_iterator.make (a_sequence, an_atomic_comparer)
+					end
 				end
 			end
 		end

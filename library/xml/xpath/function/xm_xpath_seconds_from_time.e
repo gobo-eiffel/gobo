@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath seconds-from-time() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_time_value: XM_XPATH_TIME_VALUE
@@ -69,14 +69,16 @@ feature -- Evaluation
 			l_decimal: MA_DECIMAL
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_time_value := a_result.item.as_atomic_value.as_time_value
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
+				l_time_value := a_result_item.as_atomic_value.as_time_value
 				create l_decimal_value.make_from_integer (l_time_value.time.second)
 				l_millisecond := l_time_value.time.millisecond
 				if l_millisecond /= 0 then
 					create l_decimal.make_from_integer (l_millisecond)
 					l_decimal := l_decimal / one_thousand
-					create l_decimal_value.make (l_decimal_value.value + l_decimal)
+					check attached l_decimal_value.value as l_decimal_value_value then
+						create l_decimal_value.make (l_decimal_value_value + l_decimal)
+					end
 				end
 				a_result.put (l_decimal_value)
 			end

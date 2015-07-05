@@ -5,7 +5,7 @@ note
 		"Objects that hold available documents and avaialable collections in the dynamic context"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,18 +66,20 @@ feature -- Access
 		end
 
 
-	collection (a_uri: STRING): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	collection (a_uri: STRING): detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Collection corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			uri_mapped: is_collection_mapped (a_uri)
 		do
-			Result := collection_name_map.item (a_uri).node_iterator (False)
+			check attached collection_name_map.item (a_uri) as l_collection then
+				Result := l_collection.node_iterator (False)
+			end
 		ensure
-			collection_before:  isolation_level < Serializable implies Result /= Void and then Result.before
+			collection_before: isolation_level < Serializable implies Result /= Void and then Result.before
 		end
 
-	document (a_uri: STRING): XM_XPATH_DOCUMENT
+	document (a_uri: STRING): detachable XM_XPATH_DOCUMENT
 			-- Document corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -89,7 +91,7 @@ feature -- Access
 			document_not_void:  isolation_level < Serializable implies Result /= Void
 		end
 
-	media_type (a_uri: STRING): UT_MEDIA_TYPE
+	media_type (a_uri: STRING): detachable UT_MEDIA_TYPE
 			-- Media type corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -105,7 +107,7 @@ feature -- Access
 
 feature -- Element change
 
-	add (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING)
+	add (a_document: detachable XM_XPATH_DOCUMENT; a_media_type: detachable UT_MEDIA_TYPE; a_uri: STRING)
 			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -119,7 +121,7 @@ feature -- Element change
 			uri_mapped: is_document_mapped (a_uri)
 		end
 
-	add_collection (a_collection: XM_XPATH_SEQUENCE_EXTENT; a_uri: STRING)
+	add_collection (a_collection: detachable XM_XPATH_SEQUENCE_EXTENT; a_uri: STRING)
 			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
@@ -150,13 +152,13 @@ feature {XM_XPATH_TRANSFORMER} -- Removal
 
 feature {NONE} -- Implementation
 
-	document_name_map: DS_HASH_TABLE [XM_XPATH_DOCUMENT, STRING]
+	document_name_map: DS_HASH_TABLE [detachable XM_XPATH_DOCUMENT, STRING]
 			-- Map of SYSTEM ids to documents
 
-	collection_name_map: DS_HASH_TABLE [XM_XPATH_SEQUENCE_EXTENT, STRING]
+	collection_name_map: DS_HASH_TABLE [detachable XM_XPATH_SEQUENCE_EXTENT, STRING]
 			-- Map of SYSTEM ids to collections
 
-	media_type_name_map: DS_HASH_TABLE [UT_MEDIA_TYPE, STRING]
+	media_type_name_map: DS_HASH_TABLE [detachable UT_MEDIA_TYPE, STRING]
 			-- Map of SYSTEM ids to media types
 
 invariant

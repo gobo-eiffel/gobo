@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath node-name() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,14 +59,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_name_code: INTEGER
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_name_code := a_result.item.as_node.name_code
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
+				l_name_code := a_result_item.as_node.name_code
 				if l_name_code = -1 then
 					a_result.put (Void)
 				else

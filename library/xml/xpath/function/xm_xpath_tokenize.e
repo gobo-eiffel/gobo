@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath tokenize() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
 			n: INTEGER
@@ -80,9 +80,9 @@ feature -- Optimization
 					n := 3
 				end
 				try_to_compile (n, arguments)
-				if regexp_error_value /= Void then
+				if attached regexp_error_value as l_regexp_error_value then
 					a_replacement.put (Void)
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (regexp_error_value))
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_regexp_error_value))
 				end
 			end
 		end
@@ -92,81 +92,89 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
-			l_item: XM_XPATH_ITEM
-			l_input_string, l_pattern_string, l_flags_string, l_key: STRING
+			l_item: detachable XM_XPATH_ITEM
+			l_input_string, l_pattern_string, l_key: STRING
+			l_flags_string: detachable STRING
 			l_regexp_cache_entry: like regexp_cache_entry
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			last_iterator := Void
 			create l_result.make (Void)
 			arguments.item (1).evaluate_item (l_result, a_context)
-			if l_result.item = Void then
+			if not attached l_result.item as l_result_item then
 				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			elseif l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
+			elseif attached l_result_item.error_value as l_error_value then
+				check is_error: l_result_item.is_error end
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 			else
-				l_input_string := l_result.item.string_value
-				if regexp_cache_entry = Void then
+				l_input_string := l_result_item.string_value
+				l_regexp_cache_entry := regexp_cache_entry
+				if l_regexp_cache_entry = Void then
 					create l_result.make (Void)
 					arguments.item (2).evaluate_item (l_result, a_context)
 					l_item := l_result.item
 					check
 						pattern_not_void: l_item /= Void
 						-- static typing
-					end
-					if l_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
-					else
-						check
-							atomic_pattern: l_item.is_atomic_value
-							-- Statically typed as a single string
-						end
-						l_pattern_string := l_item.as_atomic_value.string_value
-						if arguments.count = 2 then
-							l_flags_string := ""
+					then
+						if attached l_item.error_value as l_error_value then
+							check is_error: l_item.is_error end
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 						else
-							create l_result.make (Void)
-							arguments.item (3).evaluate_item (l_result, a_context)
-							l_item := l_result.item
-							if l_item.is_error then
-								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.error_value)
-							else
-								check
-									atomic_pattern: l_item.is_atomic_value
-									-- Statically typed as a single string
-								end
-								l_flags_string := normalized_flags_string (l_item.as_atomic_value.string_value)
+							check
+								atomic_pattern: l_item.is_atomic_value
+								-- Statically typed as a single string
 							end
-						end
-						if last_iterator /= Void then
-							-- in error
-						elseif l_flags_string = Void then
-							set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
-						else
-							l_pattern_string := utf8.to_utf8 (l_pattern_string)
-							l_key := composed_key (l_pattern_string, l_flags_string)
-							l_regexp_cache_entry := shared_regexp_cache.item (l_key)
-							if l_regexp_cache_entry = Void then
-								create l_regexp_cache_entry.make( l_pattern_string, l_flags_string)
+							l_pattern_string := l_item.as_atomic_value.string_value
+							if arguments.count = 2 then
+								l_flags_string := ""
+							else
+								create l_result.make (Void)
+								arguments.item (3).evaluate_item (l_result, a_context)
+								l_item := l_result.item
+								check attached l_item then
+									if attached l_item.error_value as l_error_value then
+										check is_error: l_item.is_error end
+										create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+									else
+										check
+											atomic_pattern: l_item.is_atomic_value
+											-- Statically typed as a single string
+										end
+										l_flags_string := normalized_flags_string (l_item.as_atomic_value.string_value)
+									end
+								end
+							end
+							if last_iterator /= Void then
+								-- in error
+							elseif l_flags_string = Void then
+								set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
+							else
+								l_pattern_string := utf8.to_utf8 (l_pattern_string)
+								l_key := composed_key (l_pattern_string, l_flags_string)
+								l_regexp_cache_entry := shared_regexp_cache.item (l_key)
+								if l_regexp_cache_entry = Void then
+									create l_regexp_cache_entry.make( l_pattern_string, l_flags_string)
+									if not l_regexp_cache_entry.is_error then
+										shared_regexp_cache.put (l_regexp_cache_entry, l_key)
+									end
+								end
 								if not l_regexp_cache_entry.is_error then
-									shared_regexp_cache.put (l_regexp_cache_entry, l_key)
-								end
-							end
-							if not l_regexp_cache_entry.is_error then
-								if l_regexp_cache_entry.regexp.matches ("") then
-									create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
+									if l_regexp_cache_entry.regexp.matches ("") then
+										create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
+									else
+										l_input_string := utf8.to_utf8 (l_input_string)
+										create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (l_input_string, l_regexp_cache_entry)
+									end
 								else
-									l_input_string := utf8.to_utf8 (l_input_string)
-									create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (l_input_string, l_regexp_cache_entry)
+									create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
 								end
-							else
-								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
 							end
 						end
 					end
 				else
 					l_input_string := utf8.to_utf8 (l_input_string)
-					create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (l_input_string, regexp_cache_entry)
+					create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (l_input_string, l_regexp_cache_entry)
 				end
 			end
 		end

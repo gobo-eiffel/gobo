@@ -5,7 +5,7 @@ note
 		"Objects that indicate the type of an atomic item"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	XM_XPATH_SIMPLE_TYPE
 		redefine
+			base_type,
 			is_atomic_type, as_atomic_type
 		end
 
@@ -92,6 +93,9 @@ feature -- Access
 				end
 			end
 		end
+
+	base_type: XM_XPATH_SCHEMA_TYPE
+			-- Base type
 
 	super_type: XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction

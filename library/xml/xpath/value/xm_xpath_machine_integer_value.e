@@ -5,7 +5,7 @@ note
 		"XPath for machine-sized integer values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: detachable XM_XPATH_CONTEXT): INTEGER
 			-- Compare `Current' to `other'
 		local
 			l_decimal: MA_DECIMAL
@@ -341,8 +341,10 @@ feature -- Basic operations
 				Result := l_integer_value.arithmetic (a_operator, other)
 			else
 				convert_to_type (other.item_type)
-				l_numeric_value := converted_value.as_numeric_value
-				Result := l_numeric_value.arithmetic (a_operator, other)
+				check postcondition_of_convert_to_type: attached converted_value as l_converted_value then
+					l_numeric_value := l_converted_value.as_numeric_value
+					Result := l_numeric_value.arithmetic (a_operator, other)
+				end
 			end
 		end
 

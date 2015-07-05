@@ -5,7 +5,7 @@ note
 		"Objects that support implementation of the XPath remove() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,14 +43,20 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check preocndition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := base_sequence.after or else item = Void
+			Result := base_sequence.after or else internal_item = Void
 		end
+
 feature -- Cursor movement
 
 	forth
@@ -62,23 +68,25 @@ feature -- Cursor movement
 			else
 				base_sequence.forth -- can't be after - see `after'
 			end
-			if base_sequence.is_error then
-				set_last_error (base_sequence.error_value)
+			if attached base_sequence.error_value as l_error_value then
+				check is_error: base_sequence.is_error end
+				set_last_error (l_error_value)
 			elseif not base_sequence.after then
 				if index = removal_position then
 					base_sequence.forth
-					if base_sequence.is_error then
-						set_last_error (base_sequence.error_value)
+					if attached base_sequence.error_value as l_error_value then
+						check is_error: base_sequence.is_error end
+						set_last_error (l_error_value)
 					elseif not base_sequence.after then
-						item := base_sequence.item
+						internal_item := base_sequence.item
 					else
-						item := Void
+						internal_item := Void
 					end
 				else
-					item := base_sequence.item
+					internal_item := base_sequence.item
 				end
 			else
-				item := Void
+				internal_item := Void
 			end
 		end
 
@@ -97,6 +105,9 @@ feature {NONE} -- Implementation
 
 	removal_position: INTEGER
 			-- Position of item to remove
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

@@ -5,7 +5,7 @@ note
 		"Objects that support implementation of the XPath distinct-values() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,13 +49,18 @@ feature -- Access
 
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 feature -- Status report
 
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := base_sequence.after or else item = Void
+			Result := base_sequence.after or else internal_item = Void
 		end
 feature -- Cursor movement
 
@@ -71,17 +76,18 @@ feature -- Cursor movement
 			else
 				base_sequence.forth -- can't be after - see `after'
 			end
-			if base_sequence.is_error then
-				set_last_error (base_sequence.error_value)
+			if attached base_sequence.error_value as l_error_value then
+				check is_error: base_sequence.is_error end
+				set_last_error (l_error_value)
 			else
-				item := Void
+				internal_item := Void
 				from
 				until
-					base_sequence.is_error or else base_sequence.after or else item /= Void
+					base_sequence.is_error or else base_sequence.after or else internal_item /= Void
 				loop
 					an_item := base_sequence.item
 					if an_item.is_error then
-						item := an_item
+						internal_item := an_item
 					else
 						check
 							item_is_atomic: an_item.is_atomic_value
@@ -94,12 +100,13 @@ feature -- Cursor movement
 							end
 						else
 							values_seen.force_new (a_comparison_key)
-							item := an_item.as_atomic_value
+							internal_item := an_item.as_atomic_value
 						end
 					end
 				end
-				if base_sequence.is_error then
-					set_last_error (base_sequence.error_value)
+				if attached base_sequence.error_value as l_error_value then
+					check is_error: base_sequence.is_error end
+					set_last_error (l_error_value)
 				end
 			end
 		end
@@ -122,6 +129,9 @@ feature {NONE} -- Implementation
 
 	values_seen: DS_HASH_SET [XM_XPATH_COMPARISON_KEY]
 			-- Values already seen
+
+	internal_item: detachable XM_XPATH_ITEM
+			-- Value or node at the current position
 
 invariant
 

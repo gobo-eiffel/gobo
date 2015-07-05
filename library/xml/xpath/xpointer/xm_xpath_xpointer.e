@@ -5,7 +5,7 @@ note
 		"Objects that process XPointers against XPath Data Model instances"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +61,7 @@ feature -- Access
 			a_parser: XM_XPATH_QNAME_PARSER
 		do
 			create a_parser.make (a_name)
-			Result := a_parser.is_valid and then a_parser.is_prefix_present implies namespace_bindings.is_prefix_declared (a_parser.optional_prefix)
+			Result := a_parser.is_valid and then a_parser.is_prefix_present and then attached a_parser.optional_prefix as l_optional_prefix implies namespace_bindings.is_prefix_declared (l_optional_prefix)
 		end
 
 	expanded_name (a_name: STRING): STRING
@@ -73,14 +73,21 @@ feature -- Access
 			a_parser: XM_XPATH_QNAME_PARSER
 		do
 			create a_parser.make (a_name)
-			if a_parser.is_prefix_present then
-				Result := expanded_name_from_components (namespace_bindings.namespace_uri (a_parser.optional_prefix), a_parser.local_name)
-			else
-				Result := a_parser.local_name
+			check is_valid_name: a_parser.is_valid end
+			check
+					-- Invariant 'local_name_not_void' in class XM_XPATH_QNAME_PARSER:
+				local_name_not_void: attached a_parser.local_name as l_local_name
+			then
+				if attached a_parser.optional_prefix as l_optional_prefix and then l_optional_prefix.count > 0 then
+					check is_prefix_present: a_parser.is_prefix_present end
+					Result := expanded_name_from_components (namespace_bindings.namespace_uri (l_optional_prefix), l_local_name)
+				else
+					Result := l_local_name
+				end
 			end
 		end
 
-	value: XM_XPATH_VALUE
+	value: detachable XM_XPATH_VALUE
 			-- Evaluation result;
 			-- Usually a node sequence, but can be more general
 			-- (For instance, the xpointer scheme includes points and ranges).
@@ -105,21 +112,25 @@ feature -- Evaluation
 			xml_resource_not_void: a_resource /= Void -- N.B. this may be an external parsed entity, or a well-formed document
 		local
 			a_parser: XM_XPOINTER_PARSER
-			an_element: XM_XPATH_ELEMENT
+			an_element: detachable XM_XPATH_ELEMENT
 			a_cursor:  DS_ARRAYED_LIST_CURSOR [STRING]
 			a_scheme_name: STRING
 			a_processor: XM_XPATH_XPOINTER_SCHEME
+			l_value: XM_XPATH_EMPTY_SEQUENCE
 		do
 			value := Void
 			create a_parser.make
 			a_parser.parse (an_xpointer)
-			if a_parser.is_error then
-				create {XM_XPATH_INVALID_VALUE} value.make_from_string (a_parser.error_message, Gexslt_eiffel_type_uri, a_parser.error_code, Static_error)
-			elseif a_parser.is_shorthand then
-				an_element := a_resource.selected_id (a_parser.shorthand)
+			if attached a_parser.error_message as l_error_message and attached a_parser.error_code as l_error_code then
+				check is_error: a_parser.is_error end
+				create {XM_XPATH_INVALID_VALUE} value.make_from_string (l_error_message, Gexslt_eiffel_type_uri, l_error_code, Static_error)
+			elseif attached a_parser.shorthand as l_shorthand then
+				check is_shorthand: a_parser.is_shorthand end
+				an_element := a_resource.selected_id (l_shorthand)
 				if an_element = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} value.make
-					value.set_last_error_from_string ("Could not find shorthand element", Gexslt_eiffel_type_uri, "XPOINTER_EVALUATION", Static_error)
+					create l_value.make
+					l_value.set_last_error_from_string ("Could not find shorthand element", Gexslt_eiffel_type_uri, "XPOINTER_EVALUATION", Static_error)
+					value := l_value
 				else
 					create {XM_XPATH_SINGLETON_NODE} value.make (an_element)
 				end

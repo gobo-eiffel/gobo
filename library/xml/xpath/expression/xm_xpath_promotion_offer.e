@@ -5,7 +5,7 @@ note
 		"Promotion offers"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN)
+	make (a_requested_action: INTEGER; a_binding_list: detachable DS_LIST [XM_XPATH_BINDING]; containing: detachable XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN)
 			-- Set defaults.
 		require
 			action: a_requested_action = Range_independent
@@ -66,18 +66,18 @@ feature -- Access
 	action: INTEGER
 			-- Promotion action
 
-	binding_list: DS_LIST [XM_XPATH_BINDING]
+	binding_list: detachable DS_LIST [XM_XPATH_BINDING]
 			-- In the case of `Range_independent', identifies the range variables
 			--  whose dependencies we are looking for.
 			-- In the cases of `Inline_variable_references' and `Replace_current',
 			--  it is the single binding which we are trying to inline./replace.
 
-	containing_expression: XM_XPATH_EXPRESSION
+	containing_expression: detachable XM_XPATH_EXPRESSION
 			-- In the case `Focus_independent' of identifies the level to which the promotion should occur;
 			-- When a subexpression is promoted, an expression of the form let $VAR := SUB return ORIG is created,
 			--  and this replaces the original `containing_expression' within `Current'.
 
-	accepted_expression : XM_XPATH_EXPRESSION
+	accepted_expression : detachable XM_XPATH_EXPRESSION
 			-- Result from `accept'
 
 feature -- Status report
@@ -118,15 +118,18 @@ feature -- Optimization
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
 		local
 			a_let_expression: XM_XPATH_LET_EXPRESSION
+			l_accepted_expression: XM_XPATH_VARIABLE_REFERENCE
 		do
 			inspect
 				action
 			when Range_independent then
-				if not a_child_expression.non_creating or else depends_upon_variable (a_child_expression, binding_list) then
-					accepted_expression := Void
-				else
-					promote (a_child_expression)
-					accepted_expression := promoted_expression
+				check invariant_binding_for_range_variable: attached binding_list as l_binding_list then
+					if not a_child_expression.non_creating or else depends_upon_variable (a_child_expression, l_binding_list) then
+						accepted_expression := Void
+					else
+						promote (a_child_expression)
+						accepted_expression := promoted_expression
+					end
 				end
 			when Focus_independent then
 				if not may_promote_xslt_functions and then a_child_expression.depends_upon_xslt_context then
@@ -141,25 +144,32 @@ feature -- Optimization
 					accepted_expression := Void
 				end
 			when Replace_current then
-				if a_child_expression.is_current_function then
-					check
-						a_child_expression.is_computed_expression
-						-- as it contains a call to current()
-						let_expression: containing_expression.is_let_expression
-						-- from invariant
+				check invariant_replace_current: attached containing_expression as l_containing_expression then
+					if a_child_expression.is_current_function then
+						check
+							a_child_expression.is_computed_expression
+							-- as it contains a call to current()
+							let_expression: l_containing_expression.is_let_expression
+							-- from invariant
+						end
+						a_let_expression := l_containing_expression.as_let_expression
+						check attached a_let_expression.declaration as l_declaration  then
+							create l_accepted_expression.make (l_declaration)
+							accepted_expression := l_accepted_expression
+							l_accepted_expression.as_computed_expression.set_parent (a_child_expression.as_computed_expression.container)
+						end
+					else
+						accepted_expression := Void
 					end
-					a_let_expression := containing_expression.as_let_expression
-					create {XM_XPATH_VARIABLE_REFERENCE} accepted_expression.make (a_let_expression.declaration)
-					accepted_expression.as_computed_expression.set_parent (a_child_expression.as_computed_expression.container)
-				else
-					accepted_expression := Void
 				end
 			when Inline_variable_references then
-				if a_child_expression.is_variable_reference and then
-					a_child_expression.as_variable_reference.binding = binding_list.item (1) then
-					accepted_expression := containing_expression
-				else
-					accepted_expression := Void
+				check invariant_binding_for_inline_variables: attached binding_list as l_binding_list then
+					if a_child_expression.is_variable_reference and then
+						a_child_expression.as_variable_reference.binding = l_binding_list.item (1) then
+						accepted_expression := containing_expression
+					else
+						accepted_expression := Void
+					end
 				end
 			when Unordered then
 				if a_child_expression.is_reverser then
@@ -201,13 +211,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	promoted_expression: XM_XPATH_EXPRESSION
+	promoted_expression: detachable XM_XPATH_EXPRESSION
 			-- Result from `promote'
 
 	promote (a_child_expression: XM_XPATH_EXPRESSION)
 			-- Promote `a_child_expression'
 		require
 			sub_expression_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_cardinalities_computed
+			containing_expression_not_void: containing_expression /= Void
 		local
 			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			a_variable: XM_XPATH_VARIABLE_REFERENCE
@@ -217,21 +228,23 @@ feature {NONE} -- Implementation
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 			a_lazy_expression: XM_XPATH_EXPRESSION
 		do
-			create a_type.make (a_child_expression.item_type, a_child_expression.cardinality)
-			create a_clock.make
-			a_variable_name := a_clock.time_now.out
-			a_variable_name := STRING_.appended_string ("zz:",a_variable_name)
-			create a_range_variable.make (a_variable_name, -1, a_type)
+			check precondition_containing_expression_not_void: attached containing_expression as l_containing_expression then
+				create a_type.make (a_child_expression.item_type, a_child_expression.cardinality)
+				create a_clock.make
+				a_variable_name := a_clock.time_now.out
+				a_variable_name := STRING_.appended_string ("zz:", a_variable_name)
+				create a_range_variable.make (a_variable_name, -1, a_type)
 
-			create a_variable.make (a_range_variable)
-			promoted_expression := a_variable
-			if containing_expression.is_computed_expression then
-				containing_expression.as_computed_expression.copy_location_identifier (promoted_expression)
+				create a_variable.make (a_range_variable)
+				promoted_expression := a_variable
+				if l_containing_expression.is_computed_expression then
+					l_containing_expression.as_computed_expression.copy_location_identifier (a_variable)
+				end
+				a_lazy_expression := expression_factory.created_lazy_expression (a_child_expression)
+				create a_let_expression.make (a_range_variable, a_lazy_expression, l_containing_expression)
+				a_let_expression.adopt_child_expression (l_containing_expression)
+				set_containing_expression (a_let_expression)
 			end
-			a_lazy_expression := expression_factory.created_lazy_expression (a_child_expression)
-			create a_let_expression.make (a_range_variable, a_lazy_expression, containing_expression)
-			a_let_expression.adopt_child_expression (containing_expression)
-			set_containing_expression (a_let_expression)
 		end
 
 	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN
@@ -272,13 +285,13 @@ feature {NONE} -- Implementation
 
 invariant
 
-	action: action = Range_independent or  action = Focus_independent
+	action: action = Range_independent or action = Focus_independent
 		or action = Inline_variable_references or action = Unordered
 		or action = Replace_current
-	binding_for_range_variable: action = Range_independent implies binding_list /= Void and then binding_list.count > 0
-	binding_for_inline_variables: action = Inline_variable_references implies binding_list /= Void and then binding_list.count = 1
+	binding_for_range_variable: action = Range_independent implies attached binding_list as l_binding_list and then l_binding_list.count > 0
+	binding_for_inline_variables: action = Inline_variable_references implies attached binding_list as l_binding_list and then l_binding_list.count = 1
 	containing_expression: action /= Unordered implies containing_expression /= Void
-	replace_current: action = Replace_current implies containing_expression /= Void and then containing_expression.is_let_expression
+	replace_current: action = Replace_current implies attached containing_expression as l_containing_expression and then l_containing_expression.is_let_expression
 
 end
 

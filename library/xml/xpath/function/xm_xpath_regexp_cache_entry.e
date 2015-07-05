@@ -5,7 +5,7 @@ note
 		"Objects that pair a compiled regular expression with matched inputs"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,7 @@ feature -- Access
 			Result := match_records.has (an_input_string)
 		end
 
-	match_record (an_input_string: STRING): XM_XPATH_REGEXP_MATCH_RECORD
+	match_record (an_input_string: STRING): detachable XM_XPATH_REGEXP_MATCH_RECORD
 			-- Possible previous match against `an_input_string'
 		require
 			input_string_not_void: an_input_string /= Void
@@ -91,7 +91,7 @@ feature -- Element change
 			match_records.force (a_match_record, an_input_string)
 		ensure
 			match_added: has_match_record (an_input_string)
-			correct_match: match_record (an_input_string).tokens = some_tokens
+			correct_match: attached match_record (an_input_string) as l_match_record and then l_match_record.tokens = some_tokens
 		end
 
 feature {NONE} -- Implementation

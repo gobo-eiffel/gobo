@@ -5,7 +5,7 @@ note
 		"Objects that enumerate a nodeset that is the union of two other nodesets."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,11 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
@@ -53,7 +58,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -72,21 +77,23 @@ feature -- Cursor movement
 			index := index + 1
 			if not first_iterator.before and then first_iterator.after then
 				advance_second_iterator
-				if second_iterator.is_error then
-					set_last_error (second_iterator.error_value)
+				if attached second_iterator.error_value as l_error_value then
+					check is_error: second_iterator.is_error end
+					set_last_error (l_error_value)
 				elseif not second_iterator.after then
-					item := second_iterator.item
+					internal_item := second_iterator.item
 				else
-					item := Void
+					internal_item := Void
 				end
 			elseif not second_iterator.before and then second_iterator.after then
 				advance_first_iterator
-				if first_iterator.is_error then
-					set_last_error (first_iterator.error_value)
+				if attached first_iterator.error_value as l_error_value then
+					check is_error: first_iterator.is_error end
+					set_last_error (l_error_value)
 				elseif not first_iterator.after then
-					item := first_iterator.item
+					internal_item := first_iterator.item
 				else
-					item := Void
+					internal_item := Void
 				end
 			else
 
@@ -94,20 +101,22 @@ feature -- Cursor movement
 
 				if cached_first_node = Void then
 					advance_first_iterator
-					if first_iterator.is_error then
-						set_last_error (first_iterator.error_value)
+					if attached first_iterator.error_value as l_error_value then
+						check is_error: first_iterator.is_error end
+						set_last_error (l_error_value)
 					elseif first_iterator.after then
 						if cached_second_node = Void then
 							advance_second_iterator
-							if second_iterator.is_error then
-								set_last_error (second_iterator.error_value)
+							if attached second_iterator.error_value as l_error_value then
+								check is_error: second_iterator.is_error end
+								set_last_error (l_error_value)
 							elseif second_iterator.after then
-								item := Void
+								internal_item := Void
 							else
-								item := second_iterator.item
+								internal_item := second_iterator.item
 							end
 						else
-							item := cached_second_node
+							internal_item := cached_second_node
 						end
 					else
 						first_node := first_iterator.item
@@ -116,10 +125,11 @@ feature -- Cursor movement
 							compare_two_nodes
 						else
 							advance_second_iterator
-							if second_iterator.is_error then
-								set_last_error (second_iterator.error_value)
+							if attached second_iterator.error_value as l_error_value then
+								check is_error: second_iterator.is_error end
+								set_last_error (l_error_value)
 							elseif second_iterator.after then
-								item := first_node
+								internal_item := first_node
 							else
 								second_node := second_iterator.item
 								compare_two_nodes
@@ -129,10 +139,11 @@ feature -- Cursor movement
 				else -- first node is cached so second can't be
 					first_node := cached_first_node
 					advance_second_iterator
-					if second_iterator.is_error then
-						set_last_error (second_iterator.error_value)
+					if attached second_iterator.error_value as l_error_value then
+						check is_error: second_iterator.is_error end
+						set_last_error (l_error_value)
 					elseif second_iterator.after then
-						item := first_node
+						internal_item := first_node
 					else
 						second_node := second_iterator.item
 						compare_two_nodes
@@ -160,9 +171,9 @@ feature {NONE} -- Implementation
 	comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
 			-- Comparer
 
-	cached_first_node, cached_second_node: XM_XPATH_NODE
+	cached_first_node, cached_second_node: detachable XM_XPATH_NODE
 
-	first_node, second_node: XM_XPATH_NODE
+	first_node, second_node: detachable XM_XPATH_NODE
 			-- Nodes for comparison by `compare_two_nodes'
 
 	compare_two_nodes
@@ -173,19 +184,24 @@ feature {NONE} -- Implementation
 		local
 			a_comparison: INTEGER
 		do
-			a_comparison := comparer.three_way_comparison (first_node, second_node)
-			if a_comparison = -1 then
-				item := first_node
-				cached_first_node := Void
-				cached_second_node := second_node
-			elseif a_comparison = 1 then
-				item := second_node
-				cached_first_node := first_node
-				cached_second_node := Void
-			else
-				item := second_node
-				cached_first_node := Void
-				cached_second_node := Void
+			check
+				precondition_first_node_not_void: attached first_node as l_first_node
+				precondition_second_node_not_void: attached second_node as l_second_node
+			then
+				a_comparison := comparer.three_way_comparison (l_first_node, l_second_node)
+				if a_comparison = -1 then
+					internal_item := l_first_node
+					cached_first_node := Void
+					cached_second_node := l_second_node
+				elseif a_comparison = 1 then
+					internal_item := l_second_node
+					cached_first_node := l_first_node
+					cached_second_node := Void
+				else
+					internal_item := l_second_node
+					cached_first_node := Void
+					cached_second_node := Void
+				end
 			end
 		end
 
@@ -208,6 +224,9 @@ feature {NONE} -- Implementation
 				second_iterator.forth
 			end
 		end
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Value or node at the current position
 
 invariant
 

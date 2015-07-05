@@ -5,7 +5,7 @@ note
 		"Objects that enumerate the preceding:: Axis"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,11 +52,8 @@ feature -- Access
 
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Does `Current' yield a node_sequence?
-		local
-			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
-			a_tree_node_iterator ?= ANY_.to_any (Current)
-			Result := a_tree_node_iterator
+			Result := Current
 		end
 
 feature -- Cursor movement
@@ -86,23 +83,25 @@ feature -- Duplication
 
 feature {NONE} -- Implemnentation
 
-	next_ancestor: like starting_node
+	next_ancestor: detachable like starting_node
 			-- Next ancestor;
 			--  tested by `is_conforming' and adjusted by advance
 
 	advance_one_step
 			-- Move to the next candidate node
 		do
-			next_node := next_node.previous_node_in_document_order
+			check precondition_next_node_not_void: attached next_node as l_next_node then
+				next_node := l_next_node.previous_node_in_document_order
+			end
 		end
 
-	is_conforming (a_node: like starting_node): BOOLEAN
+	is_conforming (a_node: detachable like starting_node): BOOLEAN
 			-- Does `a_node' conform to `node_test', or is it `Void'?
 		local
 			is_ancestor: BOOLEAN
 		do
 			if a_node /= Void then
-				if a_node.is_same_node (next_ancestor) then
+				if attached next_ancestor as l_next_ancestor and then a_node.is_same_node (l_next_ancestor) then
 						check
 							next_ancestor_not_void: next_ancestor /= Void
 							-- We'll never test the root node, because it's always
@@ -111,7 +110,9 @@ feature {NONE} -- Implemnentation
 					is_ancestor := True
 				end
 			end
-			if not is_ancestor then Result := Precursor (a_node) end
+			if not is_ancestor then
+				Result := Precursor (a_node)
+			end
 		end
 
 	advance
@@ -122,7 +123,9 @@ feature {NONE} -- Implemnentation
 			until
 				is_conforming (next_node)
 			loop
-				if next_node.is_same_node (next_ancestor) then next_ancestor := next_ancestor.parent end
+				if attached next_node as l_next_node and then attached next_ancestor as l_next_ancestor and then l_next_node.is_same_node (l_next_ancestor) then
+					next_ancestor := l_next_ancestor.parent
+				end
 				advance_one_step
 			end
 		end

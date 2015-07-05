@@ -5,7 +5,7 @@ note
 		"Objects that split XPath expressions into tokens"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	derivation: "See notice at bottom of file"
 	license: "MIT License"
 	date: "$Date$"
@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 			next_token_start_index := 1
 			input_index := 1
 			input := Void
+			next_token_value := ""
+			internal_last_lexical_error := ""
+			current_token_value := ""
 		end
 
 feature -- Access
@@ -66,7 +69,7 @@ feature -- Access
 			last_token_value_not_void: Result /= Void
 		end
 
-	input: STRING
+	input: detachable STRING
 			-- The string being parsed
 
 	input_length: INTEGER
@@ -90,21 +93,24 @@ feature -- Access
 			an_index: INTEGER
 			s: STRING
 		do
-			if input_index > input_length then
-				an_index := input_length
-			else
-				an_index := input_index
-			end
+			if attached input as l_input then
+				if input_index > input_length then
+					an_index := input_length
+				else
+					an_index := input_index
+				end
 
-			if an_index < 34 then
-				Result := input.substring (1, an_index)
+				if an_index < 34 then
+					Result := l_input.substring (1, an_index)
+				else
+					create normalizer.make
+					s := "..."
+					s := STRING_.appended_string (s, l_input.substring (an_index - 30, an_index))
+					Result := normalizer.normalize (s)
+				end
 			else
-				create normalizer.make
-				s := "..."
-				s := STRING_.appended_string (s, input.substring (an_index - 30, an_index))
-				Result := normalizer.normalize (s)
+				Result := ""
 			end
-
 		ensure
 			recent_text_not_void: Result /= Void
 		end
@@ -130,13 +136,13 @@ feature -- Status setting
 		require
 			input_string_not_void: an_input /= Void
 			strictly_positive_start: a_start > 0 and then a_start <= an_input.count
-			valid_end_point: an_end = -1 or else an_end >0 and then an_end > a_start and then an_end <= an_input.count
+			valid_end_point: an_end = -1 or else an_end > 0 and then an_end > a_start and then an_end <= an_input.count
 			nearly_positive_line_number: a_line_number >= -1
 		do
 			line_number := a_line_number
 			next_line_number := line_number
 			next_token := Eof_token
-			next_token_value := Void
+			next_token_value := ""
 			next_token_start_index := a_start
 			input_index := a_start
 			input := an_input
@@ -144,7 +150,7 @@ feature -- Status setting
 				no_error_yet: not is_lexical_error
 			end
 			if an_end = -1 then
-				input_length := input.count
+				input_length := an_input.count
 			else
 				input_length := an_end - a_start + 1
 			end
@@ -184,7 +190,7 @@ feature --Element change
 			finished: BOOLEAN
 		do
 			is_lexical_error := False
-			internal_last_lexical_error := Void
+			internal_last_lexical_error := ""
 			preceding_token := current_token
 			current_token := next_token
 			current_token_value := next_token_value
@@ -192,8 +198,8 @@ feature --Element change
 
 			debug ("XPath tokens")
 				std.error.put_string ("Current token is now ")
-				if is_valid_token (current_token) then
-					std.error.put_string (token_name (current_token))
+				if is_valid_token (current_token) and then attached token_name (current_token) as l_current_token_name then
+					std.error.put_string (l_current_token_name)
 				else
 					std.error.put_string (current_token.out)
 				end
@@ -208,8 +214,8 @@ feature --Element change
 				operator_type := binary_operator (current_token_value)
 				debug ("XPath tokens")
 					std.error.put_string ("Operator type is ")
-					if is_valid_token (operator_type) then
-						std.error.put_string (token_name (operator_type))
+					if is_valid_token (operator_type) and then attached token_name (operator_type) as l_operator_type_token_name then
+						std.error.put_string (l_operator_type_token_name)
 					else
 						std.error.put_string (operator_type.out)
 					end
@@ -345,8 +351,8 @@ feature --Element change
 				end
 				debug ("XPath tokens")
 					std.error.put_string ("Current token on exit from next is set to ")
-					if is_valid_token (current_token) then
-						std.error.put_string (token_name (current_token))
+					if is_valid_token (current_token) and then attached token_name (current_token) as l_current_token_name then
+						std.error.put_string (l_current_token_name)
 					else
 						std.error.put_string (current_token.out)
 					end
@@ -372,429 +378,432 @@ feature {NONE} -- Status setting
 			-- dealing with pseudo-XML syntax.
 		require
 			no_previous_lexical_error: is_lexical_error = False
+			input_not_void: input /= Void
 			more_characters_in_input_stream: not is_input_stream_exhausted
 		local
 			finished, finished_inner, finished_other, allow_e, allow_sign, allow_dot, end_of_number, only_state_change: BOOLEAN
 			c, nc, ahead: CHARACTER
 			nesting_depth, i: INTEGER
 		do
-			from
-				preceding_token := next_token
-				next_token_value := ""
-				next_token_start_index := input_index
-				internal_last_lexical_error := ""
-			until
-				finished
-			loop
-				if input_index > input_length then
-					next_token := Eof_token
-					finished := True; input_index := input_index + 1
-				else
-					c := input.item (input_index); input_index := input_index + 1
-					inspect
-						c
+			check precondition_input_not_void: attached input as l_input then
+				from
+					preceding_token := next_token
+					next_token_value := ""
+					next_token_start_index := input_index
+					internal_last_lexical_error := ""
+				until
+					finished
+				loop
+					if input_index > input_length then
+						next_token := Eof_token
+						finished := True; input_index := input_index + 1
+					else
+						c := l_input.item (input_index); input_index := input_index + 1
+						inspect
+							c
 
-					when ':' then
-						if input_index <= input_length then
-							if input.item (input_index) = ':' then
-								input_index := input_index + 1
-								next_token := Colon_colon_token
-								finished := True
-							elseif input.item (input_index) = '=' then
-								input_index := input_index + 1
-								next_token := Assign_token
-								finished := True
-							else
-								is_lexical_error := True
-								internal_last_lexical_error := "Unexpected colon at start of token"
-								finished := True
-							end
-						end
-
-					when '@' then
-						next_token := At_token
-						finished := True
-
-					when '?' then
-						next_token := Question_mark_token
-						finished := True
-
-					when '[' then
-						next_token := Left_square_bracket_token
-						finished := True
-
-					when ']' then
-						next_token := Right_square_bracket_token
-						finished := True
-
-					when '{' then
-						next_token := Left_curly_token
-						finished := True
-
-					when '}' then
-						next_token := Right_curly_token
-						finished := True
-
-					when ';' then
-						next_token := Semicolon_token
-						finished := True
-
-					when '(' then
-						if input_index <= input_length and then input.item (input_index) = ':' then
-
-							-- XPath comment syntax is (: .... :)
-							-- Comments may be nested
-
-							input_index := input_index + 1
-							from
-								nesting_depth := 1
-							until
-								nesting_depth = 0 or else input_index > input_length - 1
-							loop
-								if input.item (input_index) = '%N' then
-									next_line_number := next_line_number + 1
-								elseif input.item (input_index) = ':'  and then input.item (input_index + 1) = ')'  then
-									nesting_depth := nesting_depth - 1
-									input_index := input_index + 1
-								elseif input.item (input_index) = '('  and then input.item (input_index + 1) = ':'  then
-									nesting_depth := nesting_depth + 1
-									input_index := input_index + 1
-								end
-								input_index := input_index + 1
-							variant
-								input_length - input_index
-							end
-							if nesting_depth > 0 then
-								is_lexical_error := True
-								internal_last_lexical_error := "Unclosed XPath comment"
-							else
-								if not is_input_stream_exhausted then look_ahead end
-							end
-						else
-							next_token := Left_parenthesis_token
-						end
-						finished := True
-
-					when ')' then
-									next_token := Right_parenthesis_token
-									finished := True
-
-					when '+' then
-						next_token := Plus_token
-						finished := True
-
-					when '-' then
-						next_token := Minus_token -- Not detected if part of a name
-						finished := True
-
-					when '=' then
-						next_token := Equals_token
-						finished := True
-
-					when '!' then
-						if input_index <= input_length and then input.item (input_index) = '=' then
-							input_index := input_index + 1
-							next_token := Not_equal_token
-						else
-							is_lexical_error := True
-							internal_last_lexical_error := "%"!%" without %"=%" in expression"
-						end
-						finished := True
-
-					when '*' then
-						if input_index <= input_length and then input.item (input_index) = ':' then
-							input_index := input_index + 1
-							next_token := Suffix_token
-
-							-- we leave the parser to get the following name as a separate
-							-- token, but first check there's no intervening white space
-
+						when ':' then
 							if input_index <= input_length then
-								ahead := input.item (input_index)
-								if whitespace.has(ahead) then
+								if l_input.item (input_index) = ':' then
+									input_index := input_index + 1
+									next_token := Colon_colon_token
+									finished := True
+								elseif l_input.item (input_index) = '=' then
+									input_index := input_index + 1
+									next_token := Assign_token
+									finished := True
+								else
 									is_lexical_error := True
-									internal_last_lexical_error :=  "Whitespace is not allowed after '*:'"
+									internal_last_lexical_error := "Unexpected colon at start of token"
+									finished := True
 								end
 							end
-						else
-							next_token := Star_token
-						end
-						finished := True
 
-					when ',' then
-						next_token := Comma_token
-						finished := True
-
-					when '$' then
-						next_token := Dollar_token
-						finished := True
-
-					when '|' then
-						next_token := Union_token
-						finished := True
-
-					when '<' then
-						if input_index <= input_length and then input.item (input_index) = '=' then
-							input_index := input_index + 1
-							next_token := Less_equal_token
-						elseif input_index <= input_length and then input.item (input_index) = '<' then
-							input_index := input_index + 1
-							next_token := Precedes_token
-						else
-							next_token := Less_than_token
-						end
-						finished := True
-
-					when '>' then
-						if input_index <= input_length and then input.item (input_index) = '=' then
-							input_index := input_index + 1
-							next_token := Greater_equal_token
-						elseif input_index <= input_length and then input.item (input_index) = '>' then
-							input_index := input_index + 1
-							next_token := Follows_token
-						else
-							next_token := Greater_than_token
-						end
-						finished := True
-
-					when '/' then
-						if input_index <= input_length and then input.item (input_index) = '/' then
-							input_index := input_index + 1
-							next_token := Slash_slash_token
+						when '@' then
+							next_token := At_token
 							finished := True
-						else
-							next_token := Slash_token
+
+						when '?' then
+							next_token := Question_mark_token
 							finished := True
-						end
 
-					when '.', '0'..'9' then
+						when '[' then
+							next_token := Left_square_bracket_token
+							finished := True
 
-						-- The logic here can return some tokens that are not legitimate numbers,
-						-- for example "23e" or "1.0e+". However, this will only happen if the XPath
-						-- expression as a whole is syntactically incorrect.
-						-- These errors will be caught by the numeric creation procedure.
+						when ']' then
+							next_token := Right_square_bracket_token
+							finished := True
 
-						if c = '.' then
-							if input_index <= input_length and then input.item (input_index) = '.' then
+						when '{' then
+							next_token := Left_curly_token
+							finished := True
+
+						when '}' then
+							next_token := Right_curly_token
+							finished := True
+
+						when ';' then
+							next_token := Semicolon_token
+							finished := True
+
+						when '(' then
+							if input_index <= input_length and then l_input.item (input_index) = ':' then
+
+								-- XPath comment syntax is (: .... :)
+								-- Comments may be nested
+
 								input_index := input_index + 1
-								next_token := Dot_dot_token
+								from
+									nesting_depth := 1
+								until
+									nesting_depth = 0 or else input_index > input_length - 1
+								loop
+									if l_input.item (input_index) = '%N' then
+										next_line_number := next_line_number + 1
+									elseif l_input.item (input_index) = ':'  and then l_input.item (input_index + 1) = ')'  then
+										nesting_depth := nesting_depth - 1
+										input_index := input_index + 1
+									elseif l_input.item (input_index) = '('  and then l_input.item (input_index + 1) = ':'  then
+										nesting_depth := nesting_depth + 1
+										input_index := input_index + 1
+									end
+									input_index := input_index + 1
+								variant
+									input_length - input_index
+								end
+								if nesting_depth > 0 then
+									is_lexical_error := True
+									internal_last_lexical_error := "Unclosed XPath comment"
+								else
+									if not is_input_stream_exhausted then look_ahead end
+								end
+							else
+								next_token := Left_parenthesis_token
+							end
+							finished := True
+
+						when ')' then
+										next_token := Right_parenthesis_token
+										finished := True
+
+						when '+' then
+							next_token := Plus_token
+							finished := True
+
+						when '-' then
+							next_token := Minus_token -- Not detected if part of a name
+							finished := True
+
+						when '=' then
+							next_token := Equals_token
+							finished := True
+
+						when '!' then
+							if input_index <= input_length and then l_input.item (input_index) = '=' then
+								input_index := input_index + 1
+								next_token := Not_equal_token
+							else
+								is_lexical_error := True
+								internal_last_lexical_error := "%"!%" without %"=%" in expression"
+							end
+							finished := True
+
+						when '*' then
+							if input_index <= input_length and then l_input.item (input_index) = ':' then
+								input_index := input_index + 1
+								next_token := Suffix_token
+
+								-- we leave the parser to get the following name as a separate
+								-- token, but first check there's no intervening white space
+
+								if input_index <= input_length then
+									ahead := l_input.item (input_index)
+									if whitespace.has(ahead) then
+										is_lexical_error := True
+										internal_last_lexical_error :=  "Whitespace is not allowed after '*:'"
+									end
+								end
+							else
+								next_token := Star_token
+							end
+							finished := True
+
+						when ',' then
+							next_token := Comma_token
+							finished := True
+
+						when '$' then
+							next_token := Dollar_token
+							finished := True
+
+						when '|' then
+							next_token := Union_token
+							finished := True
+
+						when '<' then
+							if input_index <= input_length and then l_input.item (input_index) = '=' then
+								input_index := input_index + 1
+								next_token := Less_equal_token
+							elseif input_index <= input_length and then l_input.item (input_index) = '<' then
+								input_index := input_index + 1
+								next_token := Precedes_token
+							else
+								next_token := Less_than_token
+							end
+							finished := True
+
+						when '>' then
+							if input_index <= input_length and then l_input.item (input_index) = '=' then
+								input_index := input_index + 1
+								next_token := Greater_equal_token
+							elseif input_index <= input_length and then l_input.item (input_index) = '>' then
+								input_index := input_index + 1
+								next_token := Follows_token
+							else
+								next_token := Greater_than_token
+							end
+							finished := True
+
+						when '/' then
+							if input_index <= input_length and then l_input.item (input_index) = '/' then
+								input_index := input_index + 1
+								next_token := Slash_slash_token
 								finished := True
-							elseif input_index >= input_length
-								or else input.item (input_index) < '0'
-								or else input.item (input_index) > '9' then
-								next_token := Dot_token
+							else
+								next_token := Slash_token
 								finished := True
 							end
-						end
-						if not finished then
+
+						when '.', '0'..'9' then
+
+							-- The logic here can return some tokens that are not legitimate numbers,
+							-- for example "23e" or "1.0e+". However, this will only happen if the XPath
+							-- expression as a whole is syntactically incorrect.
+							-- These errors will be caught by the numeric creation procedure.
+
+							if c = '.' then
+								if input_index <= input_length and then l_input.item (input_index) = '.' then
+									input_index := input_index + 1
+									next_token := Dot_dot_token
+									finished := True
+								elseif input_index >= input_length
+									or else l_input.item (input_index) < '0'
+									or else l_input.item (input_index) > '9' then
+									next_token := Dot_token
+									finished := True
+								end
+							end
+							if not finished then
+								from
+									allow_e := True
+									allow_sign := False
+									allow_dot := True
+									end_of_number := False
+								until
+									end_of_number
+								loop
+									only_state_change := False
+									inspect
+										c
+									when '0'..'9' then
+										allow_sign := False
+									when '.' then
+										if allow_dot then
+											allow_dot := False
+											allow_sign := False
+										else
+											input_index := input_index - 1
+											only_state_change := True
+											end_of_number := True
+										end
+									when 'E' then
+										if allow_e then
+											allow_sign := True
+											allow_e := False
+										else
+											input_index := input_index - 1
+											only_state_change := True
+											end_of_number := True
+										end
+									when 'e' then
+										if allow_e then
+											allow_sign := True
+											allow_e := False
+										else
+											input_index := input_index - 1
+											only_state_change := True
+											end_of_number := True
+										end
+									when '+' then
+										if allow_sign then
+											allow_sign := False
+										else
+											input_index := input_index - 1
+											only_state_change := True
+											end_of_number := True
+										end
+									when '-' then
+										if allow_sign then
+											allow_sign := False
+										else
+											input_index := input_index - 1
+											only_state_change := True
+											end_of_number := True
+										end
+									else
+										input_index := input_index - 1
+										only_state_change := True
+										end_of_number := True
+									end
+									if not only_state_change then
+										if input_index > input_length then
+											end_of_number := True
+										else
+											c := l_input.item (input_index); input_index := input_index + 1
+										end
+									end
+								end
+								next_token_value := l_input.substring (next_token_start_index, input_index - 1)
+							end
+							if not finished then
+								next_token := Number_token
+								finished := True
+							end
+
+						when '"', '%'' then
+							next_token_value := ""
 							from
-								allow_e := True
-								allow_sign := False
-								allow_dot := True
-								end_of_number := False
+								finished_inner := False
 							until
-								end_of_number
+								finished or else finished_inner
 							loop
-								only_state_change := False
+								input_index := l_input.index_of (c, input_index )
+								if input_index = 0 then
+									input_index := next_token_start_index + 1
+									is_lexical_error := True
+									internal_last_lexical_error :=  "Unmatched quote in expression"
+									finished := True
+									finished_inner := True
+								else
+									next_token_value := STRING_.appended_string (next_token_value, l_input.substring (next_token_start_index + 1, input_index - 1))
+									input_index := input_index + 1
+
+									-- look for doubled delimiters
+
+									if input_index <= input_length and then l_input.item (input_index) = c then
+										next_token_value := STRING_.appended_string (next_token_value, c.out)
+										next_token_start_index := input_index
+										input_index := input_index + 1
+									else
+										finished_inner := True
+									end
+								end
+							end
+
+							-- maintain line number if there are newlines in the string
+							-- TODO XML 1.1 line ending normaliztions? (prior to entry to tokenizer?)
+
+							if next_token_value.index_of ('%N', 1) > 0 then
+								from
+									i := 1
+								until
+									i > next_token_value.count
+								loop
+									if next_token_value.item (i) = '%N' then
+										line_number := line_number + 1
+									end
+									i := i + 1
+								variant
+									next_token_value.count + 1 - i
+								end
+							end
+							next_token_value := STRING_.cloned_string (next_token_value)
+							next_token  := String_literal_token
+							finished := True
+
+						when '%N' then
+							line_number := line_number + 1
+							next_token_start_index := input_index
+
+						when ' ', '%R', '%T' then
+							next_token_start_index := input_index
+
+						else
+							if c /= '_' then
+								if c < 'A' or else c > 'Z' and c < 'a' or else c > 'z' then
+									is_lexical_error := True
+									internal_last_lexical_error :=  "Invalid character ("
+									internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, c.out)
+									internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, ") in expression")
+									finished := True
+								end
+							end
+							from
+								finished_other := False
+							until
+								finished or else finished_other or else input_index > input_length
+							loop
+								c := l_input.item (input_index)
 								inspect
 									c
-								when '0'..'9' then
-									allow_sign := False
-								when '.' then
-									if allow_dot then
-										allow_dot := False
-										allow_sign := False
-									else
-										input_index := input_index - 1
-										only_state_change := True
-										end_of_number := True
+								when ':'  then
+									if input_index + 1 <= input_length then
+										nc := l_input.item (input_index + 1)
+										if nc = ':' then
+											next_token_value := l_input.substring (next_token_start_index, input_index - 1)
+											next_token := Axis_token
+											finished := True
+											finished_other := True
+											input_index := input_index + 2
+										elseif nc = '*' then
+											next_token_value := l_input.substring (next_token_start_index, input_index - 1)
+											next_token := Prefix_token
+											finished := True
+											finished_other := True
+											input_index := input_index + 2
+										elseif nc = '=' then
+
+											-- as in "let $x:=2"
+
+											next_token_value := l_input.substring (next_token_start_index, input_index - 1)
+											next_token := Name_token
+											finished := True
+											finished_other := True
+										end
 									end
-								when 'E' then
-									if allow_e then
-										allow_sign := True
-										allow_e := False
-									else
-										input_index := input_index - 1
-										only_state_change := True
-										end_of_number := True
-									end
-								when 'e' then
-									if allow_e then
-										allow_sign := True
-										allow_e := False
-									else
-										input_index := input_index - 1
-										only_state_change := True
-										end_of_number := True
-									end
-								when '+' then
-									if allow_sign then
-										allow_sign := False
-									else
-										input_index := input_index - 1
-										only_state_change := True
-										end_of_number := True
-									end
-								when '-' then
-									if allow_sign then
-										allow_sign := False
-									else
-										input_index := input_index - 1
-										only_state_change := True
-										end_of_number := True
-									end
+								when '-', '_','.'  then
+									-- do nothing
 								else
-									input_index := input_index - 1
-									only_state_change := True
-									end_of_number := True
-								end
-								if not only_state_change then
-									if input_index > input_length then
-										end_of_number := True
-									else
-										c := input.item (input_index); input_index := input_index + 1
+									if c.code < 128 then
+										if c < '0' or else ( c > '9' and then c < 'A') or else (c > 'Z' and c < 'a') or else c > 'z' then
+											finished_other := True
+										end
 									end
 								end
+								if not finished_other then input_index := input_index + 1 end
 							end
-							next_token_value := input.substring (next_token_start_index, input_index - 1)
-						end
-						if not finished then
-							next_token := Number_token
-							finished := True
-						end
-
-					when '"', '%'' then
-						next_token_value := ""
-						from
-							finished_inner := False
-						until
-							finished or else finished_inner
-						loop
-							input_index := input.index_of (c, input_index )
-							if input_index = 0 then
-								input_index := next_token_start_index + 1
-								is_lexical_error := True
-								internal_last_lexical_error :=  "Unmatched quote in expression"
-								finished := True
-								finished_inner := True
-							else
-								next_token_value := STRING_.appended_string (next_token_value, input.substring (next_token_start_index + 1, input_index - 1))
-								input_index := input_index + 1
-
-								-- look for doubled delimiters
-
-								if input_index <= input_length and then input.item (input_index) = c then
-									next_token_value := STRING_.appended_string (next_token_value, c.out)
-									next_token_start_index := input_index
-									input_index := input_index + 1
-								else
-									finished_inner := True
-								end
-							end
-						end
-
-						-- maintain line number if there are newlines in the string
-						-- TODO XML 1.1 line ending normaliztions? (prior to entry to tokenizer?)
-
-						if next_token_value.index_of ('%N', 1) > 0 then
-							from
-								i := 1
-							until
-								i > next_token_value.count
-							loop
-								if next_token_value.item (i) = '%N' then
-									line_number := line_number + 1
-								end
-								i := i + 1
-							variant
-								next_token_value.count + 1 - i
-							end
-						end
-						next_token_value := STRING_.cloned_string (next_token_value)
-						next_token  := String_literal_token
-						finished := True
-
-					when '%N' then
-						line_number := line_number + 1
-						next_token_start_index := input_index
-
-					when ' ', '%R', '%T' then
-						next_token_start_index := input_index
-
-					else
-						if c /= '_' then
-							if c < 'A' or else c > 'Z' and c < 'a' or else c > 'z' then
-								is_lexical_error := True
-								internal_last_lexical_error :=  "Invalid character ("
-								internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, c.out)
-								internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, ") in expression")
+							if not finished then
+								next_token_value := l_input.substring (next_token_start_index, input_index - 1)
+								next_token := Name_token
 								finished := True
 							end
-						end
-						from
-							finished_other := False
-						until
-							finished or else finished_other or else input_index > input_length
-						loop
-							c := input.item (input_index)
-							inspect
-								c
-							when ':'  then
-								if input_index + 1 <= input_length then
-									nc := input.item (input_index + 1)
-									if nc = ':' then
-										next_token_value := input.substring (next_token_start_index, input_index - 1)
-										next_token := Axis_token
-										finished := True
-										finished_other := True
-										input_index := input_index + 2
-									elseif nc = '*' then
-										next_token_value := input.substring (next_token_start_index, input_index - 1)
-										next_token := Prefix_token
-										finished := True
-										finished_other := True
-										input_index := input_index + 2
-									elseif nc = '=' then
-
-										-- as in "let $x:=2"
-
-										next_token_value := input.substring (next_token_start_index, input_index - 1)
-										next_token := Name_token
-										finished := True
-										finished_other := True
-									end
-								end
-							when '-', '_','.'  then
-								-- do nothing
-							else
-								if c.code < 128 then
-									if c < '0' or else ( c > '9' and then c < 'A') or else (c > 'Z' and c < 'a') or else c > 'z' then
-										finished_other := True
-									end
-								end
-							end
-							if not finished_other then input_index := input_index + 1 end
-						end
-						if not finished then
-							next_token_value := input.substring (next_token_start_index, input_index - 1)
-							next_token := Name_token
-							finished := True
 						end
 					end
+				variant
+					input_length + 3 - input_index  -- + 3 to allow for setting the EOF token
 				end
-			variant
-				input_length + 3 - input_index  -- + 3 to allow for setting the EOF token
-			end
-			debug ("XPath tokens")
-				std.error.put_string ("Next token on exit from look-ahead is set to ")
-				if is_valid_token (next_token) then
-					std.error.put_string (token_name (next_token))
-				else
-					std.error.put_string (next_token.out)
+				debug ("XPath tokens")
+					std.error.put_string ("Next token on exit from look-ahead is set to ")
+					if is_valid_token (next_token) and then attached token_name (next_token) as l_next_token_name then
+						std.error.put_string (l_next_token_name)
+					else
+						std.error.put_string (next_token.out)
+					end
+					std.error.put_string (", value is ")
+					std.error.put_string (next_token_value)
+					std.error.put_new_line
 				end
-				std.error.put_string (", value is ")
-				std.error.put_string (next_token_value)
-				std.error.put_new_line
 			end
 		end
 
@@ -900,7 +909,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-		function_type (a_string: STRING): INTEGER
+	function_type (a_string: STRING): INTEGER
 			-- Distinguish nodekind names, "if", and function names, which are all followed by a "("
 		require
 			string_not_void: a_string /= Void
@@ -984,6 +993,9 @@ invariant
 	tokens_not_void: tokens /= Void
 	double_keywords_not_void: double_keywords /= Void
 	nearly_positive_line_number: line_number >= -1
+	next_token_value_not_void: next_token_value /= Void
+	internal_last_lexical_error_not_void: internal_last_lexical_error /= Void
+	current_token_value_not_void: current_token_value /= Void
 
 end
 

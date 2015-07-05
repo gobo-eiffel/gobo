@@ -5,7 +5,7 @@ note
 		"Objects that support the XPath trace() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	trace_item (a_label: STRING; an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
+	trace_item (a_label: STRING; an_item: detachable XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Write trace record.
 		require
 			item_may_be_void: True
@@ -34,8 +34,9 @@ feature -- Access
 			if a_configuration.is_tracing then
 				if an_item = Void then
 					a_value_string := "()"
-				elseif an_item.is_error then
-					a_value_string := an_item.error_value.error_message
+				elseif attached an_item.error_value as l_error_value then
+					check is_error: an_item.is_error end
+					a_value_string := l_error_value.error_message
 				else
 					a_value_string := an_item.string_value
 				end
@@ -47,8 +48,9 @@ feature -- Access
 				end
 				if an_item = Void then
 					a_value_string := "()"
-				elseif an_item.is_error then
-					a_value_string := an_item.error_value.error_message
+				elseif attached an_item.error_value as l_error_value then
+					check is_error: an_item.is_error end
+					a_value_string := l_error_value.error_message
 				else
 					a_value_string := STRING_.concat (an_item.type_name, ": ")
 					if an_item.is_node then

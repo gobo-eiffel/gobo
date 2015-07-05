@@ -5,7 +5,7 @@ note
 		"XPath Binary Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,9 @@ feature {NONE} -- Initialization
 			valid_operator: is_valid_operator (a_token)
 		do
 			operator := a_token
+				-- Make the compiler happy in void-safe mode by setting
+				-- `second_operand' before calling `set_first_operand'.
+			second_operand := a_operand_two
 			set_first_operand (a_operand_one)
 			set_second_operand (a_operand_two)
 			adopt_child_expression (a_operand_one)
@@ -138,125 +141,139 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.simplify (l_replacement)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_first_operand (l_replacement.item)
-			end
-
-			if not l_replacement.item.is_error then
-				l_replacement.put (Void)
-				second_operand.simplify (l_replacement)
-				if l_replacement.item.is_error then
-					set_replacement (a_replacement, l_replacement.item)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
 				else
-					set_second_operand (l_replacement.item)
-					a_replacement.put (Current)
+					set_first_operand (l_replacement_item)
+				end
+
+				if not l_replacement_item.is_error then
+					l_replacement.put (Void)
+					second_operand.simplify (l_replacement)
+					check postcondition_of_simplify: attached l_replacement.item as l_replacement_item_2 then
+						if l_replacement_item_2.is_error then
+							set_replacement (a_replacement, l_replacement_item_2)
+						else
+							set_second_operand (l_replacement_item_2)
+							a_replacement.put (Current)
+						end
+					end
 				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_first_operand (l_replacement.item)
-				l_replacement.put (Void)
-				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
-				if l_replacement.item.is_error then
-					set_replacement (a_replacement, l_replacement.item)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
 				else
-					set_second_operand (l_replacement.item)
+					set_first_operand (l_replacement_item)
+					l_replacement.put (Void)
+					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item_2 then
+						if l_replacement_item_2.is_error then
+							set_replacement (a_replacement, l_replacement_item_2)
+						else
+							set_second_operand (l_replacement_item_2)
 
-					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
+							-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
-					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
-						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
-						and not cardinality_allows_many then
-						create l_result.make (Void)
-						evaluate_item (l_result, a_context.new_compile_time_context)
-						if l_result.item = Void or else not l_result.item.is_error then
-							if l_result.item.is_node then
-								set_replacement (a_replacement, create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
+							if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
+								and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
+								and not cardinality_allows_many then
+								create l_result.make (Void)
+								evaluate_item (l_result, a_context.new_compile_time_context)
+								if not attached l_result.item as l_result_item or else not l_result_item.is_error then
+									check there_is_a_bug_here: attached l_result.item as l_result_item then
+										if l_result_item.is_node then
+											set_replacement (a_replacement, create {XM_XPATH_SINGLETON_NODE}.make (l_result_item.as_node))
+										else
+											set_replacement (a_replacement, l_result_item.as_atomic_value)
+										end
+									end
+								else
+									if is_error then
+										-- the value might not be needed at runtime
+										error_value := Void
+									end
+									a_replacement.put (Current)
+								end
 							else
-								set_replacement (a_replacement, l_result.item.as_atomic_value)
+								a_replacement.put (Current)
 							end
-						else;
-							if is_error then
-								-- the value might not be needed at runtime
-								error_value := Void
-							end
-							a_replacement.put (Current)
 						end
-					else
-						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			first_operand.optimize (l_replacement, a_context, a_context_item_type)
-			if l_replacement.item.is_error then
-				set_replacement (a_replacement, l_replacement.item)
-			else
-				set_first_operand (l_replacement.item)
-				l_replacement.put (Void)
-				second_operand.optimize (l_replacement, a_context, a_context_item_type)
-				if l_replacement.item.is_error then
-					set_replacement (a_replacement, l_replacement.item)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				if l_replacement_item.is_error then
+					set_replacement (a_replacement, l_replacement_item)
 				else
-					set_second_operand (l_replacement.item)
-
-					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
-
-					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
-						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
-						and not cardinality_allows_many then
-						create l_result.make (Void)
-						evaluate_item (l_result, a_context.new_compile_time_context)
-						if l_result.item /= Void and then not l_result.item.is_error then
-							-- the value might not be needed at runtime
-							if l_result.item.is_node then
-								set_replacement (a_replacement, create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
-							else
-								set_replacement (a_replacement, l_result.item.as_atomic_value)
-							end
+					set_first_operand (l_replacement_item)
+					l_replacement.put (Void)
+					second_operand.optimize (l_replacement, a_context, a_context_item_type)
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item_2 then
+						if l_replacement_item_2.is_error then
+							set_replacement (a_replacement, l_replacement_item_2)
 						else
-							a_replacement.put (Current)
+							set_second_operand (l_replacement_item_2)
+
+							-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
+
+							if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
+								and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
+								and not cardinality_allows_many then
+								create l_result.make (Void)
+								evaluate_item (l_result, a_context.new_compile_time_context)
+								if attached l_result.item as l_result_item and then not l_result_item.is_error then
+									-- the value might not be needed at runtime
+									if l_result_item.is_node then
+										set_replacement (a_replacement, create {XM_XPATH_SINGLETON_NODE}.make (l_result_item.as_node))
+									else
+										set_replacement (a_replacement, l_result_item.as_atomic_value)
+									end
+								else
+									a_replacement.put (Current)
+								end
+							else
+								a_replacement.put (Current)
+							end
 						end
-					else
-						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -265,15 +282,19 @@ feature -- Optimization
 			elseif a_offer.action /= Unordered then
 				create l_replacement.make (Void)
 				first_operand.promote (l_replacement, a_offer)
-				if first_operand /= l_replacement.item then
-					set_first_operand (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if first_operand /= l_replacement_item then
+						set_first_operand (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				second_operand.promote (l_replacement, a_offer)
-				if second_operand /= l_replacement.item then
-					set_second_operand (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if second_operand /= l_replacement_item then
+						set_second_operand (l_replacement_item)
+						reset_static_properties
+					end
 				end
 			end
 			if a_replacement.item = Void then
@@ -325,7 +346,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	display_operator: STRING
 			-- Format `operator' for display
 		do
-			Result := token_name (operator)
+			check attached token_name (operator) as l_token_name then
+				Result := l_token_name
+			end
 		ensure
 			display_operator_not_void: Result /= Void
 		end

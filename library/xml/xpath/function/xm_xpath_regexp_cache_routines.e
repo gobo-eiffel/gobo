@@ -5,7 +5,7 @@ note
 		"Rutines for regular expression caches"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	normalized_flags_string (a_flags_string: STRING): STRING
+	normalized_flags_string (a_flags_string: STRING): detachable STRING
 			-- Normalized version of `a_flags_string'
 		require
 			flags_not_void: a_flags_string /= Void

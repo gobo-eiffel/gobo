@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath lower-case() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,14 +62,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void or else not a_result.item.is_atomic_value then
+			if not attached a_result.item as a_result_item or else not a_result_item.is_atomic_value then
 				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 			else
-				a_result.put (create {XM_XPATH_STRING_VALUE}.make (lower_utf8_string (a_result.item.as_atomic_value.string_value)))
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (lower_utf8_string (a_result_item.as_atomic_value.string_value)))
 			end
 		end
 

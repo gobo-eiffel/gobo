@@ -5,7 +5,7 @@ note
 		"Tiny tree Comment nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,9 @@ feature -- Access
 		do
 			an_index := tree.alpha_value (node_number)
 			a_length  := tree.beta_value (node_number)
-			Result := tree.comment_buffer.substring (an_index, an_index + a_length - 1)
+			check attached tree.comment_buffer as l_comment_buffer then
+				Result := l_comment_buffer.substring (an_index, an_index + a_length - 1)
+			end
 		end
 
 feature -- Duplication

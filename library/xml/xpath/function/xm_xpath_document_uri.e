@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath document-uri() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,17 +59,17 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_uri: UT_URI
+			l_uri: detachable UT_URI
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as a_result_item or else a_result_item.is_error then
 				-- nothing to do
 			else
-				if a_result.item.is_document then
-					l_uri := a_result.item.as_document.document_uri
+				if a_result_item.is_document then
+					l_uri := a_result_item.as_document.document_uri
 					if l_uri /= Void and then l_uri.is_absolute then
 						a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_uri.full_reference))
 					else

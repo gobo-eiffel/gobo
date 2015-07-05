@@ -5,7 +5,7 @@ note
 		"Expressions that reverse a sequence of nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,11 +54,11 @@ feature -- Access
 
 feature -- Optimization
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -68,9 +68,11 @@ feature -- Optimization
 				a_replacement.put (Current)
 				create l_replacement.make (Void)
 				base_expression.promote (l_replacement, a_offer)
-				if base_expression /= l_replacement.item then
-					set_base_expression (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if base_expression /= l_replacement_item then
+						set_base_expression (l_replacement_item)
+						reset_static_properties
+					end
 				end
 			end
 		end
@@ -84,14 +86,16 @@ feature -- Evaluation
 			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_iterator
-			if l_iterator.is_error then
-				last_iterator := l_iterator
-			elseif l_iterator.is_reversible_iterator then
-				last_iterator := l_iterator.reverse_iterator
-			else
-				create l_sequence_extent.make (l_iterator)
-				last_iterator := l_sequence_extent.reverse_iterator
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if l_iterator.is_error then
+					last_iterator := l_iterator
+				elseif l_iterator.is_reversible_iterator then
+					last_iterator := l_iterator.reverse_iterator
+				else
+					create l_sequence_extent.make (l_iterator)
+					last_iterator := l_sequence_extent.reverse_iterator
+				end
 			end
 		end
 
@@ -102,14 +106,16 @@ feature -- Evaluation
 			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.create_node_iterator (a_context)
-			l_iterator := base_expression.last_node_iterator
-			if l_iterator.is_error then
-				last_node_iterator := l_iterator
-			elseif l_iterator.is_reversible_iterator then
-				last_node_iterator := l_iterator.reverse_iterator
-			else
-				create l_sequence_extent.make (l_iterator)
-				last_node_iterator := l_sequence_extent.reverse_iterator.as_node_iterator
+			check postcondition_create_node_iterator: attached base_expression.last_node_iterator as l_last_node_iterator then
+				l_iterator := l_last_node_iterator
+				if l_iterator.is_error then
+					last_node_iterator := l_iterator
+				elseif l_iterator.is_reversible_iterator then
+					last_node_iterator := l_iterator.reverse_iterator
+				else
+					create l_sequence_extent.make (l_iterator)
+					last_node_iterator := l_sequence_extent.reverse_iterator.as_node_iterator
+				end
 			end
 		end
 

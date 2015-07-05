@@ -5,7 +5,7 @@ note
 		"Objects that parse XPath expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tokenizer: XM_XPATH_TOKENIZER
+	tokenizer: detachable XM_XPATH_TOKENIZER
 			-- Lexical scanner
 
 	is_pattern_parser: BOOLEAN
@@ -82,12 +82,14 @@ feature -- Status report
 		require
 			parse_error: is_parse_error
 		do
-			Result := internal_last_parse_error
+			check precondition: attached internal_last_parse_error as l_internal_last_parse_error then
+				Result := l_internal_last_parse_error
+			end
 		ensure
 			error_text_not_void: Result /= Void
 		end
 
-	first_parse_error_code: STRING
+	first_parse_error_code: detachable STRING
 			-- Error code associated with `last_parse_error'
 
 	first_parse_error_line_number: INTEGER
@@ -98,7 +100,9 @@ feature -- Status report
 		require
 			no_parse_error: not is_parse_error
 		do
-			Result := internal_last_parsed_expression
+			check precondition: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+				Result := l_internal_last_parsed_expression
+			end
 		ensure
 			parsed_expression_not_void: Result /= Void
 		end
@@ -112,7 +116,9 @@ feature -- Status report
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN
 			-- Is `an_xml_prefix' declared?
 		do
-			Result := environment.is_prefix_declared (an_xml_prefix)
+			check attached environment as l_environment then
+				Result := l_environment.is_prefix_declared (an_xml_prefix)
+			end
 		end
 
 feature -- Parsers
@@ -126,20 +132,22 @@ feature -- Parsers
 			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
+			l_tokenizer: like tokenizer
 		do
 			internal_last_parse_error := Void
 			environment := a_context
-			function_library := environment.available_functions
-			create tokenizer.make
-			tokenizer.tokenize (an_expression_string, a_start, -1, a_line_number)
-			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+			function_library := a_context.available_functions
+			create l_tokenizer.make
+			tokenizer := l_tokenizer
+			l_tokenizer.tokenize (an_expression_string, a_start, -1, a_line_number)
+			if	l_tokenizer.is_lexical_error then
+				report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 			else
 				is_parse_error := False
 				parse_expression
-				if	tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif tokenizer.last_token /= a_terminator then
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				elseif l_tokenizer.last_token /= a_terminator then
 					s := STRING_.appended_string ("Unexpected token ", display_current_token)
 					s := STRING_.appended_string (s, " beyond end of expression")
 					report_parse_error (s, "XPST0003")
@@ -161,53 +169,58 @@ feature -- Creation
 			a_parser: XM_XPATH_QNAME_PARSER
 			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Making name code for name ")
-				std.error.put_string (a_qname)
-				std.error.put_new_line
-			end
-			create a_parser.make (a_qname)
-			check
-				a_parser.is_valid
-				-- from pre-condition
-			end
-			if not a_parser.is_prefix_present then
-				an_xml_prefix := ""
-				a_local_name := a_parser.local_name
-				if use_default_namespace then
-					a_uri := environment.default_element_namespace
-				else
-					a_uri := ""
+			check attached environment as l_environment then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Making name code for name ")
+					std.error.put_string (a_qname)
+					std.error.put_new_line
 				end
-				if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
-				else
-					shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-					last_generated_name_code := shared_name_pool.last_name_code
-				end
-			else
-				an_xml_prefix := a_parser.optional_prefix
-				a_local_name := a_parser.local_name
-				if environment.is_prefix_declared (an_xml_prefix) then
-					a_uri := environment.uri_for_prefix (an_xml_prefix)
-					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
-					else
-						if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+				create a_parser.make (a_qname)
+				check
+						-- from pre-condition
+					a_parser.is_valid
+						-- invariant of XM_XPATH_QNAME_PARSER:
+					local_name_not_void: attached a_parser.local_name as l_local_name
+				then
+					a_local_name := l_local_name
+					if not attached a_parser.optional_prefix as l_optional_prefix or else l_optional_prefix.is_empty then
+						check not_prefix_present: not a_parser.is_prefix_present end
+						an_xml_prefix := ""
+						if use_default_namespace then
+							a_uri := l_environment.default_element_namespace
+						else
+							a_uri := ""
+						end
+						if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+							last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+						else
 							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
 							last_generated_name_code := shared_name_pool.last_name_code
+						end
+					else
+						an_xml_prefix := l_optional_prefix
+						if l_environment.is_prefix_declared (an_xml_prefix) then
+							a_uri := l_environment.uri_for_prefix (an_xml_prefix)
+							if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+								last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+							else
+								if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
+									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+									last_generated_name_code := shared_name_pool.last_name_code
+								else
+									a_message := STRING_.concat ("Name pool has no room to allocate ", a_uri)
+									a_message := STRING_.appended_string (a_message, "#")
+									a_message := STRING_.appended_string (a_message, a_local_name)
+									report_parse_error (a_message, "FODC0002,")
+									last_generated_name_code := -2
+								end
+							end
 						else
-							a_message := STRING_.concat ("Name pool has no room to allocate ", a_uri)
-							a_message := STRING_.appended_string (a_message, "#")
-							a_message := STRING_.appended_string (a_message, a_local_name)
-							report_parse_error (a_message, "FODC0002,")
+							a_message := STRING_.concat ("Prefix is not declared: ", an_xml_prefix)
+							report_parse_error (a_message, "XPST0081")
 							last_generated_name_code := -2
 						end
 					end
-				else
-					a_message := STRING_.concat ("Prefix is not declared: ", an_xml_prefix)
-					report_parse_error (a_message, "XPST0081")
-					last_generated_name_code := -2
 				end
 			end
 		ensure
@@ -229,7 +242,7 @@ feature -- Creation
 			error_or_non_negative_name_code: not is_parse_error implies last_generated_name_code >= 0
 		end
 
-	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST
+	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): detachable XM_XPATH_LOCAL_NAME_TEST
 			-- Create a name test
 		require
 			valid_name: a_local_name /= Void
@@ -250,7 +263,9 @@ feature -- Creation
 			valid_node_type: is_node_type (a_node_type)
 			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix) and then is_prefix_declared (an_xml_prefix)
 		do
-			create Result.make (a_node_type, environment.uri_for_prefix (an_xml_prefix), STRING_.concat (an_xml_prefix, ":*"))
+			check attached environment as l_environment then
+				create Result.make (a_node_type, l_environment.uri_for_prefix (an_xml_prefix), STRING_.concat (an_xml_prefix, ":*"))
+			end
 		ensure
 			namespace_test_not_void: Result /= Void
 		end
@@ -264,102 +279,106 @@ feature {NONE} -- Implementation
 			-- Parse the sequence type production
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_primary_type: XM_XPATH_ITEM_TYPE
-			a_message, a_local_name, a_uri: STRING
+			a_message: STRING
+			a_uri: detachable STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_fingerprint: INTEGER
 			l_empty_sequence: BOOLEAN
 		do
-			a_primary_type := any_item
-			if tokenizer.last_token = Name_token then
-				if is_qname (tokenizer.last_token_value) then
-					create a_parser.make (tokenizer.last_token_value)
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				a_primary_type := any_item
+				if l_tokenizer.last_token = Name_token then
+					if is_qname (l_tokenizer.last_token_value) then
+						create a_parser.make (l_tokenizer.last_token_value)
 						check
+								-- because of is_qname:
 							one_or_two_parts: a_parser.is_valid
-							-- because of is_qname
-						end
-					a_local_name := a_parser.local_name
-						if not a_parser.is_prefix_present then
-							a_uri := environment.default_element_namespace
-					elseif environment.is_prefix_declared (a_parser.optional_prefix) then
-						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
-					else
-						a_message := STRING_.concat ("Prefix ", a_parser.optional_prefix)
-						a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
-						report_parse_error (a_message, "XPST0081")
-					end
-					if not is_parse_error then
-						if a_uri /= Void and then (is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri)) then
-							a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
-							a_primary_type := type_factory.schema_type (a_fingerprint)
-							check
-								primary_type_not_void: a_primary_type /= Void
+								-- invariant of XM_XPATH_QNAME_PARSER:
+							local_name_not_void: attached a_parser.local_name as l_local_name
+						then
+							if not attached a_parser.optional_prefix as l_optional_prefix or else l_optional_prefix.is_empty then
+								check not_prefix_present: not a_parser.is_prefix_present end
+								a_uri := l_environment.default_element_namespace
+							elseif l_environment.is_prefix_declared (l_optional_prefix) then
+								a_uri := l_environment.uri_for_prefix (l_optional_prefix)
+							else
+								a_message := STRING_.concat ("Prefix ", l_optional_prefix)
+								a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
+								report_parse_error (a_message, "XPST0081")
 							end
-							next_token ("In parse_sequence: current token is ")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+							if not is_parse_error then
+								if a_uri /= Void and then (is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri)) then
+									a_fingerprint := type_factory.standard_fingerprint (a_uri, l_local_name)
+									check primary_type_not_void: attached type_factory.schema_type (a_fingerprint) as l_primary_type then
+										a_primary_type := l_primary_type
+										next_token ("In parse_sequence: current token is ")
+										if l_tokenizer.is_lexical_error then
+											report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+										end
+									end
+								else
+									report_parse_error (STRING_.appended_string ("Named type can not be found in the static context. Found ", l_tokenizer.last_token_value), "XPST0051")
+								end
 							end
-						else
-							report_parse_error (STRING_.appended_string ("Named type can not be found in the static context. Found ", tokenizer.last_token_value), "XPST0051")
 						end
-					end
-				else
-					report_parse_error (STRING_.appended_string ("Token is not a QName. Found ", tokenizer.last_token_value), "XPST0003")
-				end
-			elseif tokenizer.last_token = Node_kind_token then
-
-				if STRING_.same_string (tokenizer.last_token_value, "item") then
-					a_primary_type := any_item
-					next_token ("In parse_sequence after item: current token is ")
-					if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 					else
-						if tokenizer.last_token /= Right_parenthesis_token then
-							a_message := "expected %"%)%", found "
-							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XPST0003")
-						else
-							next_token ("In parse_sequence after item after RPAR: current token is ")
-						end
+						report_parse_error (STRING_.appended_string ("Token is not a QName. Found ", l_tokenizer.last_token_value), "XPST0003")
 					end
-				elseif STRING_.same_string (tokenizer.last_token_value, "empty-sequence") then
-					next_token ("In parse_sequence after empty-sequence: current token is ")
-					if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+				elseif l_tokenizer.last_token = Node_kind_token then
+
+					if STRING_.same_string (l_tokenizer.last_token_value, "item") then
+						a_primary_type := any_item
+						next_token ("In parse_sequence after item: current token is ")
+						if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+						else
+							if l_tokenizer.last_token /= Right_parenthesis_token then
+								a_message := "expected %"%)%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
+							else
+								next_token ("In parse_sequence after item after RPAR: current token is ")
+							end
+						end
+					elseif STRING_.same_string (l_tokenizer.last_token_value, "empty-sequence") then
+						next_token ("In parse_sequence after empty-sequence: current token is ")
+						if l_tokenizer.is_lexical_error then
+							report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+						else
+							if l_tokenizer.last_token /= Right_parenthesis_token then
+								a_message := "expected %"%)%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
+							else
+								next_token ("In parse_sequence after empty-sequence after RPAR: current token is ")
+							end
+						end
+						l_empty_sequence := True
 					else
-						if tokenizer.last_token /= Right_parenthesis_token then
-							a_message := "expected %"%)%", found "
-							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XPST0003")
-						else
-							next_token ("In parse_sequence after empty-sequence after RPAR: current token is ")
+
+						-- Covers element(N,T), comment(), text(), etc
+
+						parse_node_kind_test
+						if not is_parse_error then
+							check postcondition_of_parse_node_kind_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+								a_primary_type := l_internal_last_parsed_node_test
+							end
 						end
 					end
-					l_empty_sequence := True
 				else
-
-					-- Covers element(N,T), comment(), text(), etc
-
-					parse_node_kind_test
-					if not is_parse_error then
-						a_primary_type := internal_last_parsed_node_test
-						check
-							node_test_primary_type_not_void: a_primary_type /= Void
-						end
-					end
+					a_message := STRING_.appended_string ("Expected type name in SequenceType, found ", display_current_token)
+					report_parse_error (a_message, "XPST0003")
 				end
-			else
-				a_message := STRING_.appended_string ("Expected type name in SequenceType, found ", display_current_token)
-				report_parse_error (a_message, "XPST0003")
-			end
-			if not is_parse_error then
-				if l_empty_sequence then
-					create internal_last_parsed_sequence.make_empty
-				else
-					set_occurrence_flag (a_primary_type)
+				if not is_parse_error then
+					if l_empty_sequence then
+						create internal_last_parsed_sequence.make_empty
+					else
+						set_occurrence_flag (a_primary_type)
+					end
 				end
 			end
 		ensure
@@ -370,33 +389,36 @@ feature {NONE} -- Implementation
 			-- Set occurrence flag
 		require
 			primary_type_not_void: a_primary_type /= Void
+			tokenizer_not_void: tokenizer /= Void
 		local
 			an_occurrence_flag: INTEGER
 		do
-			inspect
-				tokenizer.last_token
-			when Star_token, Multiply_token then
-				an_occurrence_flag := Required_cardinality_zero_or_more
-				next_token ("In set_occurrence_flag/*: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer then
+				inspect
+					l_tokenizer.last_token
+				when Star_token, Multiply_token then
+					an_occurrence_flag := Required_cardinality_zero_or_more
+					next_token ("In set_occurrence_flag/*: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					end
+				when Plus_token then
+					an_occurrence_flag := Required_cardinality_one_or_more
+					next_token ("In set_occurrence_flag/plus: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					end
+				when Question_mark_token then
+					an_occurrence_flag := Required_cardinality_optional
+					next_token ("In set_occurrence_flag/?: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					end
+				else
+					an_occurrence_flag := Required_cardinality_exactly_one
 				end
-			when Plus_token then
-				an_occurrence_flag := Required_cardinality_one_or_more
-				next_token ("In set_occurrence_flag/plus: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				end
-			when Question_mark_token then
-				an_occurrence_flag := Required_cardinality_optional
-				next_token ("In set_occurrence_flag/?: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				end
-			else
-				an_occurrence_flag := Required_cardinality_exactly_one
+				create internal_last_parsed_sequence.make (a_primary_type, an_occurrence_flag)
 			end
-			create internal_last_parsed_sequence.make (a_primary_type, an_occurrence_flag)
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_sequence /= Void
 		end
@@ -406,34 +428,40 @@ feature {NONE} -- Implementation
 			-- Expr ::= ExprSingle ( ',' ExprSingle )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_append_expression: XM_XPATH_SEQUENCE_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_expression%N")
-			end
-			parse_single_expression
-			if not is_parse_error then
-				from
-					l_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else tokenizer.last_token /= Comma_token
-				loop
-					next_token ("In parse_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_single_expression
-						if not is_parse_error then
-							create l_append_expression.make (l_expression, internal_last_parsed_expression)
-							l_expression := l_append_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_expression%N")
+				end
+				parse_single_expression
+				if not is_parse_error then
+					check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							l_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else l_tokenizer.last_token /= Comma_token
+						loop
+							next_token ("In parse_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_single_expression
+								if not is_parse_error then
+									check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create l_append_expression.make (l_expression, l_internal_last_parsed_expression2)
+										l_expression := l_append_expression
+									end
+								end
+							end
 						end
+						if not is_parse_error then internal_last_parsed_expression := l_expression end
 					end
 				end
-				if not is_parse_error then internal_last_parsed_expression := l_expression end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -447,28 +475,30 @@ feature {NONE} -- Implementation
 			-- | OrExpr
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_single_expression%N")
-			end
-			inspect
-				tokenizer.last_token
-			when For_token then
-				parse_for_expression
-			when Let_token then -- XQuery only
-				parse_for_expression
-			when Some_token then
-				parse_quantified_expression
-			when Every_token then
-				parse_quantified_expression
-			when If_token then
-				parse_if_expression
-			when Typeswitch_token then -- XQuery only
-				parse_typeswitch_expression
-			else
-				parse_or_expression
+			check precpndition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_single_expression%N")
+				end
+				inspect
+					l_tokenizer.last_token
+				when For_token then
+					parse_for_expression
+				when Let_token then -- XQuery only
+					parse_for_expression
+				when Some_token then
+					parse_quantified_expression
+				when Every_token then
+					parse_quantified_expression
+				when If_token then
+					parse_if_expression
+				when Typeswitch_token then -- XQuery only
+					parse_typeswitch_expression
+				else
+					parse_or_expression
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -479,57 +509,65 @@ feature {NONE} -- Implementation
 			-- IfExpr ::= "if" "(" Expr ")" "then" ExprSingle "else" ExprSingle
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_condition, a_then_expression, an_else_expression: XM_XPATH_EXPRESSION
 			an_if_expression: XM_XPATH_IF_EXPRESSION
 			a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_if_expression%N")
-			end
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_if_expression%N")
+				end
 
-			-- The Left_parenthesis_token has already been read.
+				-- The Left_parenthesis_token has already been read.
 
-			next_token ("In parse_if_expression: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				parse_expression
-				if not is_parse_error then
-					a_condition := internal_last_parsed_expression
-					if tokenizer.last_token /= Right_parenthesis_token then
-						a_message := "expected %")%", found "
-						a_message := STRING_.appended_string (a_message, display_current_token)
-						report_parse_error (a_message, "XPST0003")
-					else
-						next_token ("In parse_if_expression after RPAR: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-						elseif tokenizer.last_token /= Then_token then
-							a_message := "expected %"then%", found "
-							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XPST0003")
-						else
-							next_token ("In parse_if_expression after then: current token is ")
-							parse_expression
-							if not is_parse_error then
-								a_then_expression := internal_last_parsed_expression
-								if tokenizer.last_token /= Else_token then
-									a_message := "expected %"else%", found "
+				next_token ("In parse_if_expression: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					parse_expression
+					if not is_parse_error then
+						check postcondition_of_parse_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+							a_condition := l_internal_last_parsed_expression
+							if l_tokenizer.last_token /= Right_parenthesis_token then
+								a_message := "expected %")%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
+							else
+								next_token ("In parse_if_expression after RPAR: current token is ")
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+								elseif l_tokenizer.last_token /= Then_token then
+									a_message := "expected %"then%", found "
 									a_message := STRING_.appended_string (a_message, display_current_token)
 									report_parse_error (a_message, "XPST0003")
 								else
-									next_token ("In parse_if_expression after RPAR 2: current token is ")
-									if tokenizer.is_lexical_error then
-										report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-									else
-										parse_single_expression
-										if not is_parse_error then
-											an_else_expression := internal_last_parsed_expression
-											create an_if_expression.make (a_condition, a_then_expression, an_else_expression)
-											internal_last_parsed_expression := an_if_expression
+									next_token ("In parse_if_expression after then: current token is ")
+									parse_expression
+									if not is_parse_error then
+										check postcondition_of_parse_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+											a_then_expression := l_internal_last_parsed_expression2
+											if l_tokenizer.last_token /= Else_token then
+												a_message := "expected %"else%", found "
+												a_message := STRING_.appended_string (a_message, display_current_token)
+												report_parse_error (a_message, "XPST0003")
+											else
+												next_token ("In parse_if_expression after RPAR 2: current token is ")
+												if l_tokenizer.is_lexical_error then
+													report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+												else
+													parse_single_expression
+													if not is_parse_error then
+														check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression3 then
+															an_else_expression := l_internal_last_parsed_expression3
+															create an_if_expression.make (a_condition, a_then_expression, an_else_expression)
+															internal_last_parsed_expression := an_if_expression
+														end
+													end
+												end
+											end
 										end
 									end
 								end
@@ -546,13 +584,13 @@ feature {NONE} -- Implementation
 			-- XQuery only - override in descendant
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_typeswitch_expression%N")
 			end
-			report_parse_error("typeswitch is not allowed in XPath", "XPST0003")
+			report_parse_error ("typeswitch is not allowed in XPath", "XPST0003")
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
 		end
@@ -562,35 +600,40 @@ feature {NONE} -- Implementation
 			-- OrExpr ::= AndExpr ( 'or' AndExpr )
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_BOOLEAN_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_or_expression%N")
-			end
-			parse_and_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else tokenizer.last_token /= Or_token
-				loop
-					next_token ("In parse_or_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_and_expression
-						if not is_parse_error then
-							create another_expression.make (an_expression, Or_token, internal_last_parsed_expression)
-							an_expression := another_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_or_expression%N")
+				end
+				parse_and_expression
+				if not is_parse_error then
+					check postcondition_of_parse_and_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else l_tokenizer.last_token /= Or_token
+						loop
+							next_token ("In parse_or_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_and_expression
+								if not is_parse_error then
+									check postcondition_of_parse_and_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, Or_token, l_internal_last_parsed_expression2)
+										an_expression := another_expression
+									end
+								end
+							end
 						end
+						if not is_parse_error then internal_last_parsed_expression := an_expression end
 					end
 				end
-				if not is_parse_error then internal_last_parsed_expression := an_expression end
-
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -601,35 +644,40 @@ feature {NONE} -- Implementation
 			-- AndExpr ::= InstanceofExpr ( 'and' InstanceofExpr )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_BOOLEAN_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_and_expression%N")
-			end
-			parse_comparison_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else tokenizer.last_token /= And_token
-				loop
-					next_token ("In parse_and_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_comparison_expression
-						if not is_parse_error then
-							create another_expression.make (an_expression, And_token, internal_last_parsed_expression)
-							an_expression := another_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_and_expression%N")
+				end
+				parse_comparison_expression
+				if not is_parse_error then
+					check postcondition_of_parse_comparison_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else l_tokenizer.last_token /= And_token
+						loop
+							next_token ("In parse_and_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_comparison_expression
+								if not is_parse_error then
+									check postcondition_of_parse_comparison_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, And_token, l_internal_last_parsed_expression2)
+										an_expression := another_expression
+									end
+								end
+							end
 						end
+						if not is_parse_error then internal_last_parsed_expression := an_expression end
 					end
 				end
-				if not is_parse_error then internal_last_parsed_expression := an_expression end
-
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -640,16 +688,18 @@ feature {NONE} -- Implementation
 			-- "for" "$" VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* "return" ExprSingle;
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_for_expression%N")
-			end
-			if tokenizer.last_token = Let_token then
-				report_parse_error ("'let' is not supported in XPath", "XPST0003")
-			else
-				parse_mapping_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_for_expression%N")
+				end
+				if l_tokenizer.last_token = Let_token then
+					report_parse_error ("'let' is not supported in XPath", "XPST0003")
+				else
+					parse_mapping_expression
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -660,7 +710,7 @@ feature {NONE} -- Implementation
 			-- QuantifiedExpr ::= (("some" "$") | ("every" "$")) VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* "satisfies" ExprSingle
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		do
 			debug ("XPath Expression Parser")
@@ -675,7 +725,7 @@ feature {NONE} -- Implementation
 			-- Parse a mapping expression
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]
@@ -683,53 +733,55 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			a_message, a_token_value: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_mapping_expression%N")
-			end
-			create a_clause_list.make (For_clause_list_size)
-			an_operator := tokenizer.last_token
-			from
-				finished := False
-			until
-				finished or else is_parse_error
-			loop
-				a_line_number := tokenizer.line_number
-				next_token (" parse_mapping_expression: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif tokenizer.last_token /= Dollar_token then
-					a_message := "expected %"$%", found "
-					a_message := STRING_.appended_string (a_message, display_current_token)
-					report_parse_error (a_message, "XPST0003")
-				else
-					next_token ("In parse_mapping_expression after $: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					elseif tokenizer.last_token /= Name_token then
-						a_message := "expected %"<name>%", found "
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_mapping_expression%N")
+				end
+				create a_clause_list.make (For_clause_list_size)
+				an_operator := l_tokenizer.last_token
+				from
+					finished := False
+				until
+					finished or else is_parse_error
+				loop
+					a_line_number := l_tokenizer.line_number
+					next_token (" parse_mapping_expression: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif l_tokenizer.last_token /= Dollar_token then
+						a_message := "expected %"$%", found "
 						a_message := STRING_.appended_string (a_message, display_current_token)
 						report_parse_error (a_message, "XPST0003")
 					else
-						a_token_value := tokenizer.last_token_value
-
-						next_token ("In parse_mapping_expression after <name>: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-						elseif tokenizer.last_token /= In_token then
-							a_message := "expected %"in%", found "
+						next_token ("In parse_mapping_expression after $: current token is ")
+						if l_tokenizer.is_lexical_error then
+							report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+						elseif l_tokenizer.last_token /= Name_token then
+							a_message := "expected %"<name>%", found "
 							a_message := STRING_.appended_string (a_message, display_current_token)
 							report_parse_error (a_message, "XPST0003")
 						else
-							parse_in_clause (a_clause_list, a_token_value, a_line_number)
+							a_token_value := l_tokenizer.last_token_value
+
+							next_token ("In parse_mapping_expression after <name>: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							elseif l_tokenizer.last_token /= In_token then
+								a_message := "expected %"in%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
+							else
+								parse_in_clause (a_clause_list, a_token_value, a_line_number)
+							end
 						end
 					end
+
+					if not is_parse_error and then l_tokenizer.last_token /= Comma_token then finished := True end
 				end
 
-				if not is_parse_error and then tokenizer.last_token /= Comma_token then finished := True end
-			end
-
-			if not is_parse_error then
-				parse_return_satisfies (an_operator, a_clause_list)
+				if not is_parse_error then
+					parse_return_satisfies (an_operator, a_clause_list)
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -740,29 +792,36 @@ feature {NONE} -- Implementation
 			-- process the "in" clause
 		require
 			no_previous_parse_error: not is_parse_error
+			a_clause_list_not_void: a_clause_list /= Void
+			tokenizer_not_void: tokenizer /= Void
+			a_token_value_not_void: a_token_value /= Void
 		local
 			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			a_single_item: XM_XPATH_SEQUENCE_TYPE
 			a_clause: XM_XPATH_FOR_CLAUSE
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_in_clause%N")
-			end
-			next_token ("In parse_in_clause: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				parse_single_expression
-				if not is_parse_error then
-					create a_single_item.make_single_item
-					generate_name_code (a_token_value, False)
-					create a_range_variable.make (a_token_value, last_generated_name_code  \\ bits_20, a_single_item)
-					create a_clause.make (a_range_variable, internal_last_parsed_expression, a_line_number)
-					declare_range_variable (a_clause.range_variable)
-					if not a_clause_list.extendible (1) then
-						a_clause_list.resize (a_clause_list.count + For_clause_list_size)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_in_clause%N")
+				end
+				next_token ("In parse_in_clause: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					parse_single_expression
+					if not is_parse_error then
+						check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+							create a_single_item.make_single_item
+							generate_name_code (a_token_value, False)
+							create a_range_variable.make (a_token_value, last_generated_name_code  \\ bits_20, a_single_item)
+							create a_clause.make (a_range_variable, l_internal_last_parsed_expression, a_line_number)
+							declare_range_variable (a_clause.range_variable)
+							if not a_clause_list.extendible (1) then
+								a_clause_list.resize (a_clause_list.count + For_clause_list_size)
+							end
+							a_clause_list.put_last (a_clause)
+						end
 					end
-					a_clause_list.put_last (a_clause)
 				end
 			end
 		end
@@ -771,33 +830,37 @@ feature {NONE} -- Implementation
 			-- process the action ("return"/"satisfies" expression)
 		require
 			no_previous_parse_error: not is_parse_error
+			a_clause_list_not_void: a_clause_list /= Void
+			tokenizer_not_void: tokenizer /= Void
 		local
 			a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_return/satisfies%N")
-			end
-			if an_operator = For_token then
-				if tokenizer.last_token /= Return_token then
-					a_message := "expected %"return%", found "
-					a_message := STRING_.appended_string (a_message, display_current_token)
-					report_parse_error (a_message, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_return/satisfies%N")
 				end
-			else
-				if tokenizer.last_token /= Satisfies_token then
-					a_message := "expected %"satisfies%", found "
-					a_message := STRING_.appended_string (a_message, display_current_token)
-					report_parse_error (a_message, "XPST0003")
+				if an_operator = For_token then
+					if l_tokenizer.last_token /= Return_token then
+						a_message := "expected %"return%", found "
+						a_message := STRING_.appended_string (a_message, display_current_token)
+						report_parse_error (a_message, "XPST0003")
+					end
+				else
+					if l_tokenizer.last_token /= Satisfies_token then
+						a_message := "expected %"satisfies%", found "
+						a_message := STRING_.appended_string (a_message, display_current_token)
+						report_parse_error (a_message, "XPST0003")
+					end
 				end
-			end
-			if not is_parse_error then
-				next_token (" parse_return_satisifies: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif not  is_parse_error then
-					parse_single_expression
-					if not is_parse_error then
-						fix_up_references (an_operator, a_clause_list)
+				if not is_parse_error then
+					next_token (" parse_return_satisifies: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif not  is_parse_error then
+						parse_single_expression
+						if not is_parse_error then
+							fix_up_references (an_operator, a_clause_list)
+						end
 					end
 				end
 			end
@@ -805,6 +868,10 @@ feature {NONE} -- Implementation
 
 	fix_up_references (a_operator: INTEGER; a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE])
 			-- Work backwards through the list of range variables, fixing up all references to the variables in the inner expression.
+		require
+			internal_last_parsed_expression_not_void: internal_last_parsed_expression /= Void
+			a_clause_list_not_void: a_clause_list /= Void
+			range_variable_stack_not_void: range_variable_stack /= Void
 		local
 			l_action: XM_XPATH_EXPRESSION
 			l_clause: XM_XPATH_FOR_CLAUSE
@@ -812,53 +879,55 @@ feature {NONE} -- Implementation
 			l_sequence: XM_XPATH_SEQUENCE_TYPE
 			l_assignment: XM_XPATH_ASSIGNATION
 		do
-			l_action := internal_last_parsed_expression
-			from
-				l_index := a_clause_list.count
-			until
-				l_index = 0
-			loop
-				l_clause := a_clause_list.item (l_index)
+			check precondition: attached internal_last_parsed_expression as l_internal_last_parsed_expression and attached range_variable_stack as l_range_variable_stack then
+				l_action := l_internal_last_parsed_expression
+				from
+					l_index := a_clause_list.count
+				until
+					l_index = 0
+				loop
+					l_clause := a_clause_list.item (l_index)
 
-				-- Attempt to give the range variable a more precise type, based on analysis of
-				-- `l_action'. This will often be approximate, because variables and function
-				-- calls in the action expression have not yet been resolved. We rely on the ability
-				-- of all expressions to return some kind of type information even if this is imprecise.
+					-- Attempt to give the range variable a more precise type, based on analysis of
+					-- `l_action'. This will often be approximate, because variables and function
+					-- calls in the action expression have not yet been resolved. We rely on the ability
+					-- of all expressions to return some kind of type information even if this is imprecise.
 
-				create l_sequence.make (l_clause.sequence.item_type, Required_cardinality_exactly_one)
-				l_clause.range_variable.set_required_type (l_sequence)
+					create l_sequence.make (l_clause.sequence.item_type, Required_cardinality_exactly_one)
+					l_clause.range_variable.set_required_type (l_sequence)
 
-				if a_operator = For_token then
-					debug ("XPath Expression Parser")
-						std.error.put_string ("Creating for expression%N")
+					if a_operator = For_token then
+						debug ("XPath Expression Parser")
+							std.error.put_string ("Creating for expression%N")
+						end
+						create {XM_XPATH_FOR_EXPRESSION} l_assignment.make (l_clause.range_variable, l_clause.sequence, l_action)
+					else
+						debug ("XPath Expression Parser")
+							std.error.put_string ("Creating quantified expression%N")
+						end
+						create {XM_XPATH_QUANTIFIED_EXPRESSION} l_assignment.make (a_operator, l_clause.range_variable, l_clause.sequence, l_action)
 					end
-					create {XM_XPATH_FOR_EXPRESSION} l_assignment.make (l_clause.range_variable, l_clause.sequence, l_action)
-				else
-					debug ("XPath Expression Parser")
-						std.error.put_string ("Creating quantified expression%N")
-					end
-					create {XM_XPATH_QUANTIFIED_EXPRESSION} l_assignment.make (a_operator, l_clause.range_variable, l_clause.sequence, l_action)
+
+					-- for the next outermost "for" clause, the "action" is this ForExpression
+					l_action := l_assignment
+
+					l_index := l_index - 1
 				end
 
-				-- for the next outermost "for" clause, the "action" is this ForExpression
-				l_action := l_assignment
+				-- undeclare all the range variables declared at this level only
 
-				l_index := l_index - 1
-			end
-
-			-- undeclare all the range variables declared at this level only
-
-			from
-				l_index := a_clause_list.count
-			until
-				l_index = 0
-			loop
-				range_variable_stack.remove_last
-				l_index := l_index - 1
-			end
-			internal_last_parsed_expression := l_action
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Returned action%N")
+				from
+					l_index := a_clause_list.count
+				until
+					l_index = 0
+				loop
+					l_range_variable_stack.remove_last
+					l_index := l_index - 1
+				end
+				internal_last_parsed_expression := l_action
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Returned action%N")
+				end
 			end
 		end
 
@@ -867,31 +936,37 @@ feature {NONE} -- Implementation
 			-- InstanceofExpr ::= TreatExpr ( "instance" "of" SequenceType )?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_INSTANCE_OF_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_instance_of_expression%N")
-			end
-			parse_treat_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = Instance_of_token then
-					next_token (" parse_instance_of: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_sequence
-						if not is_parse_error then
-							create {XM_XPATH_INSTANCE_OF_EXPRESSION} another_expression.make (an_expression, internal_last_parsed_sequence)
-							an_expression := another_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_instance_of_expression%N")
+				end
+				parse_treat_expression
+				if not is_parse_error then
+					check postcondition_of_parse_treat_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						if l_tokenizer.last_token = Instance_of_token then
+							next_token (" parse_instance_of: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_sequence
+								if not is_parse_error then
+									check postcondition_of_parse_sequence: attached internal_last_parsed_sequence as l_internal_last_parsed_sequence then
+										create {XM_XPATH_INSTANCE_OF_EXPRESSION} another_expression.make (an_expression, l_internal_last_parsed_sequence)
+										an_expression := another_expression
+									end
+								end
+							end
 						end
+						if not is_parse_error then internal_last_parsed_expression := an_expression end
 					end
 				end
-				if not is_parse_error then internal_last_parsed_expression := an_expression end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -902,31 +977,37 @@ feature {NONE} -- Implementation
 			-- TreatExpr ::= CastableExpr ( "treat" "as" SequenceType )?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_treat_expression%N")
-			end
-			parse_castable_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = Treat_as_token then
-					next_token ("In parse_treat_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_sequence
-						if not is_parse_error then
-							an_expression := expression_factory.created_treat_expression (an_expression, internal_last_parsed_sequence)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_treat_expression%N")
+				end
+				parse_castable_expression
+				if not is_parse_error then
+					check postcondition_of_parse_castable_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						if l_tokenizer.last_token = Treat_as_token then
+							next_token ("In parse_treat_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_sequence
+								if not is_parse_error then
+									check postcondition_of_parse_sequence: attached internal_last_parsed_sequence as l_internal_last_parsed_sequence then
+										an_expression := expression_factory.created_treat_expression (an_expression, l_internal_last_parsed_sequence)
+									end
+								end
+							end
 						end
 					end
+					if not is_parse_error then
+						internal_last_parsed_expression := an_expression
+					end
 				end
-			end
-			if not is_parse_error then
-				internal_last_parsed_expression := an_expression
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -937,29 +1018,35 @@ feature {NONE} -- Implementation
 			-- CastableExpr ::= CastExpr ( "castable" "as" SingleType )?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_castable_expression%N")
-			end
-			parse_cast_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = Castable_as_token then
-					next_token ("In parse_castable_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_sequence
-						if not is_parse_error then
-							create {XM_XPATH_CASTABLE_EXPRESSION} internal_last_parsed_expression.make (an_expression, internal_last_parsed_sequence)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_castable_expression%N")
+				end
+				parse_cast_expression
+				if not is_parse_error then
+					check postcondition_of_parse_cast_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						if l_tokenizer.last_token = Castable_as_token then
+							next_token ("In parse_castable_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_sequence
+								if not is_parse_error then
+									check postcondition_of_parse_sequence: attached internal_last_parsed_sequence as l_internal_last_parsed_sequence then
+										create {XM_XPATH_CASTABLE_EXPRESSION} internal_last_parsed_expression.make (an_expression, l_internal_last_parsed_sequence)
+									end
+								end
+							end
+						else
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				else
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -971,51 +1058,57 @@ feature {NONE} -- Implementation
 			-- CastExpr ::= UnaryExpr ( "cast" "as" SingleType )?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_CAST_EXPRESSION
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			an_atomic_type: detachable XM_XPATH_ATOMIC_TYPE
 			allows_empty: BOOLEAN
 			a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_cast_expression%N")
-			end
-			parse_unary_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = Cast_as_token then
-					next_token ("In parse_cast_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					elseif tokenizer.last_token /= Name_token then
-						a_message := "expected %"<name>%", found "
-						a_message := STRING_.appended_string (a_message, display_current_token)
-						report_parse_error (a_message, "XPST0003")
-					else
-						an_atomic_type := atomic_type_from_qname (tokenizer.last_token_value)
-						if not is_parse_error then
-							next_token ("In parse_cast_expression: looking for optional '?'")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_cast_expression%N")
+				end
+				parse_unary_expression
+				if not is_parse_error then
+					check postcondition_of_parse_unary_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						if l_tokenizer.last_token = Cast_as_token then
+							next_token ("In parse_cast_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							elseif l_tokenizer.last_token /= Name_token then
+								a_message := "expected %"<name>%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
 							else
-								allows_empty := tokenizer.last_token = Question_mark_token
-								create another_expression.make (an_expression, an_atomic_type, allows_empty)
-								an_expression := another_expression
-								if allows_empty then
-									next_token ("In parse_cast_expression: after parsing.")
-									if tokenizer.is_lexical_error then
-										report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+								an_atomic_type := atomic_type_from_qname (l_tokenizer.last_token_value)
+								if not is_parse_error then
+									check postcondition_of_atomic_type_from_qname: an_atomic_type /= Void then
+										next_token ("In parse_cast_expression: looking for optional '?'")
+										if l_tokenizer.is_lexical_error then
+											report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+										else
+											allows_empty := l_tokenizer.last_token = Question_mark_token
+											create another_expression.make (an_expression, an_atomic_type, allows_empty)
+											an_expression := another_expression
+											if allows_empty then
+												next_token ("In parse_cast_expression: after parsing.")
+												if l_tokenizer.is_lexical_error then
+													report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+												end
+											end
+										end
 									end
 								end
 							end
 						end
+						if not is_parse_error then
+							internal_last_parsed_expression := an_expression
+						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1030,67 +1123,77 @@ feature {NONE} -- Implementation
 			-- NodeComp ::= "is" | "<<" | ">>"
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			an_operator: INTEGER
 			a_default_collator: ST_COLLATOR
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_comparison_expression%N")
-			end
-			parse_range_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_comparison_expression%N")
+				end
+				parse_range_expression
+				if not is_parse_error then
+					check postcondition_of_parse_range_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
 
-				inspect
-					tokenizer.last_token
+						inspect
+							l_tokenizer.last_token
 
-				when Is_token, Precedes_token, Follows_token  then
-					an_operator := tokenizer.last_token
-					next_token ("In parse_comparison_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_range_expression
-						if not is_parse_error then
-							create {XM_XPATH_IDENTITY_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression)
-						end
-					end
-
-				when Equals_token, Not_equal_token, Less_than_token, Greater_than_token, Less_equal_token, Greater_equal_token then
-					an_operator := tokenizer.last_token
-					next_token ("In parse_comparison_expression/eq etc.: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_range_expression
-						if not is_parse_error then
-							a_default_collator := environment.collator (environment.default_collation_name)
-							if environment.is_backwards_compatible_mode then
-								create {XM_XPATH_COMPATIBLE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
+						when Is_token, Precedes_token, Follows_token  then
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_comparison_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 							else
-								create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
+								parse_range_expression
+								if not is_parse_error then
+									check postcondition_of_parse_range_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create {XM_XPATH_IDENTITY_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2)
+									end
+								end
 							end
+
+						when Equals_token, Not_equal_token, Less_than_token, Greater_than_token, Less_equal_token, Greater_equal_token then
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_comparison_expression/eq etc.: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_range_expression
+								if not is_parse_error then
+									check postcondition_of_parse_range_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										a_default_collator := l_environment.collator (l_environment.default_collation_name)
+										if l_environment.is_backwards_compatible_mode then
+											create {XM_XPATH_COMPATIBLE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2, a_default_collator)
+										else
+											create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2, a_default_collator)
+										end
+									end
+								end
+							end
+
+						when Fortran_equal_token, Fortran_not_equal_token, Fortran_less_than_token, Fortran_greater_than_token, Fortran_less_equal_token, Fortran_greater_equal_token then
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_mapping_expression/= etc.: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_range_expression
+								if not is_parse_error then
+									check postcondition_of_parse_range_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										a_default_collator := l_environment.collator (l_environment.default_collation_name)
+										create {XM_XPATH_VALUE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2, a_default_collator)
+									end
+								end
+							end
+
+						else
+							internal_last_parsed_expression := an_expression
 						end
 					end
-
-				when Fortran_equal_token, Fortran_not_equal_token, Fortran_less_than_token, Fortran_greater_than_token, Fortran_less_equal_token, Fortran_greater_equal_token then
-					an_operator := tokenizer.last_token
-					next_token ("In parse_mapping_expression/= etc.: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_range_expression
-						if not is_parse_error then
-							a_default_collator := environment.collator (environment.default_collation_name)
-							create {XM_XPATH_VALUE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
-						end
-					end
-
-				else
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1102,32 +1205,38 @@ feature {NONE} -- Implementation
 			-- RangeExpr ::= AdditiveExpr ( "to" AdditiveExpr )?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_RANGE_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_range_expression%N")
-			end
-			parse_additive_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				if tokenizer.last_token = To_token then
-					next_token ("In parse_range_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_additive_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_range_expression%N")
+				end
+				parse_additive_expression
+				if not is_parse_error then
+					check postcondition_of_parse_additive_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						if l_tokenizer.last_token = To_token then
+							next_token ("In parse_range_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_additive_expression
+								if not is_parse_error then
+									check postcondition_of_parse_additive_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, To_token, l_internal_last_parsed_expression2)
+										an_expression := another_expression
+									end
+								end
+							end
+						end
 						if not is_parse_error then
-							create another_expression.make (an_expression, To_token, internal_last_parsed_expression)
-							an_expression := another_expression
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1139,37 +1248,43 @@ feature {NONE} -- Implementation
 			-- AdditiveExpr ::= MultiplicativeExpr ( ("+" | "-") MultiplicativeExpr )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_ARITHMETIC_EXPRESSION
 			an_operator: INTEGER
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_additive_expression%N")
-			end
-			parse_multiplicative_expression
-			if not is_parse_error then
-				an_expression := internal_last_parsed_expression
-				from
-				until
-					tokenizer.last_token /= Plus_token and then tokenizer.last_token /= Minus_token
-				loop
-					an_operator := tokenizer.last_token
-					next_token ("In parse_additive_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_multiplicative_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_additive_expression%N")
+				end
+				parse_multiplicative_expression
+				if not is_parse_error then
+					check postcondition_of_parse_multiplicative_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						an_expression := l_internal_last_parsed_expression
+						from
+						until
+							l_tokenizer.last_token /= Plus_token and then l_tokenizer.last_token /= Minus_token
+						loop
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_additive_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_multiplicative_expression
+								if not is_parse_error then
+									check postcondition_of_parse_multiplicative_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2)
+										an_expression := another_expression
+									end
+								end
+							end
+						end
 						if not is_parse_error then
-							create another_expression .make (an_expression, an_operator, internal_last_parsed_expression)
-							an_expression := another_expression
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1181,7 +1296,7 @@ feature {NONE} -- Implementation
 			-- MultiplicativeExpr ::= UnionExpr ( ("*" | "div" | "idiv" | "mod") UnionExpr )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -1189,37 +1304,43 @@ feature {NONE} -- Implementation
 			an_operator: INTEGER
 			finished: BOOLEAN
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_multiplicative_expression%N")
-			end
-			parse_union_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-					finished := False
-				until
-					finished or else tokenizer.last_token /= Multiply_token
-						and then tokenizer.last_token /= Division_token
-						and then tokenizer.last_token /= Modulus_token
-						and then tokenizer.last_token /= Integer_division_token
-				loop
-					an_operator := tokenizer.last_token
-					next_token ("In parse_multiplicative_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						finished := True
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_union_expression
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_multiplicative_expression%N")
+				end
+				parse_union_expression
+				if not is_parse_error then
+					check postcondition_of_parse_union_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+							finished := False
+						until
+							finished or else l_tokenizer.last_token /= Multiply_token
+								and then l_tokenizer.last_token /= Division_token
+								and then l_tokenizer.last_token /= Modulus_token
+								and then l_tokenizer.last_token /= Integer_division_token
+						loop
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_multiplicative_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								finished := True
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_union_expression
+								if not is_parse_error then
+									check postcondition_of_parse_union_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2)
+										an_expression := another_expression
+									end
+								else
+									finished := True
+								end
+							end
+						end
 						if not is_parse_error then
-							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression)
-							an_expression := another_expression
-						else
-							finished := True
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1231,51 +1352,56 @@ feature {NONE} -- Implementation
 			-- UnaryExpr ::= ("-" | "+")* ValueExpr
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			an_expression: XM_XPATH_EXPRESSION
+			an_expression: detachable XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_ARITHMETIC_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_unary_expression%N")
-			end
-			if tokenizer.last_token = Minus_token then
-				next_token ("In parse_unary_expression: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
-					parse_unary_expression
-					if not is_parse_error then
-						create another_expression.make (an_expression, Minus_token, internal_last_parsed_expression)
-						an_expression := another_expression
-					end
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_unary_expression%N")
 				end
-			elseif tokenizer.last_token = Plus_token then
-				next_token ("In parse_unary_expression/plus: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
-					parse_unary_expression
-					if not is_parse_error then
-
-						-- We cannot completely ignore unary plus,
-						-- as it might be a type error, or it might
-						-- force conversion to a number which would
-						-- affect operations such as "=".
-
-
-						create another_expression.make (an_expression, Plus_token, internal_last_parsed_expression)
-						an_expression := another_expression
+				if l_tokenizer.last_token = Minus_token then
+					next_token ("In parse_unary_expression: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
+						parse_unary_expression
+						if not is_parse_error then
+							check postcondition_of_parse_unary_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+								create another_expression.make (an_expression, Minus_token, l_internal_last_parsed_expression)
+								an_expression := another_expression
+							end
+						end
 					end
+				elseif l_tokenizer.last_token = Plus_token then
+					next_token ("In parse_unary_expression/plus: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						create {XM_XPATH_MACHINE_INTEGER_VALUE} an_expression.make (0)
+						parse_unary_expression
+						if not is_parse_error then
+
+							-- We cannot completely ignore unary plus,
+							-- as it might be a type error, or it might
+							-- force conversion to a number which would
+							-- affect operations such as "=".
+
+							check postcondition_of_parse_unary_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+								create another_expression.make (an_expression, Plus_token, l_internal_last_parsed_expression)
+								an_expression := another_expression
+							end
+						end
+					end
+				else
+					parse_path_expression
+					an_expression := internal_last_parsed_expression
 				end
-			else
-				parse_path_expression
-				an_expression := internal_last_parsed_expression
+				if not is_parse_error then internal_last_parsed_expression := an_expression end
 			end
-			if not is_parse_error then internal_last_parsed_expression := an_expression end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
 		end
@@ -1285,35 +1411,42 @@ feature {NONE} -- Implementation
 			-- UnionExpr ::= IntersectExceptExpr ( ("union" | "|") IntersectExceptExpr )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
+			function_library_not_void: function_library /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_VENN_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_union_expression%N")
-			end
-			parse_intersect_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else tokenizer.last_token /= Union_token
-				loop
-					next_token ("In parse_union_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_intersect_expression
+			check precondition: attached tokenizer as l_tokenizer and attached function_library as l_function_library then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_union_expression%N")
+				end
+				parse_intersect_expression
+				if not is_parse_error then
+					check postcondition_of_parse_intersect_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else l_tokenizer.last_token /= Union_token
+						loop
+							next_token ("In parse_union_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_intersect_expression
+								if not is_parse_error then
+									check postcondition_of_parse_intersect_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, Union_token, l_internal_last_parsed_expression2, l_function_library)
+										an_expression := another_expression
+									end
+								end
+							end
+						end
 						if not is_parse_error then
-							create another_expression.make (an_expression, Union_token, internal_last_parsed_expression, function_library)
-							an_expression := another_expression
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1325,37 +1458,44 @@ feature {NONE} -- Implementation
 			-- IntersectExceptExpr ::= InstanceOfExpr ( ("intersect" | "except") InstanceOfExpr )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
+			function_library_not_void: function_library /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			another_expression: XM_XPATH_VENN_EXPRESSION
 			an_operator: INTEGER
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_intersect_expression%N")
-			end
-			parse_instance_of_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else (tokenizer.last_token /= Intersect_token and tokenizer.last_token /= Except_token)
-				loop
-					an_operator := tokenizer.last_token
-					next_token ("In parse_intersect_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_instance_of_expression
+			check precondition: attached tokenizer as l_tokenizer and attached function_library as l_function_library then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_intersect_expression%N")
+				end
+				parse_instance_of_expression
+				if not is_parse_error then
+					check postcondition_of_parse_instance_of_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else (l_tokenizer.last_token /= Intersect_token and l_tokenizer.last_token /= Except_token)
+						loop
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_intersect_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								parse_instance_of_expression
+								if not is_parse_error then
+									check postcondition_of_parse_instance_of_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										create another_expression.make (an_expression, an_operator, l_internal_last_parsed_expression2, l_function_library)
+										an_expression := another_expression
+									end
+								end
+							end
+						end
 						if not is_parse_error then
-							create another_expression.make (an_expression, an_operator, internal_last_parsed_expression, function_library)
-							an_expression := another_expression
+							internal_last_parsed_expression := an_expression
 						end
 					end
-				end
-				if not is_parse_error then
-					internal_last_parsed_expression := an_expression
 				end
 			end
 		ensure
@@ -1369,46 +1509,48 @@ feature {NONE} -- Implementation
 			-- | RelativePathExpr
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			l_path: XM_XPATH_PATH_EXPRESSION
 			l_root: XM_XPATH_ROOT_EXPRESSION
 			l_axis: XM_XPATH_AXIS_EXPRESSION
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_path_expression%N")
-			end
-			inspect
+			check attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_path_expression%N")
+				end
+				inspect
 
-				tokenizer.last_token
+					l_tokenizer.last_token
 
-			when Slash_token then
-				next_token ("In parse_path_expression:/ current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					create l_root.make
-					if is_at_start_of_relative_path then
-						parse_remaining_path (l_root)
+				when Slash_token then
+					next_token ("In parse_path_expression:/ current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 					else
-						internal_last_parsed_expression := l_root
+						create l_root.make
+						if is_at_start_of_relative_path then
+							parse_remaining_path (l_root)
+						else
+							internal_last_parsed_expression := l_root
+						end
 					end
-				end
 
-			when Slash_slash_token then
-				next_token ("In parse_path_expression:// current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+				when Slash_slash_token then
+					next_token ("In parse_path_expression:// current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						create l_root.make
+						create l_axis.make (Descendant_or_self_axis, Void)
+						create l_path.make (l_root, l_axis)
+						parse_remaining_path (l_path)
+					end
+
 				else
-					create l_root.make
-					create l_axis.make (Descendant_or_self_axis, Void)
-					create l_path.make (l_root, l_axis)
-					parse_remaining_path (l_path)
+					parse_relative_path
 				end
-
-			else
-				parse_relative_path
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1418,7 +1560,7 @@ feature {NONE} -- Implementation
 			-- Parse rest of relative path expression.
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			l_operator: INTEGER
@@ -1427,34 +1569,38 @@ feature {NONE} -- Implementation
 			l_axis: XM_XPATH_AXIS_EXPRESSION
 			l_path: XM_XPATH_PATH_EXPRESSION
 		do
-			from
-				l_operator := Slash_token
-				l_expression := a_expression
-			until
-				is_parse_error or l_finished
-			loop
-				parse_step_expression
-				if not is_parse_error then
-					l_next := internal_last_parsed_expression
-					if l_operator = Slash_token then
-						create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_next)
-					else
-						-- add implicit descendant-or-self::node() step
-						create l_axis.make (Descendant_or_self_axis, Void)
-						create l_path.make (l_axis, l_next)
-						create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_path)
-					end
-					l_operator := tokenizer.last_token
-					l_finished := (l_operator /= Slash_token and l_operator /= Slash_slash_token)
-					if not l_finished then
-						next_token ("In remaining relative path expression: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer then
+				from
+					l_operator := Slash_token
+					l_expression := a_expression
+				until
+					is_parse_error or l_finished
+				loop
+					parse_step_expression
+					if not is_parse_error then
+						check postcondition_of_parse_step_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+							l_next := l_internal_last_parsed_expression
+							if l_operator = Slash_token then
+								create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_next)
+							else
+								-- add implicit descendant-or-self::node() step
+								create l_axis.make (Descendant_or_self_axis, Void)
+								create l_path.make (l_axis, l_next)
+								create {XM_XPATH_PATH_EXPRESSION} l_expression.make (l_expression, l_path)
+							end
+							l_operator := l_tokenizer.last_token
+							l_finished := (l_operator /= Slash_token and l_operator /= Slash_slash_token)
+							if not l_finished then
+								next_token ("In remaining relative path expression: current token is ")
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+								end
+							end
 						end
 					end
 				end
+				internal_last_parsed_expression := l_expression
 			end
-			internal_last_parsed_expression := l_expression
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
 		end
@@ -1464,7 +1610,7 @@ feature {NONE} -- Implementation
 			-- RelativePathExpr ::= StepExpr (("/" | "//") StepExpr)*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -1472,37 +1618,43 @@ feature {NONE} -- Implementation
 			an_axis: XM_XPATH_AXIS_EXPRESSION
 			an_operator: INTEGER
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_relative_path_expression%N")
-			end
-			parse_step_expression
-			if not is_parse_error then
-				from
-					an_expression := internal_last_parsed_expression
-				until
-					is_parse_error or else (tokenizer.last_token /= Slash_token and then tokenizer.last_token /= Slash_slash_token)
-				loop
-					an_operator := tokenizer.last_token
-					next_token ("In parse_relative_path_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_step_expression
-						if not is_parse_error then
-							if an_operator = Slash_token then
-								create {XM_XPATH_PATH_EXPRESSION} an_expression.make (an_expression, internal_last_parsed_expression)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_relative_path_expression%N")
+				end
+				parse_step_expression
+				if not is_parse_error then
+					check postcondition_of_parse_step_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						from
+							an_expression := l_internal_last_parsed_expression
+						until
+							is_parse_error or else (l_tokenizer.last_token /= Slash_token and then l_tokenizer.last_token /= Slash_slash_token)
+						loop
+							an_operator := l_tokenizer.last_token
+							next_token ("In parse_relative_path_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 							else
-								create an_axis.make (Descendant_or_self_axis, Void)
-								create another_path.make (an_axis, internal_last_parsed_expression)
-								create a_path.make (an_expression, another_path)
-								an_expression := a_path
+								parse_step_expression
+								if not is_parse_error then
+									check postcondition_of_parse_step_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										if an_operator = Slash_token then
+											create {XM_XPATH_PATH_EXPRESSION} an_expression.make (an_expression, l_internal_last_parsed_expression2)
+										else
+											create an_axis.make (Descendant_or_self_axis, Void)
+											create another_path.make (an_axis, l_internal_last_parsed_expression2)
+											create a_path.make (an_expression, another_path)
+											an_expression := a_path
+										end
+									end
+								end
 							end
+						end
+						if not is_parse_error then
+							internal_last_parsed_expression := an_expression
 						end
 					end
 				end
-			end
-			if not is_parse_error then
-				internal_last_parsed_expression := an_expression
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1514,57 +1666,63 @@ feature {NONE} -- Implementation
 			-- FilterStep ::=	PrimaryExpr Predicates
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_step, a_predicate: XM_XPATH_EXPRESSION
 			reverse: BOOLEAN
 			a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_step_expression%N")
-			end
-			parse_basic_step
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_step_expression%N")
+				end
+				parse_basic_step
 
-			if not is_parse_error then
+				if not is_parse_error then
 
-				-- When the filter is applied to an Axis step, the nodes are considered in
-				-- axis order. In all other cases they are considered in document order.
+					-- When the filter is applied to an Axis step, the nodes are considered in
+					-- axis order. In all other cases they are considered in document order.
 
-				a_step := internal_last_parsed_expression
-				reverse := (a_step.is_axis_expression and then is_reverse_axis (a_step.as_axis_expression.axis))
+					check postcondition_of_parse_basic_step: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+						a_step := l_internal_last_parsed_expression
+						reverse := (a_step.is_axis_expression and then is_reverse_axis (a_step.as_axis_expression.axis))
 
-				from
-				until
-					is_parse_error or else tokenizer.last_token /= Left_square_bracket_token
-				loop
-					next_token ("In parse_step_expression: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						parse_single_expression
-						if not is_parse_error then
-							a_predicate := internal_last_parsed_expression
-							if tokenizer.last_token /= Right_square_bracket_token then
-								a_message := "expected %"]%", found "
-								a_message := STRING_.appended_string (a_message, display_current_token)
-								report_parse_error (a_message, "XPST0003")
+						from
+						until
+							is_parse_error or else l_tokenizer.last_token /= Left_square_bracket_token
+						loop
+							next_token ("In parse_step_expression: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 							else
-								next_token ("In parse_step_expression]: current token is ")
-								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-								else
-									create {XM_XPATH_FILTER_EXPRESSION} a_step.make (a_step, a_predicate)
+								parse_single_expression
+								if not is_parse_error then
+									check precondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression2 then
+										a_predicate := l_internal_last_parsed_expression2
+										if l_tokenizer.last_token /= Right_square_bracket_token then
+											a_message := "expected %"]%", found "
+											a_message := STRING_.appended_string (a_message, display_current_token)
+											report_parse_error (a_message, "XPST0003")
+										else
+											next_token ("In parse_step_expression]: current token is ")
+											if l_tokenizer.is_lexical_error then
+												report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+											else
+												create {XM_XPATH_FILTER_EXPRESSION} a_step.make (a_step, a_predicate)
+											end
+										end
+									end
 								end
 							end
 						end
-					end
-				end
-				if not is_parse_error then
-					if reverse then
-						create {XM_XPATH_REVERSER} internal_last_parsed_expression.make (a_step)
-					else
-						internal_last_parsed_expression := a_step
+						if not is_parse_error then
+							if reverse then
+								create {XM_XPATH_REVERSER} internal_last_parsed_expression.make (a_step)
+							else
+								internal_last_parsed_expression := a_step
+							end
+						end
 					end
 				end
 			end
@@ -1578,47 +1736,51 @@ feature {NONE} -- Implementation
 			--	Literal ::= NumericLiteral | StringLiteral
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_basic_step%N")
-			end
-			inspect
-				tokenizer.last_token
-			when Dollar_token then
-				parse_variable_reference_step
-			when Left_parenthesis_token then
-				parse_parenthesized_expression
-			when String_literal_token then
-				parse_string_literal
-			when Number_token then
-				parse_numeric_literal
-			when Function_token then
-				parse_function_call
-			when Dot_token then
-				parse_context_item
-			when Dot_dot_token then
-				parse_abbreviated_reverse_step
-			when Node_kind_token then
-				parse_node_kind_step
-			when Prefix_token, Suffix_token, Name_token, Star_token then
-				parse_node_test (Element_node)
-				if not is_parse_error then
-					create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (Child_axis, internal_last_parsed_node_test)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_basic_step%N")
 				end
-			when At_token then
-				parse_abbreviated_forward_step
-			when Axis_token then
-				parse_axis_step
-			when Keyword_curly_token, Element_qname_token, Attribute_qname_token, Pi_qname_token, Tag_token then
-				parse_constructor
-			else
-				a_message := STRING_.appended_string ("Unexpected token ", display_current_token)
-				a_message := STRING_.appended_string (a_message, " in path expression")
-				report_parse_error (a_message, "XPST0003")
+				inspect
+					l_tokenizer.last_token
+				when Dollar_token then
+					parse_variable_reference_step
+				when Left_parenthesis_token then
+					parse_parenthesized_expression
+				when String_literal_token then
+					parse_string_literal
+				when Number_token then
+					parse_numeric_literal
+				when Function_token then
+					parse_function_call
+				when Dot_token then
+					parse_context_item
+				when Dot_dot_token then
+					parse_abbreviated_reverse_step
+				when Node_kind_token then
+					parse_node_kind_step
+				when Prefix_token, Suffix_token, Name_token, Star_token then
+					parse_node_test (Element_node)
+					if not is_parse_error then
+						check postcondition_of_parse_node_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+							create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (Child_axis, l_internal_last_parsed_node_test)
+						end
+					end
+				when At_token then
+					parse_abbreviated_forward_step
+				when Axis_token then
+					parse_axis_step
+				when Keyword_curly_token, Element_qname_token, Attribute_qname_token, Pi_qname_token, Tag_token then
+					parse_constructor
+				else
+					a_message := STRING_.appended_string ("Unexpected token ", display_current_token)
+					a_message := STRING_.appended_string (a_message, " in path expression")
+					report_parse_error (a_message, "XPST0003")
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1629,22 +1791,27 @@ feature {NONE} -- Implementation
 			-- AbbrevForwardStep ::= "@"? NodeTest
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		do
-			next_token ("In parse_abbrev_forward_step: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				if tokenizer.last_token = Name_token
-					or else tokenizer.last_token = Prefix_token
-					or else tokenizer.last_token = Suffix_token
-					or else tokenizer.last_token = Star_token
-					or else tokenizer.last_token = Node_kind_token then
-					parse_node_test (Attribute_node)
-					if not is_parse_error then
-						create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (Attribute_axis, internal_last_parsed_node_test)
-					end
+			check precondition: attached tokenizer as l_tokenizer then
+				next_token ("In parse_abbrev_forward_step: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 				else
-					report_parse_error ("@ must be followed by a NodeTest", "XPST0003")
+					if l_tokenizer.last_token = Name_token
+						or else l_tokenizer.last_token = Prefix_token
+						or else l_tokenizer.last_token = Suffix_token
+						or else l_tokenizer.last_token = Star_token
+						or else l_tokenizer.last_token = Node_kind_token then
+						parse_node_test (Attribute_node)
+						if not is_parse_error then
+							check postcondition_of_parse_node_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+								create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (Attribute_axis, l_internal_last_parsed_node_test)
+							end
+						end
+					else
+						report_parse_error ("@ must be followed by a NodeTest", "XPST0003")
+					end
 				end
 			end
 		ensure
@@ -1660,19 +1827,25 @@ feature {NONE} -- Implementation
 			-- | CommentTest
 			-- | TextTest
 			-- | AnyKindTest
+		require
+			tokenizer_not_void: tokenizer /= Void
 		local
 			a_default_axis: INTEGER
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_node_kind_step%N")
-			end
-			a_default_axis := Child_axis
-			if STRING_.same_string (tokenizer.last_token_value, "attribute") then
-				a_default_axis := Attribute_axis
-			end
-			parse_node_test (Element_node)
-			if not is_parse_error then
-				create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (a_default_axis, internal_last_parsed_node_test)
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_node_kind_step%N")
+				end
+				a_default_axis := Child_axis
+				if STRING_.same_string (l_tokenizer.last_token_value, "attribute") then
+					a_default_axis := Attribute_axis
+				end
+				parse_node_test (Element_node)
+				if not is_parse_error then
+					check postcondition_of_parse_node_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+						create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (a_default_axis, l_internal_last_parsed_node_test)
+					end
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1681,12 +1854,16 @@ feature {NONE} -- Implementation
 	parse_abbreviated_reverse_step
 			-- Parse an abbreviated reverse step.
 			-- AbbrevReverseStep ::= ".."
+		require
+			tokenizer_not_void: tokenizer /= Void
 		do
-			next_token ("In parse_abbrev_reverse_step: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				create {XM_XPATH_PARENT_NODE_EXPRESSION} internal_last_parsed_expression.make
+			check precondition: attached tokenizer as l_tokenizer then
+				next_token ("In parse_abbrev_reverse_step: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					create {XM_XPATH_PARENT_NODE_EXPRESSION} internal_last_parsed_expression.make
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1695,12 +1872,16 @@ feature {NONE} -- Implementation
 	parse_context_item
 			-- Parse a context_item_expression.
 			-- ContextItemExpr ::= "."
+		require
+			tokenizer_not_void: tokenizer /= Void
 		do
-			next_token ("In parse_context_item: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				create {XM_XPATH_CONTEXT_ITEM_EXPRESSION} internal_last_parsed_expression.make
+			check precondition: attached tokenizer as l_tokenizer then
+				next_token ("In parse_context_item: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					create {XM_XPATH_CONTEXT_ITEM_EXPRESSION} internal_last_parsed_expression.make
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1709,15 +1890,19 @@ feature {NONE} -- Implementation
 	parse_string_literal
 			-- Parse a string literal.
 			-- StringLiteral ::= ('"' (('"' '"') | [^"])* '"') | ("'" (("'" "'") | [^'])* "'")
+		require
+			tokenizer_not_void: tokenizer /= Void
 		local
 			a_string_literal: XM_XPATH_STRING_VALUE
 		do
-			create a_string_literal.make (tokenizer.last_token_value)
-			next_token ("In parse_string_literal: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				internal_last_parsed_expression := a_string_literal
+			check precondition: attached tokenizer as l_tokenizer then
+				create a_string_literal.make (l_tokenizer.last_token_value)
+				next_token ("In parse_string_literal: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					internal_last_parsed_expression := a_string_literal
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1742,37 +1927,43 @@ feature {NONE} -- Implementation
 			-- | <"ancestor-or-self" "::">
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
+			environment_not_void: environment /= Void
 		local
 			a_message: STRING
 			an_axis_number: INTEGER
 			a_principal_node_type: INTEGER
 		do
-			if not is_axis_name_valid (tokenizer.last_token_value) then
-				a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
-				report_parse_error (a_message, "XPST0003")
-			elseif not environment.is_backwards_compatible_mode
-				and then STRING_.same_string (tokenizer.last_token_value, "namespace") then
-				report_parse_error ("Namespace axis is not supported", "XPST0010")
-			else
-				an_axis_number := axis_number (tokenizer.last_token_value)
-				a_principal_node_type := axis_principal_node_type (an_axis_number)
-				next_token ("In parse_axis_step: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				if not is_axis_name_valid (l_tokenizer.last_token_value) then
+					a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
+					report_parse_error (a_message, "XPST0003")
+				elseif not l_environment.is_backwards_compatible_mode
+					and then STRING_.same_string (l_tokenizer.last_token_value, "namespace") then
+					report_parse_error ("Namespace axis is not supported", "XPST0010")
 				else
-					if tokenizer.last_token = Name_token
-						or else tokenizer.last_token = Prefix_token
-						or else tokenizer.last_token = Suffix_token
-						or else tokenizer.last_token = Star_token
-						or else tokenizer.last_token = Node_kind_token then
-						parse_node_test (a_principal_node_type)
-						if not is_parse_error then
-							create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (an_axis_number, internal_last_parsed_node_test)
-						end
+					an_axis_number := axis_number (l_tokenizer.last_token_value)
+					a_principal_node_type := axis_principal_node_type (an_axis_number)
+					next_token ("In parse_axis_step: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 					else
-						a_message := STRING_.appended_string ("Unexpected token ", display_current_token)
-						a_message := STRING_.appended_string (a_message, " after axis name")
-						report_parse_error (a_message, "XPST0003")
+						if l_tokenizer.last_token = Name_token
+							or else l_tokenizer.last_token = Prefix_token
+							or else l_tokenizer.last_token = Suffix_token
+							or else l_tokenizer.last_token = Star_token
+							or else l_tokenizer.last_token = Node_kind_token then
+							parse_node_test (a_principal_node_type)
+							if not is_parse_error then
+								check postcondition_of_parse_node_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+									create {XM_XPATH_AXIS_EXPRESSION} internal_last_parsed_expression.make (an_axis_number, l_internal_last_parsed_node_test)
+								end
+							end
+						else
+							a_message := STRING_.appended_string ("Unexpected token ", display_current_token)
+							a_message := STRING_.appended_string (a_message, " after axis name")
+							report_parse_error (a_message, "XPST0003")
+						end
 					end
 				end
 			end
@@ -1789,46 +1980,49 @@ feature {NONE} -- Implementation
 			--	Digits ::= [0-9]+
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			l_message: STRING
-			l_value: XM_XPATH_VALUE
+			l_value: detachable XM_XPATH_VALUE
 			l_decimal: MA_DECIMAL
 		do
-			if tokenizer.last_token_value.index_of ('E', 1) > 0 or else tokenizer.last_token_value.index_of ('e', 1) > 0 then
-				if tokenizer.last_token_value.is_double then
-					create {XM_XPATH_DOUBLE_VALUE} l_value.make_from_string (tokenizer.last_token_value)
+			check precondition: attached tokenizer as l_tokenizer then
+				if l_tokenizer.last_token_value.index_of ('E', 1) > 0 or else l_tokenizer.last_token_value.index_of ('e', 1) > 0 then
+					if l_tokenizer.last_token_value.is_double then
+						create {XM_XPATH_DOUBLE_VALUE} l_value.make_from_string (l_tokenizer.last_token_value)
+					else
+						l_message := STRING_.appended_string ("Invalid numeric literal [", l_tokenizer.last_token_value)
+						l_message := STRING_.appended_string (l_message,  "]")
+						report_parse_error (l_message, "XPST0003")
+					end
+				elseif l_tokenizer.last_token_value.index_of ('.', 1) > 0  then
+					create l_decimal.make_from_string_ctx (l_tokenizer.last_token_value, shared_round_context)
+					if l_decimal.is_nan then
+						l_message := STRING_.appended_string ("Invalid numeric literal [", l_tokenizer.last_token_value)
+						l_message := STRING_.appended_string (l_message,  "]")
+						report_parse_error (l_message, "XPST0003")
+					else
+						create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
+					end
+				elseif STRING_.is_integer_64 (l_tokenizer.last_token_value) then
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} l_value.make (STRING_.to_integer_64 (l_tokenizer.last_token_value))
 				else
-					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
-					l_message := STRING_.appended_string (l_message,  "]")
-					report_parse_error (l_message, "XPST0003")
+					create l_decimal.make_from_string_ctx (l_tokenizer.last_token_value, shared_integer_context)
+					if l_decimal.is_nan then
+						l_message := STRING_.concat ("Invalid numeric literal [", l_tokenizer.last_token_value)
+						l_message := STRING_.appended_string (l_message,  "]")
+						report_parse_error (l_message, "XPST0003")
+					else
+						create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
+					end
 				end
-			elseif tokenizer.last_token_value.index_of ('.', 1) > 0  then
-				create l_decimal.make_from_string_ctx (tokenizer.last_token_value, shared_round_context)
-				if l_decimal.is_nan then
-					l_message := STRING_.appended_string ("Invalid numeric literal [", tokenizer.last_token_value)
-					l_message := STRING_.appended_string (l_message,  "]")
-					report_parse_error (l_message, "XPST0003")
-				else
-					create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
+				next_token ("In parse_numeric_literal: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 				end
-			elseif STRING_.is_integer_64 (tokenizer.last_token_value) then
-				create {XM_XPATH_MACHINE_INTEGER_VALUE} l_value.make (STRING_.to_integer_64 (tokenizer.last_token_value))
-			else
-				create l_decimal.make_from_string_ctx (tokenizer.last_token_value, shared_integer_context)
-				if l_decimal.is_nan then
-					l_message := STRING_.concat ("Invalid numeric literal [", tokenizer.last_token_value)
-					l_message := STRING_.appended_string (l_message,  "]")
-					report_parse_error (l_message, "XPST0003")
-				else
-					create {XM_XPATH_DECIMAL_VALUE} l_value.make (l_decimal)
+				if not is_parse_error then
+					internal_last_parsed_expression := l_value
 				end
-			end
-			next_token ("In parse_numeric_literal: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			end
-			if not is_parse_error then
-				internal_last_parsed_expression := l_value
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1839,35 +2033,38 @@ feature {NONE} -- Implementation
 			-- ParenthesizedExpr ::= "(" Expr? ")"
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			a_message: STRING
-			a_sequence: XM_XPATH_EXPRESSION
+			a_sequence: detachable XM_XPATH_EXPRESSION
 		do
-			next_token ("In parse_parenthesized_expression: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				if tokenizer.last_token = Right_parenthesis_token then
-					next_token ("In parse_parenthesized_expression after RPAR: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						create {XM_XPATH_EMPTY_SEQUENCE} internal_last_parsed_expression.make
-					end
+			check precondition: attached tokenizer as l_tokenizer then
+				next_token ("In parse_parenthesized_expression: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 				else
-					parse_expression
-					if not is_parse_error then
-						a_sequence := internal_last_parsed_expression
-						if tokenizer.last_token /= Right_parenthesis_token then
-							a_message := "expected %")%", found "
-							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XPST0003")
+					if l_tokenizer.last_token = Right_parenthesis_token then
+						next_token ("In parse_parenthesized_expression after RPAR: current token is ")
+						if l_tokenizer.is_lexical_error then
+							report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 						else
-							next_token ("In parse_parenthesized_expression after RPAR 2: current token is ")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+							create {XM_XPATH_EMPTY_SEQUENCE} internal_last_parsed_expression.make
+						end
+					else
+						parse_expression
+						if not is_parse_error then
+							a_sequence := internal_last_parsed_expression
+							if l_tokenizer.last_token /= Right_parenthesis_token then
+								a_message := "expected %")%", found "
+								a_message := STRING_.appended_string (a_message, display_current_token)
+								report_parse_error (a_message, "XPST0003")
 							else
-								internal_last_parsed_expression := a_sequence
+								next_token ("In parse_parenthesized_expression after RPAR 2: current token is ")
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+								else
+									internal_last_parsed_expression := a_sequence
+								end
 							end
 						end
 					end
@@ -1882,61 +2079,65 @@ feature {NONE} -- Implementation
 			-- VarRef ::= "$" VarName
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
+			environment_not_void: environment /= Void
 		local
 			a_message, a_token_value: STRING
 			a_token_value_fingerprint: INTEGER
-			a_variable: XM_XPATH_VARIABLE_DECLARATION
-			a_reference: XM_XPATH_VARIABLE_REFERENCE
+			a_variable: detachable XM_XPATH_VARIABLE_DECLARATION
+			a_reference: detachable XM_XPATH_VARIABLE_REFERENCE
 		do
-			next_token ("In parse_var_ref_step: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				if tokenizer.last_token /= Name_token then
-					a_message := "expected %"<name>%", found "
-					a_message := STRING_.appended_string (a_message, display_current_token)
-					report_parse_error (a_message, "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				next_token ("In parse_var_ref_step: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 				else
-					a_token_value := tokenizer.last_token_value
-					generate_name_code (a_token_value, False)
-					a_token_value_fingerprint := last_generated_name_code \\ bits_20
-
-					next_token ("In parse_var_ref_step after <name>: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+					if l_tokenizer.last_token /= Name_token then
+						a_message := "expected %"<name>%", found "
+						a_message := STRING_.appended_string (a_message, display_current_token)
+						report_parse_error (a_message, "XPST0003")
 					else
+						a_token_value := l_tokenizer.last_token_value
+						generate_name_code (a_token_value, False)
+						a_token_value_fingerprint := last_generated_name_code \\ bits_20
 
-						-- See if it's a range variable, or a variable in the context
-
-						a_variable := find_range_variable (a_token_value_fingerprint)
-						if a_variable /= Void then
-							create a_reference.make (a_variable)
-							debug ("XPath bindings")
-								std.error.put_string ("Found reference to range variable ")
-								std.error.put_string (a_token_value)
-								std.error.put_new_line
-							end
+						next_token ("In parse_var_ref_step after <name>: current token is ")
+						if l_tokenizer.is_lexical_error then
+							report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
 						else
-							if environment.is_variable_declared (a_token_value_fingerprint) then
-								environment.bind_variable (a_token_value_fingerprint)
-								create a_reference.make(environment.last_bound_variable)
+
+							-- See if it's a range variable, or a variable in the context
+
+							a_variable := find_range_variable (a_token_value_fingerprint)
+							if a_variable /= Void then
+								create a_reference.make (a_variable)
 								debug ("XPath bindings")
-									std.error.put_string ("Bound variable ")
+									std.error.put_string ("Found reference to range variable ")
 									std.error.put_string (a_token_value)
 									std.error.put_new_line
 								end
 							else
-								a_message := STRING_.appended_string ("Variable $", a_token_value)
-								a_message := STRING_.appended_string (a_message, " has not been declared")
-								-- TODO need to add location information
-								report_parse_error (a_message, "XPST0008")
+								if l_environment.is_variable_declared (a_token_value_fingerprint) then
+									l_environment.bind_variable (a_token_value_fingerprint)
+									create a_reference.make (l_environment.last_bound_variable)
+									debug ("XPath bindings")
+										std.error.put_string ("Bound variable ")
+										std.error.put_string (a_token_value)
+										std.error.put_new_line
+									end
+								else
+									a_message := STRING_.appended_string ("Variable $", a_token_value)
+									a_message := STRING_.appended_string (a_message, " has not been declared")
+									-- TODO need to add location information
+									report_parse_error (a_message, "XPST0008")
+								end
 							end
 						end
 					end
 				end
-			end
-			if not is_parse_error then
-				internal_last_parsed_expression := a_reference
+				if not is_parse_error then
+					internal_last_parsed_expression := a_reference
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -1947,101 +2148,113 @@ feature {NONE} -- Implementation
 			-- FunctionCall ::= QName "(" (ExprSingle ("," ExprSingle)*)? ")"
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
+			function_library_not_void: function_library /= Void
 		local
 			a_function_name, a_message: STRING
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			an_argument: XM_XPATH_EXPRESSION
 			a_fingerprint: INTEGER
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri, an_xml_prefix, a_local_name: STRING
+			a_uri, an_xml_prefix, a_local_name: detachable STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_function_call%N")
-			end
-			a_function_name := tokenizer.last_token_value
-			if is_qname (a_function_name) then
-				create arguments.make (10)
-				next_token ("In parse_function_call: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					if tokenizer.last_token /= Right_parenthesis_token then
-						parse_single_expression
-						if not is_parse_error then
-							an_argument := internal_last_parsed_expression
-							if not arguments.extendible (1) then
-								arguments.resize (2 * arguments.count)
-							end
-							arguments.put_last (an_argument)
-							from
-							until
-								is_parse_error or else tokenizer.last_token /= Comma_token
-							loop
-								next_token ("In parse_function_call loop: current token is ")
-								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-								else
-									parse_single_expression
-									if not is_parse_error then
-										an_argument := internal_last_parsed_expression
-										if not arguments.extendible (1) then
-											arguments.resize (2 * arguments.count)
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment and attached function_library as l_function_library then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_function_call%N")
+				end
+				a_function_name := l_tokenizer.last_token_value
+				if is_qname (a_function_name) then
+					create arguments.make (10)
+					next_token ("In parse_function_call: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						if l_tokenizer.last_token /= Right_parenthesis_token then
+							parse_single_expression
+							if not is_parse_error then
+								check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+									an_argument := l_internal_last_parsed_expression
+									if not arguments.extendible (1) then
+										arguments.resize (2 * arguments.count)
+									end
+									arguments.put_last (an_argument)
+								end
+								from
+								until
+									is_parse_error or else l_tokenizer.last_token /= Comma_token
+								loop
+									next_token ("In parse_function_call loop: current token is ")
+									if l_tokenizer.is_lexical_error then
+										report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+									else
+										parse_single_expression
+										if not is_parse_error then
+											check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+												an_argument := l_internal_last_parsed_expression
+												if not arguments.extendible (1) then
+													arguments.resize (2 * arguments.count)
+												end
+												arguments.put_last (an_argument)
+											end
 										end
-										arguments.put_last (an_argument)
+									end
+								end
+								if not is_parse_error and then l_tokenizer.last_token /= Right_parenthesis_token then
+									a_message := "expected %")%", found "
+									a_message := STRING_.appended_string (a_message, display_current_token)
+									report_parse_error (a_message, "XPST0003")
+								end
+							end
+						end
+						if not is_parse_error then
+							next_token ("In parse_function_call after loop: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								create a_parser.make (a_function_name)
+								a_local_name := a_parser.local_name
+								an_xml_prefix := a_parser.optional_prefix
+								if an_xml_prefix = Void or else an_xml_prefix.is_empty then
+									check not_prefix_present: not a_parser.is_prefix_present end
+									a_uri := Xpath_standard_functions_uri
+								else
+									if l_environment.is_prefix_declared (an_xml_prefix) then
+										a_uri := l_environment.uri_for_prefix (an_xml_prefix)
+									else
+										a_message := STRING_.concat ("Prefix ", an_xml_prefix)
+										a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
+										report_parse_error (a_message, "XPST0081")
 									end
 								end
 							end
-							if not is_parse_error and then tokenizer.last_token /= Right_parenthesis_token then
-								a_message := "expected %")%", found "
-								a_message := STRING_.appended_string (a_message, display_current_token)
-								report_parse_error (a_message, "XPST0003")
-							end
-						end
-					end
-					if not is_parse_error then
-						next_token ("In parse_function_call after loop: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-						else
-							create a_parser.make (a_function_name)
-							a_local_name := a_parser.local_name
-							an_xml_prefix := a_parser.optional_prefix
-							if not a_parser.is_prefix_present then
-								a_uri := Xpath_standard_functions_uri
-							else
-								if environment.is_prefix_declared (an_xml_prefix) then
-									a_uri := environment.uri_for_prefix (an_xml_prefix)
-								else
-									a_message := STRING_.concat ("Prefix ", an_xml_prefix)
-									a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
-									report_parse_error (a_message, "XPST0081")
-								end
-							end
-						end
-						if not is_parse_error then
-							a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
-							if a_fingerprint = -1 and then not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-								shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
-								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
-							end
-							if a_fingerprint = -1 or else not function_library.is_function_available (a_fingerprint, arguments.count, environment.is_restricted) then
-								a_message := STRING_.concat ("Unknown function (or wrong number of arguments to function): ", a_function_name)
-								report_parse_error (a_message, "XPST0017")
-							else
-								function_library.bind_function (a_fingerprint, arguments, environment.is_restricted)
-								check_valid_function (function_library.last_bound_function)
-								if not is_parse_error then
-									internal_last_parsed_expression := function_library.last_bound_function
-									-- TODO set location
+							if not is_parse_error then
+								check not_parse_error: a_uri /= Void and a_local_name /= Void and an_xml_prefix /= Void then
+									a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+									if a_fingerprint = -1 and then not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+										shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+										a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+									end
+									if a_fingerprint = -1 or else not l_function_library.is_function_available (a_fingerprint, arguments.count, l_environment.is_restricted) then
+										a_message := STRING_.concat ("Unknown function (or wrong number of arguments to function): ", a_function_name)
+										report_parse_error (a_message, "XPST0017")
+									else
+										l_function_library.bind_function (a_fingerprint, arguments, l_environment.is_restricted)
+										check postcondition_of_bind_function: attached l_function_library.last_bound_function as l_last_bound_function then
+											check_valid_function (l_last_bound_function)
+											if not is_parse_error then
+												internal_last_parsed_expression := l_last_bound_function
+												-- TODO set location
+											end
+										end
+									end
 								end
 							end
 						end
 					end
+				else
+					report_parse_error (STRING_.appended_string ("Function name is not a QName. Found ", l_tokenizer.last_token_value), "XPST0003")
 				end
-			else
-				report_parse_error (STRING_.appended_string ("Function name is not a QName. Found ", tokenizer.last_token_value), "XPST0003")
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
@@ -2064,7 +2277,7 @@ feature {NONE} -- Implementation
 			-- | ("*" ":" NCName) 	/* ws: explicit */
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 			valid_node_type: is_node_type (a_node_type)
 		local
@@ -2072,59 +2285,61 @@ feature {NONE} -- Implementation
 			l_token_value: STRING
 			l_message: STRING
 		do
-			debug ("XPath Expression Parser")
-				std.error.put_string ("Entered parse_node_test%N")
-			end
-			l_token := tokenizer.last_token
-			l_token_value := tokenizer.last_token_value
-			inspect
-				l_token
-			when Name_token then
-				next_token ("In parse_node_test: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif is_qname (l_token_value) then
-					generate_name_test (a_node_type, l_token_value, a_node_type = Element_node)
-				else
-					report_parse_error ("Invalid node test", "XPST0003")
+			check precondition: attached tokenizer as l_tokenizer then
+				debug ("XPath Expression Parser")
+					std.error.put_string ("Entered parse_node_test%N")
 				end
-			when Prefix_token then
-				next_token ("In parse_node_test - prefix: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif is_ncname (l_token_value) and then is_prefix_declared (l_token_value) then
-					internal_last_parsed_node_test := make_namespace_test (a_node_type, l_token_value)
-				else
-					report_parse_error (STRING_.concat ("Prefix is not an in-scope namespace prefix: ", l_token_value), "XPST0081")
-				end
-			when Suffix_token then
-				next_token ("In parse_node_test - suffix: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					if tokenizer.last_token /= Name_token then
-						l_message := "expected %"<name>%", found "
-						l_message := STRING_.appended_string (l_message, display_current_token)
-						report_parse_error (l_message, "XPST0003")
+				l_token := l_tokenizer.last_token
+				l_token_value := l_tokenizer.last_token_value
+				inspect
+					l_token
+				when Name_token then
+					next_token ("In parse_node_test: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif is_qname (l_token_value) then
+						generate_name_test (a_node_type, l_token_value, a_node_type = Element_node)
 					else
-						l_token_value := tokenizer.last_token_value
-						next_token ("In parse_node_test <name>: current token is ")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+						report_parse_error ("Invalid node test", "XPST0003")
+					end
+				when Prefix_token then
+					next_token ("In parse_node_test - prefix: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif is_ncname (l_token_value) and then is_prefix_declared (l_token_value) then
+						internal_last_parsed_node_test := make_namespace_test (a_node_type, l_token_value)
+					else
+						report_parse_error (STRING_.concat ("Prefix is not an in-scope namespace prefix: ", l_token_value), "XPST0081")
+					end
+				when Suffix_token then
+					next_token ("In parse_node_test - suffix: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						if l_tokenizer.last_token /= Name_token then
+							l_message := "expected %"<name>%", found "
+							l_message := STRING_.appended_string (l_message, display_current_token)
+							report_parse_error (l_message, "XPST0003")
 						else
-							internal_last_parsed_node_test := make_local_name_test (a_node_type, l_token_value)
+							l_token_value := l_tokenizer.last_token_value
+							next_token ("In parse_node_test <name>: current token is ")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								internal_last_parsed_node_test := make_local_name_test (a_node_type, l_token_value)
+							end
 						end
 					end
+				when Star_token then
+					next_token ("In parse_node_test - star: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					else
+						create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (a_node_type)
+					end
+				when Node_kind_token then
+					parse_node_kind_test
 				end
-			when Star_token then
-				next_token ("In parse_node_test - star: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				else
-					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make (a_node_type)
-				end
-			when Node_kind_token then
-				parse_node_kind_test
 			end
 		ensure
 			node_test_not_void_unless_error: not is_parse_error implies internal_last_parsed_node_test /= Void
@@ -2144,22 +2359,24 @@ feature {NONE} -- Implementation
 			-- Parse a node kind test.
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			a_type_name: STRING
 			is_empty: BOOLEAN
 		do
-			a_type_name := tokenizer.last_token_value
-			next_token ("In node_kind_test: current token is ")
-			if tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-			else
-				if tokenizer.last_token = Right_parenthesis_token then
-					is_empty := True
-					next_token ("In node_kind_test after RPAR: current token is ")
+			check precondition: attached tokenizer as l_tokenizer then
+				a_type_name := l_tokenizer.last_token_value
+				next_token ("In node_kind_test: current token is ")
+				if l_tokenizer.is_lexical_error then
+					report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+				else
+					if l_tokenizer.last_token = Right_parenthesis_token then
+						is_empty := True
+						next_token ("In node_kind_test after RPAR: current token is ")
+					end
+					create_node_kind_test (a_type_name, is_empty)
 				end
-				create_node_kind_test (a_type_name, is_empty)
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
@@ -2238,29 +2455,34 @@ feature {NONE} -- Implementation
 			-- Create a node kind test that matches the specified document node(s).
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			l_message: STRING
 		do
-			if is_empty then
-				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_document_test
-			elseif STRING_.same_string (tokenizer.last_token_value, "element") then
-				parse_node_kind_test
-				if not is_parse_error then
-					create {XM_XPATH_DOCUMENT_NODE_TEST} internal_last_parsed_node_test.make (internal_last_parsed_node_test)
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						if tokenizer.last_token /= Right_parenthesis_token then
-							l_message := "expected %")%", found "
-			            l_message := STRING_.appended_string (l_message, display_current_token)
-							report_parse_error (l_message, "XPST0003")
-						else
-							next_token ("create_document_node_kind_test")
+			check precondition: attached tokenizer as l_tokenizer then
+				if is_empty then
+					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_document_test
+				elseif STRING_.same_string (l_tokenizer.last_token_value, "element") then
+					parse_node_kind_test
+					if not is_parse_error then
+						check postcondition_of_parse_node_kind_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+							create {XM_XPATH_DOCUMENT_NODE_TEST} internal_last_parsed_node_test.make (l_internal_last_parsed_node_test)
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							else
+								if l_tokenizer.last_token /= Right_parenthesis_token then
+									l_message := "expected %")%", found "
+					            l_message := STRING_.appended_string (l_message, display_current_token)
+									report_parse_error (l_message, "XPST0003")
+								else
+									next_token ("create_document_node_kind_test")
+								end
+							end
 						end
 					end
+				else
+					report_parse_error ("Argument to document-node() must be an element type descriptor", "XPST0003")
 				end
-			else
-				report_parse_error ("Argument to document-node() must be an element type descriptor", "XPST0003")
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
@@ -2270,65 +2492,71 @@ feature {NONE} -- Implementation
 			-- Create a node kind test that matches the specified processing-instruction node(s).
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_name_code: INTEGER
-			a_message, an_original_text, a_local_name: STRING
+			a_message, an_original_text: STRING
+			a_local_name: detachable STRING
 		do
-			an_original_text := tokenizer.last_token_value
-			if is_empty then
-				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
-			elseif tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
-				a_local_name := ""
-				create a_parser.make (an_original_text)
-				if a_parser.is_valid then
-					if a_parser.is_prefix_present then
-						if tokenizer.last_token = String_literal_token then
-							report_parse_warning ("No processing instruction name will ever contain a colon")
-							if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name") then
-								shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
-								a_name_code := shared_name_pool.last_name_code
+			check precondition: attached tokenizer as l_tokenizer then
+				an_original_text := l_tokenizer.last_token_value
+				if is_empty then
+					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
+				elseif l_tokenizer.last_token = String_literal_token or else l_tokenizer.last_token = Name_token then
+					a_local_name := ""
+					create a_parser.make (an_original_text)
+					if a_parser.is_valid then
+						if a_parser.is_prefix_present then
+							if l_tokenizer.last_token = String_literal_token then
+								report_parse_warning ("No processing instruction name will ever contain a colon")
+								if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name") then
+									shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+									a_name_code := shared_name_pool.last_name_code
+								else
+									a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+								end
 							else
-								a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt-fake-namespace", "gexslt-invalid-name")
+								report_parse_error ("Processing instruction name must not contain a colon", "XPST0003")
 							end
+						end
+						a_local_name := a_parser.local_name
+					else
+						if not a_parser.too_many_colons then
+							report_parse_warning ("No processing instruction name will ever be named by the empty string")
 						else
-							report_parse_error ("Processing instruction name must not contain a colon", "XPST0003")
+							check
+								string_literal: l_tokenizer.last_token = String_literal_token
+							end
+							a_local_name := an_original_text
 						end
 					end
-					a_local_name := a_parser.local_name
-				else
-					if not a_parser.too_many_colons then
-						report_parse_warning ("No processing instruction name will ever be named by the empty string")
-					else
-						check
-							string_literal: tokenizer.last_token = String_literal_token
+					check a_local_name /= Void then
+						if is_ncname (a_local_name) then
+							generate_name_code (a_local_name, False)
+							a_name_code := last_generated_name_code
+						else
+							a_name_code := -1
 						end
-						a_local_name := an_original_text
 					end
-				end
-				if is_ncname (a_local_name) then
-					generate_name_code (a_local_name, False)
-					a_name_code := last_generated_name_code
 				else
-					a_name_code := -1
+					report_parse_error ("Processing instruction name must be a QName or a string literal", "XPST0003")
 				end
-			else
-				report_parse_error ("Processing instruction name must be a QName or a string literal", "XPST0003")
-			end
-			if not is_empty then
-				next_token ("In create_processing_instruction_node_kind_test")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif tokenizer.last_token /= Right_parenthesis_token then
-					a_message := "expected %")%", found "
-			      a_message := STRING_.appended_string (a_message, display_current_token)
-					report_parse_error (a_message, "XPST0003")
-				else
-					next_token ("In create_processing_instruction_node_kind_test after RPAR: current token is ")
-					if a_name_code > -1 then
-						create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Processing_instruction_node, a_name_code, an_original_text)
+				if not is_empty then
+					next_token ("In create_processing_instruction_node_kind_test")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif l_tokenizer.last_token /= Right_parenthesis_token then
+						a_message := "expected %")%", found "
+				      a_message := STRING_.appended_string (a_message, display_current_token)
+						report_parse_error (a_message, "XPST0003")
 					else
-						internal_last_parsed_node_test := empty_item
+						next_token ("In create_processing_instruction_node_kind_test after RPAR: current token is ")
+						if a_name_code > -1 then
+							create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Processing_instruction_node, a_name_code, an_original_text)
+						else
+							internal_last_parsed_node_test := empty_item
+						end
 					end
 				end
 			end
@@ -2340,79 +2568,82 @@ feature {NONE} -- Implementation
 			-- Create a node kind test that matches the specified element or attribute node(s).
 		require
 			no_previous_parse_error: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			l_name_code: INTEGER
 			l_message, l_node_name: STRING
 		do
-			l_node_name := ""
-			internal_last_parsed_node_test := Void
-			if is_empty then
-				if is_attribute then
-					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
-				elseif is_schema_declaration then
-					report_parse_error ("schema-attribute(...) or schema-element(...) require a name within the parentheses.", "XPST0003")
-				else
-					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
-				end
-			elseif tokenizer.last_token = Star_token or else tokenizer.last_token = Multiply_token then
-				if is_schema_declaration then
-					report_parse_error ("schema-attribute(...) or schema-element(...) require a QName, not *.", "XPST0003")
-				else
-					l_name_code := -1
-				end
-			elseif tokenizer.last_token = Name_token then
-				l_node_name := tokenizer.last_token_value
-				generate_name_code (l_node_name, True)
-				l_name_code := last_generated_name_code
-			else
-				l_message := STRING_.concat ("Unexpected ", display_current_token)
-				l_message := STRING_.appended_string (l_message, " after '(' in named node-kind test.")
-				report_parse_error (l_message, "XPST0003")
-			end
-			if not is_parse_error and then internal_last_parsed_node_test = Void then
-				next_token ("In create_named_node_kind_test")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-				elseif tokenizer.last_token = Right_parenthesis_token then
-					next_token ("In create_named_node_kind_test after ')'")
-					if l_name_code = -1 then
-						if is_attribute then
-							create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
-						else
-							create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
-						end
+			check precondition: attached tokenizer as l_tokenizer then
+				l_node_name := ""
+				internal_last_parsed_node_test := Void
+				if is_empty then
+					if is_attribute then
+						create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
+					elseif is_schema_declaration then
+						report_parse_error ("schema-attribute(...) or schema-element(...) require a name within the parentheses.", "XPST0003")
 					else
-						if is_schema_declaration then
-							report_parse_error ("schema-attribute(...) or schema-element(...) not supported with a Basic-level XSLT processor.", "XPST0003")
-						else
-							create_bare_name_node_kind_test (l_name_code, l_node_name, is_attribute)
-						end
+						create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
 					end
-				elseif tokenizer.last_token = Comma_token then
+				elseif l_tokenizer.last_token = Star_token or else l_tokenizer.last_token = Multiply_token then
 					if is_schema_declaration then
-						report_parse_error ("schema-attribute(...) or schema-element(...) may only have one argument", "XPST0003")
+						report_parse_error ("schema-attribute(...) or schema-element(...) require a QName, not *.", "XPST0003")
 					else
-						next_token ("In create_named_node_kind_test looking for type name")
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-						elseif tokenizer.last_token = Name_token then
-							l_node_name := tokenizer.last_token_value
-							generate_name_code (l_node_name, True)
-							if last_generated_name_code = -1 then
-								report_parse_error ("No name present for node-kind test with name", "XPST0003")
+						l_name_code := -1
+					end
+				elseif l_tokenizer.last_token = Name_token then
+					l_node_name := l_tokenizer.last_token_value
+					generate_name_code (l_node_name, True)
+					l_name_code := last_generated_name_code
+				else
+					l_message := STRING_.concat ("Unexpected ", display_current_token)
+					l_message := STRING_.appended_string (l_message, " after '(' in named node-kind test.")
+					report_parse_error (l_message, "XPST0003")
+				end
+				if not is_parse_error and then internal_last_parsed_node_test = Void then
+					next_token ("In create_named_node_kind_test")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+					elseif l_tokenizer.last_token = Right_parenthesis_token then
+						next_token ("In create_named_node_kind_test after ')'")
+						if l_name_code = -1 then
+							if is_attribute then
+								create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
 							else
-								create_named_node_kind_test_with_type_name (l_name_code, l_node_name, is_attribute)
+								create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
 							end
 						else
-							l_message := STRING_.concat ("Unexpected ", display_current_token)
-							l_message := STRING_.appended_string (l_message, " after ',' in named node-kind test.")
-							report_parse_error (l_message, "XPST0003")
+							if is_schema_declaration then
+								report_parse_error ("schema-attribute(...) or schema-element(...) not supported with a Basic-level XSLT processor.", "XPST0003")
+							else
+								create_bare_name_node_kind_test (l_name_code, l_node_name, is_attribute)
+							end
 						end
+					elseif l_tokenizer.last_token = Comma_token then
+						if is_schema_declaration then
+							report_parse_error ("schema-attribute(...) or schema-element(...) may only have one argument", "XPST0003")
+						else
+							next_token ("In create_named_node_kind_test looking for type name")
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XPST0003")
+							elseif l_tokenizer.last_token = Name_token then
+								l_node_name := l_tokenizer.last_token_value
+								generate_name_code (l_node_name, True)
+								if last_generated_name_code = -1 then
+									report_parse_error ("No name present for node-kind test with name", "XPST0003")
+								else
+									create_named_node_kind_test_with_type_name (l_name_code, l_node_name, is_attribute)
+								end
+							else
+								l_message := STRING_.concat ("Unexpected ", display_current_token)
+								l_message := STRING_.appended_string (l_message, " after ',' in named node-kind test.")
+								report_parse_error (l_message, "XPST0003")
+							end
+						end
+					else
+						l_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
+						l_message := STRING_.appended_string (l_message, " in named node-kind test.")
+						report_parse_error (l_message, "XPST0003")
 					end
-				else
-					l_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
-					l_message := STRING_.appended_string (l_message, " in named node-kind test.")
-					report_parse_error (l_message, "XPST0003")
 				end
 			end
 		ensure
@@ -2447,106 +2678,108 @@ feature {NONE} -- Implementation
 			nearly_positive_name_code: a_name_code > -2
 			node_name_not_void: a_node_name /= Void
 			no_error_yet: not is_parse_error
+			tokenizer_not_void: tokenizer /= Void
 		local
 			l_uri, l_type_name, l_local_name, l_original_text, l_message: STRING
 			l_type_code: INTEGER
-			l_schema_type: XM_XPATH_SCHEMA_TYPE
+			l_schema_type: detachable XM_XPATH_SCHEMA_TYPE
 			l_content_test: XM_XPATH_CONTENT_TYPE_TEST
 			l_node_kind: INTEGER
 			l_name_test: XM_XPATH_NAME_TEST
 		do
-			l_type_name := tokenizer.last_token_value
-			if is_qname (l_type_name) then
-				generate_name_code (l_type_name, True)
-				l_type_code := fingerprint_from_name_code (last_generated_name_code)
-				if not is_parse_error then
-					if type_factory.is_built_in_fingerprint (l_type_code) then
-						l_uri := shared_name_pool.namespace_uri_from_name_code (l_type_code)
-						l_local_name := shared_name_pool.local_name_from_name_code (l_type_code)
-						if STRING_.same_string (l_uri, Xml_schema_uri) then
-							l_schema_type := type_factory.schema_type (l_type_code)
-							if l_schema_type = Void then
-								report_parse_error (STRING_.concat ("Unknown type name: ", l_local_name), "XPST0003")
-							elseif is_attribute and l_schema_type.is_complex_type then
-								report_parse_error ("An attribute cannot have a complex type", "XPST0003")
-							else
-								if is_attribute then
-									l_node_kind := Attribute_node
-								else
-									l_node_kind := Element_node
-								end
-								create l_content_test.make (l_node_kind, l_schema_type)
-								if a_name_code = -1 then
-									-- element(*,T) or attribute(*,T)
-									internal_last_parsed_node_test := l_content_test
-									next_token ("After element(*,T) or attribute(*,T)")
-									if not is_attribute and not is_parse_error then
-										if tokenizer.last_token = Question_mark_token then
-											l_content_test.set_nillable (True)
-											next_token ("After element(*,T?)")
-										end
-									end
+			check precondition: attached tokenizer as l_tokenizer then
+				l_type_name := l_tokenizer.last_token_value
+				if is_qname (l_type_name) then
+					generate_name_code (l_type_name, True)
+					l_type_code := fingerprint_from_name_code (last_generated_name_code)
+					if not is_parse_error then
+						if type_factory.is_built_in_fingerprint (l_type_code) then
+							l_uri := shared_name_pool.namespace_uri_from_name_code (l_type_code)
+							l_local_name := shared_name_pool.local_name_from_name_code (l_type_code)
+							if STRING_.same_string (l_uri, Xml_schema_uri) then
+								l_schema_type := type_factory.schema_type (l_type_code)
+								if l_schema_type = Void then
+									report_parse_error (STRING_.concat ("Unknown type name: ", l_local_name), "XPST0003")
+								elseif is_attribute and l_schema_type.is_complex_type then
+									report_parse_error ("An attribute cannot have a complex type", "XPST0003")
 								else
 									if is_attribute then
-										l_original_text := "attribute()"
+										l_node_kind := Attribute_node
 									else
-										l_original_text := "element()"
+										l_node_kind := Element_node
 									end
-									create l_name_test.make (l_node_kind, a_name_code, l_original_text)
-									create {XM_XPATH_COMBINED_NODE_TEST} internal_last_parsed_node_test.make (l_name_test, Intersect_token, l_content_test)
-									next_token ("After element(name,T) or attribute(name,T)")
-									if not is_parse_error and not is_attribute then
-										if tokenizer.last_token = Question_mark_token then
-											l_content_test.set_nillable (True)
-											next_token ("After element(*,T?)")
+									create l_content_test.make (l_node_kind, l_schema_type)
+									if a_name_code = -1 then
+										-- element(*,T) or attribute(*,T)
+										internal_last_parsed_node_test := l_content_test
+										next_token ("After element(*,T) or attribute(*,T)")
+										if not is_attribute and not is_parse_error then
+											if l_tokenizer.last_token = Question_mark_token then
+												l_content_test.set_nillable (True)
+												next_token ("After element(*,T?)")
+											end
+										end
+									else
+										if is_attribute then
+											l_original_text := "attribute()"
+										else
+											l_original_text := "element()"
+										end
+										create l_name_test.make (l_node_kind, a_name_code, l_original_text)
+										create {XM_XPATH_COMBINED_NODE_TEST} internal_last_parsed_node_test.make (l_name_test, Intersect_token, l_content_test)
+										next_token ("After element(name,T) or attribute(name,T)")
+										if not is_parse_error and not is_attribute then
+											if l_tokenizer.last_token = Question_mark_token then
+												l_content_test.set_nillable (True)
+												next_token ("After element(*,T?)")
+											end
 										end
 									end
 								end
-							end
-							if tokenizer.last_token /= Right_parenthesis_token then
-			               l_message := STRING_.concat ("expected %")%", found ", display_current_token)
-								report_parse_error (l_message, "XPST0003")
+								if l_tokenizer.last_token /= Right_parenthesis_token then
+									l_message := STRING_.concat ("expected %")%", found ", display_current_token)
+									report_parse_error (l_message, "XPST0003")
+								else
+									next_token ("At end of create_named_node_kind_test_with_type_name")
+								end
 							else
-								next_token ("At end of create_named_node_kind_test_with_type_name")
+								report_parse_error (STRING_.concat (l_type_name, " is not valid for a basic-level XSLT processor"),  "XPST0003")
 							end
 						else
 							report_parse_error (STRING_.concat (l_type_name, " is not valid for a basic-level XSLT processor"),  "XPST0003")
 						end
-					else
-						report_parse_error (STRING_.concat (l_type_name, " is not valid for a basic-level XSLT processor"),  "XPST0003")
 					end
+				else
+					l_message := STRING_.concat (display_current_token, " is not a lexical QName")
+					report_parse_error (l_message, "XPST0003")
 				end
-			else
-				l_message := STRING_.concat (display_current_token, " is not a lexical QName")
-				report_parse_error (l_message, "XPST0003")
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
 
-	environment: XM_XPATH_STATIC_CONTEXT
+	environment: detachable XM_XPATH_STATIC_CONTEXT
 			-- Current static context
 
-	function_library: XM_XPATH_FUNCTION_LIBRARY
+	function_library: detachable XM_XPATH_FUNCTION_LIBRARY
 			-- Current function library
 
-	internal_last_parse_error: STRING
+	internal_last_parse_error: detachable STRING
 			-- Text of last parse error encountered
 
-	internal_last_parsed_expression: XM_XPATH_EXPRESSION
+	internal_last_parsed_expression: detachable XM_XPATH_EXPRESSION
 			-- Result of last parsing command, if successfull
 
-	internal_last_parsed_sequence: XM_XPATH_SEQUENCE_TYPE
+	internal_last_parsed_sequence: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Result of last sequence-type parsing command, if successfull
 
-	internal_last_parsed_node_test: XM_XPATH_NODE_TEST
+	internal_last_parsed_node_test: detachable XM_XPATH_NODE_TEST
 			-- Result of last sucessfull call to `parse_node_test'
 
-	internal_last_parsed_node_kind: ARRAY [INTEGER]
+	internal_last_parsed_node_kind: detachable ARRAY [INTEGER]
 			-- Result of last sucessfull call to `parse_node_kind'
 
-
-	range_variable_stack: DS_ARRAYED_LIST [XM_XPATH_RANGE_VARIABLE_DECLARATION]
+	range_variable_stack: detachable DS_ARRAYED_LIST [XM_XPATH_RANGE_VARIABLE_DECLARATION]
 			-- Range variables
 
 	language: STRING = "XPath"
@@ -2557,39 +2790,42 @@ feature {NONE} -- Implementation
 		require
 			message_not_void: a_message /= Void
 			code_not_void: a_code /= Void
+			tokenizer_not_void: tokenizer /= Void
 		local
 			s, l_line_info, l_language, l_code: STRING
 			l: INTEGER
 		do
-			if is_pattern_parser then
-				l_code := "XTSE0340"
-			else
-				l_code := a_code
-			end
-			if not is_parse_error then
-				internal_last_parse_error := Void
-				is_parse_error := True
-				l := tokenizer.line_number
-				if l = 1 then
-					l_line_info := ""
+			check attached tokenizer as l_tokenizer then
+				if is_pattern_parser then
+					l_code := "XTSE0340"
 				else
-					l_line_info := STRING_.appended_string ("on line ", l.out)
-					l_line_info := STRING_.appended_string (l_line_info, " ")
+					l_code := a_code
 				end
-				l_language := STRING_.cloned_string (language)
-				s := STRING_.appended_string (l_language, " syntax error ")
-				s := STRING_.appended_string (s, l_line_info)
-				if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
-					s := STRING_.appended_string (s, "near")
-				else
-					s := STRING_.appended_string (s, "in")
+				if not is_parse_error then
+					internal_last_parse_error := Void
+					is_parse_error := True
+					l := l_tokenizer.line_number
+					if l = 1 then
+						l_line_info := ""
+					else
+						l_line_info := STRING_.appended_string ("on line ", l.out)
+						l_line_info := STRING_.appended_string (l_line_info, " ")
+					end
+					l_language := STRING_.cloned_string (language)
+					s := STRING_.appended_string (l_language, " syntax error ")
+					s := STRING_.appended_string (s, l_line_info)
+					if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
+						s := STRING_.appended_string (s, "near")
+					else
+						s := STRING_.appended_string (s, "in")
+					end
+					s := STRING_.appended_string (s, " �")
+					s := STRING_.appended_string (s, l_tokenizer.recent_text)
+					s := STRING_.appended_string (s, "�:%N    ")
+					internal_last_parse_error := STRING_.appended_string (s, a_message)
+					first_parse_error_code := l_code
+					first_parse_error_line_number := l
 				end
-				s := STRING_.appended_string (s, " �")
-				s := STRING_.appended_string (s, tokenizer.recent_text)
-				s := STRING_.appended_string (s, "�:%N    ")
-				internal_last_parse_error := STRING_.appended_string (s, a_message)
-				first_parse_error_code := l_code
-				first_parse_error_line_number := l
 			end
 		ensure
 			first_parse_error_not_void: first_parse_error /= Void
@@ -2600,49 +2836,57 @@ feature {NONE} -- Implementation
 			-- Report a parse warning.
 		require
 			a_message_not_void: a_message /= Void
+			tokenizer_not_void: tokenizer /= Void
+			environment_not_void: environment /= Void
 		local
 			s, line_info: STRING
 			l: INTEGER
 		do
-			l := tokenizer.line_number
-			if l = 1 then
-				line_info := ""
-			else
-				line_info := STRING_.appended_string ("on line ", l.out)
-				line_info := STRING_.appended_string (line_info, " ")
+			check precondition: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				l := l_tokenizer.line_number
+				if l = 1 then
+					line_info := ""
+				else
+					line_info := STRING_.appended_string ("on line ", l.out)
+					line_info := STRING_.appended_string (line_info, " ")
+				end
+				s := STRING_.appended_string ("Warning ", line_info)
+				if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
+					s := STRING_.appended_string (s, "near")
+				else
+					s := STRING_.appended_string (s, "in")
+				end
+				s := STRING_.appended_string (s, " �")
+				s := STRING_.appended_string (s, l_tokenizer.recent_text)
+				s := STRING_.appended_string (s, "�:%N    ")
+				l_environment.issue_warning (STRING_.appended_string (s, a_message))
 			end
-			s := STRING_.appended_string ("Warning ", line_info)
-			if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then
-				s := STRING_.appended_string (s, "near")
-			else
-				s := STRING_.appended_string (s, "in")
-			end
-			s := STRING_.appended_string (s, " �")
-			s := STRING_.appended_string (s, tokenizer.recent_text)
-			s := STRING_.appended_string (s, "�:%N    ")
-			environment.issue_warning (STRING_.appended_string (s, a_message))
 		end
 
 	display_current_token: STRING
 			-- Display the current token for an error message
 		require
-			tokenizer_has_no_error: tokenizer /= Void and then not tokenizer.is_lexical_error
+			tokenizer_has_no_error: attached tokenizer as l_tokenizer and then not l_tokenizer.is_lexical_error
 		local
 			s: STRING
 		do
-			if tokenizer.last_token = Name_token or else  tokenizer.last_token = Axis_token then
-				s := STRING_.appended_string ("name %"", tokenizer.last_token_value)
-				Result := STRING_.appended_string (s, "%"")
-			elseif tokenizer.last_token = String_literal_token then
-				s := STRING_.appended_string ("'string-lteral': %"", tokenizer.last_token_value)
-				Result := STRING_.appended_string (s, "%"")
-			elseif tokenizer.last_token = Unknown_token then
-				Result := "(unknown token)"
-			elseif tokenizer.last_token = Eof_token then
-				Result := "EOF"
-			else
-				s := STRING_.appended_string ("%"", tokenizer.token_name (tokenizer.last_token))
-				Result := STRING_.appended_string (s, "%"")
+			check precondition: attached tokenizer as l_tokenizer then
+				if l_tokenizer.last_token = Name_token or else l_tokenizer.last_token = Axis_token then
+					s := STRING_.appended_string ("name %"", l_tokenizer.last_token_value)
+					Result := STRING_.appended_string (s, "%"")
+				elseif l_tokenizer.last_token = String_literal_token then
+					s := STRING_.appended_string ("'string-lteral': %"", l_tokenizer.last_token_value)
+					Result := STRING_.appended_string (s, "%"")
+				elseif l_tokenizer.last_token = Unknown_token then
+					Result := "(unknown token)"
+				elseif l_tokenizer.last_token = Eof_token then
+					Result := "EOF"
+				else
+					check attached l_tokenizer.token_name (l_tokenizer.last_token) as l_token_name then
+						s := STRING_.appended_string ("%"", l_token_name)
+						Result := STRING_.appended_string (s, "%"")
+					end
+				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -2652,17 +2896,21 @@ feature {NONE} -- Implementation
 			-- Declare `a_declaration' to be a range variable
 		require
 			variable_not_void: a_declaration /= Void
+		local
+			l_range_variable_stack: like range_variable_stack
 		do
-			if range_variable_stack = Void then
-				create range_variable_stack.make (5)
+			l_range_variable_stack := range_variable_stack
+			if l_range_variable_stack = Void then
+				create l_range_variable_stack.make (5)
+				range_variable_stack := l_range_variable_stack
 			end
-			if not range_variable_stack.extendible (1) then
-				range_variable_stack.resize (2 * range_variable_stack.count)
+			if not l_range_variable_stack.extendible (1) then
+				l_range_variable_stack.resize (2 * l_range_variable_stack.count)
 			end
-			range_variable_stack.put_last (a_declaration)
+			l_range_variable_stack.put_last (a_declaration)
 		end
 
-	find_range_variable (a_fingerprint: INTEGER): XM_XPATH_RANGE_VARIABLE_DECLARATION
+	find_range_variable (a_fingerprint: INTEGER): detachable XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Locate a range variable with a given name;
 			-- (By "range variable", we mean a variable declared within the expression where it is used.)
 		require
@@ -2671,8 +2919,8 @@ feature {NONE} -- Implementation
 			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_RANGE_VARIABLE_DECLARATION]
 		do
-			if range_variable_stack /= Void then
-				a_cursor := range_variable_stack.new_cursor
+			if attached range_variable_stack as l_range_variable_stack then
+				a_cursor := l_range_variable_stack.new_cursor
 				from
 					a_cursor.finish
 				until
@@ -2692,103 +2940,118 @@ feature {NONE} -- Implementation
 	is_at_start_of_relative_path: BOOLEAN
 			-- Is the current token one that can start a RelativePathExpression?
 		require
-			tokenizer_in_valid_state: tokenizer /= Void and then not tokenizer.is_lexical_error
+			tokenizer_in_valid_state: attached tokenizer as l_tokenizer and then not l_tokenizer.is_lexical_error
 		do
-			inspect
-				tokenizer.last_token
-			when Axis_token then
-				Result := True
-			when At_token then
-				Result := True
-			when Name_token then
-				Result := True
-			when Prefix_token then
-				Result := True
-			when Suffix_token then
-				Result := True
-			when Star_token then
-				Result := True
-			when Node_kind_token then
-				Result := True
-			when Dot_token then
-				Result := True
-			when Dot_dot_token then
-				Result := True
-			when Function_token then
-				Result := True
-			when String_literal_token then
-				Result := True
-			when Number_token then
-				Result := True
-			when Left_parenthesis_token then
-				Result := True
-			else
-				Result := False
+			check precondition: attached tokenizer as l_tokenizer then
+				inspect
+					l_tokenizer.last_token
+				when Axis_token then
+					Result := True
+				when At_token then
+					Result := True
+				when Name_token then
+					Result := True
+				when Prefix_token then
+					Result := True
+				when Suffix_token then
+					Result := True
+				when Star_token then
+					Result := True
+				when Node_kind_token then
+					Result := True
+				when Dot_token then
+					Result := True
+				when Dot_dot_token then
+					Result := True
+				when Function_token then
+					Result := True
+				when String_literal_token then
+					Result := True
+				when Number_token then
+					Result := True
+				when Left_parenthesis_token then
+					Result := True
+				else
+					Result := False
+				end
 			end
 		end
 
 	next_token (a_debugging_message: STRING)
 			-- Fetch next token.
 		require
-			tokenizer_in_valid_state: tokenizer /= Void and then not tokenizer.is_lexical_error
+			tokenizer_in_valid_state: attached tokenizer as l_tokenizer and then not l_tokenizer.is_lexical_error
 		do
-			tokenizer.next
-			debug ("XPath Expression Parser - tokens")
-				std.error.put_string (a_debugging_message)
-				std.error.put_string (display_current_token)
-				std.error.put_new_line
+			check precondition: attached tokenizer as l_tokenizer then
+				l_tokenizer.next
+				debug ("XPath Expression Parser - tokens")
+					std.error.put_string (a_debugging_message)
+					std.error.put_string (display_current_token)
+					std.error.put_new_line
+				end
 			end
 		end
 
-	atomic_type_from_qname (a_qname: STRING): XM_XPATH_ATOMIC_TYPE
+	atomic_type_from_qname (a_qname: STRING): detachable XM_XPATH_ATOMIC_TYPE
 			-- Atomic type named by `a_qname'
 		require
 			qname_not_void: a_qname /= Void
 			no_previous_error:  not is_parse_error
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri, a_local_name, a_message: STRING
-			an_item_type: XM_XPATH_ITEM_TYPE
+			a_uri: detachable STRING
+			a_message: STRING
+			a_local_name: detachable STRING
+			an_item_type: detachable XM_XPATH_ITEM_TYPE
 		do
-			create a_parser.make (tokenizer.last_token_value)
+			check postcondition_of_parse: attached tokenizer as l_tokenizer and attached environment as l_environment then
+				create a_parser.make (l_tokenizer.last_token_value)
 				if a_parser.too_many_colons then
 					report_parse_error ("A QName may not contain more then one token", "XPST0003")
 				elseif not a_parser.is_valid then
 					report_parse_error ("Expecting a QName, found ''", "XPST0003")
 				elseif not a_parser.is_prefix_present then
-					a_uri := environment.default_element_namespace
+					a_uri := l_environment.default_element_namespace
 					a_local_name := a_parser.local_name
 				else
-					if environment.is_prefix_declared (a_parser.optional_prefix) then
-						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
-						a_local_name := a_parser.local_name
-					else
-						a_message := STRING_.concat ("Prefix ", a_parser.optional_prefix)
-						a_message := STRING_.appended_string (a_message, " is not in scope.")
-						report_parse_error (a_message, "XPST0081")
+					check is_prefix_present: attached a_parser.optional_prefix as l_parser_optional_prefix then
+						if l_environment.is_prefix_declared (l_parser_optional_prefix) then
+							a_uri := l_environment.uri_for_prefix (l_parser_optional_prefix)
+							a_local_name := a_parser.local_name
+						else
+							a_message := STRING_.concat ("Prefix ", l_parser_optional_prefix)
+							a_message := STRING_.appended_string (a_message, " is not in scope.")
+							report_parse_error (a_message, "XPST0081")
+						end
 					end
 				end
 				if not is_parse_error then
-					if STRING_.same_string (a_uri, Xml_schema_uri) then
-						an_item_type := built_in_item_type (a_uri, a_local_name)
-						if an_item_type = Void then
-							report_parse_error (STRING_.concat ("Unknown atomic type ", a_qname), "XPST0051")
-						else
-							if not an_item_type.is_atomic_type then
-								a_message := STRING_.concat ("The type ", a_qname)
-								a_message := STRING_.appended_string (a_message, " is not atomic.")
-								report_parse_error (a_message, "XPST0051")
-							else
-								Result := an_item_type.as_atomic_type
+					check a_uri /= Void then
+						if STRING_.same_string (a_uri, Xml_schema_uri) then
+							check a_local_name /= Void then
+								an_item_type := built_in_item_type (a_uri, a_local_name)
+								if an_item_type = Void then
+									report_parse_error (STRING_.concat ("Unknown atomic type ", a_qname), "XPST0051")
+								else
+									if not an_item_type.is_atomic_type then
+										a_message := STRING_.concat ("The type ", a_qname)
+										a_message := STRING_.appended_string (a_message, " is not atomic.")
+										report_parse_error (a_message, "XPST0051")
+									else
+										Result := an_item_type.as_atomic_type
+									end
+								end
 							end
+						else
+							a_message := STRING_.concat ("The type ", a_qname)
+							a_message := STRING_.appended_string (a_message, " is not a built-in.")
+							report_parse_error (a_message, "XPST0003")
 						end
-					else
-						a_message := STRING_.concat ("The type ", a_qname)
-						a_message := STRING_.appended_string (a_message, " is not a built-in.")
-						report_parse_error (a_message, "XPST0003")
 					end
 				end
+			end
 		ensure
 			atomic_type_or_parse_error:  not is_parse_error implies Result /= Void
 		end
+
 end

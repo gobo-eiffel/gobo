@@ -6,7 +6,7 @@ note
 	%that is, return the supplied sequence, checking that all its items are of the correct type"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,9 +39,9 @@ feature {NONE} -- Initialization
 			item_type_not_void: an_item_type /= Void
 		do
 			error_code := a_role_locator.error_code
-			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := an_item_type
+			make_unary (a_sequence)
 			compute_static_properties
 			adopt_child_expression (base_expression)
 		ensure
@@ -100,75 +100,79 @@ feature -- Comparison
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			set_base_expression (l_replacement.item)
-			if required_item_type = any_item or else base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if required_item_type = any_item or else base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
-		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_relation: INTEGER
 			l_message: STRING
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			elseif base_expression.cardinality_is_empty then
-				-- no type checking needed
-				set_replacement (a_replacement, base_expression)
-			else
-				l_relation := type_relationship (required_item_type, base_expression.item_type)
-				if l_relation = Same_item_type or else l_relation = Subsuming_type then
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
 					set_replacement (a_replacement, base_expression)
-				elseif l_relation = Disjoint_types then
-					if base_expression.cardinality_allows_zero then
-						a_context.issue_warning (STRING_.concat ("The only value that can pass type-checking is an empty sequence. ", role_locator.message))
-					elseif required_item_type = type_factory.string_type and is_sub_type (base_expression.item_type, type_factory.any_uri_type)  then
-						-- URI promotion will take care of this at run-time
-						if base_expression.is_computed_expression then
-							base_expression.as_computed_expression.set_parent (parent)
-						end
+				elseif base_expression.cardinality_is_empty then
+					-- no type checking needed
+					set_replacement (a_replacement, base_expression)
+				else
+					l_relation := type_relationship (required_item_type, base_expression.item_type)
+					if l_relation = Same_item_type or else l_relation = Subsuming_type then
 						set_replacement (a_replacement, base_expression)
-					else
-						l_message := "Required type of " + role_locator.message + " is "
-							+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
-						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
+					elseif l_relation = Disjoint_types then
+						if base_expression.cardinality_allows_zero then
+							a_context.issue_warning (STRING_.concat ("The only value that can pass type-checking is an empty sequence. ", role_locator.message))
+						elseif required_item_type = type_factory.string_type and is_sub_type (base_expression.item_type, type_factory.any_uri_type)  then
+							-- URI promotion will take care of this at run-time
+							if base_expression.is_computed_expression then
+								base_expression.as_computed_expression.set_parent (parent)
+							end
+							set_replacement (a_replacement, base_expression)
+						else
+							l_message := "Required type of " + role_locator.message + " is "
+								+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
+						end
 					end
 				end
-			end
-			if a_replacement.item = Void then
-				a_replacement.put (Current)
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			base_expression.evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as l_result_item then
 				-- do nothing
-			elseif a_result.item.is_error then
+			elseif l_result_item.is_error then
 				-- do nothing
 			else
-				test_conformance (a_result.item)
+				test_conformance (l_result_item)
 			end
 		end
 
@@ -178,13 +182,15 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			elseif an_iterator.is_node_iterator then
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, Current, Void)
-			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				an_iterator := l_last_iterator
+				if an_iterator.is_error then
+					last_iterator := an_iterator
+				elseif an_iterator.is_node_iterator then
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, Current, Void)
+				else
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
+				end
 			end
 		end
 
@@ -194,11 +200,14 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_iterator
-			if l_iterator.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_iterator.error_value)
-			else
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_iterator, Current, Void)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+				else
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_iterator, Current, Void)
+				end
 			end
 		end
 
@@ -214,15 +223,17 @@ feature -- Evaluation
 	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT)
 			-- Map `a_item' to a sequence
 		do
-			if not a_item.is_error then
+			if not attached a_item.error_value as l_error_value then
 				test_conformance (a_item)
-				if a_item.is_error then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_item.error_value)
+				if attached a_item.error_value as l_error_value then
+					check is_error: a_item.is_error end
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
 				else
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (a_item.as_node)
 				end
 			else
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_item.error_value)
+				check is_error: a_item.is_error end
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
 			end
 		end
 

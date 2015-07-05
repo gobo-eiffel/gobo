@@ -5,7 +5,7 @@ note
 		"Objects that call XPath system-defined and user-defined functions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,7 +124,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			simplify_arguments (a_replacement)
@@ -133,7 +133,7 @@ feature -- Optimization
 			end
 		end
 
-	simplify_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Simplify `arguments'
 		require
 			no_previous_error: not is_error
@@ -142,7 +142,7 @@ feature -- Optimization
 		local
 			l_argument: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				l_cursor := arguments.new_cursor
@@ -153,11 +153,13 @@ feature -- Optimization
 			loop
 				l_argument := l_cursor.item
 				l_argument.simplify (l_replacement)
-				if l_argument.is_error then
-					set_replacement (a_replacement, l_argument)
-				elseif l_argument /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					adopt_child_expression (l_replacement.item)
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					if l_argument.is_error then
+						set_replacement (a_replacement, l_argument)
+					elseif l_argument /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						adopt_child_expression (l_replacement_item)
+					end
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
@@ -166,12 +168,12 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_fixed_values: BOOLEAN
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				l_fixed_values := True -- until we find otherwise
@@ -182,19 +184,21 @@ feature -- Optimization
 				a_replacement.item /= Void or l_cursor.after
 			loop
 				l_cursor.item.check_static_type (l_replacement, a_context, a_context_item_type)
-				if l_cursor.item.is_error then
-					set_replacement (a_replacement, l_cursor.item)
-				elseif l_cursor.item /= l_replacement.item then
-					if l_replacement.item.is_error then
-						set_replacement (a_replacement, l_replacement.item)
-					else
-						l_cursor.replace (l_replacement.item)
-						adopt_child_expression (l_replacement.item)
-						reset_static_properties
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					if l_cursor.item.is_error then
+						set_replacement (a_replacement, l_cursor.item)
+					elseif l_cursor.item /= l_replacement_item then
+						if l_replacement_item.is_error then
+							set_replacement (a_replacement, l_replacement_item)
+						else
+							l_cursor.replace (l_replacement_item)
+							adopt_child_expression (l_replacement_item)
+							reset_static_properties
+						end
 					end
-				end
-				if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
-					l_fixed_values := False
+					if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
+						l_fixed_values := False
+					end
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
@@ -214,12 +218,12 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_fixed_values: BOOLEAN
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				l_fixed_values := True -- until we find otherwise
@@ -230,15 +234,17 @@ feature -- Optimization
 				a_replacement.item /= Void or l_cursor.after
 			loop
 				l_cursor.item.optimize (l_replacement, a_context, a_context_item_type)
-				if l_cursor.item.is_error then
-					set_replacement (a_replacement, l_cursor.item)
-				elseif l_cursor.item /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					adopt_child_expression (l_replacement.item)
-					reset_static_properties
-				end
-				if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
-					l_fixed_values := False
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					if l_cursor.item.is_error then
+						set_replacement (a_replacement, l_cursor.item)
+					elseif l_cursor.item /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						adopt_child_expression (l_replacement_item)
+						reset_static_properties
+					end
+					if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
+						l_fixed_values := False
+					end
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
@@ -258,12 +264,12 @@ feature -- Optimization
 			end
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		local
-			l_promotion: XM_XPATH_EXPRESSION
+			l_promotion: detachable XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
@@ -278,10 +284,12 @@ feature -- Optimization
 					l_cursor.after
 				loop
 					l_cursor.item.promote (l_replacement, a_offer)
-					if l_cursor.item /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
-						adopt_child_expression (l_replacement.item)
-						reset_static_properties
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						if l_cursor.item /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+							adopt_child_expression (l_replacement_item)
+							reset_static_properties
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
@@ -296,7 +304,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 			-- Functions that do not allow pre-evaluation,
 			--  or that need access to context information,
@@ -308,11 +316,16 @@ feature -- Evaluation
 			not_replaced: a_replacement.item = Void
 		do
 			create_iterator (a_context.new_compile_time_context)
-			if last_iterator.is_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
-			else
-				expression_factory.create_sequence_extent (last_iterator)
-				set_replacement (a_replacement, expression_factory.last_created_closure)
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if attached l_last_iterator.error_value as l_error_value then
+					check is_error: l_last_iterator.is_error end
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
+				else
+					expression_factory.create_sequence_extent (l_last_iterator)
+					check postcondition_of_create_sequence_extent: attached expression_factory.last_created_closure as l_last_created_closure then
+						set_replacement (a_replacement, l_last_created_closure)
+					end
+				end
 			end
 		ensure
 			replaced: a_replacement.item /= Void
@@ -320,7 +333,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		require
 			no_error: not is_error
@@ -345,30 +358,26 @@ feature {NONE} -- Implementation
 			nearly_positive_maximum_count: a_maximum_count >= -1
 			no_previous_error: not is_error
 		local
-			a_message: STRING
-			is_type_error: BOOLEAN
+			a_message: detachable STRING
 		do
 			-- TODO - need to add location information in messages
 			if a_minimum_count = a_maximum_count and then a_minimum_count /= supplied_argument_count then
-				is_type_error := True
-			a_message := STRING_.appended_string ("Function ", name)
-			a_message := STRING_.appended_string (a_message, " must have ")
-			a_message := STRING_.appended_string (a_message, (a_minimum_count - augmented_argument_count).out)
-			a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_minimum_count - augmented_argument_count)))
+				a_message := STRING_.appended_string ("Function ", name)
+				a_message := STRING_.appended_string (a_message, " must have ")
+				a_message := STRING_.appended_string (a_message, (a_minimum_count - augmented_argument_count).out)
+				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_minimum_count - augmented_argument_count)))
 			elseif supplied_argument_count < a_minimum_count then
-			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at least")
 				a_message := STRING_.appended_string (a_message, (a_minimum_count - augmented_argument_count).out)
 				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_minimum_count - augmented_argument_count)))
 			elseif a_maximum_count > -1 and supplied_argument_count > a_maximum_count then
-			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at most")
 				a_message := STRING_.appended_string (a_message, (a_maximum_count - augmented_argument_count).out)
 				a_message := STRING_.appended_string (a_message, plural_arguments_text ((a_maximum_count - augmented_argument_count)))
 			end
-			if is_type_error then
+			if a_message /= Void then
 				set_last_error_from_string (a_message, Xpath_errors_uri, "XPST0017", Static_error)
 			end
 		ensure
@@ -391,7 +400,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	arguments: arguments /= Void and then arguments.equality_tester.is_equal (expression_tester)
+	arguments: arguments /= Void and then arguments.equality_tester ~ expression_tester
 	augmented_argument_count: augmented_argument_count = 0 or else augmented_argument_count = 1
 
 end

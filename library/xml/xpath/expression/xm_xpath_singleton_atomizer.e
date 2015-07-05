@@ -5,7 +5,7 @@ note
 	"Objects that map a sequence by replacing a node with it's typed value, whilst checking cardinality"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			sequence_not_void: a_sequence /= Void
 			role_not_void: a_role /= Void
 		do
-			make_unary (a_sequence)
 			role := a_role
+			make_unary (a_sequence)
 			allows_empty := empty
 			is_always_untyped := True -- not schema-aware
 			compute_static_properties
@@ -102,49 +102,53 @@ feature -- Access
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			base_expression.simplify (l_replacement)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			elseif base_expression.is_atomic_value then
-				set_replacement (a_replacement, base_expression.as_atomic_value)
-			else
-				a_replacement.put (Current)
-			end
-		end
-
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
-			-- Perform static type-checking of `Current' and its subexpressions.
-		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
-		do
-			create l_replacement.make (Void)
-			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_base_expression (l_replacement.item)
-			if base_expression.is_error then
-				set_replacement (a_replacement, base_expression)
-			else
-				reset_static_properties
-				if base_expression.is_empty_sequence and then not allows_empty then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
-						STRING_.concat ("An empty sequence is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error))
-				elseif is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
 					set_replacement (a_replacement, base_expression)
+				elseif base_expression.is_atomic_value then
+					set_replacement (a_replacement, base_expression.as_atomic_value)
 				else
 					a_replacement.put (Current)
 				end
 			end
 		end
 
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
+			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_base_expression (l_replacement_item)
+				if base_expression.is_error then
+					set_replacement (a_replacement, base_expression)
+				else
+					reset_static_properties
+					if base_expression.is_empty_sequence and then not allows_empty then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
+							STRING_.concat ("An empty sequence is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error))
+					elseif is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
+						set_replacement (a_replacement, base_expression)
+					else
+						a_replacement.put (Current)
+					end
+				end
+			end
+		end
+
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -153,49 +157,54 @@ feature -- Evaluation
 			l_value: XM_XPATH_VALUE
 		do
 			base_expression.create_iterator (a_context)
-			l_iterator := base_expression.last_iterator
-			if l_iterator.is_error then
-				set_last_error (l_iterator.error_value)
-			else
-				from
-					l_iterator.start
-				until
-					is_error or else l_iterator.after
-				loop
-					l_item := l_iterator.item
-					if l_item.is_atomic_value then
-						l_items_count := l_items_count + 1
-						if l_items_count > 1 then
-							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
-								role.message), role.namespace_uri, role.error_code, Type_error)
-						else
-							a_result.put (l_item)
+			check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					set_last_error (l_error_value)
+				else
+					from
+						l_iterator.start
+					until
+						is_error or else l_iterator.after
+					loop
+						l_item := l_iterator.item
+						if l_item.is_atomic_value then
+							l_items_count := l_items_count + 1
+							if l_items_count > 1 then
+								set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
+									role.message), role.namespace_uri, role.error_code, Type_error)
+							else
+								a_result.put (l_item)
+							end
+						else -- Node
+							l_value := l_item.as_node.atomized_value
+							l_items_count := l_value.count
+							if l_items_count > 1 then
+								set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error)
+							elseif l_items_count = 1 then
+								a_result.put (l_value.item_at (1))
+							end
 						end
-					else -- Node
-						l_value := l_item.as_node.atomized_value
-						l_items_count := l_value.count
-						if l_items_count > 1 then
-							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error)
-						elseif l_items_count = 1 then
-							a_result.put (l_value.item_at (1))
-						end
-					end
-					if not is_error then
-						l_iterator.forth
-						if l_iterator.is_error then
-							set_last_error (l_iterator.error_value)
+						if not is_error then
+							l_iterator.forth
+							if attached l_iterator.error_value as l_error_value then
+								check is_error: l_iterator.is_error end
+								set_last_error (l_error_value)
+							end
 						end
 					end
 				end
-			end
-			if is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
-			elseif l_items_count = 0 then
-				if allows_empty then
-					a_result.put (Void)
-				else
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.concat ("An empty sequence is not allowed as the ",
-						role.message), role.namespace_uri, role.error_code, Type_error))
+				if attached error_value as l_error_value then
+					check is_error: is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+				elseif l_items_count = 0 then
+					if allows_empty then
+						a_result.put (Void)
+					else
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.concat ("An empty sequence is not allowed as the ",
+							role.message), role.namespace_uri, role.error_code, Type_error))
+					end
 				end
 			end
 		end

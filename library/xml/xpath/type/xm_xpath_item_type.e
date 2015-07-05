@@ -5,7 +5,7 @@ note
 		"Objects that indicate the type of an item"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature -- Access
 		require
 			node_test: is_node_test
 		do
+			check is_node_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -46,6 +47,7 @@ feature -- Access
 		require
 			node_kind_test: is_node_kind_test
 		do
+			check is_node_kind_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -61,6 +63,7 @@ feature -- Access
 		require
 			name_test: is_name_test
 		do
+			check is_name_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -76,6 +79,7 @@ feature -- Access
 		require
 			local_name_test: is_local_name_test
 		do
+			check is_local_name_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -91,6 +95,7 @@ feature -- Access
 		require
 			namespace_test: is_namespace_test
 		do
+			check is_namespace: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -106,6 +111,7 @@ feature -- Access
 		require
 			content_test: is_content_test
 		do
+			check is_content_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -121,6 +127,7 @@ feature -- Access
 		require
 			combined_node_test: is_combined_node_test
 		do
+			check is_combined_node_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -136,6 +143,7 @@ feature -- Access
 		require
 			document_node_test: is_document_node_test
 		do
+			check is_document_node_test: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -163,6 +171,7 @@ feature -- Access
 		require
 			atomic_type: is_atomic_type
 		do
+			check is_atomic_type: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -192,9 +201,9 @@ feature -- Access
 		deferred
 		end
 
-	super_type: XM_XPATH_ITEM_TYPE
+	super_type: detachable XM_XPATH_ITEM_TYPE
 			-- Type from which this item type is derived by restriction;
-			-- This is the super-type in the XPath type heirarchy,
+			-- This is the super-type in the XPath type hierarchy,
 			--  as distinct from the Schema base type:
 			--  this means that the super-type of xs:boolean is xdt:anyAtomicType,
 			--  whose super-type is item() (rather than xs:anySimpleType).
@@ -208,7 +217,6 @@ feature -- Access
 			-- For xdt:anyAtomicType it is atomic_type. For numeric it is number_type.
 			-- For other atomic types it is the primitive type as defined in XML Schema:
 		deferred
-		ensure
 		end
 
 	atomized_item_type: XM_XPATH_ATOMIC_TYPE

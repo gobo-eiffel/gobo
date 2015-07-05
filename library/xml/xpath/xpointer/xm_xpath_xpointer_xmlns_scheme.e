@@ -5,7 +5,7 @@ note
 		"Objects that implement the W3C XPointer xmlns scheme"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature -- Access
 	expanded_name: STRING = "xmlns"
 			-- Expanded name of implemented scheme
 
-	value: XM_XPATH_VALUE
+	value: detachable XM_XPATH_VALUE
 			-- Result of last call to `evaluate'
 
 feature -- Status report
@@ -60,17 +60,19 @@ feature -- Element change
 		local
 			a_splitter: ST_SPLITTER
 			an_xml_prefix, a_namespace_uri: STRING
+			l_components: like components
 		do
 			evaluated := True
 			is_error := False
 			create a_splitter.make
 			a_splitter.set_separators ("=")
-			components := a_splitter.split (some_data)
-			if components.count /= 2 then
+			l_components := a_splitter.split (some_data)
+			components := l_components
+			if l_components.count /= 2 then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Scheme data must have exactly one '=' sign", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 			else
-				an_xml_prefix := components.item (1)
+				an_xml_prefix := l_components.item (1)
 				STRING_.right_adjust (an_xml_prefix)
 				if not is_ncname (an_xml_prefix) then
 					is_error := True
@@ -82,7 +84,7 @@ feature -- Element change
 					is_error := True
 					create {XM_XPATH_INVALID_VALUE} value.make_from_string ("Prefix is already declared", Gexslt_eiffel_type_uri, "XPOINTER_XMLNS_SYNTAX", Static_error)
 				else
-					a_namespace_uri := components.item (2)
+					a_namespace_uri := l_components.item (2)
 					STRING_.left_adjust (a_namespace_uri)
 					if a_namespace_context.is_namespace_proscribed (a_namespace_uri) then
 						is_error := True
@@ -98,7 +100,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	components: DS_LIST [STRING]
+	components: detachable DS_LIST [STRING]
 			-- Components of scheme data
 
 end

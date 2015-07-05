@@ -5,7 +5,7 @@ note
 		"Objects that implement an XPointer scheme"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ feature -- Access
 			expanded_name_not_empty: Result /= Void and then Result.count > 0
 		end
 
-	value: XM_XPATH_VALUE
+	value: detachable XM_XPATH_VALUE
 			-- Result of last call to `evaluate'
 		deferred
 		ensure
@@ -48,7 +48,7 @@ feature -- Status report
 			evaluated: evaluated
 		deferred
 		ensure
-			error_value_set: Result implies value /= Void and then value.is_error
+			error_value_set: Result implies attached value as l_value and then l_value.is_error
 		end
 
 	evaluated: BOOLEAN

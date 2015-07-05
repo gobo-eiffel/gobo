@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath codepoints-to-string() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_string: STRING
@@ -77,44 +77,51 @@ feature -- Evaluation
 			l_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
-			l_iterator := arguments.item (1).last_iterator
-			if l_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (arguments.item (1).last_iterator.error_value))
-			else
-				l_string := ""
-				from l_iterator.start until is_error or else l_iterator.after loop
-					l_value := l_iterator.item.as_atomic_value
-					if l_value.is_machine_integer_value then
-						l_machine_integer_value := l_iterator.item.as_machine_integer_value
-						if l_machine_integer_value.is_platform_integer then
-							l_integer := l_machine_integer_value.as_integer
-						else
-							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
-						end
-					elseif l_value.is_integer_value then
-						l_integer_value := l_iterator.item.as_integer_value
-						if l_integer_value.is_platform_integer then
-							l_integer := l_integer_value.as_integer
-						else
-							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
-						end
-					else
-						set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
-					end
-					if not is_error then
-						if is_char (l_integer) then
-							l_string := STRING_.appended_string (l_string, unicode.code_to_string (l_integer))
-							l_iterator.forth
-							if l_iterator.is_error then set_last_error (l_iterator.error_value) end
-						else
-							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
-						end
-					end
-				end
-				if is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 				else
-					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
+					l_string := ""
+					from l_iterator.start until is_error or else l_iterator.after loop
+						l_value := l_iterator.item.as_atomic_value
+						if l_value.is_machine_integer_value then
+							l_machine_integer_value := l_iterator.item.as_machine_integer_value
+							if l_machine_integer_value.is_platform_integer then
+								l_integer := l_machine_integer_value.as_integer
+							else
+								set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
+							end
+						elseif l_value.is_integer_value then
+							l_integer_value := l_iterator.item.as_integer_value
+							if l_integer_value.is_platform_integer then
+								l_integer := l_integer_value.as_integer
+							else
+								set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
+							end
+						else
+							set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
+						end
+						if not is_error then
+							if is_char (l_integer) then
+								l_string := STRING_.appended_string (l_string, unicode.code_to_string (l_integer))
+								l_iterator.forth
+								if attached l_iterator.error_value as l_error_value then
+									check is_error: l_iterator.is_error end
+									set_last_error (l_error_value)
+								end
+							else
+								set_last_error_from_string ("Codepoint is not a valid XML Character", Xpath_errors_uri, "FOCH0001", Dynamic_error)
+							end
+						end
+					end
+					if attached error_value as l_error_value then
+						check is_error: is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+					else
+						a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
+					end
 				end
 			end
 		end
@@ -123,14 +130,17 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- An iterator over the values of a sequence
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			evaluate_item (l_result, a_context)
-			if l_result.item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
-			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item)
+			check attached l_result.item as l_result_item then
+				if attached l_result_item.error_value as l_error_value then
+					check is_error: l_result_item.is_error end
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+				else
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result_item)
+				end
 			end
 		end
 

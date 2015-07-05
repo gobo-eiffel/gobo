@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath local-name-from-QName() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,9 @@ feature -- Access
 			if conformance.basic_xslt_processor then
 				Result := type_factory.string_type
 			else
-				Result := type_factory.ncname_type
+				check attached type_factory.ncname_type as l_ncname_type then
+					Result := l_ncname_type
+				end
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -65,13 +67,13 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
 				if conformance.basic_xslt_processor then
-					a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result.item.as_qname_value.local_name))
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result_item.as_qname_value.local_name))
 				else
 					todo ("evaluate_item (schema-aware)", True)
 				end

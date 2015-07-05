@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath resolve-uri() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static analysis of an expression and its subexpressions
 		do
 
@@ -77,7 +77,7 @@ feature -- Optimization
 			if arguments.count = 1 then
 				base_uri := a_context.base_uri
 				check
-					base_uri_is_absolute: base_uri /= Void and then base_uri.is_absolute
+					base_uri_is_absolute: attached base_uri as l_base_uri and then l_base_uri.is_absolute
 					-- From post-condition of `a_context.base_uri'`
 				end
 			end
@@ -86,61 +86,70 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_string: STRING
-			l_uri: UT_URI
+			l_uri: detachable UT_URI
+			l_base_uri: like base_uri
 		do
 			if arguments.count = 2 then
 				arguments.item (2).evaluate_item (a_result, a_context)
-				if not a_result.item.is_error then
-					l_string := a_result.item.string_value
-					a_result.put (Void)
-					if l_string.is_empty then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() is the empty string", Xpath_errors_uri,
-							"FORG0002", Dynamic_error))
-					elseif Url_encoding.has_excluded_characters (l_string) then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
-							"FORG0002", Dynamic_error))
-					elseif l_string.occurrences ('#') > 1 then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
+				check attached a_result.item as a_result_item_2 then
+					if not a_result_item_2.is_error then
+						l_string := a_result_item_2.string_value
+						a_result.put (Void)
+						if l_string.is_empty then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() is the empty string", Xpath_errors_uri,
 								"FORG0002", Dynamic_error))
-					else
-						create base_uri.make (l_string)
-						if not base_uri.is_absolute then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() is not an absolute URI", Xpath_errors_uri,
+						elseif Url_encoding.has_excluded_characters (l_string) then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
 								"FORG0002", Dynamic_error))
+						elseif l_string.occurrences ('#') > 1 then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
+									"FORG0002", Dynamic_error))
+						else
+							create l_base_uri.make (l_string)
+							base_uri := l_base_uri
+							if not l_base_uri.is_absolute then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() is not an absolute URI", Xpath_errors_uri,
+									"FORG0002", Dynamic_error))
+							end
 						end
 					end
 				end
 			end
 			if a_result.item = Void then -- i.e. no error yet
-				if not base_uri.is_absolute then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Base URI supplied as second argument of fn:resolve-uri() is not absolute", Xpath_errors_uri,
-						"FORG0009", Dynamic_error))
-				else
-					arguments.item (1).evaluate_item (a_result, a_context)
-					if a_result.item /= Void and then not a_result.item.is_error then
-						l_string := a_result.item.string_value
-						a_result.put (Void)
-						if l_string.is_empty then
-							l_uri := base_uri
-						elseif Url_encoding.has_excluded_characters (l_string) then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
-								"FORG0002", Dynamic_error))
-						elseif l_string.occurrences ('#') > 1 then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
-								"FORG0002", Dynamic_error))
-						else
-							create l_uri.make_resolve (base_uri, l_string)
-							if not l_uri.is_absolute then
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("URI resolution process failed", Xpath_errors_uri,
-									"FORG0009", Dynamic_error))
+				l_base_uri := base_uri
+				check attached l_base_uri then
+					if not l_base_uri.is_absolute then
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Base URI supplied as second argument of fn:resolve-uri() is not absolute", Xpath_errors_uri,
+							"FORG0009", Dynamic_error))
+					else
+						arguments.item (1).evaluate_item (a_result, a_context)
+						if attached a_result.item as a_result_item_1 and then not a_result_item_1.is_error then
+							l_string := a_result_item_1.string_value
+							a_result.put (Void)
+							if l_string.is_empty then
+								l_uri := l_base_uri
+							elseif Url_encoding.has_excluded_characters (l_string) then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
+									"FORG0002", Dynamic_error))
+							elseif l_string.occurrences ('#') > 1 then
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
+									"FORG0002", Dynamic_error))
+							else
+								create l_uri.make_resolve (l_base_uri, l_string)
+								if not l_uri.is_absolute then
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("URI resolution process failed", Xpath_errors_uri,
+										"FORG0009", Dynamic_error))
+								end
 							end
-						end
-						if a_result.item = Void then
-							a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_uri.full_reference))
+							if a_result.item = Void then
+								check attached l_uri then
+									a_result.put (create {XM_XPATH_ANY_URI_VALUE}.make (l_uri.full_reference))
+								end
+							end
 						end
 					end
 				end
@@ -157,7 +166,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	base_uri: UT_URI
+	base_uri: detachable UT_URI
 			-- Base URI from static_context
 
 end

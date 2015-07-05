@@ -5,7 +5,7 @@ note
 		"Values that have not yet been evaluated"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		local
 			l_count: INTEGER
-			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			state := Unread_state
 			is_node_sequence := is_node_item_type (an_expression.item_type)
@@ -102,24 +102,32 @@ feature -- Access
 		do
 			if state = All_read_state then
 				if is_node_sequence then
-					Result := node_reservoir.count
+					check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+						Result := l_node_reservoir.count
+					end
 				else
-					Result := reservoir.count
+					check invariant_reservoir_not_void: attached reservoir as l_reservoir then
+						Result := l_reservoir.count
+					end
 				end
 			else
 				Result := Precursor
 			end
 		end
 
-	item_at (an_index: INTEGER) :XM_XPATH_ITEM
+	item_at (an_index: INTEGER): detachable XM_XPATH_ITEM
 			-- Item at `an_index'
 		local
 			a_reservoir: like reservoir
 		do
 			if is_node_sequence then
-				a_reservoir := node_reservoir
+				check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+					a_reservoir := l_node_reservoir
+				end
 			else
-				a_reservoir := reservoir
+				check invariant_reservoir_not_void: attached reservoir as l_reservoir then
+					a_reservoir := l_reservoir
+				end
 			end
 			if an_index <= a_reservoir.count then
 				Result := a_reservoir.item (an_index)
@@ -131,50 +139,59 @@ feature -- Access
 
 				-- We need to read some more items - this actually alters
 				--  the internal state, but not the externally visible state
-
-				from
-				until
-					an_index = a_reservoir.count or else state = All_read_state
-				loop
-					if input_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} Result.make (input_iterator.error_value)
-					elseif input_iterator.before then
-						input_iterator.start
+				check invariant_input_iterator_not_void: attached input_iterator as l_input_iterator then
+					from
+					until
+						an_index = a_reservoir.count or else state = All_read_state
+					loop
+						if attached l_input_iterator.error_value as l_error_value then
+							check is_error: l_input_iterator.is_error end
+							create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
+						elseif l_input_iterator.before then
+							l_input_iterator.start
+						else
+							l_input_iterator.forth
+						end
+						if attached l_input_iterator.error_value as l_error_value then
+							check is_error: l_input_iterator.is_error end
+							create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
+						elseif l_input_iterator.after then
+							state := All_read_state
+						elseif l_input_iterator.is_node_iterator then
+							check
+								node_sequence: is_node_sequence
+								invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir
+							then
+								if not l_node_reservoir.extendible (1) then
+									l_node_reservoir.resize (2 * l_node_reservoir.count)
+								end
+								l_node_reservoir.put_last (l_input_iterator.as_node_iterator.item)
+								state := Maybe_more_state
+							end
+						else
+							check
+								not_node_sequence: not is_node_sequence
+								invariant_reservoir_not_void: attached reservoir as l_reservoir
+							then
+								if not l_reservoir.extendible (1) then
+									l_reservoir.resize (2 * l_reservoir.count)
+								end
+								l_reservoir.put_last (l_input_iterator.item)
+								state := Maybe_more_state
+							end
+						end
+					end
+					if state = Maybe_more_state then
+						Result := a_reservoir.item (an_index)
 					else
-						input_iterator.forth
-					end
-					if input_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} Result.make (input_iterator.error_value)
-					elseif input_iterator.after then
-						state := All_read_state
-					elseif input_iterator.is_node_iterator then
 						check
-							node_sequence: is_node_sequence
+								-- pre-condition for `an_index'
+							out_of_range: l_input_iterator.is_error
+							is_error: attached l_input_iterator.error_value as l_error_value
+						then
+							create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
 						end
-						if not node_reservoir.extendible (1) then
-							node_reservoir.resize (2 * node_reservoir.count)
-						end
-						node_reservoir.put_last (input_iterator.as_node_iterator.item)
-						state := Maybe_more_state
-					else
-						check
-							not_node_sequence: not is_node_sequence
-						end
-						if not reservoir.extendible (1) then
-							reservoir.resize (2 * reservoir.count)
-						end
-						reservoir.put_last (input_iterator.item)
-						state := Maybe_more_state
 					end
-				end
-				if state = Maybe_more_state then
-					Result := a_reservoir.item (an_index)
-				else
-					check
-						out_of_range: input_iterator.is_error
-						-- pre-condition for `an_index'
-					end
-					create {XM_XPATH_INVALID_ITEM} Result.make (input_iterator.error_value)
 				end
 			end
 		end
@@ -185,11 +202,15 @@ feature -- Access
 			all_read: is_all_read
 		do
 			if is_node_sequence then
-				create Result.make_from_list (node_reservoir)
+				check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+					create Result.make_from_list (l_node_reservoir)
+				end
 			else
-				create Result.make_from_list (reservoir)
+				check invariant_reservoir_not_void: attached reservoir as l_reservoir then
+					create Result.make_from_list (l_reservoir)
+				end
 			end
-					ensure
+		ensure
 			result_not_void: Result /= Void
 		end
 
@@ -218,17 +239,22 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		local
 			l_reservoir: like reservoir
+			l_input_iterator: like input_iterator
 		do
 			last_iterator := Void
 			if is_node_sequence then
-				l_reservoir := node_reservoir
+				check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+					l_reservoir := l_node_reservoir
+				end
 			else
-				l_reservoir := reservoir
+				check invariant_reservoir_not_void: attached reservoir as l_reservoir2 then
+					l_reservoir := l_reservoir2
+				end
 			end
 			if l_reservoir.count > 0 then
-				if input_iterator.is_error then
-					last_iterator := input_iterator
-				elseif input_iterator /= Void and then input_iterator.after then
+				if attached input_iterator as l_input_iterator2 and then l_input_iterator2.is_error then
+					last_iterator := l_input_iterator2
+				elseif attached input_iterator as l_input_iterator2 and then l_input_iterator2.after then
 					state := All_read_state
 				end
 			end
@@ -239,26 +265,42 @@ feature -- Evaluation
 					state := Busy_state
 					if is_node_sequence then
 						base_expression.create_node_iterator (saved_xpath_context)
-						input_iterator := base_expression.last_node_iterator
+						check postcondition_of_create_node_iterator: attached base_expression.last_node_iterator as l_last_node_iterator then
+							l_input_iterator := l_last_node_iterator
+							input_iterator := l_last_node_iterator
+						end
 					else
 						base_expression.create_iterator (saved_xpath_context)
-						input_iterator := base_expression.last_iterator
+						check postcondition_of_create_iterator: attached base_expression.last_iterator as l_last_iterator then
+							l_input_iterator := l_last_iterator
+							input_iterator := l_last_iterator
+						end
 					end
 					state := Maybe_more_state
-					if input_iterator.is_error then
-						last_iterator := input_iterator
+					if l_input_iterator.is_error then
+						last_iterator := l_input_iterator
 					elseif is_node_sequence then
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
+						check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+							create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (l_node_reservoir, l_input_iterator.as_node_iterator, Current)
+						end
 					else
-						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
+						check invariant_reservoir_not_void: attached reservoir as l_reservoir2 then
+							create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (l_reservoir2, l_input_iterator, Current)
+						end
 					end
 				when Maybe_more_state then
-					if input_iterator.is_error then
-						last_iterator := input_iterator
-					elseif is_node_sequence then
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
-					else
-						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
+					check inariant_input_iterator_not_void: attached input_iterator as l_input_iterator2 then
+						if l_input_iterator2.is_error then
+							last_iterator := l_input_iterator2
+						elseif is_node_sequence then
+							check invariant_node_reservoir_not_void: attached node_reservoir as l_node_reservoir then
+								create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (l_node_reservoir, l_input_iterator2.as_node_iterator, Current)
+							end
+						else
+							check invariant_reservoir_not_void: attached reservoir as l_reservoir2 then
+								create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (l_reservoir2, l_input_iterator2, Current)
+							end
+						end
 					end
 				when All_read_state then
 					if l_reservoir.is_empty then
@@ -279,40 +321,46 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence
 		do
-			last_node_iterator := Void
-			if node_reservoir.count > 0 then
-				if input_iterator.is_error then
-					last_node_iterator := input_iterator.as_node_iterator
-				elseif input_iterator /= Void and then input_iterator.after then
-					state := All_read_state
+			check precondition_is_node_sequence: attached node_reservoir as l_node_reservoir then
+				last_node_iterator := Void
+				if l_node_reservoir.count > 0 then
+					if attached input_iterator as l_input_iterator and then l_input_iterator.is_error then
+						last_node_iterator := l_input_iterator.as_node_iterator
+					elseif attached input_iterator as l_input_iterator and then l_input_iterator.after then
+						state := All_read_state
+					end
 				end
-			end
-			if last_node_iterator = Void then
-				inspect
-					state
-				when Unread_state then
-					state := Busy_state
-					base_expression.create_node_iterator (saved_xpath_context)
-					input_iterator := base_expression.last_node_iterator
-					state := Maybe_more_state
-					if input_iterator.is_error then
-						last_node_iterator := input_iterator.as_node_iterator
-					else
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
-					end
-				when Maybe_more_state then
-					if input_iterator.is_error then
-						last_node_iterator := input_iterator.as_node_iterator
-					else
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
-					end
-				when All_read_state then
-					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_node_iterator.make (node_reservoir)
-				when Busy_state then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
-					check
-						busy_memo_closure: False
-						-- BUG
+				if last_node_iterator = Void then
+					inspect
+						state
+					when Unread_state then
+						state := Busy_state
+						base_expression.create_node_iterator (saved_xpath_context)
+						check postcondition_of_create_node_iterator: attached base_expression.last_node_iterator as l_input_iterator then
+							input_iterator := l_input_iterator
+							state := Maybe_more_state
+							if l_input_iterator.is_error then
+								last_node_iterator := l_input_iterator.as_node_iterator
+							else
+								create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (l_node_reservoir, l_input_iterator.as_node_iterator, Current)
+							end
+						end
+					when Maybe_more_state then
+						check invariant_input_iterator: attached input_iterator as l_input_iterator then
+							if l_input_iterator.is_error then
+								last_node_iterator := l_input_iterator.as_node_iterator
+							else
+								create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_node_iterator.make (l_node_reservoir, l_input_iterator.as_node_iterator, Current)
+							end
+						end
+					when All_read_state then
+						create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_node_iterator.make (l_node_reservoir)
+					when Busy_state then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
+						check
+							busy_memo_closure: False
+							-- BUG
+						end
 					end
 				end
 			end
@@ -330,21 +378,27 @@ feature -- Evaluation
 				a_context.report_fatal_error (l_error)
 			else
 				create_iterator (a_context)
-				if last_iterator.is_error then
-					a_context.report_fatal_error (last_iterator.error_value)
-				else
-					l_receiver := a_context.current_receiver
-					from
-						l_iterator := last_iterator
-						l_iterator.start
-					until
-						l_iterator.is_error or l_iterator.after
-					loop
-						if l_iterator.is_error then
-							a_context.report_fatal_error (l_iterator.error_value)
-						else
-							l_receiver.append_item (l_iterator.item)
-							l_iterator.forth
+				check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						a_context.report_fatal_error (l_error_value)
+					else
+						check precondition_has_push_processing: attached a_context.current_receiver as l_current_receiver then
+							l_receiver := l_current_receiver
+							from
+								l_iterator := l_last_iterator
+								l_iterator.start
+							until
+								l_iterator.is_error or l_iterator.after
+							loop
+								if attached l_iterator.error_value as l_error_value then
+									check is_error: l_iterator.is_error end
+									a_context.report_fatal_error (l_error_value)
+								else
+									l_receiver.append_item (l_iterator.item)
+									l_iterator.forth
+								end
+							end
 						end
 					end
 				end
@@ -364,10 +418,10 @@ feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESS
 
 feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
-	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+	reservoir: detachable DS_ARRAYED_LIST [XM_XPATH_ITEM]
 			-- List of items already read
 
-	node_reservoir: DS_ARRAYED_LIST [XM_XPATH_NODE]
+	node_reservoir: detachable DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- List of nodes already read
 
 feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR, XM_XPATH_EXPRESSION} -- Restricted
@@ -388,8 +442,8 @@ invariant
 	reservoir_not_void: not is_node_sequence implies reservoir /= Void
 	node_reservoir_not_void: is_node_sequence implies node_reservoir /= Void
 	input_iterator: state /= Unread_state implies input_iterator /= Void
-	node_iterator: is_node_sequence and then input_iterator /= Void implies input_iterator.is_error or else input_iterator.is_node_iterator
-	empty_reservoir: reservoir /= Void and then reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
-	empty_node_reservoir: node_reservoir /= Void and then node_reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
+	node_iterator: is_node_sequence and then attached input_iterator as l_input_iterator implies l_input_iterator.is_error or else l_input_iterator.is_node_iterator
+	empty_reservoir: attached reservoir as l_reservoir and then l_reservoir.count = 0 and then attached input_iterator as l_input_iterator implies l_input_iterator.off
+	empty_node_reservoir: attached node_reservoir as l_node_reservoir and then l_node_reservoir.count = 0 and then attached input_iterator as l_input_iterator implies l_input_iterator.off
 
 end

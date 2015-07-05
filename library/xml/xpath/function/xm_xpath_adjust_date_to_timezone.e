@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath adjust-date-to-timezone() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			if arguments.count = 1 then
@@ -76,19 +76,19 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_date_value: XM_XPATH_DATE_VALUE
 			l_zone: DT_FIXED_OFFSET_TIME_ZONE
 			l_duration: DT_DATE_TIME_DURATION
-			l_duration_value: XM_XPATH_SECONDS_DURATION_VALUE
+			l_duration_value: detachable XM_XPATH_SECONDS_DURATION_VALUE
 			l_zero_duration: DT_DATE_DURATION
 			l_finished: BOOLEAN
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_date_value := a_result.item.as_atomic_value.as_date_value
+			if attached a_result.item as a_result_item and then not a_result_item.is_error then
+				l_date_value := a_result_item.as_atomic_value.as_date_value
 				if arguments.count = 1 then
 					l_zone := a_context.implicit_timezone
 					create l_zero_duration.make (0, 0, 0)
@@ -97,13 +97,13 @@ feature -- Evaluation
 				else
 					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
-					if a_result.item = Void then
+					if not attached a_result.item as a_result_item_2 then
 						a_result.put (l_date_value.as_zoneless)
 						l_finished := True
-					elseif a_result.item.is_error then
+					elseif a_result_item_2.is_error then
 						l_finished := True
 					else
-						l_duration_value := a_result.item.as_atomic_value.as_seconds_duration
+						l_duration_value := a_result_item_2.as_atomic_value.as_seconds_duration
 						if not l_duration_value.is_valid_time_zone then
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Time zone has bad values", Xpath_errors_uri, "FODT0003", Dynamic_error))
 							l_finished := True
@@ -111,12 +111,14 @@ feature -- Evaluation
 					end
 				end
 				if not l_finished then
-					a_result.put (l_date_value.to_another_time_zone (l_duration_value))
+					check attached l_duration_value then
+						a_result.put (l_date_value.to_another_time_zone (l_duration_value))
+					end
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

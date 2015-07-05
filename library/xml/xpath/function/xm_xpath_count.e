@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPath count() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,7 +72,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -80,31 +80,36 @@ feature -- Evaluation
 			l_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
-			l_iterator := arguments.item (1).last_iterator
-			if l_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-			elseif l_iterator.is_last_position_finder then
-				create l_integer_value.make (l_iterator.last_position)
-				if l_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+			check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+				l_iterator := l_last_iterator
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+				elseif l_iterator.is_last_position_finder then
+					create l_integer_value.make (l_iterator.last_position)
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+					else
+						a_result.put (l_integer_value)
+					end
 				else
-					a_result.put (l_integer_value)
-				end
-			else
-				from
-					l_integer := 0
-					l_iterator.start
-				until
-					l_iterator.is_error or else l_iterator.after
-				loop
-					l_integer := l_integer + 1
-					l_iterator.forth
-				end
-				if not l_iterator.is_error then
-					create l_integer_value.make (l_integer)
-					a_result.put (l_integer_value)
-				else
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
+					from
+						l_integer := 0
+						l_iterator.start
+					until
+						l_iterator.is_error or else l_iterator.after
+					loop
+						l_integer := l_integer + 1
+						l_iterator.forth
+					end
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+					else
+						create l_integer_value.make (l_integer)
+						a_result.put (l_integer_value)
+					end
 				end
 			end
 		end
@@ -119,17 +124,19 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context)
 			if a_replacement.item = Void then
 				create l_replacement.make (Void)
 				arguments.item (1).set_unsorted (l_replacement, True)
-				if arguments.item (1) /= l_replacement.item then
-					arguments.replace (l_replacement.item, 1)
+				check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+					if arguments.item (1) /= l_replacement_item then
+						arguments.replace (l_replacement_item, 1)
+					end
 				end
 			end
 		end

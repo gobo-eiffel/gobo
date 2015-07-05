@@ -5,7 +5,7 @@ note
 		"XPath Root Node Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,21 +62,23 @@ feature -- Access
 			end
 		end
 
-	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE
+	node (a_context: XM_XPATH_CONTEXT): detachable XM_XPATH_NODE
 			-- The single node
 		local
-			a_document: XM_XPATH_DOCUMENT
+			a_document: detachable XM_XPATH_DOCUMENT
 		do
 			check
-				is_node: a_context.context_item.is_node
+				attached a_context.context_item as l_context_item
+				is_node: l_context_item.is_node
 				-- from pre-condition
+			then
+				a_document := l_context_item.as_node.document_root
+				check
+					is_document: a_document /= Void -- TODO: as_document
+					-- from pre-condition
+				end
+				Result := a_document
 			end
-			a_document := a_context.context_item.as_node.document_root
-			check
-				is_document: a_document /= Void -- TODO: as_document
-				-- from pre-condition
-			end
-			Result := a_document
 		end
 
 feature -- Comparison
@@ -92,9 +94,9 @@ feature -- Status report
 	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Is the dynamic context in a suitable condition to call `node'?
 		do
-			if a_context /= Void and then a_context.context_item /= Void then
-				if a_context.context_item.is_node then
-					Result := a_context.context_item.as_node.document_root /= Void
+			if a_context /= Void and then attached a_context.context_item as l_context_item then
+				if l_context_item.is_node then
+					Result := l_context_item.as_node.document_root /= Void
 				end
 			end
 		end
@@ -134,14 +136,14 @@ feature {NONE} -- Implementation
 			if a_context = Void then
 				create Result.make_from_string ("Evaluating '/': the dynamic context is not available", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			else
-				if a_context.context_item = Void then
+				if not attached a_context.context_item as l_context_item then
 					create Result.make_from_string ("Evaluating '/': the context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 				else
-					if not a_context.context_item.is_node then
+					if not l_context_item.is_node then
 						create Result.make_from_string ("Evaluating '/': the context item is not a node", Xpath_errors_uri, "XPTY0020", Type_error)
 					else
 						check
-							no_document_node: a_context.context_item.as_node.document_root = Void
+							no_document_node: l_context_item.as_node.document_root = Void
 							-- follows from pre-condition
 						end
 						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", Xpath_errors_uri, "XPDY0050", Type_error)

@@ -5,7 +5,7 @@ note
 		"XPath sequences of atomic values and nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,19 +48,21 @@ feature -- Status report
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
 		local
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_saved_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			a_saved_iterator := last_iterator -- to preserve purity
 			create_iterator (a_context)
-			last_iterator.start
-			if last_iterator.is_error or else last_iterator.after then
-				Result := False
-			else
-				last_iterator.forth
-				if last_iterator.is_error or else not last_iterator.after then
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				l_last_iterator.start
+				if l_last_iterator.is_error or else l_last_iterator.after then
 					Result := False
 				else
-					Result := True
+					l_last_iterator.forth
+					if l_last_iterator.is_error or else not l_last_iterator.after then
+						Result := False
+					else
+						Result := True
+					end
 				end
 			end
 			last_iterator := a_saved_iterator
@@ -70,30 +72,32 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
-			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_saved_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			a_saved_iterator := last_iterator -- to preserve purity
 			a_string := STRING_.appended_string (indentation (a_level), "sequence of ")
 			a_string := STRING_.appended_string (a_string, item_type.conventional_name)
 			a_string := STRING_.appended_string (a_string, " (")
-			from
-				create_iterator (Void)
-				if last_iterator.is_error then
-					a_string := STRING_.appended_string (a_string, "iterator in ERROR")
-				end
-				last_iterator.start
-				if last_iterator.is_error then
-					a_string := STRING_.appended_string (a_string, "iterator in ERROR")
-				end
-			until
-				last_iterator.is_error or else last_iterator.after
-			loop
-				std.error.put_string (indentation (a_level + 1))
-				std.error.put_string (last_iterator.item.string_value)
-				std.error.put_new_line
-				last_iterator.forth
-				if last_iterator.is_error then
-					a_string := STRING_.appended_string (a_string, "iterator in ERROR")
+			create_iterator (new_dummy_context)
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				from
+					if l_last_iterator.is_error then
+						a_string := STRING_.appended_string (a_string, "iterator in ERROR")
+					end
+					l_last_iterator.start
+					if l_last_iterator.is_error then
+						a_string := STRING_.appended_string (a_string, "iterator in ERROR")
+					end
+				until
+					l_last_iterator.is_error or else l_last_iterator.after
+				loop
+					std.error.put_string (indentation (a_level + 1))
+					std.error.put_string (l_last_iterator.item.string_value)
+					std.error.put_new_line
+					l_last_iterator.forth
+					if l_last_iterator.is_error then
+						a_string := STRING_.appended_string (a_string, "iterator in ERROR")
+					end
 				end
 			end
 			a_string := STRING_.appended_string (a_string, ")")
@@ -104,16 +108,19 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			create_iterator (a_context)
-			if last_iterator.is_error then
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-			else
-				last_iterator.start
-				if not last_iterator.after then
-					a_result.put (last_iterator.item) -- the assumption is cardinality is zero or one
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if attached l_last_iterator.error_value as l_error_value then
+					check is_error: l_last_iterator.is_error end
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+				else
+					l_last_iterator.start
+					if not l_last_iterator.after then
+						a_result.put (l_last_iterator.item) -- the assumption is cardinality is zero or one
+					end
 				end
 			end
 		end
@@ -121,14 +128,16 @@ feature -- Evaluation
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a String
 		local
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
 			evaluate_item (l_result, a_context)
-			if not l_result.item.is_string_value then
-				create last_evaluated_string.make ("")
-			else
-				last_evaluated_string := l_result.item.as_string_value
+			check postcondition_of_evaluate_item: attached l_result.item as l_item then
+				if not l_item.is_string_value then
+					create last_evaluated_string.make ("")
+				else
+					last_evaluated_string := l_item.as_string_value
+				end
 			end
 		end
 
@@ -138,15 +147,19 @@ feature  -- Conversion
 			-- Convert to an item
 		do
 			create_iterator (a_context)
-			if not last_iterator.is_error then
-				last_iterator.start
-				if last_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				if not attached l_last_iterator.error_value as l_error_value then
+					l_last_iterator.start
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
+					else
+						Result := l_last_iterator.item
+					end
 				else
-					Result := last_iterator.item
+					check is_error: l_last_iterator.is_error end
+					create {XM_XPATH_INVALID_ITEM} Result.make (l_error_value)
 				end
-			else
-				create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
 			end
 		end
 

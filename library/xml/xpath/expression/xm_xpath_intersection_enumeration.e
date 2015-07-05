@@ -5,7 +5,7 @@ note
 		"Objects that enumerate a nodeset that is the intersection of two other nodesets."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2012, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,10 +38,12 @@ feature {NONE} -- Initialization
 			comparer := a_comparer
 			first_iterator.start
 			second_iterator.start
-			if first_iterator.is_error then
-				set_last_error (first_iterator.error_value)
-			elseif second_iterator.is_error then
-				set_last_error (second_iterator.error_value)
+			if attached first_iterator.error_value as l_error_value then
+				check is_error: first_iterator.is_error end
+				set_last_error (l_error_value)
+			elseif attached second_iterator.error_value as l_error_value then
+				check is_error: second_iterator.is_error end
+				set_last_error (l_error_value)
 			else
 				if not first_iterator.after then
 					first_node := first_iterator.item
@@ -56,6 +58,11 @@ feature -- Access
 
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 	is_node_iterator: BOOLEAN
 			-- Does `Current' yield a node_sequence?
@@ -74,7 +81,7 @@ feature -- Status report
 	after: BOOLEAN
 			-- Are there any more items in the sequence?
 		do
-			Result := not before and item = Void
+			Result := not before and internal_item = Void
 		end
 
 feature -- Cursor movement
@@ -88,55 +95,64 @@ feature -- Cursor movement
 			index := index + 1
 			if first_node = Void or second_node = Void then
 				l_finished := True
-				item := Void
+				internal_item := Void
 			end
 			from
 			until
 				l_finished
 			loop
-				l_comparison := comparer.three_way_comparison (first_node, second_node)
-				if l_comparison = 0 then
-					item := first_node -- or `second_node' as they are the same
-					l_finished := True
-					first_iterator.forth
-					if first_iterator.is_error then
-						set_last_error (first_iterator.error_value)
-					elseif first_iterator.after then
-						first_node := Void
+				check
+					attached first_node as l_first_node
+					attached second_node as l_second_node
+				then
+					l_comparison := comparer.three_way_comparison (l_first_node, l_second_node)
+					if l_comparison = 0 then
+						internal_item := first_node -- or `second_node' as they are the same
 						l_finished := True
+						first_iterator.forth
+						if attached first_iterator.error_value as l_error_value then
+							check is_error: first_iterator.is_error end
+							set_last_error (l_error_value)
+						elseif first_iterator.after then
+							first_node := Void
+							l_finished := True
+						else
+							first_node := first_iterator.item
+						end
+						second_iterator.forth
+						if attached second_iterator.error_value as l_error_value then
+							check is_error: second_iterator.is_error end
+							set_last_error (l_error_value)
+						elseif second_iterator.after then
+							second_node := Void
+							l_finished := True
+						else
+							second_node := second_iterator.item
+						end
+					elseif l_comparison = -1 then
+						first_iterator.forth
+						if attached first_iterator.error_value as l_error_value then
+							check is_error: first_iterator.is_error end
+							set_last_error (l_error_value)
+						elseif first_iterator.after then
+							first_node := Void
+							internal_item := Void
+							l_finished := True
+						else
+							first_node := first_iterator.item
+						end
 					else
-						first_node := first_iterator.item
-					end
-					second_iterator.forth
-					if second_iterator.is_error then
-						set_last_error (second_iterator.error_value)
-					elseif second_iterator.after then
-						second_node := Void
-						l_finished := True
-					else
-						second_node := second_iterator.item
-					end
-				elseif l_comparison = -1 then
-					first_iterator.forth
-					if first_iterator.is_error then
-						set_last_error (first_iterator.error_value)
-					elseif first_iterator.after then
-						first_node := Void
-						item := Void
-						l_finished := True
-					else
-						first_node := first_iterator.item
-					end
-				else
-					second_iterator.forth
-					if second_iterator.is_error then
-						set_last_error (second_iterator.error_value)
-					elseif second_iterator.after then
-						second_node := Void
-						l_finished := True
-						item := Void
-					else
-						second_node := second_iterator.item
+						second_iterator.forth
+						if attached second_iterator.error_value as l_error_value then
+							check is_error: second_iterator.is_error end
+							set_last_error (l_error_value)
+						elseif second_iterator.after then
+							second_node := Void
+							l_finished := True
+							internal_item := Void
+						else
+							second_node := second_iterator.item
+						end
 					end
 				end
 			end
@@ -161,11 +177,14 @@ feature {NONE} -- Implementation
 	comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
 			-- Comparer
 
-	first_node: XM_XPATH_NODE
+	first_node: detachable XM_XPATH_NODE
 			-- Last inspected node from `first_iterator'
 
-	second_node: XM_XPATH_NODE
+	second_node: detachable XM_XPATH_NODE
 			-- Last inspected node from `second_iterator'
+
+	internal_item: detachable XM_XPATH_NODE
+			-- Value or node at the current position
 
 invariant
 

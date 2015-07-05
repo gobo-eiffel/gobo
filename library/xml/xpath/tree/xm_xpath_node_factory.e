@@ -5,7 +5,7 @@ note
 		"Standard tree node factory"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,8 +14,8 @@ class XM_XPATH_NODE_FACTORY
 
 feature -- Creation
 
-	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XPATH_TREE_ELEMENT
+	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: detachable XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list: detachable DS_ARRAYED_LIST [INTEGER];
+							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XPATH_TREE_ELEMENT
 			-- New element node.
 		require
 			document_not_void: a_document /= Void

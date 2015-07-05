@@ -5,7 +5,7 @@ note
 		"Objects that check for comparison type erros"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,36 +46,50 @@ feature -- Comparison
 			l_atomic_value_two := a_other_atomic_value
 			if a_atomic_value.is_numeric_value and not a_other_atomic_value.is_numeric_value then
 				l_atomic_value_one.convert_to_type (type_factory.double_type)
-				l_atomic_value_one := l_atomic_value_one.converted_value
-				if l_atomic_value_two.is_convertible (type_factory.double_type) then
-					l_atomic_value_two.convert_to_type (type_factory.double_type)
-					l_atomic_value_two := l_atomic_value_two.converted_value
-				else
-					create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_two.make_nan
+				check postcondition_of_convert_to_type: attached l_atomic_value_one.converted_value as l_converted_value then
+					l_atomic_value_one := l_converted_value
+					if l_atomic_value_two.is_convertible (type_factory.double_type) then
+						l_atomic_value_two.convert_to_type (type_factory.double_type)
+						check postcondition_of_convert_to_type: attached l_atomic_value_two.converted_value as l_converted_value2 then
+							l_atomic_value_two := l_converted_value2
+						end
+					else
+						create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_two.make_nan
+					end
 				end
 			elseif not a_atomic_value.is_numeric_value and a_other_atomic_value.is_numeric_value then
 				l_atomic_value_two.convert_to_type (type_factory.double_type)
-				l_atomic_value_two := l_atomic_value_two.converted_value
-				if l_atomic_value_one.is_convertible (type_factory.double_type) then
-					l_atomic_value_one.convert_to_type (type_factory.double_type)
-					l_atomic_value_one := l_atomic_value_one.converted_value
-				else
-					create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_one.make_nan
+				check postcondition_of_convert_to_type: attached l_atomic_value_two.converted_value as l_converted_value2 then
+					l_atomic_value_two := l_converted_value2
+					if l_atomic_value_one.is_convertible (type_factory.double_type) then
+						l_atomic_value_one.convert_to_type (type_factory.double_type)
+						check postcondition_of_convert_to_type: attached l_atomic_value_one.converted_value as l_converted_value then
+							l_atomic_value_one := l_converted_value
+						end
+					else
+						create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_one.make_nan
+					end
 				end
 			end
 			if not is_comparison_type_error then
 				if l_atomic_value_one.is_string_value and not l_atomic_value_two.is_string_value then
 					l_atomic_value_two.convert_to_type (type_factory.string_type)
-					l_atomic_value_two := l_atomic_value_two.converted_value
+					check postcondition_of_convert_to_type: attached l_atomic_value_two.converted_value as l_converted_value then
+						l_atomic_value_two := l_converted_value
+					end
 				end
 				if l_atomic_value_two.is_string_value and not l_atomic_value_one.is_string_value then
 					l_atomic_value_one.convert_to_type (type_factory.string_type)
-					l_atomic_value_one := l_atomic_value_one.converted_value
+					check postcondition_of_convert_to_type: attached l_atomic_value_one.converted_value as l_converted_value then
+						l_atomic_value_one := l_converted_value
+					end
 				end
 				if l_atomic_value_one.is_untyped_atomic and not (l_atomic_value_two.is_untyped_atomic or l_atomic_value_two.is_string_value) then
 					if l_atomic_value_one.is_convertible (l_atomic_value_two.item_type) then
 						l_atomic_value_one.convert_to_type (l_atomic_value_two.item_type)
-						l_atomic_value_one := l_atomic_value_one.converted_value
+						check postcondition_of_convert_to_type: attached l_atomic_value_one.converted_value as l_converted_value then
+							l_atomic_value_one := l_converted_value
+						end
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert first operand of general comparison in XPath 1.0 compatibility mode operand to dynamic type of second operand",
@@ -85,7 +99,9 @@ feature -- Comparison
 				if not is_comparison_type_error and l_atomic_value_two.is_untyped_atomic and not (l_atomic_value_one.is_untyped_atomic or l_atomic_value_one.is_string_value) then
 					if l_atomic_value_two.is_convertible (l_atomic_value_one.item_type) then
 						l_atomic_value_two.convert_to_type (l_atomic_value_one.item_type)
-						l_atomic_value_two := l_atomic_value_two.converted_value
+						check postcondition_of_convert_to_type: attached l_atomic_value_two.converted_value as l_converted_value then
+							l_atomic_value_two := l_converted_value
+						end
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert second operand of general comparison in XPath 1.0 compatibility mode operand to dynamic type of first operand",
@@ -107,7 +123,8 @@ feature -- Comparison
 			valid_value_operator: is_value_comparison_operator (a_operator)
 			comparer_not_void: a_atomic_comparer /= Void
 		local
-			l_atomic_value_one, l_atomic_value_two: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value_one: XM_XPATH_ATOMIC_VALUE
+			l_atomic_value_two: detachable XM_XPATH_ATOMIC_VALUE
 		do
 			is_comparison_type_error := False
 			l_atomic_value_one := a_atomic_value
@@ -115,7 +132,9 @@ feature -- Comparison
 				if a_other_atomic_value.is_numeric_value then
 					if a_atomic_value.is_convertible (type_factory.double_type) then
 						a_atomic_value.convert_to_type (type_factory.double_type)
-						l_atomic_value_one := a_atomic_value.converted_value
+						check postcondition_of_convert_to_type: attached a_atomic_value.converted_value as l_converted_value then
+							l_atomic_value_one := l_converted_value
+						end
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert first general comparison operand to xs:double", Xpath_errors_uri, "FORG0001", Type_error)
@@ -123,7 +142,9 @@ feature -- Comparison
 				else
 					if a_atomic_value.is_convertible (a_other_atomic_value.item_type) then
 						a_atomic_value.convert_to_type (a_other_atomic_value.item_type)
-						l_atomic_value_one := a_atomic_value.converted_value
+						check postcondition_of_convert_to_type: attached a_atomic_value.converted_value as l_converted_value then
+							l_atomic_value_one := l_converted_value
+						end
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", a_other_atomic_value.item_type.conventional_name),
@@ -155,7 +176,9 @@ feature -- Comparison
 				end
 			end
 			if not is_comparison_type_error then
-				check_correct_value_relation (l_atomic_value_one, a_operator, a_atomic_comparer, l_atomic_value_two)
+				check l_atomic_value_two /= Void then
+					check_correct_value_relation (l_atomic_value_one, a_operator, a_atomic_comparer, l_atomic_value_two)
+				end
 			end
 		end
 
@@ -203,7 +226,7 @@ feature -- Status report
 	is_comparison_type_error: BOOLEAN
 			-- Did one of these routines detect a type error?
 
-	last_type_error: XM_XPATH_ERROR_VALUE
+	last_type_error: detachable XM_XPATH_ERROR_VALUE
 			-- Error value if `is_comparison_type_error' is `True'
 
 	last_check_result: BOOLEAN

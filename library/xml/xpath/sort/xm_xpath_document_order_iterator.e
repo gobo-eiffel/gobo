@@ -7,7 +7,7 @@ note
 	%eliminating any duplicates.."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,8 +54,9 @@ feature {NONE} -- Initialization
 			end
 			create a_sorter.make (a_comparer)
 			sequence.sort (a_sorter)
-			if an_iterator.is_error then
-				set_last_error (an_iterator.error_value)
+			if attached an_iterator.error_value as l_error_value then
+				check is_error: an_iterator.is_error end
+				set_last_error (l_error_value)
 			end
 		ensure
 			comparer_set: comparer = a_comparer
@@ -81,7 +82,9 @@ feature -- Access
 	item: XM_XPATH_NODE
 			-- Value or node at the current position
 		do
-			Result := current_node
+			check precondition_not_off: attached current_node as l_current_node then
+				Result := l_current_node
+			end
 		end
 
 	is_node_iterator: BOOLEAN
@@ -93,7 +96,7 @@ feature -- Access
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- `Current' seen as a node iterator
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := Current
 		end
 
 feature -- Status report
@@ -123,6 +126,7 @@ feature -- Cursor movement
 		local
 			finished: BOOLEAN
 			a_node: XM_XPATH_NODE
+			l_current_node: like current_node
 		do
 			from
 			until
@@ -131,11 +135,13 @@ feature -- Cursor movement
 				a_node := sequence.item_for_iteration
 				sequence.forth
 				if not sequence.after then
-					current_node := sequence.item_for_iteration
-					if a_node.is_error then
+					l_current_node := sequence.item_for_iteration
+					current_node := l_current_node
+					if attached a_node.error_value as l_error_value then
+						check is_error: a_node.is_error end
 						finished := True
-						set_last_error (a_node.error_value)
-					elseif not a_node.is_same_node (current_node) then
+						set_last_error (l_error_value)
+					elseif not a_node.is_same_node (l_current_node) then
 						finished := True
 					end
 				else
@@ -158,7 +164,7 @@ feature {NONE} -- Implementation
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
 
-	current_node: XM_XPATH_NODE
+	current_node: detachable XM_XPATH_NODE
 			-- used by `forth' and `item'
 
 	sequence: DS_ARRAYED_LIST [XM_XPATH_NODE]

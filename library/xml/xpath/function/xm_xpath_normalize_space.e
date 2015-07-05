@@ -5,7 +5,7 @@ note
 		"Implement the XPath normalize-space() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			use_context_item_as_default
@@ -90,14 +90,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void or else a_result.item.is_error then
+			if not attached a_result.item as a_result_item or else a_result_item.is_error then
 				-- nothing to do
-			elseif a_result.item.is_string_value then
-				a_result.put (create {XM_XPATH_STRING_VALUE}.make (normalize (a_result.item.as_string_value.string_value)))
+			elseif a_result_item.is_string_value then
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (normalize (a_result_item.as_string_value.string_value)))
 			else
 				a_result.put (Void)
 			end

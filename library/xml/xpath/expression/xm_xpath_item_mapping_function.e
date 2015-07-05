@@ -9,7 +9,7 @@ note
 		]"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ deferred class XM_XPATH_ITEM_MAPPING_FUNCTION
 
 feature -- Access
 
-	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM
+	mapped_item (a_item: XM_XPATH_ITEM): detachable XM_XPATH_ITEM
 			-- `a_item' mapped to zero or one items
 		require
 			a_item_may_be_void: True

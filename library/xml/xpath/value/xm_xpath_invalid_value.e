@@ -5,7 +5,7 @@ note
 		"Objects that are XPath values which are in error"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$ $"
@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			is_invalid_value, as_invalid_value
+			is_invalid_value, as_invalid_value,
+			error_value, is_error, clear_error
 		end
 
 create
@@ -97,6 +98,12 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_error: BOOLEAN = True
+			-- Is `Current' in error?
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Last error value
+
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `other' comparable to `Current'?
 		do
@@ -117,6 +124,15 @@ feature -- Status report
 			a_string := STRING_.appended_string ("Value in error: ", error_value.error_message)
 			std.error.put_string (a_string)
 			std.error.put_new_line
+		end
+
+feature -- Status setting
+
+	clear_error
+			-- Clear `error_value'.
+		do
+		ensure then
+			inapplicable: False
 		end
 
 feature -- Conversion

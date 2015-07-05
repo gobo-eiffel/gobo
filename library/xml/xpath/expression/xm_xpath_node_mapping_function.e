@@ -8,7 +8,7 @@ note
 	%a series of such items."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ deferred class XM_XPATH_NODE_MAPPING_FUNCTION
 
 feature -- Access
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from `map_nodes'
 		deferred
 		end
@@ -28,6 +28,7 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
+			a_context_not_void: a_context /= Void
 		deferred
 
 			-- If an error is detected, then this command should create an invalid iterator

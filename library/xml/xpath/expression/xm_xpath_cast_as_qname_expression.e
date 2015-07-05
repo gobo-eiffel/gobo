@@ -5,7 +5,7 @@ note
 		"XPath cast as xs:QName Expressions"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,10 +80,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			l_xml_prefix, l_namespace_uri, l_local_name: STRING
+			l_xml_prefix, l_namespace_uri, l_local_name: detachable STRING
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_name_code: INTEGER
 			l_qname_value: XM_XPATH_QNAME_VALUE
@@ -98,23 +98,27 @@ feature -- Optimization
 					else
 						l_xml_prefix := l_parser.optional_prefix
 						l_local_name := l_parser.local_name
-						l_namespace_uri := a_context.uri_for_prefix (l_xml_prefix)
+						check parser_valid: l_xml_prefix /= Void then
+							l_namespace_uri := a_context.uri_for_prefix (l_xml_prefix)
+						end
 					end
 				else
 					set_last_error_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "XPTY0004", Static_error)
 				end
 				if not is_error then
-					if not shared_name_pool.is_name_code_allocated (l_xml_prefix, l_namespace_uri, l_local_name) then
-						shared_name_pool.allocate_name (l_xml_prefix, l_namespace_uri, l_local_name)
-						l_name_code := shared_name_pool.last_name_code
-					else
-						l_name_code := shared_name_pool.name_code (l_xml_prefix, l_namespace_uri, l_local_name)
-					end
-					if l_name_code = -1 then
-						set_last_error_from_string ("Resource failure trying to cast to xs:QName", Xpath_errors_uri, "FOER0000", Static_error)
-					else
-						create l_qname_value.make (l_name_code)
-						set_replacement (a_replacement, l_qname_value)
+					check l_xml_prefix /= Void and l_namespace_uri /= Void and l_local_name /= Void then
+						if not shared_name_pool.is_name_code_allocated (l_xml_prefix, l_namespace_uri, l_local_name) then
+							shared_name_pool.allocate_name (l_xml_prefix, l_namespace_uri, l_local_name)
+							l_name_code := shared_name_pool.last_name_code
+						else
+							l_name_code := shared_name_pool.name_code (l_xml_prefix, l_namespace_uri, l_local_name)
+						end
+						if l_name_code = -1 then
+							set_last_error_from_string ("Resource failure trying to cast to xs:QName", Xpath_errors_uri, "FOER0000", Static_error)
+						else
+							create l_qname_value.make (l_name_code)
+							set_replacement (a_replacement, l_qname_value)
+						end
 					end
 				end
 			else
@@ -125,7 +129,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: detachable XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			-- This cannot happen at present - see `check_static_type'.
@@ -135,7 +139,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot evaluate a cast to xs:QName at run-time.", Xpath_errors_uri, "FONS0003", Dynamic_error))
