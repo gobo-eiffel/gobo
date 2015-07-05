@@ -572,8 +572,6 @@ feature -- Duplication
 	copy (other: like Current)
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
-		local
-			l_keys: like internal_keys
 		do
 			if other /= Current then
 				precursor (other)
