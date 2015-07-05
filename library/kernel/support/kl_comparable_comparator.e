@@ -10,7 +10,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class KL_COMPARABLE_COMPARATOR [G -> COMPARABLE]
+class KL_COMPARABLE_COMPARATOR [G -> detachable COMPARABLE]
 
 inherit
 
