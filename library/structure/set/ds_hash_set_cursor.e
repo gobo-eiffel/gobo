@@ -6,12 +6,12 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DS_HASH_SET_CURSOR [G -> HASHABLE]
+class DS_HASH_SET_CURSOR [G -> detachable HASHABLE]
 
 inherit
 

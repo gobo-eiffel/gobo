@@ -575,12 +575,10 @@ feature -- Duplication
 		local
 			l_keys: like internal_keys
 		do
-			l_keys := internal_keys
-			precursor (other)
-			if l_keys = Void then
-				create l_keys.make (Current)
+			if other /= Current then
+				precursor (other)
+				internal_keys := Void
 			end
-			internal_keys := l_keys
 		end
 
 feature -- Iteration
