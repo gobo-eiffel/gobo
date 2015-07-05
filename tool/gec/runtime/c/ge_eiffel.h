@@ -138,6 +138,8 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
 #define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
+#define EIF_IS_WORKBENCH EIF_FALSE
+
 /* For INTEGER and NATURAL manifest constants */
 #define GE_int8(x) x
 #define GE_nat8(x) x
