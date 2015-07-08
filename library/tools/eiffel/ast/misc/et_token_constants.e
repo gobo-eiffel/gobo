@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2413,6 +2413,14 @@ feature -- Types
 			create Result.make (attached_keyword)
 		ensure
 			attached_like_current_not_void: Result /= Void
+		end
+
+	detachable_like_current: ET_LIKE_CURRENT
+			-- Type 'detachable like Current'
+		once
+			create Result.make (detachable_keyword)
+		ensure
+			detachable_like_current_not_void: Result /= Void
 		end
 
 	identity_type: ET_LIKE_CURRENT

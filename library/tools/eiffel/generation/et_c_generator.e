@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16047,26 +16047,27 @@ feature {NONE} -- Built-in feature generation
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_string: STRING
-			l_result_type: ET_DYNAMIC_TYPE
-			l_universe: ET_UNIVERSE
-			l_any_class: ET_CLASS
+			l_meta_type: detachable ET_DYNAMIC_TYPE
 		do
-			l_result_type := result_type_set_in_feature (a_feature).static_type
-			l_any_class := a_feature.static_feature.implementation_class
-			l_universe := l_any_class.universe
-			if l_universe.string_32_type.same_named_type (l_result_type.base_type, l_any_class, l_any_class) then
-				current_file.put_string (c_ge_ms32)
+			l_meta_type := a_target_type.meta_type
+			if l_meta_type = Void then
+					-- Internal error: the meta type of the target type should
+					-- have been computed when analyzing the dynamic type sets of
+					-- `a_feature'.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			else
-				current_file.put_string (c_ge_ms8)
+				current_file.put_character ('(')
+				print_type_declaration (l_meta_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_types)
+				current_file.put_character ('[')
+				current_file.put_integer (a_target_type.id)
+				current_file.put_character (']')
+				current_file.put_character (')')
 			end
-			current_file.put_character ('(')
-			l_string := a_target_type.base_type.unaliased_to_text
-			print_escaped_string (l_string)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			current_file.put_integer (l_string.count)
-			current_file.put_character (')')
 		end
 
 	print_builtin_any_generator_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)

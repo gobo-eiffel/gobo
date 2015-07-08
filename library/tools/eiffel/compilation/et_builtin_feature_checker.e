@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -198,6 +198,8 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+			l_type_detachable_like_current: ET_GENERIC_CLASS_TYPE
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.twin_feature_name) then
@@ -290,15 +292,18 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (tokens.detachable_like_current)
+				create l_type_detachable_like_current.make (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'generating_type: STRING'.
+						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.string_type, current_class, current_class) then
-						-- The signature should be 'generating_type: STRING'.
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_detachable_like_current)
+				elseif not a_feature.type.same_syntactical_type (l_type_detachable_like_current, current_class, current_class) then
+						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_detachable_like_current)
 				end
 			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
