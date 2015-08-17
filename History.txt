@@ -7,6 +7,9 @@ Version 3.10 - ?
 	  geant build files. See bug#2657770.
 	* Use ISE Eiffel's ec instead of ecb, so output is compatible with
 	  estudio; else estudio will complain about a corrupted project.
+	* Relative pathnames in the <inherit> clause are now relative to 
+	  the directory containing the current eant file (and not relative
+	  to the working directory where geant is currently running).
 
 	gec:
 
