@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/misc/ge2e.eant"/>
+		<parent location="ge2e.eant"/>
 	</inherit>
 
 	<target name="help">
