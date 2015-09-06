@@ -1,4 +1,1 @@
-*.ace linguist-language=Assembly of Components in Eiffel
-*.xace linguist-language=XML Assembly of Components in Eiffel
-*.ecf linguist-language=Eiffel Configuration File
 work/bootstrap/* linguist-vendored
