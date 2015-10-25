@@ -7,7 +7,7 @@ note
 	implements: "Appendix B of XML 1.0 -- second edition"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -112,9 +112,12 @@ feature -- Character classes (appendix B)
 				-- the generated C code contains too many parentheses for MSVC 6.0.
 				-- Do not use 'inspect' because with gec we reach a limitation
 				-- when the back-end C compiler is lcc-win32.
-				-- Use two 'if' instructions because otherwise with gec we reach
-				-- a limitation when the back-end C compiler is MSVC 7.1.
-			if (a >= 65 and a <= 90) then
+				-- Use several 'if' instructions because otherwise with gec we reach
+				-- a limitation when the back-end C compiler is MSVC 7.1, and
+				-- ISE with VS 2015.
+			if a >= 1262 then
+				-- Go to next if-instructions.
+			elseif (a >= 65 and a <= 90) then
 				Result := True
 			elseif (a >= 97 and a <= 122) then
 				Result := True
@@ -182,6 +185,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 1232 and a <= 1259) then
 				Result := True
+			end
+			if a < 1262 or a >= 2649 then
+				-- Go to next if-instructions.
 			elseif (a >= 1262 and a <= 1269) then
 				Result := True
 			elseif (a >= 1272 and a <= 1273) then
@@ -250,6 +256,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 2616 and a <= 2617) then
 				Result := True
+			end
+			if a < 2649 or a >= 3090 then
+				-- Go to next if-instructions.
 			elseif (a >= 2649 and a <= 2652) then
 				Result := True
 			elseif a = 2654 then
@@ -317,8 +326,8 @@ feature -- Character classes (appendix B)
 			elseif (a >= 3086 and a <= 3088) then
 				Result := True
 			end
-			if Result then
-				-- Already found.
+			if a < 3090 or a >= 3773 then
+				-- Go to next if-instructions.
 			elseif (a >= 3090 and a <= 3112) then
 				Result := True
 			elseif (a >= 3114 and a <= 3123) then
@@ -387,6 +396,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 3762 and a <= 3763) then
 				Result := True
+			end
+			if a < 3773 or a >= 4538 then
+				-- Go to next if-instructions.
 			elseif a = 3773 then
 				Result := True
 			elseif (a >= 3776 and a <= 3780) then
@@ -453,6 +465,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 4535 and a <= 4536) then
 				Result := True
+			end
+			if a < 4538 then
+				-- Done.
 			elseif a = 4538 then
 				Result := True
 			elseif (a >= 4540 and a <= 4546) then
@@ -524,7 +539,7 @@ feature -- Character classes (appendix B)
 			end
 		end
 
-	is_ideographic(a: INTEGER): BOOLEAN
+	is_ideographic (a: INTEGER): BOOLEAN
 			-- Ideographic class.
 		do
 			Result := (a >= 19968 and a <= 40869) or
@@ -532,7 +547,7 @@ feature -- Character classes (appendix B)
 				(a >= 12321 and a <= 12329)
 		end
 
-	is_combining_char(a: INTEGER): BOOLEAN
+	is_combining_char (a: INTEGER): BOOLEAN
 			-- Combining char class.
 		do
 			Result := (a >= 768 and a <= 837) or
@@ -652,7 +667,7 @@ feature -- Character classes (appendix B)
 				(a >= 3872 and a <= 3881)
 		end
 
-	is_extender(a: INTEGER): BOOLEAN
+	is_extender (a: INTEGER): BOOLEAN
 			-- Extender class.
 		do
 			Result := a = 183 or
