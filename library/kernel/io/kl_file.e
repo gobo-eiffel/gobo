@@ -319,12 +319,12 @@ feature -- Basic operations
 							new_file.open_write
 							if new_file.is_open_write then
 								from
-									old_file.read_string (512)
+									old_file.read_string (8192)
 								until
 									old_file.end_of_file
 								loop
 									new_file.put_string (old_file.last_string)
-									old_file.read_string (512)
+									old_file.read_string (8192)
 								end
 								new_file.close
 							end
@@ -426,8 +426,8 @@ feature -- Basic operations
 				retry
 			end
 		end
-		
-		
+
+
 feature {NONE} -- Implementation
 
 	Empty_name: STRING = "empty_name"
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			file_exists: old_exists
 		deferred
 		end
-		
+
 	old_close
 			-- Close file.
 		require
@@ -543,7 +543,7 @@ feature {KL_FILE} -- Implementation
 			-- Does physical file exist?
 		deferred
 		end
-		
+
 invariant
 
 	string_name_not_void: string_name /= Void

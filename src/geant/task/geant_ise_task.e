@@ -67,6 +67,13 @@ feature {NONE} -- Initialization
 			if has_attribute (Finish_freezing_attribute_name) then
 				command.set_finish_freezing (boolean_value (Finish_freezing_attribute_name))
 			end
+				-- project path
+			if has_attribute (Project_path_attribute_name) then
+				a_value := attribute_value_or_default (Project_path_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_project_path (a_value)
+				end
+			end
 				-- exit_code_variable:
 			if has_attribute (Exit_code_variable_attribute_name) then
 				a_value := attribute_value (Exit_code_variable_attribute_name)
@@ -115,7 +122,7 @@ feature {NONE} -- Constants
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
-		
+
 	Finalize_attribute_name: STRING
 			-- Name of xml attribute for "finalize"
 		once
@@ -138,6 +145,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "clean"
 		once
 			Result := "clean"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Project_path_attribute_name: STRING
+			-- Name of xml attribute for "project-path"
+		once
+			Result := "project-path"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

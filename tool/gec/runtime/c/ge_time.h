@@ -30,7 +30,7 @@
 #include <sys/types.h>
 #define GE_ftime(p) gettimeofday((struct timeval*)(p),((void*)0))
 #define GE_timebsz sizeof(struct timeval)
-#define GE_timebmillitm(p) ((struct timeval*)(p))->tv_usec
+#define GE_timebmillitm(p) (((struct timeval*)(p))->tv_usec/1000)
 #define GE_timebtime(p) ((struct timeval*)(p))->tv_sec
 #else
 #include <sys/timeb.h>

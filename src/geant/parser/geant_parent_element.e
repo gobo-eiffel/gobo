@@ -5,7 +5,7 @@ note
 		"Parent Elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2011, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2015, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,9 @@ feature -- Initialization
 			if has_attribute (Location_attribute_name) then
 				a_string := attribute_value (Location_attribute_name)
 				if a_string.count > 0 then
+					if file_system.is_relative_pathname (a_string) and then attached a_project.variables.value (a_project.name + ".dir") as l_dirname then
+						a_string := file_system.pathname (l_dirname, a_string)
+					end
 					create a_project_loader.make (a_string)
 					a_project_loader.load (a_project.variables, a_project.options)
 					a_parent_project := a_project_loader.project_element.project
