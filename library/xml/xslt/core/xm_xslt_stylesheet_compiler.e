@@ -5,7 +5,7 @@ note
 		"Objects that compile astylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,13 +58,13 @@ feature -- Access
 	configuration: XM_XSLT_CONFIGURATION
 			-- User configuration options
 
-	executable: XM_XSLT_EXECUTABLE
+	executable: detachable XM_XSLT_EXECUTABLE
 			-- Executable form of the stylesheet
 
 	node_factory: XM_XSLT_NODE_FACTORY
 			-- Node factory used to compile the stylesheet
 
-	last_loaded_module: XM_XPATH_TREE_DOCUMENT
+	last_loaded_module: detachable XM_XPATH_TREE_DOCUMENT
 			-- Last stylesheet module sucessfully loaded
 
 	error_listener: XM_XSLT_ERROR_LISTENER
@@ -75,7 +75,7 @@ feature -- Status report
 	load_stylesheet_module_failed: BOOLEAN
 			-- Did last call to `load_(principal_)stylesheet_module' fail?
 
-	load_stylesheet_module_error: STRING
+	load_stylesheet_module_error: detachable STRING
 			-- Error reported by last call to `load_(principal_)stylesheet_module'
 
 feature -- Status setting
@@ -129,7 +129,9 @@ feature -- Compilation
 		do
 			load_principal_stylesheet_module (a_source, a_uri)
 			if not load_stylesheet_module_failed then
-				create_style_sheet_executable (last_loaded_module)
+				check attached last_loaded_module as l_last_loaded_module then
+					create_style_sheet_executable (l_last_loaded_module)
+				end
 			end
 		ensure
 			error_or_executable: executable = Void implies load_stylesheet_module_failed
@@ -170,13 +172,19 @@ feature -- Compilation
 			create l_comment_stripper.make (l_stylesheet_stripper)
 			a_source.send_from_stream (a_stream, a_system_id, l_parser, l_comment_stripper, True)
 			if l_tree_builder.has_xpath_error then
-				error_listener.fatal_error (l_tree_builder.last_xpath_error)
-				report_error (l_tree_builder.last_xpath_error.error_message)
+				check postcondition_of_has_xpath_error: attached l_tree_builder.last_xpath_error as l_last_xpath_error then
+					error_listener.fatal_error (l_last_xpath_error)
+					report_error (l_last_xpath_error.error_message)
+				end
 			elseif l_tree_builder.has_error then
-				report_fatal_error (l_tree_builder.last_error, a_error_code)
+				check attached l_tree_builder.last_error as l_last_error then
+					report_fatal_error (l_last_error, a_error_code)
+				end
 			else
 				last_loaded_module := l_tree_builder.tree_document
-				last_loaded_module.strip_whitespace_nodes
+				check attached last_loaded_module as l_last_loaded_module then
+					l_last_loaded_module.strip_whitespace_nodes
+				end
 			end
 			configuration.reset_entity_resolver
 		ensure
@@ -216,13 +224,19 @@ feature -- Compilation
 			create l_comment_stripper.make (l_stylesheet_stripper)
 			a_source.send (l_parser, l_comment_stripper, a_uri, True)
 			if l_tree_builder.has_xpath_error then
-				error_listener.fatal_error (l_tree_builder.last_xpath_error)
-				report_error (l_tree_builder.last_xpath_error.error_message)
+				check postcondition_of_has_xpath_error: attached l_tree_builder.last_xpath_error as l_last_xpath_error then
+					error_listener.fatal_error (l_last_xpath_error)
+					report_error (l_last_xpath_error.error_message)
+				end
 			elseif l_tree_builder.has_error then
-				report_fatal_error (l_tree_builder.last_error, "GEXSLT_PRINICIPAL_STYLESHEET_ERROR")
+				check attached l_tree_builder.last_error as l_last_error then
+					report_fatal_error (l_last_error, "GEXSLT_PRINICIPAL_STYLESHEET_ERROR")
+				end
 			else
 				last_loaded_module := l_tree_builder.tree_document
-				last_loaded_module.strip_whitespace_nodes
+				check attached last_loaded_module as l_last_loaded_module then
+					l_last_loaded_module.strip_whitespace_nodes
+				end
 			end
 			configuration.reset_entity_resolver
 		ensure
@@ -237,20 +251,18 @@ feature -- Compilation
 			stylesheet_not_yet_compiled: executable = Void
 		local
 			a_stylesheet_document: XM_XPATH_TREE_DOCUMENT
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_top_node: XM_XSLT_LITERAL_RESULT_ELEMENT
 		do
 			a_stylesheet_document := a_document
 
 			-- If top-level node is a literal result element, stitch it into a skeleton stylesheet
 
-			a_top_node ?= a_stylesheet_document.document_element
-			if a_top_node /= Void then
-				a_stylesheet_document := a_top_node.constructed_stylesheet (Current)
+			if attached {XM_XSLT_LITERAL_RESULT_ELEMENT} a_stylesheet_document.document_element as a_top_node then
+				check attached a_top_node.constructed_stylesheet (Current) as l_constructed_stylesheet then
+					a_stylesheet_document := l_constructed_stylesheet
+				end
 			end
-			if not load_stylesheet_module_failed	then
-				a_stylesheet ?= a_stylesheet_document.document_element
-				if a_stylesheet = Void then
+			if not load_stylesheet_module_failed then
+				if not attached {XM_XSLT_STYLESHEET} a_stylesheet_document.document_element as a_stylesheet then
 					report_error ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element")
 				elseif not a_stylesheet.is_error then
 					if a_stylesheet.version.is_equal (decimal.one) then
@@ -277,12 +289,15 @@ feature -- Compilation
 					else
 						executable := a_stylesheet.executable
 						check
-							executable: executable /= Void
+							executable: attached executable as l_executable
 							-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.
+						then
+							l_executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
+							check attached a_stylesheet.static_context as l_stylesheet_static_context then
+								l_executable.save_static_context (l_stylesheet_static_context)
+							end
+							l_executable.rule_manager.rank_all_rules
 						end
-						executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
-						executable.save_static_context (a_stylesheet.static_context)
-						executable.rule_manager.rank_all_rules
 					end
 				end
 			end
@@ -292,13 +307,15 @@ feature -- Compilation
 
 feature -- Creation
 
-	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY; a_timer: XM_XSLT_TIMING): XM_XSLT_TRANSFORMER
+	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY; a_timer: detachable XM_XSLT_TIMING): XM_XSLT_TRANSFORMER
 			-- New transformer for this stylesheet
 		require
 			executable: executable /= Void
 			a_factory_not_void: a_factory /= Void
 		do
-			create Result.make (configuration, executable, a_factory, a_timer)
+			check precondition_executable: attached executable as l_executable then
+				create Result.make (configuration, l_executable, a_factory, a_timer)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

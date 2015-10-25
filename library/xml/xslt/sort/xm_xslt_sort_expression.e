@@ -5,7 +5,7 @@ note
 		"Objects equivalent to the imaginary syntax: expr sortby (sort-key)"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,8 +41,12 @@ feature {NONE} -- Initialization
 --			fixed: BOOLEAN
 --			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 		do
-			set_select_expression (a_select_expression)
 			sort_key_list := a_sort_key_list
+			select_expression := a_select_expression
+			adopt_child_expression (select_expression)
+			if are_static_properties_computed then
+				reset_static_properties
+			end
 -- removed, due to local variables in AVT - needs optimization
 -- 			from
 -- 				fixed := True
@@ -131,20 +135,20 @@ feature -- Access
 			from l_cursor := sort_key_list.new_cursor; l_cursor.start until l_cursor.after loop
 				l_sort_key := l_cursor.item
 				Result.force_last (l_sort_key.sort_key)
-				if l_sort_key.order_expression /= Void then
-					Result.force_last (l_sort_key.order_expression)
+				if attached l_sort_key.order_expression as l_order_expression then
+					Result.force_last (l_order_expression)
 				end
-				if l_sort_key.case_order_expression /= Void then
-					Result.force_last (l_sort_key.case_order_expression)
+				if attached l_sort_key.case_order_expression as l_case_order_expression then
+					Result.force_last (l_case_order_expression)
 				end
-				if l_sort_key.language_expression /= Void then
-					Result.force_last (l_sort_key.language_expression)
+				if attached l_sort_key.language_expression as l_language_expression then
+					Result.force_last (l_language_expression)
 				end
-				if l_sort_key.data_type_expression /= Void then
-					Result.force_last (l_sort_key.data_type_expression)
+				if attached l_sort_key.data_type_expression as l_data_type_expression then
+					Result.force_last (l_data_type_expression)
 				end
-				if l_sort_key.collation_name_expression /= Void then
-					Result.force_last (l_sort_key.collation_name_expression)
+				if attached l_sort_key.collation_name_expression as l_collation_name_expression then
+					Result.force_last (l_collation_name_expression)
 				end
 				l_cursor.forth
 			end
@@ -163,52 +167,58 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform of context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			select_expression.simplify (l_replacement)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error then
-				set_replacement (a_replacement, select_expression)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				end
+				a_replacement.put (Current)
 			end
-			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 			l_sort_item_type: XM_XPATH_ITEM_TYPE
 		do
 			create l_replacement.make (Void)
 			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error then
-				set_replacement (a_replacement, select_expression)
-			else
-				l_sort_item_type := select_expression.item_type
-				sort_key_list.do_all (agent check_sort_key (a_replacement, ?, a_context, l_sort_item_type))
-				if a_replacement.item = Void then
-					a_replacement.put (Current)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				else
+					l_sort_item_type := select_expression.item_type
+					sort_key_list.do_all (agent check_sort_key (a_replacement, ?, a_context, l_sort_item_type))
+					if a_replacement.item = Void then
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			select_expression.optimize (l_replacement, a_context, a_context_item_type)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error or else not select_expression.cardinality_allows_many then
-				set_replacement (a_replacement, select_expression)
-			else
-				a_replacement.put (Current)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+				if select_expression.is_error or else not select_expression.cardinality_allows_many then
+					set_replacement (a_replacement, select_expression)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 
@@ -218,7 +228,6 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			l_reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION
@@ -226,52 +235,55 @@ feature -- Evaluation
 		do
 			last_iterator := Void
 			select_expression.create_iterator (a_context)
-			l_sequence_iterator := select_expression.last_iterator
-			if l_sequence_iterator.is_error then
-				last_iterator := l_sequence_iterator
-			else
-				l_evaluation_context ?= a_context.new_context
-				check
-					evaluation_context_not_void: l_evaluation_context /= Void
-					-- as this is XSLT
-				end
-
-				-- See creation procedure: if fixed_sort_key_list /= Void then
-				--	l_reduced_sort_keys := fixed_sort_key_list
-				--else
-					from
-						create l_reduced_sort_keys.make (sort_key_list.count)
-						l_cursor := sort_key_list.new_cursor; l_cursor.start
-					until
-						l_cursor.after
-					loop
-						l_sort_key := l_cursor.item
-						-- ditto: if not l_sort_key.is_reducible then
-							l_sort_key.evaluate_expressions (l_evaluation_context)
-						--end
-						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
-							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
-							if l_reduced.is_error then
-								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_reduced.error_value)
-								l_cursor.go_after
-							else
-								l_reduced_sort_keys.put_last (l_reduced)
-								l_cursor.forth
-							end
-						else
-							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
-							l_cursor.go_after
-						end
-					variant
-						sort_key_list.count + 1 - l_cursor.index
-					end
-				--end
-				if last_iterator /= Void then
-					-- error
-				elseif l_sequence_iterator.is_node_iterator then
-					create {XM_XSLT_SORTED_NODE_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator.as_node_iterator, l_reduced_sort_keys)
+			check postcondition_of_create_iterator: attached select_expression.last_iterator as l_last_iterator then
+				l_sequence_iterator := l_last_iterator
+				if l_sequence_iterator.is_error then
+					last_iterator := l_sequence_iterator
 				else
-					create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
+					check
+						evaluation_context_not_void: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_context as l_evaluation_context
+						-- as this is XSLT
+					then
+
+						-- See creation procedure: if fixed_sort_key_list /= Void then
+						--	l_reduced_sort_keys := fixed_sort_key_list
+						--else
+							from
+								create l_reduced_sort_keys.make (sort_key_list.count)
+								l_cursor := sort_key_list.new_cursor; l_cursor.start
+							until
+								l_cursor.after
+							loop
+								l_sort_key := l_cursor.item
+								-- ditto: if not l_sort_key.is_reducible then
+									l_sort_key.evaluate_expressions (l_evaluation_context)
+								--end
+								if not attached l_sort_key.collation_name as l_collation_name or else l_evaluation_context.is_known_collation (l_collation_name) then
+									l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
+									if attached l_reduced.error_value as l_error_value then
+										check is_error: l_reduced.is_error end
+										create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+										l_cursor.go_after
+									else
+										l_reduced_sort_keys.put_last (l_reduced)
+										l_cursor.forth
+									end
+								else
+									create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
+									l_cursor.go_after
+								end
+							variant
+								sort_key_list.count + 1 - l_cursor.index
+							end
+						--end
+						if last_iterator /= Void then
+							-- error
+						elseif l_sequence_iterator.is_node_iterator then
+							create {XM_XSLT_SORTED_NODE_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator.as_node_iterator, l_reduced_sort_keys)
+						else
+							create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
+						end
+					end
 				end
 			end
 		end
@@ -280,7 +292,6 @@ feature -- Evaluation
 			-- Iterator over the nodes of a sequence
 		local
 			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			l_reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION
@@ -288,48 +299,51 @@ feature -- Evaluation
 		do
 			last_node_iterator := Void
 			select_expression.create_node_iterator (a_context)
-			l_sequence_iterator := select_expression.last_node_iterator
-			if l_sequence_iterator.is_error then
-				last_node_iterator := l_sequence_iterator
-			else
-				l_evaluation_context ?= a_context.new_context
-				check
-					evaluation_context_not_void: l_evaluation_context /= Void
-					-- as this is XSLT
-				end
+			check postcondition_of_create_node_iterator: attached select_expression.last_node_iterator as l_last_node_iterator then
+				l_sequence_iterator := l_last_node_iterator
+				if l_sequence_iterator.is_error then
+					last_node_iterator := l_sequence_iterator
+				else
+					check
+						evaluation_context_not_void: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_context as l_evaluation_context
+						-- as this is XSLT
+					then
 
-				-- See creation procedure:if fixed_sort_key_list /= Void then
-				--	l_reduced_sort_keys := fixed_sort_key_list
-				--else
-					from
-						create l_reduced_sort_keys.make (sort_key_list.count)
-						l_cursor := sort_key_list.new_cursor; l_cursor.start
-					until
-						l_cursor.after
-					loop
-						l_sort_key := l_cursor.item
-						--if not l_sort_key.is_reducible then
-							l_sort_key.evaluate_expressions (l_evaluation_context)
-						--end
-						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
-							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
-							if l_reduced.is_error then
-								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_reduced.error_value)
-								l_cursor.go_after
-							else
-								l_reduced_sort_keys.put_last (l_reduced)
-								l_cursor.forth
+						-- See creation procedure:if fixed_sort_key_list /= Void then
+						--	l_reduced_sort_keys := fixed_sort_key_list
+						--else
+							from
+								create l_reduced_sort_keys.make (sort_key_list.count)
+								l_cursor := sort_key_list.new_cursor; l_cursor.start
+							until
+								l_cursor.after
+							loop
+								l_sort_key := l_cursor.item
+								--if not l_sort_key.is_reducible then
+									l_sort_key.evaluate_expressions (l_evaluation_context)
+								--end
+								if not attached l_sort_key.collation_name as l_collation_name or else l_evaluation_context.is_known_collation (l_collation_name) then
+									l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
+									if attached l_reduced.error_value as l_error_value then
+										check is_error: l_reduced.is_error end
+										create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+										l_cursor.go_after
+									else
+										l_reduced_sort_keys.put_last (l_reduced)
+										l_cursor.forth
+									end
+								else
+									create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
+									l_cursor.go_after
+								end
+							variant
+								sort_key_list.count + 1 - l_cursor.index
 							end
-						else
-							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
-							l_cursor.go_after
+						--end
+						if last_node_iterator /= Void then
+							create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
 						end
-					variant
-						sort_key_list.count + 1 - l_cursor.index
 					end
-				--end
-				if last_node_iterator /= Void then
-					create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
 				end
 			end
 		end

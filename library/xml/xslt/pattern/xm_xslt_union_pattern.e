@@ -5,7 +5,7 @@ note
 		"XSLT union patterns"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,12 +102,14 @@ feature -- Analysis
 			-- variable references or function calls.
 		do
 			left_hand_side.type_check (a_context, a_context_item_type)
-			if left_hand_side.is_error then
-				set_error_value (left_hand_side.error_value)
+			if attached left_hand_side.error_value as l_error_value then
+				check is_error: left_hand_side.is_error end
+				set_error_value (l_error_value)
 			else
 				right_hand_side.type_check (a_context, a_context_item_type)
-				if right_hand_side.is_error then
-					set_error_value (right_hand_side.error_value)
+				if attached right_hand_side.error_value as l_error_value then
+					check is_error: right_hand_side.is_error end
+					set_error_value (l_error_value)
 				end
 			end
 		end
@@ -118,14 +120,16 @@ feature -- Matching
 			-- Attempt to match `Current' againast `a_node'.
 		do
 			left_hand_side.match (a_node, a_context)
-			if left_hand_side.is_error then
-				set_error_value (left_hand_side.error_value)
+			if attached left_hand_side.error_value as l_error_value then
+				check is_error: left_hand_side.is_error end
+				set_error_value (l_error_value)
 			else
 				internal_last_match_result := left_hand_side.last_match_result
 				if not internal_last_match_result then
 					right_hand_side.match (a_node, a_context)
-					if right_hand_side.is_error then
-						set_error_value (right_hand_side.error_value)
+					if attached right_hand_side.error_value as l_error_value then
+						check is_error: right_hand_side.is_error end
+						set_error_value (l_error_value)
 					else
 						internal_last_match_result := right_hand_side.last_match_result
 					end

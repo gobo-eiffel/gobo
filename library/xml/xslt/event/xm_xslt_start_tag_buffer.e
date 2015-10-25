@@ -5,7 +5,7 @@ note
 		"Event filters that buffer attributes and namespaces on a start tag - for use by use-when filters."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,13 +49,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	attribute_value (a_fingerprint: INTEGER): STRING
+	attribute_value (a_fingerprint: INTEGER): detachable STRING
 			-- Value of attribute identified by `a_fingerprint'
 		do
 			Result := buffered_attributes.attribute_value (a_fingerprint)
 		end
 
-	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
+	uri_for_defaulted_prefix (a_prefix: STRING; a_use_default_namespace: BOOLEAN): detachable STRING
 			-- Namespace URI corresponding to a given prefix
 		local
 			l_uri_code, l_prefix_code: INTEGER
@@ -84,14 +84,18 @@ feature -- Access
 			-- Fingerprint of `a_qname'
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_uri: STRING
+			l_uri: detachable STRING
 		do
 			create l_parser.make (a_qname)
-			l_uri := uri_for_defaulted_prefix (l_parser.optional_prefix, a_use_default_namespace)
-			if l_uri = Void then
-				Result := -2
-			else
-				Result := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+			check attached l_parser.optional_prefix as l_optional_prefix then
+				l_uri := uri_for_defaulted_prefix (l_optional_prefix, a_use_default_namespace)
+				if l_uri = Void then
+					Result := -2
+				else
+					check attached l_parser.local_name as l_local_name then
+						Result := shared_name_pool.fingerprint (l_uri, l_local_name)
+					end
+				end
 			end
 		end
 

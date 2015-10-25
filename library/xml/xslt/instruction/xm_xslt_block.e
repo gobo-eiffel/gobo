@@ -7,7 +7,7 @@ note
 	    %Used for top-level templates, xsl:otherwise, etc."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,9 +54,9 @@ feature {NONE} -- Initialization
 			strictly_positive_module_number: a_module_number > 0
 			positive_line_number: a_line_number >= 0
 		do
+			executable := a_executable
 			make_sequence (a_head, a_tail)
 			set_source_location (a_module_number, a_line_number)
-			executable := a_executable
 		ensure
 			executable_set: executable = a_executable
 		end
@@ -93,7 +93,7 @@ feature -- Optimization
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_child: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				create l_replacement.make (Void)
@@ -104,9 +104,11 @@ feature -- Optimization
 			loop
 				l_child := l_cursor.item
 				l_child.promote (l_replacement, a_offer)
-				if l_replacement.item /= l_child then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if l_replacement_item /= l_child then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
@@ -117,56 +119,60 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_child: XM_XPATH_EXPRESSION
-			l_instruction: XM_XSLT_INSTRUCTION
-			l_user_call: XM_XSLT_USER_FUNCTION_CALL
-			l_function, l_previous_function: XM_XSLT_COMPILED_USER_FUNCTION
-			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_function, l_previous_function: detachable XM_XSLT_COMPILED_USER_FUNCTION
+			l_value: DS_CELL [detachable XM_XPATH_VALUE]
 			l_finished: BOOLEAN
 		do
-			from
-				l_cursor := children.new_cursor; l_cursor.start
-			until
-				a_context.transformer.is_error or else l_cursor.after
-			loop
-				l_child := l_cursor.item
-				a_tail.put (Void)
-				l_instruction ?= l_child
-				if l_instruction /= Void then
-					l_instruction.generate_tail_call (a_tail, a_context)
-				else
-					l_child.generate_events (a_context)
-					if a_context.tail_call_function /= Void then
-						from
-							l_finished := False
-						until l_finished loop
-							l_function := a_context.tail_call_function
-							a_context.clear_tail_call_function
-							if l_previous_function = Void and l_child.is_user_function_call then
-								l_user_call ?= l_child
-								l_previous_function := l_user_call.function
-							end
-							if l_function /= Void then
-								if l_function /= l_previous_function then
-									a_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
+			check attached a_context.transformer as l_transformer then
+				from
+					l_cursor := children.new_cursor; l_cursor.start
+				until
+					l_transformer.is_error or else l_cursor.after
+				loop
+					l_child := l_cursor.item
+					a_tail.put (Void)
+					if attached {XM_XSLT_INSTRUCTION} l_child as l_instruction then
+						l_instruction.generate_tail_call (a_tail, a_context)
+					else
+						l_child.generate_events (a_context)
+						if a_context.tail_call_function /= Void then
+							from
+								l_finished := False
+							until l_finished loop
+								l_function := a_context.tail_call_function
+								a_context.clear_tail_call_function
+								if l_previous_function = Void and l_child.is_user_function_call then
+									check attached {XM_XSLT_USER_FUNCTION_CALL} l_child as l_user_call then
+										l_previous_function := l_user_call.function
+									end
 								end
-								l_previous_function := l_function
-								create l_value.make (Void)
-								l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
-								l_value.item.generate_events (a_context)
-							else
-								l_finished := True
+								if l_function /= Void then
+									if l_function /= l_previous_function then
+										check attached l_function.parameter_definitions as l_function_parameter_definitions then
+											a_context.reset_stack_frame_map (l_function.slot_manager, l_function_parameter_definitions.count)
+										end
+									end
+									l_previous_function := l_function
+									create l_value.make (Void)
+									l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
+									check postcondition_of_evaluate: attached l_value.item as l_value_item then
+										l_value_item.generate_events (a_context)
+									end
+								else
+									l_finished := True
+								end
 							end
 						end
 					end
+					l_cursor.forth
+				variant
+					children.count + 1 - l_cursor.index
 				end
-				l_cursor.forth
-			variant
-				children.count + 1 - l_cursor.index
 			end
 		end
 

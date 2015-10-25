@@ -3,7 +3,7 @@ note
 	description: "Objects that represent an xsl:apply-templates,"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE; a_defaulted: BOOLEAN)
+			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: detachable XM_XSLT_MODE; a_defaulted: BOOLEAN)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -44,8 +44,8 @@ feature {NONE} -- Initialization
 			is_current_mode_used := use_current_mode
 			is_tail_recursion_used := use_tail_recusrion
 			actual_parameters := some_actual_parameters
-			set_with_params_parent (actual_parameters, Current)
 			tunnel_parameters := some_tunnel_parameters
+			set_with_params_parent (actual_parameters, Current)
 			set_with_params_parent (tunnel_parameters, Current)
 			adopt_child_expression (select_expression)
 			compute_static_properties
@@ -101,7 +101,9 @@ feature -- Status report
 			else
 				a_string := STRING_.appended_string (indentation (a_level + 1), "applies to mode ")
 				std.error.put_string (a_string)
-				std.error.put_string (mode.name)
+				check attached mode as l_mode then
+					std.error.put_string (l_mode.name)
+				end
 				std.error.put_string (" %N")
 			end
 			if actual_parameters.count > 0 then
@@ -134,22 +136,25 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_code: STRING
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			simplify_with_params (actual_parameters)
 			simplify_with_params (tunnel_parameters)
 			create l_replacement.make (Void)
 			select_expression.simplify (l_replacement)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error then
-				if select_expression.error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
-					l_code := select_expression.error_value.code
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+			end
+			if attached select_expression.error_value as l_error_value then
+				check is_error: select_expression.is_error end
+				if l_error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
+					l_code := l_error_value.code
 					if l_code.same_string ("XPTY0020") or l_code.same_string ("XPDY0002") then
-						select_expression.error_value.set_code ("XTTE0510")
+						l_error_value.set_code ("XTTE0510")
 					end
 				end
 				set_replacement (a_replacement, select_expression)
@@ -160,22 +165,25 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_code: STRING
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_with_params (actual_parameters, a_context, a_context_item_type)
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 			create l_replacement.make (Void)
 			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error then
-				if select_expression.error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
-					l_code := select_expression.error_value.code
+			check potcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+			end
+			if attached select_expression.error_value as l_error_value then
+				check is_error: select_expression.is_error end
+				if l_error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
+					l_code := l_error_value.code
 					if l_code.same_string ("XPTY0020") or l_code.same_string ("XPDY0002") then
-						select_expression.error_value.set_code ("XTTE0510")
+						l_error_value.set_code ("XTTE0510")
 					end
 				end
 				set_replacement (a_replacement, select_expression)
@@ -186,10 +194,10 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 			l_code: STRING
 		do
 			optimize_with_params (actual_parameters, a_context, a_context_item_type)
@@ -199,12 +207,15 @@ feature -- Optimization
 
 			create l_replacement.make (Void)
 			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_select_expression (l_replacement.item)
-			if select_expression.is_error then
-				if select_expression.error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
-					l_code := select_expression.error_value.code
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+			end
+			if attached select_expression.error_value as l_error_value then
+				check is_error: select_expression.is_error end
+				if l_error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
+					l_code := l_error_value.code
 					if l_code.same_string ("XPTY0020") or l_code.same_string ("XPDY0002") then
-						select_expression.error_value.set_code ("XTTE0510")
+						l_error_value.set_code ("XTTE0510")
 					end
 				end
 				set_replacement (a_replacement, select_expression)
@@ -213,12 +224,15 @@ feature -- Optimization
 			else
 				l_replacement.put (Void)
 				select_expression.optimize (l_replacement, a_context, a_context_item_type)
-				set_select_expression (l_replacement.item)
-				if select_expression.is_error then
-					if select_expression.error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
-						l_code := select_expression.error_value.code
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					set_select_expression (l_replacement_item)
+				end
+				if attached select_expression.error_value as l_error_value then
+					check is_error: select_expression.is_error end
+					if l_error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
+						l_code := l_error_value.code
 						if l_code.same_string ("XPTY0020") or l_code.same_string ("XPDY0002") then
-							select_expression.error_value.set_code ("XTTE0510")
+							l_error_value.set_code ("XTTE0510")
 						end
 					end
 					set_replacement (a_replacement, select_expression)
@@ -233,13 +247,15 @@ feature -- Optimization
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			select_expression.promote (l_replacement, a_offer)
-			set_select_expression (l_replacement.item)
-			promote_with_params (actual_parameters, a_offer)
-			promote_with_params (tunnel_parameters, a_offer)
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				set_select_expression (l_replacement_item)
+				promote_with_params (actual_parameters, a_offer)
+				promote_with_params (tunnel_parameters, a_offer)
+			end
 		end
 
 feature -- Evaluation
@@ -247,19 +263,18 @@ feature -- Evaluation
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
-			l_context: XM_XSLT_EVALUATION_CONTEXT
+			l_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]
 		do
-			l_context ?= a_context
 			check
-				l_context_not_void: l_context /= Void
+				l_context_not_void: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_context
 				-- this is xslt
+			then
+				create l_tail.make (Void)
+				apply (l_tail, l_context, False)
 			end
-			create l_tail.make (Void)
-			apply (l_tail, l_context, False)
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			apply (a_tail, a_context, is_tail_recursion_used)
@@ -282,7 +297,7 @@ feature {NONE} -- Implementation
 	is_tail_recursion_used: BOOLEAN
 			-- Should we make taiul-recursive calls?
 
-	mode: XM_XSLT_MODE
+	mode: detachable XM_XSLT_MODE
 			-- Mode to use
 
 	set_select_expression (a_expression: XM_XPATH_EXPRESSION)
@@ -299,72 +314,81 @@ feature {NONE} -- Implementation
 			select_expression_set: select_expression = a_expression
 		end
 
-	apply (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN)
+	apply (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN)
 			-- Apply `Current'.
 		require
 			context_not_void: a_context /= void
 		local
-			l_evaluation_context, l_new_context: XM_XSLT_EVALUATION_CONTEXT
-			l_mode: XM_XSLT_MODE
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_mode: detachable XM_XSLT_MODE
 			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_tail_call: XM_XPATH_TAIL_CALL
-			l_result: DS_CELL [XM_XPATH_VALUE]
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
+			l_result: DS_CELL [detachable XM_XPATH_VALUE]
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- as this is XSLT
-			end
-			if is_current_mode_used then
-				l_mode := l_evaluation_context.current_mode
-			else
-				l_mode := mode
-			end
-
-			-- handle any parameters
-
-			l_parameters := assembled_parameters (a_context, actual_parameters)
-			l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
-
-			if returns_tail_call then
-				l_new_context := a_context.new_context
-				create l_result.make (Void)
-				select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, 1, a_context)
-				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} l_tail_call.make (l_result.item,
-																									l_mode, l_parameters,
-																									l_tunnel_parameters,
-																									l_new_context
-																							 )
-				a_tail.put (l_tail_call)
-			else
-
-				-- Get an iterator to iterate through the selected nodes in original order.
-
-				select_expression.create_iterator (a_context)
-				l_iterator := select_expression.last_iterator
-				if l_iterator.is_error then
-					if not l_iterator.error_value.is_location_known then
-						l_iterator.error_value.set_location (system_id, line_number)
-					end
-					a_context.transformer.report_fatal_error (l_iterator.error_value)
+			then
+				if is_current_mode_used then
+					l_mode := l_evaluation_context.current_mode
 				else
-					-- quick exit if the iterator is empty
+					l_mode := mode
+				end
 
-					if not l_iterator.is_empty_iterator then
+				-- handle any parameters
 
-						-- Process the selected nodes now.
+				l_parameters := assembled_parameters (a_context, actual_parameters)
+				l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
 
-						from
-							l_new_context := a_context.new_context
-							apply_templates (a_tail, l_iterator, l_mode, l_parameters, l_tunnel_parameters, l_new_context)
-							l_tail_call := a_tail.item
-						until
-							l_new_context.transformer.is_error or l_tail_call = Void
-						loop
-							a_tail.put (Void)
-							l_tail_call.generate_tail_call (a_tail, l_new_context)
-							l_tail_call := a_tail.item
+				if returns_tail_call then
+					l_new_context := a_context.new_context
+					create l_result.make (Void)
+					select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, 1, a_context)
+					check postcondition_of_evaluate: attached l_result.item as l_result_item then
+						create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} l_tail_call.make (l_result_item,
+																										l_mode, l_parameters,
+																										l_tunnel_parameters,
+																										l_new_context
+																								 )
+					end
+					a_tail.put (l_tail_call)
+				else
+
+					-- Get an iterator to iterate through the selected nodes in original order.
+
+					select_expression.create_iterator (a_context)
+					check postcondition_of_create_iterator: attached select_expression.last_iterator as l_last_iterator then
+						l_iterator := l_last_iterator
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							if not l_error_value.is_location_known then
+								l_error_value.set_location (system_id, line_number)
+							end
+							check attached a_context.transformer as l_transformer then
+								l_transformer.report_fatal_error (l_error_value)
+							end
+						else
+							-- quick exit if the iterator is empty
+
+							if not l_iterator.is_empty_iterator then
+
+								-- Process the selected nodes now.
+
+								l_new_context := a_context.new_context
+								check attached l_new_context.transformer as l_new_context_transformer then
+									from
+										apply_templates (a_tail, l_iterator, l_mode, l_parameters, l_tunnel_parameters, l_new_context)
+										l_tail_call := a_tail.item
+									until
+										l_new_context_transformer.is_error or l_tail_call = Void
+									loop
+										a_tail.put (Void)
+										l_tail_call.generate_tail_call (a_tail, l_new_context)
+										l_tail_call := a_tail.item
+									end
+								end
+							end
 						end
 					end
 				end

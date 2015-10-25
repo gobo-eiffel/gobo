@@ -5,7 +5,7 @@ note
 		"xsl:analyze-string element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,66 +55,71 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, a_regex_attribute, a_flags_attribute: STRING
+			an_expanded_name, a_select_attribute, a_regex_attribute, a_flags_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
-				from
-					a_cursor := attribute_collection.name_code_cursor
-					a_cursor.start
-				until
-					a_cursor.after or any_compile_errors
-				loop
-					a_name_code := a_cursor.item
-					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-					if STRING_.same_string (an_expanded_name, Select_attribute) then
-						a_select_attribute := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (a_select_attribute)
-						STRING_.right_adjust (a_select_attribute)
-					elseif STRING_.same_string (an_expanded_name, Regex_attribute) then
-						a_regex_attribute := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (a_regex_attribute)
-						STRING_.right_adjust (a_regex_attribute)
-					elseif STRING_.same_string (an_expanded_name, Flags_attribute) then
-						a_flags_attribute := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (a_flags_attribute)
-						STRING_.right_adjust (a_flags_attribute)
-					else
-						check_unknown_attribute (a_name_code)
+			check precondition_static_context_not_void: attached static_context as l_static_context then
+				if attached attribute_collection as l_attribute_collection then
+					from
+						a_cursor := l_attribute_collection.name_code_cursor
+						a_cursor.start
+					until
+						a_cursor.after or any_compile_errors
+					loop
+						a_name_code := a_cursor.item
+						an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+						if STRING_.same_string (an_expanded_name, Select_attribute) then
+							a_select_attribute := attribute_value_by_index (a_cursor.index)
+							STRING_.left_adjust (a_select_attribute)
+							STRING_.right_adjust (a_select_attribute)
+						elseif STRING_.same_string (an_expanded_name, Regex_attribute) then
+							a_regex_attribute := attribute_value_by_index (a_cursor.index)
+							STRING_.left_adjust (a_regex_attribute)
+							STRING_.right_adjust (a_regex_attribute)
+						elseif STRING_.same_string (an_expanded_name, Flags_attribute) then
+							a_flags_attribute := attribute_value_by_index (a_cursor.index)
+							STRING_.left_adjust (a_flags_attribute)
+							STRING_.right_adjust (a_flags_attribute)
+						else
+							check_unknown_attribute (a_name_code)
+						end
+						a_cursor.forth
+					variant
+						l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 					end
-					a_cursor.forth
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
+				if a_select_attribute /= Void then
+					generate_expression (a_select_attribute)
+					select_expression := last_generated_expression
+				else
+					report_absence ("regex")
+				end
+				if a_regex_attribute /= Void then
+					generate_attribute_value_template (a_regex_attribute, l_static_context)
+					regex_expression := last_generated_expression
+				else
+					report_absence ("regex")
+				end
+				if a_flags_attribute = Void then
+					a_flags_attribute := ""
+				end
+				generate_attribute_value_template (a_flags_attribute, l_static_context)
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_flags_expression then
+					flags_expression := l_new_flags_expression
+					check attached regex_expression as l_regex_expression then
+						if not any_compile_errors and then l_regex_expression.is_string_value
+							and then l_new_flags_expression.is_string_value then
+							check_regex_and_flags
+						end
+					end
+				end
+				attributes_prepared := True
 			end
-			if a_select_attribute /= Void then
-				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-			else
-				report_absence ("regex")
-			end
-			if a_regex_attribute /= Void then
-				generate_attribute_value_template (a_regex_attribute, static_context)
-				regex_expression := last_generated_expression
-			else
-				report_absence ("regex")
-			end
-			if a_flags_attribute = Void then
-				a_flags_attribute := ""
-			end
-			generate_attribute_value_template (a_flags_attribute, static_context)
-			flags_expression := last_generated_expression
-			if not any_compile_errors and then regex_expression.is_string_value
-				and then flags_expression.is_string_value then
-				check_regex_and_flags
-			end
-			attributes_prepared := True
 		end
 
 	validate
 			-- Check that the stylesheet element is valid.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_style_element: XM_XSLT_STYLE_ELEMENT
 			l_error: XM_XPATH_ERROR_VALUE
 			l_finished: BOOLEAN
 		do
@@ -123,8 +128,7 @@ feature -- Element change
 				l_child_iterator := new_axis_iterator (Child_axis)
 				l_child_iterator.start
 			until l_finished or l_child_iterator.after loop
-				l_style_element ?= l_child_iterator.item
-				if l_style_element /= Void then
+				if attached {XM_XSLT_STYLE_ELEMENT} l_child_iterator.item as l_style_element then
 					if not l_style_element.is_fallback then
 						if l_style_element.is_matching_substring then
 							if matching_substring /= Void then
@@ -169,101 +173,117 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
-			l_matching_block, l_non_matching_block: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_matching_block, l_non_matching_block: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_last_generated_expression_2: like last_generated_expression
 		do
-			if matching_substring /= Void then
-				matching_substring.compile_sequence_constructor (an_executable, matching_substring.new_axis_iterator (Child_axis), False)
-				if matching_substring.last_generated_expression /= Void then
-					l_matching_block := matching_substring.last_generated_expression
+			if attached matching_substring as l_matching_substring then
+				l_matching_substring.compile_sequence_constructor (an_executable, l_matching_substring.new_axis_iterator (Child_axis), False)
+				if attached l_matching_substring.last_generated_expression as l_last_generated_expression then
+					l_matching_block := l_last_generated_expression
 				else
 					-- better is to ensure non-void results - check consequences first
 					create {XM_XPATH_EMPTY_SEQUENCE} l_matching_block.make
 				end
 			end
-			if non_matching_substring /= Void then
-				non_matching_substring.compile_sequence_constructor (an_executable, non_matching_substring.new_axis_iterator (Child_axis), False)
-				if non_matching_substring.last_generated_expression /= Void then
-					l_non_matching_block := non_matching_substring.last_generated_expression
+			if attached non_matching_substring as l_non_matching_substring then
+				l_non_matching_substring.compile_sequence_constructor (an_executable, l_non_matching_substring.new_axis_iterator (Child_axis), False)
+				if attached l_non_matching_substring.last_generated_expression as l_last_generated_expression then
+					l_non_matching_block := l_last_generated_expression
 				else
 					-- see above
 					create {XM_XPATH_EMPTY_SEQUENCE} l_non_matching_block.make
 				end
 			end
-			create {XM_XSLT_COMPILED_ANALYZE_STRING} last_generated_expression.make (an_executable,
-				select_expression,
-				regex_expression,
-				flags_expression,
-				regexp_cache_entry,
-				l_matching_block,
-				l_non_matching_block)
+			check
+				attached select_expression as l_select_expression
+				attached regex_expression as l_regex_expression
+				attached flags_expression as l_flags_expression
+			then
+				create {XM_XSLT_COMPILED_ANALYZE_STRING} l_last_generated_expression_2.make (an_executable,
+					l_select_expression,
+					l_regex_expression,
+					l_flags_expression,
+					regexp_cache_entry,
+					l_matching_block,
+					l_non_matching_block)
+			end
 			create l_replacement.make (Void)
-			last_generated_expression.simplify (l_replacement)
+			l_last_generated_expression_2.simplify (l_replacement)
 			last_generated_expression := l_replacement.item
 		end
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Select expression
 
-	regex_expression: XM_XPATH_EXPRESSION
+	regex_expression: detachable XM_XPATH_EXPRESSION
 			-- Regex expression
 
-	flags_expression: XM_XPATH_EXPRESSION
+	flags_expression: detachable XM_XPATH_EXPRESSION
 			-- Flags expression
 
-	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
+	regexp_cache_entry: detachable XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Cached regular expression
 
-	matching_substring: XM_XSLT_MATCHING_SUBSTRING
+	matching_substring: detachable XM_XSLT_MATCHING_SUBSTRING
 			-- Matching substring child
 
-	non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING
+	non_matching_substring: detachable XM_XSLT_NON_MATCHING_SUBSTRING
 			-- Non-matching substring child
 
 	check_regex_and_flags
 			-- Check constraints upon `regex_expression' and `flags_expression'.
 		require
-			regex_expression_is_string: regex_expression /= Void and then regex_expression.is_string_value
-			flags_expression_is_string: flags_expression /= Void and then flags_expression.is_string_value
+			regex_expression_is_string: attached regex_expression as l_regex_expression and then l_regex_expression.is_string_value
+			flags_expression_is_string: attached flags_expression as l_flags_expression and then l_flags_expression.is_string_value
 		local
-			l_flags, l_flags_string, l_key: STRING
-			l_error: XM_XPATH_ERROR_VALUE
+			l_flags: detachable STRING
+			l_flags_string, l_key: STRING
+			l_error: detachable XM_XPATH_ERROR_VALUE
+			l_regexp_cache_entry: like regexp_cache_entry
 		do
-			l_flags_string := flags_expression.as_string_value.string_value
-			l_flags := normalized_flags_string (l_flags_string)
-			if l_flags = Void then
-				create l_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", l_flags_string), Xpath_errors_uri, "XTDE1145", Static_error)
-			else
-				if not are_normalized_flags (l_flags) then
+			check
+				precondition_regex_expression_not_void: attached regex_expression as l_regex_expression
+				precondition_flags_expression_not_void: attached flags_expression as l_flags_expression
+			then
+				l_flags_string := l_flags_expression.as_string_value.string_value
+				l_flags := normalized_flags_string (l_flags_string)
+				if l_flags = Void then
 					create l_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", l_flags_string), Xpath_errors_uri, "XTDE1145", Static_error)
 				else
-					l_key := composed_key (utf8.to_utf8 (regex_expression.as_string_value.string_value), l_flags)
-					regexp_cache_entry :=  shared_regexp_cache.item (l_key)
-					if regexp_cache_entry = Void then
-						create regexp_cache_entry.make (utf8.to_utf8 (regex_expression.as_string_value.string_value), l_flags)
-						if regexp_cache_entry.is_error then
-							regexp_cache_entry := Void
-						else
-							shared_regexp_cache.put (regexp_cache_entry, l_key)
+					if not are_normalized_flags (l_flags) then
+						create l_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", l_flags_string), Xpath_errors_uri, "XTDE1145", Static_error)
+					else
+						l_key := composed_key (utf8.to_utf8 (l_regex_expression.as_string_value.string_value), l_flags)
+						regexp_cache_entry :=  shared_regexp_cache.item (l_key)
+						regexp_cache_entry := l_regexp_cache_entry
+						if l_regexp_cache_entry = Void then
+							create l_regexp_cache_entry.make (utf8.to_utf8 (l_regex_expression.as_string_value.string_value), l_flags)
+							if l_regexp_cache_entry.is_error then
+								regexp_cache_entry := Void
+							else
+								shared_regexp_cache.put (l_regexp_cache_entry, l_key)
+								regexp_cache_entry := l_regexp_cache_entry
+							end
 						end
-					end
-					if regexp_cache_entry /= Void then
-						if regexp_cache_entry.regexp.matches ("") then
-							create l_error.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "XTDE1150", Static_error)
+						if l_regexp_cache_entry /= Void then
+							if l_regexp_cache_entry.regexp.matches ("") then
+								create l_error.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "XTDE1150", Static_error)
+							end
 						end
 					end
 				end
-			end
-			if l_error /= Void then
-				if is_forwards_compatible_processing_enabled then
+				if l_error /= Void then
+					if is_forwards_compatible_processing_enabled then
 
-					-- Defer error until evaluation time
+						-- Defer error until evaluation time
 
-					regexp_cache_entry := Void
-				else
-					report_compile_error (l_error)
+						regexp_cache_entry := Void
+					else
+						report_compile_error (l_error)
+					end
 				end
 			end
 		end
@@ -275,49 +295,75 @@ feature {NONE} -- Implementation
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
-			l_single_string: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_single_string: detachable XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "select", select_expression)
+			check attached select_expression as l_select_expression then
+				type_check_expression (l_replacement, "select", l_select_expression)
+			end
 			select_expression := l_replacement.item
 			if not any_compile_errors then
 				create l_single_string.make_single_string
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:analyze-string/select", 1, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (static_context, select_expression, l_single_string, False, l_role)
+				check
+					attached select_expression as l_select_expression
+				then
+					l_type_checker.static_type_check (static_context, l_select_expression, l_single_string, False, l_role)
+				end
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				else
 					select_expression := l_type_checker.checked_expression
 				end
 			end
 			if not any_compile_errors then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "regex", regex_expression)
+				check attached regex_expression as l_regex_expression then
+					type_check_expression (l_replacement, "regex", l_regex_expression)
+				end
 				regex_expression := l_replacement.item
 			end
 			if not any_compile_errors then
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:analyze-string/regex", 1, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (static_context, regex_expression, l_single_string, False, l_role)
+				check
+					attached regex_expression as l_regex_expression
+					l_single_string /= Void
+				then
+					l_type_checker.static_type_check (static_context, l_regex_expression, l_single_string, False, l_role)
+				end
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				else
 					regex_expression := l_type_checker.checked_expression
 				end
 			end
 			if not any_compile_errors then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "flags", flags_expression)
+				check attached flags_expression as l_flags_expression then
+					type_check_expression (l_replacement, "flags", l_flags_expression)
+				end
 				flags_expression := l_replacement.item
 			end
 			if not any_compile_errors then
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:analyze-string/flags", 1, Xpath_errors_uri, "XPTY0004")
-				l_type_checker.static_type_check (static_context, flags_expression, l_single_string, False, l_role)
+				check
+					attached flags_expression as l_flags_expression
+					l_single_string /= Void
+				then
+					l_type_checker.static_type_check (static_context, l_flags_expression, l_single_string, False, l_role)
+				end
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				else
 					flags_expression := l_type_checker.checked_expression
 				end

@@ -5,7 +5,7 @@ note
 		"Objects that insert <meta> tags into <head> elements."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,7 +104,9 @@ feature -- Events
 			-- Notify an attribute.
 		do
 			if in_meta_tag then
-				attributes.add_attribute (a_name_code, a_type_code, a_value, a_properties)
+				check attached attributes as l_attributes then
+					l_attributes.add_attribute (a_name_code, a_type_code, a_value, a_properties)
+				end
 			else
 				Precursor (a_name_code, a_type_code, a_value, a_properties)
 			end
@@ -145,43 +147,45 @@ feature -- Events
 			l_index: INTEGER
 		do
 			if in_meta_tag then
-				in_meta_tag := False
+				check attached attributes as l_attributes then
+					in_meta_tag := False
 
-				--	if there was an http-equiv="ContentType" attribute, discard the meta element entirely
+					--	if there was an http-equiv="ContentType" attribute, discard the meta element entirely
 
-				from
-					l_cursor := attributes.name_code_cursor
-					l_cursor.start
-				until
-					l_found or l_cursor.after
-				loop
-					if matches_name (shared_name_pool.local_name_from_name_code (l_cursor.item), "http-equiv") then
-						l_value := STRING_.cloned_string (attributes.attribute_value_by_index (l_cursor.index))
-						STRING_.left_adjust (l_value)
-						STRING_.right_adjust (l_value)
-						-- even for XHTML we must do a case-insensitive comparison
-						if STRING_.same_case_insensitive ("Content-Type", l_value) then
-							l_found := True -- so the meta tag won't be emitted
-						end
-					end
-					l_cursor.forth
-				end
-				if not l_found then
-
-					-- this was a meta element, but not one of the kind that we discard
-
-					base_receiver.start_element (meta_name_code, Untyped_type_code, 0)
 					from
-						l_cursor := attributes.name_code_cursor
+						l_cursor := l_attributes.name_code_cursor
 						l_cursor.start
-					until l_cursor.after loop
-						l_index := l_cursor.index
-						base_receiver.notify_attribute (l_cursor.item, attributes.attribute_type_code (l_index),
-																  attributes.attribute_value_by_index (l_index), 0)
+					until
+						l_found or l_cursor.after
+					loop
+						if matches_name (shared_name_pool.local_name_from_name_code (l_cursor.item), "http-equiv") then
+							l_value := STRING_.cloned_string (l_attributes.attribute_value_by_index (l_cursor.index))
+							STRING_.left_adjust (l_value)
+							STRING_.right_adjust (l_value)
+							-- even for XHTML we must do a case-insensitive comparison
+							if STRING_.same_case_insensitive ("Content-Type", l_value) then
+								l_found := True -- so the meta tag won't be emitted
+							end
+						end
 						l_cursor.forth
 					end
-					base_receiver.start_content
-					Precursor
+					if not l_found then
+
+						-- this was a meta element, but not one of the kind that we discard
+
+						base_receiver.start_element (meta_name_code, Untyped_type_code, 0)
+						from
+							l_cursor := l_attributes.name_code_cursor
+							l_cursor.start
+						until l_cursor.after loop
+							l_index := l_cursor.index
+							base_receiver.notify_attribute (l_cursor.item, l_attributes.attribute_type_code (l_index),
+																	 l_attributes.attribute_value_by_index (l_index), 0)
+							l_cursor.forth
+						end
+						base_receiver.start_content
+						Precursor
+					end
 				end
 			else
 				level := level - 1
@@ -222,7 +226,7 @@ feature {NONE} -- Implementation
 	level: INTEGER
 			-- Element nesting level
 
-	attributes: XM_XPATH_ATTRIBUTE_COLLECTION
+	attributes: detachable XM_XPATH_ATTRIBUTE_COLLECTION
 			-- Attributes for current meta element
 
 	encoding: STRING

@@ -5,7 +5,7 @@ note
 		"xsl:sequence element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,13 +29,13 @@ feature -- Status setting
 	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
-			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+			a_last_instruction: detachable XM_XSLT_STYLE_ELEMENT
 		do
 			a_last_instruction := last_child_instruction
 			if a_last_instruction /= Void then
 				a_last_instruction.mark_tail_calls
-			elseif select_expression /= Void then
-				select_expression.mark_tail_function_calls
+			elseif attached select_expression as l_select_expression then
+				l_select_expression.mark_tail_function_calls
 			end
 		end
 
@@ -60,11 +60,11 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute: STRING
+			an_expanded_name, a_select_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -80,7 +80,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_select_attribute /= Void then
@@ -95,12 +95,14 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_empty
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "select", select_expression)
+			check attached select_expression as l_select_expression then
+				type_check_expression (l_replacement, "select", l_select_expression)
+			end
 			select_expression := l_replacement.item
 			validated := True
 		end
@@ -108,10 +110,14 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
-			if select_expression.is_computed_expression then
-				select_expression.as_computed_expression.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+			check attached select_expression as l_select_expression then
+				if l_select_expression.is_computed_expression then
+					check attached principal_stylesheet as l_principal_stylesheet then
+						l_select_expression.as_computed_expression.set_source_location (l_principal_stylesheet.module_number (system_id), line_number)
+					end
+				end
+				last_generated_expression := select_expression
 			end
-			last_generated_expression := select_expression
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -119,8 +125,8 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
-			if select_expression /= Void then
-				Result := select_expression.item_type
+			if attached select_expression as l_select_expression then
+				Result := l_select_expression.item_type
 			else
 				Result := common_child_item_type
 			end
@@ -128,7 +134,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Optional select expression
 
 end

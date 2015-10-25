@@ -5,7 +5,7 @@ note
 		"Objects that reside in the Decimal Format manager's hash table"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
+	decimal_format: detachable XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Decimal format
 
-	list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
+	list: detachable DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
 			-- List of call-backs
 
 feature -- Status report

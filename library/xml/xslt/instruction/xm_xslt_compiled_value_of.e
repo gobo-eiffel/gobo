@@ -5,7 +5,7 @@ note
 		"Compiled xsl:value-of elements"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,12 +32,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN; a_module_number, a_line_number: INTEGER)
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: detachable XM_XPATH_EXPRESSION; disabled: BOOLEAN; a_module_number, a_line_number: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			is_special: BOOLEAN
 			a_string: STRING
 			an_index, a_count, a_code: INTEGER
@@ -45,10 +44,8 @@ feature {NONE} -- Initialization
 			set_source_location (a_module_number, a_line_number)
 			executable := an_executable
 			select_expression := a_select_expression
-			if select_expression /= Void then adopt_child_expression (select_expression) end
 			is_special := True
-			a_string_value ?= select_expression
-			if a_string_value /= Void then
+			if attached {XM_XPATH_STRING_VALUE} select_expression as a_string_value then
 				instruction_name := "xsl:text"
 				from
 					is_special := False
@@ -70,6 +67,9 @@ feature {NONE} -- Initialization
 				end
 			else
 				instruction_name := "xsl:value-of"
+			end
+			if a_select_expression /= Void then
+				adopt_child_expression (a_select_expression)
 			end
 			if disabled then
 				if	not is_special then
@@ -117,15 +117,16 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			check
-				select_expression_not_void: select_expression /= Void
+				select_expression_not_void: attached select_expression as l_select_expression
 				-- Compiling ensures this
+			then
+				l_select_expression.display (a_level + 1)
 			end
-			select_expression.display (a_level + 1)
 		end
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		do
 			-- do nothing
@@ -133,37 +134,50 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_orphan: XM_XPATH_ORPHAN
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- This is XSLT
-			end
-			expand_children (l_evaluation_context)
-			if not is_error then
-				create l_orphan.make (Text_node, last_string_value)
-				a_result.put (l_orphan)
-			else
-				conditionally_set_error_location
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			then
+				expand_children (l_evaluation_context)
+				if not attached error_value as l_error_value then
+					check not_is_error: not is_error end
+					check postcondition_of_expand_children: attached last_string_value as l_last_string_value then
+						create l_orphan.make (Text_node, l_last_string_value)
+						a_result.put (l_orphan)
+					end
+				else
+					conditionally_set_error_location
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+				end
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			expand_children (a_context)
-			if is_error then
+			if attached error_value as l_error_value then
+				check is_error: is_error end
 				conditionally_set_error_location
-				a_context.transformer.report_recoverable_error (error_value)
-				a_context.current_receiver.on_error (error_value.error_message)
+				check
+					attached a_context.transformer as l_context_transformer
+					attached a_context.current_receiver as l_context_current_receiver
+				then
+					l_context_transformer.report_recoverable_error (l_error_value)
+					l_context_current_receiver.on_error (l_error_value.error_message)
+				end
 			else
-				a_context.current_receiver.notify_characters (STRING_.cloned_string (last_string_value), receiver_options)
+				check
+					attached a_context.current_receiver as l_context_current_receiver
+					postcondition_of_expand_children: attached last_string_value as l_last_string_value
+				then
+					l_context_current_receiver.notify_characters (STRING_.cloned_string (l_last_string_value), receiver_options)
+				end
 			end
 		end
 

@@ -44,7 +44,7 @@ feature -- Access
 	is_function_available (a_fingerprint, an_arity: INTEGER; is_restricted: BOOLEAN): BOOLEAN
 			-- Does `a_fingerprint' represent an available function with `an_arity'?
 		local
-			a_function: XM_XSLT_FUNCTION
+			a_function: detachable XM_XSLT_FUNCTION
 		do
 			if not is_restricted then
 				a_function := stylesheet.stylesheet_function (a_fingerprint, an_arity)
@@ -70,7 +70,9 @@ feature -- Element change
 				not_restricted: not is_restricted
 				-- ensured by implementation of `is_function_available'
 			end
-			a_function := stylesheet.stylesheet_function (a_fingerprint, some_arguments.count)
+			check attached stylesheet.stylesheet_function (a_fingerprint, some_arguments.count) as l_stylesheet_function then
+				a_function := l_stylesheet_function
+			end
 			check
 				overriding: a_function.is_overriding = is_overriding
 				-- Implementation of `is_function_available' ensures this

@@ -5,7 +5,7 @@ note
 		"Objects that represent the compiled form of xsl:with-param"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,12 +50,14 @@ feature -- Status report
 			std.error.put_string (a_string);
 			std.error.put_string (variable_name);
 			std.error.put_new_line
-			if select_expression /= Void then select_expression.display (a_level + 1) end
+			if attached select_expression as l_select_expression then
+				l_select_expression.display (a_level + 1)
+			end
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			check

@@ -5,7 +5,7 @@ note
 		"xsl:function element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -49,10 +49,10 @@ feature -- Access
 	references: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_CALL]
 			-- References to `Current'
 
-	compiled_function: XM_XSLT_COMPILED_USER_FUNCTION
+	compiled_function: detachable XM_XSLT_COMPILED_USER_FUNCTION
 			-- Compiled version of `Current'
 
-	function_name: STRING
+	function_name: detachable STRING
 			-- QName of function
 
 	arity: INTEGER
@@ -60,15 +60,13 @@ feature -- Access
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			finished: BOOLEAN
-			a_param: XM_XSLT_PARAM
 		do
 			from
 				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
 			until
 				finished or else an_iterator.after
 			loop
-				a_param ?= an_iterator.item
-				if a_param /= Void then
+				if attached {XM_XSLT_PARAM} an_iterator.item as a_param then
 					Result := Result + 1
 					an_iterator.forth
 				else
@@ -85,7 +83,6 @@ feature -- Access
 			validated: validated
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_param: XM_XSLT_PARAM
 		do
 			create Result.make (arity)
 			from
@@ -93,8 +90,7 @@ feature -- Access
 			until
 				an_iterator.after
 			loop
-				a_param ?= an_iterator.item
-				if a_param /= Void then
+				if attached {XM_XSLT_PARAM} an_iterator.item as a_param then
 					Result.put_last (a_param.required_type)
 				end
 				an_iterator.forth
@@ -170,12 +166,13 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, an_as_attribute, an_override_attribute, a_memo_function_attribute: STRING
+			an_expanded_name, an_as_attribute, an_override_attribute, a_memo_function_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			l_function_name: like function_name
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -183,17 +180,18 @@ feature -- Element change
 					a_name_code := a_cursor.item
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Name_attribute) then
-						function_name := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (function_name)
-						STRING_.right_adjust (function_name)
-						if function_name.index_of (':', 2) = 0 then
+						l_function_name := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (l_function_name)
+						STRING_.right_adjust (l_function_name)
+						function_name := l_function_name
+						if l_function_name.index_of (':', 2) = 0 then
 							create an_error.make_from_string ("Xsl:function name must have a namespace prefix", Xpath_errors_uri, "XTSE0740", Static_error)
 							report_compile_error (an_error)
-						elseif not is_qname (function_name) then
+						elseif not is_qname (l_function_name) then
 							create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
 							report_compile_error (an_error)
 						else
-							generate_name_code (function_name)
+							generate_name_code (l_function_name)
 							internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 							if internal_function_fingerprint = -1 then
 								-- Must be because the namespace is reserved
@@ -235,7 +233,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if function_name = Void then
@@ -266,8 +264,13 @@ feature -- Element change
 			-- Check that this function is not a duplicate of another.
 
 			from
-				a_root := principal_stylesheet
-				a_cursor := a_root.top_level_elements.new_cursor; a_cursor.finish
+				check attached principal_stylesheet as l_principal_stylesheet then
+					a_root := l_principal_stylesheet
+				end
+				check attached a_root.top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
+				a_cursor.finish
 			until
 				a_cursor.before
 			loop
@@ -275,7 +278,9 @@ feature -- Element change
 					and then a_cursor.item.as_xslt_function.arity = an_arity
 					and then a_cursor.item.as_xslt_function.function_fingerprint = function_fingerprint
 					and then a_cursor.item.as_xslt_function.precedence = precedence then
-					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), Xpath_errors_uri, "XTSE0770", Static_error)
+					check attached function_name as l_function_name then
+						create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", l_function_name), Xpath_errors_uri, "XTSE0770", Static_error)
+					end
 					report_compile_error (an_error)
 					a_cursor.go_before
 				else
@@ -290,11 +295,12 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
-			l_body: XM_XPATH_EXPRESSION
+			l_body: detachable XM_XPATH_EXPRESSION
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_compiled_function: like compiled_function
 		do
 
 			-- Compile the function into a XM_XSLT_COMPILED_USER_FUNCTION, which treats the function
@@ -312,59 +318,86 @@ feature -- Element change
 			end
 			create l_replacement.make (Void)
 			l_body.simplify (l_replacement)
-			l_body := l_replacement.item
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				l_body := l_replacement_item
+			end
 			l_replacement.put (Void)
-			l_body.check_static_type (l_replacement, static_context, Void)
-			l_body := l_replacement.item
-			if l_body.is_error then
-				report_compile_error (l_body.error_value)
+			check attached static_context as l_static_context then
+				l_body.check_static_type (l_replacement, l_static_context, Void)
+			end
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				l_body := l_replacement_item
+			end
+			if attached l_body.error_value as l_error_value then
+				check is_error: l_body.is_error end
+				report_compile_error (l_error_value)
 			else
 				l_replacement.put (Void)
-				l_body.optimize (l_replacement, static_context, Void)
-				l_body := l_replacement.item
-				if l_body.is_error then
-					report_compile_error (l_body.error_value)
+				check attached static_context as l_static_context then
+					l_body.optimize (l_replacement, l_static_context, Void)
+				end
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					l_body := l_replacement_item
+				end
+				if attached l_body.error_value as l_error_value then
+					check is_error: l_body.is_error end
+					report_compile_error (l_error_value)
 				else
-					if result_type /= Void then
-						create l_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XTTE0780")
+					if attached result_type as l_result_type then
+						check attached function_name as l_function_name then
+							create l_role.make (Function_result_role, l_function_name, 1, Xpath_errors_uri, "XTTE0780")
+						end
 						create l_type_checker
-						l_type_checker.static_type_check (static_context, l_body, result_type, False, l_role)
+						l_type_checker.static_type_check (static_context, l_body, l_result_type, False, l_role)
 						if l_type_checker.is_static_type_check_error then
-							report_compile_error (l_type_checker.static_type_check_error)
+							check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+								report_compile_error (l_static_type_check_error)
+							end
 						else
-							l_body := l_type_checker.checked_expression
+							check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+								l_body := l_checked_expression
+							end
 						end
 					end
 					if configuration.is_tracing then
 						create l_trace_wrapper.make (l_body, an_executable, Current)
-						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						check attached principal_stylesheet as l_principal_stylesheet then
+							l_trace_wrapper.set_source_location (l_principal_stylesheet.module_number (system_id), line_number)
+						end
 						l_body := l_trace_wrapper
 					end
 					allocate_slots (l_body, slot_manager)
 					l_body.mark_tail_function_calls
-					create compiled_function.make (an_executable, l_body, function_name, function_fingerprint, arity, system_id,
-						line_number, slot_manager, result_type, is_memo_function)
-					set_parameter_definitions (compiled_function)
-					fixup_instruction (compiled_function)
-					if is_explaining then
-						std.error.put_string ("Optimized expression tree for function '")
-						std.error.put_string (function_name)
-						std.error.put_string ("' at line ")
-						std.error.put_string (line_number.out)
-						std.error.put_string (" in ")
-						std.error.put_string (system_id)
-						std.error.put_new_line
-						if not l_body.is_error then
-							std.error.put_string ("Static type: ")
-							std.error.put_string (l_body.item_type.conventional_name)
-							std.error.put_string (l_body.occurrence_indicator)
+					check
+						attached function_name as l_function_name
+						attached result_type as l_result_type
+					then
+						create l_compiled_function.make (an_executable, l_body, l_function_name, function_fingerprint, arity, system_id,
+							line_number, slot_manager, l_result_type, is_memo_function)
+						compiled_function := l_compiled_function
+						set_parameter_definitions (l_compiled_function)
+						fixup_instruction (l_compiled_function)
+						if is_explaining then
+							std.error.put_string ("Optimized expression tree for function '")
+							std.error.put_string (l_function_name)
+							std.error.put_string ("' at line ")
+							std.error.put_string (line_number.out)
+							std.error.put_string (" in ")
+							std.error.put_string (system_id)
 							std.error.put_new_line
-							std.error.put_string ("Optimized expression tree:%N")
-							l_body.display (10)
-						else
-							std.error.put_string ("Function body is in error%N")
-							std.error.put_string (l_body.error_value.error_message)
-							std.error.put_new_line
+							if not attached l_body.error_value as l_error_value then
+								std.error.put_string ("Static type: ")
+								std.error.put_string (l_body.item_type.conventional_name)
+								std.error.put_string (l_body.occurrence_indicator)
+								std.error.put_new_line
+								std.error.put_string ("Optimized expression tree:%N")
+								l_body.display (10)
+							else
+								check is_error: l_body.is_error end
+								std.error.put_string ("Function body is in error%N")
+								std.error.put_string (l_error_value.error_message)
+								std.error.put_new_line
+							end
 						end
 					end
 				end
@@ -390,7 +423,7 @@ feature {NONE} -- Implementation
 	internal_function_fingerprint: INTEGER
 			-- Fingerprint of function's QName (-1 = forward reference)
 
-	result_type: XM_XPATH_SEQUENCE_TYPE
+	result_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Type of result
 
 	is_memo_function: BOOLEAN
@@ -409,8 +442,9 @@ feature {NONE} -- Implementation
 				any_compile_errors or else a_cursor.after
 			loop
 				a_cursor.item.set_function (Current, a_user_function, static_context)
-				if a_cursor.item.is_type_error then
-					report_compile_error (a_cursor.item.error_value)
+				if attached a_cursor.item.error_value as l_error_value then
+					check is_type_error: a_cursor.item.is_type_error end
+					report_compile_error (l_error_value)
 				end
 				a_cursor.forth
 			variant
@@ -425,7 +459,6 @@ feature {NONE} -- Implementation
 		local
 			some_parameters: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_param: XM_XSLT_PARAM
 			a_function_param: XM_XSLT_USER_FUNCTION_PARAMETER
 		do
 			create some_parameters.make (arity)
@@ -435,8 +468,7 @@ feature {NONE} -- Implementation
 			until
 				an_iterator.after
 			loop
-				a_param ?= an_iterator.item
-				if a_param /= Void then
+				if attached {XM_XSLT_PARAM} an_iterator.item as a_param then
 					create a_function_param.make (a_param.required_type, a_param.slot_number, a_param.variable_name)
 					a_param.fixup_binding (a_function_param)
 					a_function_param.set_reference_count (a_param.references)

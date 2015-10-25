@@ -5,7 +5,7 @@ note
 		"XSLT format-number() sub-pictures"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,13 +79,13 @@ feature -- Access
 	integral_part_positions: DS_ARRAYED_LIST [INTEGER]
 			-- Positions of grouping separators in integral part
 
-	integral_grouping_separator_positions: ARRAY [INTEGER]
+	integral_grouping_separator_positions: detachable ARRAY [INTEGER]
 			-- Positions of grouping separators
 
 	fractional_part_positions: DS_ARRAYED_LIST [INTEGER]
 			-- Positions of grouping separators in fractional part
 
-	fractional_grouping_separator_positions: ARRAY [INTEGER]
+	fractional_grouping_separator_positions: detachable ARRAY [INTEGER]
 			-- Positions of grouping separators
 
 	formatted_number (a_value: XM_XPATH_NUMERIC_VALUE; a_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY; a_possible_minus: STRING): STRING
@@ -155,7 +155,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Is `Current' in error?
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value
 
 	phase: INTEGER
@@ -180,8 +180,8 @@ feature -- Status setting
 			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 			is_error := True
 		ensure
-			valid_error: error_value /= Void
-				and then STRING_.same_string (error_value.code, a_code)
+			valid_error: attached error_value as l_error_value
+				and then STRING_.same_string (l_error_value.code, a_code)
 			in_error: is_error
 		end
 
@@ -299,6 +299,8 @@ feature {NONE} -- Implementation
 		local
 			a_count, l_index, a_first_value: INTEGER
 			is_regular: BOOLEAN
+			l_integral_grouping_separator_positions: like integral_grouping_separator_positions
+			l_fractional_grouping_separator_positions: like fractional_grouping_separator_positions
 		do
 			a_count := integral_part_positions.count
 			if a_count > 0 then
@@ -306,25 +308,26 @@ feature {NONE} -- Implementation
 				-- Convert to positions relative to the decimal separator.
 
 				from
-					create integral_grouping_separator_positions.make_filled (0, 1, a_count)
+					create l_integral_grouping_separator_positions.make_filled (0, 1, a_count)
+					integral_grouping_separator_positions := l_integral_grouping_separator_positions
 					l_index := 1
 				until
 					l_index > a_count
 				loop
-					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - l_index + 1), l_index)
+					l_integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - l_index + 1), l_index)
 					l_index := l_index + 1
 				variant
 					a_count + 1 - l_index
 				end
 				if a_count > 1 then
 					is_regular := True
-					a_first_value := integral_grouping_separator_positions.item (1)
+					a_first_value := l_integral_grouping_separator_positions.item (1)
 					from
 						l_index := 2
 					until
 						not is_regular or else l_index > a_count
 					loop
-						if integral_grouping_separator_positions.item (l_index) /= a_first_value * l_index then
+						if l_integral_grouping_separator_positions.item (l_index) /= a_first_value * l_index then
 							is_regular := False
 						end
 						l_index := l_index + 1
@@ -332,11 +335,12 @@ feature {NONE} -- Implementation
 						a_count + 1 - l_index
 					end
 					if is_regular then
-						create integral_grouping_separator_positions.make_filled (0, 1, 1)
-						integral_grouping_separator_positions.put (a_first_value, 1)
+						create l_integral_grouping_separator_positions.make_filled (0, 1, 1)
+						integral_grouping_separator_positions := l_integral_grouping_separator_positions
+						l_integral_grouping_separator_positions.put (a_first_value, 1)
 					end
 				end
-				if integral_grouping_separator_positions.item (1) = 0 then
+				if l_integral_grouping_separator_positions.item (1) = 0 then
 					set_last_error_from_string  ("Grouping separator cannot be adjacent to decimal separator",
 						Xpath_errors_uri, "XTDE1310", Dynamic_error)
 				end
@@ -344,15 +348,16 @@ feature {NONE} -- Implementation
 			a_count := fractional_part_positions.count
 			if a_count > 0 then
 				from
-					create fractional_grouping_separator_positions.make_filled (0, 1, a_count)
+					create l_fractional_grouping_separator_positions.make_filled (0, 1, a_count)
+					fractional_grouping_separator_positions := l_fractional_grouping_separator_positions
 					l_index := 1
 				until
-					l_index > fractional_grouping_separator_positions.count
+					l_index > l_fractional_grouping_separator_positions.count
 				loop
-					fractional_grouping_separator_positions.put (fractional_part_positions.item (l_index), l_index)
+					l_fractional_grouping_separator_positions.put (fractional_part_positions.item (l_index), l_index)
 					l_index := l_index + 1
 				variant
-					fractional_grouping_separator_positions.count + 1 - l_index
+					l_fractional_grouping_separator_positions.count + 1 - l_index
 				end
 			end
 		end
@@ -512,13 +517,13 @@ feature {NONE} -- Implementation
 			if l_point = 0 then
 				l_point := a_value.count + 1
 			end
-			if integral_grouping_separator_positions /= Void then
-				if integral_grouping_separator_positions.count = 1 then
+			if attached integral_grouping_separator_positions as l_integral_grouping_separator_positions then
+				if l_integral_grouping_separator_positions.count = 1 then
 
 					-- regular positions
 
 					from
-						l_index := 1; l_grouping_index := integral_grouping_separator_positions.item (1)
+						l_index := 1; l_grouping_index := l_integral_grouping_separator_positions.item (1)
 						l_string := ""
 					until
 						l_index > a_value.count
@@ -539,13 +544,13 @@ feature {NONE} -- Implementation
 
 					from
 						l_index := 1
-						l_grouping_index := integral_grouping_separator_positions.count
+						l_grouping_index := l_integral_grouping_separator_positions.count
 						l_string := ""
 					until
 						l_index > a_value.count
 					loop
 						if l_grouping_index > 0 then
-							l_grouping_position := integral_grouping_separator_positions.item (l_grouping_index)
+							l_grouping_position := l_integral_grouping_separator_positions.item (l_grouping_index)
 						else
 							l_grouping_position := 0
 						end
@@ -623,14 +628,14 @@ feature {NONE} -- Implementation
 			l_string: STRING
 		do
 			l_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
-			if fractional_grouping_separator_positions /= Void then
+			if attached fractional_grouping_separator_positions as l_fractional_grouping_separator_positions then
 				from
 					l_index := 1; l_grouping_index := 1
 					l_string := ""
 				until
 					l_index > a_value.count
 				loop
-					l_grouping_position := fractional_grouping_separator_positions.item (l_grouping_index) + l_point
+					l_grouping_position := l_fractional_grouping_separator_positions.item (l_grouping_index) + l_point
 					if l_index = l_grouping_position then
 						l_string := STRING_.appended_string (l_string, a_decimal_format.grouping_separator)
 						l_grouping_position := l_grouping_position + 1

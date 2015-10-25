@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Emitters that write XML with possible DTD internal subset."
+		"Emitters that write XML with possible DTD internal subset."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XSLT_GEXSLT_EXAMPLES_XML_EMITTER
 
@@ -53,10 +53,10 @@ feature {NONE} -- Implementation
 	extension_attribute_expanded_name: STRING = "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example#internal-subset"
 			-- Name of extension attribute specifying DTD internal subset to be written
 
-	dtd_internal_subset: STRING
+	dtd_internal_subset: detachable STRING
 			-- Text of internal subset to be written
 
-	write_doctype (a_type, a_system_id, a_public_id: STRING )
+	write_doctype (a_type: STRING; a_system_id, a_public_id: detachable STRING)
 			-- Write DOCTYPE.
 		do
 			if is_declaration_written then
@@ -89,9 +89,11 @@ feature {NONE} -- Implementation
 		require
 			internal_subset_not_void: dtd_internal_subset /= Void
 		do
-			output ("[%N  ")
-			output (dtd_internal_subset)
-			output ("%N]")
+			check precondition_internal_subset_not_void: attached dtd_internal_subset as l_dtd_internal_subset then
+				output ("[%N  ")
+				output (l_dtd_internal_subset)
+				output ("%N]")
+			end
 		end
 
 end

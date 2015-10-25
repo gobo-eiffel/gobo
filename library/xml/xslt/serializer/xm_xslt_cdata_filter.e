@@ -5,7 +5,7 @@ note
 		"Objects that output CDATA sections."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 	emitter: XM_XSLT_EMITTER
 			-- Emitter, used to obtain `output_encoder'
 
-	output_encoder: XM_XSLT_OUTPUT_ENCODER
+	output_encoder: detachable XM_XSLT_OUTPUT_ENCODER
 			-- Outputter encoder
 
 	element_fingerprints: DS_ARRAYED_STACK [INTEGER]
@@ -178,56 +178,58 @@ feature {NONE} -- Initialization
 			l_code, l_index, l_start_index: INTEGER
 			l_buffer: STRING
 		do
-			if not character_buffer.is_empty then
-				if element_fingerprints.is_empty then
-					l_is_cdata := False -- text is not part of any element
-				else
-					l_is_cdata := cdata_names.has (element_fingerprints.item)
-				end
-				if	l_is_cdata then
-					if normalizer /= Void then
-						l_buffer := normalizer.normalized_string (character_buffer)
+			check precondition_output_encoder_not_void: attached output_encoder as l_output_encoder then
+				if not character_buffer.is_empty then
+					if element_fingerprints.is_empty then
+						l_is_cdata := False -- text is not part of any element
 					else
-						l_buffer := character_buffer
+						l_is_cdata := cdata_names.has (element_fingerprints.item)
 					end
-					from
-						l_index := 1; l_start_index := l_index
-					until
-						l_index > l_buffer.count
-					loop
-						l_code := l_buffer.item_code (l_index)
-						if l_code = 0 then
-							-- discard NULL markers
-							flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
-							l_index := l_index + 1
-						elseif output_encoder.is_bad_character_code (l_code) then
-							flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
-
-							-- flush consecutive non-encodable characters before resuming the CDATA section
-
-							from
-								l_start_index := l_index
-							until
-								not output_encoder.is_bad_character_code (l_code)
-							loop
-								if l_code /= 0 then
-									-- discard NULL markers
-									base_receiver.notify_characters (l_buffer.substring (l_index, l_index), 0)
-								end
-								l_index := l_index + 1
-								l_code := l_buffer.item_code (l_index)
-							end
+					if	l_is_cdata then
+						if attached normalizer as l_normalizer then
+							l_buffer := l_normalizer.normalized_string (character_buffer)
 						else
-							l_index := l_index + 1
+							l_buffer := character_buffer
 						end
-					variant
-						l_buffer.count + 1 - l_index
+						from
+							l_index := 1; l_start_index := l_index
+						until
+							l_index > l_buffer.count
+						loop
+							l_code := l_buffer.item_code (l_index)
+							if l_code = 0 then
+								-- discard NULL markers
+								flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
+								l_index := l_index + 1
+							elseif l_output_encoder.is_bad_character_code (l_code) then
+								flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
+
+								-- flush consecutive non-encodable characters before resuming the CDATA section
+
+								from
+									l_start_index := l_index
+								until
+									not l_output_encoder.is_bad_character_code (l_code)
+								loop
+									if l_code /= 0 then
+										-- discard NULL markers
+										base_receiver.notify_characters (l_buffer.substring (l_index, l_index), 0)
+									end
+									l_index := l_index + 1
+									l_code := l_buffer.item_code (l_index)
+								end
+							else
+								l_index := l_index + 1
+							end
+						variant
+							l_buffer.count + 1 - l_index
+						end
+						flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
+					else
+						base_receiver.notify_characters (character_buffer, 0)
 					end
-					flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
-				else
-					base_receiver.notify_characters (character_buffer, 0)
+					create character_buffer.make (80)
 				end
-				create character_buffer.make (80)
 			end
 		ensure
 			buffer_is_empty: character_buffer.is_empty

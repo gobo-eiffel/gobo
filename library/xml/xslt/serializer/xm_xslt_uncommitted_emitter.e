@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Emitters that write (X)HTML or XML accoridng to the document element."
+		"Emitters that write (X)HTML or XML accoridng to the document element."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XSLT_UNCOMMITTED_EMITTER
 
@@ -77,7 +77,9 @@ feature -- Events
 			-- Notify end of event stream.
 		do
 			is_open := False
-			base_receiver.close
+			check attached base_receiver as l_base_receiver then
+				l_base_receiver.close
+			end
 		end
 
 	start_document
@@ -85,7 +87,11 @@ feature -- Events
 		do
 			is_document_started := True
 			if committed then
-				base_receiver.start_document
+				check
+					invariant_base_receiver: attached base_receiver as l_base_receiver
+				then
+					l_base_receiver.start_document
+				end
 			end
 		end
 
@@ -100,8 +106,10 @@ feature -- Events
 			end
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.end_document
 			end
-			base_receiver.end_document
 			is_document_started := False
 		ensure then
 			committed: committed
@@ -115,12 +123,18 @@ feature -- Events
 			if not committed then
 				check_pending_event_list
 				create a_pending_event.make (chars, "", Text_node, properties)
-				pending_event_list.force_last (a_pending_event)
+				check postcondition_of_check_pending_event_list: attached pending_event_list as l_pending_event_list then
+					l_pending_event_list.force_last (a_pending_event)
+				end
 				if not is_all_whitespace (chars) then
 					switch_to_xml
 				end
 			else
-				base_receiver.notify_characters (chars, properties)
+				check
+					invariant_base_receiver: attached base_receiver as l_base_receiver
+				then
+					l_base_receiver.notify_characters (chars, properties)
+				end
 			end
 			mark_as_written
 		end
@@ -133,9 +147,15 @@ feature -- Events
 			if not committed then
 				check_pending_event_list
 				create a_pending_event.make (a_data_string, a_name, Processing_instruction_node, properties)
-				pending_event_list.force_last (a_pending_event)
+				check postcondition_of_check_pending_event_list: attached pending_event_list as l_pending_event_list then
+					l_pending_event_list.force_last (a_pending_event)
+				end
 			else
-				base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
+				check
+					invariant_base_receiver: attached base_receiver as l_base_receiver
+				then
+					l_base_receiver.notify_processing_instruction (a_name, a_data_string, properties)
+				end
 			end
 			mark_as_written
 		end
@@ -148,9 +168,15 @@ feature -- Events
 			if not committed then
 				check_pending_event_list
 				create a_pending_event.make (a_content_string, "", Comment_node, properties)
-				pending_event_list.force_last (a_pending_event)
+				check postcondition_of_check_pending_event_list: attached pending_event_list as l_pending_event_list then
+					l_pending_event_list.force_last (a_pending_event)
+				end
 			else
-				base_receiver.notify_comment (a_content_string, properties)
+				check
+					invariant_base_receiver: attached base_receiver as l_base_receiver
+				then
+					l_base_receiver.notify_comment (a_content_string, properties)
+				end
 			end
 			mark_as_written
 		end
@@ -176,9 +202,11 @@ feature -- Events
 			end
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.start_element (a_name_code, a_type_code, properties)
+				mark_as_written
 			end
-			base_receiver.start_element (a_name_code, a_type_code, properties)
-			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -188,9 +216,11 @@ feature -- Events
 		do
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.notify_namespace (a_namespace_code, properties)
+				mark_as_written
 			end
-			base_receiver.notify_namespace (a_namespace_code, properties)
-			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -200,9 +230,11 @@ feature -- Events
 		do
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
+				mark_as_written
 			end
-			base_receiver.notify_attribute (a_name_code, a_type_code, a_value, properties)
-			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -212,9 +244,11 @@ feature -- Events
 		do
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.start_content
+				mark_as_written
 			end
-			base_receiver.start_content
-			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -224,9 +258,11 @@ feature -- Events
 		do
 			check
 				committed: committed
+				invariant_base_receiver: attached base_receiver as l_base_receiver
+			then
+				l_base_receiver.end_element
+				mark_as_written
 			end
-			base_receiver.end_element
-			mark_as_written
 		ensure then
 			committed: committed
 		end
@@ -238,7 +274,9 @@ feature -- Basic operations
 		do
 			is_no_declaration_on_close := True
 			if committed then
-				base_emitter.suppress_late_open
+				check invariant_base_emitter: attached base_emitter as l_base_emitter then
+					l_base_emitter.suppress_late_open
+				end
 			end
 		end
 
@@ -250,19 +288,19 @@ feature {NONE} -- Implementation
 	emitter_factory: XM_XSLT_EMITTER_FACTORY
 			-- Factory for producing `base_emitter' and `base_receiver'
 
-	base_receiver: XM_XPATH_RECEIVER
+	base_receiver: detachable XM_XPATH_RECEIVER
 			-- Emitter/indenter to which events are forwarded
 
-	base_emitter: XM_XSLT_EMITTER
+	base_emitter: detachable XM_XSLT_EMITTER
 			-- Emitter to which events are ultimately forwarded
 
 	outputter: XM_OUTPUT
 			-- Writer of encoded strings
 
-	character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+	character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 			-- Table of character maps
 
-	pending_event_list: DS_ARRAYED_LIST [XM_XSLT_PENDING_EVENT]
+	pending_event_list: detachable DS_ARRAYED_LIST [XM_XSLT_PENDING_EVENT]
 			-- Pending events
 
 	check_pending_event_list
@@ -332,33 +370,35 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_PENDING_EVENT]
 			l_event: XM_XSLT_PENDING_EVENT
 		do
-			committed := True
-			if is_no_declaration_on_close then
-				suppress_late_open
-			end
-			base_receiver.open
-			base_receiver.start_document
-			if pending_event_list /= Void then
-				from
-					l_cursor := pending_event_list.new_cursor l_cursor.start
-				until
-					l_cursor.after
-				loop
-					l_event := l_cursor.item
-					inspect
-						l_event.node_type
-					when Comment_node then
-						base_receiver.notify_comment (l_event.content, l_event.properties)
-					when Processing_instruction_node then
-						base_receiver.notify_processing_instruction (l_event.name, l_event.content, l_event.properties)
-					when Text_node then
-						base_receiver.notify_characters (l_event.content, l_event.properties)
-					end
-					l_cursor.forth
-				variant
-					pending_event_list.count + 1 - l_cursor.index
+			check precondition_base_receiver_not_void: attached base_receiver as l_base_receiver then
+				committed := True
+				if is_no_declaration_on_close then
+					suppress_late_open
 				end
-				pending_event_list := Void
+				l_base_receiver.open
+				l_base_receiver.start_document
+				if attached pending_event_list as l_pending_event_list then
+					from
+						l_cursor := l_pending_event_list.new_cursor l_cursor.start
+					until
+						l_cursor.after
+					loop
+						l_event := l_cursor.item
+						inspect
+							l_event.node_type
+						when Comment_node then
+							l_base_receiver.notify_comment (l_event.content, l_event.properties)
+						when Processing_instruction_node then
+							l_base_receiver.notify_processing_instruction (l_event.name, l_event.content, l_event.properties)
+						when Text_node then
+							l_base_receiver.notify_characters (l_event.content, l_event.properties)
+						end
+						l_cursor.forth
+					variant
+						l_pending_event_list.count + 1 - l_cursor.index
+					end
+					pending_event_list := Void
+				end
 			end
 		ensure
 			committed: committed

@@ -5,7 +5,7 @@ note
 		"Iterators over groups of nodes. `item' Always points to first node in group"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,7 +60,7 @@ feature -- Access
 			-- The position of the current item;
 			-- This will be zero after creation of the iterator
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Last error
 
 feature -- Conversion

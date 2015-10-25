@@ -5,7 +5,7 @@ note
 		"Objects that implement gexslt:collation to define collations"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,10 +40,12 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
+			l_collation_name: like collation_name
+			l_collator: like collator
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -51,24 +53,30 @@ feature -- Element change
 					a_name_code := a_cursor.item
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Name_attribute) then
-						collation_name := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (collation_name);STRING_.right_adjust (collation_name);
+						l_collation_name := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (l_collation_name)
+						STRING_.right_adjust (l_collation_name)
+						collation_name := l_collation_name
 					else
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
-			if collation_name = Void then
+			l_collation_name := collation_name
+			if l_collation_name = Void then
 				report_absence ("name")
 			else
 
 				-- Register the collation early, so it's available when optimizing XPath expressions.
 
-				create collator
-				principal_stylesheet.declare_collation (collator, collation_name)
+				create l_collator
+				collator := l_collator
+				check attached principal_stylesheet as l_principal_stylesheet then
+					l_principal_stylesheet.declare_collation (l_collator, l_collation_name)
+				end
 			end
 			attributes_prepared := True
 		end
@@ -84,15 +92,21 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
-			principal_stylesheet.declare_collation (collator, collation_name)
+			check
+				attached principal_stylesheet as l_principal_stylesheet
+				attached collator as l_collator
+				attached collation_name as l_collation_name
+			then
+				l_principal_stylesheet.declare_collation (l_collator, l_collation_name)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	collation_name: STRING
+	collation_name: detachable STRING
 			-- Name of collation
 
-	collator: ST_COLLATOR
+	collator: detachable ST_COLLATOR
 			-- Collator to be registered
 
 end

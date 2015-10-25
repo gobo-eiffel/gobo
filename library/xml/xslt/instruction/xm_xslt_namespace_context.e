@@ -5,7 +5,7 @@ note
 		"Objects that represent a list of namespaces"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature -- Access
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- List of namespace codes
 
-	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): STRING
+	uri_for_defaulted_prefix (a_prefix: STRING; use_default_namespace: BOOLEAN): detachable STRING
 			-- Namespace URI corresponding to a given prefix
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -81,14 +81,18 @@ feature -- Access
 			-- Fingerprint of `a_qname'
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_uri: STRING
+			a_uri: detachable STRING
 		do
 			create a_parser.make (a_qname)
-			a_uri := uri_for_defaulted_prefix (a_parser.optional_prefix, use_default_namespace)
-			if a_uri = Void then
-				Result := -2
-			else
-				Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+			check attached a_parser.optional_prefix as l_optional_prefix then
+				a_uri := uri_for_defaulted_prefix (l_optional_prefix, use_default_namespace)
+				if a_uri = Void then
+					Result := -2
+				else
+					check attached a_parser.local_name as l_local_name then
+						Result := shared_name_pool.fingerprint (a_uri, l_local_name)
+					end
+				end
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Objects that represent xsl:include or xsl:import elements in the stylesheet."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,19 +21,18 @@ inherit
 
 feature -- Access
 
-	href: STRING
+	href: detachable STRING
 			-- Value of href mandatory attribute
 
-	included_document: XM_XPATH_TREE_DOCUMENT
+	included_document: detachable XM_XPATH_TREE_DOCUMENT
 			-- Document node of loaded module
 
-	included_stylesheet (l_importer: XM_XSLT_STYLESHEET; a_precedence: INTEGER): XM_XSLT_STYLESHEET
+	included_stylesheet (l_importer: XM_XSLT_STYLESHEET; a_precedence: INTEGER): detachable XM_XSLT_STYLESHEET
 			-- Stylesheet included/imported from `href'
 		require
 			importer_not_void: l_importer /= Void
 			href_not_void: href /= Void
 		local
-			l_stylesheet: XM_XSLT_STYLESHEET
 			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			l_configuration: XM_XSLT_CONFIGURATION
 			l_source: XM_XSLT_URI_SOURCE
@@ -42,9 +41,8 @@ feature -- Access
 			l_node_factory: XM_XSLT_NODE_FACTORY
 			l_message, l_error_code, l_reference: STRING
 			l_error: XM_XPATH_ERROR_VALUE
-			l_outermost_element: XM_XPATH_TREE_ELEMENT
-			l_lre: XM_XSLT_LITERAL_RESULT_ELEMENT
-			l_document: XM_XPATH_TREE_DOCUMENT
+			l_outermost_element: detachable XM_XPATH_TREE_ELEMENT
+			l_document: detachable XM_XPATH_TREE_DOCUMENT
 		do
 			check_empty
 			if is_import then
@@ -54,71 +52,93 @@ feature -- Access
 			end
 			check_top_level (l_error_code)
 			if not any_compile_errors then
-				l_stylesheet ?= parent_node
 				check
-					parent_is_stylesheet: l_stylesheet /= Void
+					parent_is_stylesheet: attached {XM_XSLT_STYLESHEET} parent_node as l_stylesheet
 					-- check_top_level ensured this
-				end
-				l_stylesheet_compiler := stylesheet_compiler
-				l_configuration := l_stylesheet_compiler.configuration
-				l_uri_resolver := l_configuration.uri_resolver
-				create a_base_uri.make (base_uri)
-				create l_uri.make_resolve (a_base_uri, href)
-				l_uri_resolver.resolve_uri (l_uri.full_reference)
-				if l_uri_resolver.has_uri_reference_error then
-					l_message := STRING_.concat (l_uri_resolver.last_uri_reference_error, ": URI is ")
-					l_message := STRING_.appended_string (l_message, l_uri.full_reference)
-					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0165", Static_error)
-					report_compile_error (l_error)
-				else
-					l_reference := l_uri_resolver.last_system_id.full_reference
-					create l_source.make (l_reference)
-					check_recursion (l_reference, l_stylesheet)
-					if not any_compile_errors then
-						create l_node_factory.make (l_configuration.error_listener, l_configuration)
-						l_configuration.error_listener.set_next_error_code (Xpath_errors_uri, "XTSE0165")
-						l_stylesheet_compiler.load_stylesheet_module (l_source, l_uri_resolver.last_uri_reference_stream, l_uri_resolver.last_system_id, l_error_code)
-						l_configuration.error_listener.clear_next_error_code_change
-						if l_stylesheet_compiler.load_stylesheet_module_failed then
-							principal_stylesheet.set_compile_errors
-						else
-							included_document := l_stylesheet_compiler.last_loaded_module
-
-							-- allow "Literal Result Element as Stylesheet" syntax
-
-							l_outermost_element := included_document.document_element
-							l_lre ?= l_outermost_element
-							if l_lre /= Void then
-								l_document := l_lre.constructed_stylesheet (stylesheet_compiler)
-								if l_document = Void then
-									l_outermost_element := Void
-								else
-									l_outermost_element := l_document.document_element
-								end
+				then
+					check attached stylesheet_compiler as l_stylesheet_compiler2 then
+						l_stylesheet_compiler := l_stylesheet_compiler2
+					end
+					l_configuration := l_stylesheet_compiler.configuration
+					l_uri_resolver := l_configuration.uri_resolver
+					check attached base_uri as l_base_uri then
+						create a_base_uri.make (l_base_uri)
+					end
+					check precondition_href_not_void: attached href as l_href then
+						create l_uri.make_resolve (a_base_uri, l_href)
+					end
+					l_uri_resolver.resolve_uri (l_uri.full_reference)
+					if attached l_uri_resolver.last_uri_reference_error as l_last_uri_reference_error then
+						check has_uri_reference_error: l_uri_resolver.has_uri_reference_error end
+						l_message := STRING_.concat (l_last_uri_reference_error, ": URI is ")
+						l_message := STRING_.appended_string (l_message, l_uri.full_reference)
+						create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0165", Static_error)
+						report_compile_error (l_error)
+					else
+						check attached l_uri_resolver.last_system_id as l_last_system_id then
+							l_reference := l_last_system_id.full_reference
+						end
+						create l_source.make (l_reference)
+						check_recursion (l_reference, l_stylesheet)
+						if not any_compile_errors then
+							create l_node_factory.make (l_configuration.error_listener, l_configuration)
+							l_configuration.error_listener.set_next_error_code (Xpath_errors_uri, "XTSE0165")
+							check
+								attached l_uri_resolver.last_uri_reference_stream as l_last_uri_reference_stream
+								attached l_uri_resolver.last_system_id as l_last_system_id
+							then
+								l_stylesheet_compiler.load_stylesheet_module (l_source, l_last_uri_reference_stream, l_last_system_id, l_error_code)
 							end
-							Result ?= l_outermost_element
-							if Result = Void then
-								l_message := STRING_.concat ("Included document ", href)
-								l_message := STRING_.appended_string (l_message, " is not (possibly recursively) a stylesheet")
-								create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0165", Static_error)
-								report_compile_error (l_error)
+							l_configuration.error_listener.clear_next_error_code_change
+							if l_stylesheet_compiler.load_stylesheet_module_failed then
+								check attached principal_stylesheet as l_principal_stylesheet then
+									l_principal_stylesheet.set_compile_errors
+								end
 							else
-								if Result.validation_error /= Void then
-									if reporting_circumstances = Report_always then
-										Result.report_compile_error (Result.validation_error)
-									elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
-										Result.report_compile_error (Result.validation_error)
+								check attached l_stylesheet_compiler.last_loaded_module as l_last_loaded_module then
+									included_document := l_last_loaded_module
+
+									-- allow "Literal Result Element as Stylesheet" syntax
+
+									l_outermost_element := l_last_loaded_module.document_element
+								end
+								if attached {XM_XSLT_LITERAL_RESULT_ELEMENT} l_outermost_element as l_lre then
+									check attached stylesheet_compiler as l_stylesheet_compiler2 then
+										l_document := l_lre.constructed_stylesheet (l_stylesheet_compiler2)
+									end
+									if l_document = Void then
+										l_outermost_element := Void
+									else
+										l_outermost_element := l_document.document_element
 									end
 								end
-								Result.set_import_precedence (a_precedence)
-								Result.set_importer (l_importer)
-								Result.splice_includes
---								set_input_type_annotations
---								if not any_compile_errors then
---									Result.set_input_type_annotations
---								end
---								if not any_compile_errors then
---								l_stylesheet.merge_input_type_annotations (Result.input_type_annotations)
+								if not attached {XM_XSLT_STYLESHEET} l_outermost_element as l_result then
+									check precondition_href_not_void: attached href as l_href then
+										l_message := STRING_.concat ("Included document ", l_href)
+									end
+									l_message := STRING_.appended_string (l_message, " is not (possibly recursively) a stylesheet")
+									create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0165", Static_error)
+									report_compile_error (l_error)
+								else
+									Result := l_result
+									if attached Result.validation_error as l_validation_error then
+										if reporting_circumstances = Report_always then
+											Result.report_compile_error (l_validation_error)
+										elseif reporting_circumstances = Report_unless_forwards_comptible and then not Result.is_forwards_compatible_processing_enabled then
+											Result.report_compile_error (l_validation_error)
+										end
+									end
+									Result.set_import_precedence (a_precedence)
+									Result.set_importer (l_importer)
+									Result.splice_includes
+--									set_input_type_annotations
+--									if not any_compile_errors then
+--										Result.set_input_type_annotations
+--									end
+--									if not any_compile_errors then
+--										l_stylesheet.merge_input_type_annotations (Result.input_type_annotations)
+--									end
+								end
 							end
 						end
 					end
@@ -152,10 +172,11 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 			l_error: XM_XPATH_ERROR_VALUE
+			l_href: like href
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					any_compile_errors or a_cursor.after
@@ -163,22 +184,23 @@ feature -- Element change
 					a_name_code := a_cursor.item
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Href_attribute) then
-						href := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (href)
-						STRING_.right_adjust (href)
+						l_href := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (l_href)
+						STRING_.right_adjust (l_href)
+						href := l_href
 					else
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if any_compile_errors then
 				-- nothing more to do
-			elseif href = Void then
+			elseif not attached href as l_href2 then
 				report_absence ("href")
-			elseif uri_encoding.has_excluded_characters (href) then
+			elseif uri_encoding.has_excluded_characters (l_href2) then
 				create l_error.make_from_string ("'href' attribute contains invalid characters", Xpath_errors_uri, "XTSE0165", Static_error)
 				report_compile_error (l_error)
 			end
@@ -234,7 +256,7 @@ feature {NONE} -- Implementation
 			a_reference_not_void: a_reference /= Void
 			a_stylesheet_not_void: a_stylesheet /= Void
 		local
-			l_ancestor: XM_XSLT_STYLESHEET
+			l_ancestor: detachable XM_XSLT_STYLESHEET
 			l_message, l_error_code, l_system_id, l_ancestor_id: STRING
 		do
 			if a_reference.has ('#') then

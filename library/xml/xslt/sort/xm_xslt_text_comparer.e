@@ -5,7 +5,7 @@ note
 		"Objects that compare text strings"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,21 +50,23 @@ feature -- Comparison
 		local
 			s1, s2: STRING
 		do
-			if collator /= Void then
+			if attached collator as l_collator then
 				s1 := u.string_value
 				s2 := v.string_value
-				Result := collator.less_than (s1, s2)
+				Result := l_collator.less_than (s1, s2)
 			else
-				Result := comparer.less_than (u, v)
+				check attached comparer as l_comparer then
+					Result := l_comparer.less_than (u, v)
+				end
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	collator: ST_COLLATOR
+	collator: detachable ST_COLLATOR
 			-- Collator used to perform string comparisons
 
-	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
+	comparer: detachable KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Comparator used to perform string comparisons
 
 invariant

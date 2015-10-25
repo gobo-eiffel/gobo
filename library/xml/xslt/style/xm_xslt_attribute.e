@@ -5,7 +5,7 @@ note
 		"xsl:attribute element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2012, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,14 +38,14 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute, a_namespace_attribute, a_type_attribute: STRING
-			a_select_attribute, a_separator_attribute, a_validation_attribute: STRING
+			an_expanded_name, a_name_attribute, a_namespace_attribute, a_type_attribute: detachable STRING
+			a_select_attribute, a_separator_attribute, a_validation_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			validation_action := Validation_strip
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -69,49 +69,67 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute = Void then
 				report_absence ("name")
 			else
-				generate_attribute_value_template (a_name_attribute, static_context)
-				attribute_name := last_generated_expression
-				if attribute_name.is_error then
-					report_compile_error (attribute_name.error_value)
-				else
-					if attribute_name.is_string_value then
-						if not is_qname (attribute_name.as_string_value.string_value) then
-							create an_error.make_from_string ("Attribute name is not a valid QName",
-																		 Xpath_errors_uri, "XTDE0850", Static_error)
-							report_compile_error (an_error)
+				check precondition_static_context_not_void: attached static_context as l_static_context then
+					generate_attribute_value_template (a_name_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_attribute_name then
+					attribute_name := l_new_attribute_name
+					if attached l_new_attribute_name.error_value as l_error_value then
+						check is_error: l_new_attribute_name.is_error end
+						report_compile_error (l_error_value)
+					else
+						if l_new_attribute_name.is_string_value then
+							if not is_qname (l_new_attribute_name.as_string_value.string_value) then
+								create an_error.make_from_string ("Attribute name is not a valid QName",
+																			 Xpath_errors_uri, "XTDE0850", Static_error)
+								report_compile_error (an_error)
 
-							-- Prevent a duplicate error message.
+								-- Prevent a duplicate error message.
 
-							create {XM_XPATH_STRING_VALUE} attribute_name.make ("gexslt-error-attribute")
+								create {XM_XPATH_STRING_VALUE} attribute_name.make ("gexslt-error-attribute")
+							end
 						end
 					end
 				end
 			end
 			if a_namespace_attribute /= Void then
-				generate_attribute_value_template (a_namespace_attribute, static_context)
-				namespace := last_generated_expression
-				if namespace.is_error then
-					report_compile_error (namespace.error_value)
+				check precondition_static_context_not_void: attached static_context as l_static_context then
+					generate_attribute_value_template (a_namespace_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_namespace then
+					namespace := l_new_namespace
+					if attached l_new_namespace.error_value as l_error_value then
+						check is_error: l_new_namespace.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_select_expression then
+					select_expression := l_select_expression
+					if attached l_select_expression.error_value as l_error_value then
+						check is_error: l_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_separator_attribute /= Void then
-				generate_attribute_value_template (a_separator_attribute, static_context)
-				separator_expression := last_generated_expression
-				if separator_expression.is_error then
-					report_compile_error (separator_expression.error_value)
+				check precondition_static_context_not_void: attached static_context as l_static_context then
+					generate_attribute_value_template (a_separator_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_separator_expression then
+					separator_expression := l_new_separator_expression
+					if attached l_new_separator_expression.error_value as l_error_value then
+						check is_error: l_new_separator_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			else
 				if a_select_attribute = Void then
@@ -127,27 +145,29 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if not attached {XM_XSLT_ATTRIBUTE_SET} parent then
 				check_within_template
 			end
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "name", attribute_name)
+			check attached attribute_name as l_attribute_name then
+				type_check_expression (l_replacement, "name", l_attribute_name)
+			end
 			attribute_name := l_replacement.item
-			if namespace /= Void then
+			if attached namespace as l_namespace then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "namespace", namespace)
+				type_check_expression (l_replacement, "namespace", l_namespace)
 				namespace := l_replacement.item
 			end
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "select", select_expression)
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 			end
-			if separator_expression /= Void then
+			if attached separator_expression as l_separator_expression then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "separator", separator_expression)
+				type_check_expression (l_replacement, "separator", l_separator_expression)
 				separator_expression := l_replacement.item
 			end
 			Precursor
@@ -157,48 +177,66 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_name_code: INTEGER
-			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
+			a_namespace_context: detachable XM_XSLT_NAMESPACE_CONTEXT
 			an_attribute: XM_XSLT_COMPILED_ATTRIBUTE
 			l_uri: UT_URI
 			l_error: XM_XPATH_ERROR_VALUE
+			l_namespace_uri: like namespace_uri
+			l_qname_prefix: like qname_prefix
 		do
 			last_generated_expression := Void
 
 			-- Deal specially with the case where the attribute name is known statically.
 
-			if attribute_name.is_string_value then
-				set_qname_parts (attribute_name.as_string_value)
-				if not any_compile_errors and then namespace_uri /= Void then
-					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
-					else
-						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-						a_name_code := shared_name_pool.last_name_code
-					end
-					if namespace = Void then
-						compile_fixed_attribute (an_executable, a_name_code)
-					elseif namespace.is_string_value then
-						namespace_uri := namespace.as_string_value.string_value
-						if Url_encoding.has_excluded_characters (namespace_uri) or namespace_uri.occurrences ('#') > 1 then
-							create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
-							report_compile_error (l_error)
-						elseif namespace_uri.count > 0 then
-							create l_uri.make (namespace_uri)
-							-- TODO: - need validation checking in UT_URI
-						end
-						if not any_compile_errors then
-							if namespace_uri.count = 0 then
-								qname_prefix := ""
-							elseif qname_prefix.count = 0 then
-								choose_arbitrary_qname_prefix
-							end
-							if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-								a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+			check attached attribute_name as l_attribute_name then
+				if l_attribute_name.is_string_value then
+					set_qname_parts (l_attribute_name.as_string_value)
+					l_namespace_uri := namespace_uri
+					if not any_compile_errors and then l_namespace_uri /= Void then
+						l_qname_prefix := qname_prefix
+						check
+							l_qname_prefix /= Void
+							attached local_name as l_local_name
+						then
+							if shared_name_pool.is_name_code_allocated (l_qname_prefix, l_namespace_uri, l_local_name) then
+								a_name_code := shared_name_pool.name_code (l_qname_prefix, l_namespace_uri, l_local_name)
 							else
-								shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
+								shared_name_pool.allocate_name (l_qname_prefix, l_namespace_uri, l_local_name)
 								a_name_code := shared_name_pool.last_name_code
 							end
+						end
+						if not attached namespace as l_namespace then
 							compile_fixed_attribute (an_executable, a_name_code)
+						elseif l_namespace.is_string_value then
+							l_namespace_uri := l_namespace.as_string_value.string_value
+							namespace_uri := l_namespace_uri
+							if Url_encoding.has_excluded_characters (l_namespace_uri) or l_namespace_uri.occurrences ('#') > 1 then
+								create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
+								report_compile_error (l_error)
+							elseif l_namespace_uri.count > 0 then
+								create l_uri.make (l_namespace_uri)
+								-- TODO: - need validation checking in UT_URI
+							end
+							if not any_compile_errors then
+								if l_namespace_uri.count = 0 then
+									l_qname_prefix := ""
+									qname_prefix := l_qname_prefix
+								elseif l_qname_prefix.count = 0 then
+									choose_arbitrary_qname_prefix
+									check postcondition_of_choose_arbitrary_qname_prefix: attached qname_prefix as l_qname_prefix2 then
+										l_qname_prefix := l_qname_prefix2
+									end
+								end
+								check attached local_name as l_local_name then
+									if shared_name_pool.is_name_code_allocated (l_qname_prefix, l_namespace_uri, l_local_name) then
+										a_name_code := shared_name_pool.name_code (l_qname_prefix, l_namespace_uri, l_local_name)
+									else
+										shared_name_pool.allocate_name (l_qname_prefix, l_namespace_uri, l_local_name)
+										a_name_code := shared_name_pool.last_name_code
+									end
+								end
+								compile_fixed_attribute (an_executable, a_name_code)
+							end
 						end
 					end
 				end
@@ -213,7 +251,9 @@ feature -- Element change
 					a_namespace_context := namespace_context
 				end
 
-				create an_attribute.make (an_executable, attribute_name, namespace, a_namespace_context, validation_action, Void, -1)
+				check attached attribute_name as l_attribute_name then
+					create an_attribute.make (an_executable, l_attribute_name, namespace, a_namespace_context, validation_action, Void, -1)
+				end
 				compile_content (an_executable, an_attribute, separator_expression)
 				last_generated_expression := an_attribute
 			end
@@ -223,19 +263,19 @@ feature {NONE} -- Implementation
 
 	validation_action: INTEGER
 
-	attribute_name: XM_XPATH_EXPRESSION
+	attribute_name: detachable XM_XPATH_EXPRESSION
 			-- Value of name attribute
 
-	namespace: XM_XPATH_EXPRESSION
+	namespace: detachable XM_XPATH_EXPRESSION
 			-- Value of namespace attribute
 
-	separator_expression: XM_XPATH_EXPRESSION
+	separator_expression: detachable XM_XPATH_EXPRESSION
 			-- Value of separator attribute
 
-	qname_prefix, namespace_uri, local_name, qname: STRING
+	qname_prefix, namespace_uri, local_name, qname: detachable STRING
 			-- Used for communicating with `compile'
 
-	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING)
+	prepare_attributes_2 (a_validation_attribute, a_type_attribute: detachable STRING)
 			-- Continue prparing attributes.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -273,38 +313,48 @@ feature {NONE} -- Implementation
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
 			an_error: XM_XPATH_ERROR_VALUE
+			l_qname: like qname
+			l_qname_prefix: like qname_prefix
 		do
 			namespace_uri := ""
 			qname_prefix := Void
 			local_name := Void
-			qname := a_string_value.string_value
-			STRING_.left_adjust (qname)
-			STRING_.right_adjust (qname)
-			if qname.count = 0 then
+			l_qname := a_string_value.string_value
+			STRING_.left_adjust (l_qname)
+			STRING_.right_adjust (l_qname)
+			qname := l_qname
+			if l_qname.count = 0 then
 				create an_error.make_from_string ("Attribute name must not be zero length", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
-			elseif STRING_.same_string (qname, "xmlns") and namespace = Void then
+			elseif STRING_.same_string (l_qname, "xmlns") and namespace = Void then
 				create an_error.make_from_string ("Invalid attribute name: xmlns", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			else
-				create a_parser.make (qname)
+				create a_parser.make (l_qname)
 				if a_parser.is_valid then
-					local_name := a_parser.local_name
-					qname_prefix := a_parser.optional_prefix
-				else
-					create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), Xpath_errors_uri, "XTSE0020", Static_error)
-					report_compile_error (an_error)
-				end
-				if STRING_.same_string (qname_prefix, "xmlns") then
-					if namespace = Void then
-						create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)
-					else
-						qname_prefix := "" -- We ignore it anyway when the namespace attribute is present
+					l_qname_prefix := a_parser.optional_prefix
+					check
+						a_parser_valid: attached a_parser.local_name as l_local_name
+						a_parser_valid_2: l_qname_prefix /= Void
+					then
+						local_name := l_local_name
+						qname_prefix := l_qname_prefix
+						if STRING_.same_string (l_qname_prefix, "xmlns") then
+							if namespace = Void then
+								create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", l_qname), Xpath_errors_uri, "XTSE0020", Static_error)
+								report_compile_error (an_error)
+							else
+								l_qname_prefix := "" -- We ignore it anyway when the namespace attribute is present
+								qname_prefix := l_qname_prefix
+							end
+						end
+						if namespace = Void then
+							namespace_uri := uri_for_prefix (l_qname_prefix, False)
+						end
 					end
-				end
-				if namespace = Void then
-					namespace_uri := uri_for_prefix (qname_prefix, False)
+				else
+					create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", l_qname), Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (an_error)
 				end
 			end
 		ensure
@@ -327,35 +377,37 @@ feature {NONE} -- Implementation
 	choose_arbitrary_qname_prefix
 			-- Choose an arbitrary XML prefix.
 		require
-			namespace_uri_not_void: namespace_uri /= Void
-			namespace_uri_not_empty: not namespace_uri.is_empty
-			qname_prefix_not_void: qname_prefix /= Void
-			empty_prefix: qname_prefix.is_empty
+			namespace_uri_not_void: attached namespace_uri as l_namespace_uri
+			namespace_uri_not_empty: not l_namespace_uri.is_empty
+			qname_prefix_not_void: attached qname_prefix as l_qname_prefix
+			empty_prefix: l_qname_prefix.is_empty
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			found: BOOLEAN
 		do
-			-- First see if we already have a binding in the stylesheet
-			from l_cursor := namespace_codes_in_scope.new_cursor; l_cursor.start until l_cursor.after loop
-				if STRING_.same_string (shared_name_pool.uri_from_namespace_code (l_cursor.item), namespace_uri) then
-					qname_prefix := shared_name_pool.prefix_from_namespace_code (l_cursor.item)
-					found := True
-					l_cursor.go_after
-				else
-					l_cursor.forth
+			check precondition_namespace_uri_not_void: attached namespace_uri as l_namespace_uri then
+				-- First see if we already have a binding in the stylesheet
+				from l_cursor := namespace_codes_in_scope.new_cursor; l_cursor.start until l_cursor.after loop
+					if STRING_.same_string (shared_name_pool.uri_from_namespace_code (l_cursor.item), l_namespace_uri) then
+						qname_prefix := shared_name_pool.prefix_from_namespace_code (l_cursor.item)
+						found := True
+						l_cursor.go_after
+					else
+						l_cursor.forth
+					end
+				end
+				-- Maybe the namespace is already known to the name pool
+				if not found then
+					qname_prefix := shared_name_pool.suggested_prefix_for_uri (l_namespace_uri)
+				end
+				if not attached qname_prefix as l_qname_prefix or else l_qname_prefix.is_empty then
+					-- the following arbitrary prefix will be change if it clashes
+					qname_prefix := "ns0"
 				end
 			end
-			-- Maybe the namespace is already known to the name pool
-			if not found then
-				qname_prefix := shared_name_pool.suggested_prefix_for_uri (namespace_uri)
-			end
-			if qname_prefix = Void or else qname_prefix.is_empty then
-				-- the following arbitrary prefix will be change if it clashes
-				qname_prefix := "ns0"
-			end
 		ensure
-			chosen_prefix_not_void: qname_prefix /= Void
-			chosen_prefix_empty: not qname_prefix.is_empty
+			chosen_prefix_not_void: attached qname_prefix as l_qname_prefix
+			chosen_prefix_empty: not l_qname_prefix.is_empty
 		end
 
 end

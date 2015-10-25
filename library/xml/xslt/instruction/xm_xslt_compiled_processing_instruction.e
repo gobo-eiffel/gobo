@@ -5,7 +5,7 @@ note
 		"Compiled xsl:processing-instructions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,9 @@ feature -- Access
 		do
 			create Result.make (2)
 			Result.set_equality_tester (expression_tester)
-			if select_expression /= Void then Result.put_last (select_expression) end
+			if attached select_expression as l_select_expression then
+				Result.put_last (l_select_expression)
+			end
 			Result.put_last (name)
 		end
 
@@ -91,72 +93,90 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_required_type: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			name.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_name (l_replacement.item)
-			if name.is_error then
-				set_replacement (a_replacement, name)
-			else
-				create l_required_type.make_single_string
-				create l_role.make (Instruction_role, "processing-instruction:name", 1, Xpath_errors_uri, "XPTY0004")
-				create l_type_checker
-				l_type_checker.static_type_check (a_context, name, l_required_type, False, l_role)
-				if l_type_checker.is_static_type_check_error then
-				 set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_name (l_replacement_item)
+				if name.is_error then
+					set_replacement (a_replacement, name)
 				else
-					set_name (l_type_checker.checked_expression)
+					create l_required_type.make_single_string
+					create l_role.make (Instruction_role, "processing-instruction:name", 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					l_type_checker.static_type_check (a_context, name, l_required_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+						end
+					else
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+							set_name (l_checked_expression)
+						end
+					end
 				end
 			end
 		end
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			name.simplify (l_replacement)
-			set_name (l_replacement.item)
-			if name.is_error then
-				set_replacement (a_replacement, name)
-			else
-				Precursor (a_replacement)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_name (l_replacement_item)
+				if name.is_error then
+					set_replacement (a_replacement, name)
+				else
+					Precursor (a_replacement)
+				end
 			end
 		end
 
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			name.promote (l_replacement, a_offer)
-			set_name (l_replacement.item)
-			Precursor (a_offer)
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				set_name (l_replacement_item)
+				Precursor (a_offer)
+			end
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_name (a_context)
-			if not is_error then
+			if not attached error_value as l_error_value then
+				check not_is_error: not is_error end
 				expand_children (a_context)
 				if not is_error then
-					check_content (last_string_value, a_context)
-					a_context.current_receiver.notify_processing_instruction (evaluated_name, last_string_value, 0)
+					check postcondition_of_expand_children: attached last_string_value as l_last_string_value then
+						check_content (l_last_string_value, a_context)
+						check
+							postcondition_of_evaluate_name: attached evaluated_name as l_evaluated_name
+							attached a_context.current_receiver as l_current_receiver
+						then
+							l_current_receiver.notify_processing_instruction (l_evaluated_name, l_last_string_value, 0)
+						end
+					end
 				end
 			else
-				a_context.report_fatal_error (error_value)
+				a_context.report_fatal_error (l_error_value)
 			end
 		end
 
@@ -173,7 +193,7 @@ feature {NONE} -- Implementation
 	name: XM_XPATH_EXPRESSION
 			-- Name
 
-	evaluated_name: STRING
+	evaluated_name: detachable STRING
 			-- Result of calling `evaluate_name'
 
 	set_name (a_name: XM_XPATH_EXPRESSION)
@@ -200,15 +220,18 @@ feature {NONE} -- Implementation
 			-- Evaluate name code.
 		do
 			evaluate_name (a_context)
-			if not is_error then
-				if not shared_name_pool.is_name_code_allocated ("", "", evaluated_name) then
-					shared_name_pool.allocate_name ("", "", evaluated_name)
-					last_name_code := shared_name_pool.last_name_code
-				else
-					last_name_code := shared_name_pool.name_code ("", "", evaluated_name)
+			if not attached error_value as l_error_value then
+				check not_is_error: not is_error end
+				check postcondition_of_evaluate_name: attached evaluated_name as l_evaluated_name then
+					if not shared_name_pool.is_name_code_allocated ("", "", l_evaluated_name) then
+						shared_name_pool.allocate_name ("", "", l_evaluated_name)
+						last_name_code := shared_name_pool.last_name_code
+					else
+						last_name_code := shared_name_pool.name_code ("", "", l_evaluated_name)
+					end
 				end
 			else
-				a_context.report_fatal_error (error_value)
+				a_context.report_fatal_error (l_error_value)
 			end
 		end
 
@@ -219,17 +242,22 @@ feature {NONE} -- Implementation
 			no_error: not is_error
 		local
 			l_message: STRING
+			l_evaluated_name: like evaluated_name
 		do
 			name.evaluate_as_string (a_context)
-			if name.last_evaluated_string.is_error then
-				set_last_error (name.last_evaluated_string.error_value)
-			else
-				evaluated_name := name.last_evaluated_string.string_value
-				if not is_ncname (evaluated_name) then
-					l_message := STRING_.concat ("Invalid processing instruction name ", evaluated_name)
-					set_last_error_from_string (l_message, Xpath_errors_uri, "XTDE0890", Dynamic_error)
-				elseif STRING_.same_case_insensitive (Xml_prefix, evaluated_name) then
-					set_last_error_from_string ("Processing instructions cannot be named 'xml' in any combination of upper/lower case", Xpath_errors_uri, "XTDE0890", Dynamic_error)
+			check postcondition_of_evaluate_as_string: attached name.last_evaluated_string as l_last_evaluated_string then
+				if attached l_last_evaluated_string.error_value as l_error_value then
+					check is_error: l_last_evaluated_string.is_error end
+					set_last_error (l_error_value)
+				else
+					l_evaluated_name := l_last_evaluated_string.string_value
+					evaluated_name := l_evaluated_name
+					if not is_ncname (l_evaluated_name) then
+						l_message := STRING_.concat ("Invalid processing instruction name ", l_evaluated_name)
+						set_last_error_from_string (l_message, Xpath_errors_uri, "XTDE0890", Dynamic_error)
+					elseif STRING_.same_case_insensitive (Xml_prefix, l_evaluated_name) then
+						set_last_error_from_string ("Processing instructions cannot be named 'xml' in any combination of upper/lower case", Xpath_errors_uri, "XTDE0890", Dynamic_error)
+					end
 				end
 			end
 		ensure

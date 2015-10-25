@@ -5,7 +5,7 @@ note
 		"xsl:comment element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,11 +38,11 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute: STRING
+			an_expanded_name, a_select_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -58,14 +58,17 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+					select_expression := l_new_select_expression
+					if attached l_new_select_expression.error_value as l_error_value then
+						check is_error: l_new_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			attributes_prepared := True
@@ -74,11 +77,11 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "select", select_expression)
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 			end
 			check_within_template

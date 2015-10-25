@@ -5,7 +5,7 @@ note
 		"Objects that parse XSLT patterns and XPath sequence types"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,9 @@ feature -- Status report
 		require
 			no_parse_error: not is_parse_error
 		do
-			Result := internal_last_parsed_pattern
+			check attached internal_last_parsed_pattern as l_internal_last_parsed_pattern then
+				Result := l_internal_last_parsed_pattern
+			end
 		ensure
 			pattern_not_void: Result /= Void
 		end
@@ -52,7 +54,9 @@ feature -- Status report
 		require
 			no_parse_error: not is_parse_error
 		do
-			Result := internal_last_parsed_sequence
+			check attached internal_last_parsed_sequence as l_internal_last_parsed_sequence then
+				Result := l_internal_last_parsed_sequence
+			end
 		ensure
 			parsed_expression_not_void: Result /= Void
 		end
@@ -67,31 +71,37 @@ feature -- Parsers
 			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
+			l_environment: like environment
+			l_tokenizer: like tokenizer
 		do
 			debug ("XSLT pattern parsing")
 				std.error.put_string ("Parsing pattern ")
 				std.error.put_string (a_pattern_text)
 				std.error.put_new_line
 			end
-			environment := a_context
-			function_library := environment.available_functions
-			create tokenizer.make
-			tokenizer.tokenize (a_pattern_text, 1, -1, a_line_number)
+			l_environment := a_context
+			environment := l_environment
+			function_library := l_environment.available_functions
+			create l_tokenizer.make
+			tokenizer := l_tokenizer
+			l_tokenizer.tokenize (a_pattern_text, 1, -1, a_line_number)
 			is_parse_error := False
 			parse_union_pattern
 
-			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-			elseif tokenizer.last_token /= Eof_token then
+			if l_tokenizer.is_lexical_error then
+				report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+			elseif l_tokenizer.last_token /= Eof_token then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of pattern")
 				report_parse_error (s, "XTSE0340")
 			end
 			debug ("XSLT pattern parsing")
 				if not is_parse_error then
-					std.error.put_string ("Fingerprint of last parsed pattern is ")
-					std.error.put_string (internal_last_parsed_pattern.fingerprint.out)
-					std.error.put_new_line
+					check postcondition_of_parse_union_pattern: attached internal_last_parsed_pattern as l_internal_last_parsed_pattern then
+						std.error.put_string ("Fingerprint of last parsed pattern is ")
+						std.error.put_string (l_internal_last_parsed_pattern.fingerprint.out)
+						std.error.put_new_line
+					end
 				end
 			end
 		ensure
@@ -108,17 +118,19 @@ feature -- Parsers
 			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
+			l_tokenizer: like tokenizer
 		do
 			internal_last_parse_error := Void
 			environment := a_context
-			create tokenizer.make
-			tokenizer.tokenize (a_sequence_type_string, 1, -1, a_line_number)
+			create l_tokenizer.make
+			tokenizer := l_tokenizer
+			l_tokenizer.tokenize (a_sequence_type_string, 1, -1, a_line_number)
 			is_parse_error := False
 			parse_sequence
 
-			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-			elseif tokenizer.last_token /= Eof_token then
+			if l_tokenizer.is_lexical_error then
+				report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+			elseif l_tokenizer.last_token /= Eof_token then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of sequence type")
 				report_parse_error (s, "XTSE0340")
@@ -135,38 +147,46 @@ feature {NONE} -- Implementation
 			--  pathPattern ( | pathPattern )*
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
 			l_left_pattern, l_right_pattern: XM_XSLT_PATTERN
 			l_finished: BOOLEAN
 		do
-			parse_path_pattern
-			if not is_parse_error then
-				from
-					l_left_pattern := internal_last_parsed_pattern
-					l_finished := tokenizer.last_token /= Union_token
-				until
-					l_finished or else tokenizer.last_token /= Union_token
-				loop
-					if STRING_.same_string ("union", tokenizer.last_token_value) then
-						report_parse_error ("'union' is not permitted in patterns - use '|' instead", "XTSE0340")
-						l_finished := True
-					else
-						tokenizer.next
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-							l_finished := True
-						else
-							parse_path_pattern
-							if not is_parse_error then
-								l_right_pattern := internal_last_parsed_pattern
-								create {XM_XSLT_UNION_PATTERN} l_left_pattern.make (environment, l_left_pattern, l_right_pattern)
+			check precondition_tokenizer_not_void: attached tokenizer as l_tokenizer then
+				parse_path_pattern
+				if not is_parse_error then
+					check postcondition_of_parse_path_pattern: attached internal_last_parsed_pattern as l_internal_last_parsed_pattern then
+						from
+							l_left_pattern := l_internal_last_parsed_pattern
+							l_finished := l_tokenizer.last_token /= Union_token
+						until
+							l_finished or else l_tokenizer.last_token /= Union_token
+						loop
+							if STRING_.same_string ("union", l_tokenizer.last_token_value) then
+								report_parse_error ("'union' is not permitted in patterns - use '|' instead", "XTSE0340")
+								l_finished := True
+							else
+								l_tokenizer.next
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+									l_finished := True
+								else
+									parse_path_pattern
+									if not is_parse_error then
+										check postcondition_of_parse_path_pattern: attached internal_last_parsed_pattern as l_internal_last_parsed_pattern_2 then
+											l_right_pattern := l_internal_last_parsed_pattern_2
+											check attached environment as l_environment then
+												create {XM_XSLT_UNION_PATTERN} l_left_pattern.make (l_environment, l_left_pattern, l_right_pattern)
+											end
+										end
+									end
+								end
 							end
 						end
+						internal_last_parsed_pattern := l_left_pattern
 					end
 				end
-				internal_last_parsed_pattern := l_left_pattern
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies internal_last_parsed_pattern /= Void
@@ -180,71 +200,131 @@ feature {NONE} -- Implementation
 			-- | IdKeyPattern (('/' | '//') RelativePathPattern)?
 		require
 			static_context_not_void: environment /= Void
-			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
+			tokenizer_usable: attached tokenizer as l_tokenizer and then l_tokenizer.input /= Void and then not l_tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			l_previous, l_pattern: XM_XSLT_PATTERN
+			l_previous, l_pattern: detachable XM_XSLT_PATTERN
 			l_location: XM_XSLT_LOCATION_PATH_PATTERN
-			l_key: XM_XSLT_KEY_PATTERN
-			l_id: XM_XSLT_ID_PATTERN
-			l_id_value: XM_XPATH_EXPRESSION
+			l_key: detachable XM_XSLT_KEY_PATTERN
+			l_id: detachable XM_XSLT_ID_PATTERN
+			l_id_value: detachable XM_XPATH_EXPRESSION
 			l_connector: INTEGER
 			l_root_only, l_finished: BOOLEAN
 			l_message, l_key_name: STRING
 		do
-			l_connector := -1
-			-- special handling for stuff before first component
+			check
+				precondition_static_context_not_void: attached environment as l_environment
+				precondition_tokenizer_usable: attached tokenizer as l_tokenizer
+			then
+				l_connector := -1
+				-- special handling for stuff before first component
 
-			inspect
-				tokenizer.last_token
-			when Slash_token then
-				l_connector := Slash_token
-				tokenizer.next
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+				inspect
+					l_tokenizer.last_token
+				when Slash_token then
+					l_connector := Slash_token
+					l_tokenizer.next
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+					else
+						create {XM_XSLT_NODE_KIND_TEST} l_previous.make (l_environment, Document_node)
+						l_root_only := True
+					end
+				when Slash_slash_token then -- leading // changes the default priority
+					l_connector := Slash_slash_token
+					l_tokenizer.next
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+					else
+						create {XM_XSLT_NODE_KIND_TEST} l_previous.make (l_environment, Document_node)
+						l_root_only := False
+					end
 				else
-					create {XM_XSLT_NODE_KIND_TEST} l_previous.make (environment, Document_node)
-					l_root_only := True
+					-- do nothing
 				end
-			when Slash_slash_token then -- leading // changes the default priority
-				l_connector := Slash_slash_token
-				tokenizer.next
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-				else
-					create {XM_XSLT_NODE_KIND_TEST} l_previous.make (environment, Document_node)
-					l_root_only := False
-				end
-			else
-				-- do nothing
-			end
 
-			if not is_parse_error then
-				from
-				until
-					l_finished
-				loop
-					l_pattern := Void; l_key := Void; l_id := Void
-					inspect
-						tokenizer.last_token
-					when Axis_token then
-						if STRING_.same_string (tokenizer.last_token_value, "child") then
-							tokenizer.next
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-								l_finished := True
-							else
-								parse_pattern_step (Element_node)
-								if is_parse_error then
+				if not is_parse_error then
+					from
+					until
+						l_finished
+					loop
+						l_pattern := Void; l_key := Void; l_id := Void
+						inspect
+							l_tokenizer.last_token
+						when Axis_token then
+							if STRING_.same_string (l_tokenizer.last_token_value, "child") then
+								l_tokenizer.next
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 									l_finished := True
 								else
-									l_pattern := last_parsed_pattern_step
+									parse_pattern_step (Element_node)
+									if is_parse_error then
+										l_finished := True
+									else
+										l_pattern := last_parsed_pattern_step
+									end
 								end
+							elseif STRING_.same_string (l_tokenizer.last_token_value, "attribute") then
+								l_tokenizer.next
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+									l_finished := True
+								else
+									parse_pattern_step (Attribute_node)
+									if is_parse_error then
+										l_finished := True
+									else
+										l_pattern := last_parsed_pattern_step
+									end
+								end
+							else
+								report_parse_error ("Axis in pattern must be child or attribute", "XTSE0340")
+								l_finished := True
 							end
-						elseif STRING_.same_string (tokenizer.last_token_value, "attribute") then
-							tokenizer.next
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+						when Star_token then
+							parse_pattern_step (Element_node)
+							if is_parse_error then
+								l_finished := True
+							else
+								l_pattern := last_parsed_pattern_step
+							end
+						when Name_token then
+							parse_pattern_step (Element_node)
+							if is_parse_error then
+								l_finished := True
+							else
+								l_pattern := last_parsed_pattern_step
+							end
+						when Prefix_token then
+							parse_pattern_step (Element_node)
+							if is_parse_error then
+								l_finished := True
+							else
+								l_pattern := last_parsed_pattern_step
+							end
+						when Suffix_token then
+							parse_pattern_step (Element_node)
+							if is_parse_error then
+								l_finished := True
+							else
+								l_pattern := last_parsed_pattern_step
+							end
+						when Node_kind_token then
+							if STRING_.same_string (l_tokenizer.last_token_value, "attribute") then
+								parse_pattern_step (Attribute_node)
+							else
+								parse_pattern_step (Element_node)
+							end
+							if is_parse_error then
+								l_finished := True
+							else
+								l_pattern := last_parsed_pattern_step
+							end
+						when At_token then
+							l_tokenizer.next
+							if l_tokenizer.is_lexical_error then
+								report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 								l_finished := True
 							else
 								parse_pattern_step (Attribute_node)
@@ -254,187 +334,136 @@ feature {NONE} -- Implementation
 									l_pattern := last_parsed_pattern_step
 								end
 							end
-						else
-							report_parse_error ("Axis in pattern must be child or attribute", "XTSE0340")
-							l_finished := True
-						end
-					when Star_token then
-						parse_pattern_step (Element_node)
-						if is_parse_error then
-							l_finished := True
-						else
-							l_pattern := last_parsed_pattern_step
-						end
-					when Name_token then
-						parse_pattern_step (Element_node)
-						if is_parse_error then
-							l_finished := True
-						else
-							l_pattern := last_parsed_pattern_step
-						end
-					when Prefix_token then
-						parse_pattern_step (Element_node)
-						if is_parse_error then
-							l_finished := True
-						else
-							l_pattern := last_parsed_pattern_step
-						end
-					when Suffix_token then
-						parse_pattern_step (Element_node)
-						if is_parse_error then
-							l_finished := True
-						else
-							l_pattern := last_parsed_pattern_step
-						end
-					when Node_kind_token then
-						if STRING_.same_string (tokenizer.last_token_value, "attribute") then
-							parse_pattern_step (Attribute_node)
-						else
-							parse_pattern_step (Element_node)
-						end
-						if is_parse_error then
-							l_finished := True
-						else
-							l_pattern := last_parsed_pattern_step
-						end
-					when At_token then
-						tokenizer.next
-						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-							l_finished := True
-						else
-							parse_pattern_step (Attribute_node)
-							if is_parse_error then
-								l_finished := True
-							else
-								l_pattern := last_parsed_pattern_step
-							end
-						end
-					when Function_token then
-						if l_previous = Void then
-							if STRING_.same_string (tokenizer.last_token_value, "id") then
-								tokenizer.next
-								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-									l_finished := True
-								else
-									l_id_value :=	Void
-									if tokenizer.last_token = String_literal_token then
-										create {XM_XPATH_STRING_VALUE} l_id_value.make (tokenizer.last_token_value)
-									elseif tokenizer.last_token = Dollar_token then
-										tokenizer.next
-										if tokenizer.is_lexical_error then
-											report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-											l_finished := True
-										else
-											if tokenizer.last_token /= Name_token then
-												l_message := "expected %"<name>%", found "
-												l_message := STRING_.appended_string (l_message, display_current_token)
-												report_parse_error (l_message, "XTSE0340")
+						when Function_token then
+							if l_previous = Void then
+								if STRING_.same_string (l_tokenizer.last_token_value, "id") then
+									l_tokenizer.next
+									if l_tokenizer.is_lexical_error then
+										report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+										l_finished := True
+									else
+										l_id_value :=	Void
+										if l_tokenizer.last_token = String_literal_token then
+											create {XM_XPATH_STRING_VALUE} l_id_value.make (l_tokenizer.last_token_value)
+										elseif l_tokenizer.last_token = Dollar_token then
+											l_tokenizer.next
+											if l_tokenizer.is_lexical_error then
+												report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 												l_finished := True
 											else
-												generate_name_code (tokenizer.last_token_value, False)
-												environment.bind_variable (last_generated_name_code  \\ bits_20)
-												create {XM_XPATH_VARIABLE_REFERENCE} l_id_value.make (environment.last_bound_variable)
+												if l_tokenizer.last_token /= Name_token then
+													l_message := "expected %"<name>%", found "
+													l_message := STRING_.appended_string (l_message, display_current_token)
+													report_parse_error (l_message, "XTSE0340")
+													l_finished := True
+												else
+													generate_name_code (l_tokenizer.last_token_value, False)
+													l_environment.bind_variable (last_generated_name_code  \\ bits_20)
+													create {XM_XPATH_VARIABLE_REFERENCE} l_id_value.make (l_environment.last_bound_variable)
+												end
+											end
+										else
+											report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
+											l_finished := True
+										end
+										check l_id_value /= Void then
+											create {XM_XSLT_ID_PATTERN} l_id.make (l_environment, l_id_value)
+											l_pattern := l_id
+											l_tokenizer.next
+											if l_tokenizer.is_lexical_error then
+												report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+												l_finished := True
+											else
+												if l_tokenizer.last_token /= Right_parenthesis_token then
+													l_message := "expected %")%", found "
+													l_message := STRING_.appended_string (l_message, display_current_token)
+													report_parse_error (l_message, "XTSE0340")
+													l_finished := True
+												else
+													l_tokenizer.next
+													if l_tokenizer.is_lexical_error then
+														report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+														l_finished := True
+													end
+												end
 											end
 										end
-									else
-										report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
-										l_finished := True
 									end
-									create {XM_XSLT_ID_PATTERN} l_id.make (environment, l_id_value)
-									l_pattern := l_id
-									tokenizer.next
-									if tokenizer.is_lexical_error then
-										report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+								elseif STRING_.same_string (l_tokenizer.last_token_value, "key") then
+									l_tokenizer.next
+									if l_tokenizer.is_lexical_error then
+										report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 										l_finished := True
 									else
-										if tokenizer.last_token /= Right_parenthesis_token then
-											l_message := "expected %")%", found "
+										if l_tokenizer.last_token /= String_literal_token then
+											l_message := "expected %"<string literal>%", found "
 											l_message := STRING_.appended_string (l_message, display_current_token)
 											report_parse_error (l_message, "XTSE0340")
 											l_finished := True
 										else
-											tokenizer.next
-											if tokenizer.is_lexical_error then
-												report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-												l_finished := True
-											end
-										end
-									end
-								end
-							elseif STRING_.same_string (tokenizer.last_token_value, "key") then
-								tokenizer.next
-								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-									l_finished := True
-								else
-									if tokenizer.last_token /= String_literal_token then
-										l_message := "expected %"<string literal>%", found "
-										l_message := STRING_.appended_string (l_message, display_current_token)
-										report_parse_error (l_message, "XTSE0340")
-										l_finished := True
-									else
-										l_key_name := tokenizer.last_token_value
-										tokenizer.next
-										if tokenizer.is_lexical_error then
-											report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-											l_finished := True
-										else
-											if tokenizer.last_token /= Comma_token then
-												l_message := "expected %",%", found "
-												l_message := STRING_.appended_string (l_message, display_current_token)
-												report_parse_error (l_message, "XTSE0340")
+											l_key_name := l_tokenizer.last_token_value
+											l_tokenizer.next
+											if l_tokenizer.is_lexical_error then
+												report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 												l_finished := True
 											else
-												tokenizer.next
-												if tokenizer.is_lexical_error then
-													report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+												if l_tokenizer.last_token /= Comma_token then
+													l_message := "expected %",%", found "
+													l_message := STRING_.appended_string (l_message, display_current_token)
+													report_parse_error (l_message, "XTSE0340")
 													l_finished := True
 												else
-													l_id_value := Void
-													if tokenizer.last_token = String_literal_token then
-														create {XM_XPATH_STRING_VALUE} l_id_value.make (tokenizer.last_token_value)
-													elseif tokenizer.last_token = Dollar_token then
-														tokenizer.next
-														if tokenizer.is_lexical_error then
-															report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-															l_finished := True
-														else
-															if tokenizer.last_token /= Name_token then
-																l_message := "expected %"<name>%", found "
-																l_message := STRING_.appended_string (l_message, display_current_token)
-																report_parse_error (l_message, "XTSE0340")
-																l_finished := True
-															else
-																generate_name_code (tokenizer.last_token_value, False)
-																environment.bind_variable (last_generated_name_code \\ bits_20)
-																create {XM_XPATH_VARIABLE_REFERENCE} l_id_value.make (environment.last_bound_variable)
-															end
-														end
-													else
-														report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
+													l_tokenizer.next
+													if l_tokenizer.is_lexical_error then
+														report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 														l_finished := True
-													end
-													if not is_parse_error then
-														generate_name_code (l_key_name, False)
-														create l_key.make (environment, last_generated_name_code, l_id_value)
-														l_pattern := l_key
-														tokenizer.next
-														if tokenizer.is_lexical_error then
-															report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-															l_finished := True
-														else
-															if tokenizer.last_token /= Right_parenthesis_token then
-																l_message := "expected %")%", found "
-																l_message := STRING_.appended_string (l_message, display_current_token)
-																report_parse_error (l_message, "XTSE0340")
+													else
+														l_id_value := Void
+														if l_tokenizer.last_token = String_literal_token then
+															create {XM_XPATH_STRING_VALUE} l_id_value.make (l_tokenizer.last_token_value)
+														elseif l_tokenizer.last_token = Dollar_token then
+															l_tokenizer.next
+															if l_tokenizer.is_lexical_error then
+																report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
 																l_finished := True
 															else
-																tokenizer.next
-																if tokenizer.is_lexical_error then
-																	report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-																l_finished := True
+																if l_tokenizer.last_token /= Name_token then
+																	l_message := "expected %"<name>%", found "
+																	l_message := STRING_.appended_string (l_message, display_current_token)
+																	report_parse_error (l_message, "XTSE0340")
+																	l_finished := True
+																else
+																	generate_name_code (l_tokenizer.last_token_value, False)
+																	l_environment.bind_variable (last_generated_name_code \\ bits_20)
+																	create {XM_XPATH_VARIABLE_REFERENCE} l_id_value.make (l_environment.last_bound_variable)
+																end
+															end
+														else
+															report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
+															l_finished := True
+														end
+														if not is_parse_error then
+															check l_id_value /= Void then
+																generate_name_code (l_key_name, False)
+																create l_key.make (l_environment, last_generated_name_code, l_id_value)
+																l_pattern := l_key
+																l_tokenizer.next
+																if l_tokenizer.is_lexical_error then
+																	report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+																	l_finished := True
+																else
+																	if l_tokenizer.last_token /= Right_parenthesis_token then
+																		l_message := "expected %")%", found "
+																		l_message := STRING_.appended_string (l_message, display_current_token)
+																		report_parse_error (l_message, "XTSE0340")
+																		l_finished := True
+																	else
+																		l_tokenizer.next
+																		if l_tokenizer.is_lexical_error then
+																			report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+																			l_finished := True
+																		end
+																	end
 																end
 															end
 														end
@@ -443,63 +472,65 @@ feature {NONE} -- Implementation
 											end
 										end
 									end
+								else
+									report_parse_error ("The only functions allowed in a pattern are id() and key()", "XTSE0340")
+									l_finished := True
 								end
 							else
-								report_parse_error ("The only functions allowed in a pattern are id() and key()", "XTSE0340")
+								report_parse_error ("Function call may appear only at the start of a pattern", "XTSE0340")
 								l_finished := True
 							end
 						else
-							report_parse_error ("Function call may appear only at the start of a pattern", "XTSE0340")
 							l_finished := True
+							if l_root_only then
+								internal_last_parsed_pattern := l_previous -- the pattern was plain "/"
+							else
+								report_parse_error (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token), "XTSE0340")
+							end
 						end
-					else
-						l_finished := True
-						if l_root_only then
-							internal_last_parsed_pattern := l_previous -- the pattern was plain "/"
-						else
-							report_parse_error (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token), "XTSE0340")
-						end
-					end
-					if not l_finished then
-						if l_previous /= Void then
+						if not l_finished then
+							if l_previous /= Void then
 								check
 									l_pattern_not_void: l_pattern /= Void
 									location_pattern: l_pattern.is_location_pattern
-								end
-							l_location := l_pattern.as_location_pattern
+								then
+									l_location := l_pattern.as_location_pattern
 									check
 										l_location_not_void: l_location /= Void
-									end
-							if l_connector = Slash_token then
+									then
+										if l_connector = Slash_token then
 
-								l_location.set_parent_pattern (l_previous)
-							else
-									check
-										ancestor_connector: l_connector = Slash_slash_token
+											l_location.set_parent_pattern (l_previous)
+										else
+												check
+													ancestor_connector: l_connector = Slash_slash_token
+												end
+											l_location.set_ancestor_pattern (l_previous)
+										end
 									end
-								l_location.set_ancestor_pattern (l_previous)
+								end
 							end
-						end
-						l_connector := tokenizer.last_token
-						l_root_only := False
-						if l_connector = Slash_token or else l_connector = Slash_slash_token then
-							l_previous := l_pattern
-							tokenizer.next
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
+							l_connector := l_tokenizer.last_token
+							l_root_only := False
+							if l_connector = Slash_token or else l_connector = Slash_slash_token then
+								l_previous := l_pattern
+								l_tokenizer.next
+								if l_tokenizer.is_lexical_error then
+									report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+									l_finished := True
+								end
+							else
 								l_finished := True
-							end
-						else
-							l_finished := True
-							if l_pattern /= Void then
-								internal_last_parsed_pattern := l_pattern
-							elseif l_key /= Void then -- pattern consists solely of key(...)
-								internal_last_parsed_pattern := l_key
-							else
-									check
-										l_id_not_void: l_id /= Void -- pattern consists solely of id(...)
-									end
-								internal_last_parsed_pattern := l_id
+								if l_pattern /= Void then
+									internal_last_parsed_pattern := l_pattern
+								elseif l_key /= Void then -- pattern consists solely of key(...)
+									internal_last_parsed_pattern := l_key
+								else
+										check
+											l_id_not_void: l_id /= Void -- pattern consists solely of id(...)
+										end
+									internal_last_parsed_pattern := l_id
+								end
 							end
 						end
 					end
@@ -517,44 +548,48 @@ feature {NONE} -- Implementation
 			l_node_test: XM_XSLT_NODE_TEST
 			l_node_kind: INTEGER
 		do
-			create l_step.make (environment)
-			parse_node_test (a_principal_node_type)
-			if not is_parse_error then
-				l_node_test := xpath_to_xslt_node_test (internal_last_parsed_node_test, environment)
-				if l_node_test = any_xslt_node_test then
+			check attached environment as l_environment then
+				create l_step.make (l_environment)
+				parse_node_test (a_principal_node_type)
+				if not is_parse_error then
+					check postcondition_of_parse_node_test: attached internal_last_parsed_node_test as l_internal_last_parsed_node_test then
+						l_node_test := xpath_to_xslt_node_test (l_internal_last_parsed_node_test, l_environment)
+						if l_node_test = any_xslt_node_test then
 
-					-- handle node() and @node() specially
+							-- handle node() and @node() specially
 
-					if a_principal_node_type = Element_node then
+							if a_principal_node_type = Element_node then
 
-						-- We are on the Child::axis
+								-- We are on the Child::axis
 
-						create {XM_XSLT_ANY_CHILD_NODE_PATTERN} l_node_test.make (environment)
-					else
+								create {XM_XSLT_ANY_CHILD_NODE_PATTERN} l_node_test.make (l_environment)
+							else
 
-						-- We are on the Attribute::axis
+								-- We are on the Attribute::axis
 
-						create {XM_XSLT_NODE_KIND_TEST} l_node_test.make (environment, a_principal_node_type)
+								create {XM_XSLT_NODE_KIND_TEST} l_node_test.make (l_environment, a_principal_node_type)
+							end
+						end
+
+						-- Deal with nonsense patterns such as @comment() or child::attribute().
+						-- These are legal, but will never match anything.
+
+						l_node_kind := l_node_test.node_kind
+						if a_principal_node_type = Element_node and then
+							(l_node_kind = Attribute_node) then
+							l_node_test := xslt_empty_item
+						elseif a_principal_node_type = Attribute_node and then
+							(l_node_kind = Comment_node or else l_node_kind = Text_node
+								or else l_node_kind = Processing_instruction_node
+								or else l_node_kind = Element_node
+								or else l_node_kind = Document_node) then
+							l_node_test := xslt_empty_item
+						end
+						l_step.set_node_test (l_node_test)
+						parse_filters (l_step)
+						last_parsed_pattern_step := l_step
 					end
 				end
-
-				-- Deal with nonsense patterns such as @comment() or child::attribute().
-				-- These are legal, but will never match anything.
-
-				l_node_kind := l_node_test.node_kind
-				if a_principal_node_type = Element_node and then
-					(l_node_kind = Attribute_node) then
-					l_node_test := xslt_empty_item
-				elseif a_principal_node_type = Attribute_node and then
-					(l_node_kind = Comment_node or else l_node_kind = Text_node
-						or else l_node_kind = Processing_instruction_node
-						or else l_node_kind = Element_node
-						or else l_node_kind = Document_node) then
-					l_node_test := xslt_empty_item
-				end
-				l_step.set_node_test (l_node_test)
-				parse_filters (l_step)
-				last_parsed_pattern_step := l_step
 			end
 		ensure
 			pattern_not_void_unless_error: not is_parse_error implies last_parsed_pattern_step /= Void
@@ -568,27 +603,31 @@ feature {NONE} -- Implementation
 			a_qualifier: XM_XPATH_EXPRESSION
 			a_message: STRING
 		do
-			from
-			until
-				tokenizer.last_token /= Left_square_bracket_token
-			loop
-				next_token ("In parse_filters: current token is ")
-				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-				else
-					parse_single_expression
-					if not is_parse_error then
-						a_qualifier := internal_last_parsed_expression
-						if tokenizer.last_token /= Right_square_bracket_token then
-							a_message := "expected %"]%", found "
-							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XTSE0340")
-						else
-							next_token ("In parse_filters after RPAR: current token is ")
-							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
-							else
-								a_step.add_filter (a_qualifier)
+			check attached tokenizer as l_tokenizer then
+				from
+				until
+					l_tokenizer.last_token /= Left_square_bracket_token
+				loop
+					next_token ("In parse_filters: current token is ")
+					if l_tokenizer.is_lexical_error then
+						report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+					else
+						parse_single_expression
+						if not is_parse_error then
+							check postcondition_of_parse_single_expression: attached internal_last_parsed_expression as l_internal_last_parsed_expression then
+								a_qualifier := l_internal_last_parsed_expression
+								if l_tokenizer.last_token /= Right_square_bracket_token then
+									a_message := "expected %"]%", found "
+									a_message := STRING_.appended_string (a_message, display_current_token)
+									report_parse_error (a_message, "XTSE0340")
+								else
+									next_token ("In parse_filters after RPAR: current token is ")
+									if l_tokenizer.is_lexical_error then
+										report_parse_error (l_tokenizer.last_lexical_error, "XTSE0340")
+									else
+										a_step.add_filter (a_qualifier)
+									end
+								end
 							end
 						end
 					end
@@ -606,10 +645,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_last_parsed_pattern: XM_XSLT_PATTERN
+	internal_last_parsed_pattern: detachable XM_XSLT_PATTERN
 			-- Last sucessfully parsed pattern
 
-	last_parsed_pattern_step: XM_XSLT_LOCATION_PATH_PATTERN
+	last_parsed_pattern_step: detachable XM_XSLT_LOCATION_PATH_PATTERN
 			-- last successfull parsed pattern step
 
 end

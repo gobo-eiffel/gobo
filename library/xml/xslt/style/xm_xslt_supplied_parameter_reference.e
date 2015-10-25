@@ -5,7 +5,7 @@ note
 		"Objects that provide runtime type checking for template parameters"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,12 +81,14 @@ feature -- Evaluation
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			if a_context.local_variable_frame.variables.item (slot_number) /= Void then
-				a_value := a_context.evaluated_local_variable (slot_number)
-				a_value.create_iterator (a_context)
-				last_iterator := a_value.last_iterator
-			else
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Local parameter value missing", Xpath_errors_uri, "XTTE0570", Type_error)
+			check attached a_context.local_variable_frame as l_local_variable_frame then
+				if l_local_variable_frame.variables.item (slot_number) /= Void then
+					a_value := a_context.evaluated_local_variable (slot_number)
+					a_value.create_iterator (a_context)
+					last_iterator := a_value.last_iterator
+				else
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Local parameter value missing", Xpath_errors_uri, "XTTE0570", Type_error)
+				end
 			end
 		end
 

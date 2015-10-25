@@ -5,7 +5,7 @@ note
 		"Objects that define one component of a sort key"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_sort_key, an_order, a_case_order, a_language, a_data_type, a_collation_name: XM_XPATH_EXPRESSION)
+	make (a_sort_key: XM_XPATH_EXPRESSION; an_order, a_case_order, a_language, a_data_type, a_collation_name: detachable XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			sort_key_not_void: a_sort_key /= Void
@@ -57,34 +57,34 @@ feature -- Access
 	sort_key: XM_XPATH_EXPRESSION
 			-- Sort key
 
-	order_expression: XM_XPATH_EXPRESSION
+	order_expression: detachable XM_XPATH_EXPRESSION
 			-- Order (ascending or descending)
 
-	case_order_expression: XM_XPATH_EXPRESSION
+	case_order_expression: detachable XM_XPATH_EXPRESSION
 			-- Case order (upper-first or lower-first)
 
-	language_expression: XM_XPATH_EXPRESSION
+	language_expression: detachable XM_XPATH_EXPRESSION
 			-- Language
 
-	data_type_expression: XM_XPATH_EXPRESSION
+	data_type_expression: detachable XM_XPATH_EXPRESSION
 			-- Data type to which sort-key-values will be coerced (text, number or QName (but not NCName)
 
-	collation_name_expression: XM_XPATH_EXPRESSION
+	collation_name_expression: detachable XM_XPATH_EXPRESSION
 			-- Name of collation (a URI) as an AVT
 
-	collation_name: STRING
+	collation_name: detachable STRING
 			-- Name of collation (a URI)
 
-	order: STRING
+	order: detachable STRING
 			-- Value of order attribute (ascending or descending)
 
-	language: STRING
+	language: detachable STRING
 			--  Value of language attribute
 
-	case_order: STRING
+	case_order: detachable STRING
 			-- Value of case-order attribute ("lower-first" or "upper-first")
 
-	data_type: STRING
+	data_type: detachable STRING
 			-- Value of data-type attribute ("text" or "number" or a QName)
 
 	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION
@@ -94,14 +94,21 @@ feature -- Access
 		require
 			context_not_void: a_context /= Void
 			reducible: is_reducible
-			known_collation: collation_name /= Void implies a_context.is_known_collation (collation_name)
+			known_collation: attached collation_name as l_collation_name implies a_context.is_known_collation (l_collation_name)
 		local
-			a_collator: ST_COLLATOR
+			a_collator: detachable ST_COLLATOR
 		do
-			if collation_name /= Void then
-				a_collator := a_context.collator (collation_name)
+			if attached collation_name as l_collation_name then
+				a_collator := a_context.collator (l_collation_name)
 			end
-			create Result.make (sort_key, order, data_type, case_order, language, a_collator)
+			check
+				attached order as l_order
+				attached data_type as l_data_type
+				attached case_order as l_case_order
+				attached language as l_language
+			then
+				create Result.make (sort_key, l_order, l_data_type, l_case_order, l_language, a_collator)
+			end
 		ensure
 			reduced_definition_not_void: Result /= Void
 		end
@@ -159,6 +166,7 @@ feature -- Conversion
 		require
 			fixed_sort_key: is_fixed_sort_key
 		do
+			check fixed_sort_key: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -170,12 +178,14 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if collation_name_expression /= Void then
+			if attached collation_name_expression as l_collation_name_expression then
 				create l_item.make (Void)
-				collation_name_expression.evaluate_item (l_item, a_context)
-				collation_name := l_item.item.string_value
+				l_collation_name_expression.evaluate_item (l_item, a_context)
+				check attached l_item.item as l_item_item then
+					collation_name := l_item_item.string_value
+				end
 			end
 		end
 
@@ -184,14 +194,16 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if order_expression = Void then
+			if not attached order_expression as l_order_expression then
 				order := "ascending"
 			else
 				create l_item.make (Void)
-				order_expression.evaluate_item (l_item, a_context)
-				order := l_item.item.string_value
+				l_order_expression.evaluate_item (l_item, a_context)
+				check attached l_item.item as l_item_item then
+					order := l_item_item.string_value
+				end
 			end
 		ensure
 			order_not_void: order /= Void
@@ -202,14 +214,16 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if case_order_expression = Void then
+			if not attached case_order_expression as l_case_order_expression then
 				case_order := "#default"
 			else
 				create l_item.make (Void)
-				case_order_expression.evaluate_item (l_item, a_context)
-				case_order := l_item.item.string_value
+				l_case_order_expression.evaluate_item (l_item, a_context)
+				check attached l_item.item as l_item_item then
+					case_order := l_item_item.string_value
+				end
 			end
 		ensure
 			case_order_not_void: case_order /= Void
@@ -220,14 +234,16 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if language_expression = Void then
+			if not attached language_expression as l_language_expression then
 				language := ""
 			else
 				create l_item.make (Void)
-				language_expression.evaluate_item (l_item, a_context)
-				language := l_item.item.string_value
+				l_language_expression.evaluate_item (l_item, a_context)
+				check attached l_item.item as l_item_item then
+					language := l_item_item.string_value
+				end
 			end
 		ensure
 			language_not_void: language /= Void
@@ -238,17 +254,17 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if data_type_expression = Void then
+			if not attached data_type_expression as l_data_type_expression then
 				data_type := ""
 			else
 				create l_item.make (Void)
-				data_type_expression.evaluate_item (l_item, a_context)
-				if l_item.item = Void then
+				l_data_type_expression.evaluate_item (l_item, a_context)
+				if not attached l_item.item as l_item_item then
 					data_type := ""
 				else
-					data_type := l_item.item.string_value
+					data_type := l_item_item.string_value
 				end
 			end
 		ensure

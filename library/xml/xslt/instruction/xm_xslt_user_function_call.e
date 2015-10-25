@@ -5,7 +5,7 @@ note
 		"Compile-time references to xsl:functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,19 +52,19 @@ feature -- Access
 	is_tail_callable: BOOLEAN
 			-- Is `Current' to be called as a tail call (not necessarily recusive)?
 
-	function: XM_XSLT_COMPILED_USER_FUNCTION
+	function: detachable XM_XSLT_COMPILED_USER_FUNCTION
 			-- Compiled function
 
 	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, where known
 		do
-			if static_type = Void then
+			if not attached static_type as l_static_type then
 
 				-- Not known yet
 
 				Result := any_item
 			else
-				Result := static_type.primary_type
+				Result := l_static_type.primary_type
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -141,11 +141,11 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_replacement, a_context, a_context_item_type)
-			if a_replacement.item = Current and function /= Void then
+			if a_replacement.item = Current and attached function as l_function then
 				compute_argument_evaluation_modes
-				if static_type = Void or static_type.primary_type = any_item then
+				if not attached static_type as l_static_type or else l_static_type.primary_type = any_item then
 					-- try and do better
-					static_type := function.result_type
+					static_type := l_function.result_type
 					reset_static_properties
 				end
 			end
@@ -165,78 +165,87 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
-			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
-			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_value: DS_CELL [detachable XM_XPATH_VALUE]
 		do
 			last_iterator := Void
-			l_execution_context ?= a_context
 			check
-				execution_context: l_execution_context /= Void
+				execution_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_execution_context
 				-- as this is an XSLT function
-			end
-			create l_value.make (Void)
-			call (l_value, l_execution_context)
-			if l_value.item.is_error then
-				if is_node_sequence then
-					create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_value.item.error_value)
-				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_value.item.error_value)
+			then
+				create l_value.make (Void)
+				call (l_value, l_execution_context)
+				check postcondition_of_call: attached l_value.item as l_value_item then
+					if attached l_value_item.error_value as l_error_value then
+						check is_error: l_value_item.is_error end
+						if is_node_sequence then
+							create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_error_value)
+						else
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+						end
+					else
+						l_value_item.create_iterator (new_dummy_context)
+						last_iterator := l_value_item.last_iterator
+					end
 				end
-			else
-				l_value.item.create_iterator (Void)
-				last_iterator := l_value.item.last_iterator
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
-			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
-			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_value: DS_CELL [detachable XM_XPATH_VALUE]
 		do
 			last_node_iterator := Void
-			l_execution_context ?= a_context
 			check
-				execution_context: l_execution_context /= Void
+				execution_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_execution_context
 				-- as this is an XSLT function
-			end
-			create l_value.make (Void)
-			call (l_value, l_execution_context)
-			if l_value.item.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_value.item.error_value)
-			else
-				l_value.item.create_node_iterator (Void)
-				last_node_iterator := l_value.item.last_node_iterator
+			then
+				create l_value.make (Void)
+				call (l_value, l_execution_context)
+				check postcondition_of_call: attached l_value.item as l_value_item then
+					if attached l_value_item.error_value as l_error_value then
+						check is_error: l_value_item.is_error end
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_error_value)
+					else
+						l_value_item.create_node_iterator (new_dummy_context)
+						last_node_iterator := l_value_item.last_node_iterator
+					end
+				end
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_execution_context: XM_XSLT_EVALUATION_CONTEXT
-			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_value: DS_CELL [detachable XM_XPATH_VALUE]
 		do
-			l_execution_context ?= a_context
 			check
-				execution_context: l_execution_context /= Void
+				execution_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_execution_context
 				-- as this is an XSLT function
-			end
-			create l_value.make (Void)
-			call (l_value, l_execution_context)
-			if l_value.item.is_atomic_value then
-				a_result.put (l_value.item.as_atomic_value)
-			else
-				l_value.item.create_iterator (a_context)
-				l_iterator := l_value.item.last_iterator
-				if l_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-				else
-					l_iterator.start
-					if l_iterator.is_error then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
-					elseif not l_iterator.after then
-						a_result.put (l_iterator.item)
+			then
+				create l_value.make (Void)
+				call (l_value, l_execution_context)
+				check postcondition_of_call: attached l_value.item as l_value_item then
+					if l_value_item.is_atomic_value then
+						a_result.put (l_value_item.as_atomic_value)
+					else
+						l_value_item.create_iterator (a_context)
+						check postcondition_of_create_iterator: attached l_value_item.last_iterator as l_last_iterator then
+							l_iterator := l_last_iterator
+							if attached l_iterator.error_value as l_error_value then
+								check is_error: l_iterator.is_error end
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+							else
+								l_iterator.start
+								if attached l_iterator.error_value as l_error_value then
+									check is_error: l_iterator.is_error end
+									a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+								elseif not l_iterator.after then
+									a_result.put (l_iterator.item)
+								end
+							end
+						end
 					end
 				end
 			end
@@ -251,27 +260,31 @@ feature -- Evaluation
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
-			l_return_value: DS_CELL [XM_XPATH_VALUE]
-			l_context, l_clean_context: XM_XSLT_EVALUATION_CONTEXT
+			l_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]
+			l_return_value: DS_CELL [detachable XM_XPATH_VALUE]
+			l_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			l_context ?= a_context
 			check
-				execution_context: l_context /= Void
+				execution_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_context
 				-- as this is an XSLT function
-			end
-			create l_return_value.make (Void)
-			create l_actual_arguments.make_filled (Void, 1, arguments.count)
-			evaluate_arguments (l_return_value, l_actual_arguments, l_context)
-			if l_return_value.item /= Void then
-				a_context.report_fatal_error (l_return_value.item.error_value)
-			else
-				if is_tail_callable then
-					l_context.set_tail_call (function, l_actual_arguments)
+			then
+				create l_return_value.make (Void)
+				create l_actual_arguments.make_filled (Void, 1, arguments.count)
+				evaluate_arguments (l_return_value, l_actual_arguments, l_context)
+				if attached l_return_value.item as l_return_value_item then
+					check attached l_return_value_item.error_value as l_error_value then
+						a_context.report_fatal_error (l_error_value)
+					end
 				else
-					l_clean_context := l_context.new_clean_context
-					l_clean_context.set_current_receiver (l_context.current_receiver)
-					function.generate_events (l_actual_arguments, l_clean_context)
+					check attached function as l_function then
+						if is_tail_callable then
+							l_context.set_tail_call (l_function, l_actual_arguments)
+						else
+							l_clean_context := l_context.new_clean_context
+							l_clean_context.set_current_receiver (l_context.current_receiver)
+							l_function.generate_events (l_actual_arguments, l_clean_context)
+						end
+					end
 				end
 			end
 		end
@@ -280,19 +293,19 @@ feature -- Evaluation
 			-- Eager evaluation via `generate_events'
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			l_other_context ?= a_context.new_minor_context
-				check
-					evaluation_context: l_other_context /= Void
-					-- This is XSLT
-				end
-			create l_receiver.make (l_other_context.transformer)
-			l_other_context.change_to_sequence_output_destination (l_receiver)
-			generate_events (l_other_context)
-			l_receiver.close
-			Result := l_receiver.sequence
+			check
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_minor_context as l_other_context
+				-- This is XSLT
+				attached l_other_context.transformer as l_transformer
+			then
+				create l_receiver.make (l_transformer)
+				l_other_context.change_to_sequence_output_destination (l_receiver)
+				generate_events (l_other_context)
+				l_receiver.close
+				Result := l_receiver.sequence
 			end
+		end
 
 feature -- Element change
 
@@ -307,7 +320,7 @@ feature -- Element change
 			static_type_set: static_type = a_static_type
 		end
 
-	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_COMPILED_USER_FUNCTION; a_context: XM_XPATH_STATIC_CONTEXT)
+	set_function (a_source_function: XM_XSLT_FUNCTION; a_compiled_function: XM_XSLT_COMPILED_USER_FUNCTION; a_context: detachable XM_XPATH_STATIC_CONTEXT)
 			-- Create reference to callable function, validate consistency and compute `argument_evaluation_modes'.
 		require
 			source_function_not_void: a_source_function /= Void
@@ -329,10 +342,14 @@ feature -- Element change
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
-					is_type_error := True
+					check postcondition_of_static_type_check: attached a_type_checker.static_type_check_error as l_static_type_check_error then
+						set_last_error (l_static_type_check_error)
+						is_type_error := True
+					end
 				else
-					 arguments.replace (a_type_checker.checked_expression, an_index)
+					check postcondition_of_static_type_check: attached a_type_checker.checked_expression as l_checked_expression then
+						arguments.replace (l_checked_expression, an_index)
+					end
 				end
 				an_index := an_index + 1
 			variant
@@ -369,22 +386,22 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality
 			-- Compute cardinality.
 		do
-			if static_type = Void then
+			if not attached static_type as l_static_type then
 
 				-- actual type is not known yet, so we return an approximation
 
 				set_cardinality_zero_or_more
 			else
-				set_cardinality (static_type.cardinality)
+				set_cardinality (l_static_type.cardinality)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	static_type: XM_XPATH_SEQUENCE_TYPE
+	static_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Static type of returned result
 
-	argument_evaluation_modes: DS_ARRAYED_LIST [INTEGER]
+	argument_evaluation_modes: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Methods by which each argument is evaluated
 
 	compute_argument_evaluation_modes
@@ -393,30 +410,38 @@ feature {NONE} -- Implementation
 			fixed_up: function /= Void
 		local
 			i, l_count, l_reference_count: INTEGER
+			l_argument_evaluation_modes: like argument_evaluation_modes
 		do
-			l_count := arguments.count
-			create argument_evaluation_modes.make (l_count)
-			from
-				i := 1
-			until
-				i > l_count
-			loop
-			l_reference_count := function.parameter_definitions.item (i).reference_count
-			if l_reference_count = 0 then
-				argument_evaluation_modes.put (Create_empty_sequence, i)
-			elseif arguments.item (i).depends_upon_user_functions then
-				-- If the argument contains a call to a user-defined function, then it might be a recursive call.
-				-- It's better to evaluate it now, rather than waiting until we are on a new stack frame, as
-				--  that can blow the stack if done repeatedly.
-				argument_evaluation_modes.put (arguments.item (i).eager_evaluation_mode, i)
-			else
-				argument_evaluation_modes.put (arguments.item (i).lazy_evaluation_mode, i)
-			end
-				i := i + 1
+			check
+				precondition_fixed_up: attached function as l_function
+			then
+				l_count := arguments.count
+				create l_argument_evaluation_modes.make (l_count)
+				argument_evaluation_modes := l_argument_evaluation_modes
+				from
+					i := 1
+				until
+					i > l_count
+				loop
+					check attached l_function.parameter_definitions as l_parameter_definitions then
+						l_reference_count := l_parameter_definitions.item (i).reference_count
+						if l_reference_count = 0 then
+							l_argument_evaluation_modes.put (Create_empty_sequence, i)
+						elseif arguments.item (i).depends_upon_user_functions then
+							-- If the argument contains a call to a user-defined function, then it might be a recursive call.
+							-- It's better to evaluate it now, rather than waiting until we are on a new stack frame, as
+							--  that can blow the stack if done repeatedly.
+							l_argument_evaluation_modes.put (arguments.item (i).eager_evaluation_mode, i)
+						else
+							l_argument_evaluation_modes.put (arguments.item (i).lazy_evaluation_mode, i)
+						end
+					end
+					i := i + 1
+				end
 			end
 		ensure
-			argument_evaluation_modes_not_void: argument_evaluation_modes /= Void
-			correct_count: argument_evaluation_modes.count = arguments.count
+			argument_evaluation_modes_not_void: attached argument_evaluation_modes as l_argument_evaluation_modes2
+			correct_count: l_argument_evaluation_modes2.count = arguments.count
 		end
 
 	name: STRING
@@ -441,7 +466,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	call (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Call the function.
 			-- Result returned as `a_return_value.item'.
 		require
@@ -450,27 +475,31 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			fixed_up: function /= Void
 		local
-			l_actual_arguments: ARRAY [XM_XPATH_VALUE]
+			l_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]
 			l_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			create l_actual_arguments.make_filled (Void, 1, arguments.count)
-			evaluate_arguments (a_return_value, l_actual_arguments, a_context)
-			if a_return_value.item /= Void then
-				-- error - do nothing
-			else
-				if is_tail_callable then
-					a_context.set_tail_call (function, l_actual_arguments)
-					a_return_value.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+			check
+				precondition_fixed_up: attached function as l_function
+			then
+				create l_actual_arguments.make_filled (Void, 1, arguments.count)
+				evaluate_arguments (a_return_value, l_actual_arguments, a_context)
+				if a_return_value.item /= Void then
+					-- error - do nothing
 				else
-					l_clean_context := a_context.new_clean_context
-					function.call (a_return_value, l_actual_arguments, arguments.count, l_clean_context, True)
+					if is_tail_callable then
+						a_context.set_tail_call (l_function, l_actual_arguments)
+						a_return_value.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+					else
+						l_clean_context := a_context.new_clean_context
+						l_function.call (a_return_value, l_actual_arguments, arguments.count, l_clean_context, True)
+					end
 				end
 			end
 		ensure
 			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
-	evaluate_arguments (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	evaluate_arguments (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Evaluate `a_arguments'.
 		require
 			a_return_value_not_void: a_return_value /= Void
@@ -487,7 +516,7 @@ feature {NONE} -- Implementation
 			arguments.do_if_with_index (agent evaluate_argument (a_return_value, a_actual_arguments, a_context, ?, ?), agent is_no_error (a_return_value, ?, ?))
 		end
 
-	is_no_error (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_expression: XM_XPATH_EXPRESSION; a_index: INTEGER): BOOLEAN
+	is_no_error (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_expression: XM_XPATH_EXPRESSION; a_index: INTEGER): BOOLEAN
 			-- Is `a_return_value' empty?
 			-- Iterator passes unwated arguments `a_expression' and `a_index'.
 		require
@@ -498,7 +527,7 @@ feature {NONE} -- Implementation
 			definition: Result implies a_return_value.item = Void
 		end
 
-	evaluate_argument (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE];
+	evaluate_argument (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE];
 		a_context: XM_XSLT_EVALUATION_CONTEXT; a_argument: XM_XPATH_EXPRESSION; a_index: INTEGER)
 			-- Evaluate `a_argument'.
 		require
@@ -514,21 +543,29 @@ feature {NONE} -- Implementation
 		local
 			l_reference_count: INTEGER
 		do
-			l_reference_count := function.parameter_definitions.item (a_index).reference_count
-			a_argument.evaluate (a_return_value, argument_evaluation_modes.item (a_index),
-				l_reference_count, a_context)
-			if a_return_value.item = Void then
-				a_actual_arguments.put (create {XM_XPATH_EMPTY_SEQUENCE}.make, a_index)
-			elseif not a_return_value.item.is_error then
-				if l_reference_count > 1 and a_return_value.item.is_closure
-					and not a_return_value.item.is_memo_closure then
-					-- this shouldn't happen, but just in case:
-					a_return_value.item.reduce
-					a_actual_arguments.put (a_return_value.item.last_reduced_value, a_index)
-				else
-					a_actual_arguments.put (a_return_value.item, a_index)
+			check
+				precondition_fixed_up: attached function as l_function
+				precondition_argument_evaluation_modes_not_void: attached argument_evaluation_modes as l_argument_evaluation_modes
+				attached l_function.parameter_definitions as l_parameter_definitions
+			then
+				l_reference_count := l_parameter_definitions.item (a_index).reference_count
+				a_argument.evaluate (a_return_value, l_argument_evaluation_modes.item (a_index),
+					l_reference_count, a_context)
+				if not attached a_return_value.item as l_return_value_item then
+					a_actual_arguments.put (create {XM_XPATH_EMPTY_SEQUENCE}.make, a_index)
+				elseif not l_return_value_item.is_error then
+					if l_reference_count > 1 and l_return_value_item.is_closure
+						and not l_return_value_item.is_memo_closure then
+						-- this shouldn't happen, but just in case:
+						l_return_value_item.reduce
+						check postcondition_of_reduce: attached l_return_value_item.last_reduced_value as l_last_reduced_value then
+							a_actual_arguments.put (l_last_reduced_value, a_index)
+						end
+					else
+						a_actual_arguments.put (l_return_value_item, a_index)
+					end
+					a_return_value.put (Void)
 				end
-				a_return_value.put (Void)
 			end
 		end
 

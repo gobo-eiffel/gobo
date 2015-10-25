@@ -5,7 +5,7 @@ note
 		"Objects that represent the compiled form of a local xsl:variable"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,19 +33,25 @@ feature -- Status report
 			std.error.put_string (a_string);
 			std.error.put_string (variable_name);
 			std.error.put_new_line
-			if select_expression /= Void then select_expression.display (a_level + 1) end
+			if attached select_expression as l_select_expression then
+				l_select_expression.display (a_level + 1)
+			end
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_result: DS_CELL [XM_XPATH_VALUE]
+			l_result: DS_CELL [detachable XM_XPATH_VALUE]
 		do
 			create l_result.make (Void)
-			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, a_context)
-			a_context.set_local_variable (l_result.item, slot_number)
+			check attached select_expression as l_select_expression then
+				l_select_expression.evaluate (l_result, l_select_expression.lazy_evaluation_mode, Many_references, a_context)
+				check postcondition_of_evaluate: attached l_result.item as l_result_item then
+					a_context.set_local_variable (l_result_item, slot_number)
+				end
+			end
 		end
 
 	evaluate_variable (a_context: XM_XPATH_CONTEXT)

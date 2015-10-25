@@ -5,7 +5,7 @@ note
 		"Event filters that normalize text and attribute nodes."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,8 +55,8 @@ feature -- Events
 			l_value: STRING
 		do
 			if not is_output_escaping_disabled (a_properties) then
-				if normalizer /= Void then
-					l_value := normalizer.normalized_string (a_value)
+				if attached normalizer as l_normalizer then
+					l_value := l_normalizer.normalized_string (a_value)
 				else
 					l_value := a_value
 				end
@@ -72,8 +72,8 @@ feature -- Events
 			l_value: STRING
 		do
 			if not is_output_escaping_disabled (a_properties) then
-				if normalizer /= Void then
-					l_value := normalizer.normalized_string (a_chars)
+				if attached normalizer as l_normalizer then
+					l_value := l_normalizer.normalized_string (a_chars)
 				else
 					l_value := a_chars
 				end

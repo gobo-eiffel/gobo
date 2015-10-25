@@ -5,7 +5,7 @@ note
 		"Iterators over groups. `item' Always points to first item in group"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	current_grouping_key: XM_XPATH_ATOMIC_VALUE
+	current_grouping_key: detachable XM_XPATH_ATOMIC_VALUE
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		deferred
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [G]
+	current_group_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [G]
 			-- Iterator over the members of the current group, in population order.
 		deferred
 		end
@@ -48,6 +48,7 @@ feature -- Conversion
 		require
 			group_node_iterator: is_group_node_iterator
 		do
+			check is_group_node_iterator: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

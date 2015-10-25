@@ -48,7 +48,7 @@ feature -- Action
 			-- Resolve `a_uri'.
 		local
 			l_output: XM_OUTPUT
-			l_stream: KL_TEXT_OUTPUT_FILE
+			l_stream: detachable KL_TEXT_OUTPUT_FILE
 			l_filename: detachable STRING
 		do
 			last_result := Void

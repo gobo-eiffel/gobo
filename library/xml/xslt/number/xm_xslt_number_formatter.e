@@ -3,7 +3,7 @@ note
 	description: "Objects that format a list of integers as a character string under the control of a format string"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -143,8 +143,10 @@ feature -- Access
 					l_string := a_numberer.formatted_string (l_atomic.as_integer_value.value, formatting_tokens.item (l_token_index),
 						a_group_size, a_group_separator, a_letter, an_ordinal)
 				elseif l_atomic.is_decimal_value then
-					l_string := a_numberer.formatted_string (l_atomic.as_decimal_value.value, formatting_tokens.item (l_token_index),
-						a_group_size, a_group_separator, a_letter, an_ordinal)
+					check attached l_atomic.as_decimal_value.value as l_decimal_value then
+						l_string := a_numberer.formatted_string (l_decimal_value, formatting_tokens.item (l_token_index),
+							a_group_size, a_group_separator, a_letter, an_ordinal)
+					end
 				else
 					l_string := l_atomic.string_value
 				end

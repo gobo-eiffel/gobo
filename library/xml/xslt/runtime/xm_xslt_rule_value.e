@@ -5,7 +5,7 @@ note
 		"Objects that can be returned from {XM_XSLT_MODE}.rule"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,9 @@ feature -- Access
 		require
 			is_template: is_template
 		do
-			Result := template_value
+			check is_template: attached template_value as l_template_value then
+				Result := l_template_value
+			end
 		end
 
 feature -- Status report
@@ -66,7 +68,7 @@ feature -- Status report
 
 feature {XM_XSLT_MODE} -- Debugging and implementation
 
-	template_value: XM_XSLT_COMPILED_TEMPLATE
+	template_value: detachable XM_XSLT_COMPILED_TEMPLATE
 			-- Template value
 
 feature {NONE} -- Implementation

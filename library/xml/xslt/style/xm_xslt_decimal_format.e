@@ -5,7 +5,7 @@ note
 		"xsl:decimal-format element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,37 +28,37 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	name: STRING
+	name: detachable STRING
 			-- Name
 
-	decimal_separator: STRING
+	decimal_separator: detachable STRING
 			-- Decimal separator sign
 
-	grouping_separator: STRING
+	grouping_separator: detachable STRING
 			-- Grouping separator sign
 
-	infinity: STRING
+	infinity: detachable STRING
 			-- Infinity symbol
 
-	minus_sign: STRING
+	minus_sign: detachable STRING
 			-- Minus symbol
 
-	nan: STRING
+	nan: detachable STRING
 			-- NaN symbol
 
-	percent: STRING
+	percent: detachable STRING
 			-- Percent symbol
 
-	per_mille: STRING
+	per_mille: detachable STRING
 			-- Per-mill symbol
 
-	zero_digit: STRING
+	zero_digit: detachable STRING
 			-- Zero digit symbol
 
-	digit: STRING
+	digit: detachable STRING
 			-- Digit sign
 
-	pattern_separator: STRING
+	pattern_separator: detachable STRING
 			-- Pattern separator sign
 
 feature -- Status report
@@ -103,18 +103,20 @@ feature -- Element change
 		do
 			preprepare_attributes
 			if not any_compile_errors then
-				if name = Void then
+				if not attached name as l_name then
 					l_fingerprint := -1
-				elseif is_qname (name) then
-					generate_name_code (name)
+				elseif is_qname (l_name) then
+					generate_name_code (l_name)
 					if last_generated_name_code = -1 then
-						create l_error.make_from_string (STRING_.concat("Invalid QName for xsl:decimal-format: ", name_code_error_value.description), Xpath_errors_uri, "XTSE0020", Static_error)
+						check postcondition_of_generate_name_code: attached name_code_error_value as l_name_code_error_value then
+							create l_error.make_from_string (STRING_.concat("Invalid QName for xsl:decimal-format: ", l_name_code_error_value.description), Xpath_errors_uri, "XTSE0020", Static_error)
+						end
 						report_compile_error (l_error)
 					else
 						l_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					end
 				else
-					create l_error.make_from_string (STRING_.concat(name, " is not a valid QName"), Xpath_errors_uri, "XTSE0020", Static_error)
+					create l_error.make_from_string (STRING_.concat (l_name, " is not a valid QName"), Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (l_error)
 				end
 				if not any_compile_errors then
@@ -123,7 +125,9 @@ feature -- Element change
 						create l_error.make_from_string ("Not all picture characters are distinct.", Xpath_errors_uri, "XTSE1300", Static_error)
 						report_compile_error (l_error)
 					else
-						l_format_manager := principal_stylesheet.decimal_format_manager
+						check attached principal_stylesheet as l_principal_stylesheet then
+							l_format_manager := l_principal_stylesheet.decimal_format_manager
+						end
 						if l_fingerprint = -1 then
 							if l_format_manager.is_default_format_set then
 								if l_format_manager.is_different_from_default_format (l_decimal_format) then
@@ -138,7 +142,9 @@ feature -- Element change
 							if l_format_manager.has_named_format (l_fingerprint) then
 								if not l_format_manager.is_duplicate_format (l_decimal_format) then
 									if l_decimal_format.precedence = l_format_manager.named_format (l_fingerprint).precedence then
-										l_message := STRING_.concat ("Cannot define xsl:decimal-format named ", name)
+										check attached name as l_name then
+											l_message := STRING_.concat ("Cannot define xsl:decimal-format named ", l_name)
+										end
 										l_message := STRING_.appended_string (l_message, " twice, unless all values are identical")
 										create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1290", Static_error)
 										report_compile_error (l_error)
@@ -170,42 +176,44 @@ feature {NONE} -- Implementation
 			l_name_code: INTEGER
 			l_expanded_name: STRING
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				l_name_code := l_cursor.item
-				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
-				if STRING_.same_string (l_expanded_name, Name_attribute) then
-					name := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Decimal_separator_attribute) then
-					decimal_separator	:= attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Grouping_separator_attribute) then
-					grouping_separator := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Infinity_attribute) then
-					infinity := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Minus_sign_attribute) then
-					minus_sign := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Nan_attribute) then
-					nan := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Percent_attribute) then
-					percent := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Per_mille_attribute) then
-					per_mille := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Zero_digit_attribute) then
-					zero_digit := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Digit_attribute) then
-					digit := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Pattern_separator_attribute) then
-					pattern_separator	:= attribute_value_by_index (l_cursor.index)
-				else
-					check_unknown_attribute (l_name_code)
+			check attached attribute_collection as l_attribute_collection then
+				from
+					l_cursor := l_attribute_collection.name_code_cursor
+					l_cursor.start
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					l_name_code := l_cursor.item
+					l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+					if STRING_.same_string (l_expanded_name, Name_attribute) then
+						name := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Decimal_separator_attribute) then
+						decimal_separator	:= attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Grouping_separator_attribute) then
+						grouping_separator := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Infinity_attribute) then
+						infinity := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Minus_sign_attribute) then
+						minus_sign := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Nan_attribute) then
+						nan := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Percent_attribute) then
+						percent := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Per_mille_attribute) then
+						per_mille := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Zero_digit_attribute) then
+						zero_digit := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Digit_attribute) then
+						digit := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Pattern_separator_attribute) then
+						pattern_separator	:= attribute_value_by_index (l_cursor.index)
+					else
+						check_unknown_attribute (l_name_code)
+					end
+					l_cursor.forth
+				variant
+					l_attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
-				l_cursor.forth
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index
 			end
 			if not any_compile_errors then
 				validate_decimal_separator
@@ -241,8 +249,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if decimal_separator /= Void and then decimal_separator.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format decimal-separator must be s single character. Found ", decimal_separator)
+			if attached decimal_separator as l_decimal_separator and then l_decimal_separator.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format decimal-separator must be s single character. Found ", l_decimal_separator)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -256,8 +264,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if grouping_separator /= Void and then grouping_separator.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format grouping-separator must be s single character. Found ", grouping_separator)
+			if attached grouping_separator as l_grouping_separator and then l_grouping_separator.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format grouping-separator must be s single character. Found ", l_grouping_separator)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -271,8 +279,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if percent /= Void and then percent.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format percent must be s single character. Found ", percent)
+			if attached percent as l_percent and then l_percent.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format percent must be s single character. Found ", l_percent)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -286,8 +294,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if per_mille /= Void and then per_mille.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format per-mille must be s single character. Found ", per_mille)
+			if attached per_mille as l_per_mille and then l_per_mille.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format per-mille must be s single character. Found ", l_per_mille)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -302,19 +310,19 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if zero_digit /= Void then
-				if zero_digit.count /= 1 then
-					l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be s single character. Found ", zero_digit)
+			if attached zero_digit as l_zero_digit then
+				if l_zero_digit.count /= 1 then
+					l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be s single character. Found ", l_zero_digit)
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1295", Static_error)
 					report_compile_error (l_error)
 				else
-					l_code := zero_digit.item_code (1)
+					l_code := l_zero_digit.item_code (1)
 					if not unicode_character_class.is_decimal_digit (l_code) then
-						l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be a Unicode decimal digit. Found ", zero_digit)
+						l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be a Unicode decimal digit. Found ", l_zero_digit)
 						create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1295", Static_error)
 						report_compile_error (l_error)
 					elseif unicode_character_class.decimal_digit_value (l_code) /= 0 then
-						l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be a Unicode decimal digit of value zero. Found ", zero_digit)
+						l_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be a Unicode decimal digit of value zero. Found ", l_zero_digit)
 						create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1295", Static_error)
 						report_compile_error (l_error)
 					end
@@ -330,8 +338,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if digit /= Void and then digit.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format digit must be s single character. Found ", digit)
+			if attached digit as l_digit and then l_digit.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format digit must be s single character. Found ", l_digit)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -345,8 +353,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if pattern_separator /= Void and then pattern_separator.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format pattern-separator must be s single character. Found ", pattern_separator)
+			if attached pattern_separator as l_pattern_separator and then l_pattern_separator.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format pattern-separator must be s single character. Found ", l_pattern_separator)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -360,8 +368,8 @@ feature {NONE} -- Implementation
 			l_message: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if minus_sign /= Void and then minus_sign.count /= 1 then
-				l_message := STRING_.appended_string ("xsl:decimal-format minus-sign must be s single character. Found ", minus_sign)
+			if attached minus_sign as l_minus_sign and then l_minus_sign.count /= 1 then
+				l_message := STRING_.appended_string ("xsl:decimal-format minus-sign must be s single character. Found ", l_minus_sign)
 				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (l_error)
 			end
@@ -372,36 +380,38 @@ feature {NONE} -- Implementation
 		require
 			no_error_yet: not any_compile_errors
 		do
-			create Result.make (a_fingerprint, containing_stylesheet.import_precedence)
-			if decimal_separator /= Void then
-				Result.set_decimal_separator (decimal_separator)
+			check attached containing_stylesheet as l_containing_stylesheet then
+				create Result.make (a_fingerprint, l_containing_stylesheet.import_precedence)
 			end
-			if grouping_separator /= Void then
-				Result.set_grouping_separator (grouping_separator)
+			if attached decimal_separator as l_decimal_separator then
+				Result.set_decimal_separator (l_decimal_separator)
 			end
-			if pattern_separator /= Void then
-				Result.set_pattern_separator (pattern_separator)
+			if attached grouping_separator as l_grouping_separator then
+				Result.set_grouping_separator (l_grouping_separator)
 			end
-			if percent /= Void then
-				Result.set_percent (percent)
+			if attached pattern_separator as l_pattern_separator then
+				Result.set_pattern_separator (l_pattern_separator)
 			end
-			if per_mille /= Void then
-				Result.set_per_mille (per_mille)
+			if attached percent as l_percent then
+				Result.set_percent (l_percent)
 			end
-			if minus_sign /= Void then
-				Result.set_minus_sign (minus_sign)
+			if attached per_mille as l_per_mille then
+				Result.set_per_mille (l_per_mille)
 			end
-			if zero_digit /= Void then
-				Result.set_zero_digit (zero_digit)
+			if attached minus_sign as l_minus_sign then
+				Result.set_minus_sign (l_minus_sign)
 			end
-			if digit /= Void then
-				Result.set_digit_sign (digit)
+			if attached zero_digit as l_zero_digit then
+				Result.set_zero_digit (l_zero_digit)
 			end
-			if infinity /= Void then
-				Result.set_infinity (infinity)
+			if attached digit as l_digit then
+				Result.set_digit_sign (l_digit)
 			end
-			if nan /= Void then
-				Result.set_nan (nan)
+			if attached infinity as l_infinity then
+				Result.set_infinity (l_infinity)
+			end
+			if attached nan as l_nan then
+				Result.set_nan (l_nan)
 			end
 		ensure
 			created_decimal_format_not_void: Result /= Void

@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs to output destinations"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,26 +65,28 @@ feature -- Action
 	resolve (a_uri: UT_URI)
 			-- Resolve `a_uri' relative to `a_base_uri'.
 		local
-			l_scheme, l_uri_to_use: STRING
+			l_uri_to_use: STRING
 			l_resolver: XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER
+			l_error_message: STRING
 		do
 			last_result := Void
 			error_message := Void
 			l_uri_to_use := a_uri.full_reference
 			if security_manager.is_output_uri_permitted (a_uri) then
-				l_scheme := a_uri.scheme
-				if scheme_resolvers.has (l_scheme) then
-					l_resolver := scheme_resolvers.item (l_scheme)
-					l_resolver.set_http_method (http_method)
-					l_resolver.resolve (a_uri)
-					last_result := l_resolver.last_result
-					error_message := l_resolver.error_message
-					if last_result /= Void then
-						output_destinations.force_new (last_result, l_uri_to_use)
+				check attached a_uri.scheme as l_scheme then
+					if scheme_resolvers.has (l_scheme) then
+						l_resolver := scheme_resolvers.item (l_scheme)
+						l_resolver.set_http_method (http_method)
+						l_resolver.resolve (a_uri)
+						last_result := l_resolver.last_result
+						error_message := l_resolver.error_message
+						if attached last_result as l_last_result then
+							output_destinations.force_new (l_last_result, l_uri_to_use)
+						end
+					else
+						l_error_message := STRING_.concat ("Writing output to URI scheme ", l_scheme)
+						error_message := STRING_.appended_string (l_error_message, " is not supported.")
 					end
-				else
-					error_message := STRING_.concat ("Writing output to URI scheme ", l_scheme)
-					error_message := STRING_.appended_string (error_message, " is not supported.")
 				end
 			else
 				error_message := STRING_.concat ("Security manager refused permission to write to ", l_uri_to_use)
@@ -114,7 +116,7 @@ feature -- Action
 
 feature -- Result
 
-	last_result: XM_XSLT_TRANSFORMATION_RESULT
+	last_result: detachable XM_XSLT_TRANSFORMATION_RESULT
 			-- Result object from last call to `resolve'
 
 feature {NONE} -- Implementation

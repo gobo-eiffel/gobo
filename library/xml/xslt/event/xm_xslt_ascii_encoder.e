@@ -43,6 +43,7 @@ feature -- Access
 			-- XML BOM
 		once
 			-- Precondition is never met
+			check byte_order_mark_permitted: False then end
 		end
 
 feature -- Status report

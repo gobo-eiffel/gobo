@@ -4,7 +4,7 @@ note
 		"Elements whose name is known at compile time"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,8 +27,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [INTEGER];
-			a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION)
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: detachable DS_ARRAYED_LIST [INTEGER];
+			a_schema_type: detachable XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER; inherit_namespaces: BOOLEAN; a_content: XM_XPATH_EXPRESSION)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -64,8 +64,8 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 		do
-			if internal_item_type /= Void then
-				Result := internal_item_type
+			if attached internal_item_type as l_internal_item_type then
+				Result := l_internal_item_type
 			else
 				Result := Precursor
 			end
@@ -90,8 +90,9 @@ feature -- Access
 	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
 			-- Re-calculated base URI
 		do
-			Result := base_uri
-			if Result = Void then
+			if attached base_uri as l_base_uri then
+				Result := l_base_uri
+			else
 				Result := ""
 			end
 		end
@@ -118,7 +119,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-free optimizations.
 		local
 			l_name_test: XM_XPATH_NAME_TEST
@@ -170,7 +171,7 @@ feature {NONE} -- Implementation
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes
 
-	internal_item_type: XM_XPATH_ITEM_TYPE
+	internal_item_type: detachable XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 
 invariant

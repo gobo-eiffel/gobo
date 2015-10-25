@@ -4,7 +4,7 @@ note
 		"Objects that implement xsl:copy"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_content: XM_XPATH_EXPRESSION; some_attribute_sets: DS_ARRAYED_LIST [INTEGER];
-			a_copy_namespaces: BOOLEAN; an_inherit_namespaces: BOOLEAN; a_schema_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER)
+			a_copy_namespaces: BOOLEAN; an_inherit_namespaces: BOOLEAN; a_schema_type: detachable XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 		do
 			executable := an_executable
 			content := a_content
-			adopt_child_expression (content)
 			attribute_sets := some_attribute_sets
 			validation_action := a_validation_action
 			type := a_schema_type
 			is_copy_namespaces := a_copy_namespaces
 			is_inherit_namespaces := an_inherit_namespaces
+			adopt_child_expression (content)
 			compute_static_properties
 			initialized := True
 		ensure
@@ -59,21 +59,22 @@ feature -- Access
 			-- Name code
 		do
 			check
-				context_item_is_node: a_context.context_item.is_node
+				attached a_context.context_item as l_context_context_item
+				context_item_is_node: l_context_context_item.is_node
+			then
+				Result := l_context_context_item.as_node.name_code
 			end
-			Result := a_context.context_item.as_node.name_code
 		end
 
 	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
 			-- Re-calculated base URI
 		local
-			l_item: XM_XPATH_ITEM
+			l_item: detachable XM_XPATH_ITEM
 		do
 			l_item := a_context.context_item
-			if l_item /= Void and then l_item.is_node then
-				Result := l_item.as_node.base_uri
-			end
-			if Result = Void then
+			if l_item /= Void and then l_item.is_node and then attached l_item.as_node.base_uri as l_base_uri then
+				Result := l_base_uri
+			else
 				Result := ""
 			end
 		end
@@ -88,61 +89,70 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_new_context: XM_XPATH_CONTEXT
 			l_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
-			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			l_new_context := a_context.new_minor_context
-			l_other_context ?= l_new_context
 			check
-				evaluation_context: l_other_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} l_new_context as l_other_context
 				-- this is XSLT
+				attached l_other_context.transformer as l_transformer
+			then
+				create l_outputter.make_with_size (1, l_transformer)
+				l_new_context.change_to_sequence_output_destination (l_outputter)
+				generate_events (l_new_context)
+				l_outputter.close
+				a_result.put (l_outputter.first_item)
 			end
-			create l_outputter.make_with_size (1, l_other_context.transformer)
-			l_new_context.change_to_sequence_output_destination (l_outputter)
-			generate_events (l_new_context)
-			l_outputter.close
-			a_result.put (l_outputter.first_item)
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
-			a_document: XM_XPATH_DOCUMENT
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_transformer := a_context.transformer
-			a_new_context := a_context.new_minor_context
-			a_receiver := a_new_context.current_receiver
-			an_item := a_new_context.context_item
-			if not an_item.is_node then
-				a_receiver.append_item (an_item)
-			else
-				a_node := an_item.as_node
-				inspect
-					a_node.node_type
-				when Element_node then
-					Precursor (a_tail, a_new_context)
-				when Attribute_node then
-					copy_attribute (a_node, a_new_context, Void, Validation_strip)
-				when Text_node then
-					a_receiver.notify_characters (STRING_.cloned_string (a_node.string_value), 0)
-				when Processing_instruction_node then
-					a_receiver.notify_processing_instruction (a_node.node_name, STRING_.cloned_string (a_node.string_value), 0)
-				when Comment_node then
-					a_receiver.notify_comment (STRING_.cloned_string (a_node.string_value), 0)
-				when Document_node then
-					a_document ?= a_node
-					copy_document (a_document, a_new_context, a_transformer, a_receiver)
-				when Namespace_node then
-					a_node.copy_node (a_receiver, No_namespaces, False)
+			check attached a_context.transformer as l_context_transformer then
+				a_transformer := l_context_transformer
+				a_new_context := a_context.new_minor_context
+				check
+					attached a_new_context.current_receiver as l_new_context_current_receiver
+					attached a_new_context.context_item as l_new_context_context_item
+				then
+					a_receiver := l_new_context_current_receiver
+					an_item := l_new_context_context_item
+					if not an_item.is_node then
+						a_receiver.append_item (an_item)
+					else
+						a_node := an_item.as_node
+						inspect
+							a_node.node_type
+						when Element_node then
+							Precursor (a_tail, a_new_context)
+						when Attribute_node then
+							copy_attribute (a_node, a_new_context, Void, Validation_strip)
+						when Text_node then
+							a_receiver.notify_characters (STRING_.cloned_string (a_node.string_value), 0)
+						when Processing_instruction_node then
+							check attached a_node.node_name as l_node_name then
+								a_receiver.notify_processing_instruction (l_node_name, STRING_.cloned_string (a_node.string_value), 0)
+							end
+						when Comment_node then
+							a_receiver.notify_comment (STRING_.cloned_string (a_node.string_value), 0)
+						when Document_node then
+							check attached {XM_XPATH_DOCUMENT} a_node as a_document then
+								copy_document (a_document, a_new_context, a_transformer, a_receiver)
+							end
+						when Namespace_node then
+							a_node.copy_node (a_receiver, No_namespaces, False)
+						end
+					end
 				end
 			end
 		end
@@ -156,10 +166,12 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 		do
 			if is_copy_namespaces then
 				check
-					context_item_is_element: a_context.context_item.is_element
+					attached a_context.context_item as l_context_context_item
+					context_item_is_element: l_context_context_item.is_element
+				then
+					an_element := l_context_context_item.as_element
+					an_element.output_namespace_nodes (a_receiver, True)
 				end
-				an_element := a_context.context_item.as_element
-				an_element.output_namespace_nodes (a_receiver, True)
 			end
 		end
 
@@ -176,31 +188,30 @@ feature {NONE} -- Implementation
 			receiver_not_void: a_receiver /= Void
 		local
 			l_validator: XM_XPATH_RECEIVER
-			l_complex_content: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 			l_nested: BOOLEAN
 		do
-			l_validator := a_transformer.configuration.document_validator (a_receiver,
-																								 a_document.base_uri,
+			check attached a_document.base_uri as l_document_base_uri then
+				l_validator := a_transformer.configuration.document_validator (a_receiver,
+																								 l_document_base_uri,
 																								 validation_action)
+			end
 			if l_validator /= a_receiver then
 				todo ("copy_document (validation)", True)
 			end
 
 			l_nested := a_receiver.is_document_started
 			if l_nested then
-				l_complex_content ?= a_receiver
 				check
-					nested_document: l_complex_content /= Void
+					nested_document: attached {XM_XSLT_COMPLEX_CONTENT_OUTPUTTER} a_receiver as l_complex_content
 					-- Logic of cluster
+				then
+					l_complex_content.start_nested_document
+					content.generate_events (a_context)
+					l_complex_content.end_nested_document
 				end
-				l_complex_content.start_nested_document
 			else
 				a_receiver.start_document
-			end
-			content.generate_events (a_context)
-			if l_nested then
-				l_complex_content.end_nested_document
-			else
+				content.generate_events (a_context)
 				a_receiver.end_document
 			end
 		end

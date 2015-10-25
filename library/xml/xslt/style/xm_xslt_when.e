@@ -5,7 +5,7 @@ note
 		"xsl:when element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	condition: XM_XPATH_EXPRESSION
+	condition: detachable XM_XPATH_EXPRESSION
 			-- Test expression
 
 feature -- Status setting
@@ -33,7 +33,7 @@ feature -- Status setting
 	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
-			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+			a_last_instruction: detachable XM_XSLT_STYLE_ELEMENT
 		do
 			a_last_instruction := last_child_instruction
 			if a_last_instruction /= Void then
@@ -56,11 +56,12 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_test_attribute: STRING
+			an_expanded_name: STRING
+			a_test_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -76,14 +77,17 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_test_attribute /= Void then
 				generate_expression (a_test_attribute)
-				condition := last_generated_expression
-				if condition.is_error then
-					report_compile_error (condition.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_last_generated_expression then
+					condition := l_last_generated_expression
+					if attached l_last_generated_expression.error_value as l_error_value then
+						check is_error: l_last_generated_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			else
 				report_absence ("test")
@@ -94,17 +98,17 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_xsl_choose: XM_XSLT_CHOOSE
 			l_error: XM_XPATH_ERROR_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_xsl_choose ?= parent
-			if l_xsl_choose = Void then
+			if not attached {XM_XSLT_CHOOSE} parent then
 				create l_error.make_from_string ("xsl:when must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (l_error)
 			else
 				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "test", condition)
+				check attached condition as l_condition then
+					type_check_expression (l_replacement, "test", l_condition)
+				end
 				condition := l_replacement.item
 			end
 			validated := True

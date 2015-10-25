@@ -5,7 +5,7 @@ note
 		"xsl:template element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -48,16 +48,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	priority: MA_DECIMAL
+	priority: detachable MA_DECIMAL
 			-- Priority of this template
 
-	match: XM_XSLT_PATTERN
+	match: detachable XM_XSLT_PATTERN
 			-- Pattern match
 
-	required_type: XM_XPATH_SEQUENCE_TYPE
+	required_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Required type for constructed sequence
 
-	compiled_template: XM_XSLT_COMPILED_TEMPLATE
+	compiled_template: detachable XM_XSLT_COMPILED_TEMPLATE
 			-- Compiled version of `Current'
 
 	template_fingerprint: INTEGER
@@ -89,7 +89,7 @@ feature -- Status setting
 	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
-			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+			a_last_instruction: detachable XM_XSLT_STYLE_ELEMENT
 		do
 			if required_type = Void then
 
@@ -108,7 +108,9 @@ feature -- Element change
 			-- Allocate slots in the stack frame for local variables contained in `an_expression', which will include a match pattern.
 		do
 			a_expression.allocate_slots (1, a_slot_manager)
-			containing_stylesheet.allocate_pattern_slots (a_expression.last_slot_number)
+			check attached containing_stylesheet as l_containing_stylesheet then
+				l_containing_stylesheet.allocate_pattern_slots (a_expression.last_slot_number)
+			end
 		end
 
 	prepare_attributes
@@ -116,12 +118,12 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute, a_mode_attribute, a_priority_attribute, a_match_attribute, an_as_attribute: STRING
+			an_expanded_name, a_name_attribute, a_mode_attribute, a_priority_attribute, a_match_attribute, an_as_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -149,7 +151,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_mode_attribute (a_mode_attribute, a_match_attribute = Void)
@@ -163,8 +165,7 @@ feature -- Element change
 				generate_pattern (a_match_attribute)
 				if not any_compile_errors then
 					match := last_generated_pattern
-					role_identifier := STRING_.concat ("match='", a_match_attribute)
-					role_identifier := STRING_.appended_string (role_identifier, "'")
+					role_identifier := STRING_.appended_string (STRING_.concat ("match='", a_match_attribute), "'")
 				end
 			end
 			if not any_compile_errors and then a_match_attribute = Void and then a_name_attribute = Void then
@@ -180,10 +181,10 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-		ensure_template_fingerprint
+	ensure_template_fingerprint
 			-- Ensure `template_fingerprint' returns correct result.
 		local
-			l_name: STRING
+			l_name: detachable STRING
 		do
 			if internal_fingerprint = -1 then
 				l_name := attribute_value_by_name ("", Name_attribute)
@@ -194,7 +195,9 @@ feature -- Element change
 						generate_name_code (l_name)
 						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 						if internal_fingerprint = -1 then
-							report_compile_error (name_code_error_value)
+							check attached name_code_error_value as l_name_code_error_value then
+								report_compile_error (l_name_code_error_value)
+							end
 						end
 					else
 						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
@@ -219,11 +222,10 @@ feature -- Element change
 		local
 			l_has_required_parameters: BOOLEAN
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			check_top_level (Void)
-			if match /= Void then
-				type_check_pattern ("match", match)
+			if attached match as l_match then
+				type_check_pattern ("match", l_match)
 			end
 			mark_tail_calls
 			validated := True
@@ -234,14 +236,15 @@ feature -- Element change
 			until
 				l_child_iterator.after
 			loop
-				l_style_element ?= l_child_iterator.item
-				if l_style_element /= Void and then l_style_element.is_param
+				if attached {XM_XSLT_STYLE_ELEMENT} l_child_iterator.item as l_style_element and then l_style_element.is_param
 				 and then l_style_element.as_param.is_required_parameter then
 				 l_has_required_parameters := True
 				end
 				l_child_iterator.forth
 			end
-			compiled_template.set_has_required_parameters (l_has_required_parameters)
+			check attached compiled_template as l_compiled_template then
+				l_compiled_template.set_has_required_parameters (l_has_required_parameters)
+			end
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE)
@@ -257,30 +260,39 @@ feature -- Element change
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_context_item_type: XM_XPATH_ITEM_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			if last_generated_expression = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+			if not attached last_generated_expression as l_last_generated_expression then
+				create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 			else
-				l_content := last_generated_expression
+				l_content := l_last_generated_expression
 			end
 			if not l_content.is_error then
 				create l_replacement.make (Void)
 				l_content.simplify (l_replacement)
-				l_content := l_replacement.item
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					l_content := l_replacement_item
+				end
 			end
-			if l_content.is_error then
-				report_compile_error (l_content.error_value)
+			if attached l_content.error_value as l_error_value then
+				check is_error: l_content.is_error end
+				report_compile_error (l_error_value)
 			else
-				if required_type /= Void then
-					create l_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XTTE0505")
+				if attached required_type as l_required_type then
+					check attached role_identifier as l_role_identifier then
+						create l_role.make (Template_result_role, l_role_identifier, 1, Xpath_errors_uri, "XTTE0505")
+					end
 					create l_type_checker
-					l_type_checker.static_type_check (static_context, l_content, required_type, False, l_role)
-					if l_type_checker.is_static_type_check_error	then
-						report_compile_error (l_type_checker.static_type_check_error)
+					l_type_checker.static_type_check (static_context, l_content, l_required_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_type_checker_static_type_check_error then
+							report_compile_error (l_type_checker_static_type_check_error)
+						end
 					else
-						l_content := l_type_checker.checked_expression
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_type_checker_checked_expression then
+							l_content := l_type_checker_checked_expression
+						end
 					end
 				end
 			end
@@ -289,66 +301,96 @@ feature -- Element change
 				if template_fingerprint = -1 then
 
 					-- Template can't be called by name, so the context item will match the match pattern
-					l_context_item_type := match.node_test
+					check attached match as l_match then
+						l_context_item_type := l_match.node_test
+					end
 				end
-				l_replacement.put (Void)
-				l_content.check_static_type (l_replacement, static_context, l_context_item_type)
-				l_content := l_replacement.item
-				if l_content.is_error then
-					report_compile_error (l_content.error_value)
+				create l_replacement.make (Void)
+				check attached static_context as l_static_context then
+					l_content.check_static_type (l_replacement, l_static_context, l_context_item_type)
+				end
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					l_content := l_replacement_item
+				end
+				if attached l_content.error_value as l_error_value then
+					check is_error: l_content.is_error end
+					report_compile_error (l_error_value)
 				else
 					l_replacement.put (Void)
-					l_content.optimize (l_replacement, static_context, l_context_item_type)
-					l_content := l_replacement.item
+					check attached static_context as l_static_context then
+						l_content.optimize (l_replacement, l_static_context, l_context_item_type)
+					end
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+						l_content := l_replacement_item
+					end
 					if configuration.is_tracing and not l_content.is_trace_wrapper then
 						create l_trace_wrapper.make (l_content, an_executable, Current)
-						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						check attached principal_stylesheet as l_principal_stylesheet then
+							l_trace_wrapper.set_source_location (l_principal_stylesheet.module_number (system_id), line_number)
+						end
 						-- TODO: sort out - l_trace_wrapper.set_parent (compiled_template)
 						l_content := l_trace_wrapper
 					end
-					compiled_template.initialize (an_executable, l_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
-					if l_content.is_error then
-						report_compile_error (l_content.error_value)
+					check attached compiled_template as l_compiled_template then
+						l_compiled_template.initialize (an_executable, l_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
+					end
+					if attached l_content.error_value as l_error_value then
+						check is_error: l_content.is_error end
+						report_compile_error (l_error_value)
 					else
 						style_element_allocate_slots (l_content, slot_manager)
 						if match /= Void then
-							l_rule_manager := principal_stylesheet.rule_manager
-							from
-								l_cursor := mode_name_codes.new_cursor
-								l_cursor.start
-							until
-								l_cursor.after
-							loop
-								l_name_code := l_cursor.item
-								if not l_rule_manager.is_mode_registered (l_name_code) then
-									l_rule_manager.register_mode (l_name_code)
+							check attached principal_stylesheet as l_principal_stylesheet then
+								l_rule_manager := l_principal_stylesheet.rule_manager
+							end
+							check attached mode_name_codes as l_mode_name_codes then
+								from
+									l_cursor := l_mode_name_codes.new_cursor
+									l_cursor.start
+								until
+									l_cursor.after
+								loop
+									l_name_code := l_cursor.item
+									if not l_rule_manager.is_mode_registered (l_name_code) then
+										l_rule_manager.register_mode (l_name_code)
+									end
+									l_mode := l_rule_manager.mode (l_name_code)
+									check attached compiled_template as l_compiled_template then
+										create l_rule_value.make (l_compiled_template)
+									end
+									check attached match as l_match then
+										if is_priority_specified then
+											check attached priority as l_priority then
+												l_rule_manager.set_handler (l_match, l_rule_value, l_mode, precedence, l_priority)
+											end
+										else
+											l_rule_manager.set_handler_with_default_priority (l_match, l_rule_value, l_mode, precedence)
+										end
+									end
+									l_cursor.forth
+								variant
+									l_mode_name_codes.count + 1 - l_cursor.index
 								end
-								l_mode := l_rule_manager.mode (l_name_code)
-								create l_rule_value.make (compiled_template)
-								if is_priority_specified then
-									l_rule_manager.set_handler (match, l_rule_value, l_mode, precedence, priority)
-								else
-									l_rule_manager.set_handler_with_default_priority (match, l_rule_value, l_mode, precedence)
-								end
-								l_cursor.forth
-							variant
-								mode_name_codes.count + 1 - l_cursor.index
 							end
 						end
-						if is_explaining or else principal_stylesheet.is_all_explaining then
-							std.error.put_string ("Compiled template ")
-							if template_fingerprint /= -1 then
-								std.error.put_string (" name=")
-								std.error.put_string (shared_name_pool.display_name_from_name_code (template_fingerprint))
+						check attached principal_stylesheet as l_principal_stylesheet then
+							if is_explaining or else l_principal_stylesheet.is_all_explaining then
+								std.error.put_string ("Compiled template ")
+								if template_fingerprint /= -1 then
+									std.error.put_string (" name=")
+									std.error.put_string (shared_name_pool.display_name_from_name_code (template_fingerprint))
+								end
+								if attached match as l_match then
+									std.error.put_string (" match=")
+									std.error.put_string (l_match.original_text)
+								end
+								std.error.put_new_line
+								-- TODO - add mode names
+								std.error.put_string (" Optimized template body:%N")
+								check attached compiled_template as l_compiled_template and then attached l_compiled_template.body as l_compiled_template_body then
+									l_compiled_template_body.display (2)
+								end
 							end
-							if match /= Void then
-								std.error.put_string (" match=")
-								std.error.put_string (match.original_text)
-							end
-							std.error.put_new_line
-							-- TODO - add mode names
-							std.error.put_string (" Optimized template body:%N")
-							compiled_template.body.display (2)
 						end
 					end
 				end
@@ -361,10 +403,10 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
-			if required_type = Void then
+			if not attached required_type as l_required_type then
 				Result := common_child_item_type
 			else
-				Result := required_type.primary_type
+				Result := l_required_type.primary_type
 			end
 		end
 
@@ -387,28 +429,26 @@ feature {NONE} -- Implementation
 	internal_fingerprint: INTEGER
 			-- Used by `template_fingerprint'
 
-	mode_name_codes: DS_ARRAYED_LIST [INTEGER]
+	mode_name_codes: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Name codes for the modes applicable to this template
 
 	is_priority_specified: BOOLEAN
 			-- has the priority been specified?
 
-	role_identifier: STRING
+	role_identifier: detachable STRING
 			-- Role identificaton
 
 	minimum_import_precedence: INTEGER
 			-- Lowest import pecedence
-		local
-			a_stylesheet: XM_XSLT_STYLESHEET
 		do
-			a_stylesheet ?= document_element
 			check
-				stylesheet: a_stylesheet /= Void
+				stylesheet: attached {XM_XSLT_STYLESHEET} document_element as a_stylesheet
+			then
+				Result := a_stylesheet.minimum_import_precedence
 			end
-			Result := a_stylesheet.minimum_import_precedence
 		end
 
-	prepare_mode_attribute (l_mode_attribute: STRING; is_match_attribute_void: BOOLEAN)
+	prepare_mode_attribute (l_mode_attribute: detachable STRING; is_match_attribute_void: BOOLEAN)
 			-- Prepare mode attribute
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -419,10 +459,12 @@ feature {NONE} -- Implementation
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_mode: STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			l_mode_name_codes: like mode_name_codes
 		do
 			if l_mode_attribute = Void then
-				create mode_name_codes.make (1)
-				mode_name_codes.put_last (Default_mode)
+				create l_mode_name_codes.make (1)
+				l_mode_name_codes.put_last (Default_mode)
+				mode_name_codes := l_mode_name_codes
 			else
 				if is_match_attribute_void then
 					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0500", Static_error)
@@ -434,7 +476,8 @@ feature {NONE} -- Implementation
 						create an_error.make_from_string ("The mode attribute must not be empty", Xpath_errors_uri, "XTSE0550", Static_error)
 						report_compile_error (an_error)
 					else
-						create mode_name_codes.make (mode_tokens.count)
+						create l_mode_name_codes.make (mode_tokens.count)
+						mode_name_codes := l_mode_name_codes
 						from
 							l_cursor := mode_tokens.new_cursor
 							l_cursor.start
@@ -443,13 +486,13 @@ feature {NONE} -- Implementation
 						loop
 							l_mode := l_cursor.item
 							if STRING_.same_string (l_mode, "#default") then
-								mode_name_codes.put_last (Default_mode)
+								l_mode_name_codes.put_last (Default_mode)
 							elseif STRING_.same_string (l_mode, "#all") then
 								if mode_tokens.count /= 1 then
 									create an_error.make_from_string ("mode='#all' cannot be combined with other modes", Xpath_errors_uri, "XTSE0550", Static_error)
 									report_compile_error (an_error)
 								else
-									mode_name_codes.put_last (All_modes)
+									l_mode_name_codes.put_last (All_modes)
 								end
 							elseif not is_qname (l_mode) then
 								create an_error.make_from_string ("Mode names must be QNames or the token '#default' or the token '#all'", Xpath_errors_uri, "XTSE0550", Static_error)
@@ -457,10 +500,12 @@ feature {NONE} -- Implementation
 							else
 								generate_name_code (l_mode)
 								if last_generated_name_code = -1 then
-									report_compile_error (name_code_error_value)
+									check postcondition_of_generate_name_code: attached name_code_error_value as l_name_code_error_value then
+										report_compile_error (l_name_code_error_value)
+									end
 									l_cursor.go_after
 								else
-									mode_name_codes.put_last (last_generated_name_code)
+									l_mode_name_codes.put_last (last_generated_name_code)
 								end
 							end
 							l_cursor.forth
@@ -477,7 +522,7 @@ feature {NONE} -- Implementation
 			mode_name_codes_not_void: not any_compile_errors implies mode_name_codes /= Void
 		end
 
-	prepare_name_attribute (a_name_attribute: STRING)
+	prepare_name_attribute (a_name_attribute: detachable STRING)
 			-- Prepare name attribute
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -486,7 +531,9 @@ feature {NONE} -- Implementation
 				if is_qname (a_name_attribute) then
 					generate_name_code (a_name_attribute)
 					if last_generated_name_code = -1 then
-						report_compile_error (name_code_error_value)
+						check postcondition_of_generate_name_code: attached name_code_error_value as l_name_code_error_value then
+							report_compile_error (l_name_code_error_value)
+						end
 					else
 						internal_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					end
@@ -498,7 +545,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_priority_attribute (a_priority_attribute: STRING; is_match_attribute_void: BOOLEAN)
+	prepare_priority_attribute (a_priority_attribute: detachable STRING; is_match_attribute_void: BOOLEAN)
 			-- Prepare priority attribute
 		local
 			l_message: STRING
@@ -515,7 +562,9 @@ feature {NONE} -- Implementation
 					create l_ctx.make (a_priority_attribute.count, round_half_up)
 					l_decimal_parser.parse_ctx (a_priority_attribute, l_ctx, False)
 					if not l_decimal_parser.error and a_priority_attribute.index_of ('e', 1) = 0 and a_priority_attribute.index_of ('E', 1) = 0 then
-						priority := l_decimal_parser.last_decimal
+						check postcondition_of_parse_ctx: attached l_decimal_parser.last_decimal as l_last_decimal then
+							priority := l_last_decimal
+						end
 					else
 						l_message := STRING_.appended_string ("Invalid decimal value for priority (", a_priority_attribute)
 						l_message := STRING_.appended_string (l_message, ")")
@@ -533,22 +582,24 @@ feature {NONE} -- Implementation
 			l_name_code: INTEGER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			create a_set.make (mode_name_codes.count)
-			from
-				l_cursor := mode_name_codes.new_cursor; l_cursor.start
-			until
-				any_compile_errors or else l_cursor.after
-			loop
-				l_name_code := l_cursor.item
-				if a_set.has (l_name_code) then
-					create an_error.make_from_string ("Mode names must all be distinct", Xpath_errors_uri, "XTSE0550", Static_error)
-					report_compile_error (an_error)
-				else
-					a_set.put (l_name_code)
+			check attached mode_name_codes as l_mode_name_codes then
+				create a_set.make (l_mode_name_codes.count)
+				from
+					l_cursor := l_mode_name_codes.new_cursor; l_cursor.start
+				until
+					any_compile_errors or else l_cursor.after
+				loop
+					l_name_code := l_cursor.item
+					if a_set.has (l_name_code) then
+						create an_error.make_from_string ("Mode names must all be distinct", Xpath_errors_uri, "XTSE0550", Static_error)
+						report_compile_error (an_error)
+					else
+						a_set.put (l_name_code)
+					end
+					l_cursor.forth
+				variant
+					l_mode_name_codes.count + 1 - l_cursor.index
 				end
-				l_cursor.forth
-			variant
-				mode_name_codes.count + 1 - l_cursor.index
 			end
 		end
 

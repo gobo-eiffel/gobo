@@ -5,7 +5,7 @@ note
 		"Latin-1 (ISO-8859-1) output encoders."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,7 @@ feature -- Access
 			-- XML BOM
 		once
 			-- Precondition is never met
+			check byte_order_mark_permitted: False then end
 		end
 
 feature -- Status report

@@ -5,7 +5,7 @@ note
 		"Objects that represent the compiled form of XSLT variables and parameters"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,10 +31,10 @@ inherit
 
 feature -- Access
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Select expresion
 
-	required_type: XM_XPATH_SEQUENCE_TYPE
+	required_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Required type
 
 	variable_fingerprint: INTEGER
@@ -58,8 +58,8 @@ feature -- Access
 		do
 			create Result.make (1)
 			Result.set_equality_tester (expression_tester)
-			if select_expression /= Void then
-				Result.put (select_expression, 1)
+			if attached select_expression as l_select_expression then
+				Result.put (l_select_expression, 1)
 			end
 		end
 
@@ -82,13 +82,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selector (a_select_expression: XM_XPATH_EXPRESSION)
+	set_selector (a_select_expression: detachable XM_XPATH_EXPRESSION)
 			-- Ensure `select_expression' = `a_select_expression'.
 		do
 			if select_expression /= a_select_expression then
 				select_expression := a_select_expression
-				if select_expression /= Void then
-					adopt_child_expression (select_expression)
+				if attached select_expression as l_select_expression then
+					adopt_child_expression (l_select_expression)
 					reset_static_properties
 				end
 			end
@@ -122,19 +122,24 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_select_expression: like select_expression
 		do
-			if select_expression /= Void then
-				if not select_expression.is_error then
+			l_select_expression := select_expression
+			if l_select_expression /= Void then
+				if not l_select_expression.is_error then
 					create l_replacement.make (Void)
-					select_expression.simplify (l_replacement)
-					set_selector (l_replacement.item)
+					l_select_expression.simplify (l_replacement)
+					check postcondition_of_simplify: attached l_replacement.item as l_new_select_expression then
+						set_selector (l_new_select_expression)
+						l_select_expression := l_new_select_expression
+					end
 				end
-				if select_expression.is_error then
-					set_replacement (a_replacement, select_expression)
+				if l_select_expression.is_error then
+					set_replacement (a_replacement, l_select_expression)
 				end
 			end
 			if a_replacement.item = Void then
@@ -142,17 +147,22 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_select_expression: like select_expression
 		do
-			if select_expression /= Void then
+			l_select_expression := select_expression
+			if l_select_expression /= Void then
 				create l_replacement.make (Void)
-				select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_selector (l_replacement.item)
-				if select_expression.is_error then
-					set_replacement (a_replacement, select_expression)
+				l_select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					l_select_expression := l_replacement_item
+					set_selector (l_replacement_item)
+				end
+				if l_select_expression.is_error then
+					set_replacement (a_replacement, l_select_expression)
 				end
 			end
 			if not is_error and a_replacement.item = Void then
@@ -160,17 +170,22 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_select_expression: like select_expression
 		do
-			if select_expression /= Void then
+			l_select_expression := select_expression
+			if l_select_expression /= Void then
 				create l_replacement.make (Void)
-				select_expression.optimize (l_replacement, a_context, a_context_item_type)
-				set_selector (l_replacement.item)
-				if select_expression.is_error then
-					set_replacement (a_replacement, select_expression)
+				l_select_expression.optimize (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					l_select_expression := l_replacement_item
+					set_selector (l_replacement_item)
+				end
+				if l_select_expression.is_error then
+					set_replacement (a_replacement, l_select_expression)
 				end
 			end
 			if a_replacement.item = Void then
@@ -181,18 +196,20 @@ feature -- Optimization
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_replacement.make (Void)
-				select_expression.promote (l_replacement, a_offer)
-				set_selector (l_replacement.item)
+				l_select_expression.promote (l_replacement, a_offer)
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					set_selector (l_replacement_item)
+				end
 			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			generate_events (a_context)
@@ -202,7 +219,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_item.make (Void)
 			evaluate_item (l_item, a_context)
@@ -215,13 +232,16 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 			select_expression_not_void: select_expression /= Void
 		local
-			l_result: DS_CELL [XM_XPATH_VALUE]
+			l_result: DS_CELL [detachable XM_XPATH_VALUE]
 		do
-			create l_result.make (Void)
-			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, a_context)
-			Result := l_result.item
-			if Result = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+			check precondition_select_expression_not_void: attached select_expression as l_select_expression then
+				create l_result.make (Void)
+				l_select_expression.evaluate (l_result, l_select_expression.lazy_evaluation_mode, Many_references, a_context)
+				if attached l_result.item as l_result_item then
+					Result := l_result_item
+				else
+					create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+				end
 			end
 		ensure
 			select_value_not_void: Result /= Void
@@ -229,7 +249,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	initialize_variable (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER)
+	initialize_variable (a_select_expression: detachable XM_XPATH_EXPRESSION; a_required_type: detachable XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER)
 			-- Set initial values.
 		do
 			set_selector (a_select_expression)
@@ -241,7 +261,7 @@ feature -- Element change
 			variable_fingerprint: variable_fingerprint = a_fingerprint
 		end
 
-	set_required_type (a_required_type: XM_XPATH_SEQUENCE_TYPE)
+	set_required_type (a_required_type: detachable XM_XPATH_SEQUENCE_TYPE)
 			-- Set `required_type'.
 		do
 			required_type := a_required_type
@@ -262,6 +282,7 @@ feature -- Conversion
 		require
 			global_variable: is_global_variable
 		do
+			check is_global_variable: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -279,7 +300,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	check_against_required_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_against_required_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check conformity against `required_type'.
 		require
 			static_context_not_void: a_context /= Void
@@ -293,14 +314,18 @@ feature {NONE} -- Implementation
 
 			-- N.B. Sometimes this check gets performed more than once
 
-			if required_type /= Void and then select_expression /= Void then
+			if attached required_type as l_required_type and then attached select_expression as l_select_expression then
 				create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
 				create l_type_checker
-				l_type_checker.static_type_check (a_context, select_expression, required_type, False, l_role)
-				if l_type_checker.is_static_type_check_error	then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+				l_type_checker.static_type_check (a_context, l_select_expression, l_required_type, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+					end
 				else
-					set_selector (l_type_checker.checked_expression)
+					check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+						set_selector (l_checked_expression)
+					end
 				end
 			end
 			if a_replacement.item = Void then

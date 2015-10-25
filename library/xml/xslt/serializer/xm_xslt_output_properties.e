@@ -5,7 +5,7 @@ note
 		"Output definitions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #5 $"
@@ -96,13 +96,13 @@ feature -- Access
 	omit_xml_declaration: BOOLEAN
 			-- Should the xml declaration be omitted?
 
-	standalone: STRING
+	standalone: detachable STRING
 			-- Value of the standalone attribute on the xml declaration
 
-	doctype_public: STRING
+	doctype_public: detachable STRING
 			-- Value of the PUBLIC identifier to be written on the DOCTYPE
 
-	doctype_system: STRING
+	doctype_system: detachable STRING
 			-- Value of the SYSTEM identifier to be written on the DOCTYPE
 
 	indent: BOOLEAN
@@ -152,13 +152,13 @@ feature -- Access
 	indent_spaces: INTEGER
 			-- Number of spaces to be used for indentation when `indent' is `True' (a gexslt extension)
 
-	normalization_form: STRING
+	normalization_form: detachable STRING
 			-- Requested normalization-form
 
-	next_in_chain: STRING
+	next_in_chain: detachable STRING
 			-- URI of next stylesheet to be applied to output
 
-	next_in_chain_base_uri: STRING
+	next_in_chain_base_uri: detachable STRING
 			-- Base URI of xsl:output element
 
 	used_character_maps: DS_ARRAYED_LIST [STRING]
@@ -209,7 +209,8 @@ feature -- Access
 				if l_representations.count = 1 then
 					l_non_ascii_representation := l_representations.item (1)
 					l_excluded_representation := l_representations.item (1)
-				elseif l_representations.count = 2 then
+				else
+					check l_representations.count = 2 end
 					l_non_ascii_representation := l_representations.item (1)
 					l_excluded_representation := l_representations.item (2)
 				end
@@ -245,10 +246,10 @@ feature -- Status report
 	is_duplication_error: BOOLEAN
 			-- Is the error a duplication error?
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message from `set_property'
 
-	duplicate_attribute_name: STRING
+	duplicate_attribute_name: detachable STRING
 			-- Name of attribute that caused a duplication error
 
 	is_default_version: BOOLEAN
@@ -303,7 +304,7 @@ feature -- Status setting
 			is_duplication_error := True
 		ensure
 			in_error: is_error and then is_duplication_error
-			name_set: STRING_.same_string (duplicate_attribute_name, a_attribute_name)
+			name_set: attached duplicate_attribute_name as l_duplicate_attribute_name and then STRING_.same_string (l_duplicate_attribute_name, a_attribute_name)
 		end
 
 	set_general_error (a_error_message: STRING)
@@ -316,7 +317,7 @@ feature -- Status setting
 			is_error := True
 		ensure
 			in_error: is_error and then not is_duplication_error
-			error_text_set: STRING_.same_string (error_message, a_error_message)
+			error_text_set: attached error_message as l_error_message and then STRING_.same_string (l_error_message, a_error_message)
 		end
 
 feature -- Element change
@@ -403,6 +404,12 @@ feature -- Element change
 				set_default_character_representation ("entity;decimal")
 			elseif STRING_.same_string (method, "text") then
 				set_default_media_type ("text/plain")
+				set_default_version ("")
+				set_default_character_representation ("hex")
+			else
+				set_default_media_type ("")
+				set_default_version ("")
+				set_default_character_representation ("hex")
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = a_import_precedence
@@ -543,7 +550,7 @@ feature -- Element change
 			normalization_form := a_form
 		ensure
 			import_precedence_set: precedence_property_map.has (Normalization_form_attribute) and then precedence_property_map.item (Normalization_form_attribute) = a_import_precedence
-			normalization_form_set: STRING_.same_string (a_form, normalization_form)
+			normalization_form_set: attached normalization_form as l_normalization_form and then STRING_.same_string (a_form, l_normalization_form)
 		end
 
 	set_doctype_system (a_system_id: STRING; a_import_precedence: INTEGER)
@@ -556,7 +563,7 @@ feature -- Element change
 			doctype_system := a_system_id
 		ensure
 			import_precedence_set: precedence_property_map.has (Doctype_system_attribute) and then precedence_property_map.item (Doctype_system_attribute) = a_import_precedence
-			doctype_system_set: STRING_.same_string (a_system_id, doctype_system)
+			doctype_system_set: attached doctype_system as l_doctype_system and then STRING_.same_string (a_system_id, l_doctype_system)
 		end
 
 	set_doctype_public (a_public_id: STRING; a_import_precedence: INTEGER)
@@ -569,7 +576,7 @@ feature -- Element change
 			doctype_public := a_public_id
 		ensure
 			import_precedence_set: precedence_property_map.has (Doctype_public_attribute) and then precedence_property_map.item (Doctype_public_attribute) = a_import_precedence
-			doctype_public_set: STRING_.same_string (a_public_id, doctype_public)
+			doctype_public_set: attached doctype_public as l_doctype_public and then STRING_.same_string (a_public_id, l_doctype_public)
 		end
 
 	set_cdata_sections (a_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING])
@@ -1000,10 +1007,12 @@ feature {NONE} -- Implementation
 				end
 			elseif STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
 				validate_cdata_sections (a_value, a_namespace_resolver)
-				if cdata_validation_error /= Void then
-					set_general_error (cdata_validation_error.error_message)
+				if attached cdata_validation_error as l_cdata_validation_error then
+					set_general_error (l_cdata_validation_error.error_message)
 				else
-					set_cdata_sections (cdata_section_expanded_names)
+					check postcondition_of_validate_cdata_sections: attached cdata_section_expanded_names as l_cdata_section_expanded_names then
+						set_cdata_sections (l_cdata_section_expanded_names)
+					end
 				end
 			elseif STRING_.same_string (a_local_name, Undeclare_prefixes_attribute) then
 				set_yes_no_property (Undeclare_prefixes_attribute, a_value)
@@ -1077,12 +1086,12 @@ feature {NONE} -- Satisfying interface only
 	any_compile_errors: BOOLEAN
 			-- Have any compile errors been reported?
 
-	uri_for_prefix (a_xml_prefix: STRING; a_use_default_namespace: BOOLEAN): STRING
+	uri_for_prefix (a_xml_prefix: STRING; a_use_default_namespace: BOOLEAN): detachable STRING
 			-- URI for `a_xml_prefix' using the in-scope namespaces
 		do
 		end
 
-	principal_stylesheet: XM_XSLT_STYLESHEET
+	principal_stylesheet: detachable XM_XSLT_STYLESHEET
 			-- Top-level stylesheet
 		do
 		end
@@ -1091,7 +1100,7 @@ invariant
 
 	extension_attributes_not_void: extension_attributes /= Void
 	cdata_section_elements_not_void: cdata_section_elements /= Void
-	standalone_valid: standalone /= Void implies STRING_.same_string (standalone, "yes") or STRING_.same_string (standalone, "no")
+	standalone_valid: attached standalone as l_standalone implies STRING_.same_string (l_standalone, "yes") or STRING_.same_string (l_standalone, "no")
 	default_media_type_not_void: default_media_type /= Void
 	used_character_maps_not_void: used_character_maps /= Void
 	default_version_not_void: default_version /= Void

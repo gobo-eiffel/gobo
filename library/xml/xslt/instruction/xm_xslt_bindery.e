@@ -5,7 +5,7 @@ note
 		"Objects that bind global variable names to values"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	global_variable_value (a_slot_number: INTEGER): XM_XPATH_VALUE
+	global_variable_value (a_slot_number: INTEGER): detachable XM_XPATH_VALUE
 		require
 			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
 		do
@@ -49,7 +49,9 @@ feature -- Access
 		require
 			is_global_parameter_supplied (a_fingerprint)
 		do
-			Result := global_parameters.value (a_fingerprint)
+			check attached global_parameters as l_global_parameters then
+				Result := l_global_parameters.value (a_fingerprint)
+			end
 		ensure
 			value_not_void: Result /= Void
 		end
@@ -75,14 +77,14 @@ feature -- Status report
 	is_global_parameter_supplied (a_fingerprint: INTEGER): BOOLEAN
 			-- Does `a_fingerprint' represent a supplied global parameter?
 		do
-			if global_parameters /= Void then
-				if global_parameters.has (a_fingerprint) then
-					Result := global_parameters.value (a_fingerprint) /= Void
+			if attached global_parameters as l_global_parameters then
+				if l_global_parameters.has (a_fingerprint) then
+					Result := l_global_parameters.value (a_fingerprint) /= Void
 				end
 			end
 		end
 
-	last_binding_failure: STRING
+	last_binding_failure: detachable STRING
 			-- Message associated with last failed binding attempt
 
 feature -- Status setting
@@ -129,10 +131,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	global_parameters: XM_XSLT_PARAMETER_SET
+	global_parameters: detachable XM_XSLT_PARAMETER_SET
 			-- global parameters
 
-	global_variables: ARRAY [XM_XPATH_VALUE]
+	global_variables: ARRAY [detachable XM_XPATH_VALUE]
 			-- Global variables
 
 	busy_globals: ARRAY [BOOLEAN]

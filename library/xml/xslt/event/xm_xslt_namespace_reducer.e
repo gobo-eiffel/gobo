@@ -5,7 +5,7 @@ note
 		"Objects that remove duplicate namespace declarations."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,9 +152,9 @@ feature -- Events
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
 		do
-			if pending_undeclarations /= Void then
+			if attached pending_undeclarations as l_pending_undeclarations then
 				from
-					a_cursor := pending_undeclarations.new_cursor; a_cursor.start
+					a_cursor := l_pending_undeclarations.new_cursor; a_cursor.start
 				until
 					a_cursor.after
 				loop
@@ -164,7 +164,7 @@ feature -- Events
 					end
 					a_cursor.forth
 				variant
-					pending_undeclarations.count + 1 - a_cursor.index
+					l_pending_undeclarations.count + 1 - a_cursor.index
 				end
 			end
 			pending_undeclarations := Void
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 	count_stack: DS_ARRAYED_LIST [INTEGER]
 			-- Count of namespaces per element
 
-	pending_undeclarations: DS_ARRAYED_LIST [INTEGER]
+	pending_undeclarations: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Pending undeclarations
 
 	disinherit_stack: DS_ARRAYED_LIST [BOOLEAN]
@@ -211,9 +211,9 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			if pending_undeclarations /= Void then
+			if attached pending_undeclarations as l_pending_undeclarations then
 				from
-					l_cursor := pending_undeclarations.new_cursor; l_cursor.start
+					l_cursor := l_pending_undeclarations.new_cursor; l_cursor.start
 				until
 					l_cursor.after
 				loop
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 					end
 					l_cursor.forth
 				variant
-					pending_undeclarations.count + 1 - l_cursor.index
+					l_pending_undeclarations.count + 1 - l_cursor.index
 				end
 			end
 		end

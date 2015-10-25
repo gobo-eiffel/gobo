@@ -5,7 +5,7 @@ note
 		"xsl:if element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	condition: XM_XPATH_EXPRESSION
+	condition: detachable XM_XPATH_EXPRESSION
 			-- Test expression
 
 feature -- Status setting
@@ -33,7 +33,7 @@ feature -- Status setting
 	mark_tail_calls
 			-- Mark tail-recursive calls on templates and functions.
 		local
-			a_last_instruction: XM_XSLT_STYLE_ELEMENT
+			a_last_instruction: detachable XM_XSLT_STYLE_ELEMENT
 		do
 			a_last_instruction := last_child_instruction
 			if a_last_instruction /= Void then
@@ -56,11 +56,12 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_test_attribute: STRING
+			an_expanded_name: STRING
+			a_test_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -76,7 +77,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_test_attribute /= Void then
@@ -91,11 +92,13 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "test", condition)
+			check attached condition as l_condition then
+				type_check_expression (l_replacement, "test", l_condition)
+			end
 			condition := l_replacement.item
 			validated := True
 		end
@@ -110,30 +113,35 @@ feature -- Element change
 			some_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
-			if condition.is_value and then not condition.depends_upon_implicit_timezone then
+			check attached condition as l_condition then
+				if l_condition.is_value and then not l_condition.depends_upon_implicit_timezone then
 
-				-- Condition known statically, so we only need compile the code if true.
-            -- This can happen with expressions such as test="function-available('abc')".
+					-- Condition known statically, so we only need compile the code if true.
+	            -- This can happen with expressions such as test="function-available('abc')".
 
-				a_value := condition.as_value
-				a_value.calculate_effective_boolean_value (Void)
-				a_boolean_value := a_value.last_boolean_value
-				if a_boolean_value.is_error then
-					report_compile_error (a_boolean_value.error_value)
-				else
-					if a_boolean_value.value then
-						compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					a_value := l_condition.as_value
+					a_value.calculate_effective_boolean_value (new_dummy_context)
+					check postcondition_of_calculate_effective_boolean_value: attached a_value.last_boolean_value as l_last_boolean_value then
+						a_boolean_value := l_last_boolean_value
 					end
-				end
-			else
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				if last_generated_expression /= Void then
-					an_action := last_generated_expression
-					create some_conditions.make (1)
-					some_conditions.put (condition, 1)
-					create some_actions.make (1)
-					some_actions.put (an_action, 1)
-					create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, some_conditions, some_actions)
+					if attached a_boolean_value.error_value as l_error_value then
+						check is_error: a_boolean_value.is_error end
+						report_compile_error (l_error_value)
+					else
+						if a_boolean_value.value then
+							compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+						end
+					end
+				else
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					if attached last_generated_expression as l_last_generated_expression then
+						an_action := l_last_generated_expression
+						create some_conditions.make (1)
+						some_conditions.put (l_condition, 1)
+						create some_actions.make (1)
+						some_actions.put (an_action, 1)
+						create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, some_conditions, some_actions)
+					end
 				end
 			end
 		end

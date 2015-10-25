@@ -3,7 +3,7 @@ note
 	description: "Routines that support passing of xsl:with-param"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ feature -- Access
 			parameter_list_not_void: a_parameters /= Void
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_COMPILED_WITH_PARAM]
-			l_expression: XM_XPATH_EXPRESSION
+			l_expression: detachable XM_XPATH_EXPRESSION
 		do
 			from
 				create Result.make (a_parameters.count)
@@ -107,12 +107,16 @@ feature {NONE} -- Agents
 			a_parameter_not_void: a_parameter /= Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)
-			l_expression.simplify (l_replacement)
-			a_parameter.set_selector (l_replacement.item)
+			check attached a_parameter.select_expression as l_select_expression then
+				l_expression := l_select_expression
+				create l_replacement.make (Void)
+				l_expression.simplify (l_replacement)
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					a_parameter.set_selector (l_replacement_item)
+				end
+			end
 		end
 
 	check_parameter_static_type (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
@@ -122,12 +126,16 @@ feature {NONE} -- Agents
 			a_context_not_void: a_context /= Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)
-			l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			a_parameter.set_selector (l_replacement.item)
+			check attached a_parameter.select_expression as l_select_expression then
+				l_expression := l_select_expression
+				create l_replacement.make (Void)
+				l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					a_parameter.set_selector (l_replacement_item)
+				end
+			end
 		end
 
 	optimize_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
@@ -137,12 +145,16 @@ feature {NONE} -- Agents
 			a_context_not_void: a_context /= Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)
-			l_expression.optimize (l_replacement, a_context, a_context_item_type)
-			a_parameter.set_selector (l_replacement.item)
+			check attached a_parameter.select_expression as l_select_expression then
+				l_expression := l_select_expression
+				create l_replacement.make (Void)
+				l_expression.optimize (l_replacement, a_context, a_context_item_type)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					a_parameter.set_selector (l_replacement_item)
+				end
+			end
 		end
 
 	promote_parameter (a_parameter: XM_XSLT_COMPILED_WITH_PARAM; a_offer: XM_XPATH_PROMOTION_OFFER)
@@ -152,12 +164,16 @@ feature {NONE} -- Agents
 			a_offer_not_void: a_offer /= Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)
-			l_expression.promote (l_replacement, a_offer)
-			a_parameter.set_selector (l_replacement.item)
+			check attached a_parameter.select_expression as l_select_expression then
+				l_expression := l_select_expression
+				create l_replacement.make (Void)
+				l_expression.promote (l_replacement, a_offer)
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					a_parameter.set_selector (l_replacement_item)
+				end
+			end
 		end
 
 end

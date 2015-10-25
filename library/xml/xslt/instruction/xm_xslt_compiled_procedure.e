@@ -5,7 +5,7 @@ note
 		"Compiled XSLT objects that may contain local variables"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,19 +44,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	executable: XM_XSLT_EXECUTABLE
+	executable: detachable XM_XSLT_EXECUTABLE
 			-- Executable stylesheet
 
-	body: XM_XPATH_EXPRESSION
+	body: detachable XM_XPATH_EXPRESSION
 			-- Executable instruction body
 
 	line_number: INTEGER
 			-- Line number within source code
 
-	system_id: STRING
+	system_id: detachable STRING
 			-- System id of source code
 
-	slot_manager: XM_XPATH_SLOT_MANAGER
+	slot_manager: detachable XM_XPATH_SLOT_MANAGER
 			-- Slot manager for variables
 
 feature -- Status report

@@ -5,7 +5,7 @@ note
 		"Attributes whose name is not known at compile time"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,8 +34,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; an_attribute_name, a_namespace: XM_XPATH_EXPRESSION; a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT;
-			a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER)
+	make (an_executable: XM_XSLT_EXECUTABLE; an_attribute_name: XM_XPATH_EXPRESSION; a_namespace: detachable XM_XPATH_EXPRESSION; a_namespace_context: detachable XM_XSLT_NAMESPACE_CONTEXT;
+			a_validation_action: INTEGER; a_simple_type: detachable XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -45,10 +45,11 @@ feature {NONE} -- Initialization
 		do
 			executable := an_executable
 			namespace_context := a_namespace_context
-			set_namespace (a_namespace)
-			set_attribute_name (an_attribute_name)
-			validation_action := a_validation_action
 			type := a_simple_type
+			attribute_name := an_attribute_name
+			set_namespace (a_namespace)
+			adopt_child_expression (attribute_name)
+			validation_action := a_validation_action
 			type_annotation := a_type_annotation
 			options := 0
 			compute_static_properties
@@ -83,14 +84,14 @@ feature -- Access
 		do
 			create Result.make (3)
 			an_index := 1
-			if select_expression /= Void then
-				Result.put (select_expression, an_index)
+			if attached select_expression as l_select_expression then
+				Result.put (l_select_expression, an_index)
 				an_index := an_index + 1
 			end
 			Result.put (attribute_name, an_index)
 			an_index := an_index + 1
-			if namespace /= Void then
-				Result.put (namespace, an_index)
+			if attached namespace as l_namespace then
+				Result.put (l_namespace, an_index)
 			end
 			Result.set_equality_tester (expression_tester)
 		end
@@ -107,8 +108,8 @@ feature -- Status report
 			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
 			std.error.put_string (a_string)
-			if namespace /= Void then
-				namespace.display (a_level + 2)
+			if attached namespace as l_namespace then
+				l_namespace.display (a_level + 2)
 			end
 			attribute_name.display (a_level + 2)
 			std.error.put_new_line
@@ -137,8 +138,8 @@ feature -- Status_setting
 		do
 			if a_namespace /= namespace then
 				namespace := a_namespace
-				if namespace /= Void then
-					adopt_child_expression (namespace)
+				if a_namespace /= Void then
+					adopt_child_expression (a_namespace)
 				end
 				if are_static_properties_computed then
 					reset_static_properties
@@ -150,68 +151,84 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			attribute_name.simplify (l_replacement)
-			set_attribute_name (l_replacement.item)
-			if attribute_name.is_error then
-				set_replacement (a_replacement, attribute_name)
-			else
-				if namespace /= Void then
-					l_replacement.put (Void)
-					namespace.simplify (l_replacement)
-					set_namespace (l_replacement.item)
-					if namespace.is_error then
-						set_replacement (a_replacement, namespace)
+			check postcondition_of_simplify: attached l_replacement.item as l_attribute_name then
+				set_attribute_name (l_attribute_name)
+				if l_attribute_name.is_error then
+					set_replacement (a_replacement, l_attribute_name)
+				else
+					if attached namespace as l_old_namespace then
+						l_replacement.put (Void)
+						l_old_namespace.simplify (l_replacement)
+						check postcondition_of_simplify: attached l_replacement.item as l_namespace then
+							set_namespace (l_namespace)
+							if l_namespace.is_error then
+								set_replacement (a_replacement, l_namespace)
+							else
+								Precursor (a_replacement)
+							end
+						end
 					else
 						Precursor (a_replacement)
 					end
-				else
-					Precursor (a_replacement)
 				end
 			end
 		end
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_single_string_type: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			attribute_name.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_attribute_name (l_replacement.item)
-			if attribute_name.is_error then
-				set_replacement (a_replacement, attribute_name)
-			else
-				create l_role.make (Instruction_role, "xsl:attribute/name", 1, Xpath_errors_uri, "XPTY0004")
-				create l_type_checker
-				create l_single_string_type.make_single_string
-				l_type_checker.static_type_check (a_context, attribute_name, l_single_string_type, False, l_role)
-				if l_type_checker.is_static_type_check_error then
-					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+			check postcondition_of_check_static_type: attached l_replacement.item as l_attribute_name then
+				set_attribute_name (l_attribute_name)
+				if l_attribute_name.is_error then
+					set_replacement (a_replacement, l_attribute_name)
 				else
-					set_attribute_name (l_type_checker.checked_expression)
-					if namespace /= Void then
-						l_replacement.put (Void)
-						namespace.check_static_type (l_replacement, a_context, a_context_item_type)
-						set_namespace (l_replacement.item)
-						if namespace.is_error then
-							set_replacement (a_replacement, namespace)
-						else
-							create l_role.make (Instruction_role, "xsl:attribute/namespace", 1, Xpath_errors_uri, "XPTY0004")
-							create l_type_checker
-							l_type_checker.static_type_check (a_context, namespace, l_single_string_type, False, l_role)
-							if l_type_checker.is_static_type_check_error then
-								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
-							else
-								set_namespace (l_type_checker.checked_expression)
+					create l_role.make (Instruction_role, "xsl:attribute/name", 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					create l_single_string_type.make_single_string
+					l_type_checker.static_type_check (a_context, l_attribute_name, l_single_string_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+						end
+					else
+						check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+							set_attribute_name (l_checked_expression)
+						end
+						if attached namespace as l_old_namespace then
+							l_replacement.put (Void)
+							l_old_namespace.check_static_type (l_replacement, a_context, a_context_item_type)
+							check postcondition_of_check_static_type: attached l_replacement.item as l_namespace then
+								set_namespace (l_namespace)
+								if l_namespace.is_error then
+									set_replacement (a_replacement, l_namespace)
+								else
+									create l_role.make (Instruction_role, "xsl:attribute/namespace", 1, Xpath_errors_uri, "XPTY0004")
+									create l_type_checker
+									l_type_checker.static_type_check (a_context, l_namespace, l_single_string_type, False, l_role)
+									if l_type_checker.is_static_type_check_error then
+										check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+											set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_static_type_check_error))
+										end
+									else
+										check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+											set_namespace (l_checked_expression)
+										end
+									end
+								end
 							end
 						end
 					end
@@ -225,32 +242,44 @@ feature -- Optimization
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			attribute_name.promote (l_replacement, a_offer)
-			set_attribute_name (l_replacement.item)
-			if namespace /= Void then
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				set_attribute_name (l_replacement_item)
+			end
+			if attached namespace as l_namespace then
 				l_replacement.put (Void)
-				namespace.promote (l_replacement, a_offer)
-				set_namespace (l_replacement.item)
+				l_namespace.promote (l_replacement, a_offer)
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					set_namespace (l_replacement_item)
+				end
 			end
 			Precursor (a_offer)
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			evaluate_name_code (a_context)
-			if not is_error then
+			if not attached error_value as l_error_value then
 				expand_children (a_context)
 				if not is_error then
-					a_context.current_receiver.notify_attribute (last_name_code, 0, last_string_value, options)
+					check
+						postcondition_of_expand_children: attached last_string_value as l_last_string_value
+					 	attached a_context.current_receiver as l_current_receiver
+					 then
+						l_current_receiver.notify_attribute (last_name_code, 0, l_last_string_value, options)
+					end
 				end
 			else
-				a_context.transformer.report_fatal_error (error_value)
+				check is_error: is_error end
+				check attached a_context.transformer as l_transformer then
+					l_transformer.report_fatal_error (l_error_value)
+				end
 			end
 		end
 
@@ -267,7 +296,7 @@ feature {NONE} -- Implementation
 	attribute_name: XM_XPATH_EXPRESSION
 			-- Name
 
-	namespace: XM_XPATH_EXPRESSION
+	namespace: detachable XM_XPATH_EXPRESSION
 			-- Namespace
 
 	validation_action: INTEGER
@@ -276,19 +305,19 @@ feature {NONE} -- Implementation
 	type_annotation: INTEGER
 			-- Type annotation
 
-	type: XM_XPATH_SCHEMA_TYPE
+	type: detachable XM_XPATH_SCHEMA_TYPE
 			--Type
 
 	options: INTEGER
 			-- Receiver options
 
-	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
+	namespace_context: detachable XM_XSLT_NAMESPACE_CONTEXT
 			-- namespace context
 
 	evaluate_name_code (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate name code.
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 			l_error: XM_XPATH_ERROR_VALUE
 			l_qname: XM_XPATH_STRING_VALUE
 			l_parser: XM_XPATH_QNAME_PARSER
@@ -296,16 +325,17 @@ feature {NONE} -- Implementation
 		do
 			create l_item.make (Void)
 			attribute_name.evaluate_item (l_item, a_context)
-			if l_item.item = Void then
+			if not attached l_item.item as l_item_item then
 				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 				set_last_error (l_error)
-			elseif l_item.item.is_error then
-				set_last_error (l_item.item.error_value)
-			elseif not l_item.item.is_string_value then
+			elseif attached l_item_item.error_value as l_error_value then
+				check is_error: l_item_item.is_error end
+				set_last_error (l_error_value)
+			elseif not l_item_item.is_string_value then
 				create l_error.make_from_string ("Attribute 'name' must be a string", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 				set_last_error (l_error)
 			else
-				l_qname := l_item.item.as_string_value
+				l_qname := l_item_item.as_string_value
 				create l_parser.make (l_qname.string_value)
 				if not l_parser.is_valid then
 					create l_error.make_from_string ("Attribute 'name' must be a lexical QName", Xpath_errors_uri, "XTDE0850", Dynamic_error)
@@ -314,17 +344,22 @@ feature {NONE} -- Implementation
 					create l_error.make_from_string ("Attribute 'name' cannot be 'xmlns'", Xpath_errors_uri, "XTDE0855", Dynamic_error)
 					set_last_error (l_error)
 				else
-					l_prefix := l_parser.optional_prefix
-					l_local := l_parser.local_name
-					if STRING_.same_string (l_prefix, Xmlns) then
-						if namespace = Void then
-							create l_error.make_from_string ("Attribute 'name' cannot be a namespace declaration", Xpath_errors_uri, "XTDE0860", Dynamic_error)
-							set_last_error (l_error)
+					check
+						l_parser_is_valid: attached l_parser.optional_prefix as l_parser_optional_prefix
+						l_parser_is_valid_2: attached l_parser.local_name as l_parser_local_name
+					then
+						l_prefix := l_parser_optional_prefix
+						l_local := l_parser_local_name
+						if STRING_.same_string (l_prefix, Xmlns) then
+							if namespace = Void then
+								create l_error.make_from_string ("Attribute 'name' cannot be a namespace declaration", Xpath_errors_uri, "XTDE0860", Dynamic_error)
+								set_last_error (l_error)
+							else
+								l_prefix := "" -- i.e. we will ignore it
+							end
 						else
-							l_prefix := "" -- i.e. we will ignore it
+							evaluate_name_code_stage2 (l_prefix, l_local, a_context)
 						end
-					else
-						evaluate_name_code_stage2 (l_prefix, l_local, a_context)
 					end
 				end
 			end
@@ -338,53 +373,60 @@ feature {NONE} -- Implementation
 			a_context_not_void: a_context /= Void
 			no_error_yet: not is_error
 		local
-			l_uri, l_prefix: STRING
+			l_uri, l_prefix: detachable STRING
 			l_error: XM_XPATH_ERROR_VALUE
-			l_namespace: UT_URI
+			l_namespace_uri: UT_URI
 		do
 			l_prefix := STRING_.cloned_string (a_prefix)
-			if namespace = Void then
+			if not attached namespace as l_namespace then
 				if l_prefix.is_empty then
 					l_uri := ""
 				else
-					l_uri := namespace_context.uri_for_defaulted_prefix (l_prefix, False)
+					check invariant_namespace_context_not_void: attached namespace_context as l_namespace_context then
+						l_uri := l_namespace_context.uri_for_defaulted_prefix (l_prefix, False)
+					end
 				end
 				if l_uri = Void then
 					create l_error.make_from_string ("Undeclared prefix in attribute 'name'", Xpath_errors_uri, "XTDE0860", Dynamic_error)
 					set_last_error (l_error)
 				end
 			else
-				namespace.evaluate_as_string (a_context)
-				if namespace.last_evaluated_string.is_error then
-					set_last_error (namespace.last_evaluated_string.error_value)
-				else
-					l_uri := namespace.last_evaluated_string.string_value
-					if Url_encoding.has_excluded_characters (l_uri) or l_uri.occurrences ('#') > 1 then
-						create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
-						set_last_error (l_error)
+				l_namespace.evaluate_as_string (a_context)
+				check postcondition_of_evaluate_as_string: attached l_namespace.last_evaluated_string as l_last_evaluated_string then
+					if attached l_last_evaluated_string.error_value as l_error_value then
+						check is_error: l_last_evaluated_string.is_error end
+						set_last_error (l_error_value)
 					else
-						if not l_uri.is_empty then
-							create l_namespace.make (l_uri)
-							-- TODO: need UT_URI validity checking
-						end
-						if l_uri.is_empty then
-							l_prefix := ""
-						elseif l_prefix.count = 0 then
-							l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)
-							if l_prefix = Void then
-								-- the following arbitrary prefix will be change if it clashes
-								l_prefix := "ns0"
+						l_uri := l_last_evaluated_string.string_value
+						if Url_encoding.has_excluded_characters (l_uri) or l_uri.occurrences ('#') > 1 then
+							create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
+							set_last_error (l_error)
+						else
+							if not l_uri.is_empty then
+								create l_namespace_uri.make (l_uri)
+								-- TODO: need UT_URI validity checking
+							end
+							if l_uri.is_empty then
+								l_prefix := ""
+							elseif l_prefix.count = 0 then
+								l_prefix := shared_name_pool.suggested_prefix_for_uri (l_uri)
+								if l_prefix = Void then
+									-- the following arbitrary prefix will be change if it clashes
+									l_prefix := "ns0"
+								end
 							end
 						end
 					end
 				end
 			end
 			if not is_error then
-				if shared_name_pool.is_name_code_allocated (l_prefix, l_uri, a_local) then
-					last_name_code := shared_name_pool.name_code (l_prefix, l_uri, a_local)
-				else
-					shared_name_pool.allocate_name (l_prefix, l_uri, a_local)
-					last_name_code := shared_name_pool.last_name_code
+				check l_uri /= Void then
+					if shared_name_pool.is_name_code_allocated (l_prefix, l_uri, a_local) then
+						last_name_code := shared_name_pool.name_code (l_prefix, l_uri, a_local)
+					else
+						shared_name_pool.allocate_name (l_prefix, l_uri, a_local)
+						last_name_code := shared_name_pool.last_name_code
+					end
 				end
 			end
 		ensure

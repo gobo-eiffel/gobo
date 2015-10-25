@@ -5,7 +5,7 @@ note
 		"xsl:for-each-group element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,11 +50,11 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_select_attribute, a_group_by_attribute, a_group_adjacent_attribute,
-			a_group_starting_with_attribute, a_group_ending_with_attribute, a_collation_attribute: STRING
+			a_group_starting_with_attribute, a_group_ending_with_attribute, a_collation_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -90,7 +90,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_attributes_2 (a_select_attribute, a_group_by_attribute, a_group_starting_with_attribute,
@@ -104,58 +104,72 @@ feature -- Element change
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_atomic_sequence, a_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_sort_comes_first (False)
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "select", select_expression)
+			check attached select_expression as l_select_expression then
+				type_check_expression (l_replacement, "select", l_select_expression)
+			end
 			select_expression := l_replacement.item
-			if group_by /= Void then
+			if attached group_by as l_group_by then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "group-by", group_by)
+				type_check_expression (l_replacement, "group-by", l_group_by)
 				group_by := l_replacement.item
 				if not any_compile_errors then
 					create l_type_checker
 					create l_role.make (Instruction_role, "xsl:for-each-group/group-by", 1, Xpath_errors_uri, "XPTY0004")
 					create l_atomic_sequence.make_atomic_sequence
-					l_type_checker.static_type_check (static_context, group_by, l_atomic_sequence, False, l_role)
+					check attached group_by as l_group_by_2 then
+						l_type_checker.static_type_check (static_context, l_group_by_2, l_atomic_sequence, False, l_role)
+					end
 					if l_type_checker.is_static_type_check_error	then
-						report_compile_error (l_type_checker.static_type_check_error)
+						check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							report_compile_error (l_static_type_check_error)
+						end
 					else
 						group_by := l_type_checker.checked_expression
 					end
 				end
 			end
-			if group_adjacent /= Void then
+			if attached group_adjacent as l_group_adjacent then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "group-adjacent", group_adjacent)
+				type_check_expression (l_replacement, "group-adjacent", l_group_adjacent)
 				group_adjacent := l_replacement.item
 				if not any_compile_errors then
 					create l_type_checker
 					create l_role.make (Instruction_role, "xsl:for-each-group/group-adjacent", 1, Xpath_errors_uri, "XTTE1100")
 					create l_atomic_sequence.make_single_atomic
-					l_type_checker.static_type_check (static_context, group_adjacent, l_atomic_sequence, False, l_role)
+					check attached group_adjacent as l_group_adjacent_2 then
+						l_type_checker.static_type_check (static_context, l_group_adjacent_2, l_atomic_sequence, False, l_role)
+					end
 					if l_type_checker.is_static_type_check_error	then
-						report_compile_error (l_type_checker.static_type_check_error)
+						check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+							report_compile_error (l_static_type_check_error)
+						end
 					else
 						group_adjacent := l_type_checker.checked_expression
 					end
 				end
 			end
-			if group_starting_with /= Void then
-				type_check_pattern ("group-starting-with", group_starting_with)
+			if attached group_starting_with as l_group_starting_with then
+				type_check_pattern ("group-starting-with", l_group_starting_with)
 			end
-			if group_ending_with /= Void then
-				type_check_pattern ("group-ending-with", group_ending_with)
+			if attached group_ending_with as l_group_ending_with then
+				type_check_pattern ("group-ending-with", l_group_ending_with)
 			end
 			if group_starting_with /= Void or group_ending_with /= Void then
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:for-each-group/select", 1, Xpath_errors_uri, "XTTE1120")
 				create a_node_sequence.make_node_sequence
-				l_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, l_role)
+				check attached select_expression as l_select_expression then
+					l_type_checker.static_type_check (static_context, l_select_expression, a_node_sequence, False, l_role)
+				end
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				end
 			end
 			validated := True
@@ -165,8 +179,8 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_algorithm: INTEGER
-			l_key, l_action: XM_XPATH_EXPRESSION
-			l_key_pattern: XM_XSLT_PATTERN
+			l_key, l_action: detachable XM_XPATH_EXPRESSION
+			l_key_pattern: detachable XM_XSLT_PATTERN
 			l_pattern: BOOLEAN
 		do
 			assemble_sort_keys
@@ -193,10 +207,19 @@ feature -- Element change
 				if l_action = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
 				end
-				if l_pattern then
-					create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (a_executable, select_expression, l_action, l_key_pattern, l_algorithm, sort_keys, collation_name, default_collation_name)
-				else
-					create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (a_executable, select_expression, l_action, l_key, l_algorithm, sort_keys, collation_name, default_collation_name)
+				check
+					attached select_expression as l_select_expression
+					attached sort_keys as l_sort_keys
+				then
+					if l_pattern then
+						check l_key_pattern /= Void then
+							create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (a_executable, l_select_expression, l_action, l_key_pattern, l_algorithm, l_sort_keys, collation_name, default_collation_name)
+						end
+					else
+						check l_key /= Void then
+							create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (a_executable, l_select_expression, l_action, l_key, l_algorithm, l_sort_keys, collation_name, default_collation_name)
+						end
+					end
 				end
 			end
 		end
@@ -211,26 +234,26 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Population selector
 
-	collation_name: XM_XPATH_EXPRESSION
+	collation_name: detachable XM_XPATH_EXPRESSION
 			-- Name of collation
 
-	group_by: XM_XPATH_EXPRESSION
+	group_by: detachable XM_XPATH_EXPRESSION
 			-- Group-by expression
 
-	group_adjacent: XM_XPATH_EXPRESSION
+	group_adjacent: detachable XM_XPATH_EXPRESSION
 			-- Group-ajacent expression
 
-	group_starting_with: XM_XSLT_PATTERN
+	group_starting_with: detachable XM_XSLT_PATTERN
 			-- Group-starting-with pattern
 
-	group_ending_with: XM_XSLT_PATTERN
+	group_ending_with: detachable XM_XSLT_PATTERN
 			-- Group-ending-with pattern
 
 	prepare_attributes_2 (a_select_attribute, a_group_by_attribute, a_group_starting_with_attribute,
-								 a_group_adjacent_attribute,	a_group_ending_with_attribute, a_collation_attribute: STRING)
+								 a_group_adjacent_attribute,	a_group_ending_with_attribute, a_collation_attribute: detachable STRING)
 			-- Prepare attributes some more.
 		local
 			count_of_grouping_attributes: INTEGER
@@ -238,51 +261,71 @@ feature {NONE} -- Implementation
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+					select_expression := l_new_select_expression
+					if attached l_new_select_expression.error_value as l_error_value then
+						check is_error: l_new_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			else
 				report_absence ("select")
 			end
 			if a_collation_attribute /= Void then
-				generate_attribute_value_template (a_collation_attribute, static_context)
-				collation_name := last_generated_expression
-				if collation_name.is_error then
-					report_compile_error (collation_name.error_value)
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (a_collation_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_collation_name then
+					collation_name := l_new_collation_name
+					if attached l_new_collation_name.error_value as l_error_value then
+						check is_error: l_new_collation_name.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 
 			if a_group_by_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_expression (a_group_by_attribute)
-				group_by := last_generated_expression
-				if group_by.is_error then
-					report_compile_error (group_by.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_group_by then
+					group_by := l_new_group_by
+					if attached l_new_group_by.error_value as l_error_value then
+						check is_error: l_new_group_by.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_group_adjacent_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_expression (a_group_adjacent_attribute)
-				group_adjacent := last_generated_expression
-				if group_adjacent.is_error then
-					report_compile_error (group_adjacent.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_group_adjacent then
+					group_adjacent := l_new_group_adjacent
+					if attached l_new_group_adjacent.error_value as l_error_value then
+						check is_error: l_new_group_adjacent.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_group_starting_with_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_pattern (a_group_starting_with_attribute)
-				group_starting_with := last_generated_pattern
-				if group_starting_with.is_error then
-					report_compile_error (group_starting_with.error_value)
+				check postcondition_of_generate_pattern: attached last_generated_pattern as l_new_group_starting_with then
+					group_starting_with := l_new_group_starting_with
+					if attached l_new_group_starting_with.error_value as l_error_value then
+						check is_error: l_new_group_starting_with.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_group_ending_with_attribute /= Void then
 				count_of_grouping_attributes := count_of_grouping_attributes + 1
 				generate_pattern (a_group_ending_with_attribute)
-				group_ending_with := last_generated_pattern
-				if group_ending_with.is_error then
-					report_compile_error (group_ending_with.error_value)
+				check postcondition_of_generate_pattern: attached last_generated_pattern as l_new_group_ending_with then
+					group_ending_with := l_new_group_ending_with
+					if attached l_new_group_ending_with.error_value as l_error_value then
+						check is_error: l_new_group_ending_with.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 

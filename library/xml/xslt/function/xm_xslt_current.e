@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT current() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- will never be called
+			check False then end
 		end
 
 	is_current_function: BOOLEAN
@@ -74,22 +75,22 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- as this is an XSLT function
+				attached l_evaluation_context.transformer as l_transformer
+			then
+				create l_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
+				l_transformer.report_fatal_error (l_error)
 			end
-			create l_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
-			l_evaluation_context.transformer.report_fatal_error (l_error)
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

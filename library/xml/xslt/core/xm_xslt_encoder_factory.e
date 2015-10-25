@@ -5,7 +5,7 @@ note
 		"Objects that create output encoders"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	outputter (an_encoding: STRING; a_raw_outputter: XM_OUTPUT): XM_XSLT_OUTPUT_ENCODER
+	outputter (an_encoding: STRING; a_raw_outputter: XM_OUTPUT): detachable XM_XSLT_OUTPUT_ENCODER
 			-- Output encoder for `an_encoding'
 		require
 			encoding_not_void: an_encoding /= Void

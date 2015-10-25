@@ -5,7 +5,7 @@ note
 		"Helper objects for parsing XSLT attribute value templates"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Access
 	components: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Parsed components
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Possible error from `parse_components'
 
 feature -- Status report
@@ -73,7 +73,7 @@ feature -- Basic operations
 			l_left_curly_brace, l_right_curly_brace, l_left_double_curly_brace, l_right_double_curly_brace: INTEGER
 			l_parser: XM_XPATH_EXPRESSION_PARSER
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				l_avt_length := avt.count
@@ -114,14 +114,20 @@ feature -- Basic operations
 						create l_parser.make
 						l_parser.parse (avt, static_context, l_left_curly_brace + 1, Right_curly_token, a_line_number)
 						if l_parser.is_parse_error then
-							create error_value.make_from_string (l_parser.first_parse_error, Xpath_errors_uri, l_parser.first_parse_error_code, Static_error)
+							check attached l_parser.first_parse_error_code as l_first_parse_error_code then
+								create error_value.make_from_string (l_parser.first_parse_error, Xpath_errors_uri, l_first_parse_error_code, Static_error)
+							end
 							l_leading_character := avt.count + 1
 						else
 							create l_replacement.make (Void)
 							l_parser.last_parsed_expression.simplify (l_replacement)
-							l_expression := l_replacement.item
-							append_parsed_expression (l_expression)
-							l_leading_character := l_parser.tokenizer.next_token_start_index + 1
+							check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+								l_expression := l_replacement_item
+								append_parsed_expression (l_expression)
+								check attached l_parser.tokenizer as l_parser_tokenizer then
+									l_leading_character := l_parser_tokenizer.next_token_start_index + 1
+								end
+							end
 						end
 					end
 				else

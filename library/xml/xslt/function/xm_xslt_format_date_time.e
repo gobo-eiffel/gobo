@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT format-date(), format-dateTime() and format-time() functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,65 +102,76 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_calendar_value: XM_XPATH_CALENDAR_VALUE
 			l_picture, l_language, l_country, l_calendar: STRING
-			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
+			l_result: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]
 			l_value: ST_FORMAT_DATE_TIME_RESULT
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_calendar_value := a_result.item.as_atomic_value.as_calendar_value
+			if attached a_result.item as l_result_item and then not l_result_item.is_error then
+				l_calendar_value := l_result_item.as_atomic_value.as_calendar_value
 				a_result.put (Void)
 				arguments.item (2).evaluate_item (a_result, a_context)
-				if not a_result.item.is_error then
-					l_picture := a_result.item.string_value
-					a_result.put (Void)
-					if arguments.count > 2 then
-						arguments.item (3).evaluate_item (a_result, a_context)
-						if a_result.item = Void then
+				check attached a_result.item as l_result_item_2 then
+					if not l_result_item_2.is_error then
+						l_picture := l_result_item_2.string_value
+						a_result.put (Void)
+						if arguments.count > 2 then
 							l_language := Default_language
-						elseif not a_result.item.is_error then
-							l_language := a_result.item.string_value
-							a_result.put (Void)
-						end
-						if a_result.item = Void then -- no error yet
-							arguments.item (4).evaluate_item (a_result, a_context)
-							if a_result.item = Void then
-								l_calendar := Default_calendar
-							elseif not a_result.item.is_error then
-								l_calendar := a_result.item.string_value
-								-- TODO: check for lexical QName when bug 2319 is resolved by WG
+							l_calendar := Default_calendar
+							l_country := Default_country
+							arguments.item (3).evaluate_item (a_result, a_context)
+							if not attached a_result.item as l_result_item_3 then
+								l_language := Default_language
+							elseif not l_result_item_3.is_error then
+								l_language := l_result_item_3.string_value
 								a_result.put (Void)
 							end
-						end
-						if a_result.item = Void then -- no error yet
-							arguments.item (5).evaluate_item (a_result, a_context)
-							if a_result.item = Void then
-								l_country := Default_country
-							elseif not a_result.item.is_error then
-								l_country := a_result.item.string_value
-								a_result.put (Void)
+							if a_result.item = Void then -- no error yet
+								arguments.item (4).evaluate_item (a_result, a_context)
+								if not attached a_result.item as l_result_item_4 then
+									l_calendar := Default_calendar
+								elseif not l_result_item_4.is_error then
+									l_calendar := l_result_item_4.string_value
+									-- TODO: check for lexical QName when bug 2319 is resolved by WG
+									a_result.put (Void)
+								end
 							end
-						end
-					else
-						l_language := Default_language
-						l_calendar := Default_calendar
-						l_country  := Default_country
-					end
-					if a_result.item = Void then -- no error yet
-						create l_result.make (Void)
-						format_date_time (l_result, l_calendar_value, l_picture, l_language, l_calendar, l_country)
-						l_value := l_result.item
-						if l_value.is_error then
-							create l_error.make_from_string (l_value.message, Xpath_errors_uri, l_value.code, Dynamic_error)
-							set_last_error (l_error)
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error))
+							if a_result.item = Void then -- no error yet
+								arguments.item (5).evaluate_item (a_result, a_context)
+								if not attached a_result.item as l_result_item_5 then
+									l_country := Default_country
+								elseif not l_result_item_5.is_error then
+									l_country := l_result_item_5.string_value
+									a_result.put (Void)
+								end
+							end
 						else
-							a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_value.value))
+							l_language := Default_language
+							l_calendar := Default_calendar
+							l_country  := Default_country
+						end
+						if a_result.item = Void then -- no error yet
+							create l_result.make (Void)
+							format_date_time (l_result, l_calendar_value, l_picture, l_language, l_calendar, l_country)
+							check postcondition_of_format_date_time: attached l_result.item as l_result_item_6 then
+							l_value := l_result_item_6
+								if l_value.is_error then
+									check invariant_of_ST_FORMAT_DATE_TIME_RESULT: attached l_value.message as l_value_message and attached l_value.code as l_value_code then
+										create l_error.make_from_string (l_value_message, Xpath_errors_uri, l_value_code, Dynamic_error)
+										set_last_error (l_error)
+										a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error))
+									end
+								else
+									check invariant_of_ST_FORMAT_DATE_TIME_RESULT: attached l_value.value as l_value_value then
+										a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_value_value))
+									end
+								end
+							end
 						end
 					end
 				end

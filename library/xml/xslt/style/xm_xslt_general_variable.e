@@ -3,10 +3,10 @@ note
 	description:
 
 	"Objects that implement common behaviour between %
-%xsl:variable xsl:param and xsl:with-param elements"
+	%xsl:variable xsl:param and xsl:with-param elements"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,10 +26,10 @@ inherit
 
 feature -- Access
 
-	as_type: XM_XPATH_SEQUENCE_TYPE
+	as_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Type declared by "as" attribute
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Optional expression given by "select" attribute
 
 	allows_required: BOOLEAN
@@ -50,11 +50,18 @@ feature -- Access
 	variable_name: STRING
 			-- Name of variable;
 			-- For use in diagnostics - lexically, a QName
+		do
+			if attached internal_variable_name as l_internal_variable_name then
+				Result := l_internal_variable_name
+			else
+				Result := ""
+			end
+		end
 
 	variable_fingerprint: INTEGER
 			-- Fingerprint of the variable name
 		local
-			l_name: STRING
+			l_name: detachable STRING
 		do
 
 			-- If an expression has a forwards reference to this variable, `variable_fingerprint' can be
@@ -65,7 +72,7 @@ feature -- Access
 			-- TODO: this won't establish the required type in time to optimize an expression containing
 			--  a forwards reference to the variable
 
-			if variable_name = Void then
+			if internal_variable_name = Void then
 				Result := -1 -- not yet known
 				l_name := attribute_value_by_name ("", Name_attribute)
 				if l_name /= Void and then is_qname (l_name) then
@@ -127,12 +134,13 @@ feature -- Status setting
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: STRING
+			an_expanded_name, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			l_internal_variable_name: like internal_variable_name
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -140,9 +148,10 @@ feature -- Status setting
 					a_name_code := a_cursor.item
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Name_attribute) then
-						variable_name := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (variable_name)
-						STRING_.right_adjust (variable_name)
+						l_internal_variable_name := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (l_internal_variable_name)
+						STRING_.right_adjust (l_internal_variable_name)
+						internal_variable_name := l_internal_variable_name
 					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
 						a_select_attribute := attribute_value_by_index (a_cursor.index)
 					elseif STRING_.same_string (an_expanded_name, As_attribute) then
@@ -160,18 +169,18 @@ feature -- Status setting
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 
-				if variable_name = Void then
+				if not attached internal_variable_name as l_internal_variable_name_2 then
 					report_absence ("name")
-				elseif not is_qname (variable_name) then
+				elseif not is_qname (l_internal_variable_name_2) then
 					create an_error.make_from_string ("Name attribute must be a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				else
-					STRING_.left_adjust (variable_name)
-					STRING_.right_adjust (variable_name)
-					generate_name_code (variable_name)
+					STRING_.left_adjust (l_internal_variable_name_2)
+					STRING_.right_adjust (l_internal_variable_name_2)
+					generate_name_code (l_internal_variable_name_2)
 					cached_variable_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				end
 			end
@@ -181,9 +190,12 @@ feature -- Status setting
 					report_compile_error (an_error)
 				else
 					generate_expression (a_select_attribute)
-					select_expression := last_generated_expression
-					if select_expression.is_error then
-						report_compile_error (select_expression.error_value)
+					check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+						select_expression := l_new_select_expression
+						if attached l_new_select_expression.error_value as l_error_value then
+							check is_error: l_new_select_expression.is_error end
+							report_compile_error (l_error_value)
+						end
 					end
 				end
 			end
@@ -198,7 +210,7 @@ feature -- Status setting
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			l_first_node: XM_XPATH_NODE
 			l_error: XM_XPATH_ERROR_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void and then has_child_nodes then
 				l_message := STRING_.concat ("An ", node_name)
@@ -209,18 +221,18 @@ feature -- Status setting
 				create l_error.make_from_string ("Function parameters must be empty", Xpath_errors_uri, "XTSE0760", Static_error)
 				report_compile_error (l_error)
 			else
-				if as_type /= Void then check_against_required_type (as_type) end
+				if attached as_type as l_as_type then check_against_required_type (l_as_type) end
 				if not any_compile_errors then
 					if select_expression = Void and then allows_value then
 						is_text_only := True
 						l_child_iterator := new_axis_iterator (Child_axis)
 						l_child_iterator.start
 						if l_child_iterator.after then
-							if as_type = Void then
+							if not attached as_type as l_as_type_2 then
 								create {XM_XPATH_STRING_VALUE} select_expression.make ("")
 							elseif is_param then
 								if not is_required_parameter then
-									if as_type.cardinality_allows_zero then
+									if l_as_type_2.cardinality_allows_zero then
 										create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
 
@@ -231,7 +243,7 @@ feature -- Status setting
 									end
 								end
 							else -- not an xsl:param
-								if as_type.cardinality_allows_zero then
+								if l_as_type_2.cardinality_allows_zero then
 									create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 								else
 									create l_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
@@ -257,9 +269,9 @@ feature -- Status setting
 					end
 				end
 			end
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "select", select_expression)
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 			end
 		end
@@ -280,11 +292,13 @@ feature -- Status setting
 				l_error := "XTTE0570"
 			end
 			create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, l_error)
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_type_checker
-				l_type_checker.static_type_check (static_context, select_expression, a_required_type, False, l_role)
+				l_type_checker.static_type_check (static_context, l_select_expression, a_required_type, False, l_role)
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				else
 					select_expression := l_type_checker.checked_expression
 				end
@@ -312,7 +326,7 @@ feature {NONE} -- Implementation
 	is_text_only: BOOLEAN
 			-- Is the value of `Current' computed solely from text nodes?
 
-	constant_text: STRING
+	constant_text: detachable STRING
 			-- Value of `Current' when it has a single text node child
 
 	initialize_instruction (a_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_COMPILED_GENERAL_VARIABLE)
@@ -324,7 +338,9 @@ feature {NONE} -- Implementation
 			l_document: XM_XSLT_COMPILED_DOCUMENT
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_last_generated_expression: like last_generated_expression
+			l_select_expression: like select_expression
 		do
 			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
 			a_variable.set_required_parameter (is_required_parameter)
@@ -337,36 +353,51 @@ feature {NONE} -- Implementation
 			if has_child_nodes then
 				if as_type = Void then
 					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
-					if last_generated_expression = Void then
-						create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make
+					l_last_generated_expression := last_generated_expression
+					if l_last_generated_expression = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_last_generated_expression.make
+						last_generated_expression := l_last_generated_expression
 					end
-					create l_document.make (a_executable, is_text_only, constant_text, base_uri, last_generated_expression)
+					check attached base_uri as l_base_uri then
+						create l_document.make (a_executable, is_text_only, constant_text, l_base_uri, l_last_generated_expression)
+					end
 					select_expression := l_document
 					a_variable.set_selector (l_document)
 				else
 					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
-					if last_generated_expression = Void then
-						create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+					if not attached last_generated_expression as l_last_generated_expression_2 then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_select_expression.make
+						select_expression := l_select_expression
 					else
-						select_expression := last_generated_expression
+						l_select_expression := l_last_generated_expression_2
+						select_expression := l_select_expression
 					end
-					if as_type /= Void then
+					if attached as_type as l_as_type then
 						create l_replacement.make (Void)
-						select_expression.simplify (l_replacement)
-						select_expression := l_replacement.item
-						if select_expression.is_error then
-							report_compile_error (select_expression.error_value)
+						l_select_expression.simplify (l_replacement)
+						check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+							l_select_expression := l_replacement_item
+							select_expression := l_select_expression
+						end
+						if attached l_select_expression.error_value as l_error_value then
+							check is_error: l_select_expression.is_error end
+							report_compile_error (l_error_value)
 						else
 							create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
 							create l_type_checker
-							l_type_checker.static_type_check (static_context, select_expression, as_type, False, l_role)
+							l_type_checker.static_type_check (static_context, l_select_expression, l_as_type, False, l_role)
 							if l_type_checker.is_static_type_check_error	then
-								report_compile_error (l_type_checker.static_type_check_error)
+								check postcondition_of_static_type_check: attached l_type_checker.static_type_check_error as l_static_type_check_error then
+									report_compile_error (l_static_type_check_error)
+								end
 							else
-								select_expression := l_type_checker.checked_expression
+								check postcondition_of_static_type_check: attached l_type_checker.checked_expression as l_checked_expression then
+									l_select_expression := l_checked_expression
+									select_expression := l_select_expression
+								end
 							end
 						end
-						a_variable.set_selector (select_expression)
+						a_variable.set_selector (l_select_expression)
 					end
 				end
 			end
@@ -381,32 +412,46 @@ feature {NONE} -- Implementation
 			global_variable: is_global_variable and then a_global_variable /= Void
 			executable_not_void: a_executable /= Void
 		local
-			l_expression: XM_XPATH_EXPRESSION
+			l_expression: detachable XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_replacement.make (Void)
-				select_expression.simplify (l_replacement)
-				l_expression := l_replacement.item
-				if l_expression.is_error then
-					report_compile_error (l_expression.error_value)
+				l_select_expression.simplify (l_replacement)
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					l_expression := l_replacement_item
+				end
+				if attached l_expression.error_value as l_error_value then
+					check is_error: l_expression.is_error end
+					report_compile_error (l_error_value)
 				else
 					l_replacement.put (Void)
-					l_expression.check_static_type (l_replacement, static_context, any_node_test)
-					l_expression := l_replacement.item
+					check attached static_context as l_static_context then
+						l_expression.check_static_type (l_replacement, l_static_context, any_node_test)
+					end
+					check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+						l_expression := l_replacement_item
+					end
 					if not l_expression.is_error then
 						l_replacement.put (Void)
-						l_expression.optimize (l_replacement, static_context, any_node_test)
-						l_expression := l_replacement.item
+						check attached static_context as l_static_context then
+							l_expression.optimize (l_replacement, l_static_context, any_node_test)
+						end
+						check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+							l_expression := l_replacement_item
+						end
 					end
-					if l_expression.is_error then
-						report_compile_error (l_expression.error_value)
+					if attached l_expression.error_value as l_error_value then
+						check is_error: l_expression.is_error end
+						report_compile_error (l_error_value)
 					else
 						if configuration.is_tracing then
 							create l_trace_wrapper.make (l_expression, a_executable, Current)
-							l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+							check attached principal_stylesheet as l_principal_stylesheet then
+								l_trace_wrapper.set_source_location (l_principal_stylesheet.module_number (system_id), line_number)
+							end
 							l_expression := l_trace_wrapper
 						end
 						allocate_slots (l_expression, slot_manager)
@@ -417,7 +462,7 @@ feature {NONE} -- Implementation
 			a_global_variable.set_selector (l_expression)
 		end
 
-	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: STRING)
+	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: detachable STRING)
 			-- Prepare attributes - stage 2.
 		local
 			l_error: XM_XPATH_ERROR_VALUE
@@ -447,5 +492,9 @@ feature {NONE} -- Implementation
 				as_type := last_generated_sequence_type
 			end
 		end
+
+	internal_variable_name: detachable like variable_name
+			-- Name of variable;
+			-- For use in diagnostics - lexically, a QName
 
 end

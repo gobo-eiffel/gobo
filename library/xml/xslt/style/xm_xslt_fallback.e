@@ -5,7 +5,7 @@ note
 		"xsl:fallback element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,9 +46,9 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -58,7 +58,7 @@ feature -- Element change
 					check_unknown_attribute (a_name_code)
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			attributes_prepared := True
@@ -67,13 +67,13 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			a_parent: XM_XSLT_STYLE_ELEMENT
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			a_parent ?= parent
-			if not a_parent.may_contain_fallback then
-				create an_error.make_from_string (STRING_.concat ("xsl:fallback is not allowed as a child of ", a_parent.node_name), Xpath_errors_uri, "XTSE0010", Static_error)
-				report_compile_error (an_error)
+			check attached {XM_XSLT_STYLE_ELEMENT} parent as a_parent then
+				if not a_parent.may_contain_fallback then
+					create an_error.make_from_string (STRING_.concat ("xsl:fallback is not allowed as a child of ", a_parent.node_name), Xpath_errors_uri, "XTSE0010", Static_error)
+					report_compile_error (an_error)
+				end
 			end
 			validated := True
 		end

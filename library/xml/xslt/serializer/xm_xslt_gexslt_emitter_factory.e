@@ -5,7 +5,7 @@ note
 		"Objects that create emitters for gexslt:methods."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,8 @@ feature -- Access
 			if STRING_.same_string (a_method_local_name, "null") then
 				create a_null_emitter.make (a_serializer, some_properties)
 				Result := a_null_emitter
+			else
+				check precondition_is_valid_output_method: False then end
 			end
 		end
 

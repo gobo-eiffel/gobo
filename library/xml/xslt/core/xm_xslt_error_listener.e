@@ -5,7 +5,7 @@ note
 		"Objects that receive notification of transformation errors"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Events
 
-	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
+	warning (a_message: STRING; a_locator: detachable XM_XPATH_LOCATOR)
 			-- Receive notification of a warning.
 		require
 			message_not_void: a_message /= Void

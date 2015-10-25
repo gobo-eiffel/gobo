@@ -5,7 +5,7 @@ note
 		"xsl:call-template element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,12 +39,13 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute: STRING
+			an_expanded_name: STRING
+			a_name_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -60,7 +61,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if not any_compile_errors then
@@ -71,7 +72,9 @@ feature -- Element change
 					if is_qname (a_name_attribute) then
 						generate_name_code (a_name_attribute)
 						if last_generated_name_code = -1 then
-							report_compile_error (name_code_error_value)
+							check postcondition_of_generate_name_code: attached name_code_error_value as l_name_code_error_value then
+								report_compile_error (l_name_code_error_value)
+							end
 						end
 						called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 					else
@@ -100,8 +103,6 @@ feature -- Element change
 			--  immediately after its children have been validated.
 		local
 			a_declared_parameter_iterator, an_actual_parameter_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_param: XM_XSLT_PARAM
-			a_with_param: XM_XSLT_WITH_PARAM
 			is_parameter_ok: BOOLEAN
 			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
@@ -109,15 +110,14 @@ feature -- Element change
 
 			-- check that a parameter is supplied for each required parameter of the called template
 
-			if template /= Void then -- should this be replaced by a pre-condition: not `any_compile_errors'?
+			if attached template as l_template then -- should this be replaced by a pre-condition: not `any_compile_errors'?
 				from
-					a_declared_parameter_iterator := template.new_axis_iterator (Child_axis)
+					a_declared_parameter_iterator := l_template.new_axis_iterator (Child_axis)
 					a_declared_parameter_iterator.start
 				until
 					any_compile_errors or else a_declared_parameter_iterator.after
 				loop
-					a_param ?= a_declared_parameter_iterator.item
-					if a_param /= Void and then a_param.is_required_parameter and then not a_param.is_tunnel_parameter then
+					if attached {XM_XSLT_PARAM} a_declared_parameter_iterator.item as a_param and then a_param.is_required_parameter and then not a_param.is_tunnel_parameter then
 						from
 							is_parameter_ok := False
 							an_actual_parameter_iterator := new_axis_iterator (Child_axis)
@@ -125,8 +125,7 @@ feature -- Element change
 						until
 							is_parameter_ok or else an_actual_parameter_iterator.after
 						loop
-							a_with_param ?= an_actual_parameter_iterator.item
-							if a_with_param /= Void and then a_with_param.variable_fingerprint = a_param.variable_fingerprint then
+							if attached {XM_XSLT_WITH_PARAM} an_actual_parameter_iterator.item as a_with_param and then a_with_param.variable_fingerprint = a_param.variable_fingerprint then
 								is_parameter_ok := True
 							end
 							an_actual_parameter_iterator.forth
@@ -150,20 +149,20 @@ feature -- Element change
 				until
 					any_compile_errors or else an_actual_parameter_iterator.after
 				loop
-					a_with_param ?= an_actual_parameter_iterator.item
-					if a_with_param /= Void then
+					if attached {XM_XSLT_WITH_PARAM} an_actual_parameter_iterator.item as a_with_param then
 						from
-							a_declared_parameter_iterator := template.new_axis_iterator (Child_axis)
+							check attached template as l_template then
+								a_declared_parameter_iterator := l_template.new_axis_iterator (Child_axis)
+							end
 							a_declared_parameter_iterator.start
 							is_parameter_ok := False
 						until
 							is_parameter_ok or else a_declared_parameter_iterator.after
 						loop
-							a_param ?= a_declared_parameter_iterator.item
-							if a_param /= Void and then a_with_param.variable_fingerprint = a_param.variable_fingerprint then
+							if attached {XM_XSLT_PARAM} a_declared_parameter_iterator.item as a_param and then a_with_param.variable_fingerprint = a_param.variable_fingerprint then
 								is_parameter_ok := True
-								if a_param.as_type /= Void then
-									a_with_param.check_against_required_type (a_param.as_type)
+								if attached a_param.as_type as l_param_as_type  then
+									a_with_param.check_against_required_type (l_param_as_type)
 								end
 							end
 							a_declared_parameter_iterator.forth
@@ -188,7 +187,12 @@ feature -- Element change
 			a_call: XM_XSLT_COMPILED_CALL
 			a_target: XM_XSLT_COMPILED_TEMPLATE
 		do
-			a_target := template.compiled_template
+			check
+				attached template as l_template
+				attached l_template.compiled_template as l_template_compiled_template
+			then
+				a_target := l_template_compiled_template
+			end
 			create a_call.make (an_executable, a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
 			last_generated_expression := a_call
 		end
@@ -198,22 +202,22 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 	returned_item_type: XM_XPATH_ITEM_TYPE
 			-- Type of item returned by this instruction
 		do
-			if template = Void then
+			if not attached template as l_template then
 				Result := any_item
 			else
-				Result := template.returned_item_type
+				Result := l_template.returned_item_type
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	template: XM_XSLT_TEMPLATE
+	template: detachable XM_XSLT_TEMPLATE
 			-- Containing template
 
 	use_tail_recursion: BOOLEAN
 			-- Use tail recursion
 
-	called_template_name: STRING
+	called_template_name: detachable STRING
 			-- Name of called template (for diagnostics)
 
 	called_template_fingerprint: INTEGER
@@ -229,8 +233,12 @@ feature {NONE} -- Implementation
 			l_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			l_template: XM_XSLT_TEMPLATE
 		do
-			l_stylesheet := principal_stylesheet
-			l_element_list := l_stylesheet.top_level_elements
+			check attached principal_stylesheet as l_principal_stylesheet then
+				l_stylesheet := l_principal_stylesheet
+			end
+			check attached l_stylesheet.top_level_elements as l_stylesheet_top_level_elements then
+				l_element_list := l_stylesheet_top_level_elements
+			end
 
 			-- Search for a matching template name, starting at the end in case of duplicates.
 			-- This also ensures we get the one with highest import precedence.
@@ -261,8 +269,10 @@ feature {NONE} -- Implementation
 				l_cursor.index
 			end
 			if template = Void and not any_compile_errors then
-				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("No template exists named ", called_template_name),
-					Xpath_errors_uri, "XTSE0650", Static_error))
+				check attached called_template_name as l_called_template_name then
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("No template exists named ", l_called_template_name),
+						Xpath_errors_uri, "XTSE0650", Static_error))
+				end
 			end
 		end
 

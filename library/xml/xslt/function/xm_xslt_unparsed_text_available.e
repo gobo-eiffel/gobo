@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT unparsed-text-available() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,45 +62,48 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_href, l_encoding: STRING
+			l_href: STRING
+			l_encoding: detachable STRING
 			l_uri: UT_URI
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item = Void then
+			if not attached a_result.item as l_result_item_1 then
 				-- logically can't happen - needs a change to the spec
 				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
-			elseif a_result.item.is_error then
+			elseif l_result_item_1.is_error then
 				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 			else
-				l_href := a_result.item.string_value
+				l_href := l_result_item_1.string_value
 				if Url_encoding.has_excluded_characters (l_href) then
 					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 				elseif l_href.has ('#') then
 					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
 				else
-					create l_uri.make_resolve (base_uri, l_href)
-					if arguments.count = 2 then
-						a_result.put (Void)
-						arguments.item (2).evaluate_item (a_result, a_context)
-						if a_result.item /= Void then
-							if a_result.item.is_error then
-								a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
-							else
-								l_encoding := a_result.item.string_value
+					check attached base_uri as l_base_uri then
+						create l_uri.make_resolve (l_base_uri, l_href)
+						if arguments.count = 2 then
+							a_result.put (Void)
+							arguments.item (2).evaluate_item (a_result, a_context)
+							if attached a_result.item as l_result_item_2 then
+								if l_result_item_2.is_error then
+									a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
+								else
+									l_encoding := l_result_item_2.string_value
+								end
 							end
 						end
-					end
-					if a_result.item = Void then -- no result yet
-						a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, True))
+						if a_result.item = Void then -- no result yet
+							a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, True))
+						end
 					end
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			-- Suppress compile-time evaluation
@@ -109,7 +112,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			Precursor (a_replacement, a_context)
@@ -128,7 +131,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	base_uri: UT_URI
+	base_uri: detachable UT_URI
 			-- Base URI saved from static context
 
 end

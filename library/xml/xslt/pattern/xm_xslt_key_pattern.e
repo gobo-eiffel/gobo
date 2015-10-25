@@ -5,7 +5,7 @@ note
 		"XSLT key patterns (of the form key(key-name, key-value))"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,24 +85,29 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			key_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			key_expression := l_replacement.item
-			if key_expression.is_error then
-				set_error_value (key_expression.error_value)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				key_expression := l_replacement_item
+				if attached key_expression.error_value as l_error_value then
+					check is_error: key_expression.is_error end
+					set_error_value (l_error_value)
+				end
 			end
 		end
 
 	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			key_expression.promote (l_replacement, a_offer)
-			key_expression := l_replacement.item
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				key_expression := l_replacement_item
+			end
 		end
 
 feature -- Matching
@@ -110,54 +115,64 @@ feature -- Matching
 	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' againast `a_node'.
 		local
-			l_doc: XM_XPATH_DOCUMENT
+			l_doc: detachable XM_XPATH_DOCUMENT
 			l_key_value: XM_XPATH_STRING_VALUE
 			l_key: STRING
 			l_km: XM_XSLT_KEY_MANAGER
 			l_finished: BOOLEAN
 			l_iter: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_nodes: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_nodes: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			internal_last_match_result := False
 			l_doc := a_node.document_root
 			if l_doc /= Void then
-				l_km := a_context.transformer.key_manager
-				key_expression.create_iterator (a_context)
-				l_iter := key_expression.last_iterator
-				if l_iter.is_error then
-					set_error_value (l_iter.error_value)
-				else
-					from
-						l_iter.start
-					until
-						l_finished or else l_iter.is_error or else l_iter.after
-					loop
-						l_key := l_iter.item.string_value
-						create l_key_value.make (l_key)
-						l_km.generate_keyed_sequence (key_fingerprint, l_doc, l_key_value, a_context)
-						if a_context.transformer.is_error then
-							set_error_value (a_context.transformer.last_error)
+				check attached a_context.transformer as l_context_transformer then
+					l_km := l_context_transformer.key_manager
+					key_expression.create_iterator (a_context)
+					check postcondition_of_create_iterator: attached key_expression.last_iterator as l_last_iterator then
+						l_iter := l_last_iterator
+						if attached l_iter.error_value as l_error_value then
+							check is_error: l_iter.is_error end
+							set_error_value (l_error_value)
 						else
-							l_nodes := l_km.last_key_sequence
 							from
-								l_nodes.start
+								l_iter.start
 							until
-								l_finished or else l_nodes.is_error or else l_nodes.after
+								l_finished or else l_iter.is_error or else l_iter.after
 							loop
-								if l_nodes.item.is_same_node (a_node) then
-									internal_last_match_result := True
-									l_finished := True
+								l_key := l_iter.item.string_value
+								create l_key_value.make (l_key)
+								l_km.generate_keyed_sequence (key_fingerprint, l_doc, l_key_value, a_context)
+								if attached l_context_transformer.last_error as l_last_error then
+									check is_error: l_context_transformer.is_error end
+									set_error_value (l_last_error)
+								else
+									l_nodes := l_km.last_key_sequence
+									check l_nodes /= Void then
+										from
+											l_nodes.start
+										until
+											l_finished or else l_nodes.is_error or else l_nodes.after
+										loop
+											if l_nodes.item.is_same_node (a_node) then
+												internal_last_match_result := True
+												l_finished := True
+											end
+											l_nodes.forth
+										end
+									end
 								end
-								l_nodes.forth
+								l_iter.forth
 							end
-						end
-						l_iter.forth
-					end
-					if not is_error then
-						if l_nodes /= Void and then l_nodes.is_error then
-							set_error_value (l_nodes.error_value)
-						elseif l_iter.is_error then
-							set_error_value (l_iter.error_value)
+							if not is_error then
+								if l_nodes /= Void and then attached l_nodes.error_value as l_error_value then
+									check is_error: l_nodes.is_error end
+									set_error_value (l_error_value)
+								elseif attached l_iter.error_value as l_error_value then
+									check is_error: l_iter.is_error end
+									set_error_value (l_error_value)
+								end
+							end
 						end
 					end
 				end

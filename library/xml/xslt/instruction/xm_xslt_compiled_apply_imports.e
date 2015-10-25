@@ -3,7 +3,7 @@ note
 	description: "Objects that represent an xsl:apply-imports,"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 		do
 			executable := an_executable
 			actual_parameters := some_actual_parameters
-			set_with_params_parent (actual_parameters, Current)
 			tunnel_parameters := some_tunnel_parameters
+			set_with_params_parent (actual_parameters, Current)
 			set_with_params_parent (tunnel_parameters, Current)
 			compute_static_properties
 			initialized := True
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		do
 			a_replacement.put (Current)
@@ -84,7 +84,7 @@ feature -- Optimization
 			simplify_with_params (tunnel_parameters)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -92,7 +92,7 @@ feature -- Optimization
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
@@ -109,20 +109,23 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			l_current_template, l_template: XM_XSLT_COMPILED_TEMPLATE
+			l_current_template: detachable XM_XSLT_COMPILED_TEMPLATE
+			l_template: XM_XSLT_COMPILED_TEMPLATE
 			l_error: XM_XPATH_ERROR_VALUE
-			l_mode: XM_XSLT_MODE
+			l_mode: detachable XM_XSLT_MODE
 			l_minimum_precedence, l_maximum_precedence: INTEGER
-			l_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_current_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_other_context: XM_XSLT_EVALUATION_CONTEXT
-			l_rule: XM_XSLT_RULE
+			l_rule: detachable XM_XSLT_RULE
 		do
-			l_transformer := a_context.transformer
+			check attached a_context.transformer as l_context_transformer then
+				l_transformer := l_context_transformer
+			end
 
 			-- handle any parameters
 
@@ -130,7 +133,7 @@ feature -- Evaluation
 			l_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
 			l_rule := a_context.current_template
 			if l_rule /= Void then
-				l_current_template := a_context.current_template.handler.as_template
+				l_current_template := l_rule.handler.as_template
 			end
 			if l_current_template = Void then
 				create l_error.make_from_string ("Current template rule is null whilst evaluating xsl:apply-imports.",
@@ -169,7 +172,9 @@ feature -- Evaluation
 							l_other_context := a_context.new_context
 							l_other_context.set_local_parameters (l_parameters)
 							l_other_context.set_tunnel_parameters (l_tunnel_parameters)
-							l_other_context.open_stack_frame (l_template.slot_manager)
+							check attached l_template.slot_manager as l_slot_manager then
+								l_other_context.open_stack_frame (l_slot_manager)
+							end
 							l_template.generate_events (l_rule, l_other_context)
 						end
 					end

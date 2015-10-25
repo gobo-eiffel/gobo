@@ -5,7 +5,7 @@ note
 		"Sort records for XM_XSLT_SORTED_GROUP_ITERATOR"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER;
+	make (an_item: XM_XPATH_ITEM; a_key_list: DS_ARRAYED_LIST [detachable XM_XPATH_ATOMIC_VALUE]; a_count: INTEGER;
 			a_current_grouping_key: XM_XPATH_ATOMIC_VALUE; a_current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM])
 			-- Establish invariant.
 		require

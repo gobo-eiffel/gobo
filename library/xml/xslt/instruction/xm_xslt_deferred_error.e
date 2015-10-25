@@ -5,7 +5,7 @@ note
 		"Objects that represent a deferred error, to be raised only if executed"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,10 +86,12 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
-			a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			check attached error_value as l_error_value then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT)

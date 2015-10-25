@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT current-group() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,6 +61,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- will never be called
+			check False then end
 		end
 
 feature -- Status setting
@@ -76,23 +77,22 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Iterator over the values of a sequence
 		local
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			a_group_iterator: detachable XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as an_evaluation_context
 				-- as this is an XSLT function
-			end
-			a_group_iterator := an_evaluation_context.current_group_iterator
-			if a_group_iterator = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-			else
-				last_iterator := a_group_iterator.current_group_iterator
+			then
+				a_group_iterator := an_evaluation_context.current_group_iterator
+				if a_group_iterator = Void then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+				else
+					last_iterator := a_group_iterator.current_group_iterator
+				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

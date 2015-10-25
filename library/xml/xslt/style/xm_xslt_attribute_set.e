@@ -5,7 +5,7 @@ note
 		"xsl:attribute-set element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -43,10 +43,10 @@ feature -- Access
 	attribute_set_name_code: INTEGER
 			-- Fingerprint of QName
 
-	use: STRING
+	use: detachable STRING
 			-- Value of supplied `use' attribute
 
-	attribute_set_elements: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
+	attribute_set_elements: detachable DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
 			-- Other attribute-sets referenced by `Current'
 
 	reference_count: INTEGER
@@ -67,12 +67,13 @@ feature -- Element change
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_name_code: INTEGER
-			l_expanded_name, l_name_attribute: STRING
+			l_expanded_name: STRING
+			l_name_attribute: detachable STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					l_cursor := attribute_collection.name_code_cursor
+					l_cursor := l_attribute_collection.name_code_cursor
 					l_cursor.start
 				until
 					l_cursor.after or any_compile_errors
@@ -90,7 +91,7 @@ feature -- Element change
 					end
 					l_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_name_attribute = Void then
@@ -99,7 +100,9 @@ feature -- Element change
 				if is_qname (l_name_attribute) then
 					generate_name_code (l_name_attribute)
 					if last_generated_name_code = -1 then
-						report_compile_error (name_code_error_value)
+						check postcondition_of_generate_name_code: attached name_code_error_value as l_name_code_error_value then
+							report_compile_error (l_name_code_error_value)
+						end
 					else
 						attribute_set_name_code := last_generated_name_code
 					end
@@ -118,9 +121,9 @@ feature -- Element change
 			-- As well as validation, it can perform first-time initialisation.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_attribute: XM_XSLT_ATTRIBUTE
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
 			an_error: XM_XPATH_ERROR_VALUE
+			l_attribute_set_elements: like attribute_set_elements
 		do
 			check_top_level (Void)
 			an_iterator := new_axis_iterator (Child_axis)
@@ -129,8 +132,7 @@ feature -- Element change
 			until
 				any_compile_errors or else an_iterator.after
 			loop
-				an_attribute ?= an_iterator.item
-				if an_attribute = Void then
+				if not attached {XM_XSLT_ATTRIBUTE} an_iterator.item then
 					create an_error.make_from_string ("Only xsl:attribute is allowed within xsl:attribute-set",
 																 Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
@@ -138,25 +140,26 @@ feature -- Element change
 				an_iterator.forth
 			end
 
-			if use /= Void then
+			if attached use as l_use then
 
 				-- Identify any attribute sets that this one refers to
 
-				create attribute_set_elements.make_default
-				accumulate_attribute_sets (use, attribute_set_elements)
+				create l_attribute_set_elements.make_default
+				attribute_set_elements := l_attribute_set_elements
+				accumulate_attribute_sets (l_use, l_attribute_set_elements)
 				if not any_compile_errors then
 
 					-- Check for circularity
 
 					from
-						a_cursor := attribute_set_elements.new_cursor; a_cursor.start
+						a_cursor := l_attribute_set_elements.new_cursor; a_cursor.start
 					until
 						a_cursor.after
 					loop
 						a_cursor.item.check_circularity (Current)
 						a_cursor.forth
 					variant
-						attribute_set_elements.count + 1 - a_cursor.index
+						l_attribute_set_elements.count + 1 - a_cursor.index
 					end
 				end
 			else
@@ -181,16 +184,16 @@ feature -- Element change
 				-- The circularity will be detected when the last attribute set
 				--  in the cycle gets validated.
 
-				if attribute_set_elements /= Void then
+				if attached attribute_set_elements as l_attribute_set_elements then
 					from
-						a_cursor := attribute_set_elements.new_cursor; a_cursor.start
+						a_cursor := l_attribute_set_elements.new_cursor; a_cursor.start
 					until
 						a_cursor.after
 					loop
 						a_cursor.item.check_circularity (an_origin)
 						a_cursor.forth
 					variant
-						attribute_set_elements.count + 1 - a_cursor.index
+						l_attribute_set_elements.count + 1 - a_cursor.index
 					end
 				end
 			end
@@ -199,10 +202,10 @@ feature -- Element change
 	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
-			l_body: XM_XPATH_EXPRESSION
+			l_body: detachable XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_instruction: XM_XSLT_COMPILED_ATTRIBUTE_SET
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
 			if reference_count > 0 then
@@ -213,20 +216,26 @@ feature -- Element change
 				end
 				create l_replacement.make (Void)
 				l_body.simplify (l_replacement)
-				l_body := l_replacement.item
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					l_body := l_replacement_item
+				end
 				if configuration.is_tracing then
 					create l_trace_wrapper.make (l_body, a_executable, Current)
-					l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+					check attached principal_stylesheet as l_principal_stylesheet then
+						l_trace_wrapper.set_source_location (l_principal_stylesheet.module_number (system_id), line_number)
+					end
 					l_trace_wrapper.set_parent (Current)
 					l_body := l_trace_wrapper
 				end
-				create l_instruction.make (fingerprint_from_name_code (attribute_set_name_code),
-													used_attribute_sets,
+				check attached used_attribute_sets as l_used_attribute_sets then
+					create l_instruction.make (fingerprint_from_name_code (attribute_set_name_code),
+													l_used_attribute_sets,
 													a_executable,
 													l_body,
 													line_number,
 													system_id,
 													slot_manager)
+				end
 				a_executable.attribute_set_manager.add_attributes (l_instruction, attribute_set_name_code)
 			end
 			last_generated_expression := Void

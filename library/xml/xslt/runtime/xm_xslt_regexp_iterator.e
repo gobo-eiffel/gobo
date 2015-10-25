@@ -5,7 +5,7 @@ note
 		"Objects that iterate over the sub-expressions of a regular expression"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,11 @@ feature -- Access
 
 	item: XM_XPATH_STRING_VALUE
 			-- Value or node at the current position
+		do
+			check precondition_not_off: attached internal_item as l_internal_item then
+				Result := l_internal_item
+			end
+		end
 
 	is_invulnerable: BOOLEAN
 			-- Is `Current' guarenteed free of implicit errors?
@@ -94,15 +99,15 @@ feature -- Cursor movement
 			else
 				regexp.match (input)
 				if regexp.match_count = 0 then
-					create item .make (new_unicode_string_from_utf8 (input))
+					create internal_item .make (new_unicode_string_from_utf8 (input))
 					was_last_match := False
 					next_subject := ""
 				elseif regexp.captured_start_position (0) > 1 then
-					create item.make (new_unicode_string_from_utf8 (input.substring (1, regexp.captured_start_position (0) - 1)))
+					create internal_item.make (new_unicode_string_from_utf8 (input.substring (1, regexp.captured_start_position (0) - 1)))
 					was_last_match := False
 					next_subject := input.substring (regexp.captured_start_position (0), input.count)
 				else
-					create item.make (new_unicode_string_from_utf8 (input.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
+					create internal_item.make (new_unicode_string_from_utf8 (input.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
 					next_subject := input.substring (regexp.captured_end_position (0) + 1, input.count)
 					was_last_match := True
 				end
@@ -112,24 +117,26 @@ feature -- Cursor movement
 	forth
 			-- Move to next position
 		do
-			index := index + 1
-			regexp.wipe_out
-			if next_subject.count = 0 then
-				was_last_match := False; after := True
-			else
-				regexp.match (next_subject)
-				if regexp.match_count = 0 then
-					create item.make (new_unicode_string_from_utf8 (next_subject))
-					was_last_match := False
-					next_subject := ""
-				elseif regexp.captured_start_position (0) > 1 then
-					create item.make (new_unicode_string_from_utf8 (next_subject.substring (1, regexp.captured_start_position (0) - 1)))
-					was_last_match := False
-					next_subject := next_subject.substring (regexp.captured_start_position (0), next_subject.count)
+			check attached next_subject as l_next_subject then
+				index := index + 1
+				regexp.wipe_out
+				if l_next_subject.count = 0 then
+					was_last_match := False; after := True
 				else
-					create item.make (new_unicode_string_from_utf8 (next_subject.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
-					next_subject := next_subject.substring (regexp.captured_end_position (0) + 1, next_subject.count)
-					was_last_match := True
+					regexp.match (l_next_subject)
+					if regexp.match_count = 0 then
+						create internal_item.make (new_unicode_string_from_utf8 (l_next_subject))
+						was_last_match := False
+						next_subject := ""
+					elseif regexp.captured_start_position (0) > 1 then
+						create internal_item.make (new_unicode_string_from_utf8 (l_next_subject.substring (1, regexp.captured_start_position (0) - 1)))
+						was_last_match := False
+						next_subject := l_next_subject.substring (regexp.captured_start_position (0), l_next_subject.count)
+					else
+						create internal_item.make (new_unicode_string_from_utf8 (l_next_subject.substring (regexp.captured_start_position (0), regexp.captured_end_position (0))))
+						next_subject := l_next_subject.substring (regexp.captured_end_position (0) + 1, l_next_subject.count)
+						was_last_match := True
+					end
 				end
 			end
 		end
@@ -144,6 +151,9 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
+	internal_item: detachable XM_XPATH_STRING_VALUE
+			-- Value or node at the current position
+
 	input: STRING
 			-- Original input string
 
@@ -153,7 +163,7 @@ feature {NONE} -- Implementation
 	was_last_match: BOOLEAN
 			-- Is `item' a match or a non-match?
 
-	next_subject: STRING
+	next_subject: detachable STRING
 			-- Next subject to match
 
 invariant

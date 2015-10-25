@@ -5,7 +5,7 @@ note
 		"Objects that receive the results of XSLT transformations"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create {XM_XSLT_OUTPUT_URI_RESOLVER, XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER}
 
 feature {NONE} -- Initialization
 
-	make (a_stream: XM_OUTPUT; a_system_id:STRING)
+	make (a_stream: XM_OUTPUT; a_system_id: STRING)
 			-- Create a stream result.
 		require
 			stream_not_void: a_stream /= Void
@@ -59,12 +59,12 @@ feature {NONE} -- Initialization
 			emitter_not_void: an_emitter /= Void
 		do
 			emitter := an_emitter
-			principal_receiver := emitter
+			principal_receiver := an_emitter
 			is_emitter := True
-			if emitter.document_uri /= Void then
-				system_id := emitter.document_uri.full_reference
+			if attached an_emitter.document_uri as l_document_uri then
+				system_id := l_document_uri.full_reference
 			else
-				system_id := emitter.base_uri
+				system_id := an_emitter.base_uri
 			end
 		ensure
 			emitter_set: emitter = an_emitter
@@ -76,12 +76,12 @@ feature {NONE} -- Initialization
 			receiver_not_void: a_receiver /= Void
 		do
 			receiver := a_receiver
-			principal_receiver := receiver
+			principal_receiver := a_receiver
 			is_receiver := True
-			if receiver.document_uri /= Void then
-				system_id := receiver.document_uri.full_reference
+			if attached a_receiver.document_uri as l_document_uri then
+				system_id := l_document_uri.full_reference
 			else
-				system_id := receiver.base_uri
+				system_id := a_receiver.base_uri
 			end
 		ensure
 			receiver_set: receiver = a_receiver
@@ -89,22 +89,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	emitter: XM_XSLT_EMITTER
+	emitter: detachable XM_XSLT_EMITTER
 			-- Wrapped emitter
 
-	stream: XM_OUTPUT
+	stream: detachable XM_OUTPUT
 			-- Wrapped stream
 
-	receiver: XM_XPATH_RECEIVER
+	receiver: detachable XM_XPATH_RECEIVER
 			-- Wrapped receivr.
 
-	principal_receiver: XM_XPATH_RECEIVER
+	principal_receiver: detachable XM_XPATH_RECEIVER
 			-- Receiver for document node
 
 	system_id: STRING
 			-- System id
 
-	response_stream: KI_CHARACTER_INPUT_STREAM
+	response_stream: detachable KI_CHARACTER_INPUT_STREAM
 			-- Body of response, if any;
 			-- Principally expected from HTTP POST requests
 
@@ -119,13 +119,13 @@ feature -- Status report
 	is_receiver: BOOLEAN
 			-- Is this a wrapper for an `XM_XPATH_RECEIVER'?
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Possible error message from output resolver
 
 	is_document_started: BOOLEAN
 			-- Has the result document been written to yet?
 		do
-			Result := principal_receiver /= Void and then principal_receiver.is_written
+			Result := attached principal_receiver as l_principal_receiver and then l_principal_receiver.is_written
 		end
 
 feature -- Element change
@@ -143,8 +143,8 @@ feature -- Element change
 	flush
 			-- Flush `stream'.
 		do
-			if stream /= Void then
-				stream.flush
+			if attached stream as l_stream then
+				l_stream.flush
 			end
 		end
 
@@ -154,14 +154,14 @@ feature -- Element change
 			stream_result: is_stream
 			output_properties_not_void: some_properties /= Void
 		do
-			if output_stream /= Void then
-				output_stream.close
+			if attached output_stream as l_output_stream then
+				l_output_stream.close
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	output_stream: KI_CHARACTER_OUTPUT_STREAM
+	output_stream: detachable KI_CHARACTER_OUTPUT_STREAM
 			-- Text stream for secondary output destination
 
 invariant

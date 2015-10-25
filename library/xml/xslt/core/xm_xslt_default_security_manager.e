@@ -5,7 +5,7 @@ note
 		"Objects that make security decisions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,8 +45,8 @@ feature -- Access
 			-- Is writing permitted to `an_absolute_uri'?
 		do
 			if is_highly_secure then
-				Result := STRING_.same_string (an_absolute_uri.scheme, "stdout")
-					or else STRING_.same_string (an_absolute_uri.scheme, "string")
+				Result := attached an_absolute_uri.scheme as l_scheme and then (STRING_.same_string (l_scheme, "stdout")
+					or else STRING_.same_string (l_scheme, "string"))
 			else
 				Result := True
 			end

@@ -5,7 +5,7 @@ note
 		"xsl:transform or xsl:stylesheet element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			create decimal_format_manager.make
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create a_code_point_collator
-			declare_collation (a_code_point_collator, default_collation_name)
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create module_list.make_default
 			module_list.set_equality_tester (string_equality_tester)
@@ -64,6 +63,7 @@ feature {NONE} -- Initialization
 			create executable.make (rule_manager, key_manager, decimal_format_manager,
 											collation_map, shared_name_pool, module_list, function_library)
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
+			declare_collation (a_code_point_collator, default_collation_name)
 		end
 
 feature -- Access
@@ -74,14 +74,14 @@ feature -- Access
 	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
 			-- Map of collation names to collators
 
-	importer: like Current
+	importer: detachable like Current
 			-- The stylesheet that imported or included `Current';
 			-- `Void' for the prinicpal stylesheet.
 
-	stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
+	stylesheet_compiler: detachable XM_XSLT_STYLESHEET_COMPILER
 			-- Stylesheet compiler object used to load `Current'
 
-	top_level_elements: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+	top_level_elements: detachable DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			-- Top-level elements in this logical stylesheet (after include/import processing)
 
 	import_precedence: INTEGER
@@ -105,7 +105,7 @@ feature -- Access
 	default_validation: INTEGER
 			-- Default validation
 
-	stripper_rules: XM_XSLT_MODE
+	stripper_rules: detachable XM_XSLT_MODE
 			-- Strip/preserve whitespace rules
 
 	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
@@ -115,7 +115,9 @@ feature -- Access
 			-- Import precedence of `Current'
 		do
 			if was_included then
-				Result := importer.precedence
+				check attached importer as l_importer then
+					Result := l_importer.precedence
+				end
 			else
 				Result := import_precedence
 			end
@@ -129,23 +131,27 @@ feature -- Access
 		local
 			l_index: INTEGER
 		do
-			Result := -1
-			-- if there are several matches, the last in stylesheet takes priority;
-			-- but the list is in reverse stylesheet order
+			check precondition_namespaces_aliases_present: attached namespace_alias_uri_codes as l_namespace_alias_uri_codes then
+				Result := -1
+				-- if there are several matches, the last in stylesheet takes priority;
+				-- but the list is in reverse stylesheet order
 
-			from
-				l_index := 1
-			until
-				l_index > namespace_alias_uri_codes.count
-			loop
-				if a_uri_code = namespace_alias_uri_codes.item (l_index) then
-					Result := namespace_alias_namespace_codes.item (l_index)
-					l_index := namespace_alias_uri_codes.count + 1
-				else
-					l_index := l_index + 1
+				from
+					l_index := 1
+				until
+					l_index > l_namespace_alias_uri_codes.count
+				loop
+					if a_uri_code = l_namespace_alias_uri_codes.item (l_index) then
+						check attached namespace_alias_namespace_codes as l_namespace_alias_namespace_codes then
+							Result := l_namespace_alias_namespace_codes.item (l_index)
+						end
+						l_index := l_namespace_alias_uri_codes.count + 1
+					else
+						l_index := l_index + 1
+					end
+				variant
+					l_namespace_alias_uri_codes.count + 1 - l_index
 				end
-			variant
-				namespace_alias_uri_codes.count + 1 - l_index
 			end
 		end
 
@@ -191,7 +197,10 @@ feature -- Access
 			-- This makes error reporting easier.
 
 			from
-				l_cursor := top_level_elements.new_cursor; l_cursor.finish
+				check attached top_level_elements as l_top_level_elements then
+					l_cursor := l_top_level_elements.new_cursor
+				end
+				l_cursor.finish
 			until
 				Result.is_error or l_cursor.before
 			loop
@@ -205,7 +214,9 @@ feature -- Access
 			end
 			if Result.is_error then
 				if Result.is_duplication_error then
-					l_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", Result.duplicate_attribute_name)
+					check attached Result.duplicate_attribute_name as l_duplicate_attribute_name then
+						l_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", l_duplicate_attribute_name)
+					end
 					if a_fingerprint = -1 then
 						l_message := STRING_.appended_string (l_message, "', in the unnamed output definition.")
 					else
@@ -214,17 +225,20 @@ feature -- Access
 					end
 					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1560", Static_error)
 				else
-					create l_error.make_from_string (Result.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
+					check attached Result.error_message as l_error_message then
+						create l_error.make_from_string (l_error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
+					end
 				end
 				report_compile_error (l_error)
 			elseif not l_found and then a_fingerprint > -1 then
-				Result := Void -- triggers an exception
+				-- Result := Void -- triggers an exception
+				check False then end
 			end
 		ensure
 			output_properties_not_void: Result /= Void
 		end
 
-	character_map (a_fingerprint: INTEGER): XM_XSLT_CHARACTER_MAP
+	character_map (a_fingerprint: INTEGER): detachable XM_XSLT_CHARACTER_MAP
 			-- Character map named by `a_fingerprint'
 		require
 			positive_fingerprint: a_fingerprint >= 0
@@ -237,7 +251,10 @@ feature -- Access
 			-- This makes error reporting easier.
 
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+				check attached top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
+				a_cursor.finish
 			until
 				a_cursor.before
 			loop
@@ -292,7 +309,10 @@ feature -- Status report
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+				check attached top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
+				a_cursor.finish
 			until
 				Result or else a_cursor.before
 			loop
@@ -324,20 +344,20 @@ feature -- Status report
 		local
 			an_index: INTEGER
 		do
-			if	namespace_alias_namespace_codes /= Void then
+			if attached namespace_alias_namespace_codes as l_namespace_alias_namespace_codes then
 				from
 					an_index := 1
 				until
-					an_index > namespace_alias_namespace_codes.count
+					an_index > l_namespace_alias_namespace_codes.count
 				loop
-					if a_uri_code = uri_code_from_namespace_code (namespace_alias_namespace_codes.item (an_index)) then
+					if a_uri_code = uri_code_from_namespace_code (l_namespace_alias_namespace_codes.item (an_index)) then
 						Result := True
-						an_index := namespace_alias_namespace_codes.count + 1
+						an_index := l_namespace_alias_namespace_codes.count + 1
 					else
 						an_index := an_index + 1
 					end
 				variant
-					namespace_alias_namespace_codes.count + 1 - an_index
+					l_namespace_alias_namespace_codes.count + 1 - an_index
 				end
 			end
 		end
@@ -356,7 +376,10 @@ feature -- Status report
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.start
+				check attached top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
+				a_cursor.start
 			until
 				a_cursor.after
 			loop
@@ -522,13 +545,14 @@ feature -- Element change
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_name_code: INTEGER
-			l_expanded_name, l_input_type_annotations_attribute: STRING
+			l_expanded_name: STRING
+			l_input_type_annotations_attribute: detachable STRING
 			l_error: XM_XPATH_ERROR_VALUE
 			l_version_found: BOOLEAN
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					l_cursor := attribute_collection.name_code_cursor
+					l_cursor := l_attribute_collection.name_code_cursor
 					l_cursor.start
 				until
 					l_cursor.after or any_compile_errors
@@ -652,17 +676,19 @@ feature -- Element change
 			-- Fix up references from XPath expressions to variables and functions, for static typing
 
 			if not any_compile_errors then
-				from
-					a_cursor := top_level_elements.new_cursor
-					a_cursor.start
-				until
-					a_cursor.after
-				loop
-					a_style_element := a_cursor.item
-					a_style_element.fixup_references
-					a_cursor.forth
-				variant
-					top_level_elements.count + 1 - a_cursor.index
+				check attached top_level_elements as l_top_level_elements then
+					from
+						a_cursor := l_top_level_elements.new_cursor
+						a_cursor.start
+					until
+						a_cursor.after
+					loop
+						a_style_element := a_cursor.item
+						a_style_element.fixup_references
+						a_cursor.forth
+					variant
+						l_top_level_elements.count + 1 - a_cursor.index
+					end
 				end
 			end
 
@@ -670,17 +696,19 @@ feature -- Element change
 
 			if not any_compile_errors then
 				validate
-				from
-					a_cursor := top_level_elements.new_cursor
-					a_cursor.start
-				until
-					any_compile_errors or else a_cursor.after
-				loop
-					a_style_element := a_cursor.item
-					a_style_element.validate_subtree
-					a_cursor.forth
-				variant
-					top_level_elements.count + 1 - a_cursor.index
+				check attached top_level_elements as l_top_level_elements then
+					from
+						a_cursor := l_top_level_elements.new_cursor
+						a_cursor.start
+					until
+						any_compile_errors or else a_cursor.after
+					loop
+						a_style_element := a_cursor.item
+						a_style_element.validate_subtree
+						a_cursor.forth
+					variant
+						l_top_level_elements.count + 1 - a_cursor.index
+					end
 				end
 				post_validated := True
 			end
@@ -696,13 +724,14 @@ feature -- Element change
 			l_previous_style_element: XM_XSLT_STYLE_ELEMENT
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			l_child: XM_XPATH_NODE
-			l_data_element: XM_XSLT_DATA_ELEMENT
 			l_module: XM_XSLT_MODULE
 			l_found_non_import: BOOLEAN
-			l_included_stylesheet: XM_XSLT_STYLESHEET
+			l_included_stylesheet: detachable XM_XSLT_STYLESHEET
 			l_error: XM_XPATH_ERROR_VALUE
+			l_top_level_elements: like top_level_elements
 		do
-			create top_level_elements.make
+			create l_top_level_elements.make
+			top_level_elements := l_top_level_elements
 			minimum_import_precedence := import_precedence
 			l_previous_style_element := Current
 			register_module (system_id)
@@ -722,51 +751,51 @@ feature -- Element change
 						 l_previous_style_element.report_compile_error (l_error)
 					end
 				else
-					l_data_element ?= l_child
-					if l_data_element /= Void then
+					if attached {XM_XSLT_DATA_ELEMENT} l_child then
 						l_found_non_import := True
 					else
-						l_previous_style_element ?= l_child
 						check
-							child_is_style_element: l_previous_style_element /= Void
+							child_is_style_element: attached {XM_XSLT_STYLE_ELEMENT} l_child as l_previous_style_element_2
 							-- Only data elements, style elements and white-space text nodes may be present
-						end
-						if l_previous_style_element.is_module then
-							l_module := l_previous_style_element.as_module
-							l_module.create_static_context
-							l_module.process_attributes
-							if l_module.is_import then
-								if l_found_non_import then
-									create l_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
-									l_module.report_compile_error (l_error)
+						then
+							l_previous_style_element := l_previous_style_element_2
+							if l_previous_style_element.is_module then
+								l_module := l_previous_style_element.as_module
+								l_module.create_static_context
+								l_module.process_attributes
+								if l_module.is_import then
+									if l_found_non_import then
+										create l_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
+										l_module.report_compile_error (l_error)
+									end
+								else
+									l_found_non_import := True
+								end
+								if not any_compile_errors then
+									l_included_stylesheet := l_module.included_stylesheet (Current, import_precedence)
+									if l_included_stylesheet /= Void then
+										if l_included_stylesheet.any_compile_errors then
+											set_compile_errors
+										else
+
+											-- After processing the imported stylesheet and any others it brought in,
+											--  adjust the import precedence of this stylesheet if necessary.
+
+											if l_module.is_import then
+												import_precedence := l_included_stylesheet.precedence + 1
+											else
+												import_precedence := l_included_stylesheet.precedence
+												l_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
+												l_included_stylesheet.set_was_included
+											end
+											copy_top_level_elements (l_included_stylesheet)
+										end
+									end
 								end
 							else
 								l_found_non_import := True
+								l_top_level_elements.force_last (l_previous_style_element)
 							end
-							if not any_compile_errors then
-								l_included_stylesheet := l_module.included_stylesheet (Current, import_precedence)
-								if l_included_stylesheet /= Void then
-									if l_included_stylesheet.any_compile_errors then
-										set_compile_errors
-									else
-
-										-- After processing the imported stylesheet and any others it brought in,
-										--  adjust the import precedence of this stylesheet if necessary.
-
-										if l_module.is_import then
-											import_precedence := l_included_stylesheet.precedence + 1
-										else
-											import_precedence := l_included_stylesheet.precedence
-											l_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
-											l_included_stylesheet.set_was_included
-										end
-										copy_top_level_elements (l_included_stylesheet)
-									end
-								end
-							end
-						else
-							l_found_non_import := True
-							top_level_elements.force_last (l_previous_style_element)
 						end
 					end
 				end
@@ -784,9 +813,9 @@ feature -- Element change
 		do
 			create static_context.make (Current, configuration)
 			process_attributes
-			if top_level_elements /= Void then
+			if attached top_level_elements as l_top_level_elements then
 				from
-					a_cursor := top_level_elements.new_cursor
+					a_cursor := l_top_level_elements.new_cursor
 					a_cursor.start
 				until
 					a_cursor.after
@@ -795,7 +824,7 @@ feature -- Element change
 					a_style_element.process_all_attributes
 					a_cursor.forth
 				variant
-					top_level_elements.count + 1 - a_cursor.index
+					l_top_level_elements.count + 1 - a_cursor.index
 				end
 			else
 				-- then validation will fail later, and report the error
@@ -812,9 +841,9 @@ feature -- Element change
 		local
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if validation_error /= Void then
-				report_compile_error (validation_error)
-			elseif not parent.is_document then
+			if attached validation_error as l_validation_error then
+				report_compile_error (l_validation_error)
+			elseif not attached parent as l_parent or else not l_parent.is_document then
 				create l_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (l_error)
 			end
@@ -846,45 +875,51 @@ feature -- Element change
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			an_error: XM_XPATH_ERROR_VALUE
 			explaining: BOOLEAN
+			l_non_overriding_runtime_library: like non_overriding_runtime_library
+			l_overriding_runtime_library: like overriding_runtime_library
 		do
 
 			-- Call compile method for each top-level object in the stylesheet
 
 			explaining := is_all_explaining
-			from
-				a_cursor := top_level_elements.new_cursor
-				a_cursor.start
-			until
-				any_compile_errors or else a_cursor.after
-			loop
-				a_system_id := a_cursor.item.system_id
-				if not is_module_registered (a_system_id) then register_module (a_system_id) end
-				a_cursor.item.compile (executable)
-				if a_cursor.item.last_generated_expression /= Void and then a_cursor.item.last_generated_expression.is_computed_expression then
-					a_cursor.item.last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
-				end
-				if explaining and then a_cursor.item.last_generated_expression /= Void then
-					if a_cursor.item.is_xslt_function then
-						a_level := 2
-						std.error.put_string ("xsl:function name=")
-						std.error.put_string (a_cursor.item.as_xslt_function.function_name)
-						if a_cursor.item.as_xslt_function.arity > 0 then
-							std.error.put_string (" taking ")
-							std.error.put_string (a_cursor.item.as_xslt_function.arity.out)
-							std.error.put_string (" parameter")
-							if a_cursor.item.as_xslt_function.arity > 1 then
-								std.error.put_string ("s")
-							end
-						end
-						std.error.put_string ("%N")
-					else
-						a_level := 1
+			check attached top_level_elements as l_top_level_elements then
+				from
+					a_cursor := l_top_level_elements.new_cursor
+					a_cursor.start
+				until
+					any_compile_errors or else a_cursor.after
+				loop
+					a_system_id := a_cursor.item.system_id
+					if not is_module_registered (a_system_id) then register_module (a_system_id) end
+					a_cursor.item.compile (executable)
+					if attached a_cursor.item.last_generated_expression as l_last_generated_expression and then l_last_generated_expression.is_computed_expression then
+						l_last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
 					end
-					a_cursor.item.last_generated_expression.display (a_level)
+					if explaining and then attached a_cursor.item.last_generated_expression as l_last_generated_expression then
+						if a_cursor.item.is_xslt_function then
+							a_level := 2
+							std.error.put_string ("xsl:function name=")
+							check attached a_cursor.item.as_xslt_function.function_name as l_function_name then
+								std.error.put_string (l_function_name)
+							end
+							if a_cursor.item.as_xslt_function.arity > 0 then
+								std.error.put_string (" taking ")
+								std.error.put_string (a_cursor.item.as_xslt_function.arity.out)
+								std.error.put_string (" parameter")
+								if a_cursor.item.as_xslt_function.arity > 1 then
+									std.error.put_string ("s")
+								end
+							end
+							std.error.put_string ("%N")
+						else
+							a_level := 1
+						end
+						l_last_generated_expression.display (a_level)
+					end
+					a_cursor.forth
+				variant
+					l_top_level_elements.count + 1 - a_cursor.index
 				end
-				a_cursor.forth
-			variant
-				top_level_elements.count + 1 - a_cursor.index
 			end
 			if not any_compile_errors then
 				decimal_format_manager.fixup_default_default
@@ -892,11 +927,15 @@ feature -- Element change
 				a_property_set := gathered_output_properties (-1)
 				if a_property_set.is_error then
 					if a_property_set.is_duplication_error then
-						a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+						check attached a_property_set.duplicate_attribute_name as l_duplicate_attribute_name then
+							a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", l_duplicate_attribute_name)
+						end
 						a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1560", Static_error)
 					else
-						create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
+						check is_error: attached a_property_set.error_message as l_error_message then
+							create an_error.make_from_string (l_error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
+						end
 					end
 					report_compile_error (an_error)
 				else
@@ -908,7 +947,9 @@ feature -- Element change
 					until
 						another_cursor.after
 					loop
-						a_compiled_templates_index.put (another_cursor.item.compiled_template, another_cursor.key)
+						check attached another_cursor.item.compiled_template as l_compiled_template then
+							a_compiled_templates_index.put (l_compiled_template, another_cursor.key)
+						end
 						another_cursor.forth
 					end
 					executable.set_named_template_table (a_compiled_templates_index)
@@ -918,21 +959,23 @@ feature -- Element change
 				-- Build the index of named character maps.
 
 				a_character_map_index := executable.character_map_index
-				from
-					a_cursor := top_level_elements.new_cursor
-					a_cursor.start
-				until
-					a_cursor.after
-				loop
-					if a_cursor.item.is_character_map and then not a_cursor.item.as_character_map.is_redundant then
-						a_fingerprint := a_cursor.item.as_character_map.character_map_fingerprint
-						create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
-						a_cursor.item.as_character_map.assemble (a_character_code_map)
-						a_character_map_index.force (a_character_code_map, a_fingerprint)
+				check attached top_level_elements as l_top_level_elements then
+					from
+						a_cursor := l_top_level_elements.new_cursor
+						a_cursor.start
+					until
+						a_cursor.after
+					loop
+						if a_cursor.item.is_character_map and then not a_cursor.item.as_character_map.is_redundant then
+							a_fingerprint := a_cursor.item.as_character_map.character_map_fingerprint
+							create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
+							a_cursor.item.as_character_map.assemble (a_character_code_map)
+							a_character_map_index.force (a_character_code_map, a_fingerprint)
+						end
+						a_cursor.forth
+					variant
+						l_top_level_elements.count + 1 - a_cursor.index
 					end
-					a_cursor.forth
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				end
 
 				-- Build the run-time function library
@@ -942,8 +985,9 @@ feature -- Element change
 				function_library.add_function_library (a_function_library)
 				create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} a_function_library.make
 				function_library.add_function_library (a_function_library)
-				create overriding_runtime_library.make
-				function_library.add_function_library (overriding_runtime_library)
+				create l_overriding_runtime_library.make
+				overriding_runtime_library := l_overriding_runtime_library
+				function_library.add_function_library (l_overriding_runtime_library)
 				from
 					a_third_cursor := a_configuration.extension_functions.new_cursor; a_third_cursor.start
 				until
@@ -954,28 +998,31 @@ feature -- Element change
 				variant
 					a_configuration.extension_functions.count + 1 - a_third_cursor.index
 				end
-				create non_overriding_runtime_library.make
-				function_library.add_function_library (non_overriding_runtime_library)
+				create l_non_overriding_runtime_library.make
+				non_overriding_runtime_library := l_non_overriding_runtime_library
+				function_library.add_function_library (l_non_overriding_runtime_library)
 
-				from
-					a_cursor := top_level_elements.new_cursor; a_cursor.start
-				until
-					a_cursor.after
-				loop
-					if a_cursor.item.is_xslt_function then
-						if a_cursor.item.as_xslt_function.is_overriding then
-							overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
-						else
-							non_overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
+				check attached top_level_elements as l_top_level_elements then
+					from
+						a_cursor := l_top_level_elements.new_cursor; a_cursor.start
+					until
+						a_cursor.after
+					loop
+						if a_cursor.item.is_xslt_function then
+							if a_cursor.item.as_xslt_function.is_overriding then
+								l_overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
+							else
+								l_non_overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
+							end
 						end
+						a_cursor.forth
+					variant
+						l_top_level_elements.count + 1 - a_cursor.index
 					end
-					a_cursor.forth
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				end
 				executable.set_function_library (function_library)
-				if stripper_rules /= Void then
-					executable.set_stripper_rules (stripper_rules)
+				if attached stripper_rules as l_stripper_rules then
+					executable.set_stripper_rules (l_stripper_rules)
 				end
 			end
 		end
@@ -1015,10 +1062,10 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	overriding_runtime_library: XM_XSLT_RUNTIME_FUNCTION_LIBRARY
+	overriding_runtime_library: detachable XM_XSLT_RUNTIME_FUNCTION_LIBRARY
 			-- Compiled xsl:functions with override="yes" (or omitted)
 
-	non_overriding_runtime_library: XM_XSLT_RUNTIME_FUNCTION_LIBRARY
+	non_overriding_runtime_library: detachable XM_XSLT_RUNTIME_FUNCTION_LIBRARY
 			-- Compiled xsl:functions with override="no"
 
 	named_templates_index: DS_HASH_TABLE [XM_XSLT_TEMPLATE, INTEGER]
@@ -1029,13 +1076,13 @@ feature {NONE} -- Implementation
 
 			-- These next three are only used at compile time
 
-	namespace_alias_list: DS_ARRAYED_LIST [XM_XSLT_NAMESPACE_ALIAS]
+	namespace_alias_list: detachable DS_ARRAYED_LIST [XM_XSLT_NAMESPACE_ALIAS]
 			-- List of namespace aliases
 
-	namespace_alias_uri_codes: ARRAY [INTEGER]
+	namespace_alias_uri_codes: detachable ARRAY [INTEGER]
 			-- URI codes for each namespace alias
 
-	namespace_alias_namespace_codes: ARRAY [INTEGER]
+	namespace_alias_namespace_codes: detachable ARRAY [INTEGER]
 			-- Namespace codes for each namespace alias
 
 	largest_pattern_stack_frame: INTEGER
@@ -1056,7 +1103,9 @@ feature {NONE} -- Implementation
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
-				a_cursor := top_level_elements.new_cursor
+				check attached top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
 				a_cursor.finish
 			until
 				a_cursor.before
@@ -1066,10 +1115,12 @@ feature {NONE} -- Implementation
 				elseif a_cursor.item.is_xslt_variable_declaration then
 						index_variable_declaration (a_cursor.item.as_xslt_variable_declaration)
 				elseif a_cursor.item.is_namespace_alias then
-					if not namespace_alias_list.extendible (1) then
-						namespace_alias_list.resize (2 * namespace_alias_list.count)
+					check attached namespace_alias_list as l_namespace_alias_list then
+						if not l_namespace_alias_list.extendible (1) then
+							l_namespace_alias_list.resize (2 * l_namespace_alias_list.count)
+						end
+						l_namespace_alias_list.put_last (a_cursor.item.as_namespace_alias)
 					end
-					namespace_alias_list.put_last (a_cursor.item.as_namespace_alias)
 				elseif a_cursor.item.is_decimal_format then
 					a_cursor.item.as_decimal_format.register
 				end
@@ -1189,69 +1240,75 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_NAMESPACE_ALIAS]
 			l_error: XM_XPATH_ERROR_VALUE
 			i: INTEGER
+			l_namespace_alias_namespace_codes: like namespace_alias_namespace_codes
+			l_namespace_alias_uri_codes: like namespace_alias_uri_codes
 		do
-			if namespace_alias_list.count > 0 then
-				create namespace_alias_namespace_codes.make_filled (0, 1, namespace_alias_list.count)
-				create namespace_alias_uri_codes.make_filled (0, 1, namespace_alias_list.count)
-				from
-					i := 1
-				until
-					i > namespace_alias_list.count
-				loop
-					namespace_alias_namespace_codes.put (-1, i)
-					namespace_alias_uri_codes.put (-1, i)
-					i := i + 1
-				end
-
-				l_current_precedence := -1
-
-				-- Note that we are processing the list in reverse stylesheet order,
-				--  that is, highest precedence first (as `build_indices' proceeds in that order).
-
-				from
-					l_cursor := namespace_alias_list.new_cursor
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					l_alias := l_cursor.item
-					l_uri_code := l_alias.stylesheet_uri_code
-					l_namespace_code := l_alias.result_namespace_code
-					l_precedence := l_alias.precedence
-
-					-- Check that there isn't a conflict with another xsl:namespace-alias
-					--  at the same precedence
-
-					if l_current_precedence /= l_precedence then
-						l_current_precedence := l_precedence
-						l_precedence_boundary := l_cursor.index
+			check precondition_namespaces_alias_list_not_void: attached namespace_alias_list as l_namespace_alias_list then
+				if l_namespace_alias_list.count > 0 then
+					create l_namespace_alias_namespace_codes.make_filled (0, 1, l_namespace_alias_list.count)
+					namespace_alias_namespace_codes := l_namespace_alias_namespace_codes
+					create l_namespace_alias_uri_codes.make_filled (0, 1, l_namespace_alias_list.count)
+					namespace_alias_uri_codes := l_namespace_alias_uri_codes
+					from
+						i := 1
+					until
+						i > l_namespace_alias_list.count
+					loop
+						l_namespace_alias_namespace_codes.put (-1, i)
+						l_namespace_alias_uri_codes.put (-1, i)
+						i := i + 1
 					end
+
+					l_current_precedence := -1
+
+					-- Note that we are processing the list in reverse stylesheet order,
+					--  that is, highest precedence first (as `build_indices' proceeds in that order).
 
 					from
-						l_index := l_precedence_boundary
+						l_cursor := l_namespace_alias_list.new_cursor
+						l_cursor.start
 					until
-						l_index > namespace_alias_list.count
+						l_cursor.after
 					loop
-						if l_uri_code = namespace_alias_uri_codes.item (l_index) then
-							if uri_code_from_namespace_code (l_namespace_code) /= uri_code_from_namespace_code (namespace_alias_namespace_codes.item (l_index)) then
-								create l_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
-								l_alias.report_compile_error (l_error)
-							end
+						l_alias := l_cursor.item
+						l_uri_code := l_alias.stylesheet_uri_code
+						l_namespace_code := l_alias.result_namespace_code
+						l_precedence := l_alias.precedence
+
+						-- Check that there isn't a conflict with another xsl:namespace-alias
+						--  at the same precedence
+
+						if l_current_precedence /= l_precedence then
+							l_current_precedence := l_precedence
+							l_precedence_boundary := l_cursor.index
 						end
 
-						l_index := l_index + 1
+						from
+							l_index := l_precedence_boundary
+						until
+							l_index > l_namespace_alias_list.count
+						loop
+							if l_uri_code = l_namespace_alias_uri_codes.item (l_index) then
+								if uri_code_from_namespace_code (l_namespace_code) /= uri_code_from_namespace_code (l_namespace_alias_namespace_codes.item (l_index)) then
+									create l_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
+									l_alias.report_compile_error (l_error)
+								end
+							end
+
+							l_index := l_index + 1
+						variant
+							l_namespace_alias_list.count + 1 - l_index
+						end
+
+						l_namespace_alias_uri_codes.put (l_uri_code, l_cursor.index)
+						l_namespace_alias_namespace_codes.put (l_namespace_code, l_cursor.index)
+
+						l_cursor.forth
 					variant
-						namespace_alias_list.count + 1 - l_index
+						l_namespace_alias_list.count + 1 - l_cursor.index
 					end
 
-					namespace_alias_uri_codes.put (l_uri_code, l_cursor.index)
-					namespace_alias_namespace_codes.put (l_namespace_code, l_cursor.index)
-
-					l_cursor.forth
-				variant
-					namespace_alias_list.count + 1 - l_cursor.index
 				end
-
 			end
 			namespace_alias_list := Void -- Now it can be garbage-collected
 		ensure
@@ -1273,30 +1330,36 @@ feature {NONE} -- Implementation
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 			a_count: INTEGER
 		do
-			a_top_level_list := an_included_stylesheet.top_level_elements
-			from
-				a_cursor := a_top_level_list.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				a_style_element := a_cursor.item
-				a_count := top_level_elements.count
-				if a_count = 0 or else a_style_element.precedence >= top_level_elements.item (a_count).precedence then
-					top_level_elements.force_last (a_style_element)
-				else
-					from
-					until
-						a_count = 0 or else a_style_element.precedence >= top_level_elements.item (a_count).precedence
-					loop
-						a_count := a_count - 1
-					variant
-						a_count
+			check
+				attached an_included_stylesheet.top_level_elements as l_included_stylesheet_top_level_elements
+				attached top_level_elements as l_top_level_elements
+			then
+				a_top_level_list := l_included_stylesheet_top_level_elements
+				from
+					a_cursor := a_top_level_list.new_cursor
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
+					a_style_element := a_cursor.item
+					a_count := l_top_level_elements.count
+					if a_count = 0 or else a_style_element.precedence >= l_top_level_elements.item (a_count).precedence then
+						l_top_level_elements.force_last (a_style_element)
+					else
+						from
+						until
+							a_count = 0 or else a_style_element.precedence >= l_top_level_elements.item (a_count).precedence
+						loop
+							a_count := a_count - 1
+						variant
+							a_count
+						end
+						l_top_level_elements.force (a_style_element, a_count + 1)
 					end
-					top_level_elements.force (a_style_element, a_count + 1)
+					a_cursor.forth
+				variant
+					a_top_level_list.count + 1 - a_cursor.index
 				end
-				a_cursor.forth
-			variant
-				a_top_level_list.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1315,7 +1378,10 @@ feature {NONE} -- Implementation
 		do
 			create a_set.make_default
 			from
-				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+				check attached top_level_elements as l_top_level_elements then
+					a_cursor := l_top_level_elements.new_cursor
+				end
+				a_cursor.finish
 			until
 				any_compile_errors or else a_cursor.before
 			loop

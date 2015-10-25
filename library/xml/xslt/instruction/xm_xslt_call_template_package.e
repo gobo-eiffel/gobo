@@ -5,7 +5,7 @@ note
 		"Objects that encapsulate a call to a template"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -51,7 +51,9 @@ feature -- Evaluation
 			a_new_context := execution_context.new_context
 			a_new_context.set_local_parameters (actual_parameters)
 			a_new_context.set_tunnel_parameters (tunnel_parameters)
-			a_new_context.open_stack_frame (target.slot_manager)
+			check attached target.slot_manager as l_slot_manager then
+				a_new_context.open_stack_frame (l_slot_manager)
+			end
 			target.expand (a_tail, a_new_context)
 		end
 

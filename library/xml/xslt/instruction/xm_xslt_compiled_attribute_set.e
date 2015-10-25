@@ -5,7 +5,7 @@ note
 		"compiled xsl:attribute-sets"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_XSLT_COMPILED_ATTRIBUTE_SET
 inherit
 
 	XM_XSLT_COMPILED_PROCEDURE
+		redefine
+			executable, body, system_id, slot_manager
+		end
 
 	XM_XSLT_ATTRIBUTE_SET_ROUTINES
 		export {NONE} all end
@@ -53,6 +56,18 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code
 
+	executable: XM_XSLT_EXECUTABLE
+			-- <Precursor>
+
+	body: XM_XPATH_EXPRESSION
+			-- <Precursor>
+
+	system_id: STRING
+			-- <Precursor>
+
+	slot_manager: XM_XPATH_SLOT_MANAGER
+			-- <Precursor>
+
 feature -- Evaluation
 
 
@@ -85,7 +100,9 @@ feature {NONE} -- Initialization
 	is_stack_frame_needed: BOOLEAN
 			-- Is a stack frame needed?
 		do
-			Result := slot_manager.number_of_variables > 0
+			check attached slot_manager as l_slot_manager then
+				Result := l_slot_manager.number_of_variables > 0
+			end
 		end
 
 invariant

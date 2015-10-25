@@ -5,7 +5,7 @@ note
 		"xsl:variable element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -46,16 +46,16 @@ feature -- Access
 		local
 			a_document_test: XM_XPATH_NODE_KIND_TEST
 		do
-			if as_type /= Void then
-				Result := as_type
-			elseif select_expression /= Void then
-				if select_expression /= Void and then select_expression.is_empty_sequence then
+			if attached as_type as l_as_type then
+				Result := l_as_type
+			elseif attached select_expression as l_select_expression then
+				if l_select_expression.is_empty_sequence then
 					create Result.make_any_sequence -- apparently, returning empty sequence as the type gives problems with static type checking
 				else
 
 					-- Try to infer the type from the select expression
 
-					create Result.make (select_expression.item_type, select_expression.cardinality)
+					create Result.make (l_select_expression.item_type, l_select_expression.cardinality)
 				end
 			elseif has_child_nodes then
 				create a_document_test.make_document_test
@@ -95,7 +95,8 @@ feature -- Element change
 		local
 			l_local_variable: XM_XSLT_LOCAL_VARIABLE
 			l_global_variable: XM_XSLT_GLOBAL_VARIABLE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_last_generated_expression: like last_generated_expression
 		do
 			last_generated_expression := Void
 			if references.count = 0 then
@@ -119,20 +120,32 @@ feature -- Element change
 
 					last_generated_expression := l_local_variable
 				end
-				if last_generated_expression /= Void then
+				l_last_generated_expression := last_generated_expression
+				if l_last_generated_expression /= Void then
 					create l_replacement.make (Void)
-					last_generated_expression.simplify (l_replacement)
-					last_generated_expression := l_replacement.item
-					if not last_generated_expression.is_error then
-						l_replacement.put (Void)
-						last_generated_expression.check_static_type (l_replacement, static_context, any_item)
-						last_generated_expression := l_replacement.item
+					l_last_generated_expression.simplify (l_replacement)
+					check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+						l_last_generated_expression := l_replacement_item
+						last_generated_expression := l_last_generated_expression
 					end
-					if last_generated_expression.is_error then
-						report_compile_error (last_generated_expression.error_value)
+					if not l_last_generated_expression.is_error then
+						l_replacement.put (Void)
+						check attached static_context as l_static_context then
+							l_last_generated_expression.check_static_type (l_replacement, l_static_context, any_item)
+						end
+						check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+							l_last_generated_expression := l_replacement_item
+							last_generated_expression := l_last_generated_expression
+						end
+					end
+					if attached l_last_generated_expression.error_value as l_error_value then
+						check is_error: l_last_generated_expression.is_error end
+						report_compile_error (l_error_value)
 					else
 						l_replacement.put (Void)
-						last_generated_expression.optimize (l_replacement, static_context, any_item)
+						check attached static_context as l_static_context then
+							l_last_generated_expression.optimize (l_replacement, l_static_context, any_item)
+						end
 						last_generated_expression := l_replacement.item
 					end
 				end

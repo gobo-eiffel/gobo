@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT unparsed-text() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,15 +66,16 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_href, l_encoding: STRING
+			l_href: STRING
+			l_encoding: detachable STRING
 			l_uri: UT_URI
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
-			if a_result.item /= Void and then not a_result.item.is_error then
-				l_href := a_result.item.string_value
+			if attached a_result.item as l_result_item and then not l_result_item.is_error then
+				l_href := l_result_item.string_value
 				if Url_encoding.has_excluded_characters (l_href) then
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("URI in unparsed-text() contains invalid characters",
 						Xpath_errors_uri, "XTDE1170", Dynamic_error))
@@ -83,21 +84,23 @@ feature -- Evaluation
 						Xpath_errors_uri, "XTDE1170", Dynamic_error))
 				else
 					a_result.put (Void)
-					create l_uri.make_resolve (base_uri, l_href)
-					if arguments.count = 2 then
-						arguments.item (2).evaluate_item (a_result, a_context)
-						if a_result.item /= Void and then not a_result.item.is_error then
-							l_encoding := a_result.item.string_value
+					check attached base_uri as l_base_uri then
+						create l_uri.make_resolve (l_base_uri, l_href)
+						if arguments.count = 2 then
+							arguments.item (2).evaluate_item (a_result, a_context)
+							if attached a_result.item as l_result_item_2 and then not l_result_item_2.is_error then
+								l_encoding := l_result_item_2.string_value
+							end
 						end
-					end
-					if a_result.item = Void then -- no error yet
-						a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, False))
+						if a_result.item = Void then -- no error yet
+							a_result.put (evaluated_unparsed_text (l_uri, l_encoding, a_context, False))
+						end
 					end
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)
@@ -106,7 +109,7 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			Precursor (a_replacement, a_context)
@@ -125,7 +128,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	base_uri: UT_URI
+	base_uri: detachable UT_URI
 			-- Base URI saved from static context
 
 end

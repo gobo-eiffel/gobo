@@ -5,7 +5,7 @@ note
 		"Objects that define one component of a sort key, where all aspects are known"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,8 @@ inherit
 		rename
 			make as old_make
 		redefine
-			reduced_definition, is_fixed_sort_key, as_fixed_sort_key
+			reduced_definition, is_fixed_sort_key, as_fixed_sort_key,
+			order, language, case_order, data_type
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -48,7 +49,7 @@ feature {NONE} -- Initialization
 
 	make (a_sort_key: XM_XPATH_EXPRESSION;
 			an_order, a_data_type, a_case_order, a_language: STRING;
-			a_collator: ST_COLLATOR)
+			a_collator: detachable ST_COLLATOR)
 			-- Establish invariant.
 		require
 			sort_key_not_void: a_sort_key /= Void
@@ -74,10 +75,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	collator: ST_COLLATOR
+	collator: detachable ST_COLLATOR
 			-- Collator
 
-	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
+	comparer: detachable KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Object that performs comparisons
 
 	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION
@@ -88,8 +89,20 @@ feature -- Access
 			no_change: Result = Current
 		end
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value when `is_error'
+
+	order: STRING
+			-- Value of order attribute (ascending or descending)
+
+	language: STRING
+			--  Value of language attribute
+
+	case_order: STRING
+			-- Value of case-order attribute ("lower-first" or "upper-first")
+
+	data_type: STRING
+			-- Value of data-type attribute ("text" or "number" or a QName)
 
 feature -- Status report
 
@@ -116,11 +129,11 @@ feature {NONE} -- Implementation
 			-- Determine which comparer should be use.
 		local
 			l_message: STRING
-			l_base_collator: ST_COLLATOR
+			l_base_collator: detachable ST_COLLATOR
 			l_role: XM_XPATH_ROLE_LOCATOR
 		do
-			if collator /= Void then
-				l_base_collator := collator
+			if attached collator as l_collator then
+				l_base_collator := l_collator
 			else
 				if language.count = 0 or else STRING_.same_string (language, "en") then
 					create l_base_collator
@@ -132,24 +145,26 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not is_error then
-				if data_type.count = 0 then
-					create l_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XTTE1020")
-					sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, l_role)
-					create {XM_XPATH_ATOMIC_SORT_COMPARER} comparer.make (l_base_collator)
-				else
-					if STRING_.same_string (data_type, "text") then
-						create {XM_XSLT_TEXT_COMPARER} comparer.make_from_collator (l_base_collator)
-					elseif  STRING_.same_string (data_type, "number") then
-						create {XM_XSLT_NUMERIC_COMPARER} comparer
-					elseif is_qname (data_type) then
-						l_message := STRING_.concat ("QName '", data_type)
-						l_message := STRING_.appended_string (l_message, "' is not supported by this implementation.")
-						create error_value.make_from_string (l_message, Xpath_errors_uri, "XTDE0030", Static_error)
-						is_error := True
+				check l_base_collator /= Void then
+					if data_type.count = 0 then
+						create l_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XTTE1020")
+						sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, l_role)
+						create {XM_XPATH_ATOMIC_SORT_COMPARER} comparer.make (l_base_collator)
 					else
-						create error_value.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
-							Xpath_errors_uri, "XTDE0290", Static_error)
-						is_error := True
+						if STRING_.same_string (data_type, "text") then
+							create {XM_XSLT_TEXT_COMPARER} comparer.make_from_collator (l_base_collator)
+						elseif  STRING_.same_string (data_type, "number") then
+							create {XM_XSLT_NUMERIC_COMPARER} comparer
+						elseif is_qname (data_type) then
+							l_message := STRING_.concat ("QName '", data_type)
+							l_message := STRING_.appended_string (l_message, "' is not supported by this implementation.")
+							create error_value.make_from_string (l_message, Xpath_errors_uri, "XTDE0030", Static_error)
+							is_error := True
+						else
+							create error_value.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
+								Xpath_errors_uri, "XTDE0290", Static_error)
+							is_error := True
+						end
 					end
 				end
 			end
@@ -167,15 +182,17 @@ feature {NONE} -- Implementation
 			comparer_not_void: comparer /= Void
 			no_previous_error: not is_error
 		do
-			if STRING_.same_string (case_order, "#default") then
-				-- OK
-			elseif STRING_.same_string (case_order, "lower-first") then
-				create {XM_XSLT_CASE_ORDER_COMPARER} comparer.make (comparer, False)
-			elseif STRING_.same_string (case_order, "upper-first") then
-				create {XM_XSLT_CASE_ORDER_COMPARER} comparer.make (comparer, True)
-			else
-				create error_value.make_from_string ("case-order must be 'lower-first' or 'upper-first'", Gexslt_eiffel_type_uri, "INVALID_CASE_ORDER", Static_error)
-				is_error := True
+			check precondition_comparer_not_void: attached comparer as l_comparer then
+				if STRING_.same_string (case_order, "#default") then
+					-- OK
+				elseif STRING_.same_string (case_order, "lower-first") then
+					create {XM_XSLT_CASE_ORDER_COMPARER} comparer.make (l_comparer, False)
+				elseif STRING_.same_string (case_order, "upper-first") then
+					create {XM_XSLT_CASE_ORDER_COMPARER} comparer.make (l_comparer, True)
+				else
+					create error_value.make_from_string ("case-order must be 'lower-first' or 'upper-first'", Gexslt_eiffel_type_uri, "INVALID_CASE_ORDER", Static_error)
+					is_error := True
+				end
 			end
 		ensure
 			comparer_not_void: not is_error implies comparer /= Void
@@ -190,7 +207,9 @@ feature {NONE} -- Implementation
 			if STRING_.same_string (order, "ascending") then
 				-- OK
 			elseif STRING_.same_string (order, "descending") then
-				create {XM_XPATH_DESCENDING_COMPARER} comparer.make (comparer)
+				check precondition_comparer_not_void: attached comparer as l_comparer then
+					create {XM_XPATH_DESCENDING_COMPARER} comparer.make (l_comparer)
+				end
 			else
 				create error_value.make_from_string ("order must be 'ascending' or 'descending'", Gexslt_eiffel_type_uri, "INVALID_ORDER", Static_error)
 				is_error := True

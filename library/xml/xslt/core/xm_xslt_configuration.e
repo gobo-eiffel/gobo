@@ -5,7 +5,7 @@ note
 		"Objects that hold user-selected configuration options"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,8 @@ feature {NONE} -- Initialization
 			a_uri_resolver: like uri_resolver;
 			an_output_resolver: like output_resolver;
 			an_error_listener: like error_listener;
-			an_encoder_factory: like encoder_factory)
+			an_encoder_factory: like encoder_factory;
+			a_error_reporter: detachable like error_reporter)
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
@@ -52,7 +53,11 @@ feature {NONE} -- Initialization
 			encoder_factory_not_void: 	an_encoder_factory /= Void
 		do
 			create message_emitter_factory
-			if error_reporter = Void then create error_reporter.make_null end
+			if a_error_reporter = Void then
+				create error_reporter.make_null
+			else
+				error_reporter := a_error_reporter
+			end
 			make_configuration
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
@@ -87,12 +92,12 @@ feature {NONE} -- Initialization
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
 			create a_security_manager.make
 			create an_output_resolver.make (a_security_manager)
-			make (a_catalog_resolver, a_catalog_resolver, an_output_resolver, an_error_listener, an_encoder_factory)
+			make (a_catalog_resolver, a_catalog_resolver, an_output_resolver, an_error_listener, an_encoder_factory, error_reporter)
 		end
 
 feature -- Access
 
-	trace_listener: XM_XSLT_TRACE_LISTENER
+	trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			-- Trace listener
 
 	error_reporter: UT_ERROR_HANDLER
@@ -257,7 +262,7 @@ feature -- Element change
 			set: is_line_numbering = on_or_off
 		end
 
-	set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)
+	set_trace_listener (a_trace_listener: detachable XM_XSLT_TRACE_LISTENER)
 			-- Set `trace_listener'.
 		require
 			trace_listener_may_be_void: True
@@ -352,8 +357,10 @@ feature -- Element change
 	trace (a_label, a_value: STRING)
 			-- Create trace entry.
 		do
-			if trace_listener.is_tracing then
-				trace_listener.trace_user_entry (a_label, a_value)
+			check precondition_tracing_enabled: attached trace_listener as l_trace_listener then
+				if l_trace_listener.is_tracing then
+					l_trace_listener.trace_user_entry (a_label, a_value)
+				end
 			end
 		end
 
@@ -405,7 +412,7 @@ feature -- Element change
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 
-	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
+	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: detachable XM_XPATH_SCHEMA_TYPE;
 							 a_validation_action: INTEGER): XM_XPATH_RECEIVER
 			-- A receiver that can be used to validate an element,
 			--  and that passes the validated element on to a target receiver.

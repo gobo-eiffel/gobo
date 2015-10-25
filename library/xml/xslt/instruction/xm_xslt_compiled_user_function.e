@@ -4,7 +4,7 @@ note
 		"Objects that represent xsl:functions compiled as a single expression"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,9 @@ inherit
 	ANY -- for SE 2.1
 
 	XM_XSLT_COMPILED_PROCEDURE
+		redefine
+			executable, body, system_id, slot_manager
+		end
 
 	XM_XPATH_EXPRESSION_CONTAINER
 
@@ -79,7 +82,7 @@ feature -- Access
 	result_type: XM_XPATH_SEQUENCE_TYPE
 			-- Return type from function
 
-	parameter_definitions: DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
+	parameter_definitions: detachable DS_ARRAYED_LIST [XM_XSLT_USER_FUNCTION_PARAMETER]
 			-- Parameters to the call
 
 	parameter_count: INTEGER
@@ -111,19 +114,21 @@ feature -- Access
 			found: BOOLEAN
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_USER_FUNCTION_PARAMETER]
 		do
-			from
-				a_cursor := parameter_definitions.new_cursor; a_cursor.start
-			until
-				found or else a_cursor.after
-			loop
-				if a_cursor.item = a_binding then
-					Result := a_cursor.item.reference_count
-					if Result > 1 then Result := Many_references end
-					found := True
+			check attached parameter_definitions as l_parameter_definitions then
+				from
+					a_cursor := l_parameter_definitions.new_cursor; a_cursor.start
+				until
+					found or else a_cursor.after
+				loop
+					if a_cursor.item = a_binding then
+						Result := a_cursor.item.reference_count
+						if Result > 1 then Result := Many_references end
+						found := True
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
+				if not found then Result := Many_references end
 			end
-			if not found then Result := Many_references end
 		end
 
 	system_id_from_module_number (a_module_number: INTEGER): STRING
@@ -131,6 +136,18 @@ feature -- Access
 		do
 			Result := executable.system_id (a_module_number)
 		end
+
+	executable: XM_XSLT_EXECUTABLE
+			-- <Precursor>
+
+	body: XM_XPATH_EXPRESSION
+			-- <Precursor>
+
+	system_id: STRING
+			-- <Precursor>
+
+	slot_manager: XM_XPATH_SLOT_MANAGER
+			-- <Precursor>
 
 feature -- Status report
 
@@ -154,7 +171,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	call (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_evaluate_tail_calls: BOOLEAN)
+	call (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_evaluate_tail_calls: BOOLEAN)
 			-- Evaluate function call.
 			-- Result returned as `a_return_value.item'.
 		require
@@ -164,27 +181,31 @@ feature -- Evaluation
 			positive_parameter_count: a_parameter_count >= 0
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 		local
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_stack_frame: XM_XPATH_STACK_FRAME
 		do
 			parameter_count := a_parameter_count
 			l_transformer := a_context.transformer
-			if is_memo_function then
-				fetch_cached_value (a_return_value, l_transformer, a_actual_arguments)
-			end
-			if a_return_value.item = Void then
-				create l_stack_frame.make (slot_manager, a_actual_arguments)
-				a_context.set_stack_frame (l_stack_frame)
-				body.evaluate (a_return_value, evaluation_mode, 1, a_context)
+			check l_transformer /= Void then
 				if is_memo_function then
-					put_cached_value (l_transformer, a_actual_arguments, a_return_value.item)
+					fetch_cached_value (a_return_value, l_transformer, a_actual_arguments)
+				end
+				if a_return_value.item = Void then
+					create l_stack_frame.make (slot_manager, a_actual_arguments)
+					a_context.set_stack_frame (l_stack_frame)
+					body.evaluate (a_return_value, evaluation_mode, 1, a_context)
+					check postcondition_of_evaluate: attached a_return_value.item as l_return_value_item then
+						if is_memo_function then
+							put_cached_value (l_transformer, a_actual_arguments, l_return_value_item)
+						end
+					end
 				end
 			end
 		ensure
 			called_value_not_void: a_return_value.item /= Void -- but may be an error value
 		end
 
-	generate_events (a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_events (a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			a_actual_arguments_not_void: a_actual_arguments /= Void
@@ -222,15 +243,15 @@ feature {NONE} -- Implementation
 	cached_evaluation_mode: INTEGER
 			-- Remembered value for `evaluation_mode'
 
-	put_cached_value (a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_cached_result: XM_XPATH_VALUE)
+	put_cached_value (a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]; a_cached_result: XM_XPATH_VALUE)
 			-- Save value in cache.
 		require
 			memo_function: is_memo_function
 			transformer_not_void: a_transformer /= Void
 			arguments_not_void: a_actual_arguments /= Void
 		local
-			a_function_cache: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
-			l_key: DS_CELL [STRING]
+			a_function_cache: detachable DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
+			l_key: DS_CELL [detachable STRING]
 		do
 			a_function_cache := a_transformer.function_results_cache (Current)
 			if a_function_cache = Void then
@@ -240,11 +261,13 @@ feature {NONE} -- Implementation
 			create l_key.make (Void)
 			calculate_combined_key (l_key, a_actual_arguments, a_transformer)
 			if not a_transformer.is_error then
-				a_function_cache.force (a_cached_result, l_key.item)
+				check postcondition_of_calculate_combined_key: attached l_key.item as l_key_item then
+					a_function_cache.force (a_cached_result, l_key_item)
+				end
 			end
 		end
 
-	fetch_cached_value (a_return_value: DS_CELL [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [XM_XPATH_VALUE])
+	fetch_cached_value (a_return_value: DS_CELL [detachable XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE])
 			-- Save value from cache into `a_return_value.item'.
 		require
 			a_return_value_not_void: a_return_value /= Void
@@ -253,22 +276,24 @@ feature {NONE} -- Implementation
 			transformer_not_void: a_transformer /= Void
 			arguments_not_void: a_actual_arguments /= Void
 		local
-			l_function_cache: DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
-			l_key: DS_CELL [STRING]
+			l_function_cache: detachable DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
+			l_key: DS_CELL [detachable STRING]
 		do
 			l_function_cache := a_transformer.function_results_cache (Current)
 			if l_function_cache /= Void then
 				create l_key.make (Void)
 				calculate_combined_key (l_key, a_actual_arguments, a_transformer)
 				if not a_transformer.is_error then
-					if l_function_cache.has (l_key.item) then
-						a_return_value.put (l_function_cache.item (l_key.item))
+					check postcondition_of_calculate_combined_key: attached l_key.item as l_key_item then
+						if l_function_cache.has (l_key_item) then
+							a_return_value.put (l_function_cache.item (l_key_item))
+						end
 					end
 				end
 			end
 		end
 
-	calculate_combined_key (a_key: DS_CELL [STRING]; a_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER)
+	calculate_combined_key (a_key: DS_CELL [detachable STRING]; a_actual_arguments: ARRAY [detachable XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER)
 			-- Calculate representation of all argument values.
 		require
 			a_key_not_void: a_key /= Void
@@ -276,7 +301,7 @@ feature {NONE} -- Implementation
 			arguments_not_void: a_actual_arguments /= Void
 			transformer_not_void: a_transformer /= Void
 		local
-			l_value: XM_XPATH_VALUE
+			l_value: detachable XM_XPATH_VALUE
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 			l_node: XM_XPATH_NODE
@@ -291,44 +316,51 @@ feature {NONE} -- Implementation
 				a_transformer.is_error or else l_index > parameter_count
 			loop
 				l_value := a_actual_arguments.item (l_index)
-				if l_value.is_error then
-					a_transformer.report_fatal_error (l_value.error_value)
-					l_index := l_index + 1
-				else
-					from
-						l_value.create_iterator (Void)
-						l_iterator := l_value.last_iterator
-						if l_iterator.is_error then
-							a_key.put (Void)
-							a_transformer.report_fatal_error (l_iterator.error_value)
-						else
-							l_iterator.start
-						end
-					until
-						l_iterator.is_error or else l_iterator.after
-					loop
-						l_item := l_iterator.item
-						if l_item.is_node then
-							l_node := l_item.as_node
-							if l_node.generated_id = Void then
-								l_node.generate_id
-							end
-							l_key.append_string (l_node.generated_id)
-						else
-							l_key.append_string (l_item.item_type.conventional_name)
-							l_key.append_string ("/")
-							l_key.append_string (l_item.string_value)
-						end
-						l_key.append_character (code_one)
-						l_iterator.forth
-					end
-					if l_iterator.is_error then
-						a_key.put (Void)
-						a_transformer.report_fatal_error (l_iterator.error_value)
+				check l_value /= Void then
+					if attached l_value.error_value as l_error_value then
+						check is_error: l_value.is_error end
+						a_transformer.report_fatal_error (l_error_value)
+						l_index := l_index + 1
 					else
-						l_key.append_character (code_two)
+						from
+							l_value.create_iterator (new_dummy_context)
+							check postcondition_of_create_iterator: attached l_value.last_iterator as l_value_last_iterator then
+								l_iterator := l_value_last_iterator
+								if attached l_iterator.error_value as l_error_value then
+									check is_error: l_iterator.is_error end
+									a_key.put (Void)
+									a_transformer.report_fatal_error (l_error_value)
+								else
+									l_iterator.start
+								end
+							end
+						until
+							l_iterator.is_error or else l_iterator.after
+						loop
+							l_item := l_iterator.item
+							if l_item.is_node then
+								l_node := l_item.as_node
+								if l_node.generated_id = Void then
+									l_node.generate_id
+								end
+								l_key.append_string (l_node.generated_id)
+							else
+								l_key.append_string (l_item.item_type.conventional_name)
+								l_key.append_string ("/")
+								l_key.append_string (l_item.string_value)
+							end
+							l_key.append_character (code_one)
+							l_iterator.forth
+						end
+						if attached l_iterator.error_value as l_error_value then
+							check is_error: l_iterator.is_error end
+							a_key.put (Void)
+							a_transformer.report_fatal_error (l_error_value)
+						else
+							l_key.append_character (code_two)
+						end
+						l_index := l_index + 1
 					end
-					l_index := l_index + 1
 				end
 			variant
 				parameter_count + 1 - l_index
@@ -351,6 +383,17 @@ feature {NONE} -- Implementation
 			Result := INTEGER_.to_character (2)
 		ensure
 			code_is_two: Result.code = 2
+		end
+
+	new_dummy_context: XM_XPATH_CONTEXT
+			-- New dummy context
+		local
+			l_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+		do
+			create l_function_library.make
+			create {XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT} Result.make_restricted (l_function_library)
+		ensure
+			new_dummy_context_not_void: Result /= Void
 		end
 
 invariant

@@ -5,7 +5,7 @@ note
 		"Objects that render a sorted iteration of items."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,9 @@ feature {NONE} -- Initialization
 			until
 				a_cursor.after
 			loop
-				key_comparers.put_last (a_cursor.item.comparer)
+				check attached a_cursor.item.comparer as l_comparer then
+					key_comparers.put_last (l_comparer)
+				end
 				a_cursor.forth
 			variant
 				sort_keys.count + 1 - a_cursor.index
@@ -76,7 +78,9 @@ feature -- Access
 	item: XM_XPATH_ITEM
 			-- Value or node at the current position
 		do
-			Result := node_keys.item (index).item
+			check attached node_keys as l_node_keys then
+				Result := l_node_keys.item (index).item
+			end
 		end
 
 	last_position: INTEGER
@@ -117,13 +121,11 @@ feature -- Status report
 	less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
-			l_sort_key, l_other_sort_key: XM_XPATH_ITEM
+			l_sort_key, l_other_sort_key: detachable XM_XPATH_ITEM
 			l_index: INTEGER
 			l_finished: BOOLEAN
 			l_comparison: INTEGER
 			l_comparator: KL_PART_COMPARATOR [XM_XPATH_ITEM]
-			l_atomic: XM_XPATH_ATOMIC_COMPARER
-			l_descending: XM_XPATH_DESCENDING_COMPARER
 		do
 			from
 				l_index := 1
@@ -131,16 +133,11 @@ feature -- Status report
 				l_finished
 			loop
 				l_comparator := key_comparers.item (l_index)
-				l_atomic ?= l_comparator
-				if l_atomic /= Void then
+				if attached {XM_XPATH_ATOMIC_COMPARER} l_comparator as l_atomic then
 					l_atomic.set_dynamic_context (context)
-				else
-					l_descending ?= l_comparator
-					if l_descending /= Void then
-						l_atomic ?= l_descending.base_comparer
-						if l_atomic /= Void then
-							l_atomic.set_dynamic_context (context)
-						end
+				elseif attached {XM_XPATH_DESCENDING_COMPARER} l_comparator as l_descending then
+					if attached {XM_XPATH_ATOMIC_COMPARER} l_descending.base_comparer as l_atomic then
+						l_atomic.set_dynamic_context (context)
 					end
 				end
 				l_sort_key := u.key_list.item (l_index)
@@ -227,7 +224,7 @@ feature {XM_XSLT_SORTED_ITERATOR} -- Local
 			count_set: count = a_count
 		end
 
-	set_node_keys (some_node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD])
+	set_node_keys (some_node_keys: detachable DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD])
 			-- Set `node_keys'.
 		do
 			node_keys := some_node_keys
@@ -249,7 +246,7 @@ feature {NONE} -- Implementation
 	key_comparers: DS_ARRAYED_LIST [KL_PART_COMPARATOR [XM_XPATH_ITEM]]
 			-- Comparers
 
-	node_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]
+	node_keys: detachable DS_ARRAYED_LIST [XM_XSLT_SORT_RECORD]
 			-- List of items with their sort-keys
 
 	make_default
@@ -277,7 +274,9 @@ feature {NONE} -- Implementation
 				build_array
 				if count > 1 then
 					create l_sorter.make (Current)
-					l_sorter.sort (node_keys)
+					check attached node_keys as l_node_keys then
+						l_sorter.sort (l_node_keys)
+					end
 				end
 			end
 		ensure
@@ -296,13 +295,15 @@ feature {NONE} -- Implementation
 		require
 			not_yet_sorted: not count_determined
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			l_sort_record: XM_XSLT_SORT_RECORD
-			l_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
-			l_sort_key: XM_XPATH_ATOMIC_VALUE
+			l_key_list: DS_ARRAYED_LIST [detachable XM_XPATH_ATOMIC_VALUE]
+			l_sort_key: detachable XM_XPATH_ATOMIC_VALUE
+			l_node_keys: like node_keys
 		do
-			create node_keys.make_default
+			create l_node_keys.make_default
+			node_keys := l_node_keys
 
 			-- Initialize the array with data.
 
@@ -312,8 +313,8 @@ feature {NONE} -- Implementation
 				until
 					is_error or base_iterator.after
 				loop
-					if node_keys.is_full then
-						node_keys.resize (node_keys.count * 2)
+					if l_node_keys.is_full then
+						l_node_keys.resize (l_node_keys.count * 2)
 					end
 					from
 						create l_key_list.make (sort_keys.count)
@@ -323,14 +324,15 @@ feature {NONE} -- Implementation
 					loop
 						create l_item.make (Void)
 						l_cursor.item.sort_key.evaluate_item (l_item, context)
-						if l_item.item /= Void then
-							if l_item.item.is_error then
-								set_last_error (l_item.item.error_value)
+						if attached l_item.item as l_item_item then
+							if attached l_item_item.error_value as l_error_value then
+								check is_error: l_item_item.is_error end
+								set_last_error (l_error_value)
 							else
-								if l_item.item.is_atomic_value then
-									l_sort_key := l_item.item.as_atomic_value
+								if l_item_item.is_atomic_value then
+									l_sort_key := l_item_item.as_atomic_value
 								else
-									create {XM_XPATH_STRING_VALUE} l_sort_key.make (l_item.item.as_node.string_value)
+									create {XM_XPATH_STRING_VALUE} l_sort_key.make (l_item_item.as_node.string_value)
 								end
 							end
 						else
@@ -344,11 +346,12 @@ feature {NONE} -- Implementation
 
 					count := count + 1
 					create l_sort_record.make (base_iterator.item, l_key_list, count)
-					node_keys.put_last (l_sort_record)
+					l_node_keys.put_last (l_sort_record)
 					base_iterator.forth
 				end
-				if not is_error and base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
+				if not is_error and attached base_iterator.error_value as l_error_value then
+					check is_error: base_iterator.is_error end
+					set_last_error (l_error_value)
 				end
 			end
 			count_determined := True

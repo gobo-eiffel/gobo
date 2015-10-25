@@ -5,7 +5,7 @@ note
 		"Objects that output a sequence of XM_PATH_ITEMs."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,24 +81,28 @@ feature -- Access
 			-- Built sequence
 		require
 			not_under_construction: not is_under_construction
+		local
+			l_cached_sequence: like cached_sequence
 		do
-			if cached_sequence = Void then
+			l_cached_sequence := cached_sequence
+			if l_cached_sequence = Void then
 				inspect
 					output_list.count
 				when 0 then
-					create {XM_XPATH_EMPTY_SEQUENCE} cached_sequence.make
+					create {XM_XPATH_EMPTY_SEQUENCE} l_cached_sequence.make
 				when 1 then
-					cached_sequence := output_list.item (1).as_item_value
+					l_cached_sequence := output_list.item (1).as_item_value
 				else
-					create {XM_XPATH_SEQUENCE_EXTENT} cached_sequence.make_from_list (output_list)
+					create {XM_XPATH_SEQUENCE_EXTENT} l_cached_sequence.make_from_list (output_list)
 				end
+				cached_sequence := l_cached_sequence
 			end
-			Result := cached_sequence
+			Result := l_cached_sequence
 		ensure
 			sequence_not_void: Result /= Void
 		end
 
-	first_item: XM_XPATH_ITEM
+	first_item: detachable XM_XPATH_ITEM
 			-- First item of output sequence
 		do
 			if output_list.count > 0 then
@@ -106,7 +110,7 @@ feature -- Access
 			end
 		end
 
-	last_popped_item: XM_XPATH_ITEM
+	last_popped_item: detachable XM_XPATH_ITEM
 			-- lasst item of output sequence just popped
 
 feature -- Status report
@@ -126,8 +130,8 @@ feature -- Events
 			a_uri, a_code, a_text: STRING
 			an_index, a_second_index: INTEGER
 		do
-			if tree /= Void then
-				tree.on_error (a_message)
+			if attached tree as l_tree then
+				l_tree.on_error (a_message)
 			else
 				an_index := a_message.index_of (':', 1)
 				if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
@@ -164,8 +168,10 @@ feature -- Events
 			if tree = Void then
 				create_tree
 			end
-			if not tree.is_open then tree.open end
-			if level = 0 then tree.start_document end
+			check attached tree as l_tree then
+				if not l_tree.is_open then l_tree.open end
+				if level = 0 then l_tree.start_document end
+			end
 			level := level + 1
 		end
 
@@ -178,7 +184,9 @@ feature -- Events
 			if tree = Void then
 				create_tree
 			end
-			tree.start_element (a_name_code, a_type_code, properties)
+			check attached tree as l_tree then
+				l_tree.start_element (a_name_code, a_type_code, properties)
+			end
 			level := level + 1
 			in_start_tag := True
 			previous_atomic := False
@@ -191,10 +199,14 @@ feature -- Events
 			if in_start_tag then
 				start_content
 			end
-			tree.end_element
+			check attached tree as l_tree then
+				l_tree.end_element
+			end
 			level := level - 1
 			if level = 0 then
-				append_item (builder.current_root)
+				check attached builder as l_builder and then attached l_builder.current_root as l_current_root then
+					append_item (l_current_root)
+				end
 			end
 			mark_as_written
 			previous_atomic := False
@@ -220,10 +232,11 @@ feature -- Events
 				append_item (l_orphan)
 			else
 				check
-					tree_not_void: tree /= Void
+					tree_not_void: attached tree as l_tree
 					-- Guarenteed by `start_element'
+				then
+					l_tree.notify_namespace (a_namespace_code, properties)
 				end
-				tree.notify_namespace (a_namespace_code, properties)
 			end
 			mark_as_written
 			previous_atomic := False
@@ -240,10 +253,11 @@ feature -- Events
 				append_item (l_orphan)
 			else
 				check
-					tree_not_void: tree /= Void
+					tree_not_void: attached tree as l_tree
 					-- Guarenteed by `start_element'
+				then
+					l_tree.notify_attribute (a_name_code, a_type_code, a_value, properties)
 				end
-				tree.notify_attribute (a_name_code, a_type_code, a_value, properties)
 			end
 			mark_as_written
 			previous_atomic := False
@@ -253,7 +267,9 @@ feature -- Events
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
 			in_start_tag := False
-			tree.start_content
+			check attached tree as l_tree then
+				l_tree.start_content
+			end
 			previous_atomic := False
 			mark_as_written
 		end
@@ -270,10 +286,11 @@ feature -- Events
 					append_item (l_orphan)
 				else
 					check
-						tree_not_void: tree /= Void
+						tree_not_void: attached tree as l_tree
 						-- Guarenteed by `start_element' or `start_document'
+					then
+						l_tree.notify_characters (chars, properties)
 					end
-					tree.notify_characters (chars, properties)
 				end
 			end
 			mark_as_written
@@ -291,10 +308,11 @@ feature -- Events
 				append_item (l_orphan)
 			else
 				check
-					tree_not_void: tree /= Void
+					tree_not_void: attached tree as l_tree
 					-- Guarenteed by `start_element' or `start_document'
+				then
+					l_tree.notify_comment (a_content_string, properties)
 				end
-				tree.notify_comment (a_content_string, properties)
 			end
 			mark_as_written
 			previous_atomic := False
@@ -319,10 +337,11 @@ feature -- Events
 				append_item (l_orphan)
 			else
 				check
-					tree_not_void: tree /= Void
+					tree_not_void: attached tree as l_tree
 					-- Guarenteed by `start_element' or `start_document'
+				then
+					l_tree.notify_processing_instruction (a_name, a_data_string, properties)
 				end
-				tree.notify_processing_instruction (a_name, a_data_string, properties)
 			end
 			mark_as_written
 			previous_atomic := False
@@ -333,8 +352,12 @@ feature -- Events
 		do
 			level := level - 1
 			if level = 0 then
-				tree.end_document
-				append_item (builder.current_root)
+				check attached tree as l_tree then
+					l_tree.end_document
+				end
+				check attached builder as l_builder and then attached l_builder.current_root as l_current_root then
+					append_item (l_current_root)
+				end
 			end
 			is_document_started := False
 			previous_atomic := False
@@ -344,8 +367,8 @@ feature -- Events
 			-- Notify end of event stream.
 		do
 			is_open := False
-			if tree /= Void and then tree.is_open then
-				tree.close
+			if attached tree as l_tree and then l_tree.is_open then
+				l_tree.close
 			end
 		end
 
@@ -357,26 +380,29 @@ feature -- Events
 				previous_atomic := False
 			elseif an_item.is_atomic_value then
 				check
-					tree_not_void: tree /= Void
+					tree_not_void: attached tree as l_tree
 					-- Guarenteed by `start_element' or `start_document'
+				then
+
+
+					-- If an atomic value is written to a tree, and the previous item was also
+					--  an atomic value, then add a single space to separate them
+
+					if previous_atomic then
+						l_tree.notify_characters (" ", 0)
+					end
+					previous_atomic := True
+					l_tree.notify_characters (an_item.as_atomic_value.string_value, 0)
 				end
-
-
-				-- If an atomic value is written to a tree, and the previous item was also
-				--  an atomic value, then add a single space to separate them
-
-				if previous_atomic then
-					tree.notify_characters (" ", 0)
-				end
-				previous_atomic := True
-				tree.notify_characters (an_item.as_atomic_value.string_value, 0)
 			else
 				check
 					node: an_item.is_node
 					-- Items are atomic values or nodes
+					attached tree as l_tree
+				then
+					an_item.as_node.copy_node (l_tree, All_namespaces, True)
+					previous_atomic := True
 				end
-				an_item.as_node.copy_node (tree, All_namespaces, True)
-				previous_atomic := True
 			end
 		end
 
@@ -409,16 +435,16 @@ feature {NONE} -- Implementation
 	in_start_tag: BOOLEAN
 			-- Are we within an element?
 
-	tree: XM_XPATH_RECEIVER
+	tree: detachable XM_XPATH_RECEIVER
 			-- Output tree
 
-	builder: XM_XPATH_TINY_BUILDER
+	builder: detachable XM_XPATH_TINY_BUILDER
 			-- Tree builder
 
 	level: INTEGER
 			-- Element nesting level
 
-	cached_sequence: XM_XPATH_VALUE
+	cached_sequence: detachable XM_XPATH_VALUE
 			-- Result returned by `sequence'
 
 	create_tree
@@ -428,14 +454,18 @@ feature {NONE} -- Implementation
 		local
 			a_reducer: XM_XSLT_NAMESPACE_REDUCER
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+			l_builder: like builder
+			l_tree: like tree
 		do
-			create builder.make (base_uri, document_uri)
-			builder.set_defaults (50, 10, 5, 200)
-			create a_reducer.make (builder)
+			create l_builder.make (base_uri, document_uri)
+			builder := l_builder
+			l_builder.set_defaults (50, 10, 5, 200)
+			create a_reducer.make (l_builder)
 			create a_complex_outputter.make (a_reducer)
-			tree := a_complex_outputter
-			tree.set_base_uri (base_uri)
-			tree.open
+			l_tree := a_complex_outputter
+			tree := l_tree
+			l_tree.set_base_uri (base_uri)
+			l_tree.open
 		end
 
 invariant

@@ -5,7 +5,7 @@ note
 		"Objects that represent XSLT key indices"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
+	map: detachable DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
 			-- Map of atomic-valued key-values to node lists
 
 feature -- Status report
@@ -46,7 +46,7 @@ feature -- Status report
 		require
 			key_value_not_void: a_key_value /= Void
 		do
-			Result := map.has (a_key_value)
+			Result := attached map as l_map and then l_map.has (a_key_value)
 		end
 
 feature -- Status report

@@ -5,7 +5,7 @@ note
 		"XSLT transformers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,7 +107,7 @@ feature -- Access
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
 
-	timer: XM_XSLT_TIMING
+	timer: detachable XM_XSLT_TIMING
 			-- Timing facility
 
 	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
@@ -120,22 +120,22 @@ feature -- Access
 			key_manager_not_void: Result /= Void
 		end
 
-	bindery: XM_XSLT_BINDERY
+	bindery: detachable XM_XSLT_BINDERY
 			-- Global parameter/variable bindings
 
-	initial_template: XM_XSLT_COMPILED_TEMPLATE
+	initial_template: detachable XM_XSLT_COMPILED_TEMPLATE
 			-- Initial template
 
 	output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
 			-- Output URI resolver
 
-	principal_result: XM_XSLT_TRANSFORMATION_RESULT
+	principal_result: detachable XM_XSLT_TRANSFORMATION_RESULT
 			-- Unamed output definition
 
-	principal_result_uri: STRING
+	principal_result_uri: detachable STRING
 		-- System id of unamed output definition
 
-	principal_receiver: XM_XPATH_SEQUENCE_RECEIVER
+	principal_receiver: detachable XM_XPATH_SEQUENCE_RECEIVER
 			-- Receiver for unnamed output definition
 
 	document_pool: XM_XPATH_DOCUMENT_POOL
@@ -150,7 +150,7 @@ feature -- Access
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 
-	trace_listener: XM_XSLT_TRACE_LISTENER
+	trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			-- Trace listener
 
 	error_listener: XM_XSLT_ERROR_LISTENER
@@ -173,7 +173,7 @@ feature -- Access
 			response_stream_readable: Result.is_open_read
 		end
 
-	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): DS_CELL [INTEGER_64]
+	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): detachable DS_CELL [INTEGER_64]
 			-- Number of a node if it is the last remembered one for `a_instruction'
 		require
 			a_node_not_void: a_node /= Void
@@ -189,7 +189,7 @@ feature -- Access
 			end
 		end
 
-	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
+	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): detachable DS_HASH_TABLE [XM_XPATH_VALUE, STRING]
 			-- Value associated with `a_function'
 		require
 			function_not_void: a_function /= Void
@@ -199,15 +199,15 @@ feature -- Access
 			end
 		end
 
-	cached_unparsed_text (a_uri, an_encoding: STRING): STRING
+	cached_unparsed_text (a_uri: STRING; an_encoding: detachable STRING): detachable STRING
 			-- Unparsed text cached by XPath unparsed-text-available(`a_uri', `an_encoding') function
 		require
 			uri_not_empty: a_uri /= Void and then not a_uri.is_empty
 		do
-			if last_unparsed_text_uri /= Void then
-				if STRING_.same_string (a_uri, last_unparsed_text_uri) then
-					if (an_encoding = Void and then last_unparsed_encoding = Void)
-						or else STRING_.same_string (an_encoding, last_unparsed_encoding) then
+			if attached last_unparsed_text_uri as l_last_unparsed_text_uri then
+				if STRING_.same_string (a_uri, l_last_unparsed_text_uri) then
+					if (an_encoding = Void or else not attached last_unparsed_encoding as l_last_unparsed_encoding)
+						or else STRING_.same_string (an_encoding, l_last_unparsed_encoding) then
 						Result := last_unparsed_text
 					end
 				end
@@ -365,15 +365,19 @@ feature -- Basic operations
 			a_fingerprint: INTEGER
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			an_error: XM_XPATH_ERROR_VALUE
+			l_initial_template: like initial_template
 		do
 			if not shared_name_pool.is_expanded_name_allocated (a_template_name) then
 				shared_name_pool.allocate_expanded_name (a_template_name)
 			end
 			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_template_name)
-			a_compiled_templates_index := executable.compiled_templates_index
+			check attached executable.compiled_templates_index as l_executable_compiled_templates_index then
+				a_compiled_templates_index := l_executable_compiled_templates_index
+			end
 			if a_compiled_templates_index.has (a_fingerprint) then
-				initial_template := a_compiled_templates_index.item (a_fingerprint)
-				if initial_template.has_required_parameters then
+				l_initial_template := a_compiled_templates_index.item (a_fingerprint)
+				initial_template := l_initial_template
+				if l_initial_template.has_required_parameters then
 					create an_error.make_from_string (("Initial template must not have any required parameters"), Xpath_errors_uri, "XTDE0060", Dynamic_error)
 					report_fatal_error (an_error)
 				end
@@ -422,15 +426,18 @@ feature -- Basic operations
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
 		local
 			l_fingerprint: INTEGER
+			l_parameters: like parameters
 		do
-			if parameters = Void then
-				create parameters.make_empty
+			l_parameters := parameters
+			if l_parameters = Void then
+				create l_parameters.make_empty
+				parameters := l_parameters
 			end
 			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
 				shared_name_pool.allocate_expanded_name (a_parameter_name)
 			end
 			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
-			parameters.put (a_parameter_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
+			l_parameters.put (a_parameter_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
 		end
 
 	set_string_parameter (a_parameter_value, a_parameter_name: STRING)
@@ -441,16 +448,19 @@ feature -- Basic operations
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_fingerprint: INTEGER
+			l_parameters: like parameters
 		do
-			if parameters = Void then
-				create parameters.make_empty
+			l_parameters := parameters
+			if l_parameters = Void then
+				create l_parameters.make_empty
+				parameters := l_parameters
 			end
 			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
 				shared_name_pool.allocate_expanded_name (a_parameter_name)
 			end
 			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create l_string_value.make (a_parameter_value)
-			parameters.put (l_string_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
+			l_parameters.put (l_string_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
 		end
 
 	set_xpath_parameter (a_parameter_value, a_parameter_name: STRING)
@@ -461,9 +471,12 @@ feature -- Basic operations
 		local
 			l_fingerprint: INTEGER
 			l_expression_factory: XM_XPATH_EXPRESSION_FACTORY
+			l_xpath_parameters: like xpath_parameters
 		do
-			if xpath_parameters = Void then
-				create xpath_parameters.make_map_default
+			l_xpath_parameters := xpath_parameters
+			if l_xpath_parameters = Void then
+				create l_xpath_parameters.make_map_default
+				xpath_parameters := l_xpath_parameters
 			end
 			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
 				shared_name_pool.allocate_expanded_name (a_parameter_name)
@@ -471,10 +484,11 @@ feature -- Basic operations
 			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create l_expression_factory
 			l_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1, executable.system_id (1))
-			if l_expression_factory.is_parse_error then
-				report_recoverable_error (l_expression_factory.parsed_error_value)
+			if attached l_expression_factory.parsed_error_value as l_parsed_error_value then
+				check is_parse_error: l_expression_factory.is_parse_error end
+				report_recoverable_error (l_parsed_error_value)
 			else
-				xpath_parameters.force (l_expression_factory.parsed_expression, l_fingerprint)
+				l_xpath_parameters.force (l_expression_factory.parsed_expression, l_fingerprint)
 			end
 		end
 
@@ -489,7 +503,7 @@ feature -- Basic operations
 			initial_context_expression_set: initial_context_expression = a_expression
 		end
 
-	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: UT_MEDIA_TYPE; a_uri: STRING)
+	register_document (a_document: XM_XPATH_DOCUMENT; a_media_type: detachable UT_MEDIA_TYPE; a_uri: STRING)
 			-- Register a document.
 		require
 			document_not_void: a_document /= Void
@@ -520,19 +534,24 @@ feature -- Basic operations
 			create l_absolute_uri.make_resolve (l_uri, a_system_id)
 			create l_uri_source.make (l_absolute_uri.full_reference)
 			transformer_factory.create_new_transformer (l_uri_source, l_absolute_uri)
-			if transformer_factory.was_error then
-				create l_error.make_from_string (transformer_factory.last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
+			if attached transformer_factory.last_error_message as l_last_error_message then
+				check was_error: transformer_factory.was_error end
+				create l_error.make_from_string (l_last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
 				report_fatal_error (l_error)
 			else
-				l_transformer := transformer_factory.created_transformer
-				create l_transformer_receiver.make (l_transformer, principal_result_uri, a_result)
+				check postcondition_of_create_new_transformer: attached transformer_factory.created_transformer as l_created_transformer then
+					l_transformer := l_created_transformer
+				end
+				check attached principal_result_uri as l_principal_result_uri then
+					create l_transformer_receiver.make (l_transformer, l_principal_result_uri, a_result)
+				end
 				create next_resolved_destination.make_receiver (l_transformer_receiver)
 			end
 		ensure
 			error_or_destination_not_void: not is_error implies next_resolved_destination /= Void
 		end
 
-	cache_unparsed_text (a_text, a_uri, an_encoding: STRING)
+	cache_unparsed_text (a_text, a_uri: STRING; an_encoding: detachable STRING)
 			-- Cache results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
 		require
 			text_not_void: a_text /= Void
@@ -564,31 +583,32 @@ feature -- Basic operations
 		require
 			principal_receiver_not_void: principal_receiver /= Void
 		local
- 			l_complex: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
  			l_receiver: XM_XPATH_RECEIVER
- 			l_proxy: XM_XPATH_PROXY_RECEIVER
-			l_emitter: XM_XSLT_EMITTER
+			l_emitter: detachable XM_XSLT_EMITTER
 		do
- 			l_complex ?= principal_receiver
-			if l_complex /= Void then
+			if attached {XM_XSLT_COMPLEX_CONTENT_OUTPUTTER} principal_receiver as l_complex then
 				from
  					l_receiver := l_complex.next_receiver
-  					l_proxy ?= l_receiver
   				until
-					l_proxy = Void
+  					not attached {XM_XPATH_PROXY_RECEIVER} l_receiver as l_proxy
 				loop
  					l_receiver := l_proxy.base_receiver
- 					l_proxy ?= l_receiver
  				end
- 				l_emitter ?= l_receiver
+ 				if attached {XM_XSLT_EMITTER} l_receiver as l_emitter_2 then
+ 					l_emitter := l_emitter_2
+ 				end
 			else
-				l_emitter ?= principal_receiver
+				if attached {XM_XSLT_EMITTER} principal_receiver as l_emitter_2 then
+ 					l_emitter := l_emitter_2
+ 				end
  			end
 			if l_emitter /= Void then
 				l_emitter.suppress_late_open
 			end
-			principal_receiver.end_document
-			principal_receiver.close
+			check precondition_principal_receiver_not_void: attached principal_receiver as l_principal_receiver then
+				l_principal_receiver.end_document
+				l_principal_receiver.close
+			end
 		end
 
 feature -- Transformation
@@ -600,17 +620,17 @@ feature -- Transformation
 			result_not_void: a_result /= Void
 			no_error_yet: not is_error
 		local
-			l_start_node: XM_XPATH_NODE
+			l_start_node: detachable XM_XPATH_NODE
 			l_builder: XM_XPATH_BUILDER
 			l_parser: XM_PARSER
 			l_document: XM_XPATH_DOCUMENT
 			l_error: XM_XPATH_ERROR_VALUE
-			l_media_type: UT_MEDIA_TYPE
+			l_media_type: detachable UT_MEDIA_TYPE
 			l_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
-			l_fragment_id: STRING
+			l_fragment_id: detachable STRING
 			l_date_time: DT_DATE_TIME
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
-			a_uri: UT_URI
+			a_uri: detachable UT_URI
 		do
 			create l_date_time.make_from_epoch (0)
 			utc_system_clock.set_date_time_to_now (l_date_time)
@@ -620,16 +640,20 @@ feature -- Transformation
 			if a_source /= Void then
 				a_source.ignore_media_types
 				if	document_pool.is_document_mapped (a_source.system_id) then
-					l_document := document_pool.document (a_source.system_id)
-					if a_source.fragment_identifier /= Void then
+					check attached document_pool.document (a_source.system_id) as l_document_pool_document then
+						l_document := l_document_pool_document
+					end
+					if attached a_source.fragment_identifier as l_source_fragment_identifier then
 						l_media_type := document_pool.media_type (a_source.system_id)
 						if l_media_type = Void then l_media_type := configuration.default_media_type (a_source.system_id) end
 						l_media_type_map := configuration.media_type_map
 						l_media_type_map.check_fragment_processing_rules (l_media_type, configuration.assume_html_is_xhtml)
 						if l_media_type_map.may_use_xpointer then
-							l_start_node := fragment_node (l_document, a_source.fragment_identifier)
+							l_start_node := fragment_node (l_document, l_source_fragment_identifier)
 						elseif l_media_type_map.may_use_id then
-							l_start_node := l_document.selected_id (l_fragment_id)
+							check l_fragment_id /= Void then
+								l_start_node := l_document.selected_id (l_fragment_id)
+							end
 							if l_start_node = Void then
 								create l_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XTRE1160", Dynamic_error)
 								report_recoverable_error (l_error)
@@ -653,20 +677,23 @@ feature -- Transformation
 					l_parser := new_parser
 					create a_uri.make (a_source.uri_reference)
 					l_builder := new_builder (l_parser, a_source.uri_reference, a_uri)
-					if timer /= Void then
-						timer.time_document_building
+					if attached timer as l_timer then
+						l_timer.time_document_building
 					end
 					a_source.send (l_parser, new_stripper (l_builder), a_uri, False)
 					l_media_type := a_source.media_type
-					if timer /= Void then
-						timer.mark_document_built
-						configuration.error_reporter.report_error_message ("Time to build " + a_uri.full_reference + " was " + timer.document_build_time.precise_out + " seconds")
+					if attached timer as l_timer then
+						l_timer.mark_document_built
+						configuration.error_reporter.report_error_message ("Time to build " + a_uri.full_reference + " was " + l_timer.document_build_time.precise_out + " seconds")
 					end
-					if l_builder.has_error then
-						create l_error.make_from_string (l_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
+					if attached l_builder.last_error as l_last_error then
+						check has_error: l_builder.has_error end
+						create l_error.make_from_string (l_last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
 						report_fatal_error (l_error)
 					else
-						l_document := l_builder.current_root.as_document
+						check attached l_builder.current_root as l_builder_current_root then
+							l_document := l_builder_current_root.as_document
+						end
 						register_document (l_document, l_media_type, a_source.system_id)
 						l_fragment_id := a_source.fragment_identifier
 						if l_fragment_id = Void then
@@ -708,9 +735,11 @@ feature -- Transformation
 			end
 			if not is_error and then configuration.final_execution_phase = Run_to_completion then
 				transform_document (l_start_node, a_result)
-				if timer /= Void then
-					timer.mark_transformation_finished
-					configuration.error_reporter.report_error_message ("Time to transform " + a_uri.full_reference + " was " + timer.transformation_time.precise_out + " seconds")
+				if attached timer as l_timer then
+					l_timer.mark_transformation_finished
+					check a_uri /= Void then
+						configuration.error_reporter.report_error_message ("Time to transform " + a_uri.full_reference + " was " + l_timer.transformation_time.precise_out + " seconds")
+					end
 				end
 			end
 			configuration.reset_entity_resolver
@@ -735,7 +764,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	last_context_node: XM_XPATH_NODE
+	last_context_node: detachable XM_XPATH_NODE
 			-- Result from `evaluate_initial_context_node'
 
 	evaluate_initial_context_node (a_start: XM_XPATH_NODE)
@@ -745,25 +774,29 @@ feature {NONE} -- Implementation
 		local
 			l_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 			l_expression: XM_XPATH_EXPRESSION
-			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
 			l_context: like new_xpath_context
 		do
 			create l_expression_factory
-			l_expression_factory.make_expression (initial_context_expression, static_context, 1, 0, 1, executable.system_id (1))
-			if l_expression_factory.is_parse_error then
-				report_fatal_error (l_expression_factory.parsed_error_value)
+			check precondition_initial_context_expression_not_void: attached initial_context_expression as l_initial_context_expression then
+				l_expression_factory.make_expression (l_initial_context_expression, static_context, 1, 0, 1, executable.system_id (1))
+			end
+			if attached l_expression_factory.parsed_error_value as l_parsed_error_value then
+				check is_parse_error: l_expression_factory.is_parse_error end
+				report_fatal_error (l_parsed_error_value)
 			else
 				l_expression := l_expression_factory.parsed_expression
 				create l_result.make (Void)
 				l_context := new_xpath_context
 				l_context.set_current_iterator (create {XM_XPATH_SINGLETON_NODE_ITERATOR}.make (a_start))
 				l_expression.evaluate_item (l_result, l_context)
-				if l_result.item = Void then
+				if not attached l_result.item as l_result_item then
 					last_context_node := Void
-				elseif l_result.item.is_error then
-					report_fatal_error (l_result.item.error_value)
-				elseif l_result.item.is_node then
-					last_context_node := l_result.item.as_node
+				elseif attached l_result_item.error_value as l_error_value then
+					check is_error: l_result_item.is_error end
+					report_fatal_error (l_error_value)
+				elseif l_result_item.is_node then
+					last_context_node := l_result_item.as_node
 				else
 					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Initial context expression does not evaluate to a single node", Xpath_errors_uri, "XPTY0004", Dynamic_error))
 				end
@@ -772,26 +805,29 @@ feature {NONE} -- Implementation
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATION} -- Transformation internals
 
-	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
+	transform_document (a_start_node: detachable XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT)
 			-- Transform document supplied as in-memory tree.
 		require
 			initial_template_or_start_node_not_void: a_start_node = Void implies initial_template /= Void
 			destination_result_not_void: a_result /= Void
 			no_error_yet: not is_error
 		local
-			l_properties: XM_XSLT_OUTPUT_PROPERTIES
-			l_next_uri: STRING
-			l_transformation_result: XM_XSLT_TRANSFORMATION_RESULT
+			l_properties: detachable XM_XSLT_OUTPUT_PROPERTIES
+			l_next_uri: detachable STRING
+			l_transformation_result: detachable XM_XSLT_TRANSFORMATION_RESULT
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 			l_parameter_set: XM_XSLT_PARAMETER_SET
-			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
-			l_tail_call: XM_XPATH_TAIL_CALL
+			l_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
+			l_principal_receiver: like principal_receiver
 		do
 			principal_result := a_result
 			principal_result_uri := a_result.system_id
 			initialize_transformer (a_start_node)
 			if not is_error then
-				l_properties := executable.default_output_properties
+				check attached executable.default_output_properties as l_default_output_properties then
+					l_properties := l_default_output_properties
+				end
 				l_transformation_result := a_result
 				-- TODO: overlay properties defined by API
 
@@ -799,62 +835,95 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 
 				l_next_uri := l_properties.next_in_chain
 				if l_next_uri /= Void then
-					resolve_next_destination (l_next_uri, l_properties.next_in_chain_base_uri, a_result)
-					if not is_error then l_transformation_result := next_resolved_destination end
+					check attached l_properties.next_in_chain_base_uri as l_properties_next_in_chain_base_uri then
+						resolve_next_destination (l_next_uri, l_properties_next_in_chain_base_uri, a_result)
+					end
+					if not is_error then
+						check postcondition_of_resolve_next_destination: attached next_resolved_destination as l_next_resolved_destination then
+							l_transformation_result := l_next_resolved_destination
+						end
+					end
 				end
 			end
 			if not is_error then
-				initial_context.change_output_destination (l_properties, l_transformation_result, True, Validation_preserve, Void)
+				check
+					attached initial_context as l_initial_context
+					l_properties /= Void
+					l_transformation_result /= Void
+				then
+					l_initial_context.change_output_destination (l_properties, l_transformation_result, True, Validation_preserve, Void)
+				end
 			end
 			if not is_error then
-				principal_receiver := initial_context.current_receiver
-				principal_result.set_principal_receiver (principal_receiver)
 				check
-					opened: principal_receiver.is_open
+					attached initial_context as l_initial_context
+					attached principal_result as l_principal_result
+					attached l_initial_context.current_receiver as l_initial_context_current_receiver
+				then
+					l_principal_receiver := l_initial_context_current_receiver
+					principal_receiver := l_principal_receiver
+					l_principal_result.set_principal_receiver (l_principal_receiver)
+				end
+				check
+					opened: l_principal_receiver.is_open
 					-- change_output_destination ensures this
 				end
-				principal_receiver.start_document
+				l_principal_receiver.start_document
 			end
 			if not is_error then
 
 				-- Process the source document using the handlers that have been set up.
 
-				if initial_template = Void then
-					perform_transformation (a_start_node)
+				if not attached initial_template as l_initial_template then
+					check a_start_node /= Void then
+						perform_transformation (a_start_node)
+					end
 				else
-					l_context := initial_context.new_context
-					l_context.open_stack_frame (initial_template.slot_manager)
+					check attached initial_context as l_initial_context then
+						l_context := l_initial_context.new_context
+					end
+					check attached l_initial_template.slot_manager as l_initial_template_slot_manager then
+						l_context.open_stack_frame (l_initial_template_slot_manager)
+					end
 					create l_parameter_set.make_empty
 					l_context.set_local_parameters (l_parameter_set)
 					create l_parameter_set.make_empty
 					l_context.set_tunnel_parameters (l_parameter_set)
 					from
 						create l_tail.make (Void)
-						initial_template.expand (l_tail, l_context)
-					until
-						l_tail.item = Void
-					loop
+						l_initial_template.expand (l_tail, l_context)
 						l_tail_call := l_tail.item
+					until
+						l_tail_call = Void
+					loop
 						l_tail.put (Void)
 						l_tail_call.generate_tail_call (l_tail, l_context)
+						l_tail_call := l_tail.item
 					end
 				end
 
-				if is_tracing then
-					trace_listener.stop_tracing
+				if attached trace_listener as l_trace_listener then
+					check is_tracing: is_tracing end
+					l_trace_listener.stop_tracing
 				end
 			end
 			if not is_error then
-				if principal_receiver /= Void and then (not principal_receiver.is_document_started and principal_receiver.is_written) then
-					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
-						Xpath_errors_uri, "XTDE1490", Dynamic_error))
-				elseif principal_receiver /= Void and then principal_receiver.is_document_started then
-					principal_receiver.end_document
-					principal_receiver.close
-					principal_result.flush
+				if attached principal_receiver as l_principal_receiver_2 and then (not l_principal_receiver_2.is_document_started and l_principal_receiver_2.is_written) then
+					check attached principal_result_uri as l_principal_result_uri then
+						report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", l_principal_result_uri),
+							Xpath_errors_uri, "XTDE1490", Dynamic_error))
+						end
+				elseif attached principal_receiver as l_principal_receiver_2 and then l_principal_receiver_2.is_document_started then
+					l_principal_receiver_2.end_document
+					l_principal_receiver_2.close
+					check attached principal_result as l_principal_result then
+						l_principal_result.flush
+					end
 				end
-				if l_transformation_result.error_message /= Void then
-					report_warning (l_transformation_result.error_message, Void)
+				check l_transformation_result /= Void then
+					if attached l_transformation_result.error_message as l_transformation_result_error_message then
+						report_warning (l_transformation_result_error_message, Void)
+					end
 				end
 			end
 		end
@@ -870,8 +939,8 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 			l_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
 			l_local_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
-			l_tail_call: XM_XPATH_TAIL_CALL
+			l_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
 		do
 			if initial_mode /= -1 and initial_template /= Void then
 				report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Initial mode and initial template are mutually exclusive", Xpath_errors_uri, "XTDE0047", Dynamic_error))
@@ -882,14 +951,18 @@ feature {XM_XSLT_TRANSFORMER} -- Transformation internals
 					create l_tail.make (Void)
 					create l_local_parameters.make_empty
 					create l_tunnel_parameters.make_empty
-					apply_templates (l_tail, l_sequence_iterator, rule_manager.mode (initial_mode), l_local_parameters, l_tunnel_parameters, initial_context)
+					check attached initial_context as l_initial_context then
+						apply_templates (l_tail, l_sequence_iterator, rule_manager.mode (initial_mode), l_local_parameters, l_tunnel_parameters, l_initial_context)
+					end
 				until
 					is_error or else l_finished
 				loop
 					l_tail_call := l_tail.item
 					l_tail.put (Void)
 					if l_tail_call /= Void then
-						l_tail_call.generate_tail_call (l_tail, initial_context)
+						check attached initial_context as l_initial_context then
+							l_tail_call.generate_tail_call (l_tail, l_initial_context)
+						end
 					else
 						l_finished := True
 					end
@@ -902,37 +975,38 @@ feature -- Implementation
 	parser_factory: XM_EIFFEL_PARSER_FACTORY
 			-- parser factory
 
-	principal_source_document: XM_XPATH_DOCUMENT
+	principal_source_document: detachable XM_XPATH_DOCUMENT
 			-- Principal document to be transformed
 
 	initial_mode: INTEGER
 			-- Fingerprint of initial mode
 
-	initial_context: XM_XSLT_EVALUATION_CONTEXT
+	initial_context: detachable XM_XSLT_EVALUATION_CONTEXT
 			-- Initial dynamic context for a transformation
 
-	initial_context_expression: STRING
+	initial_context_expression: detachable STRING
 			-- XPath expression for initial context node
 
 	temporary_destination_depth: INTEGER
 			-- Count of temporary output destinations
 
-	parameters: XM_XSLT_PARAMETER_SET
+	parameters: detachable XM_XSLT_PARAMETER_SET
 			-- Global parameters supplied to the transformer
 
 	user_data_table: DS_HASH_TABLE [DS_HASH_TABLE [XM_XPATH_VALUE, STRING], XM_XSLT_COMPILED_USER_FUNCTION]
 			-- User data map
 
-	xpath_parameters: DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
+	xpath_parameters: detachable DS_HASH_TABLE [XM_XPATH_EXPRESSION, INTEGER]
 			-- XPath-valued global parameters
 
-	next_resolved_destination: XM_XSLT_TRANSFORMATION_RESULT
+	next_resolved_destination: detachable XM_XSLT_TRANSFORMATION_RESULT
 			-- Transformation result for next transformation in chain
 
-	last_unparsed_text_uri, last_unparsed_text, last_unparsed_encoding: STRING
+	last_unparsed_text_uri, last_unparsed_text: detachable STRING
+	last_unparsed_encoding: detachable STRING
 			-- Cached result from XPath unparsed-text-available(`a_uri', `an_encoding') function
 
-	cached_static_context: XM_XSLT_EXPRESSION_CONTEXT
+	cached_static_context: detachable XM_XSLT_EXPRESSION_CONTEXT
 			-- Cached static context from `executable'
 
 	remembered_numbers: DS_HASH_TABLE [DS_PAIR [XM_XPATH_NODE, INTEGER_64], XM_XSLT_COMPILED_NUMBER]
@@ -943,21 +1017,27 @@ feature -- Implementation
 
 	static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context from `executable'
+		local
+			l_cached_static_context: like cached_static_context
 		do
 
 			-- The purpose of the clone is to keep compiled stylesheets read-only,
 			--  so they can be safely cached
 
-			if cached_static_context = Void then
-				cached_static_context := executable.static_context.cloned_object
+			l_cached_static_context := cached_static_context
+			if l_cached_static_context = Void then
+				check attached executable.static_context as l_static_context then
+					l_cached_static_context := l_static_context.cloned_object
+				end
+				cached_static_context := l_cached_static_context
 			end
-			Result := cached_static_context
+			Result := l_cached_static_context
 		ensure
 			result_not_void: Result /= Void
 			cached: cached_static_context /= Void
 		end
 
-	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): XM_XPATH_RECEIVER
+	selected_receiver (a_result: XM_XSLT_TRANSFORMATION_RESULT; some_properties: XM_XSLT_OUTPUT_PROPERTIES): detachable XM_XPATH_RECEIVER
 			-- Receiver selected according to inputs
 		require
 			result_not_void: a_result /= Void
@@ -966,10 +1046,12 @@ feature -- Implementation
 			l_emitter: XM_XSLT_EMITTER
 			l_method: STRING
 			l_method_uri, l_method_local_name: STRING
-			l_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
+			l_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 		do
 			if a_result.is_emitter then
-				l_emitter := a_result.emitter
+				check invariant_of_XM_XSLT_TRANSFORMATION_RESULT: attached a_result.emitter as l_result_emitter then
+					l_emitter := l_result_emitter
+				end
 				l_emitter.set_output_properties (some_properties)
 				Result := l_emitter
 			elseif a_result.is_receiver then
@@ -997,33 +1079,41 @@ feature -- Implementation
 					valid_output_method: emitter_factory.is_valid_output_method (l_method_uri, l_method_local_name)
 					-- compiler ensures this
 				end
-				Result := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current, a_result.stream, some_properties,  l_character_map_index)
+				check is_stream: attached a_result.stream as l_result_stream then
+					Result := emitter_factory.new_receiver (l_method_uri, l_method_local_name, Current, l_result_stream, some_properties,  l_character_map_index)
+				end
 			end
 		ensure
 			selected_receiver_not_void: Result /= Void or else is_error
 		end
 
-	initialize_transformer (a_start_node: XM_XPATH_NODE)
+	initialize_transformer (a_start_node: detachable XM_XPATH_NODE)
 			-- Initialize in preparation for a transformation.
 		local
 			l_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			l_missing: DS_LIST [STRING]
+			l_initial_context: like initial_context
+			l_parameters: like parameters
+			l_bindery: like bindery
 		do
 			trace_listener := configuration.trace_listener
-			if is_tracing then
-				trace_listener.start_tracing
+			if attached trace_listener as l_trace_listener then
+				check is_tracing: is_tracing end
+				l_trace_listener.start_tracing
 			end
 			output_resolver.output_destinations.wipe_out
 
 			-- Create a new bindery, to clear out any variables from previous runs
 
-			bindery := executable.new_bindery
-			initial_context := new_xpath_context
+			l_bindery := executable.new_bindery
+			bindery := l_bindery
+			l_initial_context := new_xpath_context
+			initial_context := l_initial_context
 			if a_start_node /= Void then
 				principal_source_document := a_start_node.document_root
 				create l_singleton_iterator.make (principal_source_document)
-				initial_context.set_current_iterator (l_singleton_iterator)
-				initial_context.current_iterator.start
+				l_initial_context.set_current_iterator (l_singleton_iterator)
+				l_singleton_iterator.start
 			end
 
 			-- If XPath parameters were supplied, set them up
@@ -1038,14 +1128,16 @@ feature -- Implementation
 			-- If parameters were supplied, set them up
 
 			if not is_error then
-				if parameters = Void then
-					create parameters.make_empty
+				l_parameters := parameters
+				if l_parameters = Void then
+					create l_parameters.make_empty
+					parameters := l_parameters
 				end
-				l_missing := executable.missing_required_global_parameters (parameters)
+				l_missing := executable.missing_required_global_parameters (l_parameters)
 				if not l_missing.is_empty then
 					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (missing_parameters_message (l_missing), Xpath_errors_uri, "XTDE0050", Dynamic_error))
 				else
-					bindery.define_global_parameters (parameters)
+					l_bindery.define_global_parameters (l_parameters)
 				end
 			end
 		end
@@ -1059,28 +1151,35 @@ feature -- Implementation
 			a_fingerprint: INTEGER
 			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 			a_value: XM_XPATH_VALUE
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			create an_expression_factory
 			from
-				a_cursor := xpath_parameters.new_cursor; a_cursor.start
+				check attached xpath_parameters as l_xpath_parameters then
+					a_cursor := l_xpath_parameters.new_cursor
+				end
+				a_cursor.start
 			until
 				a_cursor.after
 			loop
 				a_fingerprint := a_cursor.key
-				a_computed_expression ?= a_cursor.item
-				if a_computed_expression /= Void then
+				if attached {XM_XPATH_COMPUTED_EXPRESSION} a_cursor.item as a_computed_expression then
 					an_expression_factory.create_closure (a_computed_expression, a_context, Many_references)
-					a_value := an_expression_factory.last_created_closure
+					check postcondition_of_create_closure: attached an_expression_factory.last_created_closure as l_last_created_closure then
+						a_value := l_last_created_closure
+					end
 				else
-					a_value ?= a_cursor.item
+					check attached {XM_XPATH_VALUE} a_cursor.item as l_value then
+						a_value := l_value
+					end
 				end
-				parameters.put (a_value, a_fingerprint) -- replaces existing value
+				check attached parameters as l_parameters then
+					l_parameters.put (a_value, a_fingerprint) -- replaces existing value
+				end
 				a_cursor.forth
 			end
 		end
 
-	fragment_node (a_document: XM_XPATH_DOCUMENT; a_fragment_identifier: STRING): XM_XPATH_NODE
+	fragment_node (a_document: XM_XPATH_DOCUMENT; a_fragment_identifier: STRING): detachable XM_XPATH_NODE
 			-- Node identified by `a_fragment_identifier' via xpointer
 		require
 			fragment_identifier_not_void: a_fragment_identifier /= Void
@@ -1091,9 +1190,6 @@ feature -- Implementation
 			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 			a_value: XM_XPATH_VALUE
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			a_node_value: XM_XPATH_SINGLETON_NODE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create an_xpointer_processor.make (False)
@@ -1104,11 +1200,13 @@ feature -- Implementation
 			an_xpointer_processor.register_scheme (an_xmlns_scheme)
 			an_xpointer_processor.register_scheme (an_xpath_scheme)
 			an_xpointer_processor.evaluate (a_fragment_identifier, a_document)
-			a_value := an_xpointer_processor.value
-			an_empty_sequence ?= a_value
-			if a_value.is_error or else an_empty_sequence /= Void then
-				if a_value.is_error then
-					create an_error.make_from_string (STRING_.concat("XPointer reported an error: ", a_value.error_value.description) ,
+			check postcondition_of_evaluate: attached an_xpointer_processor.value as l_xpointer_processor_value then
+				a_value := l_xpointer_processor_value
+			end
+			if a_value.is_error or else attached {XM_XPATH_EMPTY_SEQUENCE} a_value then
+				if attached a_value.error_value as l_error_value then
+					check is_error: a_value.is_error end
+					create an_error.make_from_string (STRING_.concat("XPointer reported an error: ", l_error_value.description) ,
 																 Xpath_errors_uri, "XTRE1160", Dynamic_error)
 				else
 					create an_error.make_from_string ("XPointer failed to select a node." , Xpath_errors_uri, "XTRE1160", Dynamic_error)
@@ -1118,25 +1216,24 @@ feature -- Implementation
 					Result := a_document
 				end
 			else
-				a_node_value ?= a_value
-				if a_node_value = Void then
-					a_sequence_extent ?= a_value
+				if not attached {XM_XPATH_SINGLETON_NODE} a_value as a_node_value then
 					check
-						sequence_extent: a_sequence_extent /= Void
+						sequence_extent: attached {XM_XPATH_SEQUENCE_EXTENT} a_value as a_sequence_extent
 						-- Only remaining possibility
-					end
-					if a_sequence_extent.is_node_sequence and then a_sequence_extent.count = 1 then
-						check
-							result_is_a_node: a_sequence_extent.item_at (1).is_node
-							-- from the condition of the if clause
-						end
-						Result := a_sequence_extent.item_at (1).as_node
-					else
-						create an_error.make_from_string ("XPointer returned something other than a single node",
-																	 Xpath_errors_uri, "XTRE1160", Dynamic_error)
-						report_recoverable_error (an_error)
-						if not is_error then
-							Result := a_document
+					then
+						if a_sequence_extent.is_node_sequence and then a_sequence_extent.count = 1 then
+							check
+								result_is_a_node: a_sequence_extent.item_at (1).is_node
+								-- from the condition of the if clause
+							end
+							Result := a_sequence_extent.item_at (1).as_node
+						else
+							create an_error.make_from_string ("XPointer returned something other than a single node",
+																		 Xpath_errors_uri, "XTRE1160", Dynamic_error)
+							report_recoverable_error (an_error)
+							if not is_error then
+								Result := a_document
+							end
 						end
 					end
 				else
@@ -1186,7 +1283,7 @@ invariant
 	implicit_timezone_not_void: implicit_timezone /= Void
 	current_date_time_not_void: current_date_time /= Void
 	output_resolver_not_void: output_resolver /= Void
-	initial_context_expression_not_empty: initial_context_expression /= Void implies not initial_context_expression.is_empty
+	initial_context_expression_not_empty: attached initial_context_expression as l_initial_context_expression implies not l_initial_context_expression.is_empty
 	remembered_numbers_not_void: remembered_numbers /= Void
 	response_streams_not_void: response_streams /= Void
 

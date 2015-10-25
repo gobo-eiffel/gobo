@@ -5,7 +5,7 @@ note
 		"xsl:copy element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -53,13 +53,13 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
-			a_copy_namespaces_attribute, an_inherit_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING
+			a_copy_namespaces_attribute, an_inherit_namespaces_attribute, a_validation_attribute, a_type_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			validation := Validation_strip
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -81,7 +81,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_copy_namespaces_attribute = Void then
@@ -135,8 +135,8 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		do
 			check_within_template
-			if use /= Void then
-				accumulate_attribute_sets (use, Void)
+			if attached use as l_use then
+				accumulate_attribute_sets (l_use, Void)
 			else
 				create used_attribute_sets.make (0)
 			end
@@ -146,7 +146,7 @@ feature -- Element change
 	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		local
-			l_content: XM_XPATH_EXPRESSION
+			l_content: detachable XM_XPATH_EXPRESSION
 			l_attributes_usage: XM_XSLT_ATTRIBUTE_USAGE
 			l_if: XM_XPATH_IF_EXPRESSION
 			l_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
@@ -155,29 +155,33 @@ feature -- Element change
 		do
 			compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 			l_content := last_generated_expression
-			if not used_attribute_sets.is_empty then
-				create l_attributes_usage.make (a_executable, used_attribute_sets)
+			check attached used_attribute_sets as l_used_attribute_sets then
+				if not l_used_attribute_sets.is_empty then
+					create l_attributes_usage.make (a_executable, l_used_attribute_sets)
 
-				-- The use-attribute-sets is ignored unless the context item is an element node.
-            -- So we will wrap the XM_XSLT_ATTRIBUTE_USAGE in a conditional to perform a run-time test
-				create l_context_item.make
-				create l_type.make (element_node_kind_test, Required_cardinality_exactly_one)
-				create l_condition.make (l_context_item, l_type)
-				create l_if.make (l_condition, l_attributes_usage, create {XM_XPATH_EMPTY_SEQUENCE}.make)
-				if l_content = Void then
-					l_content := l_if
-				else
-					create {XM_XSLT_BLOCK} l_content.make (a_executable, l_if, l_content, principal_stylesheet.module_number (system_id), line_number)
+					-- The use-attribute-sets is ignored unless the context item is an element node.
+	            -- So we will wrap the XM_XSLT_ATTRIBUTE_USAGE in a conditional to perform a run-time test
+					create l_context_item.make
+					create l_type.make (element_node_kind_test, Required_cardinality_exactly_one)
+					create l_condition.make (l_context_item, l_type)
+					create l_if.make (l_condition, l_attributes_usage, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+					if l_content = Void then
+						l_content := l_if
+					else
+						check attached principal_stylesheet as l_principal_stylesheet then
+							create {XM_XSLT_BLOCK} l_content.make (a_executable, l_if, l_content, l_principal_stylesheet.module_number (system_id), line_number)
+						end
+					end
 				end
+				if l_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+				end
+				create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (a_executable, l_content,
+																									l_used_attribute_sets,
+																									is_copy_namespaces,
+																									is_inherit_namespaces,
+																									Void, validation)
 			end
-			if l_content = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
-			end
-			create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (a_executable, l_content,
-																								used_attribute_sets,
-																								is_copy_namespaces,
-																								is_inherit_namespaces,
-																								Void, validation)
 		end
 
 feature {NONE} -- Implementation
@@ -185,7 +189,7 @@ feature {NONE} -- Implementation
 	validation: INTEGER
 			-- Validation action
 
-	use: STRING
+	use: detachable STRING
 			-- Value of use-attribute-sets attribute
 
 	is_copy_namespaces: BOOLEAN

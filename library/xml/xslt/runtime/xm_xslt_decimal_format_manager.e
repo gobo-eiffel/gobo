@@ -5,7 +5,7 @@ note
 		"Objects that manage xsl:decimal-formats"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,8 +30,8 @@ feature -- Access
 	default_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Default decimal format
 		do
-			if default_format /= Void then
-				Result := default_format
+			if attached default_format as l_default_format then
+				Result := l_default_format
 			else
 				Result := all_defaults
 			end
@@ -45,7 +45,9 @@ feature -- Access
 			positive_fingerprint: a_fingerprint > -1
 			has_named_format: has_named_format (a_fingerprint)
 		do
-			Result := format_map.item (a_fingerprint).decimal_format
+			check attached format_map.item (a_fingerprint).decimal_format as l_decimal_format then
+				Result := l_decimal_format
+			end
 		ensure
 			named_format_not_void: Result /= Void
 		end
@@ -81,10 +83,10 @@ feature -- Status report
 		require
 			is_a_default_format: a_default_format /= Void and then a_default_format.fingerprint = -1
 		do
-			if default_format = Void then
+			if not attached default_format as l_default_format then
 				Result := True
 			else
-				Result := a_default_format.is_different_from (default_format)
+				Result := a_default_format.is_different_from (l_default_format)
 			end
 		end
 
@@ -107,7 +109,7 @@ feature -- Element change
 		do
 			default_format := a_default_format
 			using_original_default := False
-			set_named_format (default_format) -- to trigger fixup
+			set_named_format (a_default_format) -- to trigger fixup
 		ensure
 			default_format_set: default_format = a_default_format
 		end
@@ -129,18 +131,22 @@ feature -- Element change
 				check
 					entry_is_list: an_entry.is_list
 					-- From pre-condition
+					attached an_entry.list as l_entity_list
+				then
+					from
+						a_list := l_entity_list
+						a_cursor := a_list.new_cursor
+						a_cursor.start
+					until
+						a_cursor.after
+					loop
+						a_cursor.item.fixup (a_format)
+						a_cursor.forth
+					variant
+						a_list.count + 1 - a_cursor.index
+					end
+					format_map.remove (a_format.fingerprint)
 				end
-				from
-					a_list := an_entry.list; a_cursor := a_list.new_cursor; a_cursor.start
-				until
-					a_cursor.after
-				loop
-					a_cursor.item.fixup (a_format)
-					a_cursor.forth
-				variant
-					a_list.count + 1 - a_cursor.index
-				end
-				format_map.remove (a_format.fingerprint)
 			end
 			create an_entry.make (a_format)
 			format_map.put_new (an_entry, a_format.fingerprint)
@@ -174,13 +180,15 @@ feature -- Element change
 				if l_entry.is_list then
 
 					-- it's another forward reference
-
-					l_entry.list.force_last (a_callback)
+					check attached l_entry.list as l_entity_list then
+						l_entity_list.force_last (a_callback)
+					end
 				else
 
 					-- it's a backwards reference
-
-					a_callback.fixup (l_entry.decimal_format)
+					check attached l_entry.decimal_format as l_decimal_format then
+						a_callback.fixup (l_decimal_format)
+					end
 				end
 			else
 
@@ -201,7 +209,7 @@ feature {NONE} -- Implementation
 	format_map: DS_HASH_TABLE [XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY, INTEGER]
 			-- Map of fingerprints to decimal-formats
 
-	default_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
+	default_format: detachable XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Default format
 
 	all_defaults: XM_XSLT_DECIMAL_FORMAT_ENTRY

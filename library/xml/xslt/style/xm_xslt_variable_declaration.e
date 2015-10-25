@@ -5,7 +5,7 @@ note
 		"xsl:variable and xsl:param elements"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,20 +64,20 @@ feature -- Element change
 	fixup_references
 			-- Fix up references from XPath expressions.
 		local
-			l_constant_value: XM_XPATH_VALUE
+			l_constant_value: detachable XM_XPATH_VALUE
 			l_relationship: INTEGER
 		do
 			l_constant_value := Void
 			if is_xslt_variable then
-				if select_expression /= Void and then select_expression.is_value
-					and then not select_expression.depends_upon_implicit_timezone then
-					l_constant_value := select_expression.as_value
+				if attached select_expression as l_select_expression and then l_select_expression.is_value
+					and then not l_select_expression.depends_upon_implicit_timezone then
+					l_constant_value := l_select_expression.as_value
 
 					-- We can't rely on the constant value, as it hasn't been type-checked yet
 					--  (e.g. numeric promotion might change it).
 					-- So we do a quick check for now:
 
-					l_relationship := type_relationship (select_expression.item_type, required_type.primary_type)
+					l_relationship := type_relationship (l_select_expression.item_type, required_type.primary_type)
 					if l_relationship = Same_item_type or l_relationship = Subsumed_type then
 						-- OK
 					else
@@ -101,8 +101,10 @@ feature -- Element change
 			if not any_compile_errors then
 				if is_global_variable then
 					if not is_redundant_variable then
-						principal_stylesheet.allocate_global_slot (variable_name)
-						internal_slot_number := principal_stylesheet.executable.global_slot_manager.number_of_variables
+						check attached principal_stylesheet as l_principal_stylesheet then
+							l_principal_stylesheet.allocate_global_slot (variable_name)
+							internal_slot_number := l_principal_stylesheet.executable.global_slot_manager.number_of_variables
+						end
 					end
 				else
 					check_within_template

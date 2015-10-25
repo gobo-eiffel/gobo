@@ -74,7 +74,7 @@ feature -- Status_report
 
 feature -- Optimization
 
-	static_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; a_role_locator: XM_XPATH_ROLE_LOCATOR)
+	static_type_check (a_context: detachable XM_XPATH_STATIC_CONTEXT; a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; a_role_locator: XM_XPATH_ROLE_LOCATOR)
 			-- Check an expression against a required type, modifying it if necessary
 		require
 			supplied_expression_not_in_error: a_supplied_expression /= Void and then not a_supplied_expression.is_error
@@ -97,7 +97,9 @@ feature -- Optimization
 			initialize (a_supplied_expression, a_required_type)
 			handle_xpath_one_compatibility (backwards_compatible)
 			if not item_type_ok then
-				handle_xpath_two_rules (a_context, a_role_locator)
+				check a_context /= Void then
+					handle_xpath_two_rules (a_context, a_role_locator)
+				end
 			end
 
 			-- If both the cardinality and item type are statically OK, return now.

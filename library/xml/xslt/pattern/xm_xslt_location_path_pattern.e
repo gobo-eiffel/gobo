@@ -5,7 +5,7 @@ note
 		"XSLT location path patterns (e.g. A/B/C)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,17 +59,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_pattern: XM_XSLT_PATTERN
+	parent_pattern: detachable XM_XSLT_PATTERN
 			-- Parent pattern
 
-	ancestor_pattern: XM_XSLT_PATTERN
+	ancestor_pattern: detachable XM_XSLT_PATTERN
 			-- Ancestor pattern
 
 	node_test: XM_XSLT_NODE_TEST
 			-- A node test that this pattern matches
 		do
-			if refined_node_test /= Void then
-				Result := refined_node_test
+			if attached refined_node_test as l_refined_node_test then
+				Result := l_refined_node_test
 			else
 				Result := original_node_test
 			end
@@ -87,17 +87,17 @@ feature -- Access
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			Result := Precursor
-			if variable_binding /= Void then
-				Result.force_last (variable_binding)
+			if attached variable_binding as l_variable_binding then
+				Result.force_last (l_variable_binding)
 			end
-			if parent_pattern /= Void then
-				Result.append_last (parent_pattern.sub_expressions)
+			if attached parent_pattern as l_parent_pattern then
+				Result.append_last (l_parent_pattern.sub_expressions)
 			end
-			if ancestor_pattern /= Void then
-				Result.append_last (ancestor_pattern.sub_expressions)
+			if attached ancestor_pattern as l_ancestor_pattern then
+				Result.append_last (l_ancestor_pattern.sub_expressions)
 			end
-			if filters /= Void then
-				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+			if attached filters as l_filters then
+				from l_cursor := l_filters.new_cursor; l_cursor.start until l_cursor.after loop
 					Result.append_last (l_cursor.item.sub_expressions)
 					l_cursor.forth
 				end
@@ -107,11 +107,11 @@ feature -- Access
 	original_text: STRING
 			-- Original text
 		do
-			if parent_pattern /= Void then
-				Result := STRING_.concat (parent_pattern.original_text, "/")
+			if attached parent_pattern as l_parent_pattern then
+				Result := STRING_.concat (l_parent_pattern.original_text, "/")
 				Result := STRING_.appended_string (Result, original_node_test.original_text)
-			elseif ancestor_pattern /= Void then
-				Result := STRING_.concat (ancestor_pattern.original_text, "/")
+			elseif attached ancestor_pattern as l_ancestor_pattern then
+				Result := STRING_.concat (l_ancestor_pattern.original_text, "/")
 				Result := STRING_.appended_string (Result, original_node_test.original_text)
 			else
 				Result := original_node_test.original_text
@@ -130,12 +130,12 @@ feature -- Access
 			l_depends: BOOLEAN
 			l_cursor:  DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if parent_pattern /= Void and then parent_pattern.depends_upon_local_variables then
+			if attached parent_pattern as l_parent_pattern and then l_parent_pattern.depends_upon_local_variables then
 				l_depends := True
-			elseif ancestor_pattern /= Void and then ancestor_pattern.depends_upon_local_variables then
+			elseif attached ancestor_pattern as l_ancestor_pattern and then l_ancestor_pattern.depends_upon_local_variables then
 				l_depends := True
-			elseif filters /= Void then
-				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+			elseif attached filters as l_filters then
+				from l_cursor := l_filters.new_cursor; l_cursor.start until l_cursor.after loop
 					if l_cursor.item.depends_upon_local_variables then
 						l_depends := True
 						l_cursor.go_after
@@ -179,27 +179,29 @@ feature -- Status setting
 			a_offer_not_void: a_offer /= Void
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if filters /= Void then
+			if attached filters as l_filters then
 				from
 					create l_replacement.make (Void)
-					l_cursor := filters.new_cursor
+					l_cursor := l_filters.new_cursor
 					l_cursor.start
 				until l_cursor.after loop
 					l_cursor.item.promote (l_replacement, a_offer)
-					if l_cursor.item /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						if l_cursor.item /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
 				end
 			end
-			if parent_pattern /= Void and then parent_pattern.is_location_pattern then
-				parent_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
+			if attached parent_pattern as l_parent_pattern and then l_parent_pattern.is_location_pattern then
+				l_parent_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
 			end
-			if ancestor_pattern /= Void and then ancestor_pattern.is_location_pattern then
-				ancestor_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
+			if attached ancestor_pattern as l_ancestor_pattern and then l_ancestor_pattern.is_location_pattern then
+				l_ancestor_pattern.as_location_pattern.resolve_current (a_let_expression, a_offer)
 			end
 			variable_binding := a_let_expression
 		end
@@ -214,7 +216,7 @@ feature -- Optimization
 			l_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			l_filter_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -228,15 +230,15 @@ feature -- Optimization
 
 				-- Simplify each component of the pattern
 
-				if parent_pattern /= Void then
-					l_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
-				elseif ancestor_pattern /= Void then
-					l_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
+				if attached parent_pattern as l_parent_pattern then
+					l_result_pattern.set_parent_pattern (l_parent_pattern.simplified_pattern)
+				elseif attached ancestor_pattern as l_ancestor_pattern then
+					l_result_pattern.set_ancestor_pattern (l_ancestor_pattern.simplified_pattern)
 				end
 
-				if filters /= Void then
+				if attached l_result_pattern.filters as l_filters then
 					from
-						l_cursor := l_result_pattern.filters.new_cursor
+						l_cursor := l_filters.new_cursor
 						l_cursor.start
 						create l_replacement.make (Void)
 					until
@@ -245,13 +247,15 @@ feature -- Optimization
 						l_filter_expression := l_cursor.item
 
 						l_filter_expression.simplify (l_replacement)
-						if l_filter_expression /= l_replacement.item then
-							l_cursor.replace (l_replacement.item)
+						check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+							if l_filter_expression /= l_replacement_item then
+								l_cursor.replace (l_replacement_item)
+							end
 						end
 						l_replacement.put (Void)
 						l_cursor.forth
 					variant
-						l_result_pattern.filters.count + 1 - l_cursor.index
+						l_filters.count + 1 - l_cursor.index
 					end
 				end
 				Result := l_result_pattern
@@ -261,97 +265,110 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern;
 		local
-			l_context: XM_XSLT_EXPRESSION_CONTEXT
 			l_filter_expression, l_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_step: XM_XPATH_AXIS_EXPRESSION
 			l_filters: like filters
 			l_routines: XM_XSLT_PATTERN_ROUTINES
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_context ?= a_context
 			check
-				l_context_not_void: l_context /= Void
+				l_context_not_void: attached {XM_XSLT_EXPRESSION_CONTEXT} a_context as l_context
 				-- this is XSLT
-			end
+			then
 
-			-- Analyze each component of the pattern
+				-- Analyze each component of the pattern
 
-			if parent_pattern /= Void then
-				parent_pattern.type_check (a_context, a_context_item_type)
-				if parent_pattern.is_error then
-					set_error_value (parent_pattern.error_value)
-				else
-					if original_node_test.primitive_type = Attribute_node then
-						create l_step.make (Attribute_axis, original_node_test)
+				if attached parent_pattern as l_parent_pattern then
+					l_parent_pattern.type_check (a_context, a_context_item_type)
+					if attached l_parent_pattern.error_value as l_error_value then
+						check is_error: l_parent_pattern.is_error end
+						set_error_value (l_error_value)
 					else
-						create l_step.make (Child_axis, original_node_test)
-					end
-					l_step.set_source_location (l_context.style_element.containing_stylesheet.module_number (a_context.system_id), line_number)
-					create l_replacement.make (Void)
-					l_step.check_static_type (l_replacement, a_context, parent_pattern.node_test)
-					l_expression := l_replacement.item
-					if l_expression.is_error then
-						set_error_value (l_expression.error_value)
-					end
-					if not is_error and then l_expression.item_type.is_node_test then
-						create l_routines
-						refined_node_test := l_routines.xpath_to_xslt_node_test (l_expression.item_type.as_node_test, a_context)
-					end
-				end
-			elseif ancestor_pattern /= Void then
-				ancestor_pattern.type_check (a_context, a_context_item_type)
-				if ancestor_pattern.is_error then
-					set_error_value (ancestor_pattern.error_value)
-				end
-			end
-
-			if not is_error and then filters /= Void then
-				create l_filters.make (filters.count)
-				l_filters.set_equality_tester (expression_tester)
-				from
-					create l_replacement.make (Void)
-					l_cursor := filters.new_cursor
-					l_cursor.finish
-				until
-					is_error or else l_cursor.before
-				loop
-					l_cursor.item.check_static_type (l_replacement, a_context, node_test)
-					l_filter_expression := l_replacement.item
-					if l_filter_expression.is_error then
-						set_error_value (l_filter_expression.error_value)
-					else
-						l_replacement.put (Void)
-						l_filter_expression.optimize (l_replacement, a_context, node_test)
-						l_filter_expression := l_replacement.item
-						l_replacement.put (Void)
-					end
-					if not is_error then
-
-						-- If the last filter is constant true, remove it.
-
-						if l_filter_expression.is_boolean_value then
-							if l_filter_expression.as_boolean_value.value then
-								-- do nothing
-							end
+						if original_node_test.primitive_type = Attribute_node then
+							create l_step.make (Attribute_axis, original_node_test)
 						else
-							l_filters.put_first (l_filter_expression)
-							l_context.style_element.allocate_slots (l_filter_expression, l_context.style_element.containing_stylesheet.slot_manager)
+							create l_step.make (Child_axis, original_node_test)
+						end
+						check attached l_context.style_element.containing_stylesheet as l_containing_stylesheet then
+							l_step.set_source_location (l_containing_stylesheet.module_number (a_context.system_id), line_number)
+						end
+						create l_replacement.make (Void)
+						l_step.check_static_type (l_replacement, a_context, l_parent_pattern.node_test)
+						check potcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+							l_expression := l_replacement_item
+						end
+						if attached l_expression.error_value as l_error_value then
+							check is_erorr: l_expression.is_error end
+							set_error_value (l_error_value)
+						end
+						if not is_error and then l_expression.item_type.is_node_test then
+							create l_routines
+							refined_node_test := l_routines.xpath_to_xslt_node_test (l_expression.item_type.as_node_test, a_context)
 						end
 					end
-					l_cursor.back
-				variant
-					l_cursor.index
+				elseif attached ancestor_pattern as l_ancestor_pattern then
+					l_ancestor_pattern.type_check (a_context, a_context_item_type)
+					if attached l_ancestor_pattern.error_value as l_error_value then
+						check is_error: l_ancestor_pattern.is_error end
+						set_error_value (l_error_value)
+					end
 				end
-				filters := l_filters
+
+				if not is_error and then attached filters as l_filters_2 then
+					create l_filters.make (l_filters_2.count)
+					l_filters.set_equality_tester (expression_tester)
+					from
+						create l_replacement.make (Void)
+						l_cursor := l_filters_2.new_cursor
+						l_cursor.finish
+					until
+						is_error or else l_cursor.before
+					loop
+						l_cursor.item.check_static_type (l_replacement, a_context, node_test)
+						check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+							l_filter_expression := l_replacement_item
+						end
+						if attached l_filter_expression.error_value as l_error_value then
+							check is_error: l_filter_expression.is_error end
+							set_error_value (l_error_value)
+						else
+							l_replacement.put (Void)
+							l_filter_expression.optimize (l_replacement, a_context, node_test)
+							check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+								l_filter_expression := l_replacement_item
+							end
+							l_replacement.put (Void)
+						end
+						if not is_error then
+
+							-- If the last filter is constant true, remove it.
+
+							if l_filter_expression.is_boolean_value then
+								if l_filter_expression.as_boolean_value.value then
+									-- do nothing
+								end
+							else
+								l_filters.put_first (l_filter_expression)
+								check attached l_context.style_element.containing_stylesheet as l_containing_stylesheet then
+									l_context.style_element.allocate_slots (l_filter_expression, l_containing_stylesheet.slot_manager)
+								end
+							end
+						end
+						l_cursor.back
+					variant
+						l_cursor.index
+					end
+					filters := l_filters
+				end
 			end
 
 			if not is_error then
 
 				-- See if it's an element pattern with a single positional predicate of [1]
 
-				if original_node_test.node_kind = Element_node and (filters /= Void and then filters.count = 1) then
-					l_filter_expression := filters.item (1)
+				if original_node_test.node_kind = Element_node and (attached filters as l_filters_2 and then l_filters_2.count = 1) then
+					l_filter_expression := l_filters_2.item (1)
 					if (l_filter_expression.is_machine_integer_value and then l_filter_expression.as_machine_integer_value.value = 1
 						or else (l_filter_expression.is_position_range and then
 									(l_filter_expression.as_position_range.minimum_position = 1 and
@@ -365,8 +382,8 @@ feature -- Optimization
 				-- See if it's an element pattern with a single positional predicate
 				-- of [position()=last()]
 
-				if not is_first_element_pattern and original_node_test.node_kind = Element_node and (filters /= Void and then filters.count = 1) then
-					if filters.item (1).is_last_expression  and then filters.item (1).as_last_expression.condition then
+				if not is_first_element_pattern and original_node_test.node_kind = Element_node and (attached filters as l_filters_2 and then l_filters_2.count = 1) then
+					if l_filters_2.item (1).is_last_expression  and then l_filters_2.item (1).as_last_expression.condition then
 						set_last_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)
@@ -377,16 +394,20 @@ feature -- Optimization
 					l_expression := make_equivalent_expression
 					create l_replacement.make (Void)
 					l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-					set_equivalent_expression (l_replacement.item)
-					if equivalent_expression.is_error then
-						set_error_value (equivalent_expression.error_value)
-					else
-						l_context ?= a_context
-						check
-							l_context_not_void: l_context /= Void
+					check postcondition_of_check_static_type: attached l_replacement.item as l_equivalent_expression then
+						set_equivalent_expression (l_equivalent_expression)
+						if attached l_equivalent_expression.error_value as l_error_value then
+							check is_error: l_equivalent_expression.is_error end
+							set_error_value (l_error_value)
+						else
+							check
+								l_context_not_void: attached {XM_XSLT_EXPRESSION_CONTEXT} a_context as l_context
+								attached l_context.style_element.containing_stylesheet as l_containing_stylesheet
+							then
+								l_context.style_element.allocate_slots (l_equivalent_expression, l_containing_stylesheet.slot_manager)
+								set_special_filter (True)
+							end
 						end
-						l_context.style_element.allocate_slots (equivalent_expression, l_context.style_element.containing_stylesheet.slot_manager)
-						set_special_filter (True)
 					end
 				end
 			end
@@ -396,23 +417,25 @@ feature -- Optimization
 			-- Promote sub-expressions of `Current'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if parent_pattern /= Void then
-				parent_pattern.promote (a_offer)
+			if attached parent_pattern as l_parent_pattern then
+				l_parent_pattern.promote (a_offer)
 			end
-			if ancestor_pattern /= Void then
-				ancestor_pattern.promote (a_offer)
+			if attached ancestor_pattern as l_ancestor_pattern then
+				l_ancestor_pattern.promote (a_offer)
 			end
-			if filters /= Void then
+			if attached filters as l_filters then
 				from
-					l_cursor := filters.new_cursor
+					l_cursor := l_filters.new_cursor
 					l_cursor.start
 					create l_replacement.make (Void)
 				until l_cursor.after loop
 					l_cursor.item.promote (l_replacement, a_offer)
-					if l_cursor.item /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						if l_cursor.item /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
@@ -425,11 +448,11 @@ feature -- Matching
 	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Does `Current' match `a_node'?
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
-			if variable_binding /= Void then
+			if attached variable_binding as l_variable_binding then
 				create l_item.make (Void)
-				variable_binding.evaluate_item (l_item, a_context)
+				l_variable_binding.evaluate_item (l_item, a_context)
 			end
 			if is_error then
 				internal_last_match_result := False
@@ -445,15 +468,19 @@ feature -- Element change
 		require
 			under_construction: not is_constructed
 			valid_filter: a_filter_expression /= Void
+		local
+			l_filters: like filters
 		do
-			if filters = Void then
-				create filters.make (3)
-				filters.set_equality_tester (expression_tester)
+			l_filters := filters
+			if l_filters = Void then
+				create l_filters.make (3)
+				l_filters.set_equality_tester (expression_tester)
+				filters := l_filters
 			end
-			if not filters.extendible (1) then
-				filters.resize (2 * filters.count)
+			if not l_filters.extendible (1) then
+				l_filters.resize (2 * l_filters.count)
 			end
-			filters.put_last (a_filter_expression)
+			l_filters.put_last (a_filter_expression)
 		ensure
 			filters_present: filters /= Void
 		end
@@ -482,7 +509,7 @@ feature -- Element change
 			set: is_special_filter = b
 		end
 
-	set_filters (f: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
+	set_filters (f: detachable DS_ARRAYED_LIST [XM_XPATH_EXPRESSION])
 			-- Set `filters'.
 		do
 			filters := f
@@ -520,7 +547,7 @@ feature -- Conversion
 
 feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 
-	filters: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+	filters: detachable DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Filters applied to `node_test`
 
 	set_first_element_pattern (f: BOOLEAN)
@@ -553,9 +580,9 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 				axis := Child_axis
 			end
 			create {XM_XPATH_AXIS_EXPRESSION} step.make (axis, original_node_test)
-			if filters /= Void then
+			if attached filters as l_filters then
 				from
-					l_cursor := filters.new_cursor
+					l_cursor := l_filters.new_cursor
 					l_cursor.start
 				until
 					l_cursor.after
@@ -563,7 +590,7 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 					create {XM_XPATH_FILTER_EXPRESSION} step.make (step, l_cursor.item)
 					l_cursor.forth
 				variant
-					filters.count + 1 - l_cursor.index
+					l_filters.count + 1 - l_cursor.index
 				end
 			end
 			create parent_node.make
@@ -577,9 +604,9 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			a_filter_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if filters /= Void then
+			if attached filters as l_filters then
 				from
-					l_cursor := filters.new_cursor
+					l_cursor := l_filters.new_cursor
 					l_cursor.start
 				until
 					l_cursor.after
@@ -596,13 +623,13 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 					end
 					l_cursor.forth
 				variant
-					filters.count + 1 - l_cursor.index
+					l_filters.count + 1 - l_cursor.index
 				end
 			end
 		end
 
 
-	equivalent_expression: XM_XPATH_EXPRESSION
+	equivalent_expression: detachable XM_XPATH_EXPRESSION
 			-- A nodeset expression equivalent to a positional filter
 
 	is_first_element_pattern: BOOLEAN
@@ -619,47 +646,49 @@ feature {XM_XSLT_PATTERN} -- Implementation
 	original_node_test: like node_test
 			-- Originally supplied node test
 
-	refined_node_test: like node_test
+	refined_node_test: detachable like node_test
 			-- `original_node_test' refined by type checking
 
-	variable_binding: XM_XPATH_EXPRESSION
+	variable_binding: detachable XM_XPATH_EXPRESSION
 			-- Bound variable for replacing calls to fn:current()
 
 	internal_match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Does `Current' match `a_node'?
 		local
-			l_node: XM_XPATH_NODE
+			l_node: detachable XM_XPATH_NODE
 			l_is_candidate_match: BOOLEAN
 		do
 			internal_last_match_result := False
 			if node_test.matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) then
 				l_is_candidate_match := True
-				if parent_pattern /= Void then
+				if attached parent_pattern as l_parent_pattern then
 					l_node := a_node.parent
 					if l_node /= Void then
-						parent_pattern.internal_match (l_node, a_context)
-						if parent_pattern.is_error then
-							set_error_value (parent_pattern.error_value)
+						l_parent_pattern.internal_match (l_node, a_context)
+						if attached l_parent_pattern.error_value as l_error_value then
+							check is_error: l_parent_pattern.is_error end
+							set_error_value (l_error_value)
 							l_is_candidate_match := False
 						else
-							l_is_candidate_match := parent_pattern.last_match_result
+							l_is_candidate_match := l_parent_pattern.last_match_result
 						end
 					else
 						l_is_candidate_match := False
 					end
-				elseif ancestor_pattern /= Void then
+				elseif attached ancestor_pattern as l_ancestor_pattern then
 					l_is_candidate_match := False
 					from
 						l_node := a_node.parent
 					until
 						is_error or l_is_candidate_match or l_node = Void
 					loop
-						ancestor_pattern.internal_match (l_node, a_context)
-						if ancestor_pattern.is_error then
-							set_error_value (ancestor_pattern.error_value)
+						l_ancestor_pattern.internal_match (l_node, a_context)
+						if attached l_ancestor_pattern.error_value as l_error_value then
+							check is_error: l_ancestor_pattern.is_error end
+							set_error_value (l_error_value)
 							l_is_candidate_match := False
 						else
-							l_is_candidate_match := ancestor_pattern.last_match_result
+							l_is_candidate_match := l_ancestor_pattern.last_match_result
 						end
 						l_node := l_node.parent
 					end
@@ -702,7 +731,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not l_is_result_determined then
-				if filters = Void then
+				if not attached filters as l_filters then
 					internal_last_match_result := True
 				else
 					l_new_context := a_context.new_minor_context
@@ -713,21 +742,24 @@ feature {NONE} -- Implementation
 					-- as it's a non-positional filter, we can handle each node separately
 
 					from
-						l_cursor := filters.new_cursor
+						l_cursor := l_filters.new_cursor
 						l_cursor.start
 						internal_last_match_result := True
 					until
 						internal_last_match_result = False or l_cursor.after
 					loop
 						l_cursor.item.calculate_effective_boolean_value (l_new_context)
-						if l_cursor.item.is_error then
-							set_error_value (l_cursor.item.error_value)
+						if attached l_cursor.item.error_value as l_error_value then
+							check is_error: l_cursor.item.is_error end
+							set_error_value (l_error_value)
 						else
-							internal_last_match_result := l_cursor.item.last_boolean_value.value
+							check postcondition_of_calculate_effective_boolean_value: attached l_cursor.item.last_boolean_value as l_last_boolean_value then
+								internal_last_match_result := l_last_boolean_value.value
+							end
 						end
 						l_cursor.forth
 					variant
-						filters.count + 1 - l_cursor.index
+						l_filters.count + 1 - l_cursor.index
 					end
 				end
 			end
@@ -753,10 +785,15 @@ feature {NONE} -- Implementation
 				internal_last_match_result := False
 			else
 				l_context.set_current_iterator (l_iterator)
-				equivalent_expression.create_node_iterator (l_context)
-				l_node_iterator := equivalent_expression.last_node_iterator
-				if l_node_iterator.is_error then
-					set_error_value (l_node_iterator.error_value)
+				check precondition_equivalent_expression_not_void: attached equivalent_expression as l_equivalent_expression then
+					l_equivalent_expression.create_node_iterator (l_context)
+					check postcondition_of_create_node_iterator: attached l_equivalent_expression.last_node_iterator as l_last_node_iterator then
+						l_node_iterator := l_last_node_iterator
+					end
+				end
+				if attached l_node_iterator.error_value as l_error_value then
+					check is_error: l_node_iterator.is_error end
+					set_error_value (l_error_value)
 				else
 					from
 						l_node_iterator.start

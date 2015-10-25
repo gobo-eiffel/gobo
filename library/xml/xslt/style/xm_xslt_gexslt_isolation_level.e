@@ -5,7 +5,7 @@ note
 		"Objects that implement gexslt:isolation-level"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature -- Access
 
-	isolation_level_attribute_value: STRING
+	isolation_level_attribute_value: detachable STRING
 		-- Value of isolation-level attribute
 
 feature -- Status report
@@ -56,10 +56,11 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
+			l_isolation_level_attribute_value: like isolation_level_attribute_value
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -67,14 +68,16 @@ feature -- Element change
 					a_name_code := a_cursor.item
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Isolation_level_attribute) then
-						isolation_level_attribute_value := attribute_value_by_index (a_cursor.index)
-						STRING_.left_adjust (isolation_level_attribute_value);STRING_.right_adjust (isolation_level_attribute_value);
+						l_isolation_level_attribute_value := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (l_isolation_level_attribute_value)
+						STRING_.right_adjust (l_isolation_level_attribute_value)
+						isolation_level_attribute_value := l_isolation_level_attribute_value
 					else
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if isolation_level_attribute_value = Void then report_absence ("isolation-level") end
@@ -85,7 +88,6 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element: XM_XSLT_STYLE_ELEMENT
 			an_error: XM_XPATH_ERROR_VALUE
 			finished: BOOLEAN
 		do
@@ -93,7 +95,6 @@ feature -- Element change
 			from
 				a_child_iterator := new_axis_iterator (Child_axis); a_child_iterator.start
 			until finished or else a_child_iterator.after loop
-				a_style_element ?= a_child_iterator.item
 				if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
 					-- do nothing, as xml:space="preserve" makes this legitimate
 				else
@@ -102,18 +103,20 @@ feature -- Element change
 				end
 				a_child_iterator.forth
 			end
-			if STRING_.same_string (isolation_level_attribute_value, "read-uncommitted") then
-				parsed_isolation_level := Read_uncommitted
-			elseif STRING_.same_string (isolation_level_attribute_value, "read-committed") then
-				parsed_isolation_level := Read_committed
-			elseif STRING_.same_string (isolation_level_attribute_value, "repeatable-read") then
-				parsed_isolation_level := Repeatable_read
-			elseif STRING_.same_string (isolation_level_attribute_value, "serializable") then
-				parsed_isolation_level := Serializable
-			else
-				create an_error.make_from_string ("isolation-level attribute of gexslt:document must be one of 'read-uncommitted', 'read-committed', 'repeatable-read' or 'serializable'",
-															 Xpath_errors_uri, "XTSE0020", Static_error)
-				report_compile_error (an_error)
+			check attached isolation_level_attribute_value as l_isolation_level_attribute_value then
+				if STRING_.same_string (l_isolation_level_attribute_value, "read-uncommitted") then
+					parsed_isolation_level := Read_uncommitted
+				elseif STRING_.same_string (l_isolation_level_attribute_value, "read-committed") then
+					parsed_isolation_level := Read_committed
+				elseif STRING_.same_string (l_isolation_level_attribute_value, "repeatable-read") then
+					parsed_isolation_level := Repeatable_read
+				elseif STRING_.same_string (l_isolation_level_attribute_value, "serializable") then
+					parsed_isolation_level := Serializable
+				else
+					create an_error.make_from_string ("isolation-level attribute of gexslt:document must be one of 'read-uncommitted', 'read-committed', 'repeatable-read' or 'serializable'",
+																 Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (an_error)
+				end
 			end
 			validated := True
 		end

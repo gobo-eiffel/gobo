@@ -3,8 +3,8 @@
 <library name="xslt" prefix="xm_">
 	<description>
 		description: "Xace file for the Gobo Eiffel XML XSLT Library"
-		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		library: "Gobo Eiffel XML XSLT Library"
+		copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -25,6 +25,14 @@
 		<cluster name="xslt_serializer" location="serializer" relative="true"/>
 	</cluster>
 
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library_core.xace"/>
 	<mount location="${GOBO}/library/xml/xpath/library.xace"/>
 

@@ -5,7 +5,7 @@ note
 		"Objects that represent an XML document (in some form or other)"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature -- Access
 			system_id_not_void: Result /= Void
 		end
 
-	fragment_identifier: STRING
+	fragment_identifier: detachable STRING
 			-- Possible decoded fragment identifier
 		deferred
 		ensure
@@ -38,16 +38,16 @@ feature -- Access
 	uri_reference: STRING
 			-- Full URI reference
 		do
-			if fragment_identifier = Void then
+			if not attached fragment_identifier as l_fragment_identifier then
 				Result := system_id
 			else
-				Result := system_id + "#" + fragment_identifier
+				Result := system_id + "#" + l_fragment_identifier
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	media_type: UT_MEDIA_TYPE
+	media_type: detachable UT_MEDIA_TYPE
 			-- Media type of document entity
 		deferred
 		end

@@ -39,12 +39,13 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			validation: INTEGER
-			an_expanded_name, a_validation_attribute, a_type_attribute: STRING
+			an_expanded_name: STRING
+			a_validation_attribute, a_type_attribute: detachable STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -58,7 +59,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_validation_attribute /= Void then
@@ -93,12 +94,18 @@ feature -- Element change
 
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
+		local
+			l_last_generated_expression: like last_generated_expression
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			if last_generated_expression = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make
+			l_last_generated_expression := last_generated_expression
+			if l_last_generated_expression = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} l_last_generated_expression.make
+				last_generated_expression := l_last_generated_expression
 			end
-			create {XM_XSLT_COMPILED_DOCUMENT} last_generated_expression.make (an_executable, False, Void, base_uri, last_generated_expression)
+			check attached base_uri as l_base_uri then
+				create {XM_XSLT_COMPILED_DOCUMENT} last_generated_expression.make (an_executable, False, Void, l_base_uri, l_last_generated_expression)
+			end
 		end
 
 end

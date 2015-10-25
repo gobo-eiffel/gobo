@@ -5,7 +5,7 @@ note
 		"Objects that set a Unicode normalizer or issue an error."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,8 @@ feature {NONE} -- Initialization
 	set_normalizer
 			-- Set `normalizer' as specified in `a_properties' or issue error.
 		local
-			l_request, l_message: STRING
+			l_request: detachable STRING
+			l_message: STRING
 		do
 			l_request := output_properties.normalization_form
 			if l_request /= Void then
@@ -72,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	normalizer: XM_XSLT_UNICODE_NORMALIZER
+	normalizer: detachable XM_XSLT_UNICODE_NORMALIZER
 			-- Unicode string normalization
 
 feature {NONE} -- Implementation

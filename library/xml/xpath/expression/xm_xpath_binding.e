@@ -14,7 +14,7 @@ deferred class XM_XPATH_BINDING
 
 feature -- Access
 
-	required_type: XM_XPATH_SEQUENCE_TYPE
+	required_type: detachable XM_XPATH_SEQUENCE_TYPE
 			-- Static type of variable
 		deferred
 		end

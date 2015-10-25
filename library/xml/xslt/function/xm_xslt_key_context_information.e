@@ -5,7 +5,7 @@ note
 		"Objects that supply context information for an XSLT key"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 	make
 
-feature {NONE} -- Initialization is
+feature {NONE} -- Initialization
 
 		make (a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT; a_fingerprint: INTEGER)
 			-- Establish invariant.
@@ -51,7 +51,7 @@ feature -- Access
 	key_fingerprint: INTEGER
 			-- Fingerprint of key's name
 
-	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_node_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from `map_nodes'
 
 feature -- Evaluation
@@ -62,21 +62,23 @@ feature -- Evaluation
 			a_key_manager: XM_XSLT_KEY_MANAGER
 			a_key_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_key_manager := context.transformer.key_manager
-			if not an_item.is_atomic_value then
-				check
-					item_is_node: an_item.is_node
-					-- as it is not atomic
+			check attached context.transformer as l_transformer then
+				a_key_manager := l_transformer.key_manager
+				if not an_item.is_atomic_value then
+					check
+						item_is_node: an_item.is_node
+						-- as it is not atomic
+					end
+					create {XM_XPATH_STRING_VALUE} a_key_value.make (an_item.as_node.string_value)
+				else
+					a_key_value := an_item.as_atomic_value
 				end
-				create {XM_XPATH_STRING_VALUE} a_key_value.make (an_item.as_node.string_value)
-			else
-				a_key_value := an_item.as_atomic_value
-			end
-			a_key_manager.generate_keyed_sequence  (key_fingerprint, document, a_key_value, context)
-			if context.transformer.is_error then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make -- error has already been reported
-			else
-				last_node_iterator := a_key_manager.last_key_sequence
+				a_key_manager.generate_keyed_sequence  (key_fingerprint, document, a_key_value, context)
+				if l_transformer.is_error then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make -- error has already been reported
+				else
+					last_node_iterator := a_key_manager.last_key_sequence
+				end
 			end
 		end
 

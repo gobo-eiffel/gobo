@@ -5,7 +5,7 @@ note
 		"Objects that strip white space from selected elements."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,14 +37,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: XM_XSLT_MODE; an_underlying_receiver: XM_XPATH_RECEIVER)
+	make (a_transformer: XM_XSLT_TRANSFORMER; a_stripper_mode: detachable XM_XSLT_MODE; an_underlying_receiver: XM_XPATH_RECEIVER)
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
 			receiver_not_void: an_underlying_receiver /= Void
 		do
 			transformer := a_transformer
-			context := transformer.new_xpath_context
+			context := a_transformer.new_xpath_context
 			stripper_mode := a_stripper_mode
 			strip_all := False
 			preserve_all := stripper_mode = Void
@@ -84,28 +84,34 @@ feature -- Access
 		require
 			valid_name_code: a_name_code > 0
 		local
-			l_rule: XM_XSLT_RULE
+			l_rule: detachable XM_XSLT_RULE
 		do
 			if preserve_all then
 				found_space_preserving_mode := Always_preserve
 			elseif strip_all then
 				found_space_preserving_mode := Strip_default
 			else
-				orphan.set_name_code (a_name_code)
-				stripper_mode.match_rule (orphan, context)
-				l_rule := stripper_mode.last_matched_rule
-				if context.transformer.is_error then
-					found_space_preserving_mode := Strip_default
-				elseif l_rule = Void then
-					found_space_preserving_mode := Always_preserve
-				else
-					check
-						boolean_rule: l_rule.handler.is_boolean
+				check attached context as l_context then
+					orphan.set_name_code (a_name_code)
+					check attached stripper_mode as l_stripper_mode then
+						l_stripper_mode.match_rule (orphan, l_context)
+						l_rule := l_stripper_mode.last_matched_rule
 					end
-					if l_rule.handler.as_boolean then
-						found_space_preserving_mode := Always_preserve
-					else
-						found_space_preserving_mode := Strip_default
+					check attached l_context.transformer as l_context_transformer then
+						if l_context_transformer.is_error then
+							found_space_preserving_mode := Strip_default
+						elseif l_rule = Void then
+							found_space_preserving_mode := Always_preserve
+						else
+							check
+								boolean_rule: l_rule.handler.is_boolean
+							end
+							if l_rule.handler.as_boolean then
+								found_space_preserving_mode := Always_preserve
+							else
+								found_space_preserving_mode := Strip_default
+							end
+						end
 					end
 				end
 			end
@@ -134,8 +140,10 @@ feature -- Events
 	open
 			-- New document
 		do
-			strip_stack.put (Always_preserve)
-			Precursor
+			check attached strip_stack as l_strip_stack then
+				l_strip_stack.put (Always_preserve)
+				Precursor
+			end
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
@@ -143,23 +151,25 @@ feature -- Events
 		local
 			a_preservation_status, a_parent_preservation_status: INTEGER
 		do
-			Precursor (a_name_code, a_type_code, properties)
-			a_parent_preservation_status := strip_stack.item
-			a_preservation_status := INTEGER_.bit_and (a_parent_preservation_status, Preserve_parent)
+			check attached strip_stack as l_strip_stack then
+				Precursor (a_name_code, a_type_code, properties)
+				a_parent_preservation_status := l_strip_stack.item
+				a_preservation_status := INTEGER_.bit_and (a_parent_preservation_status, Preserve_parent)
 
-			find_space_preserving_mode (a_name_code)
-			if found_space_preserving_mode = Always_preserve then
-				a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_preserve)
-			elseif found_space_preserving_mode = Always_strip then
-				a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_strip)
+				find_space_preserving_mode (a_name_code)
+				if found_space_preserving_mode = Always_preserve then
+					a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_preserve)
+				elseif found_space_preserving_mode = Always_strip then
+					a_preservation_status := INTEGER_.bit_or (a_preservation_status, Always_strip)
+				end
+				if a_preservation_status = Strip_default and a_type_code > 0 and a_type_code /= Untyped_type_code then
+					-- TODO: if schema_aware
+					-- elements with simple content may not be stripped
+					--if ... then  a_preservation_status := INTEGER_.bit_or (a_preservation_status, Must_not_strip)
+				end
+				l_strip_stack.force (a_preservation_status)
+				mark_as_written
 			end
-			if a_preservation_status = Strip_default and a_type_code > 0 and a_type_code /= Untyped_type_code then
-				-- TODO: if schema_aware
-				-- elements with simple content may not be stripped
-				--if ... then  a_preservation_status := INTEGER_.bit_or (a_preservation_status, Must_not_strip)
-			end
-			strip_stack.force (a_preservation_status)
-			mark_as_written
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
@@ -172,13 +182,17 @@ feature -- Events
 
 			if fingerprint_from_name_code (a_name_code) = Xml_space_type_code then
 				if STRING_.same_string (a_value, "preserve") then
-					a_preservation_status := INTEGER_.bit_or (strip_stack.item, Preserve_parent)
-					strip_stack.replace (a_preservation_status)
+					check attached strip_stack as l_strip_stack then
+						a_preservation_status := INTEGER_.bit_or (l_strip_stack.item, Preserve_parent)
+						l_strip_stack.replace (a_preservation_status)
+					end
 				elseif STRING_.same_string (a_value, "default") then
-					a_preservation_status := strip_stack.item
-					if INTEGER_.bit_and (a_preservation_status, Preserve_parent) /= 0 then
-						a_preservation_status := a_preservation_status - Preserve_parent
-						strip_stack.replace (a_preservation_status)
+					check attached strip_stack as l_strip_stack then
+						a_preservation_status := l_strip_stack.item
+						if INTEGER_.bit_and (a_preservation_status, Preserve_parent) /= 0 then
+							a_preservation_status := a_preservation_status - Preserve_parent
+							l_strip_stack.replace (a_preservation_status)
+						end
 					end
 				end
 			end
@@ -189,7 +203,9 @@ feature -- Events
 			-- Notify the end of an element.
 		do
 			Precursor
-			strip_stack.remove
+			check attached strip_stack as l_strip_stack then
+				l_strip_stack.remove
+			end
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER)
@@ -201,9 +217,13 @@ feature -- Events
 			if chars.count > 0 then
 				if not is_all_whitespace (chars) then
 					Precursor (chars, properties)
-				elseif INTEGER_.bit_and (strip_stack.item, INTEGER_.bit_or (INTEGER_.bit_or (Preserve_parent, Always_preserve), Must_not_strip)) /= 0 and then
-					INTEGER_.bit_and (strip_stack.item, Always_strip) = 0 then
-					Precursor (chars, properties)
+				else
+					check attached strip_stack as l_strip_stack then
+						if INTEGER_.bit_and (l_strip_stack.item, INTEGER_.bit_or (INTEGER_.bit_or (Preserve_parent, Always_preserve), Must_not_strip)) /= 0 and then
+							INTEGER_.bit_and (l_strip_stack.item, Always_strip) = 0 then
+							Precursor (chars, properties)
+						end
+					end
 				end
 			end
 			mark_as_written
@@ -214,8 +234,10 @@ feature -- Duplication
 	another: XM_XSLT_STRIPPER
 			-- A clean copu of `Current'
 		do
-			create Result.make (transformer, stripper_mode, base_receiver)
-			Result.clone_attributes (strip_all, preserve_all)
+			check attached transformer as l_transformer then
+				create Result.make (l_transformer, stripper_mode, base_receiver)
+				Result.clone_attributes (strip_all, preserve_all)
+			end
 		ensure
 			copy_not_void: Result /= Void
 		end
@@ -232,7 +254,7 @@ feature {XM_XSLT_STRIPPER} -- Local
 			preserve_all_set: preserve_all = a_preserve_all
 		end
 
-	transformer: XM_XSLT_TRANSFORMER
+	transformer: detachable XM_XSLT_TRANSFORMER
 			-- Transformer - for pattern-evaluation and rule-conflict-reporting
 
 	is_local_invariant_met: BOOLEAN
@@ -247,16 +269,16 @@ feature {NONE} -- Implementation
 	preserve_all: BOOLEAN
 			-- Do all elements have whitespace preserved?
 
-	strip_stack: DS_ARRAYED_STACK [INTEGER]
+	strip_stack: detachable DS_ARRAYED_STACK [INTEGER]
 			-- Stack of strip-status flags
 
-	stripper_mode: XM_XSLT_MODE
+	stripper_mode: detachable XM_XSLT_MODE
 			-- Collection of rules governing stripping
 
 	orphan: XM_XPATH_ORPHAN
 			-- Dummy element for `{XM_XSLT_MODE}.rule'
 
-	context: XM_XSLT_EVALUATION_CONTEXT
+	context: detachable XM_XSLT_EVALUATION_CONTEXT
 			-- Dynamic context
 
 invariant

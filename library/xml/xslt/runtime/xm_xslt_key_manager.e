@@ -5,7 +5,7 @@ note
 		"XSLT key managers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_key_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+	last_key_sequence: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		-- Result from `generate_keyed_sequence'
 
 	generate_keyed_sequence (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
@@ -78,7 +78,7 @@ feature -- Access
 			context_not_void: a_context /= Void
 		local
 			l_item_type: INTEGER
-			l_value: XM_XPATH_ATOMIC_VALUE
+			l_value: detachable XM_XPATH_ATOMIC_VALUE
 			l_index: XM_XSLT_KEY_INDEX
 			l_key_set: XM_XSLT_KEY_SET
 			--a_key_definition: XM_XSLT_KEY_DEFINITION
@@ -86,56 +86,69 @@ feature -- Access
 			--a_collator: ST_COLLATOR
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			last_key_sequence := Void
-			l_item_type := a_key_value.item_type.primitive_type
-			l_key_set := key_definitions (a_key_fingerprint)
-			if l_key_set.is_backwards_compatible then
-				a_key_value.convert_to_type (type_factory.string_type)
-				l_value := a_key_value.converted_value
-				l_item_type := String_type_code
-			elseif l_item_type = Integer_type_code or else
-				l_item_type = Decimal_type_code or else
-				l_item_type = Float_type_code then
-				l_item_type := Double_type_code
-				a_key_value.convert_to_type (type_factory.schema_type (l_item_type))
-				l_value := a_key_value.converted_value
-			else
-				l_value := a_key_value
-			end
-			if does_index_exist (a_document, a_key_fingerprint, l_item_type) then
-				l_index := index (a_document, a_key_fingerprint, l_item_type)
-				if l_index.is_under_construction then
-					create l_error.make_from_string ("Key definition is circular", Xpath_errors_uri, "XTDE0640", Dynamic_error)
-					a_context.transformer.report_fatal_error (l_error)
-				end
-			else
-				create l_index.make_under_construction
-				put_index (a_document, a_key_fingerprint, l_item_type, l_index)
-				build_index (a_key_fingerprint, l_item_type, a_document, a_context)
-				if not a_context.transformer.is_error then
-					l_index := last_built_index
-					put_index (a_document, a_key_fingerprint, l_item_type, l_index)
-				end
-			end
-			if not a_context.transformer.is_error then
-				--  TODO - collation keys
-				--a_key_definition := key_definitions (a_key_fingerprint).item (1)
-				-- a_collator := a_key_definition.collator
-				if l_item_type = Untyped_atomic_type_code then
-					--  TODO - collation keys
-					l_value.convert_to_type (type_factory.string_type)
-					l_value := l_value.converted_value
-				end
-				if l_index.has (l_value) then
-					l_list := l_index.map.item (l_value)
-					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (l_list)
+			check attached a_context.transformer as l_context_transformer then
+				last_key_sequence := Void
+				l_item_type := a_key_value.item_type.primitive_type
+				l_key_set := key_definitions (a_key_fingerprint)
+				if l_key_set.is_backwards_compatible then
+					a_key_value.convert_to_type (type_factory.string_type)
+					l_value := a_key_value.converted_value
+					l_item_type := String_type_code
+				elseif l_item_type = Integer_type_code or else
+					l_item_type = Decimal_type_code or else
+					l_item_type = Float_type_code then
+					l_item_type := Double_type_code
+					check attached type_factory.schema_type (l_item_type) as l_schema_type then
+						a_key_value.convert_to_type (l_schema_type)
+						l_value := a_key_value.converted_value
+					end
 				else
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
+					l_value := a_key_value
+				end
+				if does_index_exist (a_document, a_key_fingerprint, l_item_type) then
+					l_index := index (a_document, a_key_fingerprint, l_item_type)
+					if l_index.is_under_construction then
+						create l_error.make_from_string ("Key definition is circular", Xpath_errors_uri, "XTDE0640", Dynamic_error)
+						l_context_transformer.report_fatal_error (l_error)
+					end
+				else
+					create l_index.make_under_construction
+					put_index (a_document, a_key_fingerprint, l_item_type, l_index)
+					build_index (a_key_fingerprint, l_item_type, a_document, a_context)
+					if not l_context_transformer.is_error then
+						check postcondition_of_build_index: attached last_built_index as l_last_built_index then
+							l_index := l_last_built_index
+							put_index (a_document, a_key_fingerprint, l_item_type, l_index)
+						end
+					end
+				end
+				if not l_context_transformer.is_error then
+					check l_value /= Void then
+						--  TODO - collation keys
+						--a_key_definition := key_definitions (a_key_fingerprint).item (1)
+						-- a_collator := a_key_definition.collator
+						if l_item_type = Untyped_atomic_type_code then
+							--  TODO - collation keys
+							l_value.convert_to_type (type_factory.string_type)
+							check postcondition_of_convert_to_type: attached l_value.converted_value as l_converted_value then
+								l_value := l_converted_value
+							end
+						end
+						if l_index.has (l_value) then
+							check attached l_index.map as l_index_map then
+								l_list := l_index_map.item (l_value)
+								create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (l_list)
+							end
+						else
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
+						end
+					end
 				end
 			end
 		ensure
-			possible_error: a_context.transformer.is_error implies last_key_sequence = Void
-			iterator_not_void: not a_context.transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
+			a_context_transformer_not_void: attached a_context.transformer as l_context_transformer
+			possible_error: l_context_transformer.is_error implies last_key_sequence = Void
+			iterator_not_void: not l_context_transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
 		end
 
 	collation_uri (a_key_fingerprint: INTEGER): STRING
@@ -239,7 +252,7 @@ feature {NONE} -- Implementation
 	document_map: DS_HASH_TABLE [DS_HASH_TABLE [XM_XSLT_KEY_INDEX, XM_XPATH_64BIT_NUMERIC_CODE], XM_XPATH_DOCUMENT]
 			-- Map of documents in memory to a map of key-fingerprint/item-types to indices of key/value pairs
 
-	last_built_index: XM_XSLT_KEY_INDEX
+	last_built_index: detachable XM_XSLT_KEY_INDEX
 			-- Result from `build_index'
 
 	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT)
@@ -247,37 +260,40 @@ feature {NONE} -- Implementation
 		require
 			document_not_void: a_document /= Void
 			context_not_void: a_context /= Void
-			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
+			transformer_not_in_error: attached a_context.transformer as l_context_transformer and then not l_context_transformer.is_error
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
 			l_message: STRING
 			l_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			debug ("XSLT key manager")
-				std.error.put_string ("Ready to build an index%N")
-			end
-			last_built_index := Void
-			if has_key (a_key_fingerprint) then
-				create l_map.make_with_equality_testers (10, Void, atomic_value_tester)
-				from
-					l_cursor := key_definitions (a_key_fingerprint).key_definitions.new_cursor
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					construct_index (a_document, l_map, l_cursor.item, a_item_type, a_context, l_cursor.index = 1)
-					l_cursor.forth
+			check precondition_transformer_not_void: attached a_context.transformer as l_context_transformer_2 then
+				debug ("XSLT key manager")
+					std.error.put_string ("Ready to build an index%N")
 				end
-				if not a_context.transformer.is_error then create last_built_index.make (l_map) end
-			else
-				l_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
-				l_message := STRING_.appended_string (l_message, " has not been defined")
-				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
-				a_context.transformer.report_fatal_error (l_error)
+				last_built_index := Void
+				if has_key (a_key_fingerprint) then
+					create l_map.make_with_equality_testers (10, Void, atomic_value_tester)
+					from
+						l_cursor := key_definitions (a_key_fingerprint).key_definitions.new_cursor
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						construct_index (a_document, l_map, l_cursor.item, a_item_type, a_context, l_cursor.index = 1)
+						l_cursor.forth
+					end
+					if not l_context_transformer_2.is_error then create last_built_index.make (l_map) end
+				else
+					l_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
+					l_message := STRING_.appended_string (l_message, " has not been defined")
+					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
+					l_context_transformer_2.report_fatal_error (l_error)
+				end
 			end
 		ensure
-			error_or_index_built: not a_context.transformer.is_error implies last_built_index /= Void
+			transformer_not_void: attached a_context.transformer as l_context_transformer
+			error_or_index_built: not l_context_transformer.is_error implies last_built_index /= Void
 		end
 
 	construct_index (a_document: XM_XPATH_DOCUMENT; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
@@ -286,7 +302,7 @@ feature {NONE} -- Implementation
 		require
 			document_not_void: a_document /= Void
 			context_not_void: a_context /= Void
-			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
+			transformer_not_in_error: attached a_context.transformer as l_context_transformer and then not l_context_transformer.is_error
 			map_not_void: a_map /= Void
 			key_not_void: a_key /= Void
 		local
@@ -296,74 +312,74 @@ feature {NONE} -- Implementation
 			all_nodes_iterator, an_attribute_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_node, another_node: XM_XPATH_NODE
 			a_collator: ST_COLLATOR
-			a_node_test: XM_XSLT_NODE_TEST
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			use := a_key.body
-			match := a_key.match
-			a_collator := a_key.collator
-			a_new_context := a_context.new_context
-			a_slot_manager := a_key.slot_manager
-			if a_slot_manager.number_of_variables > 0 then
-				a_new_context.open_stack_frame (a_slot_manager)
-			end
-			a_node_type := match.node_kind
-			if a_node_type = Attribute_node or else a_node_type = Any_node or else a_node_type = Document_node then
-				-- If the match pattern allows attributes to appear, we must visit them.
-				-- We also take this path in the ridiculous event that the pattern can match document nodes.
-				from
-					all_nodes_iterator := a_document.new_axis_iterator (Descendant_or_self_axis); all_nodes_iterator.start
-				until
-					a_context.transformer.is_error or all_nodes_iterator.after
-				loop
-					a_node := all_nodes_iterator.item
-					if a_node.node_type = Element_node then
-						from
-							an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
-						until
-							a_context.transformer.is_error or an_attribute_iterator.after
-						loop
-							another_node := an_attribute_iterator.item
-							match.match (another_node, a_new_context.new_pattern_context)
-							if not a_context.transformer.is_error and match.last_match_result then
-								process_key_node (another_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+			check precondition_transformer_not_void: attached a_context.transformer as l_context_transformer then
+				use := a_key.body
+				match := a_key.match
+				a_collator := a_key.collator
+				a_new_context := a_context.new_context
+				a_slot_manager := a_key.slot_manager
+				if a_slot_manager.number_of_variables > 0 then
+					a_new_context.open_stack_frame (a_slot_manager)
+				end
+				a_node_type := match.node_kind
+				if a_node_type = Attribute_node or else a_node_type = Any_node or else a_node_type = Document_node then
+					-- If the match pattern allows attributes to appear, we must visit them.
+					-- We also take this path in the ridiculous event that the pattern can match document nodes.
+					from
+						all_nodes_iterator := a_document.new_axis_iterator (Descendant_or_self_axis); all_nodes_iterator.start
+					until
+						l_context_transformer.is_error or all_nodes_iterator.after
+					loop
+						a_node := all_nodes_iterator.item
+						if a_node.node_type = Element_node then
+							from
+								an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
+							until
+								l_context_transformer.is_error or an_attribute_iterator.after
+							loop
+								another_node := an_attribute_iterator.item
+								match.match (another_node, a_new_context.new_pattern_context)
+								if not l_context_transformer.is_error and match.last_match_result then
+									process_key_node (another_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+								end
+								an_attribute_iterator.forth
 							end
-							an_attribute_iterator.forth
-						end
-						if a_node_type = Any_node then
-							-- Index the element as well as it's attributes
+							if a_node_type = Any_node then
+								-- Index the element as well as it's attributes
+								match.match (a_node, a_new_context.new_pattern_context)
+								if not l_context_transformer.is_error and match.last_match_result then
+									process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+								end
+							end
+						else
 							match.match (a_node, a_new_context.new_pattern_context)
-							if not a_context.transformer.is_error and match.last_match_result then
+							if not l_context_transformer.is_error and match.last_match_result then
 								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
 							end
 						end
-					else
-						match.match (a_node, a_new_context.new_pattern_context)
-						if not a_context.transformer.is_error and match.last_match_result then
-							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
-						end
+						all_nodes_iterator.forth
 					end
-					all_nodes_iterator.forth
-				end
-			else
-				from
-					all_nodes_iterator := a_document.new_axis_iterator_with_node_test (Descendant_axis, match.node_test); all_nodes_iterator.start
-				until
-					a_context.transformer.is_error or all_nodes_iterator.after
-				loop
-					a_node := all_nodes_iterator.item
-					-- If `match' is a node test, we avoid testing it a second time
-					a_node_test ?= match
-					if a_node_test /= Void then
-						process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
-					else
-						match.match (a_node, a_new_context.new_pattern_context)
-						if not a_context.transformer.is_error and match.last_match_result then
+				else
+					from
+						all_nodes_iterator := a_document.new_axis_iterator_with_node_test (Descendant_axis, match.node_test); all_nodes_iterator.start
+					until
+						l_context_transformer.is_error or all_nodes_iterator.after
+					loop
+						a_node := all_nodes_iterator.item
+						-- If `match' is a node test, we avoid testing it a second time
+						if attached {XM_XSLT_NODE_TEST} match as a_node_test then
 							process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+						else
+							match.match (a_node, a_new_context.new_pattern_context)
+							if not l_context_transformer.is_error and match.last_match_result then
+								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_new_context, is_first)
+							end
 						end
+						all_nodes_iterator.forth
 					end
-					all_nodes_iterator.forth
 				end
 			end
 		end
@@ -381,8 +397,7 @@ feature {NONE} -- Implementation
 		local
 			l_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_atomic_value, l_value: XM_XPATH_ATOMIC_VALUE
-			l_numeric_value: XM_XPATH_NUMERIC_VALUE
+			l_value: detachable XM_XPATH_ATOMIC_VALUE
 			l_actual_item_type: INTEGER
 			l_finished: BOOLEAN
 		do
@@ -396,60 +411,72 @@ feature {NONE} -- Implementation
 
 			-- Evaluate the "use" expression against this context node
 
-			from
-				a_use.create_iterator (a_context)
-				l_iterator := a_use.last_iterator
-				if l_iterator.is_error then
-					a_context.transformer.report_fatal_error (l_iterator.error_value)
-				else
-					l_iterator.start
-				end
-			until
-				l_finished or l_iterator.is_error or else l_iterator.after
-			loop
-				l_atomic_value ?= l_iterator.item
-				check
-					atomic_values: l_atomic_value /= Void
-					-- Use attribute is statically type-checked - sequence constructor is not yet supported
-				end
-				l_actual_item_type := l_atomic_value.item_type.primitive_type
-				if are_types_comparable (l_actual_item_type, a_sought_item_type) then
-					if a_sought_item_type = Untyped_atomic_type_code then
-
-						-- If the supplied key value is untyped atomic, we build an index using the
-						--  actual type returned by the use expression.
-						-- TODO: collation keys
-
-						create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
-					elseif a_sought_item_type = String_type_code then
-
-						-- If the supplied key value is a string, there is no match unless the use expression
-						--  returns a string or an untyped atomic value.
-						-- TODO: collation keys
-
-						create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
+			a_use.create_iterator (a_context)
+			check
+				postcondition_of_create_iterator: attached a_use.last_iterator as l_last_iterator
+				attached a_context.transformer as l_context_transformer
+			then
+				from
+					l_iterator := l_last_iterator
+					if attached l_iterator.error_value as l_error_value then
+						check is_error: l_iterator.is_error end
+						l_context_transformer.report_fatal_error (l_error_value)
 					else
-						l_numeric_value ?= l_atomic_value
-						if l_numeric_value /= Void and then l_numeric_value.is_nan then
-							-- ignore NaN
-							l_finished := True
-						else
-							if l_atomic_value.is_convertible (type_factory.schema_type (a_sought_item_type)) then
-								l_atomic_value.convert_to_type(type_factory.schema_type (a_sought_item_type))
-								l_value := l_atomic_value.converted_value
+						l_iterator.start
+					end
+				until
+					l_finished or l_iterator.is_error or else l_iterator.after
+				loop
+					check
+						atomic_values: attached {XM_XPATH_ATOMIC_VALUE} l_iterator.item as l_atomic_value
+						-- Use attribute is statically type-checked - sequence constructor is not yet supported
+					then
+						l_actual_item_type := l_atomic_value.item_type.primitive_type
+						if are_types_comparable (l_actual_item_type, a_sought_item_type) then
+							if a_sought_item_type = Untyped_atomic_type_code then
+
+								-- If the supplied key value is untyped atomic, we build an index using the
+								--  actual type returned by the use expression.
+								-- TODO: collation keys
+
+								create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
+							elseif a_sought_item_type = String_type_code then
+
+								-- If the supplied key value is a string, there is no match unless the use expression
+								--  returns a string or an untyped atomic value.
+								-- TODO: collation keys
+
+								create {XM_XPATH_STRING_VALUE} l_value.make (l_atomic_value.string_value)
 							else
-								l_finished := True
+								if attached {XM_XPATH_NUMERIC_VALUE} l_atomic_value as l_numeric_value and then l_numeric_value.is_nan then
+									-- ignore NaN
+									l_finished := True
+								else
+									check attached type_factory.schema_type (a_sought_item_type) as l_schema_type then
+										if l_atomic_value.is_convertible (l_schema_type) then
+											l_atomic_value.convert_to_type (l_schema_type)
+											check postcondition_of_convert_to_type: attached l_atomic_value.converted_value as l_converted_value then
+												l_value := l_converted_value
+											end
+										else
+											l_finished := True
+										end
+									end
+								end
+							end
+							if not l_finished then
+								check not_finished: l_value /= Void then
+									add_node_to_index (a_node, a_map, l_value, a_is_first)
+								end
 							end
 						end
 					end
-					if not l_finished then
-						add_node_to_index (a_node, a_map, l_value, a_is_first)
-					end
+					l_iterator.forth
 				end
-				l_iterator.forth
-			end
-			if l_iterator.is_error then
-				a_context.transformer.report_fatal_error (l_iterator.error_value)
+				if attached l_iterator.error_value as l_error_value then
+					check is_error: l_iterator.is_error end
+					l_context_transformer.report_fatal_error (l_error_value)
+				end
 			end
 		end
 

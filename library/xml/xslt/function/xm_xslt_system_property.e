@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT system-property() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,10 +66,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_uri: STRING
+			l_uri: detachable STRING
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_argument: XM_XPATH_EXPRESSION
@@ -79,36 +79,52 @@ feature -- Evaluation
 			read_configuration (l_configuration)
 			l_argument := arguments.item (1)
 			l_argument.evaluate_item (a_result, a_context)
-			if a_result.item.is_error then
-				set_last_error (a_result.item.error_value)
-			else
-				create l_parser.make (a_result.item.string_value)
-				a_result.put (Void)
-				if not l_parser.is_valid then
-					set_last_error_from_string ("Argument to 'system-property' is not a QName",
-						Xpath_errors_uri, "XTDE1390", Static_error)
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			check attached a_result.item as l_result_item_1 then
+				if attached l_result_item_1.error_value as l_error_value then
+					check is_error: l_result_item_1.is_error end
+					set_last_error (l_error_value)
 				else
-					if not l_parser.is_prefix_present then
-						l_uri := ""
-					else
-						l_uri := namespace_context.uri_for_defaulted_prefix (l_parser.optional_prefix, False)
-						if l_uri = Void then
-							set_last_error_from_string ("Prefix to argument to 'system-property' is not declared",
-								Xpath_errors_uri, "XTDE1390", Static_error)
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+					create l_parser.make (l_result_item_1.string_value)
+					a_result.put (Void)
+					if not l_parser.is_valid then
+						set_last_error_from_string ("Argument to 'system-property' is not a QName",
+							Xpath_errors_uri, "XTDE1390", Static_error)
+						check attached error_value as l_error_value then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 						end
-					end
-					if a_result.item = Void then
-						create l_string_value.make (system_property (l_uri, l_parser.local_name, a_context.configuration))
-						a_result.put (l_string_value)
+					else
+						check
+							l_parser_is_valid: attached l_parser.optional_prefix as l_optional_prefix
+							l_parser_is_valid_2: attached l_parser.local_name as l_local_name
+						then
+							if not l_parser.is_prefix_present then
+								l_uri := ""
+							else
+								check attached namespace_context as l_namespace_context then
+									l_uri := l_namespace_context.uri_for_defaulted_prefix (l_optional_prefix, False)
+								end
+								if l_uri = Void then
+									set_last_error_from_string ("Prefix to argument to 'system-property' is not declared",
+										Xpath_errors_uri, "XTDE1390", Static_error)
+									check attached error_value as l_error_value then
+										a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+									end
+								end
+							end
+							if a_result.item = Void then
+								check l_uri /= Void then
+									create l_string_value.make (system_property (l_uri, l_local_name, a_context.configuration))
+									a_result.put (l_string_value)
+								end
+							end
+						end
 					end
 				end
 			end
 		end
 
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_uri: STRING
@@ -127,29 +143,33 @@ feature -- Evaluation
 				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Argument to 'system-property' is not a QName",
 					Xpath_errors_uri, "XTDE1390", Static_error))
 			else
-				if not l_parser.is_prefix_present then
-					l_uri := ""
-				else
-					if a_context.is_prefix_declared (l_parser.optional_prefix) then
-						l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
+				check
+					l_parser_is_valid: attached l_parser.optional_prefix as l_optional_prefix
+					l_parser_is_valid_2: attached l_parser.local_name as l_local_name
+				then
+					if not l_parser.is_prefix_present then
+						l_uri := ""
 					else
-						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Prefix to argument to 'system-property' is not declared",
-							Xpath_errors_uri, "XTDE1390", Static_error))
+						if a_context.is_prefix_declared (l_optional_prefix) then
+							l_uri := a_context.uri_for_prefix (l_optional_prefix)
+						else
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Prefix to argument to 'system-property' is not declared",
+								Xpath_errors_uri, "XTDE1390", Static_error))
+							l_uri := ""
+						end
 					end
-				end
-				if a_replacement.item = Void then
-					create l_string_value.make (system_property (l_uri, l_parser.local_name, a_context.configuration))
-					set_replacement (a_replacement, l_string_value)
+					if a_replacement.item = Void then
+						create l_string_value.make (system_property (l_uri, l_local_name, a_context.configuration))
+						set_replacement (a_replacement, l_string_value)
+					end
 				end
 			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_arguments (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check arguments during parsing, when all the argument expressions have been read.
-		local
-			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			Precursor (a_replacement, a_context)
 			if a_replacement.item = Void then
@@ -157,12 +177,12 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 					-- we need to save the namespace context
 
-					l_expression_context ?= a_context
 					check
-						expression_context: l_expression_context /= Void
+						expression_context: attached {XM_XSLT_EXPRESSION_CONTEXT} a_context as l_expression_context
 						-- as this is XSLT
+					then
+						namespace_context := l_expression_context.namespace_context
 					end
-					namespace_context := l_expression_context.namespace_context
 				end
 			end
 		end
@@ -177,19 +197,19 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
+	namespace_context: detachable XM_XSLT_NAMESPACE_CONTEXT
 			-- Saved namespace context
 
-	product_name: STRING
+	product_name: detachable STRING
 			-- Product name (e.g. "Gexslt" or "Gestalt")
 
-	product_version: STRING
+	product_version: detachable STRING
 			-- Product version number (e.g. Gobo version number or Gestalt version number)
 
-	vendor_name: STRING
+	vendor_name: detachable STRING
 			-- Name of organization or individual responsible for this configuration (e.g. "Gobo" or "Colin Adams")
 
-	vendor_url: STRING
+	vendor_url: detachable STRING
 			-- Web page for `vendor_name'
 
 	read_configuration (a_configuration: XM_XPATH_CONFIGURATION)
@@ -216,26 +236,26 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_name, "version") then
 					Result := "2.0"
 				elseif STRING_.same_string (a_local_name, "vendor") then
-					if vendor_name /= Void then
-						Result := vendor_name
+					if attached vendor_name as l_vendor_name then
+						Result := l_vendor_name
 					else
 						Result := "Gobo"
 					end
 				elseif STRING_.same_string (a_local_name, "vendor-url") then
-					if vendor_url /= Void then
-						Result := vendor_url
+					if attached vendor_url as l_vendor_url then
+						Result := l_vendor_url
 					else
 						Result := "http://www.gobosoft.com/"
 					end
 				elseif STRING_.same_string (a_local_name, "product-name") then
-					if product_name /= Void then
-						Result := product_name
+					if attached product_name as l_product_name then
+						Result := l_product_name
 					else
 						Result :=  "Gexslt"
 					end
 				elseif STRING_.same_string (a_local_name, "product-version") then
-					if product_version /= Void then
-						Result := product_version
+					if attached product_version as l_product_version then
+						Result := l_product_version
 					else
 						Result := Version_number
 					end
@@ -251,8 +271,9 @@ feature {NONE} -- Implementation
 					Result := ""
 				end
 			elseif STRING_.same_string (a_namespace_uri, Exslt_environment_uri) then
-				Result := Execution_environment.variable_value (a_local_name)
-				if Result = Void then
+				if attached Execution_environment.variable_value (a_local_name) as l_local_value then
+					Result := l_local_value
+				else
 					Result := ""
 				end
 			else

@@ -5,7 +5,7 @@ note
 		"Group iterator implementing group-by algorithm"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -174,72 +174,77 @@ feature {NONE} -- Implementation
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)
 			a_context := key_context.new_minor_context
 			a_context.set_current_iterator (population)
-			a_transformer := a_context.transformer
-			from
-				population.start
-			until
-				a_transformer.is_error or else population.after
-			loop
-				an_item := population.item
+			check attached a_context.transformer as l_context_transformer then
+				a_transformer := l_context_transformer
 				from
-					key_expression.create_iterator (a_context)
-					a_keys_iterator := key_expression.last_iterator
-					if not a_keys_iterator.is_error then
-						a_keys_iterator.start
-						first_key := True
-					end
+					population.start
 				until
-					a_keys_iterator.is_error or else a_keys_iterator.after
+					a_transformer.is_error or else population.after
 				loop
-					check
-						key_is_atomic: a_keys_iterator.item.is_atomic_value
-					end
-					a_key := a_keys_iterator.item.as_atomic_value
-					a_comparison_key := comparer.comparison_key (a_key)
-					if a_map.has (a_comparison_key) then
-						a_group := a_map.item (a_comparison_key)
-						if first_key then
-							if not a_group.extendible (1) then
-								a_group.resize (2 * a_group.count)
+					an_item := population.item
+					from
+						key_expression.create_iterator (a_context)
+						check postcondition_of_create_iterator: attached key_expression.last_iterator as l_last_iterator then
+							a_keys_iterator := l_last_iterator
+							if not a_keys_iterator.is_error then
+								a_keys_iterator.start
+								first_key := True
 							end
-							a_group.put_last (an_item)
-						else
-
-							-- If this is not the first key value for this item, we
-							--  check whether the item is already in this group before
-							--  adding it again.
-							-- If it is in this group, then we know it will be at the end.
-
-							if a_group.last /= an_item then
+						end
+					until
+						a_keys_iterator.is_error or else a_keys_iterator.after
+					loop
+						check
+							key_is_atomic: a_keys_iterator.item.is_atomic_value
+						end
+						a_key := a_keys_iterator.item.as_atomic_value
+						a_comparison_key := comparer.comparison_key (a_key)
+						if a_map.has (a_comparison_key) then
+							a_group := a_map.item (a_comparison_key)
+							if first_key then
 								if not a_group.extendible (1) then
 									a_group.resize (2 * a_group.count)
 								end
 								a_group.put_last (an_item)
+							else
+
+								-- If this is not the first key value for this item, we
+								--  check whether the item is already in this group before
+								--  adding it again.
+								-- If it is in this group, then we know it will be at the end.
+
+								if a_group.last /= an_item then
+									if not a_group.extendible (1) then
+										a_group.resize (2 * a_group.count)
+									end
+									a_group.put_last (an_item)
+								end
 							end
+						else
+							create a_group.make_default
+							a_group.put_last (an_item)
+							if not groups.extendible (1) then
+								groups.resize (2 * groups.count)
+							end
+							groups.put_last (a_group)
+							if not group_keys.extendible (1) then
+								group_keys.resize (2 * group_keys.count)
+							end
+							group_keys.put_last (a_key)
+							a_map.force_new (a_group, a_comparison_key)
 						end
-					else
-						create a_group.make_default
-						a_group.put_last (an_item)
-						if not groups.extendible (1) then
-							groups.resize (2 * groups.count)
-						end
-						groups.put_last (a_group)
-						if not group_keys.extendible (1) then
-							group_keys.resize (2 * group_keys.count)
-						end
-						group_keys.put_last (a_key)
-						a_map.force_new (a_group, a_comparison_key)
+						first_key := False
+						a_keys_iterator.forth
 					end
-					first_key := False
-					a_keys_iterator.forth
+					if attached a_keys_iterator.error_value as l_error_value then
+						check is_error: a_keys_iterator.is_error end
+						a_transformer.report_fatal_error (l_error_value)
+					else
+						population.forth
+					end
 				end
-				if a_keys_iterator.is_error then
-					a_transformer.report_fatal_error (a_keys_iterator.error_value)
-				else
-					population.forth
-				end
+				indexed_groups_built := True
 			end
-			indexed_groups_built := True
 		ensure
 			indexed_groups_built: indexed_groups_built
 		end

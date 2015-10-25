@@ -5,7 +5,7 @@ note
 		"Emitters that write HTML."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,10 +62,12 @@ feature -- Events
 			if not is_error then
 				element_name := element_qname_stack.item.as_lower
 				element_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
-				if element_uri_code = Default_uri_code and then
-					(STRING_.same_string (element_name, "script") or else
-						STRING_.same_string (element_name, "style")) then
-					in_script := 0
+				check attached element_name as l_element_name then
+					if element_uri_code = Default_uri_code and then
+						(STRING_.same_string (l_element_name, "script") or else
+							STRING_.same_string (l_element_name, "style")) then
+						in_script := 0
+					end
 				end
 				check
 					huge_element_nesting_level: in_script /= -1
@@ -88,11 +90,13 @@ feature -- Events
 		do
 			in_script := in_script - 1
 			if in_script <= 0 then in_script := -1000000 end
-			if is_empty_tag (element_name) and then element_uri_code = Default_uri_code then
-				element_qname_stack.remove
-				element_name := element_qname_stack.item.as_lower
-			else
-				Precursor
+			check attached element_name as l_element_name then
+				if is_empty_tag (l_element_name) and then element_uri_code = Default_uri_code then
+					element_qname_stack.remove
+					element_name := element_qname_stack.item.as_lower
+				else
+					Precursor
+				end
 			end
 			mark_as_written
 		end
@@ -151,7 +155,7 @@ feature {NONE} -- Implementation
 			Result.set_equality_tester (string_equality_tester)
 		end
 
-	media_type: STRING
+	media_type: detachable STRING
 			-- Mime type
 
 	escape_uri_attributes: BOOLEAN
@@ -172,7 +176,7 @@ feature {NONE} -- Implementation
 	in_script: INTEGER
 			-- nested depth of elements withn script or style elements
 
-	element_name: STRING
+	element_name: detachable STRING
 			-- Name of current element
 
 	element_uri_code: INTEGER -- _16
@@ -337,10 +341,11 @@ feature {NONE} -- Implementation
 	open_document
 			-- Open output document.
 		local
-			a_system_id, a_public_id: STRING
+			a_system_id, a_public_id: detachable STRING
 			a_character_representation, a_non_ascii_representation, an_excluded_representation: STRING
 			an_index: INTEGER
 			an_error: XM_XPATH_ERROR_VALUE
+			l_encoding: like encoding
 		do
 			if STRING_.same_string (output_properties.version, "4.0") then
 				-- ok
@@ -348,15 +353,16 @@ feature {NONE} -- Implementation
 				serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Only versions 4.0 and 4.01 of HTML are supported", Xpath_errors_uri, "SESU0013", Dynamic_error))
 				is_error := True
 			end
-			encoding := output_properties.encoding.as_upper
+			l_encoding := output_properties.encoding.as_upper
+			encoding := l_encoding
 
-			outputter := encoder_factory.outputter (encoding, raw_outputter)
-			if outputter = Void then
-				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
+			outputter := encoder_factory.outputter (l_encoding, raw_outputter)
+			if not attached outputter as l_outputter then
+				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", l_encoding),
 															 Xpath_errors_uri, "SESU0007", Dynamic_error)
 				serializer.report_recoverable_error (an_error)
 				if not serializer.is_error then
-					outputter := encoder_factory.outputter (encoding, raw_outputter)
+					outputter := encoder_factory.outputter (l_encoding, raw_outputter)
 					if outputter = Void then
 						create an_error.make_from_string ("Failed to recover",
 																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
@@ -368,10 +374,10 @@ feature {NONE} -- Implementation
 
 				media_type := STRING_.cloned_string (output_properties.media_type)
 
-				if outputter.byte_order_mark_permitted then
+				if l_outputter.byte_order_mark_permitted then
 					if output_properties.byte_order_mark_required
-						or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
-						output_ignoring_error (outputter.byte_order_mark)
+						or (not output_properties.is_byte_order_mark_set and l_outputter.is_byte_order_mark_default) then
+						output_ignoring_error (l_outputter.byte_order_mark)
 					end
 				end
 				escape_uri_attributes := output_properties.escape_uri_attributes
@@ -429,10 +435,12 @@ feature {NONE} -- Implementation
 			--  (we assume this is a boolean attribute to be minimised), or if the value is a URL.
 		do
 			if element_uri_code = Default_uri_code then
-				if is_boolean_attribute (element_name, an_attribute_qname, a_value) then
-					output (an_attribute_qname)
-				else
-					Precursor (an_element_name_code, an_attribute_qname, a_value, properties)
+				check attached element_name as l_element_name then
+					if is_boolean_attribute (l_element_name, an_attribute_qname, a_value) then
+						output (an_attribute_qname)
+					else
+						Precursor (an_element_name_code, an_attribute_qname, a_value, properties)
+					end
 				end
 			else
 				Precursor (an_element_name_code, an_attribute_qname, a_value, properties)
@@ -449,55 +457,57 @@ feature {NONE} -- Implementation
 			a_start_index, a_beyond_index, a_code, another_code: INTEGER
 			special_characters: ARRAY [BOOLEAN]
 		do
-			if in_attribute then
-				special_characters := specials_in_attributes
-			else
-				special_characters := specials_in_text
-			end
-			from
-				a_start_index := 1;
-			until
-				is_error or a_start_index > a_character_string.count
-			loop
-				a_beyond_index := maximal_ordinary_string (a_character_string, a_start_index, special_characters)
-
-				if a_beyond_index > a_start_index then
-					output (a_character_string.substring (a_start_index, a_beyond_index - 1))
+			check precondition_document_opened: attached outputter as l_outputter then
+				if in_attribute then
+					special_characters := specials_in_attributes
+				else
+					special_characters := specials_in_text
 				end
-				if a_beyond_index <= a_character_string.count then
-					a_code := a_character_string.item_code (a_beyond_index)
-					if a_code = 0 then -- enable/disable escaping toggle
-						disabled := not disabled
-					elseif disabled then
-						output (a_character_string.substring (a_beyond_index, a_beyond_index))
-					elseif a_code < 127 then -- special ASCII
-						if a_beyond_index = a_character_string.count then
-							another_code := 0
+				from
+					a_start_index := 1;
+				until
+					is_error or a_start_index > a_character_string.count
+				loop
+					a_beyond_index := maximal_ordinary_string (a_character_string, a_start_index, special_characters)
+
+					if a_beyond_index > a_start_index then
+						output (a_character_string.substring (a_start_index, a_beyond_index - 1))
+					end
+					if a_beyond_index <= a_character_string.count then
+						a_code := a_character_string.item_code (a_beyond_index)
+						if a_code = 0 then -- enable/disable escaping toggle
+							disabled := not disabled
+						elseif disabled then
+							output (a_character_string.substring (a_beyond_index, a_beyond_index))
+						elseif a_code < 127 then -- special ASCII
+							if a_beyond_index = a_character_string.count then
+								another_code := 0
+							else
+								another_code := a_character_string.item_code (a_beyond_index + 1)
+							end
+							output_special_ascii (a_code, another_code, in_attribute)
+						elseif a_code = 160 then
+							output ("&nbsp;")
+						elseif a_code >= 127 and a_code < 160 then
+							serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Characters between x7F and x9F inclusive are not allowed in HTML", Xpath_errors_uri, "SERE0014", Dynamic_error))
+							is_error := True
+						elseif a_code >= 55296 and then a_code <= 56319 then
+							-- this can't happen, unless we were to use UTF-16 internally.
+							-- Never in a million aeons!
+							todo ("output_escape (surrogates)", True)
 						else
-							another_code := a_character_string.item_code (a_beyond_index + 1)
-						end
-						output_special_ascii (a_code, another_code, in_attribute)
-					elseif a_code = 160 then
-						output ("&nbsp;")
-					elseif a_code >= 127 and a_code < 160 then
-						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Characters between x7F and x9F inclusive are not allowed in HTML", Xpath_errors_uri, "SERE0014", Dynamic_error))
-						is_error := True
-					elseif a_code >= 55296 and then a_code <= 56319 then
-						-- this can't happen, unless we were to use UTF-16 internally.
-						-- Never in a million aeons!
-						todo ("output_escape (surrogates)", True)
-					else
-						if not outputter.is_bad_character_code (a_code) then
-							output_non_ascii (a_code, in_attribute)
-						else
-							is_hex_preferred := excluded_representation = Hexadecimal_representation
-							output_character_reference (a_code)
+							if not l_outputter.is_bad_character_code (a_code) then
+								output_non_ascii (a_code, in_attribute)
+							else
+								is_hex_preferred := excluded_representation = Hexadecimal_representation
+								output_character_reference (a_code)
+							end
 						end
 					end
+					a_start_index := a_beyond_index + 1
+				variant
+					a_character_string.count + 2 - a_start_index
 				end
-				a_start_index := a_beyond_index + 1
-			variant
-				a_character_string.count + 2 - a_start_index
 			end
 		end
 
@@ -572,32 +582,34 @@ feature {NONE} -- Implementation
 			an_index, a_code: INTEGER
 			finished: BOOLEAN
 		do
-			from
-				an_index := a_start_index
-			until
-				finished or else an_index > a_character_string.count
-			loop
-				a_code := a_character_string.item_code (an_index)
-				if a_code < 128 then -- ASCII
-					if special_characters.item (a_code) then
-						finished := True
-					else
-						an_index := an_index + 1
-					end
-				else
-					if not outputter.is_bad_character_code (a_code) then
-						if non_ascii_representation = Native_representation and then
-							a_code /= 160 then
+			check precondition_document_opened: attached outputter as l_outputter then
+				from
+					an_index := a_start_index
+				until
+					finished or else an_index > a_character_string.count
+				loop
+					a_code := a_character_string.item_code (an_index)
+					if a_code < 128 then -- ASCII
+						if special_characters.item (a_code) then
+							finished := True
+						else
 							an_index := an_index + 1
+						end
+					else
+						if not l_outputter.is_bad_character_code (a_code) then
+							if non_ascii_representation = Native_representation and then
+								a_code /= 160 then
+								an_index := an_index + 1
+							else
+								finished := True
+							end
 						else
 							finished := True
 						end
-					else
-						finished := True
 					end
 				end
+				Result := an_index
 			end
-			Result := an_index
 		end
 
 invariant

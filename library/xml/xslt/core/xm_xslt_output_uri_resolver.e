@@ -5,7 +5,7 @@ note
 		"Objects that resolve URIs to output destinations"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,13 +24,13 @@ feature -- Access
 	output_destinations: DS_HASH_TABLE [XM_XSLT_TRANSFORMATION_RESULT, STRING]
 			-- Allocated output destinations indexed by absolute URI
 
-	http_method: STRING
+	http_method: detachable STRING
 			-- Value of gexslt:method extension attribute;
 			-- Intended principally for http protocol, but interpretation depends upon descendants.
 
 feature -- Status report
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message from `resolve'
 
 feature -- Setting
@@ -79,7 +79,7 @@ feature -- Action
 
 feature -- Result
 
-	last_result: XM_XSLT_TRANSFORMATION_RESULT
+	last_result: detachable XM_XSLT_TRANSFORMATION_RESULT
 			-- Result object from last call to `resolve'
 		deferred
 		end

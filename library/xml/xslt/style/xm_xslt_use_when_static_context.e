@@ -5,7 +5,7 @@ note
 		"XSLT static contexts for use-when processing"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,22 +98,24 @@ feature -- Access
 			-- Available functions
 		local
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
-			l_configuration: XM_XSLT_CONFIGURATION
+			l_cached_function_manager: like cached_function_manager
 		do
-			if cached_function_manager = Void then
-				l_configuration ?= configuration
+			l_cached_function_manager := cached_function_manager
+			if l_cached_function_manager = Void then
 				check
-					l_configuration_not_void: l_configuration /= Void
+					l_configuration_not_void: attached {XM_XSLT_CONFIGURATION} configuration as l_configuration
 					-- this is XSLT
+				then
+					create l_cached_function_manager.make
+					cached_function_manager := l_cached_function_manager
+					create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} l_function_library.make
+					l_cached_function_manager.add_function_library (l_function_library)
+					create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} l_function_library.make
+					l_cached_function_manager.add_function_library (l_function_library)
+					l_configuration.extension_functions.do_all (agent add_function_library (l_cached_function_manager, ?))
 				end
-				create cached_function_manager.make
-				create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} l_function_library.make
-				cached_function_manager.add_function_library (l_function_library)
-				create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} l_function_library.make
-				cached_function_manager.add_function_library (l_function_library)
-				l_configuration.extension_functions.do_all (agent add_function_library (cached_function_manager, ?))
 			end
-			Result := cached_function_manager
+			Result := l_cached_function_manager
 		end
 
 	is_backwards_compatible_mode: BOOLEAN
@@ -134,7 +136,9 @@ feature -- Access
 	uri_for_prefix (a_xml_prefix: STRING): STRING
 			-- URI for `a_xml_prefix'
 		do
-			Result := namespace_resolver.uri_for_defaulted_prefix (a_xml_prefix, False)
+			check precondition_prefix_declared: attached namespace_resolver.uri_for_defaulted_prefix (a_xml_prefix, False) as l_uri_for_defaulted_prefix then
+				Result := l_uri_for_defaulted_prefix
+			end
 		end
 
 	is_prefix_declared (a_xml_prefix: STRING): BOOLEAN
@@ -147,19 +151,23 @@ feature -- Access
 			-- Is element name `a_qname' available?
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_uri: STRING
+			l_uri: detachable STRING
 		do
 			create l_parser.make (a_qname)
 			check
 				valid_parse: l_parser.is_valid
 				-- from pre-condition
 			end
-			if l_parser.optional_prefix.is_empty then
-				l_uri := namespace_resolver.uri_for_defaulted_prefix (l_parser.optional_prefix, True)
-			else
-				l_uri := uri_for_prefix (l_parser.optional_prefix)
+			check attached l_parser.optional_prefix as l_optional_prefix then
+				if l_optional_prefix.is_empty then
+					l_uri := namespace_resolver.uri_for_defaulted_prefix (l_optional_prefix, True)
+				else
+					l_uri := uri_for_prefix (l_optional_prefix)
+				end
+				check attached l_parser.local_name as l_local_name then
+					Result := node_factory.is_element_available (l_uri, l_local_name)
+				end
 			end
-			Result := node_factory.is_element_available (l_uri, l_parser.local_name)
 		end
 
 	node_factory: XM_XSLT_NODE_FACTORY
@@ -169,15 +177,13 @@ feature -- Creation
 
 	new_compile_time_context: XM_XPATH_CONTEXT
 			-- Restricted dynamic context
-		local
-			l_configuration: XM_XSLT_CONFIGURATION
 		do
-			l_configuration ?= configuration
 			check
-				xslt_configuration: l_configuration /= Void
+				xslt_configuration: attached {XM_XSLT_CONFIGURATION} configuration as l_configuration
 				-- this is XSLT library
+			then
+				create {XM_XSLT_EVALUATION_CONTEXT} Result.make_restricted (Current, known_collations, l_configuration)
 			end
-			create {XM_XSLT_EVALUATION_CONTEXT} Result.make_restricted (Current, known_collations, l_configuration)
 		end
 
 feature -- Element change
@@ -185,6 +191,7 @@ feature -- Element change
 	bind_variable (a_fingerprint: INTEGER)
 			-- Bind variable to it's declaration.
 		do
+			check False then end
 			-- pre-condition is never met
 		end
 
@@ -192,20 +199,18 @@ feature -- Output
 
 	issue_warning (a_warning: STRING)
 			-- Issue a warning message
-		local
-			l_configuration: XM_XSLT_CONFIGURATION
 		do
-			l_configuration ?= configuration
 			check
-				xslt_configuration: l_configuration /= Void
-				-- this is XSLT library
+					-- this is XSLT library
+				xslt_configuration: attached {XM_XSLT_CONFIGURATION} configuration as l_configuration
+			then
+				l_configuration.error_listener.warning (a_warning, Current)
 			end
-			l_configuration.error_listener.warning (a_warning, Current)
 		end
 
 feature {NONE} -- Implementation
 
-	cached_function_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+	cached_function_manager: detachable XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library manager
 
 	add_function_library (a_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER; a_library: XM_XPATH_FUNCTION_LIBRARY)

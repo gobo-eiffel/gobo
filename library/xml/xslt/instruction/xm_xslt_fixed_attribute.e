@@ -5,7 +5,7 @@ note
 		"Attributes whose name is known at compile time"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SIMPLE_TYPE; a_type_annotation: INTEGER)
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: detachable XM_XPATH_SIMPLE_TYPE; a_type_annotation: INTEGER)
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -96,7 +96,7 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	type_check (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type checking
 		do
 			-- do nothing
@@ -104,31 +104,38 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_RECEIVER
 			some_receiver_options, an_annotation: INTEGER
 		do
-			a_receiver := a_context.current_receiver
-			some_receiver_options := options
-			an_annotation := type_annotation
+			check attached a_context.current_receiver as l_context_current_receiver then
+				a_receiver := l_context_current_receiver
+				some_receiver_options := options
+				an_annotation := type_annotation
 
-			-- We may need to change the namespace prefix if the one we chose is
-			--  already in use with a different namespace URI.
-			-- This is done behind the scenes by the Outputter
+				-- We may need to change the namespace prefix if the one we chose is
+				--  already in use with a different namespace URI.
+				-- This is done behind the scenes by the Outputter
 
-			expand_children (a_context)
-			if is_error then
-				error_value.set_location (system_id, line_number)
-				a_context.transformer.report_recoverable_error (error_value)
-			else
-				if type /= Void then
-					todo ("process_leaving_tail - validation by type", True)
-				elseif validation_action = Validation_strict or else validation_action = Validation_lax then
-					todo ("process_leaving_tail - validation", True)
+				expand_children (a_context)
+				if attached error_value as l_error_value then
+					check is_error: is_error end
+					l_error_value.set_location (system_id, line_number)
+					check attached a_context.transformer as l_transformer then
+						l_transformer.report_recoverable_error (l_error_value)
+					end
+				else
+					if type /= Void then
+						todo ("process_leaving_tail - validation by type", True)
+					elseif validation_action = Validation_strict or else validation_action = Validation_lax then
+						todo ("process_leaving_tail - validation", True)
+					end
+					check postcondition_of_expand_children: attached last_string_value as l_last_string_value then
+						a_receiver.notify_attribute (name_code, an_annotation, l_last_string_value, some_receiver_options)
+					end
 				end
-				a_receiver.notify_attribute (name_code, an_annotation, last_string_value, some_receiver_options)
 			end
 		end
 
@@ -151,7 +158,7 @@ feature {NONE} -- Implementation
 	type_annotation: INTEGER
 			-- Type annotation
 
-	type: XM_XPATH_SCHEMA_TYPE
+	type: detachable XM_XPATH_SCHEMA_TYPE
 			--Type
 
 	options: INTEGER

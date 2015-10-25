@@ -5,7 +5,7 @@ note
 		"Compiled instructions that produce element output"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,7 +63,7 @@ feature -- Access
 		deferred
 		end
 
-	base_uri: STRING
+	base_uri: detachable STRING
 			-- Base URI for constructed element
 
 	new_base_uri (a_context: XM_XPATH_CONTEXT): STRING
@@ -85,59 +85,68 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-free optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if content.is_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
+			if attached content.error_value as l_error_value then
+				check is_error: content.is_error end
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
 			else
 				create l_replacement.make (Void)
 				content.simplify (l_replacement)
-				set_content (l_replacement.item)
-				if content.is_error then
-					set_replacement (a_replacement, content)
-				else
-					a_replacement.put (Current)
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					set_content (l_replacement_item)
+					if content.is_error then
+						set_replacement (a_replacement, content)
+					else
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if content.is_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
+			if attached content.error_value as l_error_value then
+				check is_error: content.is_error end
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
 			else
 				create l_replacement.make (Void)
 				content.check_static_type (l_replacement, a_context, a_context_item_type)
-				set_content (l_replacement.item)
-				if content.is_error then
-					set_replacement (a_replacement, content)
-				else
-					check_contents_for_attributes (a_replacement, a_context)
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					set_content (l_replacement_item)
+					if content.is_error then
+						set_replacement (a_replacement, content)
+					else
+						check_contents_for_attributes (a_replacement, a_context)
+					end
 				end
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			if content.is_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
+			if attached content.error_value as l_error_value then
+				check is_error: content.is_error end
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
 			else
 				create l_replacement.make (Void)
 				content.optimize (l_replacement, a_context, a_context_item_type)
-				set_content (l_replacement.item)
-				if content.is_error then
-					set_replacement (a_replacement, content)
-				else
-					a_replacement.put (Current)
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					set_content (l_replacement_item)
+					if content.is_error then
+						set_replacement (a_replacement, content)
+					else
+						a_replacement.put (Current)
+					end
 				end
 			end
 		end
@@ -145,68 +154,72 @@ feature -- Optimization
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this instruction.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			content.promote (l_replacement, a_offer)
-			set_content (l_replacement.item)
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				set_content (l_replacement_item)
+			end
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
-			l_old_receiver, l_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			l_validator: XM_XPATH_RECEIVER
-			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
 			l_name_code, l_properties: INTEGER
 		do
-			l_new_context ?= a_context.new_minor_context
 			check
-				evaluation_context: l_new_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_minor_context as l_new_context
 				-- This is XSLT
-			end
-			l_transformer := l_new_context.transformer
-			l_old_receiver := l_new_context.current_receiver
-			l_outputter ?= l_old_receiver
-			if l_outputter = Void or else l_outputter.is_under_construction then
-				create l_outputter.make_with_size (1, l_transformer)
-			end
-			l_receiver := l_outputter
-			l_name_code := name_code (l_new_context)
-			if not l_transformer.is_error then
-				l_validator := l_transformer.configuration.element_validator (l_receiver, l_name_code, Void, validation_action)
-				if l_validator = l_receiver then
-					l_new_context.change_to_sequence_output_destination (l_receiver)
-					if l_receiver.base_uri.is_empty then
-						l_receiver.set_base_uri (new_base_uri (a_context))
-					end
+				attached l_new_context.transformer as l_new_context_transformer
+				attached l_new_context.current_receiver as l_new_context_current_receiver
+			then
+				l_transformer := l_new_context_transformer
+				if not attached {XM_XSLT_SEQUENCE_OUTPUTTER} l_new_context_current_receiver as l_old_receiver or else l_old_receiver.is_under_construction then
+					create l_outputter.make_with_size (1, l_transformer)
 				else
-					check
-						schema_aware: False
-						-- Only Basic XSLT processor is supported now
-					end
+					l_outputter := l_old_receiver
 				end
-				if not is_inherit_namespaces then l_properties := Disinherit_namespaces end
-				-- N.B. The element is constructed as a parentless element
-				l_receiver.start_element (l_name_code, -1, l_properties)
-				output_namespace_nodes (l_new_context, l_receiver)
-				content.generate_events (l_new_context)
+				l_receiver := l_outputter
+				l_name_code := name_code (l_new_context)
 				if not l_transformer.is_error then
-					l_receiver.end_element
-					l_receiver.close
-					l_outputter.pop_last_item
-					a_result.put (l_outputter.last_popped_item)
-				else
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_transformer.last_error))
+					l_validator := l_transformer.configuration.element_validator (l_receiver, l_name_code, Void, validation_action)
+					if l_validator = l_receiver then
+						l_new_context.change_to_sequence_output_destination (l_receiver)
+						if l_receiver.base_uri.is_empty then
+							l_receiver.set_base_uri (new_base_uri (a_context))
+						end
+					else
+						check
+							schema_aware: False
+							-- Only Basic XSLT processor is supported now
+						end
+					end
+					if not is_inherit_namespaces then l_properties := Disinherit_namespaces end
+					-- N.B. The element is constructed as a parentless element
+					l_receiver.start_element (l_name_code, -1, l_properties)
+					output_namespace_nodes (l_new_context, l_receiver)
+					content.generate_events (l_new_context)
+					if not attached l_transformer.last_error as l_last_error then
+						l_receiver.end_element
+						l_receiver.close
+						l_outputter.pop_last_item
+						a_result.put (l_outputter.last_popped_item)
+					else
+						check is_error: l_transformer.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_last_error))
+					end
 				end
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_name_code, some_properties: INTEGER
@@ -216,46 +229,50 @@ feature -- Evaluation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_name_code := name_code (a_context)
-			a_transformer := a_context.transformer
-			if not a_transformer.is_error then
-				if a_name_code = -1 then
-					create an_error.make_from_string ("Name is not a valid QName", Xpath_errors_uri, "XTDE0830", Dynamic_error)
-					an_error.set_location (system_id, line_number)
-					a_context.transformer.report_fatal_error (an_error)
-				else
-					a_receiver := a_context.current_receiver
-					l_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
-					if l_validator /= a_receiver then
-						check
-							schema_aware: False
-							-- Only Basic XSLT processor is supported now
-						end
-					end
-					if a_receiver.base_uri.is_empty then
-						a_receiver.set_base_uri (new_base_uri (a_context))
-					end
-					if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
-					a_receiver.start_element (a_name_code, -1, some_properties)
+			check attached a_context.transformer as l_context_transformer then
+				a_transformer := l_context_transformer
+				if not a_transformer.is_error then
+					if a_name_code = -1 then
+						create an_error.make_from_string ("Name is not a valid QName", Xpath_errors_uri, "XTDE0830", Dynamic_error)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
+					else
+						check attached a_context.current_receiver as l_context_current_receiver then
+							a_receiver := l_context_current_receiver
+							l_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
+							if l_validator /= a_receiver then
+								check
+									schema_aware: False
+									-- Only Basic XSLT processor is supported now
+								end
+							end
+							if a_receiver.base_uri.is_empty then
+								a_receiver.set_base_uri (new_base_uri (a_context))
+							end
+							if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
+							a_receiver.start_element (a_name_code, -1, some_properties)
 
-					-- Output the required namespace nodes via a call-back
+							-- Output the required namespace nodes via a call-back
 
-					output_namespace_nodes (a_context, a_receiver)
-					if not a_transformer.is_error then
+							output_namespace_nodes (a_context, a_receiver)
+							if not a_transformer.is_error then
 
-						-- Apply the content of any attribute sets mentioned in use-attribute-sets.
+								-- Apply the content of any attribute sets mentioned in use-attribute-sets.
 
-						if attribute_sets /= Void and then not attribute_sets.is_empty then
-							expand_attribute_sets (a_transformer.executable, attribute_sets, a_context)
-						end
-						if not a_transformer.is_error then
-							content.generate_events (a_context)
-						end
+								if attached attribute_sets as l_attribute_sets and then not l_attribute_sets.is_empty then
+									expand_attribute_sets (a_transformer.executable, l_attribute_sets, a_context)
+								end
+								if not a_transformer.is_error then
+									content.generate_events (a_context)
+								end
 
-						if not a_transformer.is_error then
+								if not a_transformer.is_error then
 
-							-- Output the element end tag (which will fail if validation fails)
+									-- Output the element end tag (which will fail if validation fails)
 
-							a_receiver.end_element
+									a_receiver.end_element
+								end
+							end
 						end
 					end
 				end
@@ -273,7 +290,9 @@ feature -- Evaluation
 			-- Sending a namecode of -10 to the receiver is a special signal to ignore
 			--  this element and the attributes that follow it
 
-			a_context.current_receiver.start_element (-10, 0, 0)
+			check attached a_context.current_receiver as l_current_receiver then
+				l_current_receiver.start_element (-10, 0, 0)
+			end
 			content.generate_events (a_context)
 
 			-- Note, we don't bother with an end_element call.
@@ -282,7 +301,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_base_uri (a_uri: STRING)
+	set_base_uri (a_uri: detachable STRING)
 			-- Set `base_uri' to `a_uri'.
 		do
 			base_uri := a_uri
@@ -324,9 +343,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	type: XM_XPATH_SCHEMA_TYPE
+	type: detachable XM_XPATH_SCHEMA_TYPE
 
-	attribute_sets: DS_ARRAYED_LIST [INTEGER]
+	attribute_sets: detachable DS_ARRAYED_LIST [INTEGER]
 			-- Used attribute sets
 
 	is_inherit_namespaces: BOOLEAN
@@ -349,7 +368,7 @@ feature {NONE} -- Implementation
 			set: content = a_content
 		end
 
-	check_contents_for_attributes (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	check_contents_for_attributes (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Check no attributes or namespaces are created after child nodes.
 		require
 			a_context_not_void: a_context /= Void
@@ -358,10 +377,9 @@ feature {NONE} -- Implementation
 		local
 			l_children: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_component: XM_XPATH_EXPRESSION
-			l_value_of: XM_XSLT_COMPILED_VALUE_OF
 			l_ok, l_found_child, l_finished: BOOLEAN
 			l_mask: INTEGER
-			l_error: XM_XPATH_ERROR_VALUE
+			l_error: detachable XM_XPATH_ERROR_VALUE
 		do
 			if content.is_sequence_expression then
 				from
@@ -373,9 +391,12 @@ feature {NONE} -- Implementation
 					l_component := l_children.item
 					-- Need to ignore a zero-length text node, which is included to prevent space-separation in a construct like <a>{@x}{@y}</b>
 					if l_component.is_value_of then
-						l_value_of ?= l_component
-						if l_value_of.select_expression.is_string_value and then l_value_of.select_expression.as_string_value.string_value.is_empty then
-							l_ok := True
+						check attached {XM_XSLT_COMPILED_VALUE_OF} l_component as l_value_of then
+							check attached l_value_of.select_expression as l_select_expression then
+								if l_select_expression.is_string_value and then l_select_expression.as_string_value.string_value.is_empty then
+									l_ok := True
+								end
+							end
 						end
 					end
 					if not l_ok then

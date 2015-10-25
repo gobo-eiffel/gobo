@@ -5,7 +5,7 @@ note
 		"Objects that create Unicode normalizers."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,8 @@ feature -- Access
 				create {XM_XSLT_NFD_NORMALIZER} Result.make
 			elseif STRING_.same_string (a_form, "NFKD") then
 				create {XM_XSLT_NFKD_NORMALIZER} Result.make
+			else
+				check a_form_supported: False then end
 			end
 		ensure
 			normalizer_not_void: Result /= Void

@@ -5,7 +5,7 @@ note
 		"Objects which create XSLT stylesheets and transformers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,7 @@ feature -- Access
 	configuration: XM_XSLT_CONFIGURATION
 			-- Configuration
 
-	created_transformer: XM_XSLT_TRANSFORMER
+	created_transformer: detachable XM_XSLT_TRANSFORMER
 			-- Transformer from last call to `create_new_transformer'
 
 	is_stylesheet_cached (a_uri_reference: STRING): BOOLEAN
@@ -76,7 +76,7 @@ feature -- Status report
 	was_error: BOOLEAN
 			-- Did `create_new_transformer' fail?
 
-	last_error_message: STRING
+	last_error_message: detachable STRING
 			-- Error reported by last call to `create_new_transformer'
 
 	is_caching: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Creation
 		local
 			l_compiler: XM_XSLT_STYLESHEET_COMPILER
 			l_uri: UT_URI
-			l_timer: XM_XSLT_TIMING
+			l_timer: detachable XM_XSLT_TIMING
 		do
 			was_error := False
 			create l_uri.make_resolve (a_uri, a_source.uri_reference)
@@ -121,10 +121,12 @@ feature -- Creation
 					was_error := True
 					last_error_message := l_compiler.load_stylesheet_module_error
 				else
-					if is_caching then
-						stylesheet_cache.force_new (l_compiler.executable, l_uri.full_reference)
+					check attached l_compiler.executable as l_compiler_executable then
+						if is_caching then
+							stylesheet_cache.force_new (l_compiler_executable, l_uri.full_reference)
+						end
+						created_transformer := l_compiler.new_transformer (Current, l_timer)
 					end
-					created_transformer := l_compiler.new_transformer (Current, l_timer)
 				end
 				if l_timer /= Void then
 					l_timer.mark_compilation_finished
@@ -137,7 +139,7 @@ feature -- Creation
 			error_or_transformer_not_void: not was_error implies created_transformer /= Void
 		end
 
-	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): XM_XSLT_SOURCE
+	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): detachable XM_XSLT_SOURCE
 			-- Stylesheet associated with `a_uri'
 		require
 			source_uri_not_a_fragment: a_uri /= Void and then a_uri.index_of ('#', 1) = 0

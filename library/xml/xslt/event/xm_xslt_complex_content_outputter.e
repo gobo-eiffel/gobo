@@ -4,7 +4,7 @@ note
 		"Objects that output complex content."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -163,6 +163,7 @@ feature -- Events
 			reject_these_duplicates, reject: BOOLEAN
 			another_namespace_code, an_index: INTEGER
 			a_uri_code, a_prefix_code: INTEGER -- _16
+			l_is_element_in_null_namespace: like is_element_in_null_namespace
 		do
 			if not suppress_attributes then
 				if pending_start_tag < 0 then
@@ -209,10 +210,12 @@ feature -- Events
 						--  itself is in the null namespace, as the resulting element could not be serialized
 
 						if a_prefix_code = 0 and then a_uri_code /= 0 then
-							if is_element_in_null_namespace = Void then
-								create is_element_in_null_namespace.make (shared_name_pool.namespace_code_from_name_code (pending_start_tag) = 0)
+							l_is_element_in_null_namespace := is_element_in_null_namespace
+							if l_is_element_in_null_namespace = Void then
+								create l_is_element_in_null_namespace.make (shared_name_pool.namespace_code_from_name_code (pending_start_tag) = 0)
+								is_element_in_null_namespace := l_is_element_in_null_namespace
 							end
-							if is_element_in_null_namespace.item then
+							if l_is_element_in_null_namespace.item then
 								on_error ("XTDE0440: Cannot output a namespace node for the default namespace when the element is in no namespace")
 								reject := True
 							end
@@ -329,10 +332,12 @@ feature -- Events
 				until
 					an_index > pending_attributes_lists_size
 				loop
-					next_receiver.notify_attribute (pending_attributes_name_codes.item (an_index),
+					check attached pending_attributes_values.item (an_index) as l_pending_attributes_value then
+						next_receiver.notify_attribute (pending_attributes_name_codes.item (an_index),
 															  pending_attributes_type_codes.item (an_index),
-															  pending_attributes_values.item (an_index),
+															  l_pending_attributes_value,
 															  pending_attributes_properties.item (an_index))
+					end
 					an_index := an_index + 1
 				end
 				next_receiver.start_content
@@ -420,8 +425,9 @@ feature -- Events
 					append_item (an_iterator.item)
 					an_iterator.forth
 				end
-			elseif an_item.is_error then
-				on_error (an_item.error_value.error_message)
+			elseif attached an_item.error_value as l_error_value then
+				check is_error: an_item.is_error end
+				on_error (l_error_value.error_message)
 			else
 				check
 					node: an_item.is_node
@@ -445,7 +451,7 @@ feature {NONE} -- Implementation
 	pending_start_tag: INTEGER
 			-- Name code of pending start tag
 
-	is_element_in_null_namespace: DS_CELL [BOOLEAN]
+	is_element_in_null_namespace: detachable DS_CELL [BOOLEAN]
 			-- Is current element in null namespace?
 
 	suppress_attributes: BOOLEAN
@@ -463,7 +469,7 @@ feature {NONE} -- Implementation
 	pending_attributes_type_codes: ARRAY [INTEGER]
 			-- Pending attribute type codes
 
-	pending_attributes_values: ARRAY [STRING]
+	pending_attributes_values: ARRAY [detachable STRING]
 			-- Pending attribute values
 
 	pending_attributes_properties: ARRAY [INTEGER]

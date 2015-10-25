@@ -5,7 +5,7 @@ note
 		"xsl:copy-of element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,11 +31,11 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name: STRING
-			a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING
+			a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -55,7 +55,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_attributes_2 (a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute)
@@ -66,12 +66,14 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_empty
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "select", select_expression)
+			check attached select_expression as l_select_expression then
+				type_check_expression (l_replacement, "select", l_select_expression)
+			end
 			select_expression := l_replacement.item
 			validated := True
 		end
@@ -79,20 +81,23 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_COPY_OF} last_generated_expression.make (an_executable,
-																									 select_expression,
-																									 copy_namespaces, base_uri)
+			check
+				attached select_expression as l_select_expression
+				attached base_uri as l_base_uri
+			then
+				create {XM_XSLT_COMPILED_COPY_OF} last_generated_expression.make (an_executable, l_select_expression, copy_namespaces, l_base_uri)
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Selected node
 
 	copy_namespaces: BOOLEAN
 			-- Do we copy namespaces?
 
-	prepare_attributes_2 (a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: STRING)
+	prepare_attributes_2 (a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute: detachable STRING)
 			-- Continue preparing attributes.
 		local
 			validation: INTEGER
@@ -100,9 +105,12 @@ feature {NONE} -- Implementation
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_last_generated_expression then
+					select_expression := l_last_generated_expression
+					if attached l_last_generated_expression.error_value as l_error_value then
+						check is_error: l_last_generated_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			else
 				report_absence ("select")

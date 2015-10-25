@@ -5,7 +5,7 @@ note
 		"Objects that represent the compiled form of a global xsl:variable"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,12 +65,14 @@ feature -- Status report
 			std.error.put_string (a_string);
 			std.error.put_string (variable_name);
 			std.error.put_new_line
-			if select_expression /= Void then select_expression.display (a_level + 1) end
+			if attached select_expression as l_select_expression then
+				l_select_expression.display (a_level + 1)
+			end
 		end
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			check
@@ -81,32 +83,36 @@ feature -- Evaluation
 	evaluate_variable (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate variable
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_bindery: XM_XSLT_BINDERY
+			l_last_evaluated_binding: like last_evaluated_binding
 		do
-			an_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as an_evaluation_context
 				-- this is XSLT
-			end
-			a_bindery := an_evaluation_context.transformer.bindery
-			check
-				slot_number_in_range: slot_number > 0 and then slot_number <= a_bindery. global_variable_count
-			end
-			last_evaluated_binding := a_bindery.global_variable_value (slot_number)
-			if last_evaluated_binding = Void then
+				attached an_evaluation_context.transformer as l_evaluation_context_transformer
+			then
+				check attached l_evaluation_context_transformer.bindery as l_evaluation_context_transformer_bindery then
+					a_bindery := l_evaluation_context_transformer_bindery
+				end
+				check
+					slot_number_in_range: slot_number > 0 and then slot_number <= a_bindery.global_variable_count
+				end
+				last_evaluated_binding := a_bindery.global_variable_value (slot_number)
+				if last_evaluated_binding = Void then
 
-				-- This is the first reference to a global variable; try to evaluate it now.
-            -- But first set a flag to stop looping.
+					-- This is the first reference to a global variable; try to evaluate it now.
+	            -- But first set a flag to stop looping.
 
-				a_bindery.set_executing (slot_number, True)
-				if a_bindery.is_circularity_error then
-					create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global variable: ", variable_name),
-																													 Xpath_errors_uri, "XTDE0640", Dynamic_error)
-				else
-					last_evaluated_binding := select_value (an_evaluation_context)
-					a_bindery.define_global_variable (slot_number, last_evaluated_binding)
-					a_bindery.set_executing (slot_number, False)
+					a_bindery.set_executing (slot_number, True)
+					if a_bindery.is_circularity_error then
+						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global variable: ", variable_name),
+																														 Xpath_errors_uri, "XTDE0640", Dynamic_error)
+					else
+						l_last_evaluated_binding := select_value (an_evaluation_context)
+						last_evaluated_binding := l_last_evaluated_binding
+						a_bindery.define_global_variable (slot_number, l_last_evaluated_binding)
+						a_bindery.set_executing (slot_number, False)
+					end
 				end
 			end
 		end
@@ -116,17 +122,23 @@ feature -- Evaluation
 		local
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
-			l_result: DS_CELL [XM_XPATH_VALUE]
+			l_result: DS_CELL [detachable XM_XPATH_VALUE]
 		do
 			l_new_context := a_context.new_clean_context
-			create l_iterator.make (l_new_context.transformer.principal_source_document)
-			l_new_context.set_current_iterator (l_iterator)
-			if slot_manager.number_of_variables > 0 then
-				l_new_context.open_stack_frame (slot_manager)
+			check attached l_new_context.transformer as l_transformer then
+				create l_iterator.make (l_transformer.principal_source_document)
+				l_new_context.set_current_iterator (l_iterator)
+				if slot_manager.number_of_variables > 0 then
+					l_new_context.open_stack_frame (slot_manager)
+				end
+				create l_result.make (Void)
+				check precondition_select_expression_not_void: attached select_expression as l_select_expression then
+					l_select_expression.evaluate (l_result, l_select_expression.lazy_evaluation_mode, Many_references, l_new_context)
+					check postcondition_of_evaluate: attached l_result.item as l_result_item then
+						Result := l_result_item
+					end
+				end
 			end
-			create l_result.make (Void)
-			select_expression.evaluate (l_result, select_expression.lazy_evaluation_mode, Many_references, l_new_context)
-			Result := l_result.item
 		end
 
 feature -- Element_change

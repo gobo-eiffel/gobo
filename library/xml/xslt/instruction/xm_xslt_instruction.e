@@ -5,7 +5,7 @@ note
 		"Objects that represent an XSLT instruction"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -97,7 +97,7 @@ feature -- Access
 		local
 			a_cursor:  DS_ARRAYED_LIST_CURSOR [XM_XSLT_COMPILED_WITH_PARAM]
 			a_param: XM_XSLT_COMPILED_WITH_PARAM
-			some_existing_parameters: XM_XSLT_PARAMETER_SET
+			some_existing_parameters: detachable XM_XSLT_PARAMETER_SET
 		do
 			some_existing_parameters := a_context.tunnel_parameters
 			if some_existing_parameters = Void then
@@ -147,15 +147,15 @@ feature -- Optimization
 			still_no_error: not is_error
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			a_offer.accept (Current)
-			if a_offer.accepted_expression = Void then
+			if not attached a_offer.accepted_expression as l_accepted_expression then
 				promote_instruction (a_offer)
 				a_replacement.put (Current)
 			else
-				set_replacement (a_replacement, a_offer.accepted_expression)
+				set_replacement (a_replacement, l_accepted_expression)
 			end
 		end
 
@@ -164,64 +164,68 @@ feature -- Evaluation
 	generate_events (a_context: XM_XPATH_CONTEXT)
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
-			l_tail_call: XM_XPATH_TAIL_CALL
+			l_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context_not_void: l_evaluation_context /= Void
+				evaluation_context_not_void: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- this is XSLT
-			end
-			create l_tail.make (Void)
-			generate_tail_call (l_tail, l_evaluation_context)
-			from
-				l_tail_call := l_tail.item
-			until
-				l_tail_call = Void or else l_evaluation_context.transformer.is_error
-			loop
-				l_tail.put (Void)
-				l_tail_call.generate_tail_call (l_tail, l_evaluation_context)
-				l_tail_call := l_tail.item
+				attached l_evaluation_context.transformer as l_evaluation_context_transformer
+			then
+				create l_tail.make (Void)
+				generate_tail_call (l_tail, l_evaluation_context)
+				from
+					l_tail_call := l_tail.item
+				until
+					l_tail_call = Void or else l_evaluation_context_transformer.is_error
+				loop
+					l_tail.put (Void)
+					l_tail_call.generate_tail_call (l_tail, l_evaluation_context)
+					l_tail_call := l_tail.item
+				end
 			end
 		ensure then
 			no_tail_calls: not a_context.is_process_error implies True -- l_tail_call = Void
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			check
 				emulation: not is_evaluate_supported
 			end
 			if is_iterator_supported then
 				create_iterator (a_context)
-				if last_iterator.is_error then
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-				else
-					last_iterator.start
-					if last_iterator.is_error then
-						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (last_iterator.error_value))
-					elseif last_iterator.after then
-						a_result.put (Void)
+				check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+					if attached l_last_iterator.error_value as l_error_value then
+						check is_error: l_last_iterator.is_error end
+						a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
 					else
-						a_result.put (last_iterator.item)
+						l_last_iterator.start
+						if attached l_last_iterator.error_value as l_error_value then
+							check is_error: l_last_iterator.is_error end
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error_value))
+						elseif l_last_iterator.after then
+							a_result.put (Void)
+						else
+							a_result.put (l_last_iterator.item)
+						end
 					end
 				end
 			else
-				l_context ?= a_context.new_minor_context
 				check
-					evaluation_context: l_context /= Void
+					evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_minor_context as l_context
 					-- This is XSLT
+					attached l_context.transformer as l_transformer
+				then
+					create l_receiver.make_with_size (1, l_transformer)
+					l_context.change_to_sequence_output_destination (l_receiver)
+					generate_events (l_context)
+					l_receiver.close
+					a_result.put (l_receiver.first_item)
 				end
-				create l_receiver.make_with_size (1, l_context.transformer)
-				l_context.change_to_sequence_output_destination (l_receiver)
-				generate_events (l_context)
-				l_receiver.close
-				a_result.put (l_receiver.first_item)
 			end
 		end
 
@@ -229,8 +233,7 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			l_other_context: XM_XSLT_EVALUATION_CONTEXT
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			check
 				emulation: not is_iterator_supported
@@ -238,39 +241,42 @@ feature -- Evaluation
 			if is_evaluate_supported then
 				create l_item.make (Void)
 				evaluate_item (l_item, a_context)
-				if l_item.item = Void then
+				if not attached l_item.item as l_item_item then
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
-				elseif l_item.item.is_error then
+				elseif attached l_item_item.error_value as l_error_value then
+					check is_error: l_item_item.is_error end
 					if is_node_sequence then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_item.item.error_value)
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_error_value)
 					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_item.item.error_value)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
 					end
 				else
-					if not l_item.item.is_node then
-						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
+					if not l_item_item.is_node then
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item_item)
 					else
-						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_item.item.as_node)
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_item_item.as_node)
 					end
 				end
 			else
-				l_other_context ?= a_context.new_minor_context
 				check
-					evaluation_context: l_other_context /= Void
+					evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_minor_context as l_other_context
 					-- This is XSLT
-				end
-				create l_receiver.make (l_other_context.transformer)
-				l_other_context.change_to_sequence_output_destination (l_receiver)
-				generate_events (l_other_context)
-				if l_receiver.is_open then l_receiver.close end
-				if not l_other_context.transformer.is_error then
-					l_receiver.sequence.create_iterator (l_other_context)
-					last_iterator := l_receiver.sequence.last_iterator
-				else
-					if is_node_sequence then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_other_context.transformer.last_error)
+					attached l_other_context.transformer as l_transformer
+				then
+					create l_receiver.make (l_transformer)
+					l_other_context.change_to_sequence_output_destination (l_receiver)
+					generate_events (l_other_context)
+					if l_receiver.is_open then l_receiver.close end
+					if not attached l_transformer.last_error as l_last_error then
+						l_receiver.sequence.create_iterator (l_other_context)
+						last_iterator := l_receiver.sequence.last_iterator
 					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_other_context.transformer.last_error)
+						check is_error: l_transformer.is_error end
+						if is_node_sequence then
+							create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_last_error)
+						else
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_last_error)
+						end
 					end
 				end
 			end
@@ -280,25 +286,27 @@ feature -- Evaluation
 			-- Create an iterator over a node sequence.
 		do
 			create_iterator (a_context)
-			last_node_iterator := last_iterator.as_node_iterator
+			check postcondition_of_create_iterator: attached last_iterator as l_last_iterator then
+				last_node_iterator := l_last_iterator.as_node_iterator
+			end
 		end
 
 	processed_eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE
 			-- Eager evaluation via `generate_events'
 		local
 			l_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
-			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			l_other_context ?= a_context.new_minor_context
-				check
-					evaluation_context: l_other_context /= Void
-					-- This is XSLT
-				end
-			create l_receiver.make (l_other_context.transformer)
-			l_other_context.change_to_sequence_output_destination (l_receiver)
-			generate_events (l_other_context)
-			l_receiver.close
-			Result := l_receiver.sequence
+			check
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context.new_minor_context as l_other_context
+				-- This is XSLT
+				attached l_other_context.transformer as l_transformer
+			then
+				create l_receiver.make (l_transformer)
+				l_other_context.change_to_sequence_output_destination (l_receiver)
+				generate_events (l_other_context)
+				l_receiver.close
+				Result := l_receiver.sequence
+			end
 		end
 
 feature -- Element change

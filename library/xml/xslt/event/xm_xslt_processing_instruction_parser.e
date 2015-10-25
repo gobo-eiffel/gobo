@@ -5,7 +5,7 @@ note
 		"XML event handler that parses xml-stylesheet PIs"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,16 @@ inherit
 
 	XM_CALLBACKS_NULL
 		rename
-			make as make_callbacks
+			make as make_callbacks,
+			initialize as initialize_callbacks
 		redefine
 			on_processing_instruction, on_start_tag, on_error
 		end
 
 	XM_DTD_CALLBACKS_NULL
 		rename
-			make as make_dtd_callbacks
+			make as make_dtd_callbacks,
+			initialize as initialize_dtd_callbacks
 		redefine
 			on_dtd_processing_instruction
 		end
@@ -66,7 +68,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Did an error occur for current PI?
 
-	error_message: STRING
+	error_message: detachable STRING
 			-- Error message (for interactive debugging only)
 
 feature -- Document type definuition callbacks
@@ -74,7 +76,9 @@ feature -- Document type definuition callbacks
 	on_dtd_processing_instruction (a_name, a_content: STRING)
 			-- PI.
 		do
-			if pi_name.is_equal (a_name) then process_pi (a_content) end
+			if pi_name.is_equal (a_name) then
+				process_pi (a_content)
+			end
 		end
 
 
@@ -88,7 +92,7 @@ feature -- Errors
 
 feature -- Tag
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+	on_start_tag (a_namespace: detachable STRING; a_prefix: detachable STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			on_error ("Document element found")
@@ -99,7 +103,9 @@ feature -- Meta
 	on_processing_instruction (a_name: STRING; a_content: STRING)
 			-- Processing instruction.
 		do
-			if pi_name.is_equal (a_name) then process_pi (a_content) end
+			if pi_name.is_equal (a_name) then
+				process_pi (a_content)
+			end
 		end
 
 feature {NONE} -- Initialization
@@ -110,19 +116,19 @@ feature {NONE} -- Initialization
 	error_collector: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector to stop further parsing.
 
-	uri: STRING
+	uri: detachable STRING
 			-- URI of stylesheet to be applied
 
-	mime_type: UT_MEDIA_TYPE
+	mime_type: detachable UT_MEDIA_TYPE
 			-- MIME type of stylesheet to be applied
 
-	title: STRING
+	title: detachable STRING
 			-- Preference name of stylesheet to be applied
 
-	charset: STRING
+	charset: detachable STRING
 			-- Character set of stylesheet to be applied
 
-	applicable_media: DS_LIST [STRING]
+	applicable_media: detachable DS_LIST [STRING]
 			-- Target media of stylesheet to be applied
 
 	alternate: BOOLEAN
@@ -141,7 +147,13 @@ feature {NONE} -- Initialization
 			a_quote: CHARACTER
 		do
 			is_error := False
-			applicable_media := Void; uri := Void; charset := Void; mime_type := Void; title := Void; alternate_seen := False; alternate := False
+			applicable_media := Void
+			uri := Void
+			charset := Void
+			mime_type := Void
+			title := Void
+			alternate_seen := False
+			alternate := False
 			from
 				create a_string.make_from_string (a_content)
 				STRING_.right_adjust (a_string)
@@ -211,10 +223,12 @@ feature {NONE} -- Initialization
 	process_attribute (a_name, a_value: STRING)
 			-- Process a pseudo-attribute.
 		require
-			name_not_empty: a_name /= Void is_valid_name (a_name)
+			name_not_empty: a_name /= Void
+			valid_name: is_valid_name (a_name)
 			value_not_void: a_value /= Void
 		local
-			a_message, a_major, a_minor, an_unescaped_value: STRING
+			a_message, a_major, a_minor: STRING
+			an_unescaped_value: detachable STRING
 			a_splitter: ST_SPLITTER
 			some_type_parts: DS_LIST [STRING]
 		do
@@ -291,7 +305,8 @@ feature {NONE} -- Initialization
 			-- Set a diagnostic error message.
 		require
 			no_previous_error: not is_error
-			message_not_empty: a_message /= Void and then a_message.count > 0
+			a_message_not_void: a_message /= Void
+			a_message_not_empty: a_message.count > 0
 		do
 			is_error := True
 			error_message := STRING_.concat ("Error processing xml-stylesheet PI (on the assumption it is for XSLT): ", a_message)
@@ -315,10 +330,10 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	process_media  (a_value: STRING)
+	process_media (a_value: STRING)
 			-- Process "media=" pseudo-attribute.
 		require
-			not_seen_before:applicable_media = Void
+			not_seen_before: applicable_media = Void
 			value_not_void: a_value /= Void
 		local
 			a_splitter: ST_SPLITTER
@@ -326,18 +341,22 @@ feature {NONE} -- Initialization
 			a_medium: STRING
 			an_index, a_code: INTEGER
 			all_ascii: BOOLEAN
+			l_applicable_media: like applicable_media
 		do
 			create a_splitter.make
 			a_splitter.set_separators (",")
-			applicable_media := a_splitter.split (a_value)
+			l_applicable_media := a_splitter.split (a_value)
+			applicable_media := l_applicable_media
 			from
-				a_cursor := applicable_media.new_cursor;a_cursor.start
+				a_cursor := l_applicable_media.new_cursor
+				a_cursor.start
 			until
 				a_cursor.after
 			loop
 				a_medium := a_cursor.item
 				from
-					an_index := 1; all_ascii := True
+					an_index := 1
+					all_ascii := True
 				until
 					not all_ascii or else an_index > a_medium.count
 				loop
@@ -345,7 +364,8 @@ feature {NONE} -- Initialization
 					if a_code = 45 -- hyphen
 						or else (a_code >= 48 and then a_code <= 57) -- digit
 						or else (a_code >= 65 and then a_code <= 90) -- upper case
- 						or else (a_code >= 96 and then a_code <= 122) then -- lower case
+ 						or else (a_code >= 96 and then a_code <= 122) -- lower case
+ 					then
 					   -- OK
 					else
 						all_ascii := False
@@ -355,7 +375,7 @@ feature {NONE} -- Initialization
 				end
 				a_cursor.forth
 			variant
-				applicable_media.count + 1 - a_cursor.index
+				l_applicable_media.count + 1 - a_cursor.index
 			end
 		ensure
 			processed: applicable_media /= Void
@@ -367,25 +387,34 @@ feature {NONE} -- Initialization
 			no_error: not is_error
 		local
 			a_pi: XM_XSLT_XML_STYLESHEET
+			l_applicable_media: like applicable_media
+			l_title: like title
+			l_charset: like charset
 		do
-			if uri /= Void and then mime_type /= Void then
-				if charset = Void then
-					charset := ""
+			if attached uri as l_uri and then attached mime_type as l_mime_type then
+				l_charset := charset
+				if l_charset = Void then
+					l_charset := ""
+					charset := l_charset
 				end
-				if title = Void then
-					title := ""
+				l_title := title
+				if l_title = Void then
+					l_title := ""
+					title := l_title
 				end
-				if applicable_media = Void then
-					create {DS_ARRAYED_LIST [STRING]} applicable_media.make (1)
+				l_applicable_media := applicable_media
+				if l_applicable_media = Void then
+					create {DS_ARRAYED_LIST [STRING]} l_applicable_media.make (1)
+					applicable_media := l_applicable_media
 				end
-				applicable_media.set_equality_tester (string_equality_tester)
-				if applicable_media.count = 0 then
-					applicable_media.put_last ("screen")
+				l_applicable_media.set_equality_tester (string_equality_tester)
+				if l_applicable_media.count = 0 then
+					l_applicable_media.put_last ("screen")
 				end
-				if title.count = 0 and then alternate then
-					set_error (STRING_.concat ("Empty title for alternate stylesheet ", uri))
+				if l_title.count = 0 and then alternate then
+					set_error (STRING_.concat ("Empty title for alternate stylesheet ", l_uri))
 				else
-					create a_pi.make (uri, mime_type, charset, title, applicable_media, alternate)
+					create a_pi.make (l_uri, l_mime_type, l_charset, l_title, l_applicable_media, alternate)
 					stylesheets.force_last (a_pi)
 				end
 			else
@@ -393,14 +422,14 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	unescaped_value (a_value: STRING): STRING
+	unescaped_value (a_value: STRING): detachable STRING
 			-- `a_value' with all escaping removed.
 		require
 			value_not_void: a_value /= Void
 			no_error: not is_error
 		local
 			an_index, a_count, a_semicolon: INTEGER
-			a_string: STRING
+			a_string: detachable STRING
 		do
 			an_index := a_value.index_of ('&', 1)
 			if an_index = 0 then
@@ -421,10 +450,10 @@ feature {NONE} -- Initialization
 						else
 							a_string := predefined_entity_reference (a_value.substring (an_index + 1, a_semicolon - 1))
 						end
-						if a_string = Void then
-							Result := Void
-						else
+						if a_string /= Void and Result /= Void then
 							Result := STRING_.appended_string (Result, a_string)
+						else
+							Result := Void
 						end
 						an_index := a_semicolon + 1
 					else
@@ -439,7 +468,7 @@ feature {NONE} -- Initialization
 			possible_void_result: True
 		end
 
-	character_reference (a_value: STRING): STRING
+	character_reference (a_value: STRING): detachable STRING
 			-- Decoded character reference
 		require
 			value_not_void: a_value /= Void
@@ -468,7 +497,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	predefined_entity_reference (a_value: STRING): STRING
+	predefined_entity_reference (a_value: STRING): detachable STRING
 			-- Decoded predefined entity reference
 		require
 			value_not_void: a_value /= Void
@@ -489,6 +518,7 @@ feature {NONE} -- Initialization
 invariant
 
 	candidates_not_void: stylesheets /= Void
-	error_message: is_error implies error_message /= Void and then error_message.count > 0
+	error_collector_not_void: error_collector /= Void
+	error_message: is_error implies attached error_message as l_error_message and then l_error_message.count > 0
 
 end

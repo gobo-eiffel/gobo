@@ -5,7 +5,7 @@ note
 	"Emitters that write plain text."
 
 library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
+copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 license: "MIT License"
 date: "$Date$"
 revision: "$Revision$"
@@ -46,10 +46,12 @@ feature -- Events
 
 				-- Write a BOM if requested
 
-				if outputter.byte_order_mark_permitted then
-					if output_properties.byte_order_mark_required
-						or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
-					output_ignoring_error (outputter.byte_order_mark)
+				check is_output_open: attached outputter as l_outputter then
+					if l_outputter.byte_order_mark_permitted then
+						if output_properties.byte_order_mark_required
+							or (not output_properties.is_byte_order_mark_set and l_outputter.is_byte_order_mark_default) then
+							output_ignoring_error (l_outputter.byte_order_mark)
+						end
 					end
 				end
 			end

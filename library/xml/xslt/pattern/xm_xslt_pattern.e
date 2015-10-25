@@ -5,7 +5,7 @@ note
 		"XSLT patterns"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,6 @@ inherit
 		export {NONE} all end
 
 feature -- Access
-
 
 	node_kind: INTEGER
 			-- Type of nodes matched
@@ -66,7 +65,7 @@ feature -- Access
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
 		ensure
-			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
+			expression_tester: Result /= Void and then attached Result.equality_tester as l_equality_tester and then l_equality_tester.is_equal (expression_tester)
 		end
 
 	compute_dependencies
@@ -93,7 +92,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Is the pattern in error ?
 
-	error_value: XM_XPATH_ERROR_VALUE
+	error_value: detachable XM_XPATH_ERROR_VALUE
 			-- Error value
 
 	is_node_test: BOOLEAN
@@ -201,6 +200,7 @@ feature -- Conversion
 		require
 			location_path_pattern: is_location_pattern
 		do
+			check location_path_pattern: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -210,6 +210,7 @@ feature -- Conversion
 		require
 			union_pattern: is_union_pattern
 		do
+			check union_pattern: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end

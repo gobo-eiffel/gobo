@@ -5,7 +5,7 @@ note
 		"Objects that maintain template-matching rules (one set for each mode)"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,7 +66,9 @@ feature -- Access
 			if a_mode_name_code = Default_mode then
 				Result := mode_for_default_mode
 			elseif a_mode_name_code = All_modes then
-				Result := omni_mode
+				check attached omni_mode as l_omni_mode then
+					Result := l_omni_mode
+				end
 			else
 				a_node_key := fingerprint_from_name_code (a_mode_name_code)
 				Result := mode_map.item (a_node_key)
@@ -75,10 +77,10 @@ feature -- Access
 			mode_not_void: Result /= Void
 		end
 
-	last_found_template: XM_XSLT_RULE
+	last_found_template: detachable XM_XSLT_RULE
 			-- Last template found by `find_template_rule' or `find_imported_template_rule' or `find_next_match_handler'
 
-	find_template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	find_template_rule (a_node: XM_XPATH_NODE; a_mode: detachable XM_XSLT_MODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Template rule registered for a particular node in a specific mode.
 		require
 			node_not_void: a_node /= Void
@@ -95,7 +97,7 @@ feature -- Access
 			l_mode_to_use.match_rule (a_node, a_context)
 			last_found_template := l_mode_to_use.last_matched_rule
 			check
-				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				template_rule: attached last_found_template as l_last_found_template implies l_last_found_template.handler.is_template
 				-- Rule manager is only used with template rules
 			end
 		end
@@ -118,7 +120,7 @@ feature -- Access
 			l_mode_to_use.match_imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
 			last_found_template := l_mode_to_use.last_matched_rule
 			check
-				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				template_rule: attached last_found_template as l_last_found_template implies l_last_found_template.handler.is_template
 				-- Rule manager is only used with template rules
 			end
 		end
@@ -142,7 +144,7 @@ feature -- Access
 			l_mode_to_use.match_next_rule (a_node, a_current_template, a_context)
 			last_found_template := l_mode_to_use.last_matched_rule
 			check
-				template_rule: last_found_template /= Void implies last_found_template.handler.is_template
+				template_rule: attached last_found_template as l_last_found_template implies l_last_found_template.handler.is_template
 				-- Rule manager is only used with template rules
 			end
 		end
@@ -173,18 +175,20 @@ feature -- Element change
 		local
 			a_node_key: INTEGER
 			a_mode: XM_XSLT_MODE
+			l_omni_mode: like omni_mode
 		do
 			if a_mode_name_code = All_modes then
-				create omni_mode.make
-				omni_mode.set_name ("#all")
+				create l_omni_mode.make
+				l_omni_mode.set_name ("#all")
+				omni_mode := l_omni_mode
 			else
 				a_node_key := fingerprint_from_name_code (a_mode_name_code)
 
 				-- When creating a specific mode, copy all the rules currently held
             --  in `omni_mode', as these apply to all modes
 
-				if omni_mode /= Void then
-					create a_mode.make_with_copy (omni_mode)
+				if attached omni_mode as l_omni_mode_2 then
+					create a_mode.make_with_copy (l_omni_mode_2)
 				else
 					create a_mode.make
 				end
@@ -270,8 +274,8 @@ feature -- Element change
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
 		do
 			rank_mode (mode_for_default_mode)
-			if omni_mode /= Void then
-				rank_mode (omni_mode)
+			if attached omni_mode as l_omni_mode then
+				rank_mode (l_omni_mode)
 			end
 			from
 				l_cursor := mode_map.new_cursor; l_cursor.start
@@ -289,7 +293,7 @@ feature -- Element change
 			mode_not_void: a_mode /= Void
 		local
 			l_index: INTEGER
-			l_rule: XM_XSLT_RULE
+			l_rule: detachable XM_XSLT_RULE
 			l_priority: MA_DECIMAL
 		do
 			from
@@ -302,18 +306,20 @@ feature -- Element change
 				until
 					l_rule = Void
 				loop
-					l_priority := l_rule.priority
-					priority_ranks.start
-					priority_ranks.search_forth (l_priority)
-					check
-						priority_found: not priority_ranks.off
-							-- `set_handler' always calls `rank_priority' to guarantee this
+					check attached l_rule.priority as l_rule_priority then
+						l_priority := l_rule_priority
+						priority_ranks.start
+						priority_ranks.search_forth (l_priority)
+						check
+							priority_found: not priority_ranks.off
+								-- `set_handler' always calls `rank_priority' to guarantee this
+						end
+						-- to avoid re-ranking - is this sound? - XM_XSLT_TEST_INFOSET caused this change
+						if l_rule.priority_rank = -1 then
+							l_rule.set_priority_rank (priority_ranks.index)
+						end
+						l_rule := l_rule.next_rule
 					end
-					-- to avoid re-ranking - is this sound? - XM_XSLT_TEST_INFOSET caused this change
-					if l_rule.priority_rank = -1 then
-						l_rule.set_priority_rank (priority_ranks.index)
-					end
-					l_rule := l_rule.next_rule
 				end
 				l_index := l_index + 1
 			variant
@@ -358,7 +364,7 @@ feature {NONE} -- Implementation
 	mode_for_default_mode: XM_XSLT_MODE
 			-- Mode for node handlers with default mode
 
-	omni_mode: XM_XSLT_MODE
+	omni_mode: detachable XM_XSLT_MODE
 			-- Mode for node handlers that specify mode="all"
 
 	mode_map: DS_HASH_TABLE [XM_XSLT_MODE, INTEGER]

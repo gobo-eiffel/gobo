@@ -5,7 +5,7 @@ note
 		"Interface to XSLT serializers"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	last_error: XM_XPATH_ERROR_VALUE
+	last_error: detachable XM_XPATH_ERROR_VALUE
 		-- Last reported fatal or non-recovered error
 
 	error_listener: XM_XSLT_ERROR_LISTENER
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)
+	report_warning (a_message: STRING; a_locator: detachable XM_XPATH_LOCATOR)
 			-- Report a warning.
 		require
 			a_message_not_void: a_message /= Void

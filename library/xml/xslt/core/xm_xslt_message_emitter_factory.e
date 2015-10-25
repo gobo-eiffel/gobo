@@ -5,7 +5,7 @@ note
 		"Objects that create message emitters"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class XM_XSLT_MESSAGE_EMITTER_FACTORY
 
 feature -- Access
 
-	outputter: XM_OUTPUT
+	outputter: detachable XM_OUTPUT
 			-- Destination for xsl:message output
 
 feature -- Element change
@@ -36,12 +36,16 @@ feature -- Creation
 		require
 			a_transformer_not_void: a_transformer /= Void
 			a_properties_not_void: a_properties /= Void
+		local
+			l_outputter: like outputter
 		do
-			if outputter = void then
-				create outputter
-				outputter.set_output_standard_error
+			l_outputter := outputter
+			if l_outputter = void then
+				create l_outputter
+				l_outputter.set_output_standard_error
+				outputter := l_outputter
 			end
-			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, outputter, a_properties)
+			create {XM_XSLT_MESSAGE_EMITTER} Result.make (a_transformer, l_outputter, a_properties)
 		ensure
 			new_message_emitter_not_void: Result /= Void
 		end

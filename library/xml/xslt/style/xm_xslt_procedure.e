@@ -6,12 +6,12 @@ note
 %Specifically, xsl:template, xsl:variable, xsl:param, xsl:function or xsl:attribute-sets"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_PROCEDURE
+deferred class XM_XSLT_PROCEDURE
 
 feature -- Access
 

@@ -5,7 +5,7 @@ note
 		"Objects that create emitters for gexslt-examples:methods."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,6 +67,8 @@ feature -- Access
 					create {XM_XSLT_CDATA_FILTER} l_receiver.make (l_receiver, l_xml_emitter, a_serializer, a_properties)
 				end
 				Result := l_receiver
+			else
+				check precondition_is_valid_output_method: False then end
 			end
 		end
 

@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Emitters that write XML."
+		"Emitters that write XML."
 
-library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2004-2011, Colin Adams and others"
-license: "MIT License"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XSLT_XML_EMITTER
 
@@ -110,8 +110,8 @@ feature -- Events
 			if not is_error and not is_output_open and not is_no_declaration_on_close then
 				open_document
 			end
-			if outputter /= Void then
-				outputter.outputter.flush
+			if attached outputter as l_outputter then
+				l_outputter.outputter.flush
 			end
 			is_open := False
 		end
@@ -119,7 +119,8 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER)
 			-- Notify the start of an element
 		local
-			l_display_name, l_system_id, l_public_id: STRING
+			l_display_name: detachable STRING
+			l_system_id, l_public_id: detachable STRING
 			l_bad_character_code: INTEGER
 			l_message: STRING
 		do
@@ -206,7 +207,7 @@ feature -- Events
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER)
 			-- Notify an attribute.
 		local
-			a_display_name: STRING
+			a_display_name: detachable STRING
 			a_bad_character: INTEGER
 			a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
@@ -409,7 +410,7 @@ feature {NONE} -- Implementation
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Encoder factory
 
-	encoding: STRING
+	encoding: detachable STRING
 			-- Actual encoding to be used
 
 	current_element_name_code: INTEGER
@@ -504,56 +505,61 @@ feature {NONE} -- Implementation
 			l_omit: BOOLEAN
 			l_version: STRING
 		do
-			if outputter.byte_order_mark_permitted then
-				if output_properties.byte_order_mark_required
-					or (not output_properties.is_byte_order_mark_set and outputter.is_byte_order_mark_default) then
-					output_ignoring_error (outputter.byte_order_mark)
-				end
-			end
-			l_omit := output_properties.omit_xml_declaration
-			if l_omit and then
-				not (STRING_.same_string (encoding, "UTF-8") or else
-				STRING_.same_string (encoding, "UTF-16") or else
-				STRING_.same_string (encoding, "US-ASCII") or else
-				STRING_.same_string (encoding, "ASCII"))
+			check
+				attached outputter as l_outputter
+				attached encoding as l_encoding
 			then
-				l_omit := False
-			end
-
-			l_version := output_properties.version
-			if l_version.same_string ("1.0") and output_properties.undeclare_prefixes then
-				serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version 1.0 does not permit undeclaring namespaces",
-					Xpath_errors_uri, "SEPM0010", Dynamic_error))
-			elseif not l_omit then
-				if l_version.same_string ("1.0") or l_version.same_string ("1.1") then
-					-- ok
-				else
-					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version must be 1.0 or 1.1", Xpath_errors_uri, "SEUS0013", Dynamic_error))
-				end
-				if not serializer.is_error then
-					output ("<?xml version=%"" + l_version + "%" " + "encoding=%"" + encoding + "%"")
-					if output_properties.standalone /= Void then
-						is_well_formed_document_required := True
-						output (" standalone=%"" + output_properties.standalone + "%"")
-					end
-					output ("?>")
-
-					-- Don't write a newline character: it's wrong if the output is an
-					--  external general parsed entity
-
-				end
-			else
-				if not l_version.same_string ("1.0") and output_properties.doctype_system /= Void then
-					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when version is not 1.0 and a DOCTYPE has been requested",
-						Xpath_errors_uri, "SEPM0009", Dynamic_error))
-				else
-					if output_properties.standalone /= Void then
-						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when standalone=yes",
-						Xpath_errors_uri, "SEPM0009", Dynamic_error))
+				if l_outputter.byte_order_mark_permitted then
+					if output_properties.byte_order_mark_required
+						or (not output_properties.is_byte_order_mark_set and l_outputter.is_byte_order_mark_default) then
+						output_ignoring_error (l_outputter.byte_order_mark)
 					end
 				end
+				l_omit := output_properties.omit_xml_declaration
+				if l_omit and then
+					not (STRING_.same_string (l_encoding, "UTF-8") or else
+					STRING_.same_string (l_encoding, "UTF-16") or else
+					STRING_.same_string (l_encoding, "US-ASCII") or else
+					STRING_.same_string (l_encoding, "ASCII"))
+				then
+					l_omit := False
+				end
+
+				l_version := output_properties.version
+				if l_version.same_string ("1.0") and output_properties.undeclare_prefixes then
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version 1.0 does not permit undeclaring namespaces",
+						Xpath_errors_uri, "SEPM0010", Dynamic_error))
+				elseif not l_omit then
+					if l_version.same_string ("1.0") or l_version.same_string ("1.1") then
+						-- ok
+					else
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version must be 1.0 or 1.1", Xpath_errors_uri, "SEUS0013", Dynamic_error))
+					end
+					if not serializer.is_error then
+						output ("<?xml version=%"" + l_version + "%" " + "encoding=%"" + l_encoding + "%"")
+						if attached output_properties.standalone as l_output_properties_standalone then
+							is_well_formed_document_required := True
+							output (" standalone=%"" + l_output_properties_standalone + "%"")
+						end
+						output ("?>")
+
+						-- Don't write a newline character: it's wrong if the output is an
+						--  external general parsed entity
+
+					end
+				else
+					if not l_version.same_string ("1.0") and output_properties.doctype_system /= Void then
+						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when version is not 1.0 and a DOCTYPE has been requested",
+							Xpath_errors_uri, "SEPM0009", Dynamic_error))
+					else
+						if output_properties.standalone /= Void then
+							serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML declaration may not be omitted when standalone=yes",
+							Xpath_errors_uri, "SEPM0009", Dynamic_error))
+						end
+					end
+				end
+				is_declaration_written := True
 			end
-			is_declaration_written := True
 		ensure
 			written: is_declaration_written
 		end
@@ -562,12 +568,14 @@ feature {NONE} -- Implementation
 			-- Output `a_character_string'.
 		require
 			document_opened: is_output_open
-			valid_string: outputter.is_valid_string (a_character_string)
+			valid_string: attached outputter as l_outputter and then l_outputter.is_valid_string (a_character_string)
 		do
-			if not is_error then
-				outputter.output (a_character_string)
-				if outputter.is_error then
-					on_error ("Failed to write to output stream")
+			check precondition_document_opened: attached outputter as l_outputter then
+				if not is_error then
+					l_outputter.output (a_character_string)
+					if l_outputter.is_error then
+						on_error ("Failed to write to output stream")
+					end
 				end
 			end
 		end
@@ -575,10 +583,12 @@ feature {NONE} -- Implementation
 	output_ignoring_error (a_character_string: STRING)
 			-- Output `a_character_string', ignoring any error.
 		require
-			valid_string: outputter.is_valid_string (a_character_string)
 			document_opened: is_output_open
+			valid_string: attached outputter as l_outputter and then l_outputter.is_valid_string (a_character_string)
 		do
-			outputter.output_ignoring_error (a_character_string)
+			check precondition_is_output_open: attached outputter as l_outputter then
+				l_outputter.output_ignoring_error (a_character_string)
+			end
 		end
 
 	output_attribute (a_element_name_code: INTEGER; a_attribute_qname: STRING; a_value: STRING; a_properties: INTEGER)
@@ -683,29 +693,31 @@ feature {NONE} -- Implementation
 			l_index, l_code: INTEGER
 			l_finished: BOOLEAN
 		do
-			from
-				l_index := a_start_index
-			until
-				l_finished or l_index > a_character_string.count
-			loop
-				l_code := a_character_string.item_code (l_index)
-				if l_code < 127 then -- ASCII
-					if a_special_characters.item (l_code) then
+			check attached outputter as l_outputter then
+				from
+					l_index := a_start_index
+				until
+					l_finished or l_index > a_character_string.count
+				loop
+					l_code := a_character_string.item_code (l_index)
+					if l_code < 127 then -- ASCII
+						if a_special_characters.item (l_code) then
+							l_finished := True
+						else
+							l_index := l_index + 1
+						end
+					elseif l_code < 160 then -- required as character references
+						l_finished := True
+					elseif l_code = 8232  then -- Line Separator
+						l_finished := True
+					elseif l_outputter.is_bad_character_code (l_code) then
 						l_finished := True
 					else
 						l_index := l_index + 1
 					end
-				elseif l_code < 160 then -- required as character references
-					l_finished := True
-				elseif l_code = 8232  then -- Line Separator
-					l_finished := True
-				elseif outputter.is_bad_character_code (l_code) then
-					l_finished := True
-				else
-					l_index := l_index + 1
 				end
+				Result := l_index
 			end
-			Result := l_index
 		end
 
 	output_character_reference (a_code: INTEGER)
@@ -736,16 +748,18 @@ feature {NONE} -- Implementation
 			document_not_yet_opened: not is_output_open
 		local
 			l_character_representation: STRING
+			l_encoding: like encoding
 		do
 			is_well_formed_document_required := False
-			encoding := output_properties.encoding.as_upper
+			l_encoding := output_properties.encoding.as_upper
+			encoding := l_encoding
 
-			outputter := encoder_factory.outputter (encoding, raw_outputter)
+			outputter := encoder_factory.outputter (l_encoding, raw_outputter)
 			if outputter = Void then
-				serializer.report_recoverable_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
+				serializer.report_recoverable_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", l_encoding),
 					Xpath_errors_uri, "SESU0007", Dynamic_error))
 				if not serializer.is_error then
-					outputter := encoder_factory.outputter (encoding, raw_outputter)
+					outputter := encoder_factory.outputter (l_encoding, raw_outputter)
 					if outputter = Void then
 						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Failed to recover", Xpath_errors_uri, "SESU0007", Dynamic_error))
 					end
@@ -777,7 +791,7 @@ feature {NONE} -- Implementation
 			document_opened: is_error or is_output_open
 		end
 
-	write_doctype (a_type, a_system_id, a_public_id: STRING )
+	write_doctype (a_type: STRING; a_system_id, a_public_id: detachable STRING)
 			-- Write DOCTYPE.
 		require
 			doctype_not_void: a_type /= Void
@@ -821,9 +835,11 @@ feature {NONE} -- Implementation
 			loop
 				a_code := a_character_string.item_code (l_index)
 				if a_code > 127 then
-					if outputter.is_bad_character_code (a_code) then
-						Result := a_code
-						l_finished := True
+					check attached outputter as l_outputter then
+						if l_outputter.is_bad_character_code (a_code) then
+							Result := a_code
+							l_finished := True
+						end
 					end
 				end
 				l_index := l_index + 1

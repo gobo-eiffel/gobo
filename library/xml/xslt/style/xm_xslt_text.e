@@ -5,7 +5,7 @@ note
 		"xsl:text element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,12 +38,12 @@ feature -- Element change
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_name_code: INTEGER
-			l_expanded_name, l_doe_attribute: STRING
+			l_expanded_name, l_doe_attribute: detachable STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					l_cursor := attribute_collection.name_code_cursor
+					l_cursor := l_attribute_collection.name_code_cursor
 					l_cursor.start
 				until
 					l_cursor.after or any_compile_errors
@@ -55,7 +55,7 @@ feature -- Element change
 					end
 					l_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_doe_attribute /= Void then
@@ -95,7 +95,9 @@ feature -- Element change
 	compile (a_executable: XM_XSLT_EXECUTABLE)
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_VALUE_OF} last_generated_expression.make (a_executable, value, False, principal_stylesheet.module_number (system_id), line_number)
+			check attached principal_stylesheet as l_principal_stylesheet then
+				create {XM_XSLT_COMPILED_VALUE_OF} last_generated_expression.make (a_executable, value, False, l_principal_stylesheet.module_number (system_id), line_number)
+			end
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -108,7 +110,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	value: XM_XPATH_STRING_VALUE
+	value: detachable XM_XPATH_STRING_VALUE
 			-- String value of text node
 
 end

@@ -5,7 +5,7 @@ note
 		"Objects that receive notification of trace events"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 
 	make (a_trace_reporter: UT_ERROR_HANDLER; add_timings: BOOLEAN)
 			-- Establish invariant.
+		require
+			a_trace_reporter_not_void: a_trace_reporter /= Void
 		do
 			reporter := a_trace_reporter
 			is_timing := add_timings
@@ -58,7 +60,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	start_time: DT_TIME
+	start_time: detachable DT_TIME
 			-- Time at start of trace
 
 	indentation: INTEGER
@@ -95,11 +97,13 @@ feature -- Events
 			a_time: DT_TIME
 		do
 			if is_timing then
-				a_time := utc_system_clock.time_now
-				a_duration := a_time.canonical_duration (start_time)
-				reporter.info_file.put_string (" <end time=%"")
-				reporter.info_file.put_string (a_duration.millisecond_count.out)
-				reporter.report_info_message ("%"/>")
+				check attached start_time as l_start_time then
+					a_time := utc_system_clock.time_now
+					a_duration := a_time.canonical_duration (l_start_time)
+					reporter.info_file.put_string (" <end time=%"")
+					reporter.info_file.put_string (a_duration.millisecond_count.out)
+					reporter.report_info_message ("%"/>")
+				end
 			end
 			reporter.report_info_message ("</trace>")
 			is_tracing := False
@@ -143,10 +147,12 @@ feature -- Events
 			reporter.info_file.put_string ("%" base_uri=%"")
 			reporter.info_file.put_string (some_trace_details.system_id)
 			if is_timing then
-				a_time := utc_system_clock.time_now
-				a_duration := a_time.canonical_duration (start_time)
-				reporter.info_file.put_string ("%" time=%"")
-				reporter.info_file.put_string (a_duration.millisecond_count.out)
+				check attached start_time as l_start_time then
+					a_time := utc_system_clock.time_now
+					a_duration := a_time.canonical_duration (l_start_time)
+					reporter.info_file.put_string ("%" time=%"")
+					reporter.info_file.put_string (a_duration.millisecond_count.out)
+				end
 			end
 			reporter.report_info_message ("%">")
 		end
@@ -158,12 +164,14 @@ feature -- Events
 			a_time: DT_TIME
 		do
 			if is_timing then
-				a_time := utc_system_clock.time_now
-				a_duration := a_time.canonical_duration (start_time)
-				reporter.info_file.put_string (spaces (indentation + 1))
-				reporter.info_file.put_string ("<end time=%"")
-				reporter.info_file.put_string (a_duration.millisecond_count.out)
-				reporter.report_info_message ("%"/>")
+				check attached start_time as l_start_time then
+					a_time := utc_system_clock.time_now
+					a_duration := a_time.canonical_duration (l_start_time)
+					reporter.info_file.put_string (spaces (indentation + 1))
+					reporter.info_file.put_string ("<end time=%"")
+					reporter.info_file.put_string (a_duration.millisecond_count.out)
+					reporter.report_info_message ("%"/>")
+				end
 			end
 			reporter.info_file.put_string (spaces (indentation))
 			reporter.info_file.put_string ("</")
@@ -176,20 +184,24 @@ feature -- Events
 			-- Trace making new item current.
 		local
 			a_node: XM_XPATH_NODE
-			a_duration: DT_TIME_DURATION
+			a_duration: detachable DT_TIME_DURATION
 			a_time: DT_TIME
 		do
 			if is_timing then
-				a_time := utc_system_clock.time_now
-				a_duration := a_time.canonical_duration (start_time)
+				check attached start_time as l_start_time then
+					a_time := utc_system_clock.time_now
+					a_duration := a_time.canonical_duration (l_start_time)
+				end
 			end
 			indentation := indentation + 1
 			reporter.info_file.put_string (spaces (indentation))
 			if not a_current_item.is_node then
 				if is_timing then
-					reporter.info_file.put_string ("<item time=%"")
-					reporter.info_file.put_string (a_duration.millisecond_count.out)
-					reporter.report_info_message ("%">")
+					check a_duration /= Void then
+						reporter.info_file.put_string ("<item time=%"")
+						reporter.info_file.put_string (a_duration.millisecond_count.out)
+						reporter.report_info_message ("%">")
+					end
 				else
 					reporter.report_info_message ("<item>")
 				end
@@ -200,12 +212,16 @@ feature -- Events
 				reporter.info_file.put_string ("%" line=%"")
 				reporter.info_file.put_string (a_node.line_number.out)
 				reporter.info_file.put_string ("%" base_uri=%"")
-				reporter.info_file.put_string (a_node.base_uri)
-				if is_timing then
-					reporter.info_file.put_string ("%" time=%"")
-					reporter.info_file.put_string (a_duration.millisecond_count.out)
+				check attached a_node.base_uri as l_base_uri then
+					reporter.info_file.put_string (l_base_uri)
+					if is_timing then
+						check a_duration /= Void then
+							reporter.info_file.put_string ("%" time=%"")
+							reporter.info_file.put_string (a_duration.millisecond_count.out)
+						end
+					end
+					reporter.report_info_message ("%">")
 				end
-				reporter.report_info_message ("%">")
 			end
 		end
 
@@ -217,11 +233,13 @@ feature -- Events
 		do
 			reporter.info_file.put_string (spaces (indentation + 1))
 			if is_timing then
-				a_time := utc_system_clock.time_now
-				a_duration := a_time.canonical_duration (start_time)
-				reporter.info_file.put_string ("<end time=%"")
-				reporter.info_file.put_string (a_duration.millisecond_count.out)
-				reporter.report_info_message ("%"/>")
+				check attached start_time as l_start_time then
+					a_time := utc_system_clock.time_now
+					a_duration := a_time.canonical_duration (l_start_time)
+					reporter.info_file.put_string ("<end time=%"")
+					reporter.info_file.put_string (a_duration.millisecond_count.out)
+					reporter.report_info_message ("%"/>")
+				end
 			end
 			reporter.info_file.put_string (spaces (indentation))
 			if not a_current_item.is_node then

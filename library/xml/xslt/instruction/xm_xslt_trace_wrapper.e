@@ -5,7 +5,7 @@ note
 		"Objects that trace expression execution"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,134 +91,151 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			child.simplify (l_replacement)
-			set_child (l_replacement.item)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				set_child (l_replacement_item)
+			end
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			child.check_static_type (l_replacement, a_context, a_context_item_type)
-			set_child (l_replacement.item)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				set_child (l_replacement_item)
+			end
 			a_replacement.put (Current)
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			child.optimize (l_replacement, a_context, a_context_item_type)
-			set_child (l_replacement.item)
+			check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+				set_child (l_replacement_item)
+			end
 			a_replacement.put (Current)
 		end
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			l_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			l_is_tracing: BOOLEAN
 			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- This is XSLT
-			end
-			l_transformer := l_evaluation_context.transformer
-			l_is_tracing := l_transformer.is_tracing
-			if l_is_tracing then
+				attached l_evaluation_context.transformer as l_evaluation_context_transformer
+			then
+				l_transformer := l_evaluation_context_transformer
+				l_is_tracing := l_transformer.is_tracing
 				l_trace_listener := l_transformer.trace_listener
-				l_trace_listener.trace_instruction_entry (trace_details)
-			end
-			child.evaluate_item (a_result, a_context)
-			if l_is_tracing then
-				l_trace_listener.trace_instruction_exit (trace_details)
+				if l_trace_listener /= Void then
+					check l_is_tracing: l_is_tracing end
+					l_trace_listener.trace_instruction_entry (trace_details)
+				end
+				child.evaluate_item (a_result, a_context)
+				if l_trace_listener /= Void then
+					check l_is_tracing: l_is_tracing end
+					l_trace_listener.trace_instruction_exit (trace_details)
+				end
 			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence.
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_trace_listener: XM_XSLT_TRACE_LISTENER
+			a_trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			is_tracing: BOOLEAN
 			a_transformer: XM_XSLT_TRANSFORMER
 		do
-			an_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as an_evaluation_context
 				-- This is XSLT
-			end
-			a_transformer := an_evaluation_context.transformer
-			is_tracing := a_transformer.is_tracing
-			if is_tracing then
+				attached an_evaluation_context.transformer as l_evaluation_context_transformer
+			then
+				a_transformer := l_evaluation_context_transformer
+				is_tracing := a_transformer.is_tracing
 				a_trace_listener := a_transformer.trace_listener
-				a_trace_listener.trace_instruction_entry (trace_details)
-			end
-			child.create_iterator (a_context)
-			last_iterator := child.last_iterator
-			if is_tracing then
-				a_trace_listener.trace_instruction_exit (trace_details)
+				if a_trace_listener /= Void then
+					check is_tracing: is_tracing end
+					a_trace_listener.trace_instruction_entry (trace_details)
+				end
+				child.create_iterator (a_context)
+				last_iterator := child.last_iterator
+				if a_trace_listener /= Void then
+					check is_tracing: is_tracing end
+					a_trace_listener.trace_instruction_exit (trace_details)
+				end
 			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over a node sequence.
 		local
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			l_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			l_is_tracing: BOOLEAN
 			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- This is XSLT
-			end
-			l_transformer := l_evaluation_context.transformer
-			l_is_tracing := l_transformer.is_tracing
-			if l_is_tracing then
+				attached l_evaluation_context.transformer as l_evaluation_context_transformer
+
+			then
+				l_transformer := l_evaluation_context_transformer
+				l_is_tracing := l_transformer.is_tracing
 				l_trace_listener := l_transformer.trace_listener
-				l_trace_listener.trace_instruction_entry (trace_details)
-			end
-			child.create_node_iterator (a_context)
-			last_node_iterator := child.last_node_iterator
-			if l_is_tracing then
-				l_trace_listener.trace_instruction_exit (trace_details)
+				if l_trace_listener /= Void then
+					check l_is_tracing: l_is_tracing end
+					l_trace_listener.trace_instruction_entry (trace_details)
+				end
+				child.create_node_iterator (a_context)
+				last_node_iterator := child.last_node_iterator
+				if l_trace_listener /= Void then
+					check l_is_tracing: l_is_tracing end
+					l_trace_listener.trace_instruction_exit (trace_details)
+				end
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_trace_listener: XM_XSLT_TRACE_LISTENER
+			a_trace_listener: detachable XM_XSLT_TRACE_LISTENER
 			is_tracing: BOOLEAN
 		do
-			a_transformer := a_context.transformer
-			is_tracing := a_transformer.is_tracing
-			if is_tracing then
+			check attached a_context.transformer as l_context_transformer then
+				a_transformer := l_context_transformer
+				is_tracing := a_transformer.is_tracing
 				a_trace_listener := a_transformer.trace_listener
-				a_trace_listener.trace_instruction_entry (trace_details)
-			end
-			child.generate_events (a_context)
-			if is_tracing then
-				a_trace_listener.trace_instruction_exit (trace_details)
+				if a_trace_listener /= Void then
+					check is_tracing: is_tracing end
+					a_trace_listener.trace_instruction_entry (trace_details)
+				end
+				child.generate_events (a_context)
+				if a_trace_listener /= Void then
+					check is_tracing: is_tracing end
+					a_trace_listener.trace_instruction_exit (trace_details)
+				end
 			end
 		end
 
@@ -241,27 +258,31 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinalities (child)
 		end
 
-	set_unsorted (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN)
+	set_unsorted (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN)
 			-- Remove unwanted sorting from an expression, at compile time.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
 			create l_replacement.make (Void)
 			child.set_unsorted (l_replacement, eliminate_duplicates)
-			set_child (l_replacement.item)
+			check postcondition_of_set_unsorted: attached l_replacement.item as l_replacement_item then
+				set_child (l_replacement_item)
+			end
 		end
 
-	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN)
+	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN)
 			-- Remove unwanted sorting from an expression, at compile time,
 			--  but only if all nodes or all atomic values.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
 			create l_replacement.make (Void)
 			child.set_unsorted_if_homogeneous (l_replacement, eliminate_duplicates)
-			set_child (l_replacement.item)
+			check postcondition_of_set_unsorted_if_homogeneous: attached l_replacement.item as l_replacement_item then
+				set_child (l_replacement_item)
+			end
 		end
 
 feature {NONE} -- Implementation

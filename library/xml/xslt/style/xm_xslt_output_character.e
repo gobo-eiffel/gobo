@@ -5,7 +5,7 @@ note
 		"xsl:output-character element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature -- Access
 	code: INTEGER
 			-- Unicode code-point of character to be replaced
 
-	replacement_string: STRING
+	replacement_string: detachable STRING
 			-- Replacement string
 
 feature -- Element change
@@ -42,9 +42,9 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			code := -1
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -66,7 +66,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if code = -1 then
@@ -80,11 +80,9 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			a_character_map: XM_XSLT_CHARACTER_MAP
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			a_character_map ?= parent
-			if a_character_map = Void then
+			if not attached {XM_XSLT_CHARACTER_MAP} parent then
 				create an_error.make_from_string ("xsl:output-character may appear only as a direct child of xsl:character-map", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end

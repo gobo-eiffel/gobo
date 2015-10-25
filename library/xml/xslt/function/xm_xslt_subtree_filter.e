@@ -5,7 +5,7 @@ note
 		"Objects that filter a document to a sub-tree anchored on an origin node"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ feature -- Access
 	origin: XM_XPATH_NODE
 			-- Root of sub-tree
 
-	mapped_node (a_node: XM_XPATH_NODE): XM_XPATH_NODE
+	mapped_node (a_node: XM_XPATH_NODE): detachable XM_XPATH_NODE
 			-- `a_node' mapped to zero or one nodes
 		do
 			if a_node = Void then

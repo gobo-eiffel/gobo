@@ -5,7 +5,7 @@ note
 		"xsl:value-of element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,12 +38,12 @@ feature -- Element change
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_name_code: INTEGER
-			l_expanded_name, l_select_attribute, l_disable_attribute, l_separator_attribute: STRING
+			l_expanded_name, l_select_attribute, l_disable_attribute, l_separator_attribute: detachable STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					l_cursor := attribute_collection.name_code_cursor
+					l_cursor := l_attribute_collection.name_code_cursor
 					l_cursor.start
 				until
 					l_cursor.after or any_compile_errors
@@ -65,14 +65,17 @@ feature -- Element change
 					end
 					l_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_select_attribute /= Void then
 				generate_expression (l_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+					select_expression := l_new_select_expression
+					if attached l_new_select_expression.error_value as l_error_value then
+						check is_error: l_new_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if l_disable_attribute /= Void then
@@ -90,10 +93,15 @@ feature -- Element change
 			end
 
 			if l_separator_attribute /= Void then
-				generate_attribute_value_template (l_separator_attribute, static_context)
-				separator_expression := last_generated_expression
-				if separator_expression.is_error then
-					report_compile_error (separator_expression.error_value)
+				check precondition_static_context_not_void: attached static_context as l_static_context then
+					generate_attribute_value_template (l_separator_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_separator_expression then
+					separator_expression := l_new_separator_expression
+					if attached l_new_separator_expression.error_value as l_error_value then
+						check is_error: l_new_separator_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			attributes_prepared := True
@@ -102,18 +110,18 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			Precursor
 			check_within_template
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "select", select_expression)
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 			end
-			if separator_expression /= Void then
+			if attached separator_expression as l_separator_expression then
 				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "separator", separator_expression)
+				type_check_expression (l_replacement, "separator", l_separator_expression)
 				separator_expression := l_replacement.item
 			end
 		end
@@ -122,30 +130,41 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_value_of: XM_XSLT_COMPILED_VALUE_OF
+			l_select_expression: like select_expression
+			l_separator_expression: like separator_expression
 		do
-			if separator_expression = Void and then select_expression /= Void
+			l_select_expression := select_expression
+			if separator_expression = Void and then l_select_expression /= Void
 				and then is_backwards_compatible_processing_enabled then
-				if not select_expression.is_error then
-					if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
-						create {XM_XPATH_ATOMIZER_EXPRESSION} select_expression.make (select_expression, static_context.configuration.are_all_nodes_untyped)
+				if not l_select_expression.is_error then
+					if not is_sub_type (l_select_expression.item_type, type_factory.any_atomic_type) then
+						check attached static_context as l_static_context then
+							create {XM_XPATH_ATOMIZER_EXPRESSION} l_select_expression.make (l_select_expression, l_static_context.configuration.are_all_nodes_untyped)
+						end
+						select_expression := l_select_expression
 					end
-					if select_expression.cardinality_allows_many then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} select_expression.make (select_expression)
+					if l_select_expression.cardinality_allows_many then
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_select_expression.make (l_select_expression)
+						select_expression := l_select_expression
 					end
-					if not is_sub_type (select_expression.item_type, type_factory.string_type) then
-						create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} select_expression.make (select_expression, type_factory.string_type)
+					if not is_sub_type (l_select_expression.item_type, type_factory.string_type) then
+						create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} select_expression.make (l_select_expression, type_factory.string_type)
 					end
 				end
 			end
-			if separator_expression = Void then
+			l_separator_expression := separator_expression
+			if l_separator_expression = Void then
 				if select_expression = Void then
-					create {XM_XPATH_STRING_VALUE} separator_expression.make ("")
+					create {XM_XPATH_STRING_VALUE} l_separator_expression.make ("")
 				else
-					create {XM_XPATH_STRING_VALUE} separator_expression.make (" ")
+					create {XM_XPATH_STRING_VALUE} l_separator_expression.make (" ")
 				end
+				separator_expression := l_separator_expression
 			end
-			create a_value_of.make (an_executable, select_expression, False, principal_stylesheet.module_number (system_id), line_number)
-			compile_content (an_executable, a_value_of, separator_expression)
+			check attached principal_stylesheet as l_principal_stylesheet then
+				create a_value_of.make (an_executable, select_expression, False, l_principal_stylesheet.module_number (system_id), line_number)
+			end
+			compile_content (an_executable, a_value_of, l_separator_expression)
 			last_generated_expression := a_value_of
 		end
 
@@ -159,7 +178,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	separator_expression: XM_XPATH_EXPRESSION
+	separator_expression: detachable XM_XPATH_EXPRESSION
 			-- String used to separate adjacent items in the output sequence
 
 end

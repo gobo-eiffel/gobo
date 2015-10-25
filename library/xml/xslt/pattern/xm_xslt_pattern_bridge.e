@@ -5,7 +5,7 @@ note
 		"Expressions that provide a bridge to XSLT patterns"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,11 +66,8 @@ feature -- Comparison
 
 	same_expression (a_other: XM_XPATH_EXPRESSION): BOOLEAN
 			-- Are `Current' and `a_other' the same expression?
-		local
-			l_bridge: XM_XSLT_PATTERN_BRIDGE
 		do
-			l_bridge ?= a_other
-			Result := l_bridge /= Void and then STRING_.same_string (pattern.original_text, l_bridge.pattern.original_text)
+			Result := attached {XM_XSLT_PATTERN_BRIDGE} a_other as l_bridge and then STRING_.same_string (pattern.original_text, l_bridge.pattern.original_text)
 		end
 
 feature -- Status report
@@ -94,7 +91,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations
 		do
 			pattern := pattern.simplified_pattern
@@ -103,24 +100,25 @@ feature -- Optimization
 			a_replacement.put (Current)
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			pattern.type_check (a_context, a_context_item_type)
-			if pattern.is_error then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (pattern.error_value))
+			if attached pattern.error_value as l_error_value then
+				check is_error: pattern.is_error end
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_error_value))
 			else
 				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			a_replacement.put (Current)
 		end
 
-	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
+	promote (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote this subexpression.
 		do
 			a_replacement.put (Current)
@@ -132,24 +130,25 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT)
 			-- Calculate effective boolean value.
 		local
-			l_context_item: XM_XPATH_ITEM
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_context_item: detachable XM_XPATH_ITEM
 		do
 			l_context_item := a_context.context_item
 			if l_context_item /= Void and then l_context_item.is_node  then
-				l_evaluation_context ?= a_context
-				pattern.match (l_context_item.as_node, l_evaluation_context.new_pattern_context)
-				if pattern.is_error then
-					set_last_error (pattern.error_value)
-				else
-					create last_boolean_value.make (pattern.last_match_result)
+				check attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context then
+					pattern.match (l_context_item.as_node, l_evaluation_context.new_pattern_context)
+					if attached pattern.error_value as l_error_value then
+						check is_error: pattern.is_error end
+						set_last_error (l_error_value)
+					else
+						create last_boolean_value.make (pattern.last_match_result)
+					end
 				end
 			else
 				create last_boolean_value.make (False)
 			end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			calculate_effective_boolean_value (a_context)
@@ -159,24 +158,27 @@ feature -- Evaluation
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a String.
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			create l_item.make (Void)
 			evaluate_item (l_item, a_context)
-			create last_evaluated_string.make (l_item.item.string_value)
+			check attached l_item.item as l_item_item then
+				create last_evaluated_string.make (l_item_item.string_value)
+			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT)
 			-- Create an iterator over the values of a sequence
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			create l_item.make (Void)
-			l_context ?= a_context
-			l_context := l_context.new_pattern_context
-			evaluate_item (l_item, l_context)
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
+			check attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_context_2 then
+				l_context := l_context_2.new_pattern_context
+				evaluate_item (l_item, l_context)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
+			end
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT)
@@ -195,6 +197,7 @@ feature -- Evaluation
 			-- Eager evaluation via `generate_events'
 		do
 			-- pre-condition cannot be met
+			check False then end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Local

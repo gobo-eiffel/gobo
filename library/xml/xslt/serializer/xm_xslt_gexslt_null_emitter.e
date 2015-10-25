@@ -5,7 +5,7 @@ note
 	"Emitters that write nothing at all - for performance mesurements."
 
 library: "Gobo Eiffel XSLT Library"
-copyright: "Copyright (c) 2005, Colin Adams and others"
+copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 license: "MIT License"
 date: "$Date$"
 revision: "$Revision$"
@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			serializer := a_serializer
 			output_properties := some_output_properties
+			base_uri := ""
 		ensure
 			serializer_set: serializer = a_serializer
 			outputter_properties_set: output_properties = some_output_properties

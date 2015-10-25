@@ -3,10 +3,10 @@ note
 	description:
 
 	"Objects used to receive notification of errors%
-%if the user does not supply an error listener"
+	%if the user does not supply an error listener"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,7 +85,7 @@ feature -- Events
 			l_error: like a_error
 		do
 			if recovery_policy /= Recover_silently then
-					display_location_information (a_error, True)
+				display_location_information (a_error, True)
 			end
 			recovered := True
 			if recovery_policy = Recover_with_warnings then
@@ -93,6 +93,8 @@ feature -- Events
 			elseif recovery_policy = Do_not_recover then
 				recovered := False
 				l_msg := "Error: "
+			else
+				l_msg := ""
 			end
 			if recovery_policy /= Recover_silently then
 				if is_error_code_editing then

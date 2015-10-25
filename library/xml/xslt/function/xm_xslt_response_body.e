@@ -5,7 +5,7 @@ note
 		"Objects that implement the gexslt:response-body() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,48 +56,51 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			l_transformer: XM_XSLT_TRANSFORMER
+			l_transformer: detachable XM_XSLT_TRANSFORMER
 			l_uri, l_buffer: STRING
 			l_response: KI_CHARACTER_INPUT_STREAM
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- as this is an XSLT function
-			end
-			arguments.item (1).evaluate_item (a_result, a_context)
-			if not a_result.item.is_error then
-				l_uri := a_result.item.string_value
-				l_transformer := l_evaluation_context.transformer
-				if l_transformer.has_response_from (l_uri) then
-					l_response := l_transformer.response_stream (l_uri)
-					from
-						l_response.read_string (1024)
-						l_buffer := l_response.last_string
-					until
-						l_response.end_of_input
-					loop
-						l_buffer := STRING_.appended_string (l_buffer, l_response.last_string)
-						l_response.read_string (1024)
+			then
+				arguments.item (1).evaluate_item (a_result, a_context)
+				check attached a_result.item as l_result_item then
+					if not l_result_item.is_error then
+						l_uri := l_result_item.string_value
+						l_transformer := l_evaluation_context.transformer
+						check l_transformer /= Void then
+							if l_transformer.has_response_from (l_uri) then
+								l_response := l_transformer.response_stream (l_uri)
+								from
+									l_response.read_string (1024)
+									l_buffer := l_response.last_string
+								until
+									l_response.end_of_input
+								loop
+									l_buffer := STRING_.appended_string (l_buffer, l_response.last_string)
+									l_response.read_string (1024)
+								end
+								l_transformer.discard_response (l_uri)
+								if l_buffer = Void then
+									l_buffer := ""
+								end
+								a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_buffer))
+							else
+								create l_error.make_from_string (STRING_.concat ("No response is available for ", l_uri), Gexslt_eiffel_type_uri, "NO_RESPONSE", Dynamic_error)
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error))
+							end
+						end
 					end
-					l_transformer.discard_response (l_uri)
-					if l_buffer = Void then
-						l_buffer := ""
-					end
-					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_buffer))
-				else
-					create l_error.make_from_string (STRING_.concat ("No response is available for ", l_uri), Gexslt_eiffel_type_uri, "NO_RESPONSE", Dynamic_error)
-					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_error))
 				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

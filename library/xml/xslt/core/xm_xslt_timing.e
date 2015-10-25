@@ -5,7 +5,7 @@ note
 		"Objects that hold timing information about a transformation"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2008, Colin Adams and others"
+	copyright: "Copyright (c) 2008-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,16 +33,16 @@ feature -- Access
 	start_time: DT_TIME
 			-- Time at start of compilation
 
-	build_start_time: DT_TIME
+	build_start_time: detachable DT_TIME
 			-- Time at start of building document
 
-	build_finish_time: DT_TIME
+	build_finish_time: detachable DT_TIME
 			-- Time at end of building document
 
-	finish_compiling_time: DT_TIME
+	finish_compiling_time: detachable DT_TIME
 			-- Time at end of compilation
 
-	finish_time: DT_TIME
+	finish_time: detachable DT_TIME
 			-- Time at ebd of transformation
 
 	compile_time: DT_TIME_DURATION
@@ -50,7 +50,9 @@ feature -- Access
 		require
 			finish_compiling_time_not_void: finish_compiling_time /= Void
 		do
-			Result := finish_compiling_time.canonical_duration (start_time)
+			check precondition_finish_compiling_time_not_void: attached finish_compiling_time as l_finish_compiling_time then
+				Result := l_finish_compiling_time.canonical_duration (start_time)
+			end
 		ensure
 			compile_time_not_void: Result /= Void
 		end
@@ -61,7 +63,12 @@ feature -- Access
 			build_start_time_not_void: build_start_time /= Void
 			build_finish_time_not_void: build_finish_time /= Void
 		do
-			Result := build_finish_time.canonical_duration (build_start_time)
+			check
+				precondition_build_start_time_not_void: attached build_start_time as l_build_start_time
+				precondition_build_finish_time_not_void: attached build_finish_time as l_build_finish_time
+			then
+				Result := l_build_finish_time.canonical_duration (l_build_start_time)
+			end
 		ensure
 			document_build_time_not_void: Result /= Void
 		end
@@ -72,10 +79,15 @@ feature -- Access
 			finish_compiling_time_not_void: finish_compiling_time /= Void
 			finish_time_not_void: finish_time /= Void
 		do
-			if build_finish_time = Void then
-				Result := finish_time.canonical_duration (finish_compiling_time)
-			else
-				Result := finish_time.canonical_duration (build_finish_time)
+			check
+				precondition_finish_compiling_time_not_void: attached finish_compiling_time as l_finish_compiling_time
+				precondition_finish_time_not_void: attached finish_time as l_finish_time
+			then
+				if not attached build_finish_time as l_build_finish_time then
+					Result := l_finish_time.canonical_duration (l_finish_compiling_time)
+				else
+					Result := l_finish_time.canonical_duration (l_build_finish_time)
+				end
 			end
 		ensure
 			transformation_time_not_void: Result /= Void
@@ -86,7 +98,9 @@ feature -- Access
 		require
 			finish_time_not_void: finish_time /= Void
 		do
-			Result := finish_time.canonical_duration (start_time)
+			check precondition_finish_time_not_void: attached finish_time as l_finish_time then
+				Result := l_finish_time.canonical_duration (start_time)
+			end
 		ensure
 			compile_time_not_void: Result /= Void
 		end

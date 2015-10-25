@@ -5,7 +5,7 @@ note
 		"xsl:apply-templates element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -55,11 +55,11 @@ feature -- Element change
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			l_name_code: INTEGER
-			l_expanded_name, l_select_attribute, l_mode_attribute: STRING
+			l_expanded_name, l_select_attribute, l_mode_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					l_cursor := attribute_collection.name_code_cursor
+					l_cursor := l_attribute_collection.name_code_cursor
 					l_cursor.start
 				until
 					l_cursor.after or any_compile_errors
@@ -79,7 +79,7 @@ feature -- Element change
 					end
 					l_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_select_attribute /= Void then
@@ -97,7 +97,9 @@ feature -- Element change
 					if is_qname (l_mode_attribute) then
 						generate_name_code (l_mode_attribute)
 						if last_generated_name_code = -1 then
-							report_compile_error (name_code_error_value)
+							check attached name_code_error_value as l_name_code_error_value then
+								report_compile_error (l_name_code_error_value)
+							end
 						end
 						mode_name_code := last_generated_name_code
 					else
@@ -112,22 +114,23 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_sort: XM_XSLT_SORT
-			l_param: XM_XSLT_WITH_PARAM
 			l_node: XM_XPATH_NODE
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_node_sequence: XM_XPATH_SEQUENCE_TYPE
 			l_rule_manager: XM_XSLT_RULE_MANAGER
 			l_error: XM_XPATH_ERROR_VALUE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
+			l_select_expression: like select_expression
 		do
 			check_within_template
 
 			-- get the mode object
 
 			if not use_current_mode then
-				l_rule_manager := principal_stylesheet.rule_manager
+				check attached principal_stylesheet as l_principal_stylesheet then
+					l_rule_manager := l_principal_stylesheet.rule_manager
+				end
 				if not l_rule_manager.is_mode_registered (mode_name_code) then
 					l_rule_manager.register_mode (mode_name_code)
 				end
@@ -141,12 +144,10 @@ feature -- Element change
 				any_compile_errors or else l_child_iterator.after
 			loop
 				l_node := l_child_iterator.item
-				l_sort ?= l_node
-				if l_sort /= Void then
+				if attached {XM_XSLT_SORT} l_node as l_sort then
 					-- do nothing
 				else
-					l_param ?= l_node
-					if l_param /= Void then
+					if attached {XM_XSLT_WITH_PARAM} l_node as l_param then
 						-- do nothing
 					elseif l_node.node_type = Text_node then
 						if not is_all_whitespace (l_node.string_value) then
@@ -162,20 +163,25 @@ feature -- Element change
 				end
 				l_child_iterator.forth
 			end
-			if select_expression = Void then
-				create {XM_XPATH_AXIS_EXPRESSION} select_expression.make (Child_axis, Void)
+			l_select_expression := select_expression
+			if l_select_expression = Void then
+				create {XM_XPATH_AXIS_EXPRESSION} l_select_expression.make (Child_axis, Void)
+				select_expression := l_select_expression
 			end
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "select", select_expression)
+			type_check_expression (l_replacement, "select", l_select_expression)
 			if not any_compile_errors then
 				select_expression := l_replacement.item
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:apply-templates/select", 1,
 					Xpath_errors_uri, "XTTE0520")
 				create l_node_sequence.make_node_sequence
-				l_type_checker.static_type_check (static_context, select_expression, l_node_sequence, False, l_role)
-				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+				check attached select_expression as l_select_expression_2 then
+					l_type_checker.static_type_check (static_context, l_select_expression_2, l_node_sequence, False, l_role)
+				end
+				if attached l_type_checker.static_type_check_error as l_static_type_check_error then
+					check is_error: l_type_checker.is_static_type_check_error end
+					report_compile_error (l_static_type_check_error)
 				else
 					select_expression := l_type_checker.checked_expression
 				end
@@ -189,18 +195,22 @@ feature -- Element change
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			l_sorted_sequence: XM_XPATH_EXPRESSION
 		do
-			l_sorted_sequence := select_expression
-			assemble_sort_keys
-			if not any_compile_errors then
-				l_sort_key_list := sort_keys
-				if l_sort_key_list.count > 0 then
-					use_tail_recursion := False
-					create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (select_expression, l_sort_key_list)
+			check attached select_expression as l_select_expression then
+				l_sorted_sequence := l_select_expression
+				assemble_sort_keys
+				if not any_compile_errors then
+					check postcondition_of_assemble_sort_keys: attached sort_keys as l_sort_keys then
+						l_sort_key_list := l_sort_keys
+					end
+					if l_sort_key_list.count > 0 then
+						use_tail_recursion := False
+						create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (l_select_expression, l_sort_key_list)
+					end
+					create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, l_sorted_sequence,
+						with_param_instructions (an_executable, False),
+						with_param_instructions (an_executable, True),
+						use_current_mode, use_tail_recursion, mode, is_select_defaulted)
 				end
-				create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, l_sorted_sequence,
-					with_param_instructions (an_executable, False),
-					with_param_instructions (an_executable, True),
-					use_current_mode, use_tail_recursion, mode, is_select_defaulted)
 			end
 		end
 
@@ -214,7 +224,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	mode: XM_XSLT_MODE
+	mode: detachable XM_XSLT_MODE
 			-- Mode to use
 
 	mode_name_code: INTEGER
@@ -226,7 +236,7 @@ feature {NONE} -- Implementation
 	use_tail_recursion: BOOLEAN
 			-- Use tail recursion
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Value of 'select' attribute
 
 	is_select_defaulted: BOOLEAN

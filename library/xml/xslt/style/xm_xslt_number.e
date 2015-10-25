@@ -34,14 +34,14 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, a_value_attribute: STRING
-			a_count_attribute, a_from_attribute, a_level_attribute: STRING
-			a_lang_attribute, a_letter_value_attribute, a_grouping_size_attribute: STRING
-			a_grouping_separator_attribute, an_ordinal_attribute, a_format_attribute: STRING
+			an_expanded_name, a_select_attribute, a_value_attribute: detachable STRING
+			a_count_attribute, a_from_attribute, a_level_attribute: detachable STRING
+			a_lang_attribute, a_letter_value_attribute, a_grouping_size_attribute: detachable STRING
+			a_grouping_separator_attribute, an_ordinal_attribute, a_format_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -75,7 +75,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute,
@@ -91,64 +91,68 @@ feature -- Element change
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_single_node: XM_XPATH_SEQUENCE_TYPE
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_empty
 			create l_replacement.make (Void)
-			if select_expression /= Void then
-				type_check_expression (l_replacement, "select", select_expression)
+			if attached select_expression as l_select_expression then
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 				create l_type_checker
 				create l_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XTTE1000")
 				create l_single_node.make_single_node
-				l_type_checker.static_type_check (static_context, select_expression, l_single_node, False, l_role)
+				check attached select_expression as l_select_expression_2 then
+					l_type_checker.static_type_check (static_context, l_select_expression_2, l_single_node, False, l_role)
+				end
 				if l_type_checker.is_static_type_check_error	then
-					report_compile_error (l_type_checker.static_type_check_error)
+					check attached l_type_checker.static_type_check_error as l_static_type_check_error then
+						report_compile_error (l_static_type_check_error)
+					end
 				else
 					select_expression := l_type_checker.checked_expression
 				end
 			end
-			if value_expression /= Void then
+			if attached value_expression as l_value_expression then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "value", value_expression)
+				type_check_expression (l_replacement, "value", l_value_expression)
 				value_expression := l_replacement.item
 			end
-			if format /= Void then
+			if attached format as l_format then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "format", format)
+				type_check_expression (l_replacement, "format", l_format)
 				format := l_replacement.item
 			end
-			if grouping_size /= Void then
+			if attached grouping_size as l_grouping_size then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "grouping-size", grouping_size)
+				type_check_expression (l_replacement, "grouping-size", l_grouping_size)
 				grouping_size := l_replacement.item
 			end
-			if grouping_separator /= Void then
+			if attached grouping_separator as l_grouping_separator then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "grouping-separator", grouping_separator)
+				type_check_expression (l_replacement, "grouping-separator", l_grouping_separator)
 				grouping_separator := l_replacement.item
 			end
-			if letter_value /= Void then
+			if attached letter_value as l_letter_value then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "letter-value", letter_value)
+				type_check_expression (l_replacement, "letter-value", l_letter_value)
 				letter_value := l_replacement.item
 			end
-			if ordinal /= Void then
+			if attached ordinal as l_ordinal then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "ordinal", ordinal)
+				type_check_expression (l_replacement, "ordinal", l_ordinal)
 					ordinal := l_replacement.item
 			end
-			if language /= Void then
+			if attached language as l_language then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "lang", language)
+				type_check_expression (l_replacement, "lang", l_language)
 				language := l_replacement.item
 			end
-			if from_pattern /= Void then
-				type_check_pattern ("from", from_pattern)
+			if attached from_pattern as l_from_pattern then
+				type_check_pattern ("from", l_from_pattern)
 			end
-			if count_pattern /= Void then
-				type_check_pattern ("count", count_pattern)
+			if attached count_pattern as l_count_pattern then
+				type_check_pattern ("count", l_count_pattern)
 			end
 			validated := True
 		end
@@ -159,10 +163,13 @@ feature -- Element change
 			l_compiler: XM_XSLT_STYLESHEET_COMPILER
 			l_hash_code: INTEGER
 		do
-			l_compiler := stylesheet_compiler
+			check attached stylesheet_compiler as l_stylesheet_compiler then
+				l_compiler := l_stylesheet_compiler
+			end
 			l_compiler.increment_counter
 			l_hash_code := l_compiler.counter
-			create {XM_XSLT_COMPILED_NUMBER} last_generated_expression.make (an_executable, select_expression,
+			check attached static_context as l_static_context then
+				create {XM_XSLT_COMPILED_NUMBER} last_generated_expression.make (an_executable, select_expression,
 																								  level, l_hash_code, count_pattern,
 																								  from_pattern,
 																								  value_expression, format,
@@ -170,7 +177,8 @@ feature -- Element change
 																								  grouping_separator,
 																								  letter_value, ordinal,
 																								  language, formatter,
-																								  numberer, has_variables_in_patterns, static_context.is_backwards_compatible_mode)
+																								  numberer, has_variables_in_patterns, l_static_context.is_backwards_compatible_mode)
+			end
 			-- TODO: consider wrapping this in a value-of
 		end
 
@@ -190,59 +198,65 @@ feature {NONE} -- Implementation
 	has_variables_in_patterns: BOOLEAN
 			-- Do any supplied patterns include variable references?
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Selected node
 
-	value_expression: XM_XPATH_EXPRESSION
+	value_expression: detachable XM_XPATH_EXPRESSION
 			-- Supplied value
 
-	count_pattern: XM_XSLT_PATTERN
+	count_pattern: detachable XM_XSLT_PATTERN
 			-- Nodes which are to be counted
 
-	from_pattern: XM_XSLT_PATTERN
+	from_pattern: detachable XM_XSLT_PATTERN
 			-- Node from which counted is to be started
 
-	format: XM_XPATH_EXPRESSION
+	format: detachable XM_XPATH_EXPRESSION
 			-- Format for formatted number
 
-	grouping_size, grouping_separator: XM_XPATH_EXPRESSION
+	grouping_size, grouping_separator: detachable XM_XPATH_EXPRESSION
 			-- Grouping parameters
 
-	language: XM_XPATH_EXPRESSION
+	language: detachable XM_XPATH_EXPRESSION
 			-- Language
 
-	letter_value: XM_XPATH_EXPRESSION
+	letter_value: detachable XM_XPATH_EXPRESSION
 			-- Letter value
 
-	ordinal: XM_XPATH_EXPRESSION
+	ordinal: detachable XM_XPATH_EXPRESSION
 			-- Ordinal marker
 
-	formatter: XM_XSLT_NUMBER_FORMATTER
+	formatter: detachable XM_XSLT_NUMBER_FORMATTER
 			-- Formatter
 
-	numberer: ST_XSLT_NUMBERER
+	numberer: detachable ST_XSLT_NUMBERER
 			-- Numberer
 
-	prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute: STRING;
-										 a_count_attribute,a_lang_attribute, a_from_attribute: STRING;
-										 a_level_attribute, a_letter_value_attribute, a_grouping_size_attribute: STRING;
-										 a_grouping_separator_attribute, a_format_attribute: STRING)
+	prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute: detachable STRING;
+										 a_count_attribute,a_lang_attribute, a_from_attribute: detachable STRING;
+										 a_level_attribute, a_letter_value_attribute, a_grouping_size_attribute: detachable STRING;
+										 a_grouping_separator_attribute, a_format_attribute: detachable STRING)
 			-- Prepare attributes some more.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+					select_expression := l_new_select_expression
+					if attached l_new_select_expression.error_value as l_error_value then
+						check is_error: l_new_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			if a_value_attribute /= Void then
 				generate_expression (a_value_attribute)
-				value_expression := last_generated_expression
-				if value_expression.is_error then
-					report_compile_error (value_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_value_expression then
+					value_expression := l_new_value_expression
+					if attached l_new_value_expression.error_value as l_error_value then
+						check is_error: l_new_value_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 				if a_select_attribute /= Void then
 					create an_error.make_from_string ("The select attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0975", Static_error)
@@ -291,17 +305,21 @@ feature {NONE} -- Implementation
 										  a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute)
 		end
 
-	prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute: STRING;
-		a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute: STRING)
+	prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute: detachable STRING;
+		a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute: detachable STRING)
 			-- Prepare attributes even more.
 		do
 			if a_format_attribute /= Void then
-				generate_attribute_value_template (a_format_attribute, static_context)
-				format := last_generated_expression
-				if format.is_string_value then
-					create formatter.make (format.as_string_value.string_value)
-				else
-					-- We must allocate the formatter at run time
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (a_format_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_format then
+					format := l_new_format
+					if l_new_format.is_string_value then
+						create formatter.make (l_new_format.as_string_value.string_value)
+					else
+						-- We must allocate the formatter at run time
+					end
 				end
 			else
 				create formatter.make ("1") -- default
@@ -310,31 +328,41 @@ feature {NONE} -- Implementation
 
 				-- the spec says that if only one is specified, it is ignored
 
-				generate_attribute_value_template (a_grouping_size_attribute, static_context)
-				grouping_size :=  last_generated_expression
-				generate_attribute_value_template (a_grouping_separator_attribute, static_context)
-				grouping_separator :=  last_generated_expression
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (a_grouping_size_attribute, l_static_context)
+					grouping_size :=  last_generated_expression
+					generate_attribute_value_template (a_grouping_separator_attribute, l_static_context)
+					grouping_separator :=  last_generated_expression
+				end
 			end
 			if a_lang_attribute = Void then
 				numberer := selected_numberer ("en")
 			else
-				generate_attribute_value_template (a_lang_attribute, static_context)
-				language := last_generated_expression
-				if language.is_string_value then
-					numberer := selected_numberer (language.as_string_value.string_value)
-					if numberer = Void then
-						numberer := selected_numberer ("en")
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (a_lang_attribute, l_static_context)
+				end
+				check postcondition_of_generate_attribute_value_template: attached last_generated_expression as l_new_language then
+					language := l_new_language
+					if l_new_language.is_string_value then
+						numberer := selected_numberer (l_new_language.as_string_value.string_value)
+						if numberer = Void then
+							numberer := selected_numberer ("en")
+						end
+					else
+						-- we allocate the numberer at run-time
 					end
-				else
-					-- we allocate the numberer at run-time
 				end
 			end
 			if a_letter_value_attribute /= Void then
-				generate_attribute_value_template (a_letter_value_attribute, static_context)
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (a_letter_value_attribute, l_static_context)
+				end
 				letter_value := last_generated_expression
 			end
 			if an_ordinal_attribute /= Void then
-				generate_attribute_value_template (an_ordinal_attribute, static_context)
+				check attached static_context as l_static_context then
+					generate_attribute_value_template (an_ordinal_attribute, l_static_context)
+				end
 				ordinal := last_generated_expression
 			end
 		end

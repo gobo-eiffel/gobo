@@ -5,7 +5,7 @@ note
 		"Objects that represent an executable stylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,16 +86,16 @@ feature -- Access
 	decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			-- Manager of decimal formats
 
-	default_output_properties: XM_XSLT_OUTPUT_PROPERTIES
+	default_output_properties: detachable XM_XSLT_OUTPUT_PROPERTIES
 			-- Default output properties (for the unnamed output format)
 
-	compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
+	compiled_templates_index: detachable DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
 
 	character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 			-- Index of named character maps
 
-	static_context: XM_XSLT_EXPRESSION_CONTEXT
+	static_context: detachable XM_XSLT_EXPRESSION_CONTEXT
 			-- Static context of principal stylesheet
 
 	largest_pattern_stack_frame: INTEGER
@@ -213,8 +213,8 @@ feature -- Creation
 			transformer_not_void: a_transformer /= Void
 			builder_not_void: a_builder /= Void
 		do
-			if stripper_rules /= Void then
-				rule_manager.rank_mode (stripper_rules)
+			if attached stripper_rules as l_stripper_rules then
+				rule_manager.rank_mode (l_stripper_rules)
 			end
 			create Result.make (a_transformer, stripper_rules, a_builder)
 		ensure
@@ -333,7 +333,7 @@ feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
 
 feature {NONE} -- Implementation
 
-	stripper_rules: XM_XSLT_MODE
+	stripper_rules: detachable XM_XSLT_MODE
 			-- Whitespace stripping rules
 
 	module_list: DS_ARRAYED_LIST [STRING]

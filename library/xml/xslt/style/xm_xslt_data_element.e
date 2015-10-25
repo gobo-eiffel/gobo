@@ -6,7 +6,7 @@ note
 	%Also, children of such an element. These elements are ignored"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,11 +28,8 @@ feature -- Status report
 
 	is_parent_data_element: BOOLEAN
 			-- Is `parent_node' a user-defined element?
-		local
-			a_user_defined_element: XM_XSLT_DATA_ELEMENT
 		do
-			a_user_defined_element ?= parent_node
-			Result := a_user_defined_element  /= Void
+			Result := attached {XM_XSLT_DATA_ELEMENT} parent_node
 		end
 
 invariant

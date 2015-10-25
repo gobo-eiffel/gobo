@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT current-grouping-key() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,6 +61,7 @@ feature -- Status report
 			-- Type of argument number `argument_number'
 		do
 			-- will never be called
+			check False then end
 		end
 
 feature -- Status setting
@@ -73,26 +74,25 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
-			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
-			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_group_iterator: detachable XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 		do
-			l_evaluation_context ?= a_context
 			check
-				evaluation_context: l_evaluation_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_evaluation_context
 				-- as this is an XSLT function
-			end
-			l_group_iterator := l_evaluation_context.current_group_iterator
-			if l_group_iterator = Void then
-				a_result.put (Void)
-			else
-				a_result.put (l_group_iterator.current_grouping_key)
+			then
+				l_group_iterator := l_evaluation_context.current_group_iterator
+				if l_group_iterator = Void then
+					a_result.put (Void)
+				else
+					a_result.put (l_group_iterator.current_grouping_key)
+				end
 			end
 		end
 
-	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
+	pre_evaluate (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT)
 			-- Pre-evaluate `Current' at compile time.
 		do
 			a_replacement.put (Current)

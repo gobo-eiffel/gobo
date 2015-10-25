@@ -3,7 +3,7 @@ note
 	description: "Objects that represent an xsl:choose or an xsl:if,"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -173,12 +173,12 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION])
+	simplify (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION])
 			-- Perform context-independent static optimizations.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
 			from
@@ -190,9 +190,11 @@ feature -- Optimization
 			loop
 				l_expression := l_cursor.item
 				l_expression.simplify (l_replacement)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
@@ -205,9 +207,11 @@ feature -- Optimization
 			loop
 				l_expression := l_cursor.item
 				l_expression.simplify (l_replacement)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
@@ -216,12 +220,12 @@ feature -- Optimization
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			a_replacement.put (Current)
 			from
@@ -233,9 +237,11 @@ feature -- Optimization
 			loop
 				l_expression := l_cursor.item
 				l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
@@ -248,9 +254,11 @@ feature -- Optimization
 			loop
 				l_expression := l_cursor.item
 				l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
@@ -259,14 +267,14 @@ feature -- Optimization
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
+	optimize (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
 			l_boolean: BOOLEAN
 			l_index: INTEGER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			from
 				create l_replacement.make (Void)
@@ -277,34 +285,38 @@ feature -- Optimization
 			loop
 				l_expression := l_cursor.item
 				l_expression.optimize (l_replacement, a_context, a_context_item_type)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						l_cursor.replace (l_replacement_item)
+						reset_static_properties
+					end
 				end
 				if l_expression.is_value and not l_expression.depends_upon_implicit_timezone then
-					l_expression.calculate_effective_boolean_value (Void)
-					if not l_expression.is_error then
-						l_boolean := l_expression.last_boolean_value.value
-						l_index := l_cursor.index
-						if l_boolean then
-							-- if condition is always true, remove all the subsequent conditions and actions
-							if l_index = 1 then
-								set_replacement (a_replacement, actions.item (1))
+					l_expression.calculate_effective_boolean_value (new_dummy_context)
+					check postcondition_of_calculate_effective_boolean_value: attached l_expression.last_boolean_value as l_last_boolean_value then
+						if not l_expression.is_error then
+							l_boolean := l_last_boolean_value.value
+							l_index := l_cursor.index
+							if l_boolean then
+								-- if condition is always true, remove all the subsequent conditions and actions
+								if l_index = 1 then
+									set_replacement (a_replacement, actions.item (1))
+								else
+									conditions.keep_first (l_index)
+									actions.keep_first (l_index)
+								end
+								l_replacement.put (Void)
+								l_cursor.go_after
 							else
-								conditions.keep_first (l_index)
-								actions.keep_first (l_index)
+								-- if condition is false, skip this test
+								l_replacement.put (Void)
+								l_cursor.remove
+								actions.remove (l_index)
 							end
+						else -- a run-time error will result only if this condition is tested
 							l_replacement.put (Void)
-							l_cursor.go_after
-						else
-							-- if condition is false, skip this test
-							l_replacement.put (Void)
-							l_cursor.remove
-							actions.remove (l_index)
+							l_cursor.forth
 						end
-					else -- a run-time error will result only if this condition is tested
-						l_replacement.put (Void)
-						l_cursor.forth
 					end
 				else
 					l_replacement.put (Void)
@@ -320,9 +332,11 @@ feature -- Optimization
 				loop
 					l_expression := l_cursor.item
 					l_expression.optimize (l_replacement, a_context, a_context_item_type)
-					if l_expression /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
-						reset_static_properties
+					check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+						if l_expression /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+							reset_static_properties
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
@@ -344,7 +358,7 @@ feature -- Optimization
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			-- xsl:when acts as a guard:
 			-- Expressions inside the when mustn't be evaluated if the when is false,
@@ -361,9 +375,11 @@ feature -- Optimization
 				loop
 					l_expression := l_cursor.item
 					l_expression.promote (l_replacement, a_offer)
-					if l_expression /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
-						reset_static_properties
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						if l_expression /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+							reset_static_properties
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
@@ -376,9 +392,11 @@ feature -- Optimization
 				loop
 					l_expression := l_cursor.item
 					l_expression.promote (l_replacement, a_offer)
-					if l_expression /= l_replacement.item then
-						l_cursor.replace (l_replacement.item)
-						reset_static_properties
+					check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+						if l_expression /= l_replacement_item then
+							l_cursor.replace (l_replacement_item)
+							reset_static_properties
+						end
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
@@ -389,9 +407,16 @@ feature -- Optimization
 
 				l_expression := conditions.item (1)
 				l_expression.promote (l_replacement, a_offer)
-				if l_expression /= l_replacement.item then
-					l_cursor.replace (l_replacement.item)
-					reset_static_properties
+				check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+					if l_expression /= l_replacement_item then
+						check
+							-- Bug: `l_cursor' has not been initialized.
+							False
+						then
+							l_cursor.replace (l_replacement_item)
+						end
+						reset_static_properties
+					end
 				end
 			end
 		ensure then
@@ -405,88 +430,99 @@ feature -- Evaluation
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_iterator := Void
-			a_new_context ?= a_context
 			check
-				evaluation_context: a_new_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as a_new_context
 				-- This is XSLT
-			end
-			from
-				l_cursor := conditions.new_cursor; l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_cursor.item.calculate_effective_boolean_value (a_context)
-				a_boolean_value := l_cursor.item.last_boolean_value
-				if a_boolean_value.is_error then
-					a_boolean_value.error_value.set_location (system_id, line_number)
-					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
-					if is_node_sequence then
-						create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (a_boolean_value.error_value)
-					else
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+			then
+				from
+					l_cursor := conditions.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_cursor.item.calculate_effective_boolean_value (a_context)
+					check postcondition_of_calculate_effective_boolean_value: attached l_cursor.item.last_boolean_value as l_last_boolean_value then
+						a_boolean_value := l_last_boolean_value
+						if attached a_boolean_value.error_value as l_error_value then
+							check is_error: a_boolean_value.is_error end
+							l_error_value.set_location (system_id, line_number)
+							check attached a_new_context.transformer as l_transformer then
+								l_transformer.report_fatal_error (l_error_value)
+							end
+							if is_node_sequence then
+								create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (l_error_value)
+							else
+								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+							end
+							l_cursor.go_after
+						elseif a_boolean_value.value then
+							actions.item (l_cursor.index).create_iterator (a_context)
+							last_iterator := actions.item (l_cursor.index).last_iterator
+							l_cursor.go_after
+						else
+							l_cursor.forth
+						end
 					end
-					l_cursor.go_after
-				elseif a_boolean_value.value then
-					actions.item (l_cursor.index).create_iterator (a_context)
-					last_iterator := actions.item (l_cursor.index).last_iterator
-					l_cursor.go_after
-				else
-					l_cursor.forth
+				variant
+					conditions.count + 1 - l_cursor.index
 				end
-			variant
-				conditions.count + 1 - l_cursor.index
+				if last_iterator = Void then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+				end
 			end
-			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_action: XM_XPATH_EXPRESSION
 		do
-			l_new_context ?= a_context
 			check
-				evaluation_context: l_new_context /= Void
+				evaluation_context: attached {XM_XSLT_EVALUATION_CONTEXT} a_context as l_new_context
 				-- This is XSLT
-			end
-			from
-				l_cursor := conditions.new_cursor; l_cursor.start
-			until
-				l_cursor.after
-			loop
-				l_cursor.item.calculate_effective_boolean_value (a_context)
-				l_boolean_value := l_cursor.item.last_boolean_value
-				if l_boolean_value.is_error then
-					l_boolean_value.error_value.set_location (system_id, line_number)
-					l_new_context.transformer.report_fatal_error (l_boolean_value.error_value)
-					a_result.put (l_boolean_value)
-					l_cursor.go_after
-				elseif l_boolean_value.value then
-					l_action := actions.item (l_cursor.index)
-					l_action.evaluate_item (a_result, a_context)
-					l_cursor.go_after
-				else
-					l_cursor.forth
+			then
+				from
+					l_cursor := conditions.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_cursor.item.calculate_effective_boolean_value (a_context)
+					check postcondition_of_calculate_effective_boolean_value: attached l_cursor.item.last_boolean_value as l_last_boolean_value then
+						l_boolean_value := l_last_boolean_value
+						if attached l_boolean_value.error_value as l_error_value then
+							check is_error: l_boolean_value.is_error end
+							l_error_value.set_location (system_id, line_number)
+							check attached l_new_context.transformer as l_transformer then
+								l_transformer.report_fatal_error (l_error_value)
+							end
+							a_result.put (l_boolean_value)
+							l_cursor.go_after
+						elseif l_boolean_value.value then
+							l_action := actions.item (l_cursor.index)
+							l_action.evaluate_item (a_result, a_context)
+							l_cursor.go_after
+						else
+							l_cursor.forth
+						end
+					end
+				variant
+					conditions.count + 1 - l_cursor.index
 				end
-			variant
-				conditions.count + 1 - l_cursor.index
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			l_instruction: XM_XSLT_INSTRUCTION
 			l_action: XM_XPATH_EXPRESSION
-			l_tail_call: XM_XPATH_TAIL_CALL
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
 		do
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
@@ -494,26 +530,30 @@ feature -- Evaluation
 				l_cursor.after
 			loop
 				l_cursor.item.calculate_effective_boolean_value (a_context)
-				l_boolean_value := l_cursor.item.last_boolean_value
-				if l_boolean_value.is_error then
-					l_boolean_value.error_value.set_location (system_id, line_number)
-					a_context.transformer.report_fatal_error (l_boolean_value.error_value)
-					l_cursor.go_after
-				elseif l_boolean_value.value then
-					l_action := actions.item (l_cursor.index)
-					l_instruction ?= l_action
-					if l_instruction /= Void then
-						l_instruction.generate_tail_call (a_tail, a_context)
-						l_tail_call := a_tail.item
+				check postcondition_of_calculate_effective_boolean_value: attached l_cursor.item.last_boolean_value as l_last_boolean_value then
+					l_boolean_value := l_last_boolean_value
+					if attached l_boolean_value.error_value as l_error_value then
+						check is_error: l_boolean_value.is_error end
+						l_error_value.set_location (system_id, line_number)
+						check attached a_context.transformer as l_transformer then
+							l_transformer.report_fatal_error (l_error_value)
+						end
+						l_cursor.go_after
+					elseif l_boolean_value.value then
+						l_action := actions.item (l_cursor.index)
+						if attached {XM_XSLT_INSTRUCTION} l_action as l_instruction then
+							l_instruction.generate_tail_call (a_tail, a_context)
+							l_tail_call := a_tail.item
+						else
+							l_action.generate_events (a_context)
+							l_tail_call := Void
+						end
+						l_cursor.go_after
 					else
-						l_action.generate_events (a_context)
-						l_tail_call := Void
+						l_cursor.forth
 					end
-					l_cursor.go_after
-				else
-					l_cursor.forth
+					a_tail.put (l_tail_call)
 				end
-				a_tail.put (l_tail_call)
 			variant
 				conditions.count + 1 - l_cursor.index
 			end

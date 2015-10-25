@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			display_name := "" -- to preserve the invariant
 			a_declaration.register_reference (Current)
 			l_name := a_declaration.variable_name
-			if l_name /= Void then
+			if not l_name.is_empty then
 				display_name := l_name
 			end
 			if not are_static_properties_computed then compute_static_properties end
@@ -332,12 +332,16 @@ feature {NONE} -- Implementation
 				else
 					if attached {XM_XPATH_ASSIGNATION} l_binding as l_assignation then
 						if l_assignation.is_let_expression then
-							set_cardinality (l_binding.required_type.cardinality)
+							check attached l_binding.required_type as l_required_type then
+								set_cardinality (l_required_type.cardinality)
+							end
 						else
 							set_cardinality_exactly_one
 						end
 					else
-						set_cardinality (l_binding.required_type.cardinality)
+						check attached l_binding.required_type as l_required_type then
+							set_cardinality (l_required_type.cardinality)
+						end
 					end
 				end
 			else

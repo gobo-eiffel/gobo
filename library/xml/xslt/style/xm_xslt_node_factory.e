@@ -5,7 +5,7 @@ note
 		"XSLT node factory"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #6 $"
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_element_available (a_uri, a_local_name: STRING): BOOLEAN
+	is_element_available (a_uri: detachable STRING; a_local_name: STRING): BOOLEAN
 			-- Is named element available?
 		require
 			local_name_not_void: a_local_name /= Void
@@ -109,19 +109,16 @@ feature -- Status report
 feature -- Creation
 
 	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XPATH_TREE_ELEMENT
+							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XPATH_TREE_ELEMENT
 			-- New element node.
 		local
 			a_uri_code, a_child_index: INTEGER
 			a_local_name: STRING
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_style_element: XM_XSLT_STYLE_ELEMENT
+			a_style_element: detachable XM_XSLT_STYLE_ELEMENT
 			is_top_level_element: BOOLEAN
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			a_style_element ?= a_parent
-			a_stylesheet ?= a_parent
-			is_top_level_element := a_stylesheet /= Void
+			is_top_level_element := attached {XM_XSLT_STYLESHEET} a_parent
 			a_style_element := new_xslt_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			if a_style_element /= Void then
 				Result := a_style_element
@@ -177,7 +174,7 @@ feature {NONE} -- Implementation
 			-- System configuration
 
 	new_xslt_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
+							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XSLT_STYLE_ELEMENT
 			-- New XSLT element.
 		require
 			document_not_void: a_document /= Void
@@ -339,7 +336,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT
+							a_name_code: INTEGER; a_sequence_number: INTEGER): detachable XM_XSLT_STYLE_ELEMENT
 			-- New gexslt instruction or User-defined Element (or child of latter).
 		require
 			document_not_void: a_document /= Void

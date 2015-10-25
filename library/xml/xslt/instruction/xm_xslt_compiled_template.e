@@ -5,7 +5,7 @@ note
 		"Objects that represent a compiled xsl:template"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,9 @@ feature -- Status report
 	is_stack_frame_needed: BOOLEAN
 			-- Does `Current' need a stack frame?
 		do
-			Result := slot_manager.number_of_variables > 0
+			check attached slot_manager as l_slot_manager then
+				Result := l_slot_manager.number_of_variables > 0
+			end
 		end
 
 	has_required_parameters: BOOLEAN
@@ -99,8 +101,8 @@ feature -- Evaluation
 			a_rule_not_void: a_rule /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_tail: DS_CELL [XM_XPATH_TAIL_CALL]
-			l_tail_call: XM_XPATH_TAIL_CALL
+			l_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]
+			l_tail_call: detachable XM_XPATH_TAIL_CALL
 		do
 			from
 				create l_tail.make (Void)
@@ -115,7 +117,7 @@ feature -- Evaluation
 			end
 		end
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_rule: XM_XSLT_RULE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			a_rule_not_void: a_rule /= Void
@@ -132,7 +134,7 @@ feature -- Evaluation
 			end
 		end
 
-	expand (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	expand (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Expand the template.
 			-- Called when the template is invoked using xsl:call-template or xsl:apply-templates.
 		require
@@ -140,36 +142,41 @@ feature -- Evaluation
 			no_tail_call: a_tail.item = Void
 			context_not_void: a_context /= Void
 		local
-			l_instruction: XM_XSLT_INSTRUCTION
-			l_user_call: XM_XSLT_USER_FUNCTION_CALL
-			l_function, l_previous_function: XM_XSLT_COMPILED_USER_FUNCTION
-			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_function: detachable XM_XSLT_COMPILED_USER_FUNCTION
+			l_previous_function: detachable XM_XSLT_COMPILED_USER_FUNCTION
+			l_value: DS_CELL [detachable XM_XPATH_VALUE]
 			l_finished: BOOLEAN
 		do
-			l_instruction ?= body
-			if l_instruction /= Void then
+			if attached {XM_XSLT_INSTRUCTION} body as l_instruction then
 				l_instruction.generate_tail_call (a_tail, a_context)
 			else
-				from
-					body.generate_events (a_context)
-					-- TODO: do we need this?
-				until l_finished loop
-					l_function := a_context.tail_call_function
-					a_context.clear_tail_call_function
-					if l_previous_function = Void and body.is_user_function_call then
-						l_user_call ?= body
-						l_previous_function := l_user_call.function
-					end
-					if l_function /= Void then
-						if l_function /= l_previous_function then
-						a_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
+				check attached body as l_body then
+					from
+						l_body.generate_events (a_context)
+						-- TODO: do we need this?
+					until l_finished loop
+						l_function := a_context.tail_call_function
+						a_context.clear_tail_call_function
+						if l_previous_function = Void and l_body.is_user_function_call then
+							check attached {XM_XSLT_USER_FUNCTION_CALL} body as l_user_call then
+								l_previous_function := l_user_call.function
+							end
 						end
-						l_previous_function := l_function
-						create l_value.make (Void)
-						l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
-						l_value.item.generate_events (a_context)
-					else
-						l_finished := True
+						if l_function /= Void then
+							if l_function /= l_previous_function then
+								check attached l_function.parameter_definitions as l_function_parameter_definitions then
+									a_context.reset_stack_frame_map (l_function.slot_manager, l_function_parameter_definitions.count)
+								end
+							end
+							l_previous_function := l_function
+							create l_value.make (Void)
+							l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, a_context)
+							check postcondition_of_evaluate: attached l_value.item as l_value_item then
+								l_value_item.generate_events (a_context)
+							end
+						else
+							l_finished := True
+						end
 					end
 				end
 			end

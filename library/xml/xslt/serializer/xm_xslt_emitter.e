@@ -5,7 +5,7 @@ note
 		"Objects that send receiver events to an output destination."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	outputter: XM_XSLT_OUTPUT_ENCODER
+	outputter: detachable XM_XSLT_OUTPUT_ENCODER
 			-- Outputter which writes to the destination stream
 
 	output_properties: XM_XSLT_OUTPUT_PROPERTIES
@@ -42,6 +42,7 @@ feature -- Access
 		require
 			xml_emitter: is_xml_emitter
 		do
+			check xml_emitter: False then end
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
@@ -82,8 +83,8 @@ feature -- Events
 				l_code := "SERIALIZATION_ERROR"
 			end
 			create l_error.make_from_string (l_text, l_uri, l_code, Dynamic_error)
-			if document_uri /= Void then
-				l_error.set_location (document_uri.full_reference, 0)
+			if attached document_uri as l_document_uri then
+				l_error.set_location (l_document_uri.full_reference, 0)
 			elseif not base_uri.is_empty then
 				l_error.set_location (base_uri, 0)
 			end
@@ -115,8 +116,8 @@ feature -- Element change
 		do
 			output_properties := some_output_properties
 			an_encoding := output_properties.encoding
-			if outputter /= Void then
-				an_outputter := outputter.outputter
+			if attached outputter as l_outputter then
+				an_outputter := l_outputter.outputter
 				outputter := serializer.encoder_factory.outputter (an_encoding, an_outputter)
 			end
 		ensure

@@ -5,7 +5,7 @@ note
 		"XSLT ID patterns (of the form id(literal))"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,24 +87,29 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Type-check the pattern
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			id_expression.check_static_type (l_replacement, a_context, a_context_item_type)
-			id_expression := l_replacement.item
-			if id_expression.is_error then
-				set_error_value (id_expression.error_value)
+			check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+				id_expression := l_replacement_item
+				if attached id_expression.error_value as l_error_value then
+					check is_error: id_expression.is_error end
+					set_error_value (l_error_value)
+				end
 			end
 		end
 
 	promote (a_offer: XM_XPATH_PROMOTION_OFFER)
 			-- Promote sub-expressions of `Current'.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			id_expression.promote (l_replacement, a_offer)
-			id_expression := l_replacement.item
+			check postcondition_of_promote: attached l_replacement.item as l_replacement_item then
+				id_expression := l_replacement_item
+			end
 		end
 
 feature -- Matching
@@ -112,13 +117,13 @@ feature -- Matching
 	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Attempt to match `Current' againast `a_node'.
 		local
-			l_doc: XM_XPATH_DOCUMENT
+			l_doc: detachable XM_XPATH_DOCUMENT
 			l_id, l_ids: STRING
 			l_splitter: ST_SPLITTER
 			l_strings:  DS_LIST [STRING]
 			l_cursor: DS_LIST_CURSOR [STRING]
-			l_element: XM_XPATH_ELEMENT
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_element: detachable XM_XPATH_ELEMENT
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 		do
 			internal_last_match_result := False
 			if a_node.node_type = Element_node then
@@ -126,35 +131,37 @@ feature -- Matching
 				if l_doc /= Void then
 					create l_item.make (Void)
 					id_expression.evaluate_item (l_item, a_context)
-					if l_item.item.is_string_value then
-						l_ids := l_item.item.as_string_value.string_value
-						create l_splitter.make
-						l_strings := l_splitter.split (l_ids)
-						check
-							more_than_zero_ids: l_strings.count > 0
-						end
-						if l_strings.count = 1 then
-							l_element := l_doc.selected_id (l_ids)
-							if l_element /= Void then
-								internal_last_match_result := l_element.is_same_node (a_node)
+					check attached l_item.item as l_item_item then
+						if l_item_item.is_string_value then
+							l_ids := l_item_item.as_string_value.string_value
+							create l_splitter.make
+							l_strings := l_splitter.split (l_ids)
+							check
+								more_than_zero_ids: l_strings.count > 0
 							end
-						else
-							from
-								l_cursor := l_strings.new_cursor
-								l_cursor.start
-							until
-								l_cursor.after
-							loop
-								l_id := l_cursor.item
-								l_element := l_doc.selected_id (l_id)
-								if l_element /= Void and then l_element.is_same_node (a_node) then
-									internal_last_match_result := True
-									l_cursor.go_after
-								else
-									l_cursor.forth
+							if l_strings.count = 1 then
+								l_element := l_doc.selected_id (l_ids)
+								if l_element /= Void then
+									internal_last_match_result := l_element.is_same_node (a_node)
 								end
-							variant
-								l_strings.count + 1 - l_cursor.index
+							else
+								from
+									l_cursor := l_strings.new_cursor
+									l_cursor.start
+								until
+									l_cursor.after
+								loop
+									l_id := l_cursor.item
+									l_element := l_doc.selected_id (l_id)
+									if l_element /= Void and then l_element.is_same_node (a_node) then
+										internal_last_match_result := True
+										l_cursor.go_after
+									else
+										l_cursor.forth
+									end
+								variant
+									l_strings.count + 1 - l_cursor.index
+								end
 							end
 						end
 					end

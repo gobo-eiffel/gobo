@@ -17,6 +17,8 @@ inherit
 	XM_XSLT_STRIPPER
 		rename
 			make as make_stripper
+		export
+			{XM_XSLT_STYLESHEET_STRIPPER} orphan, context
 		redefine
 			another, find_space_preserving_mode, is_local_invariant_met
 		end
@@ -48,6 +50,7 @@ feature {NONE} -- Initialization
 			base_uri := an_underlying_receiver.base_uri
 			document_uri := an_underlying_receiver.document_uri
 			create strip_stack.make (100)
+			create orphan.make (Element_node, "")
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
@@ -60,6 +63,8 @@ feature {NONE} -- Initialization
 			xsl_text_fingerprint := other.xsl_text_fingerprint
 			specials := other.specials
 			base_receiver := other.base_receiver
+			base_uri := other.base_uri
+			create orphan.make (Element_node, "")
 		ensure
 			fingerprint_set: xsl_text_fingerprint = other.xsl_text_fingerprint
 			specials_set: specials = other.specials

@@ -5,7 +5,7 @@ note
 		"Objects that create emitters from xsl:output parameters."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,7 +102,7 @@ feature {XM_XSLT_SERIALIZER} -- Creation
 
 	new_receiver (a_method_uri, a_method_local_name: STRING; a_serializer: XM_XSLT_SERIALIZER;
 		a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
+		a_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
 			-- New receiver chain including an emitter
 		require
 			a_method_uri_not_void: a_method_uri /= Void
@@ -124,6 +124,8 @@ feature {XM_XSLT_SERIALIZER} -- Creation
 					Result := new_html_emitter (a_serializer, a_result_stream, a_properties, a_character_map_index).first
 				elseif STRING_.same_string (a_method_local_name, "text") then
 					Result := new_text_emitter (a_serializer, a_result_stream, a_properties, a_character_map_index)
+				else
+					check precondition_valid_output_method: False then end
 				end
 			else
 				Result := extension_emitter_factories.item (a_method_uri).new_receiver (a_method_local_name, a_serializer, a_result_stream, a_properties, a_character_map_index)
@@ -135,7 +137,7 @@ feature {XM_XSLT_SERIALIZER} -- Creation
 feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 
 	new_xml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT;	a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
+		a_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an xml emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -157,7 +159,9 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			create {XM_XSLT_NORMALIZING_FILTER} l_receiver.make (l_receiver, a_serializer, a_properties)
 			-- Phase three (c) of serialization
 			if not a_properties.used_character_maps.is_empty then
-				l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				check precondition_a_character_map_index: a_character_map_index /= Void then
+					l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				end
 			end
 			-- Phase three (b) of serialization
 			if not a_properties.cdata_section_elements.is_empty then
@@ -171,7 +175,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		end
 
 	new_xhtml_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
+		a_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an xhtml emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -193,7 +197,9 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			create {XM_XSLT_NORMALIZING_FILTER} l_receiver.make (l_receiver, a_serializer, a_properties)
 			-- Phase three (c) of serialization
 			if not a_properties.used_character_maps.is_empty then
-				l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				check precondition_a_character_map_index: a_character_map_index /= Void then
+					l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				end
 			end
 			-- Phase three (b) of serialization
 			if not a_properties.cdata_section_elements.is_empty then
@@ -215,7 +221,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		end
 
 	new_html_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
+		a_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): DS_PAIR [XM_XPATH_RECEIVER, XM_XSLT_EMITTER]
 			-- New receiver chain including an html emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -237,7 +243,9 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			create {XM_XSLT_NORMALIZING_FILTER} l_receiver.make (l_receiver, a_serializer, a_properties)
 			-- Phase three (c) of serialization
 			if not a_properties.used_character_maps.is_empty then
-				l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				check precondition_a_character_map_index: a_character_map_index /= Void then
+					l_receiver := character_map_expander (l_receiver, a_properties, a_character_map_index, True)
+				end
 			end
 			-- Phase three (a) of serialization
 			if a_properties.escape_uri_attributes then
@@ -255,7 +263,7 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 		end
 
 	new_text_emitter (a_serializer: XM_XSLT_SERIALIZER; a_result_stream: XM_OUTPUT; a_properties: XM_XSLT_OUTPUT_PROPERTIES;
-		a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
+		a_character_map_index: detachable DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]): XM_XPATH_RECEIVER
 			-- New receiver chain including a text emitter
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -269,7 +277,9 @@ feature {XM_XSLT_UNCOMMITTED_EMITTER} -- Creation
 			create {XM_XSLT_NORMALIZING_FILTER} Result.make (Result, a_serializer, a_properties)
 			-- Phase three (c) of serialization
 			if not a_properties.used_character_maps.is_empty then
-				Result := character_map_expander (Result, a_properties, a_character_map_index, False)
+				check precondition_a_character_map_index: a_character_map_index /= Void then
+					Result := character_map_expander (Result, a_properties, a_character_map_index, False)
+				end
 			end
 		end
 

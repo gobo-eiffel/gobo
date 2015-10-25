@@ -5,7 +5,7 @@ note
 		"xsl:for-each element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,11 +45,11 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute: STRING
+			an_expanded_name, a_select_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -65,7 +65,7 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_select_attribute /= Void then
@@ -80,16 +80,19 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_sort_comes_first (False)
-			if select_expression.is_error then
-				report_compile_error (select_expression.error_value)
-			else
-				create l_replacement.make (Void)
-				type_check_expression (l_replacement, "select", select_expression)
-				select_expression := l_replacement.item
+			check attached select_expression as l_select_expression then
+				if attached l_select_expression.error_value as l_error_value then
+					check is_error: l_select_expression.is_error end
+					report_compile_error (l_error_value)
+				else
+					create l_replacement.make (Void)
+					type_check_expression (l_replacement, "select", l_select_expression)
+					select_expression := l_replacement.item
+				end
 			end
 			validated := True
 		end
@@ -99,28 +102,38 @@ feature -- Element change
 		local
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			l_sorted_sequence: XM_XPATH_EXPRESSION
-			l_content: XM_XPATH_EXPRESSION
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_content: detachable XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_sorted_sequence := select_expression
-			assemble_sort_keys
-			if not any_compile_errors then
-				l_sort_key_list := sort_keys
-				if l_sort_key_list.count > 0 then
-					create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (select_expression, l_sort_key_list)
-					create l_replacement.make (Void)
-					l_sorted_sequence.check_static_type (l_replacement, static_context, any_item)
-					l_sorted_sequence := l_replacement.item
-					l_replacement.put (Void)
-					l_sorted_sequence.optimize (l_replacement, static_context, any_item)
-					l_sorted_sequence := l_replacement.item
+			check attached select_expression as l_select_expression then
+				l_sorted_sequence := l_select_expression
+				assemble_sort_keys
+				if not any_compile_errors then
+					check attached sort_keys as l_sort_keys then
+						l_sort_key_list := l_sort_keys
+					end
+					if l_sort_key_list.count > 0 then
+						create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (l_select_expression, l_sort_key_list)
+						create l_replacement.make (Void)
+						check attached static_context as l_static_context then
+							l_sorted_sequence.check_static_type (l_replacement, l_static_context, any_item)
+							check postcondition_of_check_static_type: attached l_replacement.item as l_replacement_item then
+								l_sorted_sequence := l_replacement_item
+							end
+							l_replacement.put (Void)
+							l_sorted_sequence.optimize (l_replacement, l_static_context, any_item)
+							check postcondition_of_optimize: attached l_replacement.item as l_replacement_item then
+								l_sorted_sequence := l_replacement_item
+							end
+						end
+					end
+					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+					l_content := last_generated_expression
+					if l_content = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+					end
+					create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, l_sorted_sequence, l_content)
 				end
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				l_content := last_generated_expression
-				if l_content = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
-				end
-				create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, l_sorted_sequence, l_content)
 			end
 		end
 
@@ -142,7 +155,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	select_expression: XM_XPATH_EXPRESSION
+	select_expression: detachable XM_XPATH_EXPRESSION
 			-- Select expression
 
 

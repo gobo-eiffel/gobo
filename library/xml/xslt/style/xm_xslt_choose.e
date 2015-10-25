@@ -29,15 +29,13 @@ feature -- Status setting
 			-- Mark tail-recursive calls on templates and functions.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
 			from
 				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
 			until
 				an_iterator.after
 			loop
-				a_style_element ?= an_iterator.item
-				if a_style_element /= Void then
+				if attached {XM_XSLT_STYLE_ELEMENT} an_iterator.item as a_style_element then
 					a_style_element.mark_tail_calls
 				end
 				an_iterator.forth
@@ -53,9 +51,9 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -65,7 +63,7 @@ feature -- Element change
 					check_unknown_attribute (a_name_code)
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			attributes_prepared := True
@@ -75,8 +73,6 @@ feature -- Element change
 			-- Check that the stylesheet element is valid.
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_xsl_when: XM_XSLT_WHEN
-			an_otherwise: XM_XSLT_OTHERWISE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
@@ -86,16 +82,14 @@ feature -- Element change
 			until
 				any_compile_errors or else a_child_iterator.after
 			loop
-				an_xsl_when ?= a_child_iterator.item
-				if an_xsl_when /= Void then
+				if attached {XM_XSLT_WHEN} a_child_iterator.item then
 					if otherwise /= Void then
 						create an_error.make_from_string ("xsl:otherwise must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					number_of_whens := number_of_whens + 1
 				else
-					an_otherwise ?= a_child_iterator.item
-					if an_otherwise /= Void then
+					if attached {XM_XSLT_OTHERWISE} a_child_iterator.item as an_otherwise then
 						if otherwise /= Void then
 							create an_error.make_from_string ("Only one xsl:otherwise is allowed within an xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 							report_compile_error (an_error)
@@ -123,12 +117,10 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_when: XM_XSLT_WHEN
-			l_otherwise: XM_XSLT_OTHERWISE
 			l_condition: XM_XPATH_EXPRESSION
-			l_action: XM_XPATH_EXPRESSION
+			l_action: detachable XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_WRAPPER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			top_stylesheet := principal_stylesheet
 			compiled_actions_count := number_of_whens
@@ -143,36 +135,42 @@ feature -- Element change
 			until
 				has_compile_loop_finished or else l_child_iterator.after
 			loop
-				l_when ?= l_child_iterator.item
-				if l_when /= Void then
+				if attached {XM_XSLT_WHEN} l_child_iterator.item as l_when then
 					compile_when (an_executable, l_when)
 				else
-					l_otherwise ?= l_child_iterator.item
 					check
-						otherwise: l_otherwise /= Void
+						otherwise: attached {XM_XSLT_OTHERWISE} l_child_iterator.item as l_otherwise
 						-- validation has already checked for this
-					end
-					compiled_actions_count := compiled_actions_count + 1
-					create {XM_XPATH_BOOLEAN_VALUE} l_condition.make (True)
-					compiled_conditions.put_last (l_condition)
-					compile_sequence_constructor (an_executable, l_otherwise.new_axis_iterator (Child_axis), True)
-					l_action := last_generated_expression
-					if l_action = Void then
-						create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
-					end
-					create l_replacement.make (Void)
-					l_action.simplify (l_replacement)
-					l_action := l_replacement.item
-					if l_action.is_error then
-						report_compile_error (l_action.error_value)
-					else
-						if configuration.is_tracing then
-							l_trace_wrapper := new_trace_wrapper (l_action, an_executable, l_otherwise)
-							l_trace_wrapper.set_parent (l_otherwise)
-							l_action := l_trace_wrapper
+					then
+						compiled_actions_count := compiled_actions_count + 1
+						create {XM_XPATH_BOOLEAN_VALUE} l_condition.make (True)
+						check attached compiled_conditions as l_compiled_conditions then
+							l_compiled_conditions.put_last (l_condition)
 						end
-						compiled_actions.put_last (l_action)
-						has_compile_loop_finished := True
+						compile_sequence_constructor (an_executable, l_otherwise.new_axis_iterator (Child_axis), True)
+						l_action := last_generated_expression
+						if l_action = Void then
+							create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
+						end
+						create l_replacement.make (Void)
+						l_action.simplify (l_replacement)
+						check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+							l_action := l_replacement_item
+						end
+						if attached l_action.error_value as l_error_value then
+							check is_error: l_action.is_error end
+							report_compile_error (l_error_value)
+						else
+							if configuration.is_tracing then
+								l_trace_wrapper := new_trace_wrapper (l_action, an_executable, l_otherwise)
+								l_trace_wrapper.set_parent (l_otherwise)
+								l_action := l_trace_wrapper
+							end
+							check attached compiled_actions as l_compiled_actions then
+								l_compiled_actions.put_last (l_action)
+							end
+							has_compile_loop_finished := True
+						end
 					end
 				end
 				if not has_compile_loop_finished then l_child_iterator.forth end
@@ -180,23 +178,34 @@ feature -- Element change
 			if compiled_actions_count = 0 then
 				last_generated_expression := Void
 			elseif compiled_actions_count = 1 then
-				if compiled_conditions.item (1).is_boolean_value then
-					if compiled_conditions.item (1).as_boolean_value.value then
+				check attached compiled_conditions as l_compiled_conditions then
+					if l_compiled_conditions.item (1).is_boolean_value then
+						if l_compiled_conditions.item (1).as_boolean_value.value then
 
-						-- only one condition left, and it's known to be true: return the corresponding action
+							-- only one condition left, and it's known to be true: return the corresponding action
 
-						last_generated_expression := compiled_actions.item (1)
+							check attached compiled_actions as l_compiled_actions then
+								last_generated_expression := l_compiled_actions.item (1)
+							end
+						else
+
+							-- but if it's false, return a no-op
+
+							last_generated_expression := Void
+						end
 					else
-
-						-- but if it's false, return a no-op
-
-						last_generated_expression := Void
+						check attached compiled_actions as l_compiled_actions then
+							create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, l_compiled_conditions, l_compiled_actions)
+						end
 					end
-				else
-					create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, compiled_conditions, compiled_actions)
 				end
 			else
-				create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, compiled_conditions, compiled_actions)
+				check
+					attached compiled_conditions as l_compiled_conditions
+					attached compiled_actions as l_compiled_actions
+				then
+					create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, l_compiled_conditions, l_compiled_actions)
+				end
 			end
 		end
 
@@ -211,7 +220,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 feature {NONE} -- Implementation
 
-	otherwise: XM_XSLT_OTHERWISE
+	otherwise: detachable XM_XSLT_OTHERWISE
 			-- Otherwise clause
 
 	number_of_whens: INTEGER
@@ -223,13 +232,13 @@ feature {NONE} -- Implementation
 	has_compile_loop_finished: BOOLEAN
 			-- Communication flag between `compile' and `compile_when'
 
-	top_stylesheet:XM_XSLT_STYLESHEET
+	top_stylesheet: detachable XM_XSLT_STYLESHEET
 			-- Prinicpal stylesheet
 
-	compiled_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+	compiled_conditions: detachable DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			--	Conditions present in compiled instruction
 
-	compiled_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+	compiled_actions: detachable DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions present in compiled instruction
 
 	compile_when (an_executable: XM_XSLT_EXECUTABLE; l_when: XM_XSLT_WHEN)
@@ -238,11 +247,14 @@ feature {NONE} -- Implementation
 			executable_not_void: an_executable /= Void
 			when_clause_not_void: l_when /= Void
 		local
-			l_condition, l_action: XM_XPATH_EXPRESSION
+			l_condition: XM_XPATH_EXPRESSION
+			l_action: detachable XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_WRAPPER
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
-			l_condition := l_when.condition
+			check attached l_when.condition as l_when_condition then
+				l_condition := l_when_condition
+			end
 			compile_sequence_constructor (an_executable, l_when.new_axis_iterator (Child_axis), True)
 			l_action := last_generated_expression
 			if l_action = Void then
@@ -250,9 +262,12 @@ feature {NONE} -- Implementation
 			end
 			create l_replacement.make (Void)
 			l_action.simplify (l_replacement)
-			l_action := l_replacement.item
-			if l_action.is_error then
-				report_compile_error (l_action.error_value)
+			check postcondition_of_simplify: attached l_replacement.item as l_replacement_item then
+				l_action := l_replacement_item
+			end
+			if attached l_action.error_value as l_error_value then
+				check is_error: l_action.is_error end
+				report_compile_error (l_error_value)
 			else
 				if configuration.is_tracing then
 					l_trace_wrapper := new_trace_wrapper (l_action, an_executable, l_when)
@@ -265,8 +280,12 @@ feature {NONE} -- Implementation
 				if l_condition.is_boolean_value then
 					if l_condition.as_boolean_value.value then
 						compiled_actions_count := compiled_actions_count + 1
-						compiled_conditions.put_last (l_condition)
-						compiled_actions.put_last (l_action)
+						check attached compiled_conditions as l_compiled_conditions then
+							l_compiled_conditions.put_last (l_condition)
+						end
+						check attached compiled_actions as l_compiled_actions then
+							l_compiled_actions.put_last (l_action)
+						end
 						has_compile_loop_finished := True
 					else
 
@@ -275,8 +294,12 @@ feature {NONE} -- Implementation
 					end
 				else
 					compiled_actions_count := compiled_actions_count + 1
-					compiled_conditions.put_last (l_condition)
-					compiled_actions.put_last (l_action)
+					check attached compiled_conditions as l_compiled_conditions then
+						l_compiled_conditions.put_last (l_condition)
+					end
+					check attached compiled_actions as l_compiled_actions then
+						l_compiled_actions.put_last (l_action)
+					end
 				end
 			end
 		end

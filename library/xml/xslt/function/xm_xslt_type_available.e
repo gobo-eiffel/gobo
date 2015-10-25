@@ -5,7 +5,7 @@ note
 		"Objects that implement the XSLT type-available() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2006, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,12 +64,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
+	evaluate_item (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT)
 			-- Evaluate as a single item to `a_result'.
 		do
 			arguments.item (1).evaluate_as_string (a_context)
-			if not a_result.item.is_error then
-				evaluate_qname (a_result, arguments.item (1).last_evaluated_string.string_value)
+			check attached a_result.item as l_result_item then
+				if not l_result_item.is_error then
+					check postcondition_of_evaluate_as_string: attached arguments.item (1).last_evaluated_string as l_last_evaluated_string then
+						evaluate_qname (a_result, l_last_evaluated_string.string_value)
+					end
+				end
 			end
 		end
 
@@ -83,10 +87,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
+	namespace_resolver: detachable XM_XPATH_NAMESPACE_RESOLVER
 			-- Saved namespace context from static context
 
-	evaluate_qname (a_result: DS_CELL [XM_XPATH_ITEM]; a_qname: STRING)
+	evaluate_qname (a_result: DS_CELL [detachable XM_XPATH_ITEM]; a_qname: STRING)
 			-- Evaluate if `a_qname' represents an available type
 		require
 			a_result_not_void: a_result /= Void
@@ -99,14 +103,16 @@ feature {NONE} -- Implementation
 			if not is_qname (a_qname) then
 				a_result.put (create {XM_XPATH_INVALID_VALUE}.make_from_string ("Argument is not a lexical QNAME", Xpath_errors_uri, "XTDE1428", Dynamic_error))
 			else
-				l_fingerprint := namespace_resolver.fingerprint (a_qname, true)
-				if l_fingerprint = -2 then
-					a_result.put (create {XM_XPATH_INVALID_VALUE}.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1428", Dynamic_error))
-				elseif l_fingerprint = -1 then
-					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
-				else
-					-- TODO: will need to be changed for user-defined types in schema-aware version
-					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (type_factory.is_built_in_fingerprint (l_fingerprint) and then type_factory.schema_type (l_fingerprint) /= Void))
+				check precondition_namespace_resolver_not_void: attached namespace_resolver as l_namespace_resolver then
+					l_fingerprint := l_namespace_resolver.fingerprint (a_qname, true)
+					if l_fingerprint = -2 then
+						a_result.put (create {XM_XPATH_INVALID_VALUE}.make_from_string ("There is no namespace in scope for argument's prefix", Xpath_errors_uri, "XTDE1428", Dynamic_error))
+					elseif l_fingerprint = -1 then
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (False))
+					else
+						-- TODO: will need to be changed for user-defined types in schema-aware version
+						a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (type_factory.is_built_in_fingerprint (l_fingerprint) and then type_factory.schema_type (l_fingerprint) /= Void))
+					end
 				end
 			end
 		end

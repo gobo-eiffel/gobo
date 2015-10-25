@@ -5,7 +5,7 @@ note
 		"xsl:namespace element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: detachable XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration)
 			-- Establish invariant.
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: XM_XPATH_EXPRESSION
+	name: detachable XM_XPATH_EXPRESSION
 			-- Name (prefix) to be generated
 
 	select_and_content_error: STRING
@@ -52,11 +52,11 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute, a_select_attribute: STRING
+			an_expanded_name, a_name_attribute, a_select_attribute: detachable STRING
 		do
-			if attribute_collection /= Void then
+			if attached attribute_collection as l_attribute_collection then
 				from
-					a_cursor := attribute_collection.name_code_cursor
+					a_cursor := l_attribute_collection.name_code_cursor
 					a_cursor.start
 				until
 					a_cursor.after or any_compile_errors
@@ -76,20 +76,25 @@ feature -- Element change
 					end
 					a_cursor.forth
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
+					l_attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute = Void then
 				report_absence ("name")
 			else
-				generate_attribute_value_template (a_name_attribute, static_context)
+				check precondition_static_context_not_void: attached static_context as l_static_context then
+					generate_attribute_value_template (a_name_attribute, l_static_context)
+				end
 				name := last_generated_expression
 			end
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
-				select_expression := last_generated_expression
-				if select_expression.is_error then
-					report_compile_error (select_expression.error_value)
+				check postcondition_of_generate_expression: attached last_generated_expression as l_new_select_expression then
+					select_expression := l_new_select_expression
+					if attached l_new_select_expression.error_value as l_error_value then
+						check is_error: l_new_select_expression.is_error end
+						report_compile_error (l_error_value)
+					end
 				end
 			end
 			attributes_prepared := True
@@ -98,15 +103,17 @@ feature -- Element change
 	validate
 			-- Check that the stylesheet element is valid.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			create l_replacement.make (Void)
-			type_check_expression (l_replacement, "name", name)
+			check attached name as l_name then
+				type_check_expression (l_replacement, "name", l_name)
+			end
 			name := l_replacement.item
-			if select_expression /= Void then
+			if attached select_expression as l_select_expression then
 				l_replacement.put (Void)
-				type_check_expression (l_replacement, "select", select_expression)
+				type_check_expression (l_replacement, "select", l_select_expression)
 				select_expression := l_replacement.item
 			end
 			Precursor
@@ -118,7 +125,9 @@ feature -- Element change
 			a_namespace: XM_XSLT_COMPILED_NAMESPACE
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			create a_namespace.make (an_executable, name)
+			check attached name as l_name then
+				create a_namespace.make (an_executable, l_name)
+			end
 			create a_string_value.make (" ")
 			compile_content (an_executable, a_namespace, a_string_value)
 			last_generated_expression := a_namespace

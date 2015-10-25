@@ -5,7 +5,7 @@ note
 		"Objects that render a sorted iteration of groups"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,9 @@ feature -- Access
 			-- Grouping key for current group;
 			-- (or `Void' for group-starting/ending-with)
 		do
-			Result := node_keys.item (index).as_group_sort_record.current_grouping_key
+			check attached node_keys as l_node_keys then
+				Result := l_node_keys.item (index).as_group_sort_record.current_grouping_key
+			end
 		end
 
 feature -- Evaluation
@@ -54,10 +56,12 @@ feature -- Evaluation
 			-- Iterator over the members of the current group, in population order.
 		do
 			check
-				group_sort_record: node_keys.item (index).is_group_sort_record
+				node_keys: attached node_keys as l_node_keys
+				group_sort_record: l_node_keys.item (index).is_group_sort_record
 				-- `build_array' assures this
+			then
+				Result := l_node_keys.item (index).as_group_sort_record.current_group_iterator.another
 			end
-			Result := node_keys.item (index).as_group_sort_record.current_group_iterator.another
 		end
 
 feature -- Duplication
@@ -89,14 +93,16 @@ feature {NONE} -- Implementation
 	build_array
 			-- Build `node_keys'.
 		local
-			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_item: DS_CELL [detachable XM_XPATH_ITEM]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			l_sort_record: XM_XSLT_GROUP_SORT_RECORD
-			l_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
-			l_sort_key: XM_XPATH_ATOMIC_VALUE
+			l_key_list: DS_ARRAYED_LIST [detachable XM_XPATH_ATOMIC_VALUE]
+			l_sort_key: detachable XM_XPATH_ATOMIC_VALUE
 			l_new_context: like context
+			l_node_keys: like node_keys
 		do
-			create node_keys.make_default
+			create l_node_keys.make_default
+			node_keys := l_node_keys
 
 			-- This provides the context for evaluating the sort key:
 			-- Note that current() must return the node being sorted.
@@ -112,8 +118,8 @@ feature {NONE} -- Implementation
 			until
 				group_iterator.is_error or else group_iterator.after
 			loop
-				if node_keys.is_full then
-					node_keys.resize (node_keys.count * 2)
+				if l_node_keys.is_full then
+					l_node_keys.resize (l_node_keys.count * 2)
 				end
 				from
 					create l_key_list.make (sort_keys.count)
@@ -123,8 +129,8 @@ feature {NONE} -- Implementation
 				loop
 					create l_item.make (Void)
 					l_cursor.item.sort_key.evaluate_item (l_item, l_new_context)
-					if l_item.item /= Void then
-						l_sort_key := l_item.item.as_atomic_value
+					if attached l_item.item as l_item_item then
+						l_sort_key := l_item_item.as_atomic_value
 					else
 						l_sort_key := Void  -- = () - an empty sequence
 					end
@@ -140,13 +146,20 @@ feature {NONE} -- Implementation
 				-- (apart from the type of `l_sort_record',
 				--  the use of `group_iterator' for `base_iterator' throughout)
 				--  and the setting and saving of the current group iterator).
-
-				create l_sort_record.make (group_iterator.item, l_key_list, count,group_iterator.current_grouping_key, group_iterator.current_group_iterator)
-				node_keys.put_last (l_sort_record)
+				check
+					attached group_iterator.current_grouping_key as l_current_grouping_key
+					attached group_iterator.current_group_iterator as l_current_group_iterator
+				then
+					create l_sort_record.make (group_iterator.item, l_key_list, count, l_current_grouping_key, l_current_group_iterator)
+					l_node_keys.put_last (l_sort_record)
+				end
 				group_iterator.forth
 			end
-			if group_iterator.is_error then
-				context.transformer.report_fatal_error (group_iterator.error_value)
+			if attached group_iterator.error_value as l_error_value then
+				check is_error: group_iterator.is_error end
+				check attached context.transformer as l_context_transformer then
+					l_context_transformer.report_fatal_error (l_error_value)
+				end
 			end
 			count_determined := True
 		end

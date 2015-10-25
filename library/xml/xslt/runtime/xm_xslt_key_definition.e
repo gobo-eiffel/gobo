@@ -5,7 +5,7 @@ note
 		"Objects that represent XSLT keys"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_XSLT_KEY_DEFINITION
 inherit
 
 	XM_XSLT_COMPILED_PROCEDURE
+		redefine
+			executable, body, system_id, slot_manager
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -66,6 +69,18 @@ feature -- Access
 
 	is_backwards_compatible_mode: BOOLEAN
 			-- Wss XPath 1.0 compatibility in force for this definition?
+
+	executable: XM_XSLT_EXECUTABLE
+			-- <Precursor>
+
+	body: XM_XPATH_EXPRESSION
+			-- <Precursor>
+
+	system_id: STRING
+			-- <Precursor>
+
+	slot_manager: XM_XPATH_SLOT_MANAGER
+			-- <Precursor>
 
 feature -- Setting
 

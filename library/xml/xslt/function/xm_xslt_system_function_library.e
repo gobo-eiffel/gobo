@@ -5,7 +5,7 @@ note
 		"Objects that provide access to standard XSLT and core XPATH functions"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,7 +76,7 @@ feature -- Element change
 	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN)
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
 		local
-			a_function_call: XM_XPATH_FUNCTION_CALL
+			a_function_call: detachable XM_XPATH_FUNCTION_CALL
 			precursor_called: BOOLEAN
 		do
 			inspect a_fingerprint
@@ -126,9 +126,10 @@ feature -- Element change
 				check
 					function_bound: a_function_call /= Void
 					-- From pre-condition
+				then
+					a_function_call.set_arguments (some_arguments)
+					last_bound_function := a_function_call
 				end
-				a_function_call.set_arguments (some_arguments)
-				last_bound_function := a_function_call
 			end
 		end
 

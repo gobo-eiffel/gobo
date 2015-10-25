@@ -3,7 +3,7 @@ note
 	description: "Objects that represent an xsl:next-match,"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,20 +23,22 @@ create
 
 feature -- Evaluation
 
-	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
+	generate_tail_call (a_tail: DS_CELL [detachable XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT)
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			l_transformer: XM_XSLT_TRANSFORMER
 			l_parameters, l_tunnel_parameters: XM_XSLT_PARAMETER_SET
-			l_current_rule, l_rule: XM_XSLT_RULE
+			l_current_rule, l_rule: detachable XM_XSLT_RULE
 			l_error: XM_XPATH_ERROR_VALUE
-			l_mode: XM_XSLT_MODE
+			l_mode: detachable XM_XSLT_MODE
 			l_template: XM_XSLT_COMPILED_TEMPLATE
-			l_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_current_iterator: detachable XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_other_context: XM_XSLT_EVALUATION_CONTEXT
 
 		do
-			l_transformer := a_context.transformer
+			check attached a_context.transformer as l_context_transformer then
+				l_transformer := l_context_transformer
+			end
 
 			-- handle any parameters
 
@@ -78,7 +80,9 @@ feature -- Evaluation
 							l_other_context := a_context.new_context
 							l_other_context.set_local_parameters (l_parameters)
 							l_other_context.set_tunnel_parameters (l_tunnel_parameters)
-							l_other_context.open_stack_frame (l_template.slot_manager)
+							check attached l_template.slot_manager as l_template_slot_manager then
+								l_other_context.open_stack_frame (l_template_slot_manager)
+							end
 							l_template.generate_events (l_rule, l_other_context)
 						end
 					end

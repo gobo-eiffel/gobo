@@ -5,7 +5,7 @@ note
 	"Objects that receive notification of errors and store them in a string"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	error_text: STRING
+	error_text: detachable STRING
 			-- Text of error message
 
 feature -- Events
@@ -72,9 +72,11 @@ feature -- Events
 			if recovery_policy /= Recover_silently then
 				if recovery_policy = Recover_with_warnings then
 					l_msg := "Recoverable error: "
-				elseif recovery_policy = Do_not_recover then
-					recovered := False
-					l_msg := "Error: "
+				else
+					check recovery_policy = Do_not_recover then
+						recovered := False
+						l_msg := "Error: "
+					end
 				end
 				if is_error_code_editing then
 					create l_error.make (a_error.description, error_change_stack.item.first, error_change_stack.item.second, a_error.value, a_error.type)
@@ -105,17 +107,19 @@ feature {NONE} -- Implementation
 			-- Set_error_text.
 		require
 			message_not_void: a_message /= Void
+		local
+			l_error_text: like error_text
 		do
 			if a_locator /= Void then
 				if a_locator.line_number > 0 then
-					error_text := "At line " + a_locator.line_number.out + " in " + a_locator.system_id + ":"
+					l_error_text := "At line " + a_locator.line_number.out + " in " + a_locator.system_id + ":"
 				else
-					error_text := "In " + a_locator.system_id + ":"
+					l_error_text := "In " + a_locator.system_id + ":"
 				end
 			else
-				error_text := ""
+				l_error_text := ""
 			end
-			error_text := STRING_.appended_string (error_text, a_message)
+			error_text := STRING_.appended_string (l_error_text, a_message)
 		end
 
 invariant

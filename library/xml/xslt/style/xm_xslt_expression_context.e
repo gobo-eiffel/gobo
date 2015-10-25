@@ -5,7 +5,7 @@ note
 		"XSLT expression contexts"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,13 +40,17 @@ feature {NONE} -- Initialization
 		require
 			style_element_not_void:	a_style_element /= Void
 			configuration_not_void: a_configuration /= Void
-			known_collation: a_style_element.principal_stylesheet.collation_map.has (a_style_element.default_collation_name)
+			known_collation: attached a_style_element.principal_stylesheet as l_principal_stylesheet and then l_principal_stylesheet.collation_map.has (a_style_element.default_collation_name)
 		do
 			configuration := a_configuration
 			style_element := a_style_element
-			known_collations := a_style_element.principal_stylesheet.collation_map
+			check attached a_style_element.principal_stylesheet as l_principal_stylesheet then
+				known_collations := l_principal_stylesheet.collation_map
+			end
 			default_collation_name := a_style_element.default_collation_name
-			create base_uri.make (style_element.base_uri)
+			check attached style_element.base_uri as l_base_uri then
+				create base_uri.make (l_base_uri)
+			end
 		ensure
 			configuration_set: configuration = a_configuration
 			style_element_set: style_element = a_style_element
@@ -64,7 +68,9 @@ feature {NONE} -- Initialization
 			create known_collations.make_with_equality_testers (1, Void, string_equality_tester)
 			default_collation_name := Unicode_codepoint_collation_uri
 			declare_collation (create {ST_COLLATOR}, default_collation_name)
-			create base_uri.make (style_element.base_uri)
+			check attached style_element.base_uri as l_base_uri then
+				create base_uri.make (l_base_uri)
+			end
 			is_restricted := True
 		ensure
 			configuration_set: configuration = a_configuration
@@ -91,7 +97,9 @@ feature -- Access
 	style_sheet: XM_XSLT_STYLESHEET
 			-- Principal style sheet
 		do
-			Result := style_element.principal_stylesheet
+			check attached style_element.principal_stylesheet as l_principal_stylesheet then
+				Result := l_principal_stylesheet
+			end
 		ensure
 			style_sheet_not_void: Result /= Void
 		end
@@ -100,23 +108,25 @@ feature -- Access
 			-- Available functions
 		local
 			l_function_library: XM_XPATH_FUNCTION_LIBRARY
-			l_configuration: XM_XSLT_CONFIGURATION
+			l_cached_function_manager: like cached_function_manager
 		do
 			if is_restricted then
-				if cached_function_manager = Void then
-					l_configuration ?= configuration
+				l_cached_function_manager := cached_function_manager
+				if l_cached_function_manager = Void then
 					check
-						l_configuration_not_void: l_configuration /= Void
+						l_configuration_not_void: attached {XM_XSLT_CONFIGURATION} configuration as l_configuration
 						-- this is XSLT
+					then
+						create l_cached_function_manager.make
+						cached_function_manager := l_cached_function_manager
+						create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} l_function_library.make
+						l_cached_function_manager.add_function_library (l_function_library)
+						create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} l_function_library.make
+						l_cached_function_manager.add_function_library (l_function_library)
+						l_configuration.extension_functions.do_all (agent add_function_library (l_cached_function_manager, ?))
 					end
-					create cached_function_manager.make
-					create {XM_XSLT_SYSTEM_FUNCTION_LIBRARY} l_function_library.make
-					cached_function_manager.add_function_library (l_function_library)
-					create {XM_XPATH_CONSTRUCTOR_FUNCTION_LIBRARY} l_function_library.make
-					cached_function_manager.add_function_library (l_function_library)
-					l_configuration.extension_functions.do_all (agent add_function_library (cached_function_manager, ?))
 				end
-				Result := cached_function_manager
+				Result := l_cached_function_manager
 			else
 				Result := style_sheet.function_library
 			end
@@ -150,7 +160,9 @@ feature -- Access
 	uri_for_prefix (an_xml_prefix: STRING): STRING
 			-- URI for a namespace prefix
 		do
-			Result := style_element.uri_for_prefix (an_xml_prefix, False)
+			check attached style_element.uri_for_prefix (an_xml_prefix, False) as l_uri_for_prefix then
+				Result := l_uri_for_prefix
+			end
 		end
 
 	is_backwards_compatible_mode: BOOLEAN
@@ -171,19 +183,27 @@ feature -- Access
 			if not a_parser.is_valid then
 				Result := -1
 			else
-				if not a_parser.is_prefix_present then
-					if use_default_namespace then
-						a_uri := style_element.uri_for_prefix (a_parser.optional_prefix, True)
+				check
+					invariant_of_XM_XPATH_QNAME_PARSER_prefix_not_void: attached a_parser.optional_prefix as l_optional_prefix
+					invariant_of_XM_XPATH_QNAME_PARSER_local_name_not_void: attached a_parser.local_name as l_local_name
+				then
+					if not a_parser.is_prefix_present then
+						if use_default_namespace then
+							check attached style_element.uri_for_prefix (l_optional_prefix, True) as l_uri_for_prefix then
+								a_uri := l_uri_for_prefix
+							end
+						else
+							a_uri := ""
+						end
+					elseif is_prefix_declared (l_optional_prefix) then
+						a_uri := uri_for_prefix (l_optional_prefix)
 					else
+						Result := -1
 						a_uri := ""
 					end
-				elseif is_prefix_declared (a_parser.optional_prefix) then
-					a_uri := uri_for_prefix (a_parser.optional_prefix)
-				else
-					Result := -1
-				end
-				if Result /= -1 then
-					Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
+					if Result /= -1 then
+						Result := shared_name_pool.fingerprint (a_uri, l_local_name)
+					end
 				end
 			end
 		end
@@ -229,44 +249,45 @@ feature -- Status report
 			-- Is element name `a_qname' available?
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_uri: STRING
+			l_uri: detachable STRING
 			l_node_factory: XM_XSLT_NODE_FACTORY
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			l_configuration: XM_XSLT_CONFIGURATION
+			l_stylesheet_compiler: detachable XM_XSLT_STYLESHEET_COMPILER
 		do
 			create l_parser.make (a_qname)
 			check
 				valid_parse: l_parser.is_valid
 				-- from pre-condition
+				invariant_of_XM_XPATH_QNAME_PARSER_prefix_not_void: attached l_parser.optional_prefix as l_optional_prefix
+				invariant_of_XM_XPATH_QNAME_PARSER_local_name_not_void: attached l_parser.local_name as l_local_name
+			then
+				if l_optional_prefix.is_empty then
+					l_uri := style_element.uri_for_prefix (l_optional_prefix, True)
+				else
+					l_uri := uri_for_prefix (l_optional_prefix)
+				end
+				l_stylesheet_compiler := style_element.stylesheet_compiler
+				if l_stylesheet_compiler /= Void then
+					l_node_factory := l_stylesheet_compiler.node_factory
+				else
+					check attached {XM_XSLT_CONFIGURATION} configuration as l_configuration then
+						create l_node_factory.make (l_configuration.error_listener, l_configuration)
+					end
+				end
+				Result := l_node_factory.is_element_available (l_uri, l_local_name)
 			end
-			if l_parser.optional_prefix.is_empty then
-				l_uri := style_element.uri_for_prefix (l_parser.optional_prefix, True)
-			else
-				l_uri := uri_for_prefix (l_parser.optional_prefix)
-			end
-			l_stylesheet_compiler := style_element.stylesheet_compiler
-			if l_stylesheet_compiler /= Void then
-				l_node_factory := l_stylesheet_compiler.node_factory
-			else
-				l_configuration ?= configuration
-				create l_node_factory.make (l_configuration.error_listener, l_configuration)
-			end
-			Result := l_node_factory.is_element_available (l_uri, l_parser.local_name)
 		end
 
 feature -- Creation
 
 	new_compile_time_context: XM_XPATH_CONTEXT
 			-- Restricted dynamic context
-		local
-			l_configuration: XM_XSLT_CONFIGURATION
 		do
-			l_configuration ?= configuration
 			check
-				l_configuration_not_void: l_configuration /= Void
+				attached {XM_XSLT_CONFIGURATION} configuration as l_configuration
 				-- this is XSLT
+			then
+				create {XM_XSLT_EVALUATION_CONTEXT} Result.make_restricted (Current, known_collations, l_configuration)
 			end
-			create {XM_XSLT_EVALUATION_CONTEXT} Result.make_restricted (Current, known_collations, l_configuration)
 		end
 
 
@@ -298,10 +319,10 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	internal_default_function_namespace_uri: STRING
+	internal_default_function_namespace_uri: detachable STRING
 			-- Namespace for non-prefixed XPath functions
 
-	cached_function_manager: XM_XPATH_FUNCTION_LIBRARY_MANAGER
+	cached_function_manager: detachable XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library manager for use-when processing
 
 	code_point_collator: ST_COLLATOR

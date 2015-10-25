@@ -5,7 +5,7 @@ note
 		"Objects that implement one rule within an XSLT mode"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL; a_sequence_number: INTEGER)
+	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: detachable MA_DECIMAL; a_sequence_number: INTEGER)
 			-- Establish invariant.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -50,8 +50,8 @@ feature {NONE} -- Implementation
 			priority := other.priority
 			priority_rank := other.priority_rank
 			sequence_number := other.sequence_number
-			if other.next_rule /= Void then
-				create next_rule.make_with_copy (other.next_rule)
+			if attached other.next_rule as l_other_next_rule then
+				create next_rule.make_with_copy (l_other_next_rule)
 			end
 		end
 
@@ -66,7 +66,7 @@ feature -- Access
 	precedence: INTEGER
 			-- Precedence
 
-	priority: MA_DECIMAL
+	priority: detachable MA_DECIMAL
 			-- Priority
 
 	priority_rank: INTEGER
@@ -75,12 +75,12 @@ feature -- Access
 	sequence_number: INTEGER
 			-- Sequence number
 
-	next_rule: XM_XSLT_RULE
+	next_rule: detachable XM_XSLT_RULE
 			-- Next rule on the chain
 
 feature -- Element change
 
-	set_next_rule (a_next_rule: XM_XSLT_RULE)
+	set_next_rule (a_next_rule: detachable XM_XSLT_RULE)
 			-- Set next rule in chain.
 		do
 			next_rule := a_next_rule
