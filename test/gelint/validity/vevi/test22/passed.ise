@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VEVI
+
+Error: variable is not properly set.
+What to do: ensure the variable is properly set by the corresponding
+  setter instruction.
+
+Class: BB
+Feature: default_create
+Attribute(s): c
+Line: 18
+      do
+->      create c.make (Current)
+      end
+
+-------------------------------------------------------------------------------

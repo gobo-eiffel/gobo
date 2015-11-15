@@ -1,0 +1,22 @@
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+AA                  f @1                   out:                         
+<XXXXXXXXXXXXXXXX>                         Feature call on void target.  Fail
+-------------------------------------------------------------------------------
+AA                  f @1                                                
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+BB                  f @2                                                
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @2                                             
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<XXXXXXXXXXXXXXXX>                         Routine failure.              Exit
+-------------------------------------------------------------------------------
