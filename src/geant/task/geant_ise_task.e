@@ -5,7 +5,7 @@ note
 		"Compilation tasks for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -67,9 +67,14 @@ feature {NONE} -- Initialization
 			if has_attribute (Finish_freezing_attribute_name) then
 				command.set_finish_freezing (boolean_value (Finish_freezing_attribute_name))
 			end
-				-- project path
+				-- project_path:
 			if has_attribute (Project_path_attribute_name) then
 				a_value := attribute_value_or_default (Project_path_attribute_name, "")
+				if a_value.count > 0 then
+					command.set_project_path (a_value)
+				end
+			elseif has_attribute (Old_project_path_attribute_name) then
+				a_value := attribute_value_or_default (Old_project_path_attribute_name, "")
 				if a_value.count > 0 then
 					command.set_project_path (a_value)
 				end
@@ -151,6 +156,15 @@ feature {NONE} -- Constants
 		end
 
 	Project_path_attribute_name: STRING
+			-- Name of xml attribute for "project_path"
+		once
+			Result := "project_path"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Old_project_path_attribute_name: STRING
 			-- Name of xml attribute for "project-path"
 		once
 			Result := "project-path"

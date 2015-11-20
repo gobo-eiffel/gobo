@@ -5,7 +5,7 @@ note
 		"Compilation commands for ISE Eiffel"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,16 +73,16 @@ feature -- Access
 	exit_code_variable_name: STRING
 			-- Name of variable holding exit code of se compilation process
 
-	project_path: STRING = ""
+	project_path: STRING
 			-- Default is the current path
 
 	eifgen_directory: STRING
 			-- Directory where created and compiled files are saved
-		once
-			if project_path.is_empty then
+		do
+			if not attached project_path as l_project_path or else l_project_path.is_empty then
 				Result := "EIFGENs"
 			else
-				Result := project_path + "/EIFGENs"
+				Result := l_project_path + "/EIFGENs"
 			end
 		ensure
 			not_empty: Result /= Void and then not Result.is_empty
@@ -151,11 +151,13 @@ feature -- Setting
 		end
 
 	set_project_path (a_directory: like project_path)
+			-- Set `project_path' to `a_directory'.
+		require
+			a_directory_not_void: a_directory /= Void
 		do
-			project_path.wipe_out
-			project_path.append_string (a_directory)
+			project_path := a_directory
 		ensure
-			set: STRING_.same_string (project_path, a_directory)
+			project_path_set: project_path = a_directory
 		end
 
 
@@ -205,9 +207,9 @@ feature -- Execution
 				cmd.append_string (" -project ")
 				cmd := STRING_.appended_string (cmd, a_filename)
 			end
-			if not project_path.is_empty then
+			if attached project_path as l_project_path and then not l_project_path.is_empty then
 				cmd.append_string (" -project_path ")
-				cmd := STRING_.appended_string (cmd, project_path)
+				cmd := STRING_.appended_string (cmd, l_project_path)
 			end
 			project.trace (<<"  [ise] ", cmd>>)
 			execute_shell (cmd)
@@ -326,10 +328,5 @@ feature -- Execution
 				end
 			end
 		end
-
-
-invariant
-
-	project_path_not_void: project_path /= Void
 
 end
