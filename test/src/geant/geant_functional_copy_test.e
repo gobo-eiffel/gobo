@@ -46,30 +46,30 @@ feature -- Test
 --			file_system.recursive_create_directory (a_tmp_geant_subdir)
 -- 			assert_true ("test_copy1_prepare2", file_system.directory_exists (a_tmp_geant_subdir))
 
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_file='1.txt'/>"
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_file='1.txt'/>"
  			basic_test ("test_copy1a")
  			assert_true ("test_copy1b", file_system.file_exists (path ("1.txt")))
- 			assert_files_equal ("test_copy1c", path ("${GOBO}/Readme.txt"), path ("1.txt"))
+ 			assert_files_equal ("test_copy1c", path ("${GOBO}/Readme.md"), path ("1.txt"))
 		end
 
 	test_copy2
 			-- Test task 'copy': file, to_directory
 		do
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_directory='__copy'/>"
  			basic_test ("test_copy2a")
- 			assert_files_equal ("test_copy2b", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+ 			assert_files_equal ("test_copy2b", path ("${GOBO}/Readme.md"), path ("__copy/Readme.md"))
 		end
 
 	test_copy3
 			-- Test task 'copy': file, to_file, into nonexisting directory to test that the directory
 			-- specified in 'to_file' is not created automatically
 		do
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_file='__copy/1.txt'/>"
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_file='__copy/1.txt'/>"
 
 			expected_exit_code := 1
  			expected_task_output := "{
 			|  [copy] error: cannot copy file '
-			}" + Execution_environment.interpreted_string (path ("$GOBO/Readme.txt")) + "' to file '" + path ("__copy/1.txt") + "%'"
+			}" + Execution_environment.interpreted_string (path ("$GOBO/Readme.md")) + "' to file '" + path ("__copy/1.txt") + "%'"
 			expected_stdout_txt := default_expected_stdout_txt
 			expected_stderr_txt := "{
 				|
@@ -84,17 +84,17 @@ feature -- Test
 		local
 			a_timestamp1, a_timestamp2: INTEGER
 		do
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_directory='__copy'/>"
  			basic_test ("test_copy4a")
- 			assert_files_equal ("test_copy4b", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+ 			assert_files_equal ("test_copy4b", path ("${GOBO}/Readme.md"), path ("__copy/Readme.md"))
 
 				-- test lazy copying (timestamp of target file after second
 				-- copy attempt must be the same as before):
-			a_timestamp1 := file_system.file_time_stamp (path ("__copy/Readme.txt"))
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy'/>"
+			a_timestamp1 := file_system.file_time_stamp (path ("__copy/Readme.md"))
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_directory='__copy'/>"
  			basic_test ("test_copy4c")
-			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.txt"))
- 			assert_files_equal ("test_copy4d", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.md"))
+ 			assert_files_equal ("test_copy4d", path ("${GOBO}/Readme.md"), path ("__copy/Readme.md"))
 			assert_integers_equal ("test_copy4e", a_timestamp1, a_timestamp2)
 
 
@@ -102,10 +102,10 @@ feature -- Test
 				-- Sleep 2 seconds to be able to detect timestamp difference:
 			Execution_environment.sleep (2_000_000_000)
 
- 			tasks := "<copy file='${GOBO}/Readme.txt' to_directory='__copy' force='true'/>"
+ 			tasks := "<copy file='${GOBO}/Readme.md' to_directory='__copy' force='true'/>"
  			basic_test ("test_copy4f")
-			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.txt"))
- 			assert_files_equal ("test_copy4g", path ("${GOBO}/Readme.txt"), path ("__copy/Readme.txt"))
+			a_timestamp2 := file_system.file_time_stamp (path ("__copy/Readme.md"))
+ 			assert_files_equal ("test_copy4g", path ("${GOBO}/Readme.md"), path ("__copy/Readme.md"))
 			assert_integers_not_equal ("test_copy4h", a_timestamp1, a_timestamp2)
 		end
 

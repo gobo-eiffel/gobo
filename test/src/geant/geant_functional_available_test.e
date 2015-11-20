@@ -26,7 +26,7 @@ feature -- Test
 			-- Test task 'available'
 		do
 			tasks := "{
-				<available resource="${GOBO}/Readme.txt" variable="available"/>
+				<available resource="${GOBO}/Readme.md" variable="available"/>
 				<echo message="${available}" to_file="out.txt"/>
 				}"
 			expected_out_txt := "true"
