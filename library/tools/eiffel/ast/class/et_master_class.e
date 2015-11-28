@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			other_local_override_classes := tokens.empty_classes
 			other_local_non_override_classes := tokens.empty_classes
 			other_local_ignored_classes := tokens.empty_classes
+			other_local_hidden_classes := tokens.empty_classes
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
@@ -197,6 +198,25 @@ feature -- Access
 			-- Other classes, if any, declared in a group of `universe', which has been explicitly ignored
 			--
 			-- The first such class, if any, is stored in `first_local_ignored_class'.
+
+	first_local_hidden_class: detachable ET_CLASS
+			-- First class, if any, declared in a group of `universe', to be used when
+			-- `first_local_ignored_class' is not Void and there is no other non-hidden local classes.
+			-- This class is hidden otherwise.
+			-- It can be useful in a SCM context to keep track of previous versions
+			-- in the SCM history of the class being ignored.
+			--
+			-- If more than one such class, the other classes are stored in
+			-- `other_local_hidden_classes'.
+
+	other_local_hidden_classes: DS_ARRAYED_LIST [ET_CLASS]
+			-- Other classes, if any, declared in a group of `universe', to be used when
+			-- `first_local_ignored_class' is not Void and there is no other non-hidden local classes.
+			-- These classes are hidden otherwise.
+			-- It can be useful in a SCM context to keep track of previous versions
+			-- in the SCM history of the class being ignored.
+			--
+			-- The first such class, if any, is stored in `first_local_hidden_class'.
 
 	first_imported_class: detachable ET_MASTER_CLASS
 			-- First class, if any, imported from a universe other than `universe'
@@ -557,6 +577,22 @@ feature -- Status report
 					Result := True
 				else
 					Result := other_local_ignored_classes.has (a_class)
+				end
+			end
+		end
+
+	has_local_hidden_class (a_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' one of the hidden classes that have been declared in a  group of `universe'?
+			-- This means that `a_class' is one of the classes in `first_local_hidden_class'
+			-- or `other_local_hidden_classes'?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if attached first_local_hidden_class as l_local_class then
+				if l_local_class = a_class then
+					Result := True
+				else
+					Result := other_local_hidden_classes.has (a_class)
 				end
 			end
 		end
@@ -940,7 +976,13 @@ feature -- Element change
 	add_first_local_ignored_class (a_class: ET_CLASS)
 			-- Add `a_class' to `first_local_ignored_class'.
 			-- If there was already such class, move it to `other_local_ignored_classes'.
-			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_ignored_class' and
+			-- `add_last_local_ignored_class' is that here we try to set
+			-- `intrinsic_class' to `first_local_hidden_class' if possible.
+			-- This will happen if `first_local_hidden_class' was not void
+			-- and there was no other non-hidden local class.
 		require
 			a_class_not_void: a_class /= Void
 --			no_cycle: no cycle in graph of master classes
@@ -952,6 +994,7 @@ feature -- Element change
 				other_local_ignored_classes.force_first (l_first_local_ignored_class)
 			end
 			first_local_ignored_class := a_class
+			update_intrinsic_class
 		ensure
 			a_class_added_first: first_local_ignored_class = a_class
 		end
@@ -959,7 +1002,14 @@ feature -- Element change
 	add_last_local_ignored_class (a_class: ET_CLASS)
 			-- Add `a_class' to `first_local_ignored_class', if there was
 			-- no such class, otherwise add it to `other_local_ignored_classes'.
-			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_ignored_class' and
+			-- `add_last_local_ignored_class' is that here we try to avoid
+			-- having to modify `intrinsic_class'. It will be modified, and hence
+			-- set to `first_local_hidden_class', only if `first_local_hidden_class'
+			-- was not void, `first_local_ignored_class' was void, and there was
+			-- no other non-hidden local class.
 		require
 			a_class_not_void: a_class /= Void
 --			no_cycle: no cycle in graph of master classes
@@ -972,9 +1022,65 @@ feature -- Element change
 				end
 				other_local_ignored_classes.force_last (a_class)
 			end
+			update_intrinsic_class
 		ensure
 			a_class_added_first: (old first_local_ignored_class = Void) implies (first_local_ignored_class = a_class)
 			a_class_added_last: (old first_local_ignored_class /= Void) implies (not other_local_ignored_classes.is_empty and then other_local_ignored_classes.last = a_class)
+		end
+
+	add_first_local_hidden_class (a_class: ET_CLASS)
+			-- Add `a_class' to `first_local_hidden_class'.
+			-- If there was already such class, move it to `other_local_hidden_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_hidden_class' and
+			-- `add_last_local_hidden_class' is that here we try to set
+			-- `intrinsic_class' to `a_class' if possible.
+			-- This will happen if `first_local_ignored_clas' was not void,
+			-- and there was no other non-hidden local class.
+		require
+			a_class_not_void: a_class /= Void
+--			no_cycle: no cycle in graph of master classes
+		do
+			if attached first_local_hidden_class as l_first_local_hidden_class then
+				if other_local_hidden_classes = tokens.empty_classes then
+					create other_local_hidden_classes.make (2)
+				end
+				other_local_hidden_classes.force_first (l_first_local_hidden_class)
+			end
+			first_local_hidden_class := a_class
+			update_intrinsic_class
+		ensure
+			a_class_added_first: first_local_hidden_class = a_class
+		end
+
+	add_last_local_hidden_class (a_class: ET_CLASS)
+			-- Add `a_class' to `first_local_hidden_class', if there was
+			-- no such class, otherwise add it to `other_local_hidden_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_hidden_class' and
+			-- `add_last_local_hidden_class' is that here we try to avoid
+			-- having to modify `intrinsic_class'. It will be modified, and hence
+			-- set to `a_class', only if `first_local_hidden_class'
+			-- was void, `first_local_ignored_class' was not void, and there was
+			-- no other non-hidden local class.
+		require
+			a_class_not_void: a_class /= Void
+--			no_cycle: no cycle in graph of master classes
+		do
+			if first_local_hidden_class = Void then
+				first_local_hidden_class := a_class
+			else
+				if other_local_hidden_classes = tokens.empty_classes then
+					create other_local_hidden_classes.make (2)
+				end
+				other_local_hidden_classes.force_last (a_class)
+			end
+			update_intrinsic_class
+		ensure
+			a_class_added_first: (old first_local_hidden_class = Void) implies (first_local_hidden_class = a_class)
+			a_class_added_last: (old first_local_hidden_class /= Void) implies (not other_local_hidden_classes.is_empty and then other_local_hidden_classes.last = a_class)
 		end
 
 	add_first_imported_class (a_class: ET_MASTER_CLASS)
@@ -1151,7 +1257,7 @@ feature -- Element change
 
 	remove_local_ignored_class (a_class: ET_CLASS)
 			-- Remove `a_class' from `first_local_ignored_class' and `other_local_ignored_classes'.
-			-- Note that `intrinsic_class' and `is_modified' will not be affected.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -1163,11 +1269,43 @@ feature -- Element change
 				else
 					first_local_ignored_class := Void
 				end
+				update_intrinsic_class
 			else
 				other_local_ignored_classes.delete (a_class)
 			end
 		ensure
 			a_class_removed: not has_local_ignored_class (a_class)
+		end
+
+	remove_local_hidden_class (a_class: ET_CLASS)
+			-- Remove `a_class' from `first_local_hidden_class' and `other_local_hidden_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if first_local_hidden_class = a_class then
+				other_local_hidden_classes.delete (a_class)
+				if not other_local_hidden_classes.is_empty then
+					first_local_hidden_class := other_local_hidden_classes.first
+					other_local_hidden_classes.remove_first
+				else
+					first_local_hidden_class := Void
+				end
+				update_intrinsic_class
+			else
+				other_local_hidden_classes.delete (a_class)
+			end
+		ensure
+			a_class_removed: not has_local_hidden_class (a_class)
+		end
+
+	remove_all_local_hidden_classes
+			-- Remove all classes in `first_local_hidden_class' and `other_local_hidden_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+		do
+			first_local_hidden_class := Void
+			other_local_hidden_classes.wipe_out
+			update_intrinsic_class
 		end
 
 	remove_unknown_local_classes
@@ -1282,6 +1420,8 @@ feature -- Element change
 			other_local_non_override_classes.wipe_out
 			first_local_ignored_class := Void
 			other_local_ignored_classes.wipe_out
+			first_local_hidden_class := Void
+			other_local_hidden_classes.wipe_out
 			first_imported_class := Void
 			other_imported_classes.wipe_out
 			first_overriding_class := Void
@@ -1343,6 +1483,7 @@ feature {NONE} -- Element change
 	update_intrinsic_class
 			-- Set `intrinsic_class' to `first_local_override_class'.
 			-- If no such class, then set it to `first_local_non_override_class'.
+			-- If no such class and `first_local_ignored_class' is not Void, then set it to `first_local_hidden_class'.
 			-- If no such class, then set it to `first_imported_class'.
 			-- If no such class, then it will be the unknown class.
 			--
@@ -1354,6 +1495,8 @@ feature {NONE} -- Element change
 				l_new_intrinsic_class := l_first_local_override_class
 			elseif attached first_local_non_override_class as l_first_local_non_override_class then
 				l_new_intrinsic_class := l_first_local_non_override_class
+			elseif first_local_ignored_class /= Void and then attached first_local_hidden_class as l_first_local_hidden_class then
+				l_new_intrinsic_class := l_first_local_hidden_class
 			elseif attached first_imported_class as l_first_imported_class then
 				l_new_intrinsic_class := l_first_imported_class
 			else
@@ -1476,6 +1619,19 @@ feature -- Iteration
 			if attached first_local_ignored_class as l_first_local_ignored_class then
 				a_action.call ([l_first_local_ignored_class])
 				other_local_ignored_classes.do_all (a_action)
+			end
+		end
+
+	local_hidden_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+			-- Apply `a_action' to every hidden class declared in groups of `universe'.
+			-- These classes can be found in `first_local_hidden_class' and
+			-- `other_local_hidden_classes'.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			if attached first_local_hidden_class as l_first_local_hidden_class then
+				a_action.call ([l_first_local_hidden_class])
+				other_local_hidden_classes.do_all (a_action)
 			end
 		end
 
@@ -1883,6 +2039,9 @@ invariant
 	other_local_ignored_classes_not_void: other_local_ignored_classes /= Void
 	no_void_other_local_ignored_classes: not other_local_ignored_classes.has_void
 	no_other_local_ignored_classes: first_local_ignored_class = Void implies other_local_ignored_classes.is_empty
+	other_local_hidden_classes_not_void: other_local_hidden_classes /= Void
+	no_void_other_local_hidden_classes: not other_local_hidden_classes.has_void
+	no_other_local_hidden_classes: first_local_ignored_class = Void implies other_local_hidden_classes.is_empty
 	other_imported_classes_not_void: other_imported_classes /= Void
 	no_void_other_imported_classes: not other_imported_classes.has_void
 	no_other_imported_classes: first_imported_class = Void implies other_imported_classes.is_empty
