@@ -10,7 +10,7 @@ Class: AA
 Feature: make
 Attribute(s): b2
 Line: 12
-        create b1.make
+        create {CC} b1.make
 ->      b1.f (Current)
         create b2.make
 

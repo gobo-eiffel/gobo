@@ -47,6 +47,7 @@
 		<geant file="build.eant" target="install" dir="test20"/>
 		<geant file="build.eant" target="install" dir="test21"/>
 		<geant file="build.eant" target="install" dir="test22"/>
+		<geant file="build.eant" target="install" dir="test23"/>
 	</target>
 
 	<target name="other_clean" depend="init">
@@ -75,6 +76,7 @@
 		<geant file="build.eant" target="clean" dir="test20"/>
 		<geant file="build.eant" target="clean" dir="test21"/>
 		<geant file="build.eant" target="clean" dir="test22"/>
+		<geant file="build.eant" target="clean" dir="test23"/>
 		<delete directory="Ttest1"/>
 		<delete directory="Ttest2"/>
 		<delete directory="Ttest3"/>
@@ -97,6 +99,7 @@
 		<delete directory="Ttest20"/>
 		<delete directory="Ttest21"/>
 		<delete directory="Ttest22"/>
+		<delete directory="Ttest23"/>
 	</target>
 
 	<target name="other_clobber" depend="init">
@@ -125,6 +128,7 @@
 		<geant file="build.eant" target="clobber" dir="test20"/>
 		<geant file="build.eant" target="clobber" dir="test21"/>
 		<geant file="build.eant" target="clobber" dir="test22"/>
+		<geant file="build.eant" target="clobber" dir="test23"/>
 	</target>
 
 	<target name="init_system">
