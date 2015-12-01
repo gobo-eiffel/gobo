@@ -495,17 +495,21 @@ feature -- Nested
 			l_trailing_items: ARRAY [STRING]
 			l_full_pathname: STRING
 		do
-			l_cluster_pathname := file_system.string_to_pathname (a_cluster.absolute_pathname)
-			l_ancestor_pathname := file_system.string_to_pathname (a_ancestor.absolute_pathname)
-			l_trailing_items := l_ancestor_pathname.trailing_items (l_cluster_pathname)
-			if l_trailing_items.is_empty then
-				Result := Current
-			elseif is_recursive then
-				Result := cluster_by_name (l_trailing_items)
+			if a_ancestor = Current then
+				Result := a_cluster
 			else
-				l_full_pathname := file_system.nested_pathname (absolute_pathname, l_trailing_items)
-				if attached cluster_with_absolute_pathname (l_full_pathname) as l_cluster and then l_cluster.is_relative_to (Current) then
-					Result := l_cluster
+				l_cluster_pathname := file_system.string_to_pathname (a_cluster.absolute_pathname)
+				l_ancestor_pathname := file_system.string_to_pathname (a_ancestor.absolute_pathname)
+				l_trailing_items := l_ancestor_pathname.trailing_items (l_cluster_pathname)
+				if l_trailing_items.is_empty then
+					Result := Current
+				elseif is_recursive then
+					Result := cluster_by_name (l_trailing_items)
+				else
+					l_full_pathname := file_system.nested_pathname (absolute_pathname, l_trailing_items)
+					if attached cluster_with_absolute_pathname (l_full_pathname) as l_cluster and then l_cluster.is_relative_to (Current) then
+						Result := l_cluster
+					end
 				end
 			end
 		ensure

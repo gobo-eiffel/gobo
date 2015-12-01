@@ -180,7 +180,11 @@ feature {NONE} -- Cluster dependence constraints
 			a_cluster_not_void: a_cluster /= Void
 		do
 			if attached a_cluster.scm_write_mapping_recursive as l_scm_write_mapping then
-				Result := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (a_cluster, l_scm_write_mapping.current_cluster)
+				if l_scm_write_mapping.master_cluster = l_scm_write_mapping.current_cluster then
+					Result := a_cluster
+				else
+					Result := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (a_cluster, l_scm_write_mapping.current_cluster)
+				end
 			end
 		end
 
