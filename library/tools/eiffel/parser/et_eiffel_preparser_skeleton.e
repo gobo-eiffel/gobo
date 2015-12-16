@@ -94,6 +94,8 @@ feature {NONE} -- Parsing
 			l_entry: STRING
 			l_class: detachable ET_CLASS
 			l_classes: detachable DS_ARRAYED_LIST [ET_CLASS]
+			l_cell: detachable DS_CELL [detachable ET_CLASS]
+			l_class_name: ET_IDENTIFIER
 			l_already_preparsed: BOOLEAN
 			i, nb: INTEGER
 			old_group: ET_PRIMARY_GROUP
@@ -114,21 +116,33 @@ feature {NONE} -- Parsing
 						l_entry := l_dir.last_entry
 						if a_cluster.is_valid_eiffel_filename (l_entry) then
 							l_filename := file_system.pathname (l_dir_name, l_entry)
+							l_class := Void
 							if l_already_preparsed then
 									-- This cluster has already been traversed. Therefore
 									-- we are only interested in new or modified classes.
-								if l_classes = Void then
-									l_classes := current_universe.classes_in_group (a_cluster)
+								if l_cell = Void then
+									create l_cell.make (Void)
+								else
+									l_cell.put (Void)
 								end
-								l_class := Void
-								nb := l_classes.count
-								from i := 1 until i > nb loop
-									l_class := l_classes.item (i)
-									if attached l_class.filename as l_class_filename and then file_system.same_pathnames (l_class_filename, l_filename) then
-										i := nb + 1
-									else
-										l_class := Void
-										i := i + 1
+								create l_class_name.make (l_entry.substring (1, l_entry.count - 2))
+								current_universe.master_class (l_class_name).local_classes_do_if (agent l_cell.put ({ET_CLASS}?), agent {ET_CLASS}.is_in_group (a_cluster))
+								if attached l_cell.item as l_local_class and then attached l_local_class.filename as l_local_class_filename and then file_system.same_pathnames (l_local_class_filename, l_filename) then
+									l_class := l_local_class
+								else
+									if l_classes = Void then
+										l_classes := current_universe.classes_in_group (a_cluster)
+									end
+									l_class := Void
+									nb := l_classes.count
+									from i := 1 until i > nb loop
+										l_class := l_classes.item (i)
+										if attached l_class.filename as l_class_filename and then file_system.same_pathnames (l_class_filename, l_filename) then
+											i := nb + 1
+										else
+											l_class := Void
+											i := i + 1
+										end
 									end
 								end
 							end

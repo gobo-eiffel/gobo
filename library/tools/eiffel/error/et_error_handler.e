@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -126,13 +126,8 @@ feature -- Compilation report
 			if is_verbose then
 				if info_file /= Void then
 					info_file.put_string ("Degree 6 ")
-					if a_group.is_cluster then
-						info_file.put_string ("cluster ")
-					elseif a_group.is_dotnet_assembly then
-						info_file.put_string ("assembly ")
-					else
-						info_file.put_string ("group ")
-					end
+					info_file.put_string (a_group.kind_lower_name)
+					info_file.put_character (' ')
 					info_file.put_line (a_group.full_lower_name ('/'))
 				end
 			end

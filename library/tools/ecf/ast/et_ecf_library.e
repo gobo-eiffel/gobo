@@ -5,7 +5,7 @@ note
 		"ECF Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,8 @@ inherit
 			universe as library,
 			has_class as has_class_by_name
 		undefine
-			kind_name
+			kind_name,
+			preparse
 		redefine
 			name, library
 		end

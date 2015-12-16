@@ -5,7 +5,7 @@ note
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,8 @@ inherit
 			has_class as has_class_by_name
 		redefine
 			library,
-			kind_name
+			kind_name,
+			preparse
 		end
 
 	ET_ADAPTED_LIBRARY
@@ -175,6 +176,15 @@ feature -- Relations
 				a_visited.force_last (Current)
 				libraries.do_all (agent {ET_LIBRARY}.add_library_recursive (a_visited))
 			end
+		end
+
+feature -- Parsing
+
+	preparse
+			-- <Precursor>
+		do
+			current_system.error_handler.report_preparsing_status (Current)
+			Precursor
 		end
 
 invariant

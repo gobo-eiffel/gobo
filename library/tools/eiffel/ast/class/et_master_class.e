@@ -16,7 +16,7 @@ note
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #8 $"
@@ -1883,7 +1883,7 @@ feature {NONE} -- Initialization
 			l_override_mode: BOOLEAN
 			l_readonly_mode: BOOLEAN
 			l_shallow_mode: BOOLEAN
-			l_time_stamp: INTEGER
+			l_time_stamp, l_new_timestamp: INTEGER
 			l_actual_class: ET_CLASS
 		do
 			l_override_mode := current_system.preparse_override_mode
@@ -1912,37 +1912,40 @@ feature {NONE} -- Initialization
 							-- So we have to get rid of this class.
 						a_class.reset
 						is_modified := is_modified or (l_actual_class = a_class)
-					elseif not file_system.file_exists (l_filename) then
-							-- The file does not exist anymore.
-							-- So we have to get rid of this class.
-						a_class.reset
-						is_modified := is_modified or (l_actual_class = a_class)
-					elseif not l_shallow_mode or else a_class.is_parsed then
-							-- With the "shallow" algorithm the time-stamp is only set when
-							-- parsing the class. Hence the test above.
-						l_time_stamp := a_class.time_stamp
-						if l_time_stamp < 0 or else file_system.file_time_stamp (l_filename) /= l_time_stamp then
-								-- The time-stamp of the file has changed or was never recorded.
-								-- The file may have been modified.
-							if l_shallow_mode then
-									-- Force parsing again.
-									-- No need to preparse again because the name of the file has not changed.
-								a_class.reset_after_preparsed
-							else
-									-- Force preparsing again because this file may not contain this class anymore.
-								a_class.reset
-							end
+					else
+						l_new_timestamp := file_system.file_time_stamp (l_filename)
+						if l_new_timestamp < 0 and then not file_system.file_exists (l_filename) then
+								-- The file does not exist anymore.
+								-- So we have to get rid of this class.
+							a_class.reset
 							is_modified := is_modified or (l_actual_class = a_class)
-						else
-								-- The time-stamp of the file has not changed.
+						elseif not l_shallow_mode or else a_class.is_parsed then
+								-- With the "shallow" algorithm the time-stamp is only set when
+								-- parsing the class. Hence the test above.
+							l_time_stamp := a_class.time_stamp
+							if l_time_stamp < 0 or else l_new_timestamp /= l_time_stamp then
+									-- The time-stamp of the file has changed or was never recorded.
+									-- The file may have been modified.
+								if l_shallow_mode then
+										-- Force parsing again.
+										-- No need to preparse again because the name of the file has not changed.
+									a_class.reset_after_preparsed
+								else
+										-- Force preparsing again because this file may not contain this class anymore.
+									a_class.reset
+								end
+								is_modified := is_modified or (l_actual_class = a_class)
+							else
+									-- The time-stamp of the file has not changed.
+									-- Just skip this class.
+							end
+						elseif l_shallow_mode then
+								-- The class is not marked as parsed. It has only been
+								-- preparsed using the "shallow" algorithm (i.e. the
+								-- file is named "classname.e").
+								-- We already know that the file still exists.
 								-- Just skip this class.
 						end
-					elseif l_shallow_mode then
-							-- The class is not marked as parsed. It has only been
-							-- preparsed using the "shallow" algorithm (i.e. the
-							-- file is named "classname.e").
-							-- We already know that the file still exists.
-							-- Just skip this class.
 					end
 				elseif a_class.is_in_dotnet_assembly then
 						-- This class belongs to a .NET assembly.
