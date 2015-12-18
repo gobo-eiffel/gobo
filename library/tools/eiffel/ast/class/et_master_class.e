@@ -524,13 +524,14 @@ feature -- Status report
 			-- This means that `a_class' is one of the classes in `first_local_override_class',
 			-- `other_local_override_classes', `first_local_non_override_class',
 			-- `other_local_non_override_classes', `first_local_ignored_class'
-			-- or `other_local_ignored_classes'?
+			-- `other_local_ignored_classes, `first_local_hidden_class'
+			-- or `other_local_hidden_classes'?
 		require
 			a_class_not_void: a_class /= Void
 		do
-			Result := has_local_override_class (a_class) or else has_local_non_override_class (a_class) or else has_local_ignored_class (a_class)
+			Result := has_local_override_class (a_class) or else has_local_non_override_class (a_class) or else has_local_ignored_class (a_class) or else has_local_hidden_class (a_class)
 		ensure
-			definition: Result = (has_local_override_class (a_class) or has_local_non_override_class (a_class) or has_local_ignored_class (a_class))
+			definition: Result = (has_local_override_class (a_class) or has_local_non_override_class (a_class) or has_local_ignored_class (a_class) or has_local_hidden_class (a_class))
 		end
 
 	has_local_override_class (a_class: ET_CLASS): BOOLEAN
@@ -1199,8 +1200,9 @@ feature -- Element change
 
 	remove_local_class (a_class: ET_CLASS)
 			-- Remove `a_class' from `first_local_override_class', `other_local_override_classes',
-			-- `first_local_non_override_class', `other_local_non_override_classes'.
-			-- `first_local_ignored_class' and `other_local_ignored_classes'.
+			-- `first_local_non_override_class', `other_local_non_override_classes',
+			-- `first_local_ignored_class', `other_local_ignored_classes',
+			-- `first_local_hidden_class' and `other_local_hidden_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 		require
 			a_class_not_void: a_class /= Void
@@ -1208,6 +1210,7 @@ feature -- Element change
 			remove_local_override_class (a_class)
 			remove_local_non_override_class (a_class)
 			remove_local_ignored_class (a_class)
+			remove_local_hidden_class (a_class)
 		ensure
 			a_class_removed: not has_local_class (a_class)
 		end

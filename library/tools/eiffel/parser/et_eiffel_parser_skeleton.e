@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -126,8 +126,8 @@ feature -- Status report
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER)
-			-- Parse all classes in `a_file' within cluster `a_cluster'.
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_group: ET_PRIMARY_GROUP)
+			-- Parse all classes in `a_file' within group `a_group'.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
 			--
@@ -139,12 +139,12 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.is_empty
-			a_cluster_not_void: a_cluster /= Void
+			a_group_not_void: a_group /= Void
 		local
 			old_group: ET_PRIMARY_GROUP
 		do
 			old_group := group
-			group := a_cluster
+			group := a_group
 			debug ("GELINT")
 				std.error.put_string ("Parsing file '")
 				std.error.put_string (a_filename)
@@ -337,6 +337,9 @@ feature -- AST processing
 			a_file: KL_TEXT_INPUT_FILE
 			old_class: ET_CLASS
 			old_group: ET_PRIMARY_GROUP
+			l_class_text: KL_STRING_INPUT_STREAM
+			a_text_filename: STRING
+			l_class_filename: detachable STRING
 		do
 			if a_class.is_none then
 				a_class.set_parsed
@@ -376,7 +379,7 @@ feature -- AST processing
 								if not syntax_error and current_system.preparse_multiple_mode then
 										-- The file contains other classes, but not `current_class'.
 									set_fatal_error (a_class)
-									error_handler.report_gvscn1b_error (a_class)
+									error_handler.report_gvscn1b_error (a_class, a_filename)
 								end
 							end
 						else
@@ -390,6 +393,40 @@ feature -- AST processing
 						end
 					elseif current_class.is_in_dotnet_assembly then
 						current_system.dotnet_assembly_consumer.consume_class (current_class)
+					elseif attached {ET_TEXT_GROUP} current_class.group as l_text_group then
+						l_class_filename := current_class.filename
+						if l_class_filename /= Void and then not l_class_filename.is_empty then
+							a_text_filename := l_class_filename
+						else
+							a_text_filename := current_class.lower_name + ".e"
+						end
+						current_class.reset_after_preparsed
+						if attached l_text_group.class_text (current_class) as l_text then
+							create l_class_text.make (l_text)
+						else
+							create l_class_text.make ("")
+						end
+							-- Note that `parse_file' may change the value of `current_class'
+							-- if `l_class_text' contains a class other than `a_class'.
+						parse_file (l_class_text, a_text_filename, -1, l_text_group)
+						if not a_class.is_preparsed then
+								-- Make sure that `current_class' is as it was
+								-- after it was last preparsed when the file
+								-- does not contain this class anymore.
+							if l_class_filename /= Void and then not l_class_filename.is_empty then
+								a_class.set_filename (l_class_filename)
+							else
+								a_class.reset_preparsed
+							end
+							a_class.set_group (l_text_group)
+						end
+						if not a_class.is_parsed then
+							if not syntax_error and current_system.preparse_multiple_mode then
+									-- The class text contains other classes, but not `current_class'.
+								set_fatal_error (a_class)
+								error_handler.report_gvscn1b_error (a_class, a_text_filename)
+							end
+						end
 					end
 					if not a_class.is_parsed then
 						set_fatal_error (a_class)
@@ -1901,7 +1938,9 @@ feature {NONE} -- AST factory
 		do
 			if a_name /= Void then
 				l_master_class := current_universe.master_class (a_name)
-				if l_master_class.has_local_class (current_class) then
+				if current_class.name.same_class_name (a_name) then
+					Result := current_class
+				elseif l_master_class.has_local_class (current_class) then
 					Result := current_class
 				elseif attached l_master_class.first_local_class as l_first_local_class then
 					Result := l_first_local_class
@@ -1911,7 +1950,7 @@ feature {NONE} -- AST factory
 				if not current_system.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
 						-- We are parsing another class than the one we want to parse.
 					set_fatal_error (current_class)
-					error_handler.report_gvscn1a_error (current_class, a_name)
+					error_handler.report_gvscn1a_error (current_class, a_name, filename)
 						-- Stop the parsing.
 					accept
 				elseif current_system.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
@@ -1926,7 +1965,7 @@ feature {NONE} -- AST factory
 					l_new_class.set_filename (filename)
 					l_new_class.set_group (group)
 					set_fatal_error (l_new_class)
-					error_handler.report_gvscn1a_error (l_new_class, a_name)
+					error_handler.report_gvscn1a_error (l_new_class, a_name, filename)
 						-- Stop the parsing.
 					accept
 				else
@@ -1945,7 +1984,9 @@ feature {NONE} -- AST factory
 						create Result.make (a_name)
 						current_system.register_class (Result)
 						Result.set_group (group)
-						l_master_class.add_last_local_class (Result)
+						if group.is_cluster then
+							l_master_class.add_last_local_class (Result)
+						end
 					end
 					Result.set_filename (filename)
 					Result.set_parsed

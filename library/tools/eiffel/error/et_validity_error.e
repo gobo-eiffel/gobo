@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12880,16 +12880,16 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_gvscn1a (a_class: ET_CLASS; a_name: ET_CLASS_NAME)
-			-- Create a new GVSCN-1 error: the file `a_class.filename' is
+	make_gvscn1a (a_class: ET_CLASS; a_name: ET_CLASS_NAME; a_filename: STRING)
+			-- Create a new GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- actually contains a class of name `a_name'.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_in_cluster
 			a_name_not_void: a_name /= Void
+			a_filename_not_void: a_filename /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -12905,12 +12905,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			if attached a_class.filename as l_filename then
-				parameters.put (l_filename, 8)
-			else
-					-- Should never happen according to the precondition.
-				check a_class_preparsed: False end
-			end
+			parameters.put (a_filename, 8)
 			parameters.put (a_name.upper_name, 9)
 			set_compilers (True)
 		ensure
@@ -12930,15 +12925,15 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = name of class actually found in that file
 		end
 
-	make_gvscn1b (a_class: ET_CLASS)
-			-- Create a new GVSCN-1 error: the file `a_class.filename' is
+	make_gvscn1b (a_class: ET_CLASS; a_filename: STRING)
+			-- Create a new GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- does not.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_in_cluster
+			a_filename_not_void: a_filename /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -12954,12 +12949,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			if attached a_class.filename as l_filename then
-				parameters.put (l_filename, 8)
-			else
-					-- Should never happen according to the precondition.
-				check a_class_preparsed: False end
-			end
+			parameters.put (a_filename, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -14002,7 +13992,7 @@ feature -- Access
 	filename: STRING
 			-- Name of file where current error occurred
 		do
-			if class_impl.is_in_cluster and then attached class_impl.filename as l_filename then
+			if attached class_impl.filename as l_filename and then not l_filename.is_empty and then (class_impl.group.is_cluster or attached {ET_TEXT_GROUP} class_impl.group) then
 				Result := l_filename
 			else
 				Result := "not in a cluster"

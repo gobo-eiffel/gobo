@@ -6686,39 +6686,39 @@ feature -- Validity errors
 			end
 		end
 
-	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME)
-			-- Report GVSCN-1 error: the file `a_class.filename' is
+	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME; a_filename: STRING)
+			-- Report GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- actually contains a class of name `a_name'.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_in_cluster
 			a_name_not_void: a_name /= Void
+			a_filename_not_void: a_filename /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvscn1_error (a_class) then
-				create an_error.make_gvscn1a (a_class, a_name)
+				create an_error.make_gvscn1a (a_class, a_name, a_filename)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_gvscn1b_error (a_class: ET_CLASS)
-			-- Report GVSCN-1 error: the file `a_class.filename' is
+	report_gvscn1b_error (a_class: ET_CLASS; a_filename: STRING)
+			-- Report GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
 			-- does not.
 			--
 			-- Not in ETL
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_in_cluster
+			a_filename_not_void: a_filename /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_gvscn1_error (a_class) then
-				create an_error.make_gvscn1b (a_class)
+				create an_error.make_gvscn1b (a_class, a_filename)
 				report_validity_error (an_error)
 			end
 		end
