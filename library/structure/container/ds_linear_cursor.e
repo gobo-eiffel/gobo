@@ -20,6 +20,13 @@ inherit
 			next_cursor
 		end
 
+	ITERATION_CURSOR [G]
+		undefine
+			copy, is_equal
+		redefine
+			after
+		end
+		
 feature -- Access
 
 	container: DS_LINEAR [G]
@@ -41,7 +48,7 @@ feature -- Status report
 	after: BOOLEAN
 			-- Is there no valid position to right of cursor?
 		deferred
-		ensure
+		ensure then
 			after_constraint: Result implies off
 		end
 
@@ -64,8 +71,6 @@ feature -- Cursor movement
 
 	forth
 			-- Move cursor to next position.
-		require
-			not_after: not after
 		do
 			container.cursor_forth (Current)
 		end

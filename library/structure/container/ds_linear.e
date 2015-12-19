@@ -25,6 +25,13 @@ inherit
 
 	DS_SEARCHABLE [G]
 
+	ITERABLE [G]
+		rename
+			new_cursor as new_iterator
+		undefine
+			is_equal, copy
+		end
+		
 feature -- Access
 
 	first: G
@@ -41,6 +48,13 @@ feature -- Access
 		deferred
 		end
 
+	new_iterator: like new_cursor
+			-- New external cursor to be used in the 'across' construct
+		do
+			Result := new_cursor
+			Result.start
+		end
+		
 feature -- Status report
 
 	is_first: BOOLEAN

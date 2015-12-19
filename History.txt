@@ -153,6 +153,7 @@ Version 3.10 - ?
 	* Added iteration routines to the descendants of DS_TABLE so that the key can be
 	  passed first and then the item to the agents.
 	* Made it compilable in void-safe mode with ISE 7.3.
+	* Added support for the 'across' Eiffel construct.
 
 	Gobo Eiffel Test Library:
 

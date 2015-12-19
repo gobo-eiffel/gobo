@@ -119,6 +119,55 @@ feature -- Test
 			assert ("for_all2", a_list1.for_all (agent INTEGER_.is_even))
 		end
 
+	test_across_loop
+			-- Test the 'across ... loop' instruction.
+		local
+			a_list1: DS_ARRAYED_LIST [INTEGER]
+			a_list2: DS_ARRAYED_LIST [INTEGER]
+		do
+			create a_list1.make_from_array (<<INTEGER_.to_integer (1), 2, 3, 4, 5>>)
+			create a_list2.make (5)
+			across a_list1 as i loop
+				a_list2.force_first (i.item)
+			end
+			assert_iarrays_same ("items1", <<INTEGER_.to_integer (5), 4, 3, 2, 1>>, a_list2.to_array)
+				-- Empty list.
+			create a_list1.make (0)
+			create a_list2.make (0)
+			across a_list1 as i loop
+				a_list2.force_first (i.item)
+			end
+			assert ("empty1", a_list2.is_empty)
+		end
+
+	test_across_all
+			-- Test the 'across ... all' expression.
+		local
+			a_list1: DS_ARRAYED_LIST [INTEGER]
+		do
+			create a_list1.make_from_array (<<INTEGER_.to_integer (1), 2, 3, 4, 5>>)
+			assert ("not_across_all1", not across a_list1 as i all INTEGER_.is_even (i.item) end)
+			create a_list1.make_from_array (<<INTEGER_.to_integer (2), 4, 6>>)
+			assert ("across_all1", across a_list1 as i all INTEGER_.is_even (i.item) end)
+				-- Empty list.
+			create a_list1.make (0)
+			assert ("across_all2", across a_list1 as i all INTEGER_.is_even (i.item) end)
+		end
+
+	test_across_some
+			-- Test the 'across ... some' expression.
+		local
+			a_list1: DS_ARRAYED_LIST [INTEGER]
+		do
+			create a_list1.make_from_array (<<INTEGER_.to_integer (1), 2, 3, 4, 5>>)
+			assert ("across_some1", across a_list1 as i some INTEGER_.is_even (i.item) end)
+			create a_list1.make_from_array (<<INTEGER_.to_integer (1), 3, 5>>)
+			assert ("not_across_some1", not across a_list1 as i some INTEGER_.is_even (i.item) end)
+				-- Empty list.
+			create a_list1.make (0)
+			assert ("not_across_some2", not across a_list1 as i some INTEGER_.is_even (i.item) end)
+		end
+		
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN
