@@ -17,6 +17,7 @@ The procedure is quite simple:
 . Depending on your platform, run either:
 
      cmake -G <generator> -DCMAKE_BUILD_TYPE=RELEASE
+     make
   
 To find out about the already supported values for
 <generator> run cmake but with the option '-help'. 
