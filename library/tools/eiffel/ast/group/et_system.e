@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			alias_transition_mode := True
 			unknown_builtin_reported := True
 			qualified_anchored_types_enabled := True
+			qualified_anchored_types_cycle_detection_enabled := False
 			create null_processor.make
 			eiffel_preparser := null_processor
 			master_class_checker := null_processor
@@ -519,6 +520,12 @@ feature -- Parser status report
 			-- (also known as qualified anchored types or remote
 			-- anchored types) accepted?
 
+	qualified_anchored_types_cycle_detection_enabled: BOOLEAN
+			-- Should an error be reported (VTAT-2) when the type of
+			-- the anchor appearing in a qualified anchored type
+			-- depends on a qualified anchored type?
+			-- This is a way to avoid cycles in qualified anchored types.
+
 	preparse_enabled: BOOLEAN
 			-- Should preparsing be performed even when not necessary?
 			--
@@ -633,6 +640,14 @@ feature -- Parser setting
 			qualified_anchored_types_enabled := b
 		ensure
 			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
+		end
+
+	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
+			-- Set `qualified_anchored_types_cycle_detection_enabled' to `b'.
+		do
+			qualified_anchored_types_cycle_detection_enabled := b
+		ensure
+			qualified_anchored_types_cycle_detection_enabled_set: qualified_anchored_types_cycle_detection_enabled = b
 		end
 
 	set_preparse_enabled (b: BOOLEAN)
