@@ -129,6 +129,8 @@ feature {NONE} -- Parent validity
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
 									a_formal_creator := a_formal_parameter.creation_procedures
 								end
+							else
+								a_formal_type := Void
 							end
 							nb2 := a_creator.count
 							if nb2 > 0 then

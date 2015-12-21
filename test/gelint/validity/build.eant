@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for gelint validity tests"
-		copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+		copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -173,6 +173,10 @@
 		<geant file="build.eant" target="${target}" exit_code_variable="vtat2_exit_code" dir="vtat2"/>
 		<set name="do_all_exit_code" value="1" unless="${vtat2_exit_code}=0"/>
 		<geant file="build.eant" target="clean" dir="vtat2" if="${do_clean}=true"/>
+
+		<geant file="build.eant" target="${target}" exit_code_variable="vtcg4_exit_code" dir="vtcg4"/>
+		<set name="do_all_exit_code" value="1" unless="${vtcg4_exit_code}=0"/>
+		<geant file="build.eant" target="clean" dir="vtcg4" if="${do_clean}=true"/>
 		
 		<geant file="build.eant" target="${target}" exit_code_variable="vtct_exit_code" dir="vtct"/>
 		<set name="do_all_exit_code" value="1" unless="${vtct_exit_code}=0"/>
@@ -207,6 +211,7 @@
 		<echo message="# FAILED: vqmc3" unless="${vqmc3_exit_code}=0"/>
 		<echo message="# FAILED: vtat2" unless="${vtat2_exit_code}=0"/>
 		<echo message="# FAILED: vtct" unless="${vtct_exit_code}=0"/>
+		<echo message="# FAILED: vtcg4" unless="${vtcg4_exit_code}=0"/>
 		<echo message="# FAILED: vuex1" unless="${vuex1_exit_code}=0"/>
 		<echo message="# FAILED: vuot1" unless="${vuot1_exit_code}=0"/>
 		<echo message="# FAILED: vuta2" unless="${vuta2_exit_code}=0"/>
