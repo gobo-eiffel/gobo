@@ -308,7 +308,7 @@ feature {NONE} -- Processing
 					else
 						l_filename := l_system_name + ".sh"
 					end
-					create l_command.make (file_system.absolute_pathname (l_filename))
+					create l_command.make (file_system.absolute_pathname (file_system.nested_pathname (".gec", <<l_filename>>)))
 					l_command.execute
 					if l_command.exit_code /= 0 then
 						Exceptions.die (1)
