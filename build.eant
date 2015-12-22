@@ -15,7 +15,8 @@
 		<echo message="   geant install"/>
 		<echo message="   geant develop"/>
 		<echo message="   geant delivery"/>
-		<echo message="   geant bootstrap"/>
+		<echo message="   geant bootstrap1"/>
+		<echo message="   geant bootstrap2"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -67,7 +68,33 @@
 		<geant target="clean"/>
 	</target>
 
-	<target name="bootstrap" depend="init">
+	<target name="bootstrap1" depend="init">
+		<description>
+			Bootstrap the Gobo Eiffel package (first pass).
+		</description>
+
+		<geant file="build.eant" target="clobber" dir="library"/>
+		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="clobber" dir="src/gec"/>
+		<geant file="build.eant" target="install" dir="src/gec"/>
+			<!-- Compile gec twice to get a bootstrap effect -->
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
+		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile gec only once with other Eiffel compilers -->
+		<geant file="../src/gec/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+		<geant file="../src/gec/build.eant" target="clean" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
+			<!-- Compile geant -->
+		<geant file="build.eant" target="clobber" dir="src/geant"/>
+		<geant file="build.eant" target="install" dir="src/geant"/>
+		<geant file="../src/geant/build.eant" target="compile" fork="false" dir="bin"/>
+		<geant file="../src/geant/build.eant" target="clean" dir="bin"/>
+	</target>
+
+	<target name="bootstrap2" depend="init">
 		<description>
 			Bootstrap the Gobo Eiffel package (second pass).
 		</description>
