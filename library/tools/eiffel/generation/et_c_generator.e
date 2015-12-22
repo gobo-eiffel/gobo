@@ -350,6 +350,20 @@ feature -- Compilation options setting
 
 feature -- Generation
 
+	set_output_directory (a_output_directory: STRING)
+			-- Define the C output directory
+		require
+			a_output_directory_valid: file_system.is_valid_directory (a_output_directory)
+		do
+			output_directory := a_output_directory
+		end
+
+	get_output_directory : STRING
+			-- Return the defined C output directory
+		do
+			Result := output_directory
+		end
+
 	generate (a_system_name: STRING)
 			-- Generate C code and C compilation script file for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -357,11 +371,14 @@ feature -- Generation
 			a_system_name_not_void: a_system_name /= Void
 		do
 			has_fatal_error := False
-			file_system.create_directory (output_directory)
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
 		end
+
+feature {NONE} -- Generation implementation
+
+	output_directory: STRING
 
 feature {NONE} -- Compilation script generation
 
@@ -456,8 +473,8 @@ feature {NONE} -- Compilation script generation
 				end
 				i := i + 1
 			end
-			l_variables.force (l_libs, "libs")
-			l_variables.force (file_system.pathname (file_system.relative_parent_directory, l_base_name + l_c_config.item ("exe")), "exe")
+			l_variables.force (l_libs, "libs")			
+			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
 			l_cursor := c_filenames.new_cursor
@@ -512,9 +529,8 @@ feature {NONE} -- Compilation script generation
 					l_file.put_line ("@echo off")
 				else
 					l_file.put_line ("#!/bin/sh")
+					l_file.put_line ("cd " + output_directory)
 				end
-					-- Change folder reference
-				l_file.put_line ("cd " + output_directory)
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
 				l_cc_template := l_c_config.item ("cc")
@@ -30239,7 +30255,6 @@ feature {NONE} -- Constants
 	default_split_threshold: INTEGER = 1000000
 			-- Default value for `split_threshold'
 
-	output_directory: STRING = ".gec"
 	bat_file_extension: STRING = ".bat"
 	c_file_extension: STRING = ".c"
 	cfg_file_extension: STRING = ".cfg"

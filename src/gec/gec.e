@@ -291,6 +291,10 @@ feature {NONE} -- Processing
 				if split_size > 0 then
 					l_generator.set_split_threshold (split_size)
 				end
+				if not file_system.directory_exists (output_directory_generation) then
+					file_system.create_directory (output_directory_generation)
+				end
+				l_generator.set_output_directory (output_directory_generation)
 				l_generator.generate (l_system_name)
 				if is_verbose then
 					error_handler.info_file.put_string ("Never void targets: ")
@@ -308,7 +312,7 @@ feature {NONE} -- Processing
 					else
 						l_filename := l_system_name + ".sh"
 					end
-					create l_command.make (file_system.absolute_pathname (file_system.nested_pathname (".gec", <<l_filename>>)))
+					create l_command.make (file_system.pathname (output_directory_generation, l_filename))
 					l_command.execute
 					if l_command.exit_code /= 0 then
 						Exceptions.die (1)
@@ -376,6 +380,16 @@ feature -- Status report
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
 			Result := c_compile_option.was_found and then not c_compile_option.parameter
+		end
+
+	output_directory_generation: STRING
+			-- Get output directory folder for C generator.
+		do
+			if c_output_directory_option.parameters.is_empty then
+				Result := file_system.current_working_directory
+			else
+				Result := c_output_directory_option.parameters.item (1)
+			end
 		end
 
 	no_split: BOOLEAN
@@ -485,9 +499,9 @@ feature -- Argument parsing
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
 			c_compile_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (c_compile_option)
-			create c_output_directory_option.make_with_long_form ("cc_output")
+			create c_output_directory_option.make_with_long_form ("cc-output")
 			c_output_directory_option.set_description ("Default output source code directory (default: current directory)")
-			c_output_directory_option.set_parameter_description (".")
+			c_output_directory_option.set_parameter_description ("<current directory>")
 			a_parser.options.force_last (c_output_directory_option)
 				-- split
 			create split_option.make_with_long_form ("split")
