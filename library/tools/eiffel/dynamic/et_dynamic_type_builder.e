@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1557,16 +1557,16 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE)
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest array of type `a_type' in context
-			-- of `current_type' has been processed.
+			-- of `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and

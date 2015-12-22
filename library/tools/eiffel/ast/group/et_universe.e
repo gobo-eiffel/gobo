@@ -750,6 +750,9 @@ feature -- Kernel types
 	array_detachable_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [detachable ANY]", with implicit 'attached' type mark
 
+	array_like_current_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "ARRAY [like Current]", with implicit 'attached' type mark
+
 	boolean_type: ET_CLASS_TYPE
 			-- Class type "BOOLEAN"
 
@@ -870,6 +873,9 @@ feature -- Kernel types
 	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
 
+	typed_pointer_like_current_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "TYPED_POINTER [like Current]"
+
 	wide_character_type: ET_CLASS_TYPE
 			-- Class type "WIDE_CHARACTER"
 
@@ -964,6 +970,10 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
 			create array_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+				-- Type "ARRAY [like Current]".
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.like_current)
+			create array_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_boolean_type
@@ -1460,9 +1470,14 @@ feature -- Kernel types
 			l_name := tokens.typed_pointer_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- "TYPED_POINTER [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create typed_pointer_any_type.make (Void, l_name, l_parameters, l_master_class)
+				-- "TYPED_POINTER [like Current]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.like_current)
+			create typed_pointer_like_current_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_wide_character_type
@@ -1494,6 +1509,7 @@ feature -- Kernel types
 			detachable_tuple_type := tokens.unknown_tuple_type
 			array_any_type := tokens.unknown_generic_class_type
 			array_detachable_any_type := tokens.unknown_generic_class_type
+			array_like_current_type := tokens.unknown_generic_class_type
 			boolean_type := tokens.unknown_class_type
 			character_type := tokens.unknown_class_type
 			character_8_type := tokens.unknown_class_type
@@ -1546,6 +1562,7 @@ feature -- Kernel types
 			type_detachable_any_type := tokens.unknown_generic_class_type
 			detachable_type_detachable_any_type := tokens.unknown_generic_class_type
 			typed_pointer_any_type := tokens.unknown_generic_class_type
+			typed_pointer_like_current_type := tokens.unknown_generic_class_type
 			wide_character_type := tokens.unknown_class_type
 		end
 
@@ -2425,6 +2442,7 @@ invariant
 	any_clients_not_void: any_clients /= Void
 	array_any_type_not_void: array_any_type /= Void
 	array_detachable_any_type_not_void: array_detachable_any_type /= Void
+	array_like_current_type_not_void: array_like_current_type /= Void
 	character_8_type_not_void: character_8_type /= Void
 	character_32_type_not_void: character_32_type /= Void
 	function_type_not_void: function_type /= Void
@@ -2456,6 +2474,7 @@ invariant
 	detachable_tuple_type_not_void: detachable_tuple_type /= Void
 	type_any_type_not_void: type_any_type /= Void
 	typed_pointer_any_type_not_void: typed_pointer_any_type /= Void
+	typed_pointer_like_current_type_not_void: typed_pointer_like_current_type /= Void
 		-- Class mapping.
 	boolean_type_not_void: boolean_type /= Void
 	character_type_not_void: character_type /= Void

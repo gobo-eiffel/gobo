@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -5864,17 +5864,13 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
-			l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+			l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+			l_typed_pointer_class := l_typed_pointer_type.named_base_class
 			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$Current' is 'TYPED_POINTER [like Current]'.
-				create l_actuals.make_with_capacity (1)
--- TODO: shouldn't we use `tokens.like_current' instead of `current_type'.
-				l_actuals.put_first (current_type)
-				create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 				report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 				a_context.force_last (l_typed_pointer_type)
 					-- Need current type to create an object of type 'TYPED_POINTER [<current_type>]'.
@@ -5980,32 +5976,20 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
 			l_detachable_any_type := current_system.detachable_any_type
-			l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+			l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+			l_typed_pointer_class := l_typed_pointer_type.named_base_class
 			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$(expr)' is 'TYPED_POINTER [<type-of-expr>]'.
 				check_expression_validity (an_expression.expression, a_context, l_detachable_any_type)
 				if not has_fatal_error then
-					if not a_context.is_empty then
-						create l_actuals.make_with_capacity (1)
-						l_actuals.put_first (a_context.last)
-						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-						a_context.remove_last
-						report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-						a_context.put_last (l_typed_pointer_type)
-					else
-						create l_actuals.make_with_capacity (1)
-						l_actuals.put_first (a_context.root_context)
-						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-						report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-						a_context.force_last (l_typed_pointer_type)
-					end
+					report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+					a_context.force_last (l_typed_pointer_type)
 						-- It might occur that the current type is needed to create
 						-- an object of type 'TYPED_POINTER [<type-of-expr>]'.
 -- TODO: try to find out whether <type-of_expr> depends on the type of current.
@@ -6067,7 +6051,6 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_object_tests: detachable ET_OBJECT_TEST_LIST
 			l_object_test: detachable ET_NAMED_OBJECT_TEST
 			l_across_component: detachable ET_ACROSS_COMPONENT
@@ -6122,7 +6105,8 @@ feature {NONE} -- Expression validity
 								report_object_test_local (l_identifier, l_object_test)
 								l_seed := l_object_test.name.seed
 								l_identifier.set_seed (l_seed)
-								l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+								l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
 										-- Use ISE's implementation: the type of '$object_test_local' is
@@ -6138,9 +6122,6 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 									else
 										a_context.copy_type_context (current_object_test_types.found_item)
-										create l_actuals.make_with_capacity (1)
-										l_actuals.put_first (tokens.identity_type)
-										create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 										l_type := l_object_test.type
@@ -6185,7 +6166,8 @@ feature {NONE} -- Expression validity
 								report_across_cursor (l_identifier, l_across_component)
 								l_seed := l_across_component.cursor_name.seed
 								l_identifier.set_seed (l_seed)
-								l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+								l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+								l_typed_pointer_class := l_typed_pointer_type.named_base_class
 								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
 										-- Use ISE's implementation: the type of '$across_cursor' is
@@ -6201,9 +6183,6 @@ feature {NONE} -- Expression validity
 										set_fatal_error
 									else
 										a_context.copy_type_context (current_across_cursor_types.found_item)
-										create l_actuals.make_with_capacity (1)
-										l_actuals.put_first (tokens.identity_type)
-										create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 									end
@@ -6243,15 +6222,14 @@ feature {NONE} -- Expression validity
 									l_name.set_seed (l_seed)
 									if l_query.is_attribute then
 										report_attribute_address (an_expression, l_query)
-										l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+										l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+										l_typed_pointer_class := l_typed_pointer_type.named_base_class
 										if l_typed_pointer_class.actual_class.is_preparsed then
 												-- Class TYPED_POINTER has been found in the universe.
 												-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 											l_type := l_query.type
 											if l_type.is_base_type or current_class = current_type then
-												create l_actuals.make_with_capacity (1)
-												l_actuals.put_first (l_type)
-												create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+												a_context.force_last (l_type)
 												report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 												a_context.force_last (l_typed_pointer_type)
 													-- The type of the attribute may vary in various descendant classes/types.
@@ -6336,14 +6314,13 @@ feature {NONE} -- Expression validity
 							l_argument := l_arguments.formal_argument (l_seed)
 							l_identifier := l_name.argument_name.identifier
 							report_formal_argument (l_identifier, l_argument)
-							l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+							l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
 								l_type := l_argument.type
-								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (l_type)
-								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								a_context.force_last (l_type)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 								if not l_type.is_base_type then
@@ -6401,14 +6378,13 @@ feature {NONE} -- Expression validity
 							l_local := l_locals.local_variable (l_seed)
 							l_identifier := l_name.local_name.identifier
 							report_local_variable (l_identifier, l_local)
-							l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+							l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+							l_typed_pointer_class := l_typed_pointer_type.named_base_class
 							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
 								l_type := l_local.type
-								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (l_type)
-								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								a_context.force_last (l_type)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 								if not l_type.is_base_type then
@@ -6439,7 +6415,8 @@ feature {NONE} -- Expression validity
 						l_object_test := l_object_tests.object_test (l_seed)
 						l_identifier := l_name.object_test_local_name.identifier
 						report_object_test_local (l_identifier, l_object_test)
-						l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+						l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
 								-- Use ISE's implementation: the type of '$object_test_local' is
@@ -6454,9 +6431,6 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_object_test_types.found_item)
-								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (tokens.identity_type)
-								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 								l_type := l_object_test.type
@@ -6488,7 +6462,8 @@ feature {NONE} -- Expression validity
 						l_across_component := l_across_components.across_component (l_seed)
 						l_identifier := l_name.across_cursor_name
 						report_across_cursor (l_identifier, l_across_component)
-						l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+						l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+						l_typed_pointer_class := l_typed_pointer_type.named_base_class
 						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
 								-- Use ISE's implementation: the type of '$across_cursor' is
@@ -6503,9 +6478,6 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							else
 								a_context.copy_type_context (current_across_cursor_types.found_item)
-								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (tokens.identity_type)
-								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
 							end
@@ -6537,14 +6509,13 @@ feature {NONE} -- Expression validity
 							if l_query /= Void then
 								if l_query.is_attribute then
 									report_attribute_address (an_expression, l_query)
-									l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+									l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+									l_typed_pointer_class := l_typed_pointer_type.named_base_class
 									if l_typed_pointer_class.actual_class.is_preparsed then
 											-- Class TYPED_POINTER has been found in the universe.
 											-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 										l_type := l_query.type
-										create l_actuals.make_with_capacity (1)
-										l_actuals.put_first (l_type)
-										create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+										a_context.force_last (l_type)
 										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 										a_context.force_last (l_typed_pointer_type)
 											-- The type of the attribute may vary in various descendant classes/types.
@@ -7482,18 +7453,17 @@ feature {NONE} -- Expression validity
 		local
 			i, j, nb: INTEGER
 			had_error: BOOLEAN
-			l_item_type: detachable ET_TYPE
 			hybrid_type: BOOLEAN
 			l_is_item_type_attached: BOOLEAN
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			array_class: ET_NAMED_CLASS
 			l_array_type: detachable ET_CLASS_TYPE
 			l_array_parameters: detachable ET_ACTUAL_PARAMETER_LIST
 			l_array_parameter: detachable ET_TYPE
-			l_generic_class_type: ET_GENERIC_CLASS_TYPE
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
+			l_item_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_old_item_context: ET_NESTED_TYPE_CONTEXT
 			l_item: ET_EXPRESSION_ITEM
 			l_item_expression: ET_EXPRESSION
 			l_convert_expression: detachable ET_CONVERT_EXPRESSION
@@ -7529,61 +7499,38 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					else
-						if not had_error then
-							if l_item_type = Void then
-								l_item_type := l_expression_context.named_type
-							elseif not hybrid_type then
-								if l_expression_context.conforms_to_type (l_item_type, current_type) then
-										-- The type of the current item conforms to the type
-										-- retained so far. Keep the old type.
-								elseif l_item_type.conforms_to_type (tokens.identity_type, l_expression_context, current_type) then
-										-- The type retained so far conforms to the type of the
-										-- current item. Retain this new type.
-									l_item_type := l_expression_context.named_type
-								else
-									hybrid_type := True
-									l_is_item_type_attached := l_item_type.is_type_attached (current_type)
-									if l_is_item_type_attached then
-										l_is_item_type_attached := l_expression_context.is_type_attached
-									end
-								end
-							elseif l_is_item_type_attached then
-								l_is_item_type_attached := l_expression_context.is_type_attached
-							end
-						end
 						if l_array_type /= Void and then not l_expression_context.conforms_to_type (l_array_parameter, current_type) then
 								-- The type of this item does not conform to the type of
 								-- the parameter of the expected array type. Try to see
 								-- if it converts to it.
-							l_convert_expression := convert_expression (l_item_expression, l_expression_context, l_parameter_context)
-							if has_fatal_error then
-								had_error := True
-							elseif l_convert_expression /= Void then
-									-- Insert the conversion feature call in the AST.
-									-- Convertibility should be resolved in the implementation class.
-								check implementation_class: current_class = current_class_impl end
-								if attached {ET_EXPRESSION_COMMA} l_item as l_expression_comma then
-									l_expression_comma.set_expression (l_convert_expression)
+							if current_class = current_class_impl then
+								l_convert_expression := convert_expression (l_item_expression, l_expression_context, l_parameter_context)
+								if has_fatal_error then
+									had_error := True
+								elseif l_convert_expression /= Void then
+										-- Insert the conversion feature call in the AST.
+										-- Convertibility should be resolved in the implementation class.
+									if attached {ET_EXPRESSION_COMMA} l_item as l_expression_comma then
+										l_expression_comma.set_expression (l_convert_expression)
+									else
+										an_expression.put (l_convert_expression, i)
+									end
 								else
-									an_expression.put (l_convert_expression, i)
-								end
-							else
-									-- It does not conform nor convert. We are out of luck
-									-- and revise our position: We will have to find another
-									-- way to determine the type of the array, and a validity
-									-- error will be reported when we try to pass this array as
-									-- argument or in an assignment with a type that does
-									-- not conform nor convert to the expected type.
-									-- To determine the type of the array, we will now
-									-- try to see if all items have the same type. If so then the
-									-- type of the manifest array will be an array of that type.
-									-- Otherwise we are out of luck and will consider that it is
-									-- an 'ARRAY [ANY]' or an 'ARRAY [detachable ANY]' if not all
-									-- items are attached.
-								l_array_type := Void
-									-- We need to remove the convert features that we might
-									-- have added to the AST.
-								if current_class = current_class_impl then
+										-- It does not conform nor convert. We are out of luck
+										-- and revise our position: We will have to find another
+										-- way to determine the type of the array, and a validity
+										-- error will be reported when we try to pass this array as
+										-- argument or in an assignment with a type that does
+										-- not conform nor convert to the expected type.
+										-- To determine the type of the array, we will now
+										-- try to see if all items have the same type. If so then the
+										-- type of the manifest array will be an array of that type.
+										-- Otherwise we are out of luck and will consider that it is
+										-- an 'ARRAY [ANY]' or an 'ARRAY [detachable ANY]' if not all
+										-- items are attached.
+									l_array_type := Void
+										-- We need to remove the convert features that we might
+										-- have added to the AST.
 									from j := 1 until j >= i loop
 										l_item := an_expression.item (j)
 										l_item_expression := l_item.expression
@@ -7598,6 +7545,31 @@ feature {NONE} -- Expression validity
 										j := j + 1
 									end
 								end
+							end
+						end
+						if not had_error then
+							if l_item_context = Void then
+								l_item_context := l_expression_context
+								l_expression_context := new_context (current_type)
+							elseif not hybrid_type then
+								if l_expression_context.conforms_to_context (l_item_context) then
+										-- The type of the current item conforms to the type
+										-- retained so far. Keep the old type.
+								elseif l_item_context.conforms_to_context (l_expression_context) then
+										-- The type retained so far conforms to the type of the
+										-- current item. Retain this new type.
+									l_old_item_context := l_item_context
+									l_item_context := l_expression_context
+									l_expression_context := l_old_item_context
+								else
+									hybrid_type := True
+									l_is_item_type_attached := l_item_context.is_type_attached
+									if l_is_item_type_attached then
+										l_is_item_type_attached := l_expression_context.is_type_attached
+									end
+								end
+							elseif l_is_item_type_attached then
+								l_is_item_type_attached := l_expression_context.is_type_attached
 							end
 						end
 					end
@@ -7620,19 +7592,22 @@ feature {NONE} -- Expression validity
 					if has_fatal_error then
 						had_error := True
 					elseif not had_error then
-						if l_item_type = Void then
-							l_item_type := l_expression_context.named_type
+						if l_item_context = Void then
+							l_item_context := l_expression_context
+							l_expression_context := new_context (current_type)
 						elseif not hybrid_type then
-							if l_expression_context.conforms_to_type (l_item_type, current_type) then
+							if l_expression_context.conforms_to_context (l_item_context) then
 									-- The type of the current item conforms to the type
 									-- retained so far. Keep the old type.
-							elseif l_item_type.conforms_to_type (tokens.identity_type, l_expression_context, current_type) then
+							elseif l_item_context.conforms_to_context (l_expression_context) then
 									-- The type retained so far conforms to the type of the
 									-- current item. Retain this new type.
-								l_item_type := l_expression_context.named_type
+								l_old_item_context := l_item_context
+								l_item_context := l_expression_context
+								l_expression_context := l_old_item_context
 							else
 								hybrid_type := True
-								l_is_item_type_attached := l_item_type.is_type_attached (current_type)
+								l_is_item_type_attached := l_item_context.is_type_attached
 								if l_is_item_type_attached then
 									l_is_item_type_attached := l_expression_context.is_type_attached
 								end
@@ -7649,13 +7624,13 @@ feature {NONE} -- Expression validity
 			if had_error then
 				set_fatal_error
 			elseif l_array_type /= Void then
-				report_manifest_array (an_expression, l_array_type)
+				report_manifest_array (an_expression, l_array_type, current_type)
 				a_context.force_last (l_array_type)
-			elseif l_item_type = Void then
+			elseif l_item_context = Void then
 					-- This is an empty manifest array: '<< >>'. We have no way to
 					-- find out the type of the parameter, so we use 'ARRAY [ANY]'.
 				l_array_type := current_system.array_any_type
-				report_manifest_array (an_expression, l_array_type)
+				report_manifest_array (an_expression, l_array_type, current_type)
 				a_context.force_last (l_array_type)
 			elseif hybrid_type then
 					-- There are at least two items which don't conform to each other either way.
@@ -7668,16 +7643,18 @@ feature {NONE} -- Expression validity
 				else
 					l_array_type := current_system.array_detachable_any_type
 				end
-				report_manifest_array (an_expression, l_array_type)
+				report_manifest_array (an_expression, l_array_type, current_type)
 				a_context.force_last (l_array_type)
 			else
 					-- The type of all items conforms to one of them.
 					-- So the manifest array will be an array of that type.
-				create l_actuals.make_with_capacity (1)
-				l_actuals.put_first (l_item_type)
-				create l_generic_class_type.make (tokens.implicit_attached_type_mark, array_class.name, l_actuals, array_class)
-				report_manifest_array (an_expression, l_generic_class_type)
-				a_context.force_last (l_generic_class_type)
+				a_context.copy_type_context (l_item_context)
+				l_array_type := current_system.array_like_current_type
+				report_manifest_array (an_expression, l_array_type, a_context)
+				a_context.force_last (l_array_type)
+			end
+			if l_item_context /= Void then
+				free_context (l_item_context)
 			end
 		end
 
@@ -9044,7 +9021,6 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
 			if in_precondition then
@@ -9125,13 +9101,12 @@ feature {NONE} -- Expression validity
 						end
 					end
 				else
-					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+					l_typed_pointer_type := current_universe_impl.typed_pointer_like_current_type
+					l_typed_pointer_class := l_typed_pointer_type.named_base_class
 					if l_typed_pointer_class.actual_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$Result' is 'TYPED_POINTER [<type-of-result>]'.
-						create l_actuals.make_with_capacity (1)
-						l_actuals.put_first (l_type)
-						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+						a_context.force_last (l_type)
 						report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 						a_context.force_last (l_typed_pointer_type)
 						if not l_type.is_base_type then
@@ -12974,13 +12949,15 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE)
+	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest array of type `a_type' in context
-			-- of `current_type' has been processed.
+			-- of `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
 		do
 		end
 
