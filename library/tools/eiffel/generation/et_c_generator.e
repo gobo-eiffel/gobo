@@ -473,7 +473,7 @@ feature {NONE} -- Compilation script generation
 				end
 				i := i + 1
 			end
-			l_variables.force (l_libs, "libs")			
+			l_variables.force (l_libs, "libs")
 			l_variables.force (l_base_name + l_c_config.item ("exe"), "exe")
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
