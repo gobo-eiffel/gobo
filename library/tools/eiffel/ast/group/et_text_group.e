@@ -70,8 +70,6 @@ feature -- Access
 
 	pathname: detachable STRING
 			-- Directory pathname (may be Void)
-		do
-		end
 
 	universe: ET_UNIVERSE
 			-- Surrounding universe
@@ -121,6 +119,14 @@ feature -- Nested
 			-- Parent group
 		do
 			-- Result := Void
+		end
+
+	set_pathname (a_pathname: like pathname)
+			-- Set `pathname' to `a_pathname'.
+		do
+			pathname := a_pathname
+		ensure
+			pathname_set: pathname = a_pathname
 		end
 
 feature -- Iteration

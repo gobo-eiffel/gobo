@@ -111,7 +111,7 @@ feature -- Status report
 			l_library_name: STRING
 		do
 				-- Note that we check first whether `group_pathnames' and `group_names' are
-				-- empty to avoid spending to too much time and creating too much unnecessary
+				-- empty to avoid spending too much time and creating too much unnecessary
 				-- memory garbage getting the pathname and full name of `a_group'.
 			if a_group = current_cluster then
 				Result := True
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 				l_pathname := a_pathname
 				if attached a_wildcard.pattern as l_pattern and then not l_pattern.is_empty and then l_pattern.item (l_pattern.count) = '/' then
 					if not l_pathname.is_empty and then l_pathname.item (l_pathname.count) /= '/' then
-						if a_group.is_cluster then
+						if a_group.is_cluster or attached {ET_TEXT_GROUP} a_group then
 							if l_pathname = pathname_buffer then
 								l_pathname.append_character ('/')
 								l_slash_added := True
