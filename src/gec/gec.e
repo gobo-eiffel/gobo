@@ -425,6 +425,9 @@ feature -- Argument parsing
 	c_compile_option: AP_BOOLEAN_OPTION
 			-- Option for '--cc=<no|yes>'
 
+	c_output_directory_option: AP_STRING_OPTION
+			-- Option for '--cc=<"relative folder">'
+
 	split_option: AP_BOOLEAN_OPTION
 			-- Option for '--split=<no|yes>'
 
@@ -482,6 +485,10 @@ feature -- Argument parsing
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
 			c_compile_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (c_compile_option)
+			create c_output_directory_option.make_with_long_form ("cc_output")
+			c_output_directory_option.set_description ("Default output source code directory (default: current directory)")
+			c_output_directory_option.set_parameter_description (".")
+			a_parser.options.force_last (c_output_directory_option)
 				-- split
 			create split_option.make_with_long_form ("split")
 			split_option.set_description ("Should generated C code be split over several C files instead of being held in a single possibly large C file? (default: yes)")
@@ -545,6 +552,7 @@ feature -- Argument parsing
 			silent_flag_not_void: silent_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
 			c_compile_option_not_void: c_compile_option /= Void
+			c_output_directory_option_not_void: c_output_directory_option /=Void
 			split_option_not_void: split_option /= Void
 			split_size_option_not_void: split_size_option /= Void
 			gc_option_not_void: gc_option /= Void
@@ -561,6 +569,7 @@ invariant
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
 	c_compile_option_not_void: c_compile_option /= Void
+	c_output_directory_option_not_void: c_output_directory_option /= Void
 	split_option_not_void: split_option /= Void
 	split_size_option_not_void: split_size_option /= Void
 	new_instance_types_option_not_void: new_instance_types_option /= Void

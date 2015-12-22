@@ -357,7 +357,7 @@ feature -- Generation
 			a_system_name_not_void: a_system_name /= Void
 		do
 			has_fatal_error := False
-			file_system.create_directory(output_directory)
+			file_system.create_directory (output_directory)
 			generate_c_code (a_system_name)
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
@@ -457,7 +457,7 @@ feature {NONE} -- Compilation script generation
 				i := i + 1
 			end
 			l_variables.force (l_libs, "libs")
-			l_variables.force (file_system.nested_pathname("..", << l_base_name + l_c_config.item ("exe") >>), "exe")
+			l_variables.force (file_system.pathname (file_system.relative_parent_directory, l_base_name + l_c_config.item ("exe")), "exe")
 			create l_obj_filenames.make (100)
 			l_obj := l_c_config.item ("obj")
 			l_cursor := c_filenames.new_cursor
@@ -505,7 +505,7 @@ feature {NONE} -- Compilation script generation
 				l_script_filename := l_base_name + sh_file_extension
 			end
 
-			create l_file.make (file_system.nested_pathname (output_directory, <<l_script_filename>>))
+			create l_file.make (file_system.pathname (output_directory, l_script_filename))
 			l_file.open_write
 			if l_file.is_open_write then
 				if operating_system.is_windows then
@@ -538,7 +538,7 @@ feature {NONE} -- Compilation script generation
 				l_c_config.search ("rc")
 				if l_c_config.found then
 					l_rc_template := l_c_config.found_item
-					l_rc_filename :=  file_system.nested_pathname (output_directory, <<l_base_name + rc_file_extension>>)
+					l_rc_filename :=  file_system.pathname (output_directory, l_base_name + rc_file_extension)
 					if file_system.file_exists (l_rc_filename) then
 						l_res_filename := l_base_name + res_file_extension
 						l_variables.force (l_rc_filename, "rc_file")
@@ -782,7 +782,7 @@ feature {NONE} -- C code Generation
 			old_system_name := system_name
 			system_name := a_system_name
 			l_header_filename := a_system_name + h_file_extension
-			create l_header_file.make ( file_system.nested_pathname (output_directory, <<l_header_filename>>))
+			create l_header_file.make ( file_system.pathname (output_directory, l_header_filename))
 			l_header_file.open_write
 			if not l_header_file.is_open_write then
 				set_fatal_error
@@ -28388,7 +28388,7 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + 1).out
 				c_filenames.force_last (c_file_extension, l_filename)
-				create l_c_file.make (file_system.nested_pathname (output_directory, <<l_filename + c_file_extension>>))
+				create l_c_file.make (file_system.pathname (output_directory, l_filename + c_file_extension))
 				l_c_file.open_write
 				c_file := l_c_file
 			elseif not l_c_file.is_open_write then
@@ -28468,7 +28468,7 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + 1).out
 				c_filenames.force_last (cpp_file_extension, l_filename)
-				create l_cpp_file.make (file_system.nested_pathname (output_directory, <<l_filename + cpp_file_extension>>))
+				create l_cpp_file.make (file_system.pathname (output_directory, l_filename + cpp_file_extension))
 				l_cpp_file.open_write
 				cpp_file := l_cpp_file
 			elseif not l_cpp_file.is_open_write then
