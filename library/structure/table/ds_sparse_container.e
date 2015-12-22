@@ -6,7 +6,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #16 $"
@@ -1075,21 +1075,49 @@ feature {NONE} -- Cursor movements
 		require
 			valid_old_position: valid_position (old_position)
 		local
+			a_cursor, next_cursor: detachable like new_cursor
+			previous_cursor: detachable like new_cursor
 			i, nb: INTEGER
 		do
-				-- Search next valid position.
 			from
-				i := old_position + 1
-				nb := last_position
+				a_cursor := internal_cursor
 			until
-				i > nb or else clashes_item (i) > Free_watermark
+				a_cursor = Void
 			loop
-				i := i + 1
-			end
-			if i > nb then
-				move_cursors_after (old_position)
-			else
-				move_all_cursors (old_position, i)
+				if a_cursor.position = old_position then
+					if i = 0 then
+							-- Next position not computed yet.
+						from
+							i := old_position + 1
+							nb := last_position
+						until
+							i > nb or else clashes_item (i) > Free_watermark
+						loop
+							i := i + 1
+						end
+					end
+					if i > nb then
+							-- Move after.
+						a_cursor.set_after
+						if previous_cursor = Void then
+								-- Do not remove `internal_cursor'.
+							previous_cursor := a_cursor
+							a_cursor := a_cursor.next_cursor
+						else
+							next_cursor := a_cursor.next_cursor
+							previous_cursor.set_next_cursor (next_cursor)
+							a_cursor.set_next_cursor (Void)
+							a_cursor := next_cursor
+						end
+					else
+							-- Move to position `i'.
+						a_cursor.set_position (i)
+						a_cursor := a_cursor.next_cursor
+					end
+				else
+					previous_cursor := a_cursor
+					a_cursor := a_cursor.next_cursor
+				end
 			end
 		end
 
