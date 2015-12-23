@@ -500,8 +500,8 @@ feature -- Argument parsing
 			c_compile_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (c_compile_option)
 			create c_output_directory_option.make_with_long_form ("cc-output")
-			c_output_directory_option.set_description ("Default output source code directory (default: current directory)")
-			c_output_directory_option.set_parameter_description ("<current directory>")
+			c_output_directory_option.set_description ("Backend output directory (default: current working directory)")
+			c_output_directory_option.set_parameter_description ("<current working directory>")
 			a_parser.options.force_last (c_output_directory_option)
 				-- split
 			create split_option.make_with_long_form ("split")
