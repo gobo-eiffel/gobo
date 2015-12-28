@@ -225,6 +225,7 @@ feature {NONE} -- Initialization
 			c_filenames.set_key_equality_tester (string_equality_tester)
 			make_rescue_data
 			make_external_regexps
+			set_output_directory (file_system.current_working_directory)
 		end
 
 feature -- Access
@@ -353,7 +354,7 @@ feature -- Generation
 	set_output_directory (a_output_directory: STRING)
 			-- Define the C output directory
 		require
-			a_output_directory_valid: file_system.is_valid_directory (a_output_directory)
+			a_output_directory_not_void: file_system /= Void
 		do
 			output_directory := a_output_directory
 		end
@@ -30272,6 +30273,7 @@ invariant
 	current_file_open_write: current_file.is_open_write
 	header_file_not_void: header_file /= Void
 	header_file_open_write: header_file.is_open_write
+	output_directory_is_valid: file_system.is_valid_directory (output_directory)
 	current_function_header_buffer_not_void: current_function_header_buffer /= Void
 	current_function_body_buffer_not_void: current_function_body_buffer /= Void
 	current_feature_not_void: current_feature /= Void
