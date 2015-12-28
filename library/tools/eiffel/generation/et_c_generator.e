@@ -354,7 +354,7 @@ feature -- Generation
 	set_output_directory (a_output_directory: STRING)
 			-- Define the C output directory
 		require
-			a_output_directory_not_void: file_system /= Void
+			a_output_directory_not_void: a_output_directory /= Void
 		do
 			output_directory := a_output_directory
 		end
