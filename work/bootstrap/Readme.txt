@@ -20,9 +20,9 @@ The procedure is quite simple:
      bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
   or under Unix:
      bootstrap.sh [-v] <c_compiler> <eiffel_compiler>
-  or with CMake builder toolchain:
+  or with CMake builder toolchain (from gobo root directory):
      cmake -G <generator> -DCMAKE_BUILD_TYPE=RELEASE
-     make
+     make (depending of selected generator)
 
 To find out about the already supported values for
 <c_compiler> and <eiffel_compiler>, run the same command
