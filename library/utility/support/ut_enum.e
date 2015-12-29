@@ -33,7 +33,7 @@ feature
 
 feature {}
 
-	members: ARRAY [G]
+	members: DS_SET [G]
 		deferred
 	end
 
