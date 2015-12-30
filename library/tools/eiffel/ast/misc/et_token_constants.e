@@ -2431,6 +2431,14 @@ feature -- Types
 			identity_type_not_void: Result /= Void
 		end
 
+	like_0: ET_LIKE_N
+			-- Type 'like 0' with no type mark modifier
+		once
+			create Result.make_zero (Void)
+		ensure
+			like_0_not_void: Result /= Void
+		end
+
 	attached_separate_type_mark: ET_ATTACHMENT_SEPARATE_KEYWORDS
 			-- 'attached separate' type mark
 		once

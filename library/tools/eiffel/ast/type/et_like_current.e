@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,11 +79,11 @@ feature -- Access
 			Result := a_context.base_type_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do
-			Result := a_context.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+			Result := a_context.root_context.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 		end
 
 	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
@@ -115,11 +115,11 @@ feature -- Access
 			Result := a_context.named_type_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do
-			Result := a_context.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+			Result := a_context.root_context.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 		end
 
 	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_LIKE_CURRENT

@@ -5,7 +5,7 @@ note
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do

@@ -85,24 +85,6 @@ feature -- Status report
 	is_dotnet: BOOLEAN
 			-- Does current system contain Eiffel for .NET kernel classes?
 			-- Hence follow Eiffel for .NET validity rules.
-		local
-			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
-		do
-			if not dotnet_assemblies.is_empty then
-				Result := True
-			else
-				create l_visited.make (initial_universes_capacity)
-				add_internal_universe_recursive (l_visited)
-				from l_visited.start until l_visited.after loop
-					if not l_visited.item_for_iteration.dotnet_assemblies.is_empty then
-						Result := True
-						l_visited.go_after
-					else
-						l_visited.forth
-					end
-				end
-			end
-		end
 
 feature -- Access
 
@@ -306,6 +288,14 @@ feature -- Inline constant registration
 			-- Number of inline constants already registered
 
 feature -- Setting
+
+	set_dotnet (b: BOOLEAN)
+			-- Set `is_dotnet' to `b'.
+		do
+			is_dotnet := b
+		ensure
+			dotnet_set: is_dotnet = b
+		end
 
 	set_root_type (a_name: ET_CLASS_NAME)
 			-- Set `root_type'.

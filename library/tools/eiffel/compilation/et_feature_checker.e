@@ -2182,6 +2182,8 @@ feature {NONE} -- Type checking
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
 			if in_precursor then
@@ -2194,21 +2196,27 @@ feature {NONE} -- Type checking
 						-- signature types of features, they have not been resolved (i.e.
 						-- if they contain formal generic parameter, these parameters may
 						-- need to be resolved in the `current_class').
-					type_checker.check_type_validity (a_type, l_current_inline_agent, current_class_impl, current_class_impl)
+					l_context := new_context (current_class_impl)
+					type_checker.check_type_validity (a_type, l_current_inline_agent, current_class_impl, l_context)
+					free_context (l_context)
 				else
-					type_checker.check_type_validity (a_type, current_feature_impl, current_class_impl, current_type)
+					l_context := new_context (current_type)
+					type_checker.check_type_validity (a_type, current_feature_impl, current_class_impl, l_context)
+					free_context (l_context)
 				end
 				if type_checker.has_fatal_error then
 					set_fatal_error
 				else
-					if a_type.is_type_expanded (current_type) then
-						if attached {ET_CLASS_TYPE} a_type.shallow_named_type (current_type) as l_class_type then
-							type_checker.check_creation_type_validity (l_class_type, current_class_impl, current_type, a_type.position)
+					l_context := new_context (current_type)
+					if a_type.is_type_expanded (l_context) then
+						if attached {ET_CLASS_TYPE} a_type.shallow_named_type (l_context) as l_class_type then
+							type_checker.check_creation_type_validity (l_class_type, current_class_impl, l_context, a_type.position)
 							if type_checker.has_fatal_error then
 								set_fatal_error
 							end
 						end
 					end
+					free_context (l_context)
 				end
 			end
 		end
@@ -2220,6 +2228,7 @@ feature {NONE} -- Type checking
 		require
 			a_type_not_void: a_type /= Void
 		local
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
 				-- We check the validity of the types of the local variables
@@ -2227,18 +2236,22 @@ feature {NONE} -- Type checking
 				-- signature types of features, they have not been resolved
 				-- (i.e. if they contain formal generic parameter, these
 				-- parameters may need to be resolved in the `current_class').
-			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_class_impl)
+			l_context := new_context (current_class_impl)
+			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
+			free_context (l_context)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			else
-				if a_type.is_type_expanded (current_type) then
-					if attached {ET_CLASS_TYPE} a_type.shallow_named_type (current_type) as l_class_type then
-						type_checker.check_creation_type_validity (l_class_type, current_class_impl, current_type, a_type.position)
+				l_context := new_context (current_type)
+				if a_type.is_type_expanded (l_context) then
+					if attached {ET_CLASS_TYPE} a_type.shallow_named_type (l_context) as l_class_type then
+						type_checker.check_creation_type_validity (l_class_type, current_class_impl, l_context, a_type.position)
 						if type_checker.has_fatal_error then
 							set_fatal_error
 						end
 					end
 				end
+				free_context (l_context)
 			end
 		end
 
@@ -2248,9 +2261,13 @@ feature {NONE} -- Type checking
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_class_impl)
+			l_context := new_context (current_class_impl)
+			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
+			free_context (l_context)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
@@ -2262,10 +2279,13 @@ feature {NONE} -- Type checking
 			a_type_not_void: a_type /= Void
 		local
 			l_error_handler: ET_ERROR_HANDLER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_error_handler := current_system.error_handler
 			current_system.set_error_handler (null_error_handler)
-			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, current_type)
+			l_context := new_context (current_type)
+			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
+			free_context (l_context)
 			Result := not type_checker.has_fatal_error
 			current_system.set_error_handler (l_error_handler)
 		end
@@ -2278,9 +2298,13 @@ feature {NONE} -- Type checking
 		require
 			a_type_not_void: a_type /= Void
 			a_position_not_void: a_position /= Void
+		local
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-			type_checker.check_creation_type_validity (a_type, current_class_impl, current_type, a_position)
+			l_context := new_context (current_type)
+			type_checker.check_creation_type_validity (a_type, current_class_impl, l_context, a_position)
+			free_context (l_context)
 			if type_checker.has_fatal_error then
 				set_fatal_error
 			end
@@ -2792,6 +2816,7 @@ feature {NONE} -- Instruction validity
 					report_qualified_call_instruction (an_instruction, l_target_context, l_assigner_procedure)
 				end
 			end
+			free_context (l_source_context)
 			free_context (l_target_context)
 		end
 
@@ -3101,6 +3126,7 @@ feature {NONE} -- Instruction validity
 		local
 			l_creation_context: ET_NESTED_TYPE_CONTEXT
 			l_creation_type: detachable ET_TYPE
+			l_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_class: detachable ET_CLASS
 			l_creation_named_type: ET_NAMED_TYPE
 			l_target_named_type: ET_NAMED_TYPE
@@ -3114,6 +3140,7 @@ feature {NONE} -- Instruction validity
 			l_target_type: detachable ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 			l_explicit_creation_type: detachable ET_TYPE
+			l_explicit_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
 			l_call: detachable ET_QUALIFIED_CALL
 			l_name: detachable ET_FEATURE_NAME
@@ -3215,8 +3242,8 @@ feature {NONE} -- Instruction validity
 								else
 									l_creation_type := l_target_type
 								end
+								l_class := l_creation_type.base_class (l_creation_context)
 								l_creation_context.force_last (l_creation_type)
-								l_class := l_creation_type.base_class (current_type)
 								l_class.process (current_system.interface_checker)
 								if not l_class.interface_checked or else l_class.has_interface_error then
 									set_fatal_error
@@ -3282,8 +3309,8 @@ feature {NONE} -- Instruction validity
 						else
 							l_creation_type := l_target_type
 						end
+						l_class := l_creation_type.base_class (l_creation_context)
 						l_creation_context.force_last (l_creation_type)
-						l_class := l_creation_type.base_class (current_type)
 						l_class.process (current_system.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -3301,7 +3328,9 @@ feature {NONE} -- Instruction validity
 			end
 			if not has_fatal_error and l_class /= Void and l_creation_type /= Void and l_name /= Void and l_target_type /= Void then
 				if l_explicit_creation_type /= Void then
-					if not l_explicit_creation_type.conforms_to_type (l_target_type, current_type, current_type) then
+					l_explicit_creation_type_context := new_context (current_type)
+					l_explicit_creation_type_context.force_last (l_explicit_creation_type)
+					if not l_explicit_creation_type_context.conforms_to_context (l_target_context) then
 						set_fatal_error
 						l_creation_named_type := l_explicit_creation_type.named_type (current_type)
 						l_target_named_type := l_target_type.named_type (current_type)
@@ -3309,8 +3338,11 @@ feature {NONE} -- Instruction validity
 					else
 						report_create_supplier (l_explicit_creation_type, current_class, current_feature)
 					end
+					free_context (l_explicit_creation_type_context)
 				end
-				l_creation_named_type := l_creation_type.shallow_named_type (current_type)
+				l_creation_type_context := new_context (current_type)
+				l_creation_named_type := l_creation_type.shallow_named_type (l_creation_type_context)
+				free_context (l_creation_type_context)
 				if attached {ET_CLASS_TYPE} l_creation_named_type as l_class_type then
 					if l_explicit_creation_type = Void and then not is_type_valid (l_class_type) then
 							-- There is no explicit creation type, and the type of the target is not a valid type.
@@ -3915,16 +3947,14 @@ feature {NONE} -- Instruction validity
 				end
 				if l_query /= Void then
 					if attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
-							-- If we use the same object for the constant attribute
-							-- when analyzing different client features, each feature
-							-- will assign its own index to this object. That's why
-							-- we need to clone the object here and to reset the index
-							-- so that the index does not get corrupted.
-						Result := l_constant_attribute.constant.twin
-						Result.set_index (0)
+						Result := l_constant_attribute.constant
+						if Result.is_character_constant then
+							Result := character_choice_constant
+						elseif Result.is_integer_constant then
+							Result := integer_choice_constant
+						end
 					elseif attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
--- TODO: determine the exact value of the unique attribute.
-						Result := create {ET_REGULAR_INTEGER_CONSTANT}.make ("1")
+						Result := integer_choice_constant
 					end
 				end
 			end
@@ -5609,6 +5639,7 @@ feature {NONE} -- Expression validity
 			l_query: detachable ET_QUERY
 			l_procedure: detachable ET_PROCEDURE
 			l_creation_type: ET_TYPE
+			l_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
 			l_name: detachable ET_FEATURE_NAME
 			had_error: BOOLEAN
@@ -5643,6 +5674,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giaaa_error
 							end
 						else
+							l_class := l_creation_type.base_class (a_context)
 							a_context.force_last (l_creation_type)
 							if current_universe.attachment_type_conformance_mode then
 									-- When we have:
@@ -5655,7 +5687,6 @@ feature {NONE} -- Expression validity
 									a_context.force_last (tokens.attached_like_current)
 								end
 							end
-							l_class := l_creation_type.base_class (current_type)
 							l_class.process (current_system.interface_checker)
 							if not l_class.interface_checked or else l_class.has_interface_error then
 								set_fatal_error
@@ -5719,6 +5750,7 @@ feature {NONE} -- Expression validity
 						-- where this creation expression was written and we need to
 						-- find the version of the creation procedure in the context
 						-- of `current_type'.
+					l_class := l_creation_type.base_class (a_context)
 					a_context.force_last (l_creation_type)
 					if current_universe.attachment_type_conformance_mode then
 							-- When we have:
@@ -5731,7 +5763,6 @@ feature {NONE} -- Expression validity
 							a_context.force_last (tokens.attached_like_current)
 						end
 					end
-					l_class := l_creation_type.base_class (current_type)
 					l_class.process (current_system.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
@@ -5751,7 +5782,9 @@ feature {NONE} -- Expression validity
 				check l_name_not_void: l_name /= Void end
 				if l_class /= Void and l_name /= Void then
 					report_create_supplier (l_creation_type, current_class, current_feature)
-					l_named_creation_type := l_creation_type.shallow_named_type (current_type)
+					l_creation_type_context := new_context (current_type)
+					l_named_creation_type := l_creation_type.shallow_named_type (l_creation_type_context)
+					free_context (l_creation_type_context)
 					if attached {ET_CLASS_TYPE} l_named_creation_type as l_class_type then
 						check_creation_type_validity (l_class_type, an_expression.type_position)
 					end
@@ -7759,23 +7792,14 @@ feature {NONE} -- Expression validity
 				end
 			end
 			l_detachable_any_type := current_system.detachable_any_type
-			l_expression_context := new_context (current_type)
 			nb := an_expression.count
-			create l_actuals.make_with_capacity (nb)
-			from i := nb until i <= nb2 loop
-					-- There is no matching tuple item type.
-				check_expression_validity (an_expression.expression (i), l_expression_context, l_detachable_any_type)
-				if has_fatal_error then
-					had_error := True
-				else
-					l_actuals.put_first (l_expression_context.named_type)
-				end
-				l_expression_context.wipe_out
-				i := i - 1
-			end
-			if l_tuple_parameters /= Void then
-				l_parameter_context := new_context (current_type)
-				from until i < 1 loop
+			if nb = 0 then
+				l_tuple_type := current_universe_impl.tuple_type
+				report_manifest_tuple (an_expression, l_tuple_type)
+				a_context.force_last (l_tuple_type)
+			elseif nb = 1 then
+				if l_tuple_parameters /= Void and nb2 >= 1 then
+					l_parameter_context := new_context (current_type)
 						-- The expected type for the manifest tuple is 'TUPLE [...]'.
 						-- Use these item types as expected types for the corresponding items
 						-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
@@ -7784,26 +7808,63 @@ feature {NONE} -- Expression validity
 						-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
 						-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
 						-- if it were analyzed out of context).
-					l_parameter_context.force_last (l_tuple_parameters.type (i))
-					check_expression_validity (an_expression.expression (i), l_expression_context, l_parameter_context)
+					l_parameter_context.force_last (l_tuple_parameters.type (1))
+					check_expression_validity (an_expression.expression (1), a_context, l_parameter_context)
+					free_context (l_parameter_context)
+				else
+					check_expression_validity (an_expression.expression (1), a_context, l_detachable_any_type)
+				end
+				if not has_fatal_error then
+					l_tuple_type := current_universe_impl.tuple_like_current_type
+					report_manifest_tuple (an_expression, l_tuple_type)
+					a_context.force_last (l_tuple_type)
+				end
+			else
+				l_expression_context := new_context (current_type)
+				create l_actuals.make_with_capacity (nb)
+				from i := nb until i <= nb2 loop
+						-- There is no matching tuple item type.
+					check_expression_validity (an_expression.expression (i), l_expression_context, l_detachable_any_type)
 					if has_fatal_error then
 						had_error := True
 					else
 						l_actuals.put_first (l_expression_context.named_type)
 					end
 					l_expression_context.wipe_out
-					l_parameter_context.wipe_out
 					i := i - 1
 				end
-				free_context (l_parameter_context)
-			end
-			free_context (l_expression_context)
-			if had_error then
-				set_fatal_error
-			else
-				create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
-				report_manifest_tuple (an_expression, l_tuple_type)
-				a_context.force_last (l_tuple_type)
+				if l_tuple_parameters /= Void then
+					l_parameter_context := new_context (current_type)
+					from until i < 1 loop
+							-- The expected type for the manifest tuple is 'TUPLE [...]'.
+							-- Use these item types as expected types for the corresponding items
+							-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
+							-- and we have '[3]' then '3' will be considered as a '{INTEGER_64} 3'.
+							-- Likewise, if we expect a 'TUPLE [ARRAY [HASHABLE]]' and we have
+							-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
+							-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
+							-- if it were analyzed out of context).
+						l_parameter_context.force_last (l_tuple_parameters.type (i))
+						check_expression_validity (an_expression.expression (i), l_expression_context, l_parameter_context)
+						if has_fatal_error then
+							had_error := True
+						else
+							l_actuals.put_first (l_expression_context.named_type)
+						end
+						l_expression_context.wipe_out
+						l_parameter_context.wipe_out
+						i := i - 1
+					end
+					free_context (l_parameter_context)
+				end
+				free_context (l_expression_context)
+				if had_error then
+					set_fatal_error
+				else
+					create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
+					report_manifest_tuple (an_expression, l_tuple_type)
+					a_context.force_last (l_tuple_type)
+				end
 			end
 		end
 
@@ -7817,9 +7878,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_type_class: ET_NAMED_CLASS
 			l_type_type: ET_GENERIC_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
@@ -7833,10 +7892,8 @@ feature {NONE} -- Expression validity
 						-- descendant classes/types.
 					report_current_type_needed
 				end
-				l_type_class := current_universe_impl.type_any_type.named_base_class
-				create l_actuals.make_with_capacity (1)
-				l_actuals.put_first (l_type)
-				create l_type_type.make (tokens.implicit_attached_type_mark, l_type_class.name, l_actuals, l_type_class)
+				a_context.force_last (l_type)
+				l_type_type := current_universe_impl.type_like_current_type
 				report_manifest_type (an_expression, l_type_type, a_context)
 				a_context.force_last (l_type_type)
 			end
@@ -7856,6 +7913,7 @@ feature {NONE} -- Expression validity
 			l_name: ET_IDENTIFIER
 			i, j, nb: INTEGER
 			l_enclosing_agent: ET_INLINE_AGENT
+			l_type_kept: BOOLEAN
 		do
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
@@ -7884,6 +7942,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				current_object_test_types.force_last (l_expression_context, an_expression)
+				l_type_kept := True
 			end
 				-- Check object-test local name clashes (see VUOT-1, in ECMA-367-2 p.127).
 			if current_class = current_class_impl then
@@ -7968,6 +8027,9 @@ feature {NONE} -- Expression validity
 			if not has_fatal_error then
 				a_context.force_last (current_universe_impl.boolean_type)
 				report_named_object_test (an_expression, l_expression_context)
+			end
+			if not l_type_kept then
+				free_context (l_expression_context)
 			end
 		end
 
@@ -10799,11 +10861,8 @@ feature {NONE} -- Agent validity
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (current_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -10832,9 +10891,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -10851,11 +10908,8 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (current_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				report_unqualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -11123,11 +11177,8 @@ feature {NONE} -- Agent validity
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -11157,13 +11208,10 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -11191,13 +11239,9 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_procedure, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (a_target_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -11257,11 +11301,8 @@ feature {NONE} -- Agent validity
 				l_type := a_target_class.formal_parameter_type (l_index)
 				l_target_type := tokens.identity_type
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					l_agent_class := current_universe_impl.predicate_type.named_base_class
-					create l_parameters.make_with_capacity (2)
-					l_parameters.put_first (current_universe_impl.detachable_tuple_type)
-					l_parameters.put_first (l_target_type)
-					create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+					a_context.force_last (current_universe_impl.detachable_tuple_type)
+					l_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					l_agent_class := current_universe_impl.function_type.named_base_class
 					create l_parameters.make_with_capacity (3)
@@ -11497,11 +11538,8 @@ feature {NONE} -- Agent validity
 				a_result_type := a_query.type
 -- TODO: like argument
 				if a_result_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -11531,19 +11569,15 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			a_target_type := a_target.type
 			if not a_procedure.is_exported_to (current_class) then
 					-- The feature is not exported to `current_class'.
 				set_fatal_error
@@ -11564,14 +11598,10 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 			end
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
-				an_open_operands.put_first (a_target_type)
+				an_open_operands.put_first (tokens.identity_type)
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (a_target_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				report_qualified_procedure_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -11629,11 +11659,8 @@ feature {NONE} -- Agent validity
 				l_open_operands.put_first (l_target_type)
 				create l_tuple_type.make (tokens.implicit_attached_type_mark, l_open_operands, current_universe_impl.tuple_type.named_base_class)
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-					l_agent_class := current_universe_impl.predicate_type.named_base_class
-					create l_parameters.make_with_capacity (2)
-					l_parameters.put_first (l_tuple_type)
-					l_parameters.put_first (l_target_type)
-					create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+					a_context.force_last (l_tuple_type)
+					l_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					l_agent_class := current_universe_impl.function_type.named_base_class
 					create l_parameters.make_with_capacity (3)
@@ -12376,11 +12403,8 @@ feature {NONE} -- Agent validity
 -- TODO: like argument
 				if not has_fatal_error then
 					if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
-						an_agent_class := current_universe_impl.predicate_type.named_base_class
-						create a_parameters.make_with_capacity (2)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (current_type)
-						create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+						a_context.force_last (a_tuple_type)
+						an_agent_type := current_universe_impl.predicate_like_current_type
 					else
 						an_agent_class := current_universe_impl.function_type.named_base_class
 						create a_parameters.make_with_capacity (3)
@@ -12405,9 +12429,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 		do
 			has_fatal_error := False
 			a_formal_arguments := an_expression.formal_arguments
@@ -12419,11 +12441,8 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (current_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				report_procedure_inline_agent (an_expression, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
 			end
@@ -14553,6 +14572,24 @@ feature -- Precursors
 			precursor_procedures_set: precursor_procedures = a_procedure_set
 		end
 
+feature {NONE} -- Choice constants
+
+	character_choice_constant: ET_C1_CHARACTER_CONSTANT
+			-- Character constant
+		once
+			create Result.make ('a')
+		ensure
+			character_choice_constant_not_void: Result /= Void
+		end
+
+	integer_choice_constant: ET_REGULAR_INTEGER_CONSTANT
+			-- Integer constant
+		once
+			create Result.make ("1")
+		ensure
+			integer_choice_constant_not_void: Result /= Void
+		end
+
 feature {NONE} -- Overloading (useful in .NET)
 
 	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; a_name: ET_CALL_NAME; an_actuals: detachable ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT; a_is_static_call, a_is_creation_call: BOOLEAN)
@@ -14931,7 +14968,7 @@ feature {NONE} -- Type contexts
 			a_root_context_valid: a_root_context.is_valid_context
 		do
 			if unused_contexts.is_empty then
-				create Result.make_with_capacity (a_root_context, 10)
+				create Result.make_with_capacity (a_root_context, 100)
 			else
 				Result := unused_contexts.last
 				unused_contexts.remove_last

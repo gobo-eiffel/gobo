@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -982,6 +982,13 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_like_n (a_type: ET_LIKE_N)
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void

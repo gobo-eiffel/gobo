@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -220,9 +220,9 @@ feature -- Basic operations
 			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_universe_clusters: detachable ET_CLUSTERS
-			l_universe_libraries: detachable ET_ADAPTED_LIBRARIES
-			l_universe_dotnet_assemblies: detachable ET_ADAPTED_DOTNET_ASSEMBLIES
+			l_universe_clusters: ET_CLUSTERS
+			l_universe_libraries: ET_ADAPTED_LIBRARIES
+			l_universe_dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
 			l_cluster: ET_ECF_CLUSTER
 			l_library: ET_ECF_ADAPTED_LIBRARY
 			l_dotnet_assembly: ET_ECF_ADAPTED_DOTNET_ASSEMBLY
@@ -242,12 +242,7 @@ feature -- Basic operations
 						 -- Override clusters in ECF libraries are ignored.
 						 -- That's the way it works in ISE Eiffel.
 					elseif l_cluster.is_enabled (a_state) then
-						if l_universe_clusters = Void then
-							create l_universe_clusters.make (l_cluster)
-							a_universe.set_clusters (l_universe_clusters)
-						else
-							l_universe_clusters.put_last (l_cluster)
-						end
+						l_universe_clusters.put_last (l_cluster)
 						l_cluster.fill_subclusters (a_state)
 						l_cluster.fill_file_rules (Current, a_state)
 					end
@@ -260,12 +255,7 @@ feature -- Basic operations
 				from i := 1 until i > nb loop
 					l_library := l_libraries.library (i)
 					if l_library.is_enabled (a_state) then
-						if l_universe_libraries = Void then
-							create l_universe_libraries.make (l_library)
-							a_universe.set_libraries (l_universe_libraries)
-						else
-							l_universe_libraries.put_last (l_library)
-						end
+						l_universe_libraries.put_last (l_library)
 					end
 					i := i + 1
 				end
@@ -276,12 +266,8 @@ feature -- Basic operations
 				from i := 1 until i > nb loop
 					l_dotnet_assembly := l_dotnet_assemblies.dotnet_assembly (i)
 					if l_dotnet_assembly.is_enabled (a_state) then
-						if l_universe_dotnet_assemblies = Void then
-							create l_universe_dotnet_assemblies.make (l_dotnet_assembly)
-							a_universe.set_dotnet_assemblies (l_universe_dotnet_assemblies)
-						else
-							l_universe_dotnet_assemblies.put_last (l_dotnet_assembly)
-						end
+						l_universe_dotnet_assemblies.put_last (l_dotnet_assembly)
+						a_universe.current_system.set_dotnet (True)
 					end
 					i := i + 1
 				end

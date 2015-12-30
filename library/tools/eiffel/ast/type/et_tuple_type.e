@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,8 +71,6 @@ feature -- Access
 		do
 			if a_override_type_mark = Void then
 				Result := type_mark
-			elseif type_mark = Void then
-				Result := a_override_type_mark
 			else
 				l_current_ok := True
 				l_other_ok := True

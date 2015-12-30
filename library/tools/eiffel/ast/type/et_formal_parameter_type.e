@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,6 +100,7 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -141,7 +142,14 @@ feature -- Access
 						Result := tokens.unknown_class
 					end
 				else
-					Result := an_actual.named_base_class (a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.named_base_class (a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.named_base_class (l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -217,19 +225,20 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			an_actual: ET_TYPE
-			a_class: ET_CLASS
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_root_context: ET_BASE_TYPE
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
-			l_context_base_class := a_context.base_class
+			l_root_context := a_context.root_context
+			l_context_base_class := l_root_context.base_class
 			if l_context_base_class /= implementation_class then
 				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
 					Result := l_actual_parameters.type (index).shallow_base_type_with_type_mark (l_type_mark, a_context)
@@ -240,18 +249,17 @@ feature -- Access
 						-- of actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif attached a_context.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
+			elseif attached l_root_context.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
 				an_actual := l_actual_parameters.type (index)
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					a_class := a_context.base_class
 					an_index := l_formal_type.index
-					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
+					if attached l_context_base_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
 						if attached a_formal.constraint_base_type as l_base_type then
 							Result := l_base_type.type_with_type_mark (l_type_mark)
-						elseif not a_class.is_preparsed then
+						elseif not l_context_base_class.is_preparsed then
 								-- Internal error: we have a formal parameter of a class that
 								-- is not even preparsed (i.e. for which we know nothing,
 								-- not even its filename). Therefore it is impossible to
@@ -262,7 +270,7 @@ feature -- Access
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
 								-- "detachable ANY" in these two cases.
-							Result := a_class.current_system.detachable_any_type.type_with_type_mark (l_type_mark)
+							Result := l_context_base_class.current_system.detachable_any_type.type_with_type_mark (l_type_mark)
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -294,6 +302,7 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -316,7 +325,14 @@ feature -- Access
 					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
 						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.base_type_actual (i, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_base_type.base_type_actual (i, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_base_type.base_type_actual (i, l_root_context)
+								l_root_context.remove_last
+							end
 						else
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
@@ -329,7 +345,14 @@ feature -- Access
 						Result := tokens.unknown_class
 					end
 				else
-					Result := an_actual.base_type_actual (i, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.base_type_actual (i, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.base_type_actual (i, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -346,6 +369,7 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -368,7 +392,14 @@ feature -- Access
 					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
 						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.base_type_actual_parameter (i, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_base_type.base_type_actual_parameter (i, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_base_type.base_type_actual_parameter (i, l_root_context)
+								l_root_context.remove_last
+							end
 						else
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
@@ -381,7 +412,14 @@ feature -- Access
 						Result := tokens.unknown_class
 					end
 				else
-					Result := an_actual.base_type_actual_parameter (i, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.base_type_actual_parameter (i, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.base_type_actual_parameter (i, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -399,6 +437,7 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -421,7 +460,14 @@ feature -- Access
 					if attached a_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
 						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.base_type_index_of_label (a_label, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_base_type.base_type_index_of_label (a_label, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_base_type.base_type_index_of_label (a_label, l_root_context)
+								l_root_context.remove_last
+							end
 						else
 								-- This formal parameter has either no constraint
 								-- or a cyclic constraint of the form "[G -> H,
@@ -434,7 +480,14 @@ feature -- Access
 						Result := 0
 					end
 				else
-					Result := an_actual.base_type_index_of_label (a_label, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.base_type_index_of_label (a_label, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.base_type_index_of_label (a_label, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -469,15 +522,17 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_root_context: ET_BASE_TYPE
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
-			l_context_base_class := a_context.base_class
+			l_root_context := a_context.root_context
+			l_context_base_class := l_root_context.base_class
 			if l_context_base_class /= implementation_class then
 				if attached l_context_base_class.ancestor (implementation_class) as l_ancestor and then attached l_ancestor.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
 					Result := l_actual_parameters.type (index).shallow_named_type_with_type_mark (l_type_mark, a_context)
@@ -488,7 +543,7 @@ feature -- Access
 						-- actual and formal generic parameters in `l_ancestor'.
 					Result := tokens.unknown_class
 				end
-			elseif attached a_context.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
+			elseif attached l_root_context.actual_parameters as l_actual_parameters and then index <= l_actual_parameters.count then
 				if attached {ET_NAMED_TYPE} l_actual_parameters.type (index) as l_named_type then
 					Result := l_named_type.type_with_type_mark (l_type_mark)
 				else
@@ -614,6 +669,7 @@ feature -- Status report
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -642,7 +698,14 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -659,6 +722,7 @@ feature -- Status report
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -687,7 +751,14 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -705,6 +776,7 @@ feature -- Status report
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
@@ -730,9 +802,23 @@ feature -- Status report
 						if a_formal.is_expanded then
 							Result := True
 						elseif l_formal_type /= Current then
-							Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_formal_type.is_type_attached_with_type_mark (l_type_mark, l_root_context)
+								l_root_context.remove_last
+							end
 						elseif attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_base_type.is_type_attached_with_type_mark (l_type_mark, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_base_type.is_type_attached_with_type_mark (l_type_mark, l_root_context)
+								l_root_context.remove_last
+							end
 						else
 							Result := l_type_mark /= Void and then l_type_mark.is_attached_mark
 						end
@@ -742,7 +828,14 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_attached_with_type_mark (l_type_mark, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.is_type_attached_with_type_mark (l_type_mark, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.is_type_attached_with_type_mark (l_type_mark, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -760,6 +853,7 @@ feature -- Status report
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_type_mark := overridden_type_mark (a_type_mark)
 			l_context_base_class := a_context.base_class
@@ -787,7 +881,14 @@ feature -- Status report
 						elseif l_formal_type = Current then
 							Result := l_type_mark /= Void and then l_type_mark.is_detachable_mark
 						else
-							Result := l_formal_type.is_type_detachable_with_type_mark (l_type_mark, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_formal_type.is_type_detachable_with_type_mark (l_type_mark, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_formal_type.is_type_detachable_with_type_mark (l_type_mark, l_root_context)
+								l_root_context.remove_last
+							end
 						end
 					else
 							-- Internal error: does current type really
@@ -795,7 +896,14 @@ feature -- Status report
 						Result := False
 					end
 				else
-					Result := an_actual.is_type_detachable_with_type_mark (l_type_mark, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.is_type_detachable_with_type_mark (l_type_mark, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.is_type_detachable_with_type_mark (l_type_mark, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -809,6 +917,7 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -828,7 +937,14 @@ feature -- Status report
 						-- type is itself a formal generic parameter.
 					Result := True
 				else
-					Result := an_actual.has_formal_types (a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.has_formal_types (a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.has_formal_types (l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -843,6 +959,7 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -862,7 +979,14 @@ feature -- Status report
 						-- type is itself a formal generic parameter.
 					Result := True
 				else
-					Result := an_actual.named_type_is_formal_type (a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.named_type_is_formal_type (a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.named_type_is_formal_type (l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -879,6 +1003,7 @@ feature -- Status report
 			a_formal: ET_FORMAL_PARAMETER
 			an_index: INTEGER
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -901,7 +1026,14 @@ feature -- Status report
 					if attached a_base_class.formal_parameters as l_formals and then an_index <= l_formals.count then
 						a_formal := l_formals.formal_parameter (an_index)
 						if attached a_formal.constraint_base_type as l_base_type then
-							Result := l_base_type.base_type_has_class (a_class, a_context.root_context)
+							if a_context.is_root_context then
+								Result := l_base_type.base_type_has_class (a_class, a_context)
+							else
+								l_root_context := a_context.as_nested_type_context
+								l_root_context.force_last (tokens.like_0)
+								Result := l_base_type.base_type_has_class (a_class, l_root_context)
+								l_root_context.remove_last
+							end
 						elseif not a_base_class.is_preparsed then
 								-- Internal error: we have a formal parameter of a class that
 								-- is not even preparsed (i.e. for which we know nothing,
@@ -920,7 +1052,14 @@ feature -- Status report
 						Result := a_class.is_unknown
 					end
 				else
-					Result := an_actual.base_type_has_class (a_class, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.base_type_has_class (a_class, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.base_type_has_class (a_class, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -934,6 +1073,7 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -953,7 +1093,14 @@ feature -- Status report
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.named_type_has_class (a_class, a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.named_type_has_class (a_class, a_context)
+					else
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.named_type_has_class (a_class, l_root_context)
+						l_root_context.remove_last
+					end
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -969,6 +1116,7 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -986,9 +1134,27 @@ feature -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_syntactical_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					if a_context.is_root_context then
+						Result := other.same_syntactical_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context, other_type_mark, other_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := other.same_syntactical_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), l_root_context, other_type_mark, other_context)
+						l_root_context.remove_last
+					else
+						Result := other.same_syntactical_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					end
 				else
-					Result := an_actual.same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1002,6 +1168,7 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1019,9 +1186,27 @@ feature -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_named_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					if a_context.is_root_context then
+						Result := other.same_named_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context, other_type_mark, other_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := other.same_named_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), l_root_context, other_type_mark, other_context)
+						l_root_context.remove_last
+					else
+						Result := other.same_named_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					end
 				else
-					Result := an_actual.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1035,6 +1220,7 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1052,9 +1238,27 @@ feature -- Comparison
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.same_base_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					if a_context.is_root_context then
+						Result := other.same_base_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context, other_type_mark, other_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := other.same_base_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), l_root_context, other_type_mark, other_context)
+						l_root_context.remove_last
+					else
+						Result := other.same_base_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					end
 				else
-					Result := an_actual.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1077,6 +1281,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1096,7 +1301,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1117,6 +1331,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1136,7 +1351,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1157,6 +1381,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1183,7 +1408,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						end
 					end
 				else
-					Result := an_actual.same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1204,6 +1438,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1223,7 +1458,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_like_current_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1244,6 +1488,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1263,7 +1508,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_like_feature_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1284,6 +1538,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1303,7 +1558,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_qualified_like_identifier_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really
@@ -1325,6 +1589,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1344,7 +1609,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_syntactical_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1360,6 +1634,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1379,7 +1654,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1395,6 +1679,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1414,7 +1699,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1430,6 +1724,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1456,7 +1751,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						end
 					end
 				else
-					Result := an_actual.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1472,6 +1776,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1491,7 +1796,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1507,6 +1821,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1526,7 +1841,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1542,6 +1866,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1561,7 +1886,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1577,6 +1911,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1603,7 +1938,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						end
 					end
 				else
-					Result := an_actual.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1619,6 +1963,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1638,7 +1983,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						-- type is itself a formal generic parameter.
 					Result := False
 				else
-					Result := an_actual.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1654,6 +2008,7 @@ feature -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1671,9 +2026,27 @@ feature -- Conformance
 				if attached {ET_FORMAL_PARAMETER_TYPE} an_actual as l_formal_type then
 						-- The actual parameter associated with current
 						-- type is itself a formal generic parameter.
-					Result := other.conforms_from_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					if a_context.is_root_context then
+						Result := other.conforms_from_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context, other_type_mark, other_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := other.conforms_from_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), l_root_context, other_type_mark, other_context)
+						l_root_context.remove_last
+					else
+						Result := other.conforms_from_formal_parameter_type_with_type_marks (l_formal_type, overridden_type_mark (a_type_mark), a_context.root_context, other_type_mark, other_context)
+					end
 				else
-					Result := an_actual.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1693,6 +2066,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1713,7 +2087,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- No type other than itself conforms to a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1731,6 +2114,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1759,7 +2143,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						end
 					end
 				else
-					Result := an_actual.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1781,6 +2174,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			l_formal: ET_FORMAL_PARAMETER
 			visited: ARRAY [BOOLEAN]
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1823,7 +2217,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 								if attached l_formal.constraint_base_type then
 										-- There is no cycle of the form
 										-- "[G -> G]" or "[G -> H, H -> G]".
-									Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context.root_context)
+									if other_context.is_root_context then
+										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context)
+									elseif a_context /= other_context then
+										l_root_context := other_context.as_nested_type_context
+										l_root_context.force_last (tokens.like_0)
+										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), l_root_context)
+										l_root_context.remove_last
+									else
+										Result := l_constraint.conforms_to_type_with_type_marks (Current, a_type_mark, a_context, other.overridden_type_mark (other_type_mark), other_context.root_context)
+									end
 								else
 										-- There is a cycle. If `other' is "G" and current
 										-- type is "K", we still want to return True when
@@ -1886,7 +2289,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						end
 					end
 				else
-					Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+ 					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -1904,6 +2316,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			l_context_base_class: ET_CLASS
+			l_root_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_context_base_class := a_context.base_class
 			if l_context_base_class /= implementation_class then
@@ -1924,7 +2337,16 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- No type other than itself conforms to a formal generic type.
 					Result := False
 				else
-					Result := an_actual.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					if a_context.is_root_context then
+						Result := an_actual.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
+					elseif a_context /= other_context then
+						l_root_context := a_context.as_nested_type_context
+						l_root_context.force_last (tokens.like_0)
+						Result := an_actual.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_root_context)
+						l_root_context.remove_last
+					else
+						Result := an_actual.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context.root_context)
+					end
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

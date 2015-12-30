@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_TYPE_CONTEXT
 		redefine
-			as_nested_type_context
+			as_nested_type_context,
+			is_root_context
 		end
 
 	ET_TAIL_LIST [ET_TYPE]
@@ -94,12 +95,20 @@ feature -- Access
 			-- (instead of from the universe it is written in)
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
+			if count = 0 then
 				Result := root_context.named_base_class
-			when 1 then
-				Result := last.named_base_class (root_context)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.named_base_class
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.named_base_class (Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -113,12 +122,20 @@ feature -- Access
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.base_type_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.type_with_type_mark (a_type_mark)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.type_with_type_mark (a_type_mark)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -131,12 +148,24 @@ feature -- Access
 			-- `i'-th actual generic parameter's type of `base_type'
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_actual (i)
-			when 1 then
-				Result := last.base_type_actual (i, root_context)
+			if count = 0 then
+				Result := root_context.base_type_actual (i, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.base_type_actual (i, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.base_type_actual (i, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_actual (i, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -149,12 +178,24 @@ feature -- Access
 			-- `i'-th actual generic parameter of `base_type'
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_actual_parameter (i)
-			when 1 then
-				Result := last.base_type_actual_parameter (i, root_context)
+			if count = 0 then
+				Result := root_context.base_type_actual_parameter (i, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.base_type_actual_parameter (i, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.base_type_actual_parameter (i, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_actual_parameter (i, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -168,12 +209,20 @@ feature -- Access
 			-- 0 if it does not exist
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_index_of_label (a_label)
-			when 1 then
-				Result := last.base_type_index_of_label (a_label, root_context)
+			if count = 0 then
+				Result := root_context.index_of_label (a_label)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.index_of_label (a_label)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_index_of_label (a_label, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -187,12 +236,20 @@ feature -- Access
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_named_type_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.named_type_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.type_with_type_mark (a_type_mark)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.type_with_type_mark (a_type_mark)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.named_type_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -236,12 +293,20 @@ feature -- Measurement
 			-- Number of actual generic parameters of `base_type'
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_actual_count
-			when 1 then
-				Result := last.base_type_actual_count (root_context)
+			if count = 0 then
+				Result := root_context.actual_parameter_count
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.actual_parameter_count
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_actual_count (Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -258,17 +323,37 @@ feature -- Status report
 			-- the actual parameters of these formal parameters are
 			-- themselves
 
+	is_root_context: BOOLEAN
+			-- Is current context its own root context?
+		do
+			Result := count = 0 or else (attached {ET_LIKE_N} last as l_like_n and then l_like_n.index = 0)
+		ensure then
+			not_empty: not Result implies not is_empty
+		end
+
 	is_type_expanded_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Same as `is_type_expanded' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_is_type_expanded_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.is_type_expanded_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.is_type_expanded_with_type_mark (a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.is_type_expanded_with_type_mark (a_type_mark, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.is_type_expanded_with_type_mark (a_type_mark, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.is_type_expanded_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -282,12 +367,24 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_is_type_reference_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.is_type_reference_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.is_type_reference_with_type_mark (a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.is_type_reference_with_type_mark (a_type_mark, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.is_type_reference_with_type_mark (a_type_mark, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.is_type_reference_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -301,12 +398,24 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_is_type_attached_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.is_type_attached_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.is_type_attached_with_type_mark (a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.is_type_attached_with_type_mark (a_type_mark, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.is_type_attached_with_type_mark (a_type_mark, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.is_type_attached_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -320,12 +429,24 @@ feature -- Status report
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_is_type_detachable_with_type_mark (a_type_mark)
-			when 1 then
-				Result := last.is_type_detachable_with_type_mark (a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.is_type_detachable_with_type_mark (a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.is_type_detachable_with_type_mark (a_type_mark, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.is_type_detachable_with_type_mark (a_type_mark, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.is_type_detachable_with_type_mark (a_type_mark, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -338,12 +459,24 @@ feature -- Status report
 			-- Does the base type of current context contain `a_class'?
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_base_type_has_class (a_class)
-			when 1 then
-				Result := last.base_type_has_class (a_class, root_context)
+			if count = 0 then
+				Result := root_context.base_type_has_class (a_class, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.base_type_has_class (a_class, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.base_type_has_class (a_class, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.base_type_has_class (a_class, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -356,12 +489,24 @@ feature -- Status report
 			-- Does the named type of current context contain `a_class'?
 		local
 			l_type: ET_TYPE
+			l_index: INTEGER
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_named_type_has_class (a_class)
-			when 1 then
-				Result := last.named_type_has_class (a_class, root_context)
+			if count = 0 then
+				Result := root_context.named_type_has_class (a_class, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.named_type_has_class (a_class, Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.named_type_has_class (a_class, Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.named_type_has_class (a_class, Current)
+					put (l_like_n, count)
+				end
 			else
 				l_type := last
 				remove_last
@@ -377,24 +522,50 @@ feature -- Comparison
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -404,24 +575,50 @@ feature -- Comparison
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -435,24 +632,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -464,24 +687,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -493,24 +742,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -522,24 +797,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -551,24 +852,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -580,24 +907,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -609,24 +962,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -638,24 +1017,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -667,24 +1072,50 @@ feature -- Conformance
 			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -699,24 +1130,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -729,24 +1186,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -759,24 +1242,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -789,24 +1298,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_index: INTEGER
+			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			inspect count
-			when 0 then
-				Result := root_context.context_conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark)
-			when 1 then
-				Result := last.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
+			if count = 0 then
+				Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				elseif l_index >= count then
+					if other_context /= Current then
+						force_last (tokens.like_0)
+						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						remove_last
+					else
+						l_context := cloned_type_context
+						l_context.force_last (tokens.like_0)
+						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				else
+					if other_context /= Current then
+						l_type := item (l_index)
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+						put (l_like_n, count)
+					else
+						l_context := cloned_type_context
+						put (l_like_n.previous, count)
+						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					end
+				end
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
 					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 					put_last (l_type)
+				elseif count = 1 then
+					Result := last.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
 				else
 					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, a_context)
+					l_context := cloned_type_context
+					l_context.remove_last
+					Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 				end
 			end
 		end
@@ -827,19 +1362,6 @@ feature -- Conversion
 			-- Return a new object at each call.
 		do
 			Result := cloned_type_context
-		end
-
-feature -- Link
-
-	next: detachable like Current
-			-- Next linked context if list of contexts
-
-	set_next (a_next: like Current)
-			-- Set `next' to `a_next'.
-		do
-			next := a_next
-		ensure
-			next_set: next = a_next
 		end
 
 feature -- Duplication

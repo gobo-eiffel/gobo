@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,7 @@ feature -- Access
 			-- Result := Void
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do
@@ -145,7 +145,7 @@ feature -- Access
 		do
 			check attached actual_parameters as l_actual_parameters then
 				an_actual := l_actual_parameters.type (i)
-				if a_context = Current and then attached {ET_NAMED_TYPE} an_actual as l_named_type then
+				if (a_context = Current or (a_context.is_root_context and then a_context.root_context = Current)) and then attached {ET_NAMED_TYPE} an_actual as l_named_type then
 						-- The current type is its own context,
 						-- therefore it is its own base type (i.e all
 						-- its actual generic parameters are named).
@@ -164,7 +164,7 @@ feature -- Access
 		do
 			check attached actual_parameters as l_actual_parameters then
 				an_actual := l_actual_parameters.actual_parameter (i)
-				if a_context = Current then
+				if a_context = Current or (a_context.is_root_context and then a_context.root_context = Current) then
 						-- The current type is its own context,
 						-- therefore it is its own base type (i.e all
 						-- its actual generic parameters are named).

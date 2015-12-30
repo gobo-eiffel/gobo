@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -96,7 +96,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -105,8 +105,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.named_base_class (l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -122,7 +124,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -131,8 +133,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -142,13 +146,13 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -157,11 +161,13 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 						-- Here we have to use `base_type' and not `shallow_base_type'
 						-- because otherwise the actual generic parameters will not
 						-- be viewed from `a_context' but from `l_target_context'.
 					Result := l_query.type.base_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -177,7 +183,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -186,8 +192,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_actual (i, l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -203,7 +211,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -212,8 +220,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_actual_parameter (i, l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -230,7 +240,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -239,8 +249,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_index_of_label (a_label, l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -256,7 +268,7 @@ feature -- Access
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -265,8 +277,10 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -276,13 +290,13 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -291,11 +305,13 @@ feature -- Access
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 						-- Here we have to use `named_type' and not `shallow_named_type'
 						-- because otherwise the actual generic parameters will not
 						-- be viewed from `a_context' but from `l_target_context'.
 					Result := l_query.type.named_type_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -338,7 +354,7 @@ feature -- Measurement
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -347,8 +363,10 @@ feature -- Measurement
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_actual_count (l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -366,7 +384,7 @@ feature -- Status report
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -375,8 +393,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.is_type_expanded_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -392,7 +412,7 @@ feature -- Status report
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -401,8 +421,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.is_type_reference_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -418,7 +440,7 @@ feature -- Status report
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -427,8 +449,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.is_type_attached_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -444,7 +468,7 @@ feature -- Status report
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -453,8 +477,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -485,7 +511,7 @@ feature -- Status report
 		local
 			l_base_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			l_target_type := target_type
 			if l_target_type.named_type_is_formal_type (a_context) then
@@ -496,8 +522,10 @@ feature -- Status report
 			else
 				l_base_class := l_target_type.base_class (a_context)
 				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.named_type_is_formal_type (l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -513,7 +541,7 @@ feature -- Status report
 		local
 			l_base_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -522,8 +550,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_base_class := l_target_type.base_class (a_context)
 				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.base_type_has_class (a_class, l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -539,7 +569,7 @@ feature -- Status report
 		local
 			l_base_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -548,8 +578,10 @@ feature -- Status report
 				l_target_type := target_type
 				l_base_class := l_target_type.base_class (a_context)
 				if attached l_base_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					l_target_context := a_context.as_nested_type_context
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.named_type_has_class (a_class, l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -578,7 +610,7 @@ feature -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -589,8 +621,14 @@ feature -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_named_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -606,7 +644,7 @@ feature -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -617,8 +655,14 @@ feature -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_base_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -683,7 +727,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -692,8 +736,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -711,7 +761,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -720,8 +770,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -739,7 +795,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -748,8 +804,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -767,7 +829,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -776,8 +838,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -795,7 +863,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -804,8 +872,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -823,7 +897,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -832,8 +906,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -851,7 +931,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -860,8 +940,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -879,7 +965,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -888,8 +974,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -907,7 +999,7 @@ feature -- Conformance
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if other = Current and then other_type_mark = a_type_mark and then other_context = a_context then
 				Result := True
@@ -918,8 +1010,14 @@ feature -- Conformance
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -941,7 +1039,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -950,8 +1048,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -971,7 +1075,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -980,8 +1084,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1001,7 +1111,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -1010,8 +1120,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1031,7 +1147,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			l_class: ET_CLASS
 			l_target_type: ET_TYPE
-			l_target_context: ET_TYPE_CONTEXT
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
@@ -1040,8 +1156,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				l_target_type := target_type
 				l_class := l_target_type.base_class (a_context)
 				if attached l_class.seeded_query (seed) as l_query then
-					l_target_context := a_context.new_type_context (l_target_type)
+					if a_context /= other_context then
+						l_target_context := a_context.as_nested_type_context
+					else
+						l_target_context := a_context.to_nested_type_context
+					end
+					l_target_context.force_last (l_target_type)
 					Result := l_query.type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), l_target_context)
+					l_target_context.remove_last
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved

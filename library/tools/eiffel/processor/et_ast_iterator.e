@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1808,6 +1808,15 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_type.like_keyword.process (Current)
 			a_type.name.process (Current)
+		end
+
+	process_like_n (a_type: ET_LIKE_N)
+			-- Process `a_type'.
+		do
+			if attached a_type.type_mark as l_type_mark then
+				l_type_mark.process (Current)
+			end
+			a_type.like_keyword.process (Current)
 		end
 
 	process_local_variable_semicolon (a_local: ET_LOCAL_VARIABLE_SEMICOLON)

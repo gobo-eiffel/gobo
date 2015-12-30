@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,7 @@ feature -- Access
 			deep_base_type: Result.is_named_type
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- but where the actual generic parameters are not replaced
 			-- by their named version and should still be considered as
@@ -138,6 +138,7 @@ feature -- Access
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_root_context: a_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := shallow_base_type_with_type_mark (Void, a_context)
@@ -145,12 +146,13 @@ feature -- Access
 			shallow_base_type_not_void: Result /= Void
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_root_context: a_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
@@ -237,7 +239,7 @@ feature -- Access
 			named_type_named: Result.is_named_type
 		end
 
-	shallow_named_type (a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type (a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
 			-- by its actual counterpart in `a_context'. Return this
@@ -246,6 +248,7 @@ feature -- Access
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_root_context: a_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := shallow_named_type_with_type_mark (Void, a_context)
@@ -253,12 +256,13 @@ feature -- Access
 			shallow_named_type_not_void: Result /= Void
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
+			a_root_context: a_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			Result := shallow_base_type_with_type_mark (a_type_mark, a_context)

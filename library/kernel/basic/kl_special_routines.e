@@ -7,7 +7,7 @@ note
 		%equipped with features `put', `item' and `count'."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,15 +20,11 @@ feature -- Initialization
 			-- Create a new special object being able to contain `n' items.
 		require
 			non_negative_n: n >= 0
-		local
-			l_array: ARRAY [G]
 		do
-			create l_array.make_empty
-			Result := l_array.area
-			Result := Result.aliased_resized_area (n)
+			create Result.make_empty (n)
 		ensure
 			special_not_void: Result /= Void
-			count_set: Result.capacity = n
+			capacity_set: Result.capacity = n
 		end
 
 	make_filled (v: G; n: INTEGER): SPECIAL [G]
@@ -98,7 +94,7 @@ feature -- Status report
 feature -- Element change
 
 	force (a_array: SPECIAL [G]; v: G; i: INTEGER)
-			-- If `i' is equal to `a_array.count' increase `a_array.count' 
+			-- If `i' is equal to `a_array.count' increase `a_array.count'
 			-- by one and insert `v' at index `a_array.count',
 			-- otherwise replace `i'-th item by `v'.
 		require
@@ -167,7 +163,7 @@ feature -- Resizing
 			count_set: Result.capacity = n
 			preserved: Result.same_items (old an_array.twin, 0, 0, n.min (old an_array.count))
 		end
-		
+
 	aliased_resized_area_with_default (an_array: SPECIAL [G]; a_default_value: G; n: INTEGER): SPECIAL [G]
 			-- Try to resize `an_array' with a count of `n', if not
 			-- possible a new copy. Non yet initialized entries are set to `a_default_value'.

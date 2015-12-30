@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,8 +70,6 @@ feature -- Access
 		do
 			if a_override_type_mark = Void then
 				Result := type_mark
-			elseif type_mark = Void then
-				Result := a_override_type_mark
 			else
 				l_current_ok := True
 				l_other_ok := True
@@ -169,7 +167,7 @@ feature -- Access
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_actual_parameters := actual_parameters
-			if a_context = Current then
+			if a_context = Current or (a_context.is_root_context and then a_context.root_context = Current) then
 					-- The current type is its own context, therefore it has the same
 					-- actual parameters as its base type.
 				l_named_parameters := l_actual_parameters

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Create a new type checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
-			current_type := tokens.unknown_class
+			current_context := tokens.unknown_class
 			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
 			create constraint_context.make_with_capacity (current_class, 1)
@@ -56,9 +56,9 @@ feature {NONE} -- Initialization
 
 feature -- Validity checking
 
-	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE)
+	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT)
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
-			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
+			-- `a_current_class_impl' viewed from `a_current_context'. Resolve
 			-- identifiers (such as 'like identifier', 'BIT identifier',
 			-- 'like {A}.identifier or 'like a.identifier') in type `a_type'
 			-- if not already done.
@@ -67,43 +67,45 @@ feature -- Validity checking
 			a_type_not_void: a_type /= Void
 			a_current_feature_impl_not_void: a_current_feature_impl /= Void
 			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_type_valid: a_current_type.is_valid_context
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
+			a_current_context_not_void: a_current_context /= Void
+			a_current_context_valid: a_current_context.is_valid_context
+			a_current_context_root_context: a_current_context.is_root_context
+			a_current_class_preparsed: a_current_context.base_class.is_preparsed
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			old_feature_impl: ET_CLOSURE
-			old_type: ET_BASE_TYPE
+			old_context: ET_TYPE_CONTEXT
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
 			old_feature_impl := current_feature_impl
 			current_feature_impl := a_current_feature_impl
-			old_type := current_type
-			current_type := a_current_type
+			old_context := current_context
+			current_context := a_current_context
 			old_class := current_class
-			current_class := current_type.base_class
+			current_class := current_context.root_context.base_class
 			old_class_impl := current_class_impl
 			current_class_impl := a_current_class_impl
 			a_type.process (Current)
 			current_class_impl := old_class_impl
 			current_class := old_class
-			current_type := old_type
+			current_context := old_context
 			current_feature_impl := old_feature_impl
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE; a_position: ET_POSITION)
+	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
-			-- and viewed from `a_current_type'. Note that `a_type' should already be a valid
+			-- and viewed from `a_current_context'. Note that `a_type' should already be a valid
 			-- type by itself (call `check_type_validity' for that).
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_type_valid: a_current_type.is_valid_context
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
+			a_current_context_not_void: a_current_context /= Void
+			a_current_context_valid: a_current_context.is_valid_context
+			a_current_context_root_context: a_current_context.is_root_context
+			a_current_class_preparsed: a_current_context.base_class.is_preparsed
 			a_position_not_void: a_position /= Void
 		local
 			a_type_class: ET_CLASS
@@ -126,15 +128,15 @@ feature -- Validity checking
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			had_error: BOOLEAN
-			old_type: ET_BASE_TYPE
+			old_context: ET_TYPE_CONTEXT
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
-			old_type := current_type
-			current_type := a_current_type
+			old_context := current_context
+			current_context := a_current_context
 			old_class := current_class
-			current_class := current_type.base_class
+			current_class := current_context.root_context.base_class
 			old_class_impl := current_class_impl
 			current_class_impl := a_current_class_impl
 			an_actuals := a_type.actual_parameters
@@ -153,17 +155,17 @@ feature -- Validity checking
 					a_formal_parameters := current_class.formal_parameters
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
-						a_named_actual := an_actual.shallow_named_type (current_type)
+						a_named_actual := an_actual.shallow_named_type (current_context)
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := a_named_actual.base_class (current_type)
+							a_base_class := a_named_actual.base_class (current_context)
 							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as l_attached_formal_type then
 								a_formal_type := l_attached_formal_type
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed to be
-										-- a formal parameter of `current_type''s base class.
+										-- a formal parameter of `current_context''s base class.
 									has_formal_type_error := True
 									set_fatal_error
 									error_handler.report_giaaa_error
@@ -279,7 +281,7 @@ feature -- Validity checking
 								-- its validity as a creation type.
 							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
 								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
+								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -291,7 +293,7 @@ feature -- Validity checking
 								-- its validity as a creation type.
 							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
 								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
+								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -303,7 +305,7 @@ feature -- Validity checking
 			end
 			current_class_impl := old_class_impl
 			current_class := old_class
-			current_type := old_type
+			current_context := old_context
 		end
 
 feature -- Type conversion
@@ -539,12 +541,12 @@ feature {NONE} -- Validity checking
 							reset_fatal_error (has_fatal_error or had_error)
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
-								if not an_actual.is_type_expanded (current_type) then
+								if not an_actual.is_type_expanded (current_context) then
 									set_fatal_error
 									error_handler.report_gvtcg5b_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
 							elseif a_formal.is_reference then
-								if not an_actual.is_type_reference (current_type) then
+								if not an_actual.is_type_reference (current_context) then
 									set_fatal_error
 									error_handler.report_gvtcg5a_error (current_class, current_class_impl, a_type, an_actual, a_formal)
 								end
@@ -567,8 +569,8 @@ feature {NONE} -- Validity checking
 								--
 								-- we need to check that "LIST [FOO]" conforms to
 								-- "LIST [LIST [FOO]]", not just "LIST [G]".
-							constraint_context.set (a_type, current_type)
-							if not an_actual.conforms_to_type (a_constraint, constraint_context, current_type) then
+							constraint_context.set (a_type, current_context.root_context)
+							if not an_actual.conforms_to_type (a_constraint, constraint_context, current_context) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 									--
@@ -774,7 +776,7 @@ feature {NONE} -- Validity checking
 			l_target_type := a_type.target_type
 			l_target_type.process (Current)
 			if not has_fatal_error then
-				report_qualified_anchored_type_supplier (l_target_type, current_type)
+				report_qualified_anchored_type_supplier (l_target_type, current_context.root_context)
 				l_seed := a_type.seed
 				if l_seed = 0 then
 						-- Not resolved yet. It needs to be resolved
@@ -785,7 +787,7 @@ feature {NONE} -- Validity checking
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						l_class := l_target_type.base_class (current_type)
+						l_class := l_target_type.base_class (current_context)
 						l_class.process (current_system.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -810,7 +812,7 @@ feature {NONE} -- Validity checking
 						end
 					end
 				else
-					l_class := l_target_type.base_class (current_type)
+					l_class := l_target_type.base_class (current_context)
 					l_class.process (current_system.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
@@ -964,8 +966,8 @@ feature {NONE} -- Access
 			-- (May be different from `current_class' when the
 			-- code has been inherited from an ancestor)
 
-	current_type: ET_BASE_TYPE
-			-- Base type where the type appears
+	current_context: ET_TYPE_CONTEXT
+			-- Context for the type being processed
 
 	in_qualified_anchored_type: BOOLEAN
 			-- Is the type being checked contained in a qualified anchored type?
@@ -989,9 +991,10 @@ feature {NONE} -- Implementation
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
-	current_type_not_void: current_type /= Void
-	valid_current_type: current_type.is_valid_context
-	current_class_definition: current_class = current_type.base_class
+	current_context_not_void: current_context /= Void
+	valid_current_context: current_context.is_valid_context
+	current_context_root_context: current_context.is_root_context
+	current_class_definition: current_class = current_context.base_class
 	current_feature_impl_not_void: current_feature_impl /= Void
 	constraint_context_not_void: constraint_context /= Void
 

@@ -5,7 +5,7 @@ note
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -171,7 +171,7 @@ feature -- Access
 			end
 		end
 
-	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_BASE_TYPE
+	shallow_base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Same as `shallow_base_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -182,7 +182,7 @@ feature -- Access
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class
+				a_class := a_context.root_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
 					Result := l_args.item (l_index).type.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
@@ -193,7 +193,7 @@ feature -- Access
 					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class
+				a_class := a_context.root_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.shallow_base_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else
@@ -342,7 +342,7 @@ feature -- Access
 			end
 		end
 
-	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_BASE_TYPE): ET_NAMED_TYPE
+	shallow_named_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE
 			-- Same as `shallow_named_type' except that its type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
@@ -353,7 +353,7 @@ feature -- Access
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class
+				a_class := a_context.root_context.base_class
 				l_index := index
 				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
 					Result := l_args.item (l_index).type.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
@@ -364,7 +364,7 @@ feature -- Access
 					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class
+				a_class := a_context.root_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.shallow_named_type_with_type_mark (overridden_type_mark (a_type_mark), a_context)
 				else

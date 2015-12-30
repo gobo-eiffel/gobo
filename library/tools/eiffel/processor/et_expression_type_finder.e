@@ -1424,23 +1424,13 @@ feature {NONE} -- Expression processing
 				end
 			end
 			l_detachable_any_type := current_system.detachable_any_type
-			l_expression_context := new_context (current_type)
 			nb := an_expression.count
-			create l_actuals.make_with_capacity (nb)
-			from i := nb until i <= nb2 loop
-					-- There is no matching tuple item type.
-				find_expression_type (an_expression.expression (i), l_expression_context, l_detachable_any_type)
-				if has_fatal_error then
-					had_error := True
-				else
-					l_actuals.put_first (l_expression_context.named_type)
-				end
-				l_expression_context.wipe_out
-				i := i - 1
-			end
-			if l_tuple_parameters /= Void then
-				l_parameter_context := new_context (current_type)
-				from until i < 1 loop
+			if nb = 0 then
+				l_tuple_type := current_universe_impl.tuple_type
+				a_context.force_last (l_tuple_type)
+			elseif nb = 1 then
+				if l_tuple_parameters /= Void and nb2 >= 1 then
+					l_parameter_context := new_context (current_type)
 						-- The expected type for the manifest tuple is 'TUPLE [...]'.
 						-- Use these item types as expected types for the corresponding items
 						-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
@@ -1449,25 +1439,61 @@ feature {NONE} -- Expression processing
 						-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
 						-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
 						-- if it were analyzed out of context).
-					l_parameter_context.force_last (l_tuple_parameters.type (i))
-					find_expression_type (an_expression.expression (i), l_expression_context, l_parameter_context)
+					l_parameter_context.force_last (l_tuple_parameters.type (1))
+					find_expression_type (an_expression.expression (1), a_context, l_parameter_context)
+					free_context (l_parameter_context)
+				else
+					find_expression_type (an_expression.expression (1), a_context, l_detachable_any_type)
+				end
+				if not has_fatal_error then
+					l_tuple_type := current_universe_impl.tuple_like_current_type
+					a_context.force_last (l_tuple_type)
+				end
+			else
+				l_expression_context := new_context (current_type)
+				create l_actuals.make_with_capacity (nb)
+				from i := nb until i <= nb2 loop
+						-- There is no matching tuple item type.
+					find_expression_type (an_expression.expression (i), l_expression_context, l_detachable_any_type)
 					if has_fatal_error then
 						had_error := True
 					else
 						l_actuals.put_first (l_expression_context.named_type)
 					end
 					l_expression_context.wipe_out
-					l_parameter_context.wipe_out
 					i := i - 1
 				end
-				free_context (l_parameter_context)
-			end
-			free_context (l_expression_context)
-			if had_error then
-				set_fatal_error
-			else
-				create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
-				a_context.force_last (l_tuple_type)
+				if l_tuple_parameters /= Void then
+					l_parameter_context := new_context (current_type)
+					from until i < 1 loop
+							-- The expected type for the manifest tuple is 'TUPLE [...]'.
+							-- Use these item types as expected types for the corresponding items
+							-- in the manifest tuple. For example if we expect a 'TUPLE [INTEGER_64]'
+							-- and we have '[3]' then '3' will be considered as a '{INTEGER_64} 3'.
+							-- Likewise, if we expect a 'TUPLE [ARRAY [HASHABLE]]' and we have
+							-- '[<<"gobo", 3>>]' then the manifest array '<<"gobo", 3>>' will be
+							-- considered of type 'ARRAY [HASHABLE]' (rather than of type 'ARRAY [ANY]'
+							-- if it were analyzed out of context).
+						l_parameter_context.force_last (l_tuple_parameters.type (i))
+						find_expression_type (an_expression.expression (i), l_expression_context, l_parameter_context)
+						if has_fatal_error then
+							had_error := True
+						else
+							l_actuals.put_first (l_expression_context.named_type)
+						end
+						l_expression_context.wipe_out
+						l_parameter_context.wipe_out
+						i := i - 1
+					end
+					free_context (l_parameter_context)
+				end
+				free_context (l_expression_context)
+				if had_error then
+					set_fatal_error
+				else
+					create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
+					a_context.force_last (l_tuple_type)
+				end
 			end
 		end
 
@@ -1480,18 +1506,14 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_type_class: ET_NAMED_CLASS
 			l_type_type: ET_GENERIC_CLASS_TYPE
-			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			reset_fatal_error (False)
 			l_type := an_expression.type
 -- TODO: I think that the formal generic parameters of `l_type' need to
 -- be resolved in the context of `current_type'.
-			l_type_class := current_universe_impl.type_any_type.named_base_class
-			create l_actuals.make_with_capacity (1)
-			l_actuals.put_first (l_type)
-			create l_type_type.make (Void, l_type_class.name, l_actuals, l_type_class)
+			a_context.force_last (l_type)
+			l_type_type := current_universe_impl.type_like_current_type
 			a_context.force_last (l_type_type)
 		end
 
@@ -2277,11 +2299,8 @@ feature {NONE} -- Agent validity
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (current_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -2310,9 +2329,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2323,11 +2340,8 @@ feature {NONE} -- Agent validity
 			end
 			if not has_fatal_error then
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (current_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				a_context.force_last (an_agent_type)
 			end
 		end
@@ -2440,11 +2454,8 @@ feature {NONE} -- Agent validity
 				a_type := a_query.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -2473,13 +2484,10 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
@@ -2490,13 +2498,9 @@ feature {NONE} -- Agent validity
 				fill_open_operands (an_expression, a_procedure, an_open_operands)
 			end
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (a_target_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				a_context.force_last (an_agent_type)
 			end
 		end
@@ -2529,11 +2533,8 @@ feature {NONE} -- Agent validity
 			l_type := a_context.base_class.formal_parameter_type (l_index)
 			l_target_type := tokens.identity_type
 			if l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-				l_agent_class := current_universe_impl.predicate_type.named_base_class
-				create l_parameters.make_with_capacity (2)
-				l_parameters.put_first (current_universe_impl.detachable_tuple_type)
-				l_parameters.put_first (l_target_type)
-				create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+				a_context.force_last (current_universe_impl.detachable_tuple_type)
+				l_agent_type := current_universe_impl.predicate_like_current_type
 			else
 				l_agent_class := current_universe_impl.function_type.named_base_class
 				create l_parameters.make_with_capacity (3)
@@ -2653,11 +2654,8 @@ feature {NONE} -- Agent validity
 				a_result_type := a_query.type
 -- TODO: like argument
 				if a_result_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -2686,18 +2684,14 @@ feature {NONE} -- Agent validity
 		local
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_target_type: ET_TYPE
 			an_open_operands: ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 		do
 			reset_fatal_error (False)
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			a_target_type := a_target.type
 			a_formal_arguments := a_procedure.arguments
 			if a_formal_arguments /= Void then
 				create an_open_operands.make_with_capacity (a_formal_arguments.count + 1)
@@ -2706,14 +2700,10 @@ feature {NONE} -- Agent validity
 				create an_open_operands.make_with_capacity (1)
 			end
 			if not has_fatal_error then
-				a_target_type := tokens.identity_type
-				an_open_operands.put_first (a_target_type)
+				an_open_operands.put_first (tokens.identity_type)
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (a_target_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				a_context.force_last (an_agent_type)
 			end
 		end
@@ -2751,11 +2741,8 @@ feature {NONE} -- Agent validity
 			l_open_operands.put_first (l_target_type)
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_open_operands, current_universe_impl.tuple_type.named_base_class)
 			if l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-				l_agent_class := current_universe_impl.predicate_type.named_base_class
-				create l_parameters.make_with_capacity (2)
-				l_parameters.put_first (l_tuple_type)
-				l_parameters.put_first (l_target_type)
-				create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+				a_context.force_last (l_tuple_type)
+				l_agent_type := current_universe_impl.predicate_like_current_type
 			else
 				l_agent_class := current_universe_impl.function_type.named_base_class
 				create l_parameters.make_with_capacity (3)
@@ -2860,11 +2847,8 @@ feature {NONE} -- Agent validity
 				a_type := an_expression.type
 -- TODO: like argument
 				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-					an_agent_class := current_universe_impl.predicate_type.named_base_class
-					create a_parameters.make_with_capacity (2)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (current_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					a_context.force_last (a_tuple_type)
+					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
@@ -2888,9 +2872,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_NAMED_CLASS
 		do
 			reset_fatal_error (False)
 			a_formal_arguments := an_expression.formal_arguments
@@ -2900,11 +2882,8 @@ feature {NONE} -- Agent validity
 			end
 			if not has_fatal_error then
 				create a_tuple_type.make (tokens.implicit_attached_type_mark, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-				an_agent_class := current_universe_impl.procedure_type.named_base_class
-				create a_parameters.make_with_capacity (2)
-				a_parameters.put_first (a_tuple_type)
-				a_parameters.put_first (current_type)
-				create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+				a_context.force_last (a_tuple_type)
+				an_agent_type := current_universe_impl.procedure_like_current_type
 				a_context.force_last (an_agent_type)
 			end
 		end

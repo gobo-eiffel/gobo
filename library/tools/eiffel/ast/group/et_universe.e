@@ -813,11 +813,11 @@ feature -- Kernel types
 	pointer_type: ET_CLASS_TYPE
 			-- Class type "POINTER"
 
-	predicate_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "PREDICATE [ANY, TUPLE]", with implicit 'attached' type mark
+	predicate_like_current_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "PREDICATE [NONE, like Current]", with implicit 'attached' type mark
 
-	procedure_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "PROCEDURE [ANY, TUPLE]", with implicit 'attached' type mark
+	procedure_like_current_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "PROCEDURE [NONE, like Current]", with implicit 'attached' type mark
 
 	real_type: ET_CLASS_TYPE
 			-- Class type "REAL"
@@ -861,6 +861,9 @@ feature -- Kernel types
 	detachable_tuple_type: ET_TUPLE_TYPE
 			-- Type "detachable TUPLE"
 
+	tuple_like_current_type: ET_TUPLE_TYPE
+			-- Type "TUPLE [like Current]", with implicit 'attached' type mark
+
 	type_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPE [ANY]"
 
@@ -869,6 +872,9 @@ feature -- Kernel types
 
 	detachable_type_detachable_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "detachable TYPE [detachable ANY]"
+
+	type_like_current_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "TYPE [like Current], with implicit 'attached' type mark"
 
 	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
@@ -1257,10 +1263,11 @@ feature -- Kernel types
 			l_name := tokens.predicate_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- "PREDICATE [NONE, like Current]"
 			create l_parameters.make_with_capacity (2)
-			l_parameters.put_first (tuple_type)
-			l_parameters.put_first (any_type)
-			create predicate_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			l_parameters.put_first (tokens.like_current)
+			l_parameters.put_first (none_type)
+			create predicate_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_procedure_type
@@ -1273,10 +1280,11 @@ feature -- Kernel types
 			l_name := tokens.procedure_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- "PROCEDURE [NONE, like Current]"
 			create l_parameters.make_with_capacity (2)
-			l_parameters.put_first (tuple_type)
-			l_parameters.put_first (any_type)
-			create procedure_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			l_parameters.put_first (tokens.like_current)
+			l_parameters.put_first (none_type)
+			create procedure_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_real_type
@@ -1433,12 +1441,19 @@ feature -- Kernel types
 		local
 			l_name: ET_CLASS_NAME
 			l_master_class: ET_MASTER_CLASS
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.tuple_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- "TUPLE"
 			create tuple_type.make (tokens.implicit_attached_type_mark, Void, l_master_class)
+				-- "detachable TUPLE"
 			create detachable_tuple_type.make (tokens.detachable_keyword, Void, l_master_class)
+				-- "TUPLE [like Current]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.like_current)
+			create tuple_like_current_type.make (tokens.implicit_attached_type_mark, l_parameters, l_master_class)
 		end
 
 	set_type_type
@@ -1451,13 +1466,20 @@ feature -- Kernel types
 			l_name := tokens.type_class_name
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
+				-- "TYPE [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create type_any_type.make (Void, l_name, l_parameters, l_master_class)
+				-- "TYPE [detachable ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
 			create type_detachable_any_type.make (Void, l_name, l_parameters, l_master_class)
+				-- "detachable TYPE [detachable ANY]"
 			create detachable_type_detachable_any_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+				-- "TYPE [like Current]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.like_current)
+			create type_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_typed_pointer_type
@@ -1507,6 +1529,7 @@ feature -- Kernel types
 			any_clients := tokens.empty_clients
 			tuple_type := tokens.unknown_tuple_type
 			detachable_tuple_type := tokens.unknown_tuple_type
+			tuple_like_current_type := tokens.unknown_tuple_type
 			array_any_type := tokens.unknown_generic_class_type
 			array_detachable_any_type := tokens.unknown_generic_class_type
 			array_like_current_type := tokens.unknown_generic_class_type
@@ -1540,8 +1563,8 @@ feature -- Kernel types
 			none_type := tokens.unknown_class_type
 			detachable_none_type := tokens.unknown_class_type
 			pointer_type := tokens.unknown_class_type
-			predicate_type := tokens.unknown_generic_class_type
-			procedure_type := tokens.unknown_generic_class_type
+			predicate_like_current_type := tokens.unknown_generic_class_type
+			procedure_like_current_type := tokens.unknown_generic_class_type
 			real_type := tokens.unknown_class_type
 			real_32_type := tokens.unknown_class_type
 			real_32_convert_feature := tokens.unknown_convert_feature
@@ -1561,6 +1584,7 @@ feature -- Kernel types
 			type_any_type := tokens.unknown_generic_class_type
 			type_detachable_any_type := tokens.unknown_generic_class_type
 			detachable_type_detachable_any_type := tokens.unknown_generic_class_type
+			type_like_current_type := tokens.unknown_generic_class_type
 			typed_pointer_any_type := tokens.unknown_generic_class_type
 			typed_pointer_like_current_type := tokens.unknown_generic_class_type
 			wide_character_type := tokens.unknown_class_type
@@ -2396,7 +2420,7 @@ feature {NONE} -- Constants
 	initial_universes_capacity: INTEGER
 			-- Initial capacity for containers containing universes
 		once
-			Result := 10
+			Result := 100
 		ensure
 			capacity_positive: Result > 0
 		end
@@ -2404,7 +2428,7 @@ feature {NONE} -- Constants
 	initial_classes_in_group_capacity: INTEGER
 			-- Initial capacity for `classes_in_group'
 		once
-			Result := 20
+			Result := 100
 		ensure
 			capacity_positive: Result > 0
 		end
@@ -2412,7 +2436,7 @@ feature {NONE} -- Constants
 	initial_classes_by_groups_capacity: INTEGER
 			-- Initial capacity for `classes_by_groups'
 		once
-			Result := 500
+			Result := 1000
 		ensure
 			capacity_positive: Result > 0
 		end
@@ -2458,8 +2482,8 @@ invariant
 	none_type_not_void: none_type /= Void
 	detachable_none_type_not_void: detachable_none_type /= Void
 	pointer_type_not_void: pointer_type /= Void
-	predicate_type_not_void: predicate_type /= Void
-	procedure_type_not_void: procedure_type /= Void
+	predicate_like_current_type_not_void: predicate_like_current_type /= Void
+	procedure_like_current_type_not_void: procedure_like_current_type /= Void
 	real_32_type_not_void: real_32_type /= Void
 	real_64_type_not_void: real_64_type /= Void
 	routine_type_not_void: routine_type /= Void
@@ -2472,7 +2496,11 @@ invariant
 	system_string_type_not_void: system_string_type /= Void
 	tuple_type_not_void: tuple_type /= Void
 	detachable_tuple_type_not_void: detachable_tuple_type /= Void
+	tuple_like_current_type_not_void: tuple_like_current_type /= Void
 	type_any_type_not_void: type_any_type /= Void
+	type_detachable_any_type_not_void: type_detachable_any_type /= Void
+	detachable_type_detachable_any_type_not_void: detachable_type_detachable_any_type /= Void
+	type_like_currenttype_not_void: type_like_current_type /= Void
 	typed_pointer_any_type_not_void: typed_pointer_any_type /= Void
 	typed_pointer_like_current_type_not_void: typed_pointer_like_current_type /= Void
 		-- Class mapping.
