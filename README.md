@@ -57,9 +57,9 @@ To install this package, please follow the instructions below:
 
 Note that if you downloaded this package from Git on on [GitHub] (http://github.com/gobo-eiffel/gobo).
 
-you will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
+you will need to bootstrap it. Please read [$GOBO/work/bootstrap/Readme.txt](/work/bootstrap/Readme.txt).
 
-The supported Eiffel compilers, in alphabetical order, are: Gobo Eiffel Compiler (gec) 3.9, ISE Eiffel 6.3.7.5660 (Classic and .NET). For more details about the supported Eiffel compilers, please see the file "Release_notes.txt". This software might work with other Eiffel compilers and/or other compiler versions, however no test has been done. To have a better understanding of the way this software has been designed and implemented, you can also have a look at "$GOBO/doc/portability".
+The supported Eiffel compilers, in alphabetical order, are: Gobo Eiffel Compiler (gec) 3.9, ISE Eiffel 6.3.7.5660 (Classic and .NET). For more details about the supported Eiffel compilers, please see the file "Release_notes.txt". This software might work with other Eiffel compilers and/or other compiler versions, however no test has been done. To have a better understanding of the way this software has been designed and implemented, you can also have a look at [$GOBO/doc/portability](/doc/portability).
 
 ## In this distribution:
 
