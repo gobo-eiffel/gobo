@@ -15,8 +15,12 @@ feature -- Raise
 
 	raise
 			-- Raise current exception
+		local
+			l_exceptions: EXCEPTIONS
 		do
 -- TODO
+			create l_exceptions
+			l_exceptions.raise ("EXCEPTION")
 		end
 
 feature -- Access
