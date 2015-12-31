@@ -7795,7 +7795,7 @@ feature {NONE} -- Expression validity
 			nb := an_expression.count
 			if nb = 0 then
 				l_tuple_type := current_universe_impl.tuple_type
-				report_manifest_tuple (an_expression, l_tuple_type)
+				report_manifest_tuple (an_expression, l_tuple_type, a_context)
 				a_context.force_last (l_tuple_type)
 			elseif nb = 1 then
 				if l_tuple_parameters /= Void and nb2 >= 1 then
@@ -7816,7 +7816,7 @@ feature {NONE} -- Expression validity
 				end
 				if not has_fatal_error then
 					l_tuple_type := current_universe_impl.tuple_like_current_type
-					report_manifest_tuple (an_expression, l_tuple_type)
+					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
 				end
 			else
@@ -7862,7 +7862,7 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 				else
 					create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actuals, current_universe_impl.tuple_type.named_base_class)
-					report_manifest_tuple (an_expression, l_tuple_type)
+					report_manifest_tuple (an_expression, l_tuple_type, a_context)
 					a_context.force_last (l_tuple_type)
 				end
 			end
@@ -12980,13 +12980,15 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE)
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest tuple of type `a_type' in context of
-			-- `current_type' has been processed.
+			-- `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
 		do
 		end
 

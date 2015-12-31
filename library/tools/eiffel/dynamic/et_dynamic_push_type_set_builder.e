@@ -317,9 +317,9 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE)
+	report_manifest_tuple (an_expression: ET_MANIFEST_TUPLE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
 			-- Report that a manifest tuple of type `a_type' in context of
-			-- `current_type' has been processed.
+			-- `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
@@ -328,7 +328,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 				if attached {ET_DYNAMIC_TUPLE_TYPE} l_type as l_tuple_type then
