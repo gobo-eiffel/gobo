@@ -8274,14 +8274,28 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_temp: ET_IDENTIFIER
+			l_feature_address: ET_FEATURE_ADDRESS
 		do
-			if in_operand then
-				operand_stack.force (an_expression)
-			else
--- TODO: TYPED_POINTER vs. POINTER.
-				current_file.put_character ('0')
-print ("ET_C_GENERATOR.print_expression_address%N")
-			end
+			l_dynamic_type_set := dynamic_type_set (an_expression.expression)
+			l_dynamic_type := l_dynamic_type_set.static_type
+			l_temp := new_temp_variable (l_dynamic_type)
+			mark_temp_variable_frozen (l_temp)
+			l_temp.set_index (an_expression.expression.index)
+			print_indentation
+			print_temp_name (l_temp, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			print_expression (an_expression.expression)
+			current_file.put_character (';')
+			current_file.put_new_line
+			create l_feature_address.make (l_temp)
+			l_feature_address.set_index (an_expression.index)
+			print_feature_address (l_feature_address)
 		end
 
 	print_false_constant (a_constant: ET_FALSE_CONSTANT)
@@ -8382,6 +8396,8 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					l_name_expression := l_name.object_test_local_name
 				elseif l_name.is_across_cursor then
 					l_name_expression := l_name.across_cursor_name
+				elseif attached {ET_IDENTIFIER} l_name as l_identifier and then l_identifier.is_temporary then
+					l_name_expression := l_identifier
 				end
 				if l_name_expression /= Void then
 					l_value_type_set := dynamic_type_set (l_name_expression)
