@@ -542,14 +542,14 @@ feature -- Comparison
 						Result := root_context.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_named_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -595,14 +595,14 @@ feature -- Comparison
 						Result := root_context.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_base_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -652,14 +652,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -707,14 +707,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_named_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -762,14 +762,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -817,14 +817,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -872,14 +872,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -927,14 +927,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_base_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -982,14 +982,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1037,14 +1037,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						Result := root_context.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1092,14 +1092,14 @@ feature -- Conformance
 						Result := root_context.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.conforms_to_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1150,14 +1150,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						Result := root_context.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1206,14 +1206,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						Result := root_context.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.conforms_from_class_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1262,14 +1262,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
@@ -1318,14 +1318,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						Result := root_context.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				else
+					l_type := item (l_index)
 					if other_context /= Current then
-						l_type := item (l_index)
 						put (l_like_n.previous, count)
 						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 						put (l_like_n, count)
 					else
 						l_context := cloned_type_context
-						put (l_like_n.previous, count)
+						l_context.force_last (l_like_n.previous)
 						Result := l_type.conforms_from_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
 					end
 				end
