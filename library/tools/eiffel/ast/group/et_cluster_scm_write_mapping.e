@@ -41,6 +41,5 @@ feature -- Access
 invariant
 
 	master_cluster_not_void: master_cluster /= Void
-	scm_read_mapping: master_cluster.scm_read_mapping_recursive /= Void
 
 end
