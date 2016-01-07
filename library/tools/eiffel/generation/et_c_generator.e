@@ -24758,7 +24758,7 @@ feature {NONE} -- C function generation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_integer_type := l_dynamic_type_set.static_type
+				l_integer_type := l_integer_dynamic_type_set.static_type
 				l_item_type := l_special_type.item_type_set.static_type
 					-- Print signature to `header_file' and `current_file'.
 				header_file.put_string (c_extern)
