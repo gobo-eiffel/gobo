@@ -180,6 +180,8 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */
 #define FUNCTION_CAST(r_type,arg_types) (r_type (*) arg_types)
 #define FUNCTION_CAST_TYPE(r_type,call_type,arg_types) (r_type (call_type *) arg_types)
+#define SIGBLOCK
+#define SIGRESUME
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */

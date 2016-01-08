@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -359,6 +359,9 @@ feature -- Compilation options
 			-- Should the generated application be a console application
 			-- (or a Windows GUI application)?
 
+	multithreaded_mode: BOOLEAN
+			-- Should the generated application be thread-capable?
+
 	exception_trace_mode: BOOLEAN
 			-- Should the generated application be able to provide an exception trace?
 			-- An exception trace is the execution path from the root creation procedure
@@ -396,6 +399,14 @@ feature -- Compilation options setting
 			console_application_mode := b
 		ensure
 			console_application_mode_set: console_application_mode = b
+		end
+
+	set_multithreaded_mode (b: BOOLEAN)
+			-- Set `multithreaded_mode' to `b'.
+		do
+			multithreaded_mode := b
+		ensure
+			multithreaded_mode_mode_set: multithreaded_mode = b
 		end
 
 	set_exception_trace_mode (b: BOOLEAN)

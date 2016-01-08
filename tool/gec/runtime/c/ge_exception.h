@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +65,11 @@ extern GE_rescue* GE_last_rescue;
 	Raise an exception with code 'code'.
 */
 extern void GE_raise(int code);
+
+/*
+	Raise an exception with code 'code' and message 'msg'.
+*/
+extern void GE_raise_with_message(char* msg, int code);
 
 /*
 	Check whether the type id of 'obj' is not in 'type_ids'.

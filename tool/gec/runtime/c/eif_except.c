@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 void eraise(char* name, long code) {
-	GE_raise((int)code);
+	GE_raise_with_message(name, (int)code);
 }
 
 void esdie(int code) {

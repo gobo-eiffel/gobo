@@ -5,7 +5,7 @@ note
 		"ECF targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -321,6 +321,17 @@ feature -- Basic operations
 			l_value := settings.value (console_application_setting_name)
 			if l_value /= Void and then l_value.is_boolean  then
 				a_system.set_console_application_mode (l_value.to_boolean)
+			end
+				-- concurrency.
+			l_value := settings.value (concurrency_setting_name)
+			if l_value /= Void then
+				if STRING_.same_case_insensitive (l_value, "thread") then
+					a_system.set_multithreaded_mode (True)
+				elseif STRING_.same_case_insensitive (l_value, "scoop") then
+					a_system.set_multithreaded_mode (False)
+				else
+					a_system.set_multithreaded_mode (False)
+				end
 			end
 				-- Unknown built-in features reported.
 			l_value := variables.value ("unknown_builtin_reported")

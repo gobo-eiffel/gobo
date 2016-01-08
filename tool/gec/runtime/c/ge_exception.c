@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,6 +38,14 @@ void GE_raise(int code)
 #endif
 	fprintf(stderr, "Unhandled exception\n");
 	exit(1);
+}
+
+/*
+	Raise an exception with code 'code' and message 'msg'.
+*/
+void GE_raise_with_message(char* msg, int code)
+{
+	GE_raise(code);
 }
 
 /*

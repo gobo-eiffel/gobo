@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -276,6 +276,12 @@ feature -- Compilation options
 			-- (or a Windows GUI application)?
 		do
 			Result := current_system.console_application_mode
+		end
+
+	multithreaded_mode: BOOLEAN
+			-- Should the generated application be thread-capable?
+		do
+			Result := current_system.multithreaded_mode
 		end
 
 	exception_trace_mode: BOOLEAN
@@ -627,6 +633,9 @@ feature {NONE} -- Compilation script generation
 				if console_application_mode then
 					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
 				end
+				if multithreaded_mode then
+					l_c_config_parser.define_value ("True", "EIF_THREADS")
+				end
 				l_c_config_parser.parse_file (l_file)
 				l_file.close
 				if l_c_config_parser.has_error then
@@ -809,6 +818,12 @@ feature {NONE} -- C code Generation
 					header_file.put_line (c_eif_boehm_gc)
 					header_file.put_new_line
 				end
+				if multithreaded_mode then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_threads)
+					header_file.put_new_line
+				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_native_string.h", True, header_file)
@@ -825,6 +840,10 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_identified.h", True, header_file)
 				header_file.put_new_line
+				if multithreaded_mode then
+					include_runtime_header_file ("ge_thread.h", True, header_file)
+					header_file.put_new_line
+				end
 					-- Two header files needed to compile EiffelCOM.
 				include_runtime_header_file ("eif_cecil.h", False, header_file)
 				include_runtime_header_file ("eif_plug.h", False, header_file)
@@ -23967,6 +23986,10 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
 				print_indentation
+				if multithreaded_mode then
+					current_file.put_line ("GE_init_thread();")
+					print_indentation
+				end
 				current_file.put_line ("GE_init_identified();")
 				print_indentation
 				current_file.put_line ("GE_const_init();")
@@ -28293,6 +28316,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_gc.c")
 				elseif a_filename.same_string ("ge_identified.h") then
 					included_runtime_c_files.force ("ge_identified.c")
+				elseif a_filename.same_string ("ge_thread.h") then
+					included_runtime_c_files.force ("ge_thread.c")
 				elseif a_filename.same_string ("ge_main.h") then
 					included_runtime_c_files.force ("ge_main.c")
 				elseif a_filename.same_string ("ge_real.h") then
@@ -30144,6 +30169,7 @@ feature {NONE} -- Constants
 	c_eif_real_64: STRING = "EIF_REAL_64"
 	c_eif_reference: STRING = "EIF_REFERENCE"
 	c_eif_test: STRING = "EIF_TEST"
+	c_eif_threads: STRING = "EIF_THREADS"
 	c_eif_trace: STRING = "EIF_TRACE"
 	c_eif_true: STRING = "EIF_TRUE"
 	c_eif_type: STRING = "EIF_TYPE"
