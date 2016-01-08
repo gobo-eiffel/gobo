@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2015-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,6 +101,14 @@ feature -- Measurement
 			Result := l_counter.item
 		end
 
+feature -- Nested
+
+	parent: detachable ET_GROUP
+			-- Parent group
+		do
+			-- Result := Void
+		end
+
 feature -- Setting
 
 	set_class_text (a_text: detachable STRING; a_class: ET_CLASS)
@@ -111,14 +119,6 @@ feature -- Setting
 			class_texts.force_last (a_text, a_class)
 		ensure
 			class_text_set: class_text (a_class) = a_text
-		end
-
-feature -- Nested
-
-	parent: detachable ET_GROUP
-			-- Parent group
-		do
-			-- Result := Void
 		end
 
 	set_pathname (a_pathname: like pathname)

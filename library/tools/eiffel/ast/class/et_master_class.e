@@ -16,7 +16,7 @@ note
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #8 $"
@@ -523,8 +523,8 @@ feature -- Status report
 			-- Is `a_class' one of the classes that have been declared in a group of `universe'?
 			-- This means that `a_class' is one of the classes in `first_local_override_class',
 			-- `other_local_override_classes', `first_local_non_override_class',
-			-- `other_local_non_override_classes', `first_local_ignored_class'
-			-- `other_local_ignored_classes, `first_local_hidden_class'
+			-- `other_local_non_override_classes', `first_local_ignored_class',
+			-- `other_local_ignored_classes', `first_local_hidden_class'
 			-- or `other_local_hidden_classes'?
 		require
 			a_class_not_void: a_class /= Void
