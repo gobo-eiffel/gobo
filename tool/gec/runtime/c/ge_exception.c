@@ -17,6 +17,10 @@
 extern "C" {
 #endif
 
+#ifdef EIF_WINDOWS
+#include <winbase.h>
+#endif
+
 /*
 	Context of last feature entered containing a rescue clause.
 	Warning: this is not thread-safe.
@@ -137,6 +141,46 @@ void* GE_check_null(void* ptr)
 	}
 	return (ptr);
 }
+
+#ifdef EIF_WINDOWS
+static LONG WINAPI GE_windows_exception_filter (LPEXCEPTION_POINTERS an_exception)
+{
+		/* In order to be able to catch exceptions that cannot be caught by
+		 * just using signals on Windows, we need to set `windows_exception_filter'
+		 * as an unhandled exception filter.
+		 */
+
+	switch (an_exception->ExceptionRecord->ExceptionCode) {
+		case STATUS_STACK_OVERFLOW:
+			GE_raise_with_message ("Stack overflow", EN_EXT);
+			break;
+
+		case STATUS_INTEGER_DIVIDE_BY_ZERO:
+			GE_raise_with_message ("Integer division by Zero", EN_FLOAT);
+			break;
+
+		default:
+			GE_raise_with_message ("Unhandled exception", EN_EXT);
+			break;
+	}
+
+		/* Possible return values include:
+		 * EXCEPTION_CONTINUE_EXECUTION : Returns to the statement that caused the exception
+		 *    and re-executes that statement. (Causes an infinite loop of calling the exception
+		 *    handler if the handler does not fix the problem)
+		 * EXCEPTION_EXECUTE_HANDLER: Passes the exception to default handler, in our case
+		 *    none, since `windows_exception_filter' is the default one now.
+		 * EXCEPTION_CONTINUE_SEARCH: Continue to search up the stack for a handle
+		 */
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+/* Set default exception handler. */
+void GE_set_windows_exception_filter() {
+	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
+	old_exception_handler = SetUnhandledExceptionFilter (GE_windows_exception_filter);
+}
+#endif
 
 #ifdef __cplusplus
 }

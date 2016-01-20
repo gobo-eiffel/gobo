@@ -97,6 +97,11 @@ extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 #define GE_null(ptr) GE_check_null(ptr)
 extern void* GE_check_null(void* ptr);
 
+#ifdef EIF_WINDOWS
+/* Set default exception handler. */
+extern void GE_set_windows_exception_filter();
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -150,11 +150,7 @@ void eetrace(char b) {
 
 #ifdef EIF_WINDOWS
 void set_windows_exception_filter() {
-	/* TODO: Needed to compile some code at AXAR */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'set_windows_exception_filter' in 'eif_except.h' not implemented\n");
+	GE_set_windows_exception_filter();
 }
 #endif
 

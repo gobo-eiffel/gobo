@@ -38,6 +38,9 @@ int main(void)
 	int argc;
 	EIF_NATIVE_CHAR** argv;
 	EIF_NATIVE_CHAR* cmd;
+#ifdef EIF_WINDOWS
+	GE_set_windows_exception_filter();
+#endif
 	cmd = GE_nstrdup(GetCommandLineW());
 	GE_get_argcargv(cmd, &argc, &argv);
 	code = GE_main(argc, argv);
