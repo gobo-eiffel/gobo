@@ -21,6 +21,14 @@ inherit
 
 feature -- Calls
 
+	apply
+			-- Call procedure with `args' as last set.
+		local
+			l_args: detachable OPEN_ARGS
+		do
+			call (l_args)
+		end
+		
 	call (args: detachable OPEN_ARGS)
 			-- Call routine with operands `args'.
 		external

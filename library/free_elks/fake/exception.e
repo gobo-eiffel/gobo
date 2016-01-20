@@ -25,6 +25,12 @@ feature -- Raise
 
 feature -- Access
 
+	trace: detachable STRING_32
+			-- String representation of current exception trace
+		do
+-- TODO
+		end
+			
 	tag: IMMUTABLE_STRING_32
 			-- A short message describing what current exception is
 		once
