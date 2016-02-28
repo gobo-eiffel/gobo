@@ -291,6 +291,10 @@ feature {NONE} -- Processing
 				if split_size > 0 then
 					l_generator.set_split_threshold (split_size)
 				end
+				if not file_system.directory_exists (output_directory_generation) then
+					file_system.create_directory (output_directory_generation)
+				end
+				l_generator.set_output_directory (output_directory_generation)
 				l_generator.generate (l_system_name)
 				if is_verbose then
 					error_handler.info_file.put_string ("Never void targets: ")
@@ -308,7 +312,7 @@ feature {NONE} -- Processing
 					else
 						l_filename := l_system_name + ".sh"
 					end
-					create l_command.make (file_system.absolute_pathname (l_filename))
+					create l_command.make (file_system.pathname (output_directory_generation, l_filename))
 					l_command.execute
 					if l_command.exit_code /= 0 then
 						Exceptions.die (1)
@@ -378,6 +382,16 @@ feature -- Status report
 			Result := c_compile_option.was_found and then not c_compile_option.parameter
 		end
 
+	output_directory_generation: STRING
+			-- Get output directory folder for C generator.
+		do
+			if c_output_directory_option.parameters.is_empty then
+				Result := file_system.current_working_directory
+			else
+				Result := c_output_directory_option.parameters.item (1)
+			end
+		end
+
 	no_split: BOOLEAN
 			-- Should C code be generated into a single file?
 		do
@@ -424,6 +438,9 @@ feature -- Argument parsing
 
 	c_compile_option: AP_BOOLEAN_OPTION
 			-- Option for '--cc=<no|yes>'
+
+	c_output_directory_option: AP_STRING_OPTION
+			-- Option for '--cc=<"relative folder">'
 
 	split_option: AP_BOOLEAN_OPTION
 			-- Option for '--split=<no|yes>'
@@ -482,6 +499,10 @@ feature -- Argument parsing
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
 			c_compile_option.set_parameter_description ("no|yes")
 			a_parser.options.force_last (c_compile_option)
+			create c_output_directory_option.make_with_long_form ("cc-output")
+			c_output_directory_option.set_description ("Backend output directory (default: current working directory)")
+			c_output_directory_option.set_parameter_description ("<current working directory>")
+			a_parser.options.force_last (c_output_directory_option)
 				-- split
 			create split_option.make_with_long_form ("split")
 			split_option.set_description ("Should generated C code be split over several C files instead of being held in a single possibly large C file? (default: yes)")
@@ -545,6 +566,7 @@ feature -- Argument parsing
 			silent_flag_not_void: silent_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
 			c_compile_option_not_void: c_compile_option /= Void
+			c_output_directory_option_not_void: c_output_directory_option /=Void
 			split_option_not_void: split_option /= Void
 			split_size_option_not_void: split_size_option /= Void
 			gc_option_not_void: gc_option /= Void
@@ -561,6 +583,7 @@ invariant
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
 	c_compile_option_not_void: c_compile_option /= Void
+	c_output_directory_option_not_void: c_output_directory_option /= Void
 	split_option_not_void: split_option /= Void
 	split_size_option_not_void: split_size_option /= Void
 	new_instance_types_option_not_void: new_instance_types_option /= Void

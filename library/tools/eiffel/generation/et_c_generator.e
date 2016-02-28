@@ -225,6 +225,7 @@ feature {NONE} -- Initialization
 			c_filenames.set_key_equality_tester (string_equality_tester)
 			make_rescue_data
 			make_external_regexps
+			set_output_directory (file_system.current_working_directory)
 		end
 
 feature -- Access
@@ -356,6 +357,20 @@ feature -- Compilation options setting
 
 feature -- Generation
 
+	set_output_directory (a_output_directory: STRING)
+			-- Define the C output directory
+		require
+			a_output_directory_not_void: a_output_directory /= Void
+		do
+			output_directory := a_output_directory
+		end
+
+	get_output_directory : STRING
+			-- Return the defined C output directory
+		do
+			Result := output_directory
+		end
+
 	generate (a_system_name: STRING)
 			-- Generate C code and C compilation script file for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -367,6 +382,10 @@ feature -- Generation
 			generate_compilation_script (a_system_name)
 			c_filenames.wipe_out
 		end
+
+feature {NONE} -- Generation implementation
+
+	output_directory: STRING
 
 feature {NONE} -- Compilation script generation
 
@@ -509,13 +528,15 @@ feature {NONE} -- Compilation script generation
 			else
 				l_script_filename := l_base_name + sh_file_extension
 			end
-			create l_file.make (l_script_filename)
+
+			create l_file.make (file_system.pathname (output_directory, l_script_filename))
 			l_file.open_write
 			if l_file.is_open_write then
 				if operating_system.is_windows then
 					l_file.put_line ("@echo off")
 				else
 					l_file.put_line ("#!/bin/sh")
+					l_file.put_line ("cd " + output_directory)
 				end
 					-- Compile files in reverse order so that it looks like
 					-- a countdown since the filenames are numbered.
@@ -540,7 +561,7 @@ feature {NONE} -- Compilation script generation
 				l_c_config.search ("rc")
 				if l_c_config.found then
 					l_rc_template := l_c_config.found_item
-					l_rc_filename :=  l_base_name + rc_file_extension
+					l_rc_filename :=  file_system.pathname (output_directory, l_base_name + rc_file_extension)
 					if file_system.file_exists (l_rc_filename) then
 						l_res_filename := l_base_name + res_file_extension
 						l_variables.force (l_rc_filename, "rc_file")
@@ -787,7 +808,7 @@ feature {NONE} -- C code Generation
 			old_system_name := system_name
 			system_name := a_system_name
 			l_header_filename := a_system_name + h_file_extension
-			create l_header_file.make (l_header_filename)
+			create l_header_file.make ( file_system.pathname (output_directory, l_header_filename))
 			l_header_file.open_write
 			if not l_header_file.is_open_write then
 				set_fatal_error
@@ -28425,7 +28446,7 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + 1).out
 				c_filenames.force_last (c_file_extension, l_filename)
-				create l_c_file.make (l_filename + c_file_extension)
+				create l_c_file.make (file_system.pathname (output_directory, l_filename + c_file_extension))
 				l_c_file.open_write
 				c_file := l_c_file
 			elseif not l_c_file.is_open_write then
@@ -28505,7 +28526,7 @@ feature {NONE} -- Output files/buffers
 				l_header_filename := system_name + h_file_extension
 				l_filename := system_name + (c_filenames.count + 1).out
 				c_filenames.force_last (cpp_file_extension, l_filename)
-				create l_cpp_file.make (l_filename + cpp_file_extension)
+				create l_cpp_file.make (file_system.pathname (output_directory, l_filename + cpp_file_extension))
 				l_cpp_file.open_write
 				cpp_file := l_cpp_file
 			elseif not l_cpp_file.is_open_write then
@@ -30294,6 +30315,7 @@ invariant
 	current_file_open_write: current_file.is_open_write
 	header_file_not_void: header_file /= Void
 	header_file_open_write: header_file.is_open_write
+	output_directory_is_valid: file_system.is_valid_directory (output_directory)
 	current_function_header_buffer_not_void: current_function_header_buffer /= Void
 	current_function_body_buffer_not_void: current_function_body_buffer /= Void
 	current_feature_not_void: current_feature /= Void
