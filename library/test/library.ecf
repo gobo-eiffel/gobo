@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="test"
-	uuid="E1FFE100-60B0-0016-0001-000020131201"
+	uuid="E1FFE100-60B0-0016-0001-000020160219"
 	library_target="test">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"
-		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -51,7 +51,7 @@
 		
 		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
 
-		<cluster name="test" location="./" recursive="true">
+		<cluster name="test" location="./src/" recursive="true">
 			<file_rule>
 				<exclude>/harness$</exclude>
 			</file_rule>

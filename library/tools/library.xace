@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Tools Library"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="tools" location="${GOBO}/library/tools">
+	<cluster name="tools" location="${GOBO}/library/tools/src">
 		<option name="abstract" value="true"/>
 		<cluster name="eiffel" prefix="eiffel_">
 			<option name="abstract" value="true"/>
@@ -57,7 +57,6 @@
 		</cluster>
 		<cluster name="support"/>
 	</cluster>
-
 
 	<mount location="${GOBO}/library/kernel.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

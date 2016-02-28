@@ -4,7 +4,7 @@ note
 
 		"Example test cases"
 
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 	program_dirname: STRING
 			-- Name of program source directory
 		do
-			Result := file_system.nested_pathname ("${GOBO}", <<"example", library_name, program_name>>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", library_name, "example", program_name>>)
 			Result := Execution_environment.interpreted_string (Result)
 		end
 

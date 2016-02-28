@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="bang2create" default="help">
+
+	<description>
+		system: "Tool to replace !! creation instructions by create keywords"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="bang2create"/>
+		<set name="library" value="tools"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/${system}"/>
+	</target>
+
+</project>

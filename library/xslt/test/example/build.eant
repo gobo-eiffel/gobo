@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="xml" default="help">
+
+	<description>
+		system: "Gobo Eiffel XSLT Example Tester"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tschematron"/>
+		<delete directory="Tserializer"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xxml"/>
+		<set name="library" value="xslt"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
+	</target>
+
+</project>

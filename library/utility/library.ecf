@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="utility"
-	uuid="E1FFE100-60B0-0009-0001-000020130825"
+	uuid="E1FFE100-60B0-0009-0001-000020160220"
 	library_target="utility">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Utility Library"
 		library: "Gobo Eiffel Utility Library"
-		copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -42,6 +42,6 @@
 
 		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
 
-		<cluster name="utility" location="./" recursive="true"/>
+		<cluster name="utility" location="./src/" recursive="true"/>
 	</target>
 </system>

@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Structure Library"
 		library: "Gobo Eiffel Structure Library"
-		copyright:  "Copyright (c) 2001-2013, Eric Bezault and others"
+		copyright:  "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="structure" location="${GOBO}/library/structure">
+	<cluster name="structure" location="${GOBO}/library/structure/src">
 		<option name="abstract" value="true"/>
 		<cluster name="container"/>
 		<cluster name="dispenser"/>

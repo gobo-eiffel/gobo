@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system 
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
+	name="xpath"
+	uuid="E1FFE100-60B0-0018-0001-000020160220"
+	library_target="xpath">
+
+	<description>
+		description: "ECF file for the Gobo Eiffel XML XPath Library"
+		library: "Gobo Eiffel XML XPath Library"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+	</description>
+
+	<target name="xpath">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" is_void_safe="true"/>
+
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+
+		<library name="free_elks" location="$GOBO/library/free_elks/library.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" value="ge"/>
+			</condition>
+		</library>
+		
+		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
+		
+		<library name="math" location="$GOBO/library/math/library.ecf" readonly="true"/>
+		
+		<library name="regexp" location="$GOBO/library/regexp/library.ecf" readonly="true"/>
+		
+		<library name="string" location="$GOBO/library/string/library.ecf" readonly="true"/>
+		
+		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
+		
+		<library name="time" location="$GOBO/library/time/library.ecf" readonly="true"/>
+		
+		<library name="utility" location="$GOBO/library/utility/library.ecf" readonly="true"/>
+		
+		<library name="xml" location="$GOBO/library/xml/library.ecf" readonly="true"/>
+
+		<cluster name="xpath" location="./src/" recursive="true"/>
+	</target>
+</system>

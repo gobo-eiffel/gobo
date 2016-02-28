@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<project name="utility" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Utility Library"
+		library: "Gobo Eiffel Utility Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Utility Library.
+		</description>
+
+		<geant target="config_scanner"/>
+		<geant target="config_parser"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="config/ut_config_scanner.e"/>
+		<delete file="config/ut_config_parser.e"/>
+		<delete file="config/ut_config_tokens.e"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="config_scanner" dir="config">
+		<gelex input="ut_config_scanner.l"/>
+	</target>
+
+	<target name="config_parser" dir="config">
+		<geyacc input="ut_config_parser.y" tokens="UT_CONFIG_TOKENS" output="ut_config_parser.e"/>
+	</target>
+
+</project>

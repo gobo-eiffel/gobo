@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<system name="xstring">
+	<description>
+		system: "Gobo Eiffel String Library Unit Tester"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="XSTRING" creation="make"/>
+	<option name="console_application" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="finalize" value="true"/>
+		<option if="${GOBO_EIFFEL}=ise">
+				<!--
+					In finized mode, it takes a huge amount of time to compile a big generated C file.
+					The option below turn off some optimizations to make the C compilation faster.
+				-->
+			<option name="inlining" value="none"/>
+		</option>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="st_tester" location="${GOBO}/library/string/test/unit"/>
+	<cluster name="st_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>

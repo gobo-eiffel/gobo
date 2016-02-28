@@ -25,8 +25,8 @@ time_zone
     Time zones, date/time conversions. (STILL UNDER DEVELOPMENT)
 
 A more detailed documentation for this library, in HTML format,
-is provided in "$GOBO/doc/time". Examples for this library can
-be found in "$GOBO/example/time".
+is provided in "$GOBO/library/time/doc". Examples for this library can
+be found in "$GOBO/library/time/example".
 
 --
 Copyright (c) 2000-2009, Eric Bezault and others

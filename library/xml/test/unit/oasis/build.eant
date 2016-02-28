@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="xmloasis" default="help">
+
+	<description>
+		system: "Gobo Eiffel XML Library Unit Tester"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="xmloasis"/>
+		<set name="library" value="xml"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/unit/oasis/"/>
+	</target>
+
+</project>

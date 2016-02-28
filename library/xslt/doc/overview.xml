@@ -1,0 +1,190 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Overview of the XSLT library"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Monday, October 18th, 2004</date>
+  </chapterinfo>
+  <title>Overview of the XSLT library</title>
+  <para>
+    This chapter gives Eiffel programmers an introduction to the Gobo Eiffel XSLT library, which
+    implements the World Wide Web Consortium's 
+    <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
+  </para>
+  <para>
+    The library supports a Basic XSLT processor, and is in line with the Recommendation.
+  </para>
+  <para>
+    The support is not yet quite complete. The following features have yet to be implemented:
+    <itemizedlist>
+	<listitem>
+	  <para>
+	    Xsl:sort case-order attribute is not supported yet.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The functions unparsed-text() and unparsed-text-available() do not work properly
+	    yet. They will probably work OK for 7-bit ASCII and UTF-8 files.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The functions lower-case() and upper-case() only use simple
+	    case mappings (one's that don't change the string length).
+	  </para>
+	</listitem>
+    </itemizedlist>
+  </para>
+  <para>
+    See <link linkend="examples">Examples</link> for examples of how to use the library.
+  </para>
+  <section>
+    <title>Invoking XSLT</title>
+    <para>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    The first step involved in using the XSLT library, is to set the 
+	    <ulink url="http://www.w3.org/TR/xslt20/#conformance">conformance</ulink> level.
+	    At present, only Basic XSLT Processor is supported. In the future, we hope to add support 
+	    for Schema-Aware XSLT Processor, so the first step is to inherit from
+	    <classname>XM_XPATH_SHARED_CONFORMANCE</classname> and call <featurecall><featurename>conformance.set_basic_xslt_processor</featurename></featurecall>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is to configure the processor, by creating an
+	    <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is <link linkend="transformer">Creating a Transformer</link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is <link linkend="transforming">Executing the Transformation</link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Finally, <link linkend="results">Accessing the Transformation Results</link>.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>Customizable interfaces</title>
+    <para>
+      The following is a list of XSLT interfaces that the Eiffel programmer
+      may need to implement. In all cases, the library provides at least one
+      concrete implementation.
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <link linkend="output_resolver"><classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <link linkend="error_listener"><classname>XM_XSLT_ERROR_LISTENER</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <link linkend="tracing"><classname>XM_XSLT_TRACE_LISTENER</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <link linkend="transformation_source"><classname>XM_XSLT_SOURCE</classname></link>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <classname>XM_XSLT_ENCODER_FACTORY</classname> is explained in <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <classname>XM_XSLT_MESSAGE_EMITTER_FACTORY</classname> is explained in <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>Extensions</title>
+    <para>
+      XSLT and XPath provide for standard mechanisms to access extensions to the language.
+      This library provides some built-in extensions in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>.
+      In order to make use of them, you must provide a namespace declaration in your stylesheets, something like:
+      <exmlsyntax>gexslt:xmlns="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"</exmlsyntax>. Don't forget
+      to exclude this namespace from your result documents with: <xslt>exclude-result-prefixes="gexslt"</xslt> when
+      appropriate.
+    </para>
+    <para>
+      You can also provide your own extensions. In this case, you should allocate a namespace URI that you control
+      to your extensions. 
+    </para>
+    <para>
+      In some cases (notably output extensions), the mechanism for accessing built-in extensions differs slightly 
+      from that for user-written extensions. In these cases, I have incorporated example classes into the library so
+      you can see how to code your own extensions. These examples are all in the namespace
+      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</uri>.
+    </para>
+    <para>
+      <link linkend="output_extensions">Output extensions</link>
+    </para>
+    <para>
+      <link linkend="../../gexslt/extension/index">Other extensions</link>
+    </para>
+  </section>
+  <section>
+    <title>Compiling programs which use the XSLT library</title>
+    <para>
+      To see which libraries need to be mounted in your system.xace file,
+      take a look at the example program in <filename>${GOBO}/library/xslt/example/schematron</filename>.
+    </para>
+  </section>
+  <section>
+   <title>Conformance</title>
+   <para>See <link linkend="conformance">Conformance to standards</link></para>
+  </section>
+  <section>
+    <title>Serializer</title>
+    <para>
+     For documentation on the serializer (which is a separate component for general XML serialization - that is, you do
+     not have to use the XSLT engine to use it), see <link linkend="xslt_serializer">XSLT 2.0 serialization</link>.
+    </para>
+  </section>
+
+</chapter>

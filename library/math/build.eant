@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="math" default="help">
+<project name="lexical" default="help">
 
 	<description>
-		description: "Eiffel Ant file for the Gobo Eiffel Math Library"
-		library: "Gobo Eiffel Math Library"
-		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		description: "Gobo Eiffel Math Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -18,26 +17,48 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install">
+	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel Math libraries.
+			Install the library.
 		</description>
-		<!-- do nothing -->
+
+		<geant target="do_all" arguments="install"/>
 	</target>
 
-	<target name="clean">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
-	<target name="clobber">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant target="clean"/>
+		<geant target="do_all" arguments="clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories.
+		</description>
+		<argument name="target"/>
+
+		<geant file="build.eant" target="${target}" dir="doc"/>
+		<geant file="build.eant" target="${target}" dir="example"/>
+		<geant file="build.eant" target="${target}" dir="src"/>
+		<geant file="build.eant" target="${target}" dir="test"/>
 	</target>
 
 </project>

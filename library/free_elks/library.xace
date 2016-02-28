@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the FreeELKS Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="free_elks" location="${GOBO}/library/free_elks">
+	<cluster name="free_elks" location="${GOBO}/library/free_elks/src">
 		<option name="abstract" value="true"/>
 		<cluster name="fake"/>
 		<cluster name="kernel">

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="lexical" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel Lexical Library"
+		library: "Gobo Eiffel Lexical Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="lex_scanner"/>
+		<geant target="lex_parser"/>
+		<geant target="regexp_scanner"/>
+		<geant target="regexp_parser"/>
+		<geant target="wildcard_scanner"/>
+		<geant target="wildcard_parser"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="lex/lx_lex_scanner.e"/>
+		<delete file="lex/lx_lex_parser.e"/>
+		<delete file="lex/lx_lex_tokens.e"/>
+		<delete file="regexp/lx_regexp_scanner.e"/>
+		<delete file="regexp/lx_regexp_parser.e"/>
+		<delete file="regexp/lx_regexp_tokens.e"/>
+		<delete file="regexp/lx_wildcard_scanner.e"/>
+		<delete file="regexp/lx_wildcard_parser.e"/>
+		<delete file="regexp/lx_wildcard_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="lex_scanner" dir="lex">
+		<gelex input="lx_lex_scanner.l"/>
+	</target>
+
+	<target name="lex_parser" dir="lex">
+		<geyacc input="lx_lex_parser.y" tokens="LX_LEX_TOKENS" output="lx_lex_parser.e"/>
+	</target>
+
+	<target name="regexp_scanner" dir="regexp">
+		<gelex input="lx_regexp_scanner.l"/>
+	</target>
+
+	<target name="regexp_parser" dir="regexp">
+		<geyacc input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
+	</target>
+
+	<target name="wildcard_scanner" dir="regexp">
+		<gelex input="lx_wildcard_scanner.l"/>
+	</target>
+
+	<target name="wildcard_parser" dir="regexp">
+		<geyacc input="lx_wildcard_parser.y" tokens="LX_WILDCARD_TOKENS" output="lx_wildcard_parser.e"/>
+	</target>
+
+</project>

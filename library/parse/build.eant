@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="parse" default="help">
+<project name="lexical" default="help">
 
 	<description>
-		description: "Eiffel Ant file for the Gobo Eiffel Parse Library"
-		library: "Gobo Eiffel Parse Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		description: "Gobo Eiffel Parse Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -18,43 +17,47 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install">
+	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel Parse Library.
-			Generate scanner and parser files.
+			Install the library.
 		</description>
 
-		<geant target="yacc_scanner"/>
-		<geant target="yacc_parser"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
-	<target name="clean">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
-	<target name="clobber">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant target="clean"/>
-		<delete file="yacc/pr_yacc_scanner.e"/>
-		<delete file="yacc/pr_yacc_parser.e"/>
-		<delete file="yacc/pr_yacc_tokens.e"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
 
 
 <!-- Implementation -->
 
-	<target name="yacc_scanner" dir="yacc">
-		<gelex input="pr_yacc_scanner.l"/>
+	<target name="init">
+		<!-- do nothing -->
 	</target>
 
-	<target name="yacc_parser" dir="yacc">
-		<geyacc input="pr_yacc_parser.y" tokens="PR_YACC_TOKENS" output="pr_yacc_parser.e"/>
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories.
+		</description>
+		<argument name="target"/>
+
+		<geant file="build.eant" target="${target}" dir="src"/>
+		<geant file="build.eant" target="${target}" dir="example"/>
+		<geant file="build.eant" target="${target}" dir="test"/>
 	</target>
 
 </project>

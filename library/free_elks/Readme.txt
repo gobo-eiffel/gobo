@@ -18,7 +18,7 @@ version in the FreeELKS SourceForge project (see URL above) and effort
 should be made to keep the version in Gobo synchronized with this master
 copy.
 
-The directory $GOBO/library/free_elks/fake is a transitional cluster
+The directory $GOBO/library/free_elks/src/fake is a transitional cluster
 containing classes for which the FreeELKS version is not yet supported
 by the Gobo Eiffel Compiler.
 

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="string" default="help">
+
+	<description>
+		system: "Gobo Eiffel String Library Unit Tester"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="xstring"/>
+		<set name="library" value="string"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>
+	</target>
+
+</project>

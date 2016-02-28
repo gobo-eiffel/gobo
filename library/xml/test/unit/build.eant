@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+
+<project name="xml" default="help">
+
+	<description>
+		system: "Gobo Eiffel XML Library Unit Tester"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant test_ge"/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ge"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel XML Library testers.
+		</description>
+
+		<geant target="do_all" arguments="install,false"/>
+	</target>
+
+	<target name="test" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<geant target="do_all" arguments="test,true"/>
+	</target>
+
+	<target name="test_ge" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Gobo Eiffel.
+		</description>
+
+		<geant target="do_all" arguments="test_ge,true"/>
+	</target>
+
+	<target name="test_ise" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with ISE Eiffel.
+		</description>
+
+		<geant target="do_all" arguments="test_ise,true"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<geant target="do_all" arguments="test_debug,true"/>
+	</target>
+
+	<target name="test_debug_ge" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with Gobo Eiffel in debug mode.
+		</description>
+
+		<geant target="do_all" arguments="test_debug_ge,true"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Test the Gobo Eiffel XML Library with ISE Eiffel in debug mode.
+		</description>
+
+		<geant target="do_all" arguments="test_debug_ise,true"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant target="do_all" arguments="clean,false"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="do_all" arguments="clobber,false"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="init">
+		<!-- do nothing -->
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories. Call 'clean' after each target has
+			been executed if ${do_clean} (second argument) is true.
+		</description>
+		<argument name="target"/>
+		<argument name="do_clean"/>
+
+			<!--
+				The attribute "if" does not seem to interpret arguments.
+				Therefore set the variable "do_clean" with the value
+				of argument "do_clean".
+			-->
+		<set name="do_clean" value="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="oasis"/>
+		<geant file="build.eant" target="clean" dir="oasis" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="general"/>
+		<geant file="build.eant" target="clean" dir="general" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="eiffel"/>
+		<geant file="build.eant" target="clean" dir="eiffel" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="xpointer"/>
+		<geant file="build.eant" target="clean" dir="xpointer" if="${do_clean}=true"/>
+		<geant target="do_all_expat" arguments="${target},${do_clean}" if="${EXPAT}"/>
+	</target>
+
+	<target name="do_all_expat" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories. Call 'clean' after each target has
+			been executed if ${do_clean} (second argument) is true.
+			The Expat package is supposed to be installed and the
+			environement variable ${EXPAT} set.
+		</description>
+		<argument name="target"/>
+		<argument name="do_clean"/>
+
+			<!--
+				The attribute "if" does not seem to interpret arguments.
+				Therefore set the variable "do_clean" with the value
+				of argument "do_clean".
+			-->
+		<set name="do_clean" value="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="expat"/>
+		<geant file="build.eant" target="clean" dir="expat" if="${do_clean}=true"/>
+	</target>
+
+</project>

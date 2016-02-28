@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="math"
-	uuid="E1FFE100-60B0-0011-0001-000020130828"
+	uuid="E1FFE100-60B0-0011-0001-000020160219"
 	library_target="math">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Math Library"
 		library: "Gobo Eiffel Math Library"
-		copyright: "Copyright (c) 2004-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -36,6 +36,6 @@
 
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
 
-		<cluster name="math" location="./" recursive="true"/>
+		<cluster name="math" location="./src/" recursive="true"/>
 	</target>
 </system>

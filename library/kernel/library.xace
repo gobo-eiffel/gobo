@@ -4,13 +4,13 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="kernel" location="${GOBO}/library/kernel">
+	<cluster name="kernel" location="${GOBO}/library/kernel/src">
 		<option name="abstract" value="true"/>
 		<cluster name="basic"/>
 		<cluster name="io"/>

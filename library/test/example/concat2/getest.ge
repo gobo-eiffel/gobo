@@ -1,0 +1,18 @@
+test
+
+	xconcat2
+
+default
+
+	class ("TEST_[A-Z0-9_]*")
+	feature ("test_[a-z0-9_]*")
+	prefix ("X")
+	testgen ("TESTGEN")
+	compile ("geant compile_ge > xcompile.log 2>&1")
+	execute ("xconcat2")
+
+cluster
+
+	concat2: "$GOBO/library/test/example/concat2"
+
+end

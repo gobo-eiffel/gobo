@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="tools"
-	uuid="E1FFE100-60B0-0020-0001-000020140316"
+	uuid="E1FFE100-60B0-0020-0001-000020160220"
 	library_target="tools">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel Tools Library"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -54,6 +54,6 @@
 
 		<library name="xml" location="$GOBO/library/xml/library.ecf" readonly="true"/>
 
-		<cluster name="tools" location="./" recursive="true"/>
+		<cluster name="tools" location="./src/" recursive="true"/>
 	</target>
 </system>

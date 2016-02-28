@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<system name="xpattern">
+	<description>
+		system: "Gobo Eiffel Pattern Example Tester"
+		copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="XPATTERN" creation="make"/>
+	<option name="console_application" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="internal"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="pattern_tester" location="${GOBO}/library/pattern/test/example" prefix="example_"/>
+	<cluster name="test_common" location="${GOBO}/test/common"/>
+	<cluster name="test_example_common" location="${GOBO}/test/example/common"/>
+	<cluster name="example_pattern_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>

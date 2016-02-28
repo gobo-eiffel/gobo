@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="expat" default="help">
+
+	<description>
+		system: "Gobo Eiffel XML Library Unit Tester"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="init_system"/>
+			<redefine target="other_clean"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="xexpat"/>
+		<set name="library" value="xml"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/unit/expat"/>
+		<set name="GOBO_XML_EXPAT" value="true"/>
+	</target>
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete file="xexpat.pdb"/>
+	</target>
+
+</project>

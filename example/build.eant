@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel examples"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -51,16 +51,6 @@
 		</description>
 		<argument name="target"/>
 
-		<geant file="build.eant" target="${target}" dir="argument"/>
-		<geant file="build.eant" target="${target}" dir="lexical"/>
-		<geant file="build.eant" target="${target}" dir="math"/>
-		<geant file="build.eant" target="${target}" dir="parse"/>
-		<geant file="build.eant" target="${target}" dir="pattern"/>
-		<geant file="build.eant" target="${target}" dir="regexp"/>
-		<geant file="build.eant" target="${target}" dir="test"/>
-		<geant file="build.eant" target="${target}" dir="time"/>
-		<geant file="build.eant" target="${target}" dir="tools"/>
-		<geant file="build.eant" target="${target}" dir="xml"/>
 	</target>
 
 </project>

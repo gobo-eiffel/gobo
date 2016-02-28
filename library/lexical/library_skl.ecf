@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="lexical_skl"
-	uuid="E1FFE100-60B0-0004-0001-000020130825"
+	uuid="E1FFE100-60B0-0004-0001-000020160219"
 	library_target="lexical_skl">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel scanner skeletons"
 		library: "Gobo Eiffel Lexical  Library"
-		copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -36,6 +36,6 @@
 
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
 
-		<cluster name="skeleton" location="./skeleton/" recursive="true"/>
+		<cluster name="skeleton" location="./src/skeleton/" recursive="true"/>
 	</target>
 </system>

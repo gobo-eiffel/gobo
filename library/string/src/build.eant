@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="string" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel String Library"
+		library: "Gobo Eiffel String Library"
+		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel String Library.
+		</description>
+		<!-- do nothing -->
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+	</target>
+
+</project>

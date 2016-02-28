@@ -3,7 +3,7 @@
 <system name="gexslt">
 	<description>
 		system: "Gobo Eiffel XSLT 2.0 processor"
-		copyright: "Copyright (c) 2004-2013, Colin Adams and others"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -55,6 +55,8 @@
 
 	<cluster name="gexslt" location="${GOBO}/src/gexslt"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
+	<mount location="${GOBO}/library/xpath/library.xace"/>
+	<mount location="${GOBO}/library/xslt/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>

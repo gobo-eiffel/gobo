@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<project name="calc" default="help">
+
+	<description>
+		system: "Infix Notation Calculator"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="help"/>
+			<redefine target="other_install"/>
+			<redefine target="other_clobber"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant parser"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="parser" depend="init">
+		<description>
+			Generate parser classes.
+		</description>
+
+		<geant target="calc"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="other_install" depend="init">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+
+		<geant target="parser"/>
+	</target>
+
+	<target name="other_clobber" depend="init">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="calc.e"/>
+	</target>
+
+	<target name="calc">
+		<geyacc input="calc.y" output="calc.e"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="calc"/>
+		<set name="library" value="parse"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/${system}"/>
+	</target>
+
+</project>

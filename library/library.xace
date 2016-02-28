@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Library libraries"
-		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -24,4 +24,6 @@
 	<mount location="${GOBO}/library/tools/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
+	<mount location="${GOBO}/library/xpath/library.xace"/>
+	<mount location="${GOBO}/library/xslt/library.xace"/>
 </library>

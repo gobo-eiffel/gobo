@@ -36,7 +36,7 @@ table
     implementation of tables is hash tables.
 
 A more detailed documentation for this library, in HTML format, is
-provided in "$GOBO/doc/structure".
+provided in "$GOBO/library/structure/doc".
 
 --
 Copyright (c) 1997-2001, Eric Bezault and others

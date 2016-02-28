@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<project name="lexical" default="help">
+
+	<description>
+		system: "Gobo Eiffel Lexical Example Tester"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tascii2ps"/>
+		<delete directory="Tcalculator"/>
+		<delete directory="Teiffel_scanner"/>
+		<delete directory="Tgegrep"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xlexical"/>
+		<set name="library" value="lexical"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
+	</target>
+
+</project>

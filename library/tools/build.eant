@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="tools" default="help">
+<project name="lexical" default="help">
 
 	<description>
-		description: "Eiffel Ant file for the Gobo Eiffel Tools Library"
-		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		description: "Gobo Eiffel Tools Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -18,62 +17,48 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install">
+	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel Tools Library.
-			Generate scanner and parser files.
+			Install the library.
 		</description>
 
-		<geant target="eiffel_scanner"/>
-		<geant target="eiffel_parser"/>
-		<geant target="eiffel_preparser"/>
-		<geant target="lace_scanner"/>
-		<geant target="lace_parser"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
-	<target name="clean">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
-	<target name="clobber">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant target="clean"/>
-		<delete file="eiffel/parser/et_eiffel_scanner.e"/>
-		<delete file="eiffel/parser/et_eiffel_parser.e"/>
-		<delete file="eiffel/parser/et_eiffel_tokens.e"/>
-		<delete file="eiffel/parser/et_eiffel_preparser.e"/>
-		<delete file="lace/parser/et_lace_scanner.e"/>
-		<delete file="lace/parser/et_lace_parser.e"/>
-		<delete file="lace/parser/et_lace_tokens.e"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
 
 
 <!-- Implementation -->
 
-	<target name="eiffel_scanner" dir="eiffel/parser">
-		<gelex input="et_eiffel_scanner.l"/>
+	<target name="init">
+		<!-- do nothing -->
 	</target>
 
-	<target name="eiffel_parser" dir="eiffel/parser">
-		<geyacc input="et_eiffel_parser.y" tokens="ET_EIFFEL_TOKENS" output="et_eiffel_parser.e" separate_actions="true"/>
-	</target>
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories.
+		</description>
+		<argument name="target"/>
 
-	<target name="eiffel_preparser" dir="eiffel/parser">
-		<gelex input="et_eiffel_preparser.l"/>
-	</target>
-
-	<target name="lace_scanner" dir="lace/parser">
-		<gelex input="et_lace_scanner.l"/>
-	</target>
-
-	<target name="lace_parser" dir="lace/parser">
-		<geyacc input="et_lace_parser.y" tokens="ET_LACE_TOKENS" output="et_lace_parser.e"/>
+		<geant file="build.eant" target="${target}" dir="doc"/>
+		<geant file="build.eant" target="${target}" dir="example"/>
+		<geant file="build.eant" target="${target}" dir="src"/>
+		<geant file="build.eant" target="${target}" dir="test"/>
 	</target>
 
 </project>

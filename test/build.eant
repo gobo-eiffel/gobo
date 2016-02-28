@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel tests"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -46,7 +46,6 @@
 			Run Gobo tests with Gobo Eiffel.
 		</description>
 
-		<geant target="do_all_ge" arguments="test_ge,true"/>
 		<geant target="do_all" arguments="test_ge,true"/>
 	</target>
 
@@ -73,7 +72,6 @@
 			Run Gobo tests with Gobo Eiffel in debug mode.
 		</description>
 
-		<geant target="do_all_ge" arguments="test_debug_ge,true"/>
 		<geant target="do_all" arguments="test_debug_ge,true"/>
 	</target>
 
@@ -90,7 +88,6 @@
 			Remove intermediary generated files.
 		</description>
 
-		<geant target="do_all_ge" arguments="clean,false"/>
 		<geant target="do_all" arguments="clean,false"/>
 	</target>
 
@@ -99,7 +96,6 @@
 			Remove all generated files.
 		</description>
 
-		<geant target="do_all_ge" arguments="clobber,false"/>
 		<geant target="do_all" arguments="clobber,false"/>
 	</target>
 
@@ -124,55 +120,10 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="argument"/>
-		<geant file="build.eant" target="clean" dir="argument" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="lexical"/>
-		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="kernel"/>
-		<geant file="build.eant" target="clean" dir="kernel" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="math"/>
-		<geant file="build.eant" target="clean" dir="math" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="pattern"/>
-		<geant file="build.eant" target="clean" dir="pattern" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="regexp"/>
-		<geant file="build.eant" target="clean" dir="regexp" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="string"/>
-		<geant file="build.eant" target="clean" dir="string" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="structure"/>
-		<geant file="build.eant" target="clean" dir="structure" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="time"/>
-		<geant file="build.eant" target="clean" dir="time" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="tools"/>
-		<geant file="build.eant" target="clean" dir="tools" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="utility"/>
-		<geant file="build.eant" target="clean" dir="utility" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="xml"/>
-		<geant file="build.eant" target="clean" dir="xml" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="example"/>
-		<geant file="build.eant" target="clean" dir="example" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="src"/>
 		<geant file="build.eant" target="clean" dir="src" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="precomp"/>
 		<geant file="build.eant" target="clean" dir="precomp" if="${do_clean}=true"/>
-	</target>
-
-	<target name="do_all_ge" depend="init">
-		<description>
-			Call 'geant' with the same target ${target} (first argument)
-			in all subdirectories specific to GE. Call 'clean' after each
-			target has been executed if ${do_clean} (second argument) is true.
-		</description>
-		<argument name="target"/>
-		<argument name="do_clean"/>
-
-			<!--
-				The attribute "if" does not seem to interpret arguments.
-				Therefore set the variable "do_clean" with the value
-				of argument "do_clean".
-			-->
-		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="free_elks"/>
-		<geant file="build.eant" target="clean" dir="free_elks" if="${do_clean}=true"/>
 	</target>
 
 </project>

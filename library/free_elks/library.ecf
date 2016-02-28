@@ -4,13 +4,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="free_elks"
-	uuid="E1FFE100-60B0-0001-0001-000020130812"
+	uuid="E1FFE100-60B0-0001-0001-000020160219"
 	library_target="free_elks">
 
 	<description>
 		description: "ECF file for the FreeELKS Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
+		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -34,6 +34,6 @@
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
 
-		<cluster name="free_elks" location="./" recursive="true"/>
+		<cluster name="free_elks" location="./src/" recursive="true"/>
 	</target>
 </system>

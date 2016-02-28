@@ -1,19 +1,14 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="lexical" default="help">
 
 	<description>
-		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
-		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		description: "Gobo Eiffel XML Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
-
-	<inherit>
-		<parent location="${GOBO}/misc/ge2e.eant"/>
-	</inherit>
 
 	<target name="help">
 		<echo message="usage:"/>
@@ -22,44 +17,48 @@
 		<echo message="   geant clobber"/>
 	</target>
 
-	<target name="install">
+	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel XML Library.
-			Generate scanner and parser files.
-			Generate Eiffel files from .ge files.
+			Install the library.
 		</description>
 
-		<geant target="xm_eiffel_scanner"/>
-		<geant target="xm_eiffel_parser"/>
+		<geant target="do_all" arguments="install"/>
 	</target>
 
-	<target name="clean">
+	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
 		</description>
 
+		<geant target="do_all" arguments="clean"/>
 	</target>
 
-	<target name="clobber">
+	<target name="clobber" depend="init">
 		<description>
 			Remove all generated files.
 		</description>
 
-		<geant target="clean"/>
-		<delete file="parser/eiffel/xm_eiffel_scanner.e"/>
-		<delete file="parser/eiffel/xm_eiffel_parser.e"/>
-		<delete file="parser/eiffel/xm_eiffel_tokens.e"/>
+		<geant target="do_all" arguments="clobber"/>
 	</target>
 
 
 <!-- Implementation -->
 
-	<target name="xm_eiffel_scanner" dir="parser/eiffel">
-		<gelex input="xm_eiffel_scanner.l" output="xm_eiffel_scanner.e"/>
+	<target name="init">
+		<!-- do nothing -->
 	</target>
-	
-	<target name="xm_eiffel_parser" dir="parser/eiffel">
-		<geyacc input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			in all subdirectories.
+		</description>
+		<argument name="target"/>
+
+		<geant file="build.eant" target="${target}" dir="doc"/>
+		<geant file="build.eant" target="${target}" dir="example"/>
+		<geant file="build.eant" target="${target}" dir="src"/>
+		<geant file="build.eant" target="${target}" dir="test"/>
 	</target>
 
 </project>

@@ -74,7 +74,7 @@
 		</description>
 
 		<geant file="build.eant" target="clobber" dir="library"/>
-		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="install_src" dir="library"/>
 		<geant file="build.eant" target="clobber" dir="src/gec"/>
 		<geant file="build.eant" target="install" dir="src/gec"/>
 			<!-- Compile gec twice to get a bootstrap effect -->
@@ -110,7 +110,7 @@
 		<geant file="../src/geyacc/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/geyacc/build.eant" target="clean" dir="bin"/>
 		<geant target="clobber"/>
-		<geant file="build.eant" target="install" dir="library"/>
+		<geant file="build.eant" target="install_src" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="../src/getest/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
@@ -118,6 +118,7 @@
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
+		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>

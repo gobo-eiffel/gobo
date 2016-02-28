@@ -4,7 +4,7 @@ This library provides parsing functionalities such as syntactical analyzers
 (also known as parsers). This library is mainly used by Gobo Eiffel Yacc
 (geyacc). To get information about Geyacc, have a look at "$GOBO/doc/geyacc"
 and "$GOBO/src/geyacc/Redame.txt". Examples for both Geyacc and this library
-can be found in "$GOBO/example/parse".
+can be found in "$GOBO/library/parse/example".
 
 Clusters:
 

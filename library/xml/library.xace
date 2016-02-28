@@ -1,17 +1,64 @@
 <?xml version="1.0"?>
 
-<library name="xml" prefix="xm_">
+<library name="xml_core" prefix="xm_">
 	<description>
-		description: "Xace file for the Gobo Eiffel XML Library"
+		description: "Xace file for the Gobo Eiffel XML core Library"
 		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<mount location="${GOBO}/library/xml/library_core.xace"/>
-	<mount location="${GOBO}/library/xml/xslt/library.xace"/>
-	<mount location="${GOBO}/library/xml/xpath/library.xace"/>
-
+	<cluster name="xml" location="${GOBO}/library/xml/src">
+		<option name="abstract" value="true"/>
+		<cluster name="position"/>
+		<cluster name="source"/>
+		<cluster name="general"/>
+		<cluster name="event"/>
+		<cluster name="tree"/>
+		<cluster name="formatter"/>
+		<cluster name="resolver">
+			<option name="abstract" value="true"/>
+			<cluster name="resolver_interface" location="interface" relative="true"/>
+			<cluster name="catalog"/>
+			<cluster name="simple"/>
+			<cluster name="uri"/>
+		</cluster>
+		<cluster name="parser">
+			<option name="abstract" value="true"/>
+			<cluster name="interface"/>
+			<cluster name="eiffel"/>
+			<cluster name="expat" if="${GOBO_XML_EXPAT}">
+        <!-- Note, we expect Expat 1.95.4 -->
+				<cluster name="spec">
+					<option name="abstract" value="true"/>
+					<cluster name="${GOBO_EIFFEL}" prefix="parser_expat_spec_"/>
+				</cluster>
+				<option unless="${GOBO_OS}=windows">
+					<option name="header" value="${EXPAT}/include"/>
+					<option name="link" value="-lexpat"/>
+				</option>
+				<option if="${GOBO_OS}=windows">
+					<option name="header" value="${EXPAT}/Source/lib"/>
+					<option name="link" value="${EXPAT}/Libs/libexpat.lib" unless="${GOBO_MT}"/>
+					<option name="link" value="${EXPAT}/StaticLibs/libexpatMT.lib" if="${GOBO_MT}"/>
+				</option>
+			</cluster>
+			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
+		</cluster>
+		<cluster name="xml_xpointer" location="${GOBO}/library/xml/src/xpointer">
+			<option name="abstract" value="true"/>
+			<cluster name="xpointer_common" location="common" relative="true"/>
+			<cluster name="xpointer_event" location="event" relative="true"/>
+		</cluster>
+	</cluster>
+	
+	<mount location="${GOBO}/library/kernel.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library_skl.xace"/>
+	<mount location="${GOBO}/library/parse/library_skl.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/string/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>		
 </library>

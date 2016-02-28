@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="xpath" default="help">
+
+	<description>
+		system: "Gobo Eiffel XPath Library Unit Tester"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="init_system"/>
+			<redefine target="other_clobber"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="xpath"/>
+		<set name="library" value="xpath"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>
+	</target>
+
+	<target name="other_clobber" depend="init">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<delete file="${system_dir}/listing"/>
+	</target>
+
+</project>

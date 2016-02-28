@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<project name="xml" default="help">
+
+	<description>
+		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
+		library: "Gobo Eiffel XML Library"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/ge2e.eant"/>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel XML Library.
+			Generate scanner and parser files.
+			Generate Eiffel files from .ge files.
+		</description>
+
+		<geant target="xm_eiffel_scanner"/>
+		<geant target="xm_eiffel_parser"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="parser/eiffel/xm_eiffel_scanner.e"/>
+		<delete file="parser/eiffel/xm_eiffel_parser.e"/>
+		<delete file="parser/eiffel/xm_eiffel_tokens.e"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xm_eiffel_scanner" dir="parser/eiffel">
+		<gelex input="xm_eiffel_scanner.l" output="xm_eiffel_scanner.e"/>
+	</target>
+	
+	<target name="xm_eiffel_parser" dir="parser/eiffel">
+		<geyacc input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
+	</target>
+
+</project>

@@ -6,7 +6,7 @@ nondeterministic finite automata (NFA) and deterministic finite automata
 library is mainly used by Gobo Eiffel Lex (gelex). To get information
 about Gelex, have a look at "$GOBO/src/gelex/Readme.txt" and
 "$GOBO/doc/gelex". Examples for both Gelex and this library can be
-found in "$GOBO/example/lexical".
+found in "$GOBO/library/lexical/example".
 
 Clusters:
 
