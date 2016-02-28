@@ -1,0 +1,390 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Paul G. Crismer">
+   <meta name="GENERATOR" content="Mozilla/4.7 [fr] (Win98; I) [Netscape]">
+   <meta name="KeyWords" content="Eiffel, Open Source, Frameworks, Libraries, Decimal Arithmetic, Unlimited precision, IEEE 854">
+   <title>Eiffel Decimal Arithmetic - EDA Library</title>
+   <link rel="stylesheet" type="text/css" media="screen" href="default.css"
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#FF0000" vlink="#800080" alink="#0000FF" >
+<div id="header">
+	<p><em>EDA&nbsp;&nbsp;</em>
+		Eiffel Decimal Arithmetic - User Guide
+	</p>
+</div>
+<div id="library_content">
+<h1>Content</h1>
+<ol>
+	<li><a href="#INTRODUCTION">Introduction</a></li>
+	<li><a href="#CONCEPTS">Concepts</a></li>
+	<li><a href="#CLASSES">Classes</a></li>
+	<li><a href="#USAGE">Usage</a></li>
+	<li><a href="#INSTALLATION">Installation</a></li>
+	<li><a href="#REFERENCES">Reference documents</a></li>
+</ol>
+
+<h1><a name="INTRODUCTION"></a>Introduction</h1>
+
+
+<p>Floating point arithmetic using binary representation does not meet requirements of many application fields like accounting, legal, tax, and more. Many programmers experienced problems using binary floating point arithmetic : loss of accurracy, problems of inexact representation, etc...<br></br>
+Existing databases store a lot of data using decimal representation.  Unfortunately, not many languages support decimal arithmetic natively. What's the use of
+storing decimal data if arithmetic operations do not support this representation?
+<br></br>Thanks to the excellent specification work of Mike Cowlishaw, IBM Fellow, it is now possible to develop a standards-compliant decimal arithmetic library.
+</p>
+<p>EDA is an Eiffel implementation of the
+"General Decimal Arithmetic Specification" (GDAS, in the rest of this text) <a href="decarith.html">version 1.08</a> (see References, 1).
+</p>
+<p>
+By following the GDAS, this Eiffel implementation conforms to the
+requirements of the ANSI/IEEE standard 854-1987, while supporting integer and unrounded floating-point
+arithmetic as a subset (see GDAS page 1).
+
+EDA uses the <a href="dectest.html">acceptance tests of IBM</a>, so that the implementation can be trusted.</p>
+<p>EDA has been incorporated in the acclaimed GOBO library since 2004.</p>
+<!-- uses the multi-platform, multi-compiler GOBO 3.1 library (see References, 2).-->
+</p>
+
+
+<h2>Content of the package</h2>
+
+<pre>
+${GOBO}
+   |
+   + doc
+   |   + math
+   |      + decimal             -- index.html
+   |
+   + example
+   |   + math
+   |      + decimal
+   |         + telco            -- Telco benchmark application
+
+   ...
+
+   + library
+   |   + math
+   |      + decimal
+   |         + abstract
+   |         + implementation
+   |         + spec
+
+   ...
+
+   + test
+   |   + math
+   |      + decimal
+   |         + acceptance       -- Acceptance/non-regression tests using IBM's test cases
+   ...
+
+</pre>
+
+<h2>GDAS Standard conformance</h2>
+<dl>
+<dt>Arithmetic operations</dt><dd>abs, add and subtract, compare, divide, divide-integer, max, min, minus, plus, multiply, normalize, remainder, rescale, round-to-integer.</dd>
+<dt>Conversion</dt><dd>to_scientific_string, to_engineering_string, to_number (as creation routine 'make_from_string').</dd>
+<dt>Context</dt><dd>7 rounding modes : Round_up, Round_down, Round_ceiling, Round_floor, Round_half_up, Round_half_down, Round_half_even.</dd>
+<dt>Not Implemented</dt><dd>remainder-near, square-root, power.</dd>
+</dl>
+
+
+<h2>Acknowledgements</h2>
+<p>Special thanks to <em>Mike Cowlishaw</em> for his work on decimal arithmetic and for the help he provided, answering promptly to many questions. He helped understand the specification.  He also helped clarify problems when running the test cases.</p>
+
+
+<h1><a name="CONCEPTS"></a>Concepts</h1>
+
+<p>Users who want to get the most of this library, should have read thoroughly the GDAS specification.</p>
+
+
+<h2>Decimal numbers</h2>
+
+<p>Decimal numbers can be <em>finite</em> or <em>special</em>.
+</p>
+<p>A <em>finite</em> number has the following characteristics :
+</p>
+
+<dl>
+<dt>sign</dt><dd><em>positive</em> or <em>negative</em></dd>
+<dt>coefficient</dt><dd>a sequence of digits (0 through 9). This sequence represents a positive integer number, and may not be empty.</dd>
+<dt>exponent</dt><dd>a signed integer.  This is the power of ten by which the <em>coefficient</em> is multiplied.</dd>
+</dl>
+
+<p>Finite numbers can be represented by a <em>triad</em> [sign, coefficient, exponent] that fully represent a number.
+<br/>[0, 2708, -2] represents 27.08;<br/>
+[1, 1289, 0] represents -1289.</p>
+
+<p><em>Special</em> numbers are :
+</p>
+<dl>
+<dt>Infinity</dt><dd>A value whose magnitude is infinitely large.  It may be positive or negative.</dd>
+<dt>quiet NaN</dt><dd>Undefined result ("Not a Number"), which shall <em>not</em> raise an <em>Invalid operation</em> signal.</dd>
+<dt>signaling NaN</dt><dd>Undefined result, which <em>shall</em> raise an <em>Invalid operation</em> signal.</dd>
+</dl>
+
+<p>Special numbers can be represented by a <em>diad</em> [sign, symbol] : [1, Inf] is -Infinity;
+[0, Inf] is +Infinity ; [0, qNaN] is quiet NaN ; [0, sNaN] is signaling NaN.
+</p>
+
+<h2>Operations</h2>
+<dl>
+<dt>Conversions</dt><dd>conversion to numeric string in scientific or engineering format : to-scientific-string, to-engineering-string;
+creation of number from another type : from-integer, from-double, from-string</dd>
+<dt>Arithmetic operations</dt><dd>abs, add, subtract, compare, divide, divide-integer, max,min, minus, plus, multiply, normalize, remainder, rescale, round-to-integer</dd>
+</dl>
+
+<h2>Mathematical context</h2>
+
+<p>Nearly all the operations are relative to a mathematical <em>context</em>.  A context is the set of parameters and rules which govern the results of arithmetic operations. Those parameters and rules are user-selectable.
+The next sections contain extracts from the GDAS document.</p>
+
+<dl>
+<dt>Digits</dt><dd>also know as <em>precision</em>. Maximum number of significant digits that can results from arithmetic operations.</dd>
+<dt>Rounding mode</dt><dd>Algorithm to be used when rounding is necessary, i.e. when a result value has more significant digits than <em>digits</em>.</dd>
+<dt>Flags</dt><dd>Flags that represent exceptional conditions. A raised flag is known as <em>a signal</em>.</dd>
+<dt>Traps</dt><dd>A trap can be enabled or disabled.  There are as many traps as there are exceptional conditions.  An enabled trap raises an exception when the corresponding <em>signal</em> occurs.</dd>
+</dl>
+
+<h3>Rounding modes</h3>
+
+<p>
+When a result value has more significant digits than <em>digits</em>, the digits in excess are discarded with respect to the rounding mode.
+</p>
+
+<dl>
+<dt>round-down</dt><dd>Truncate : just drop the digits in excess.</dd>
+<dt>round-half-up</dt><dd>If the discarded digits represent greater than or equal to half (0.5) of the value
+of a one in the next left position then the result should be incremented by 1
+(rounded up).</dd>
+<dt>round-half-even</dt><dd>If the discarded digits represent greater than half (0.5) the value of a one in the
+next left position then the result should be incremented by 1 (rounded up). If
+they represent less than half, then the result is not adjusted (that is, the discarded
+digits are ignored).
+Otherwise (they represent exactly half) the result is unaltered if its rightmost
+digit is even, or incremented by 1 (rounded up) if its rightmost digit is odd (to
+make an even digit).</dd>
+<dt>round-ceiling</dt><dd>Round toward +Infinity. If all of the discarded digits are zero or if the sign is <em>negative</em> the
+result is unchanged. Otherwise, the result should be incremented by 1 (rounded
+up). If this would cause overflow then the result will be +Infinity.</dd>
+<dt>round-floor</dt><dd>Round toward -Infinity. If all of the discarded digits are zero or if the sign is <em>positive</em> the
+result is unchanged. Otherwise, the sign is 1 and the coefficient should be
+incremented by 1. If this would cause overflow then the result will be
+-Infinity.</dd>
+<dt>round-half-down</dt><dd>Round to nearest, where a 0.5 case is rounded
+down.</dd>
+<dt>round-up</dt><dd>Round away from zero.</dd>
+</dl>
+
+<h3>Signals - Exceptional conditions</h3>
+
+<dl>
+<dt>SIGNAL</dt><dd><b>RAISED WHEN ...</b></dd>
+<dt>division-by-zero</dt><dd>Non-zero dividend is divided by zero.</dd>
+<dt>inexact</dt><dd>Result is not exact (one or more non-zero coefficient digits were
+discarded during rounding).</dd>
+<dt>invalid-operation</dt><dd>Result would be undefined or impossible.</dd>
+<dt>overflow</dt><dd>The exponent of a result is too large to be represented.</dd>
+<dt>rounded</dt><dd>Result has been rounded (that is, some zero or non-zero coefficient
+digits were discarded).</dd>
+<dt>subnormal</dt><dd>Result is subnormal (its adjusted exponent is less than Emin),
+before any rounding.</dd>
+<dt>underflow</dt><dd>Result is both subnormal and inexact.</dd>
+</dl>
+
+<h1><a name="CLASSES"></a>Classes</h2>
+<dl>
+	<dt><b>Class</b></dt><dd><b>Description</b></dd>
+	<dt>MA_DECIMAL</dt><dd>Decimal numbers whoses operations are specified by GDAS.</dd>
+	<dt>MA_DECIMAL_CONTEXT</dt><dd>Mathematical contexts that hold status flags and various control options like current rounding mode.</dd>
+	<dt>MA_SHARED_DECIMAL_CONTEXT</dt><dd>Objects that give access to a single, shared, decimal context.  Decimal operations whose signature do not use an explicit context do use this shared context.</dd>
+</dl>
+
+<h2>MA_DECIMAL</h2>
+<dl>
+<dt>sign</dt><dd>+1 positive, -1 negative.</dd>
+<dt>exponent</dt><dd>Power of ten by which the (invisible) coefficient is multiplied.</dd>
+<dt>+, -, *, /, //, \\</dt><dd>Infix operations using <em>shared_decimal_context</em> : add, subract, multiply, divide, divide-integer, remainder respectively.</dd>
+<dt>+, -</dt><dd>Prefix operations using <em>shared_decimal_context</em> : plus, minus respectively.</dd>
+<dt>is_nan, is_quiet_nan,<br/> is_signaling_nan</dt><dd>NaN indicators.</dd>
+<dt>is_infinity</dt><dd>Infinity indicator.</dd>
+<dt>is_special</dt><dd>Special value indicator.</dd>
+<dt>is_zero</dt><dd>Zero indicator - shortcut to avoid comparing with zero.</dd>
+<dt>to_double,<br/>to_integer,<br/>to_scientific_string, <br/>to_engineering_string</dt><dd>Conversion to integer, double, and string representations.</dd>
+<dt>add, subract,<br/>multiply, divide,<br/>divide_integer, remainder</dt><dd>Operations using an explicit context.</dd>
+<dt>rescale</dt><dd>rescale to specific exponent.</dd>
+<dt>normalize</dt><dd>normalize internal representation.</dd>
+<dt>abs, min, max</dt><dd>abs, min, max relative to implicit <em>shared_decimal_context</em></dd>
+<dt>abs_ctx, min_ctx, max_ctx</dt><dd>abs, min, max using explicit context</dd>
+<dt>compare</dt><dd>three way comparison using explicit context</dd>
+<dt>&lt;, &gt;, &lt;=, &gt;=</dt><dd>Comparison infix operators using implicit <em>shared_decimal_context</em>.</dd>
+<dt></dt><dd></dd>
+<dt></dt><dd></dd>
+</dl>
+
+
+<h2>MA_DECIMAL_CONTEXT</h2>
+
+<dl>
+<dt>digits</dt><dd>maximum number of significant digits.</dd>
+<dt>rouding_mode</dt><dd>integer value specifying the rounding algorithm to be used.</dd>
+<dt>set_digits</dt><dd>digits setter.</dd>
+<dt>set_rounding_mode</dt><dd>rouding_mode setter.</dd>
+<dt>is_flagged (<em>signal</em>)</dt><dd>Status of <em>signal</em> : is it raised (flagged) ?</dd>
+<dt>is_trapped (<em>signal</em>)</dt><dd>Is <em>signal</em> trapped ?</dd>
+<dt>exception_on_trap</dt><dd>Is an exception raised when a trap occurs.</dd>
+<dt>is_extended</dt><dd>Is the context extended?</dd>
+</dl>
+
+<p>Signals are <em>flagged</em> when they occur.  If the signal is <em>trapped</em>, then an exception is raised <em>if</em>
+<em>exception_on_trap</em> is True.
+</p>
+
+<h2>MA_SHARED_DECIMAL_CONTEXT</h2>
+
+<p>Features</p>
+
+<dl>
+<dt>shared_decimal_context</dt><dd>decimal context implicitly used by various operations.</dd>
+<dt>set_shared_decimal_context</dt><dd>sets the current shared decimal context.</dd>
+<dt>decimal_zero</dt><dd>Constant zero : neutral element for addition.</dd>
+<dt>decimal_one</dt><dd>Constant one : neutral element for multiplication.</dd>
+</dl>
+<p>The default decimal context has the following characteristics :
+digits = 9, rounding_mode = round_half_up, <br/>is_trapped (Signal_division_by_zero),
+is_trapped (Signal_invalid_operation),is_trapped (Signal_overflow), is_trapped (Signal_underflow).
+</p>
+
+<h1><a name="USAGE"></a>Usage</h1>
+
+<h3>Local Definitions for the code</h3>
+<pre>
+	a, b, c, d, r : MA_DECIMAL
+	ctx, dbl_ctx : MA_DECIMAL_CONTEXT
+</pre>
+
+<h3>Creation</h3>
+<pre>
+	--| using a default decimal context for general purpose arithmetic (IEEE 854),
+	create a.make_from_integer (4)
+	create b.make_from_string ("314e-2")
+
+	--| using an explicit double precision decimal context
+	create ctx.make_double
+	create a.make_from_string_ctx ("3.141598", ctx)
+</pre>
+<h3>Basic Operations</h3>
+<pre>
+	create dbl_ctx.make_double
+
+	--| using explicit context
+	a := a.multiply (b, dbl_ctx)
+
+	--| using implicit shared decimal context
+	--| set desired context first
+	set_shared_decimal_context (dbl_ctx)
+
+	r := a * b + c \\ d
+</pre>
+
+<h3>Code fragment using shared context and infix operations</h3>
+<pre>
+--| establish math contexts
+create price_context.make_double
+price_context.set_digits (31)
+price_context.set_rounding_mode (price_context.Round_half_even)
+tax_context := price_context.cloned_object
+tax_context.set_rounding_mode (tax_context.Round_down)
+create default_context.make_double
+default_context.set_digits (31)
+
+...
+
+--| 1. Price
+set_shared_decimal_context (default_context)
+if long_distance then
+	price := number * distance_rate
+	long_distance_count := long_distance_count + 1
+else
+	price := number * base_rate
+end
+price := price.rescale (-2, price_context)
+if tax then
+	--| 2. Basic tax
+	set_shared_decimal_context (tax_context)
+	base_tax := price * base_tax_rate
+	base_tax := base_tax.rescale (-2, tax_context)
+	sum_b := sum_b + base_tax
+	total_price := price + base_tax
+	--| 3. Long distance calls
+	if long_distance then
+		distance_tax := price * distance_tax_rate
+		distance_tax := distance_tax.rescale (-2, tax_context)
+		sum_d := sum_d + distance_tax
+		--| 4. total price
+		total_price := total_price + distance_tax
+	end
+else
+	total_price := price
+end
+</pre>
+<h3>Conversion</h3>
+<pre>
+	print ("Scientific representation : ")
+	print (a.to_scientific_string)
+
+	print ("Engineering representation : ")
+	print (b.to_engineering_string)
+</pre>
+
+<p>With a = b = [1,123,-12], the output is</p>
+<pre>
+Scientific representation : -1.23e-10
+Engineering representation : -123e-12
+</pre>
+
+<h1><a name="INSTALLATION"></a>Installation</h1>
+
+<dl><dt>PLATFORMS</dt><dd>Should run on any platform.</dd>
+    <dt>COMPILERS</dt><dd>Any GOBO supported Eiffel compiler.</dd>
+</dl>
+<ol>
+<!--	<li>Define environment variable 'EDA'.  It must point to the directory where this package
+   has been installed. For example : /usr/local/lib/eda, or c:\user\eiffel\libraries\eda</li>
+-->
+	<li>Create an application
+		  <ul>
+<!--		  <li> Create a XACE project definition, and mount the ${EDA}/library.xace</li> -->
+		  <li> Create a XACE project definition, and mount the ${GOBO}/library/math/decimal/library.xace</li>
+		  <li>Create a 'build.eant' file.</li>
+		  </ul>
+  </li>
+	<li>Generate the application :  Automate build with geant.</li>
+</ol>
+
+<p>EDA has currently been tested using</p>
+<ul>
+<li>ESI EiffelStudio 5.2, 5.3, 5.4 (Win32, Linux)</li>
+<li>SmartEiffel 1.0, 1.1 (Win32, Linux),</li>
+<li>Visual Eiffel v4.1 (Win32, Linux)</li>
+</ul>
+<p>.NET acceptance tests have no errors but MA_DECIMAL_CONTEXT flags for comparison operations are not set correctly.</p>
+
+<h1><a name="REFERENCES"></a>Reference Documents</h1>
+<dl>
+	<dt>1. GDA Specification</dt><dd><a href="decarith.html">"General Decimal Arithmetic Specification" version 1.08</a>, Mike Cowlishaw,
+IBM UK Laboratories.</dd></dt>
+	<dt>2. GOBO Library</dt><dd><a href="http://sourceforge.net/projects/gobo-eiffel">http://sourceforge.net/projects/gobo-eiffel</a>; <a href="http://www.gobosoft.com">http://www.gobosoft.com</a>.</dd>
+	<dt>3. Decimal Arithmetic</dt><dd>"IBM's site dedicated to Decimal Arithmetic" : <a href="http://www2.hursley.ibm.com/decimal">http://www2.hursley.ibm.com/decimal</a>.</dd>
+	<dt>4. Acceptance Tests specification</dt><dd><a href="dectest.html">IBM's acceptance tests</a> specification documentation, whose version is in sync with GDAS 1.08.</dd>
+</dl>
+</div>
+
+<div id="footer">
+<p>
+<a href="http://sourceforge.net"><img SRC="http://sourceforge.net/sflogo.php?group_id=1160&type=1" border="0"></a>
+	<b>Last revision</b>&nbsp;: May 20, 2004. <b>&nbsp;&nbsp;&copy; copyright 2002 - 2004</b> Paul G. Crismer and others.
+</p>
+</div>
+</body>
+</html>

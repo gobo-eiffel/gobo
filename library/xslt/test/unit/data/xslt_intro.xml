@@ -1,0 +1,9 @@
+<body>
+  <h2>Introduction</h2>
+  <p>XSLT is used to write stylesheets.</p>
+  <p>XQuery is used to query XML databases.</p>
+  <h2>What is a stylesheet?</h2>
+  <p>A stylesheet is an XML document used to define a transformation.</p>
+  <p>Stylesheets may be written in XSLT.</p>
+  <p>XSLT 2.0 introduces new grouping constructs.</p>
+</body>

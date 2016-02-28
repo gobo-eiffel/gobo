@@ -8,6 +8,7 @@
 bang2create[0-9]*
 bang2create*.[^e]*
 bang2create*.e?*
+!bang2create.eant
 libbang2create*.dll
 EIFGEN*
 preferences.wb
