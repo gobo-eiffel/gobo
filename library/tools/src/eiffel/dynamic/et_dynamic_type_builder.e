@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,6 +75,7 @@ inherit
 			report_natural_64_constant,
 			report_object_equality_expression,
 			report_object_test,
+			report_object_test_type,
 			report_object_test_local,
 			report_pointer_expression,
 			report_precursor_expression,
@@ -1710,6 +1711,18 @@ feature {NONE} -- Event handling
 			-- Report that the object-test `a_object_test' has been processed.
 		do
 			report_constant_expression (a_object_test, current_universe_impl.boolean_type)
+		end
+
+	report_object_test_type (a_object_test: ET_OBJECT_TEST; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that the type `a_type' in context `a_context' appearing
+			-- in the object-test `a_object_test' has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
+				mark_type_alive (l_type)
+			end
 		end
 
 	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST)

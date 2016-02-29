@@ -3653,6 +3653,7 @@ feature {NONE} -- Instruction validity
 			j, nb2: INTEGER
 			l_constant: detachable ET_CONSTANT
 			l_cast_type: detachable ET_TARGET_TYPE
+			l_index: INTEGER
 			l_old_attachment_scope: like current_attachment_scope
 			l_inspect_attachment_scope: detachable like current_attachment_scope
 			l_old_initialization_scope: like current_initialization_scope
@@ -3718,11 +3719,19 @@ feature {NONE} -- Instruction validity
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
 								elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant then
+										-- If we use the same object for the constant attribute
+										-- when analyzing different client features, each feature
+										-- will assign its own index to this object. That's why
+										-- we need to reset the index so that the index does not
+										-- get corrupted.
+									l_index := l_integer_constant.index
+									l_integer_constant.set_index (0)
 									l_cast_type := l_integer_constant.cast_type
 									l_integer_constant.set_cast_type (Void)
 									l_choice_context.wipe_out
 									check_expression_validity (l_integer_constant, l_choice_context, l_value_context)
 									l_integer_constant.set_cast_type (l_cast_type)
+									l_integer_constant.set_index (l_index)
 									if has_fatal_error then
 										had_error := True
 									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -3735,11 +3744,19 @@ feature {NONE} -- Instruction validity
 										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 									end
 								elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
+										-- If we use the same object for the constant attribute
+										-- when analyzing different client features, each feature
+										-- will assign its own index to this object. That's why
+										-- we need to reset the index so that the index does not
+										-- get corrupted.
+									l_index := l_character_constant.index
+									l_character_constant.set_index (0)
 									l_cast_type := l_character_constant.cast_type
 									l_character_constant.set_cast_type (Void)
 									l_choice_context.wipe_out
 									check_expression_validity (l_character_constant, l_choice_context, l_value_context)
 									l_character_constant.set_cast_type (l_cast_type)
+									l_character_constant.set_index (l_index)
 									if has_fatal_error then
 										had_error := True
 									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -3776,11 +3793,19 @@ feature {NONE} -- Instruction validity
 									if l_choice_context.same_named_type (l_value_type, l_value_context) then
 										-- OK.
 									elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant2 then
+											-- If we use the same object for the constant attribute
+											-- when analyzing different client features, each feature
+											-- will assign its own index to this object. That's why
+											-- we need to reset the index so that the index does not
+											-- get corrupted.
+										l_index := l_integer_constant2.index
+										l_integer_constant2.set_index (0)
 										l_cast_type := l_integer_constant2.cast_type
 										l_integer_constant2.set_cast_type (Void)
 										l_choice_context.wipe_out
 										check_expression_validity (l_integer_constant2, l_choice_context, l_value_context)
 										l_integer_constant2.set_cast_type (l_cast_type)
+										l_integer_constant2.set_index (l_index)
 										if has_fatal_error then
 											had_error := True
 										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -3793,11 +3818,19 @@ feature {NONE} -- Instruction validity
 											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 										end
 									elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant2 then
+											-- If we use the same object for the constant attribute
+											-- when analyzing different client features, each feature
+											-- will assign its own index to this object. That's why
+											-- we need to reset the index so that the index does not
+											-- get corrupted.
+										l_index := l_character_constant2.index
+										l_character_constant2.set_index (0)
 										l_cast_type := l_character_constant2.cast_type
 										l_character_constant2.set_cast_type (Void)
 										l_choice_context.wipe_out
 										check_expression_validity (l_character_constant2, l_choice_context, l_value_context)
 										l_character_constant2.set_cast_type (l_cast_type)
+										l_character_constant2.set_index (l_index)
 										if has_fatal_error then
 											had_error := True
 										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
@@ -8141,6 +8174,7 @@ feature {NONE} -- Expression validity
 					check_expression_validity (an_expression.expression, l_expression_context, current_system.detachable_any_type)
 					has_fatal_error := has_fatal_error or l_had_error
 				else
+					report_object_test_type (an_expression, l_type, a_context)
 					l_expression_context.force_last (l_type)
 					check_expression_validity (an_expression.expression, a_context, l_expression_context)
 					a_context.reset (current_type)
@@ -13072,6 +13106,18 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			a_object_test_not_void: a_object_test /= Void
+		do
+		end
+
+	report_object_test_type (a_object_test: ET_OBJECT_TEST; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that the type `a_type' in context `a_context' appearing
+			-- in the object-test `a_object_test' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_object_test_not_void: a_object_test /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
 		do
 		end
 
