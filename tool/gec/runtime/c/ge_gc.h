@@ -222,7 +222,7 @@ extern void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t els
  */
 #ifdef EIF_BOEHM_GC
 extern void GE_boehm_dispose(void* C, void* disp); /* Call dispose routine `disp' on object `C'. */
-#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, NULL, NULL, NULL)
+#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER_NO_ORDER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, NULL, NULL, NULL)
 #else /* No GC */
 #define GE_register_dispose(obj, disp) /* do nothing */
 #endif
