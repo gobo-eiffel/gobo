@@ -216,6 +216,7 @@ feature -- Test
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
 			svn_directory: STRING
+			gitignore_filename: STRING
 			vss_extension: STRING
 		do
 			a_name := data_dirname
@@ -226,6 +227,7 @@ feature -- Test
 				assert ("not_eof", not a_directory.end_of_input)
 				svn_directory := ".svn"
 				vss_extension := ".scc"
+				gitignore_filename := ".gitignore"
 				from
 					create filenames.make (10)
 				until
@@ -238,6 +240,7 @@ feature -- Test
 							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
 							not STRING_.same_string (an_entry, file_system.relative_parent_directory) and
 							not STRING_.same_string (an_entry, svn_directory) and
+							not STRING_.same_string (an_entry, gitignore_filename) and
 							not file_system.has_extension (an_entry, vss_extension)
 						then
 							filenames.force_last (an_entry)
@@ -535,6 +538,7 @@ feature -- Test
 			i, nb: INTEGER
 			l_filename: STRING
 			vss_extension: STRING
+			gitignore_filename: STRING
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
@@ -542,11 +546,12 @@ feature -- Test
 			filenames := a_directory.filenames
 			create filenames_list.make (filenames.count)
 			vss_extension := ".scc"
+			gitignore_filename := ".gitignore"
 			i := filenames.lower
 			nb := filenames.upper
 			from until i > nb loop
 				l_filename := filenames.item (i)
-				if not file_system.has_extension (l_filename, vss_extension) then
+				if not file_system.has_extension (l_filename, vss_extension) and not STRING_.same_string (l_filename, gitignore_filename) then
 					filenames_list.put_last (l_filename)
 				end
 				i := i + 1
