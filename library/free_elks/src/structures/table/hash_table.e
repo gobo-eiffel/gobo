@@ -1,7 +1,6 @@
-note
+﻿note
 	description: "Hash tables, used to store items identified by hashable keys"
 	library: "Free implementation of ELKS library"
-	legal: "See notice at end of class."
 	instructions: "See instructions at the end of the class."
 	warning: "[
 		Modifying an object used as a key by an item present in a table will
@@ -9,10 +8,6 @@ note
 		pass a clone, not the object itself, as key argument to
 		`put' and `replace_key'.
 		]"
-
-	status: "See notice at end of class."
-	date: "$Date: 2013-01-10 01:57:33 +0100 (Thu, 10 Jan 2013) $"
-	revision: "$Revision: 696 $"
 
 class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
@@ -696,12 +691,10 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			a_position_small_enough: a_position <= keys.count
 		local
 			l_deleted_marks: like deleted_marks
-			l_table_size: INTEGER
 		do
-			Result := a_position - 1
 			l_deleted_marks := deleted_marks
-			l_table_size := content.count
 			from
+				Result := a_position - 1
 			until
 				Result <= 0 or else not l_deleted_marks.item (Result)
 			loop
@@ -1231,6 +1224,9 @@ feature {NONE} -- Transformation
 					ht_deleted_key := l_default_key
 						-- We don't change `object_comparison' from the value it was retrieved from.
 				end
+
+					-- Reset `control' to an acceptable value.
+				control := 0
 			end
 		end
 
@@ -1249,7 +1245,7 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	indexes_map: SPECIAL [INTEGER]
 			-- Indexes of items in `content', and `keys'.
-			-- If item is not present, then it has `ht_mpossible_position'.
+			-- If item is not present, then it has `ht_impossible_position'.
 			-- If item is deleted, then it has `ht_deleted_position'.
 
 	deleted_marks: SPECIAL [BOOLEAN]
@@ -1509,7 +1505,6 @@ feature {NONE} -- Implementation
 			hash_value, increment, l_pos, l_item_pos, l_capacity: INTEGER
 			l_first_deleted_position: INTEGER
 			stop: INTEGER
-			l_keys: like keys
 			l_indexes: like indexes_map
 			l_deleted_marks: like deleted_marks
 		do
@@ -1522,7 +1517,6 @@ feature {NONE} -- Implementation
 				item_position := capacity
 			else
 				from
-					l_keys := keys
 					l_indexes := indexes_map
 					l_deleted_marks := deleted_marks
 					l_capacity := capacity
@@ -1698,7 +1692,54 @@ invariant
 	slot_count_big_enough: 0 <= count
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	instruction: "[
+		Several procedures are provided for inserting an item
+		with a given key.
+
+		Here is how to choose between them:
+
+			- Use `put' if you want to do an insertion only if
+			  there was no item with the given key, doing nothing
+			  otherwise. (You can find out on return if there was one,
+			  and what it was.)
+
+			- Use `force' if you always want to insert the item;
+			  if there was one for the given key it will be removed,
+			  (and you can find out on return what it was).
+
+			- Use `extend' if you are sure there is no item with
+			  the given key, enabling faster insertion (but
+			  unpredictable behavior if this assumption is not true).
+
+			- Use `replace' if you want to replace an already present
+			  item with the given key, and do nothing if there is none.
+
+		In addition you can use `replace_key' to change the key of an
+		already present item, identified by its previous key, or
+		do nothing if there is nothing for that previous key.
+		You can find out on return.
+
+		To find out whether a key appears in the table, use `has'.
+		To find out the item, if any, associated with a certain key,
+		use `item'.
+
+		Both of these routines perform a search. If you need
+		both pieces of information (does a key appear? And, if so,
+		what is the associated item?), you can avoid performing
+		two redundant traversals by using instead the combination
+		of `search', `found' and `found_item' as follows:
+
+			your_table.search (your_key)
+			if your_table.found then
+				what_you_where_looking_for := your_table.found_item
+				... Do whatever is needed to `what_you_were_looking_for' ...
+			else
+				... No item was present for `your_key' ...
+			end
+		]"
+	date: "$Date: 2014-04-10 08:28:38 -0700 (Thu, 10 Apr 2014) $"
+	revision: "$Revision: 94809 $"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

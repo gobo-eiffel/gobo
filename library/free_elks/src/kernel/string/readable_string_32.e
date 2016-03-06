@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-05-14 22:21:19 -0700 (Wed, 14 May 2014) $"
+	revision: "$Revision: 95060 $"
 
 deferred class
 	READABLE_STRING_32
@@ -484,6 +484,26 @@ feature -- Status report
 			end
 		end
 
+	is_substring_whitespace (start_index, end_index: INTEGER): BOOLEAN
+			-- <Precursor>
+		local
+			i, n: INTEGER
+			l_prop: like character_properties
+			l_area: like area
+		do
+			from
+				l_area := area
+				i := area_lower + start_index - 1
+				n := area_lower + end_index - 1
+				l_prop := character_properties
+			until
+				i > n or not l_prop.is_space (l_area.item (i))
+			loop
+				i := i + 1
+			end
+			Result := i > n
+		end
+
 	has (c: CHARACTER_32): BOOLEAN
 			-- Does string include `c'?
 		local
@@ -503,11 +523,6 @@ feature -- Status report
 				end
 				Result := (i < nb)
 			end
-		ensure then
-			false_if_empty: count = 0 implies not Result
-			true_if_first: count > 0 and then item (1) = c implies Result
-			recurse: (count > 0 and then item (1) /= c) implies
-				(Result = substring (2, count).has (c))
 		end
 
 	starts_with (s: READABLE_STRING_32): BOOLEAN
@@ -835,7 +850,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

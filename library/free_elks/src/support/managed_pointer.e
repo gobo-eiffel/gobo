@@ -10,8 +10,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-10-30 01:12:00 +0100 (Tue, 30 Oct 2012) $"
-	revision: "$Revision: 593 $"
+	date: "$Date: 2015-06-24 14:53:41 -0700 (Wed, 24 Jun 2015) $"
+	revision: "$Revision: 97552 $"
 
 class
 	MANAGED_POINTER
@@ -336,21 +336,64 @@ feature -- Access: Platform specific
 			count_positive: a_count > 0
 			valid_position: (pos + a_count) <= count
 		local
-			i: INTEGER
 			l_area: SPECIAL [NATURAL_8]
 		do
-			from
-				create l_area.make_empty (a_count)
-			until
-				i >= a_count
-			loop
-				l_area.extend (read_natural_8 (pos + i))
-				i := i + 1
-			end
+			create l_area.make_filled (0, a_count)
+			read_into_special_natural_8 (l_area, pos, 0, a_count)
 			create Result.make_from_special (l_area)
 		ensure
 			read_array_not_void: Result /= Void
 			read_array_valid_count: Result.count = a_count
+		end
+
+	read_special_natural_8 (source_index, n: INTEGER): SPECIAL [NATURAL_8]
+			-- Read `n' bytes of Current from position `source_index'.
+		require
+			source_index_non_negative: source_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+		do
+			create Result.make_filled (0, n)
+			read_into_special_natural_8 (Result, source_index, 0, n)
+		end
+
+	read_special_character_8 (source_index, n: INTEGER): SPECIAL [CHARACTER_8]
+			-- Read `n' bytes of Current from position `source_index'.
+		require
+			source_index_non_negative: source_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+		do
+			create Result.make_filled ('%U', n)
+			read_into_special_character_8 (Result, source_index, 0, n)
+		end
+
+	read_into_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; source_index, destination_index, n: INTEGER)
+			-- Read `n' bytes of Current from position `source_index' and store them in `a_spec' at `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= a_spec.count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= a_spec.count
+		do
+			a_spec.item_address (destination_index).memory_copy (item + source_index, n)
+		end
+
+	read_into_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; source_index, destination_index, n: INTEGER)
+			-- Read `n' bytes of Current from position `source_index' and store them in `a_spec' at `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= a_spec.count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= a_spec.count
+		do
+			a_spec.item_address (destination_index).memory_copy (item + source_index, n)
 		end
 
 feature -- Element change: Platform specific
@@ -535,6 +578,38 @@ feature -- Element change: Platform specific
 			(item + pos).memory_copy ($l_sp, data.count)
 		ensure
 			inserted: read_array (pos, data.count) ~ data
+		end
+
+	put_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; source_index, destination_index, n: INTEGER)
+			-- Write `n' bytes of `a_spec' from position `source_index' to Current at position `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= a_spec.count
+			n_is_small_enough_for_destination: destination_index + n <= count
+		do
+			(item + destination_index).memory_copy (a_spec.item_address (source_index), n)
+		ensure
+			inserted: a_spec.same_items (read_special_natural_8 (destination_index, n), 0, source_index, n)
+		end
+
+	put_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; source_index, destination_index, n: INTEGER)
+			-- Write `n' bytes of `a_spec' from position `source_index' to Current at position `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= a_spec.count
+			n_is_small_enough_for_destination: destination_index + n <= count
+		do
+			(item + destination_index).memory_copy (a_spec.item_address (source_index), n)
+		ensure
+			inserted: a_spec.same_items (read_special_character_8 (destination_index, n), 0, source_index, n)
 		end
 
 feature -- Access: Little-endian format
@@ -1159,7 +1234,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

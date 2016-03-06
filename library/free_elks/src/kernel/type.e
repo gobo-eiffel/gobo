@@ -89,7 +89,7 @@ feature -- Access
 		end
 
 	detachable_type: TYPE [detachable G]
-			-- Attached version of current type
+			-- Detachable version of current type
 		do
 			Result := {detachable G}
 		end
@@ -591,12 +591,23 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable separate ANY): detachable G
-			-- Result of assignment attempt of `obj' to entity of type G
+	attempted alias "/" (obj: detachable separate ANY): detachable G
+			-- If possible, `obj' understood as an object of type `G';
+			-- If not, default detachable value of type `G'..
 		do
 			if attached {G} obj as l_g then
 				Result := l_g
 			end
+		ensure
+			assigned_or_void: Result = obj or Result = default_detachable_value
+		end
+
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
+			-- Result of assignment attempt of `obj' to entity of type G
+		obsolete
+			"Use `attempted' or its operator alias `/'"
+		do
+			Result := attempted (obj)
 		ensure
 			assigned_or_void: Result = obj or Result = default_detachable_value
 		end

@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-03 14:26:20 -0800 (Fri, 03 Jan 2014) $"
+	revision: "$Revision: 93888 $"
 
 frozen class
 	IMMUTABLE_STRING_8
@@ -126,10 +126,10 @@ feature -- Access
 
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'.
-		obsolete
-			"For consistency with Unicode string handling, use `code (i)' instead."
+			-- Use `code' instead for consistency with Unicode handling.
+			--| Not obsolete because old code using just ASCII is safe.
 		do
-			Result := area.item (i + area_lower - 1).natural_32_code.as_integer_32
+			Result := area.item (i + area_lower - 1).code
 		end
 
 feature -- Element change

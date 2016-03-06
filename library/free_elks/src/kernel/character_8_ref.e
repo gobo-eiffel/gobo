@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-26 07:05:34 +0100 (Sat, 26 Jan 2013) $"
-	revision: "$Revision: 724 $"
+	date: "$Date: 2014-05-19 14:26:14 -0700 (Mon, 19 May 2014) $"
+	revision: "$Revision: 95117 $"
 
 class CHARACTER_8_REF inherit
 
@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 		require
 			v_not_void: v /= Void
 		do
-			set_item (v)
+			set_item (v.item)
 		ensure
 			item_set: item = v.item
 		end
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	is_space_flag: NATURAL_8 = 0x80;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date: 2013-12-30 16:54:49 -0800 (Mon, 30 Dec 2013) $"
+	revision: "$Revision: 93855 $"
 
 class REAL_32_REF inherit
 
@@ -84,6 +84,13 @@ feature -- Access
 	min_value: REAL_32 = -3.4028234663852885981170e+038
 	max_value: REAL_32 = 3.4028234663852885981170e+038
 			-- Minimum and Maximum value hold in `item'.
+
+	machine_epsilon: REAL_32 = 1.1920928955078125000000e-007
+			-- The difference between 1 and the least value greater than
+			-- 1 that is representable in the given floating point type.
+
+	epsilon: REAL_32 = 1.1754943508222875079688e-038
+			-- Minimum normalized positive floating-point number.
 
 feature -- Comparison
 
@@ -342,7 +349,7 @@ invariant
 	sign_times_abs: not item.is_nan implies sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

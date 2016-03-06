@@ -8,8 +8,8 @@ note
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date: 2015-08-18 22:52:35 -0700 (Tue, 18 Aug 2015) $"
+	revision: "$Revision: 97844 $"
 
 class ARRAYED_QUEUE [G]
 
@@ -26,8 +26,8 @@ inherit
 		end
 
 	MISMATCH_CORRECTOR
-		export {NONE}
-			all
+		export
+			{NONE} all
 		redefine
 			is_equal, copy, correct_mismatch
 		end
@@ -331,7 +331,7 @@ feature -- Resizing
 				area := area.aliased_resized_area (n)
 			end
 		ensure then
-			same_items: linear_representation.is_equal (old linear_representation)
+			same_items: linear_representation ~ old linear_representation
 		end
 
 feature -- Conversion
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

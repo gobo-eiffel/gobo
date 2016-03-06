@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-03-19 06:27:01 -0700 (Wed, 19 Mar 2014) $"
+	revision: "$Revision: 94630 $"
 
 deferred class
 	READABLE_STRING_GENERAL
@@ -261,6 +261,21 @@ feature -- Status report
 
 	is_empty: BOOLEAN
 			-- Is structure empty?
+		deferred
+		end
+
+	is_whitespace: BOOLEAN
+			-- Is structure containing only whitespace characters?
+		do
+			Result := is_substring_whitespace (1, count)
+		end
+
+	is_substring_whitespace (start_index, end_index: INTEGER): BOOLEAN
+			-- Is substring between `start_index' and `end_index' containing only whitespace characters?
+		require
+			start_index_big_enough: 1 <= start_index
+			end_index_small_enough: end_index <= count
+			consistent_indexes: start_index - 1 <= end_index
 		deferred
 		end
 
@@ -1238,8 +1253,19 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 	internal_case_insensitive_hash_code: INTEGER;
 			-- Cash for `case_insensitive_hash_code'.
 
+
+feature -- Access: Cursor
+
+	new_character_32_cursor: STRING_ITERATION_CURSOR
+			-- Fresh cursor for this string that iterates over code points (see `code')
+			-- exposed as {CHARACTER_32}.
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

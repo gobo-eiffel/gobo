@@ -7,8 +7,8 @@ note
 	representation: linked;
 	access: fixed, fifo, membership;
 	contents: generic;
-	date: "$Date: 2012-11-17 16:28:45 +0100 (Sat, 17 Nov 2012) $"
-	revision: "$Revision: 615 $"
+	date: "$Date: 2014-01-17 11:50:59 -0800 (Fri, 17 Jan 2014) $"
+	revision: "$Revision: 94051 $"
 
 class LINKED_QUEUE [G] inherit
 
@@ -30,8 +30,7 @@ class LINKED_QUEUE [G] inherit
 			put as ll_put,
 			extend as ll_extend
 		export
-			{NONE}
-				all
+			{NONE} all
 			{LINKED_QUEUE}
 				cursor, valid_cursor, start, forth, go_to,
 				first_element, last_element, ll_item
@@ -192,7 +191,7 @@ invariant
 	is_always_after: not is_empty implies after
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

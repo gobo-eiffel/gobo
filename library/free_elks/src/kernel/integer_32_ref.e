@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date: 2014-05-19 14:26:14 -0700 (Mon, 19 May 2014) $"
+	revision: "$Revision: 95117 $"
 
 class
 	INTEGER_32_REF
@@ -524,9 +524,9 @@ feature -- Bit operations
 			n_greater_or_equal_to_minus_32: n >= -32
 		do
 			if n > 0 then
-				Result := bit_shift_right (n)
+				Result := bit_shift_right (n).item
 			else
-				Result := bit_shift_left (- n)
+				Result := bit_shift_left (- n).item
 			end
 		end
 
@@ -617,7 +617,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

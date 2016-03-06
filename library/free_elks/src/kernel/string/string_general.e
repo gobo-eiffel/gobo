@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-30 21:23:58 +0100 (Wed, 30 Jan 2013) $"
-	revision: "$Revision: 733 $"
+	date: "$Date: 2014-03-19 07:36:10 -0700 (Wed, 19 Mar 2014) $"
+	revision: "$Revision: 94633 $"
 
 deferred class
 	STRING_GENERAL
@@ -261,6 +261,7 @@ feature -- Element change
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (1).is_space
 			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
+			only_spaces_removed_before: elks_checking implies (old twin).is_substring_whitespace (1, (old twin).substring_index (Current, 1) - 1)
 		end
 
 	right_adjust
@@ -270,6 +271,21 @@ feature -- Element change
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (count).is_space
 			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
+			only_spaces_removed_after: elks_checking implies (old twin).is_substring_whitespace ((old twin).substring_index (Current, 1) + count, old count)
+		end
+
+	adjust
+			-- Remove leading and/or trailing whitespace.
+		do
+			left_adjust
+			right_adjust
+		ensure
+			valid_count: count <= old count
+			new_count_left: not is_empty implies not item (1).is_space
+			new_count_right: not is_empty implies not item (count).is_space
+			kept: elks_checking implies (old twin).has_substring (Current)
+			only_spaces_removed_before: elks_checking implies (old twin).is_substring_whitespace (1, (old twin).substring_index (Current, 1) - 1)
+			only_spaces_removed_after: elks_checking implies (old twin).is_substring_whitespace ((old twin).substring_index (Current, 1) + count, old count)
 		end
 
 feature -- Removal
@@ -304,7 +320,7 @@ invariant
 	mutable: not is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

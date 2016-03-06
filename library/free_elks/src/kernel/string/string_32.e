@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2015-03-05 00:13:33 -0800 (Thu, 05 Mar 2015) $"
+	revision: "$Revision: 96769 $"
 
 class
 	STRING_32
@@ -413,7 +413,7 @@ feature -- Element change
 					loop
 						i := i - 1
 						l_src_index := l_index_list.item (i)
-						l_dest_index := l_src_index + (i) * l_copy_delta
+						l_dest_index := l_src_index + i * l_copy_delta
 							-- Shift non-matching characters to the right of the newly replaced string.
 						l_area.overlapping_move (l_src_index + l_orig_count - 1, l_dest_index + l_new_count - 1, l_prev_index - l_src_index - l_orig_count + 1)
 							-- Store new end of string where characters will be moved.
@@ -1455,7 +1455,7 @@ feature -- Resizing
 		do
 			n := count
 			if n < capacity then
-				area := area.aliased_resized_area (n)
+				area := area.aliased_resized_area (n + 1)
 			end
 		ensure then
 			same_string: same_string (old twin)
@@ -1545,9 +1545,7 @@ feature -- Conversion
 			else
 				l_offset := left_nb_space - l_offset // 2 - 1
 			end
-			if l_offset = 0 then
-					-- Nothing to be done.
-			else
+			if l_offset /= 0 then
 					-- Shift characters to the right or left (depending on sign of
 					-- `l_offset' by `l_offset' position.
 				l_area.move_data (left_nb_space, left_nb_space - l_offset,
@@ -1802,7 +1800,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

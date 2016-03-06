@@ -423,6 +423,12 @@ feature -- Status report
 			Result := count = 0
 		end
 
+	index_set: INTEGER_INTERVAL
+			-- Range of acceptable indexes
+		do
+			create Result.make (lower, upper)
+		end
+
 feature -- Element change
 
 	put (v: detachable ANY; index: INTEGER)
@@ -841,7 +847,7 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniforme_character_32, is_uniform_wide_character: BOOLEAN
+	is_uniform_character_32, is_uniform_wide_character: BOOLEAN
 			-- Are all items of type CHARACTER_32?
 		do
 			Result := is_tuple_uniform (character_32_code)

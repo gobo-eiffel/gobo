@@ -5,8 +5,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-21 01:35:07 +0100 (Mon, 21 Jan 2013) $"
-	revision: "$Revision: 706 $"
+	date: "$Date: 2015-06-24 14:53:41 -0700 (Wed, 24 Jun 2015) $"
+	revision: "$Revision: 97552 $"
 
 class
 	C_STRING
@@ -251,21 +251,8 @@ feature -- Access
 			end_position_big_enough: start_pos <= end_pos + 1
 			end_position_not_too_big: end_pos <= capacity
 			a_area_large_enough: a_area.count >= end_pos - start_pos + 1
-		local
-			l_data: like managed_data
-			i, j, nb: INTEGER
 		do
-			from
-				i := start_pos - 1
-				nb := end_pos - start_pos
-				l_data := managed_data
-			until
-				i > nb
-			loop
-				a_area.put (l_data.read_natural_8 (i).to_character_8, j)
-				i := i + 1
-				j := j + 1
-			end
+			managed_data.read_into_special_character_8 (a_area, start_pos - 1, 0, end_pos - start_pos + 1)
 		ensure
 			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]
 		end
@@ -419,7 +406,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

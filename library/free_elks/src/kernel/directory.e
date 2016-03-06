@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-02-01 00:49:53 +0100 (Fri, 01 Feb 2013) $"
-	revision: "$Revision: 736 $"
+	date: "$Date: 2015-08-03 17:18:55 -0700 (Mon, 03 Aug 2015) $"
+	revision: "$Revision: 97763 $"
 
 class DIRECTORY
 
@@ -283,7 +283,8 @@ feature -- Measurement
 feature -- Conversion
 
 	entries: ARRAYED_LIST [PATH]
-			-- The entries, in sequential format, in a platform specific order.
+			-- Entries (i.e. just the file or directory name) of current directory,
+			-- in sequential format, in a platform specific order.
 		local
 			dir_temp: DIRECTORY
 			e: like last_entry_pointer
@@ -308,10 +309,42 @@ feature -- Conversion
 			dir_temp.close
 		end
 
+	resolved_entries: ARRAYED_LIST [PATH]
+			-- Entries of current directory resolved in the context of current directory (i.e. the path
+			-- of the current directory appended with the entry) in sequential format, in a platform specific
+			-- order.
+			-- Compared to `entries', it removes the need for callers to build the full path of the entry
+			-- using `Current'.
+		local
+			dir_temp: DIRECTORY
+			e: like last_entry_pointer
+			l_path: like path
+		do
+			create dir_temp.make_open_read (internal_name)
+				-- Arbitrary size for arrayed_list creation to avoid
+				-- querying `count' which traverses list of entries
+				-- in current directory as we do here, making current
+				-- less efficient if Current has a lot of entries.
+			create Result.make (16)
+			from
+				dir_temp.start
+				dir_temp.readentry
+				e := dir_temp.last_entry_pointer
+				l_path := path
+			until
+				e = default_pointer
+			loop
+				Result.extend (l_path.extended_path (create {PATH}.make_from_pointer (e)))
+				dir_temp.readentry
+				e := dir_temp.last_entry_pointer
+			end
+			dir_temp.close
+		end
+
 	linear_representation: ARRAYED_LIST [STRING_8]
-			-- The entries, in sequential format. Entries that can be
-			-- expressed in Unicode are excluded and one has to use
-			-- `linear_representation' to get them.
+			-- The entries, in sequential format.
+			-- Use `entries' or `linear_representation_32' to get a readable version
+			-- of the Unicode entries.
 		obsolete
 			"Use `entries' instead if your application is using Unicode file names."
 		local
@@ -494,7 +527,7 @@ feature -- Removal
 			file: detachable RAW_FILE
 			l_info: like file_info
 			dir: detachable DIRECTORY
-			dir_temp: DIRECTORY
+			dir_temp: detachable DIRECTORY
 			l_last_entry_pointer: like last_entry_pointer
 			l_name: detachable STRING_8
 			file_count: INTEGER
@@ -569,6 +602,10 @@ feature -- Removal
 				-- agent has been called, call one now.
 			if file_count > 1 and action /= Void then
 				action.call ([deleted_files])
+			end
+		rescue
+			if dir_temp /= Void and then not dir_temp.is_closed then
+				dir_temp.close
 			end
 		end
 
@@ -752,7 +789,7 @@ invariant
 	name_attached: attached internal_name
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
