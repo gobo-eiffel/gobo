@@ -28,14 +28,26 @@ extern "C" {
 GE_rescue* GE_last_rescue;
 
 /*
-	Raise an exception with code 'code'.
+	Exception manager.
+	Can be used from any thread.
 */
-void GE_raise(int code)
+EIF_REFERENCE GE_exception_manager;
+
+/*
+	Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data
+*/
+void (*GE_set_exception_data)(EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+
+/*
+	Jump to execute the rescue of the last routine with a rescue
+	in the call stack.
+*/
+static void GE_jump_to_last_rescue()
 {
 	GE_rescue* r = GE_last_rescue;
 	if (r != 0) {
 		GE_last_rescue = r->previous;
-		GE_longjmp(r->jb, code);
+		GE_longjmp(r->jb, 1);
 	}
 #ifdef EIF_WINDOWS
 	GE_show_console();
@@ -45,11 +57,79 @@ void GE_raise(int code)
 }
 
 /*
+	Call feature EXCEPTION_MANAGER.set_exception_data.
+*/
+static void GE_call_set_exception_data(long code, int new_obj, int signal_code, int error_code, const char *tag, char *recipient, char *eclass, char *rf_routine, char *rf_class, char *trace, int line_number, int is_invariant_entry)
+{
+	EIF_REFERENCE l_tag;
+	EIF_REFERENCE l_recipient;
+	EIF_REFERENCE l_eclass;
+	EIF_REFERENCE l_rf_routine;
+	EIF_REFERENCE l_rf_class;
+	EIF_REFERENCE l_trace;
+
+	if (tag) {
+		l_tag = GE_str8(tag);
+	} else {
+		l_tag = GE_ms8("", 0);
+	}
+	if (recipient) {
+		l_recipient = GE_str8(recipient);
+	} else {
+		l_recipient = GE_ms8("", 0);
+	}
+	if (eclass) {
+		l_eclass = GE_str8(eclass);
+	} else {
+		l_eclass = GE_ms8("", 0);
+	}
+	if (rf_routine) {
+		l_rf_routine = GE_str8(rf_routine);
+	} else {
+		l_rf_routine = GE_ms8("", 0);
+	}
+	if (rf_class) {
+		l_rf_class = GE_str8(rf_class);
+	} else {
+		l_rf_class = GE_ms8("", 0);
+	}
+	if (trace) {
+		l_trace = GE_str8(trace);
+	} else {
+		l_trace = GE_ms8("", 0);
+	}
+	GE_set_exception_data(
+#ifdef EIF_EXCEPTION_TRACE
+		0,
+#endif
+		GE_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
+}
+
+/*
+	Raise an exception with code 'code'.
+*/
+void GE_raise(long code)
+{
+	GE_call_set_exception_data(code, 1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_jump_to_last_rescue();
+}
+
+/*
 	Raise an exception with code 'code' and message 'msg'.
 */
-void GE_raise_with_message(char* msg, int code)
+void GE_raise_with_message(long code, const char *msg)
 {
-	GE_raise(code);
+	GE_call_set_exception_data(code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_jump_to_last_rescue();
+}
+
+/*
+	Raise an exception from EXCEPTION_MANAGER.
+*/
+void GE_developer_raise(long code, char *meaning, char *message)
+{
+	GE_call_set_exception_data(code, 0, -1, -1, message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_jump_to_last_rescue();
 }
 
 /*
@@ -82,7 +162,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb)
 						scanf("%c", &c);
 					}
 #endif
-					GE_raise(24);
+					GE_raise(GE_EX_PROG);
 					break;
 				} else if (type_id < type_ids[i]) {
 						/* type-ids are sorted in increasing order. */
@@ -113,7 +193,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 			scanf("%c", &c);
 		}
 #endif
-		GE_raise(1);
+		GE_raise(GE_EX_VOID);
 	}
 	return (obj);
 }
@@ -137,13 +217,13 @@ void* GE_check_null(void* ptr)
 			scanf("%c", &c);
 		}
 #endif
-		GE_raise(2);
+		GE_raise(GE_EX_MEM);
 	}
 	return (ptr);
 }
 
 #ifdef EIF_WINDOWS
-static LONG WINAPI GE_windows_exception_filter (LPEXCEPTION_POINTERS an_exception)
+static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS an_exception)
 {
 		/* In order to be able to catch exceptions that cannot be caught by
 		 * just using signals on Windows, we need to set `windows_exception_filter'
@@ -152,15 +232,15 @@ static LONG WINAPI GE_windows_exception_filter (LPEXCEPTION_POINTERS an_exceptio
 
 	switch (an_exception->ExceptionRecord->ExceptionCode) {
 		case STATUS_STACK_OVERFLOW:
-			GE_raise_with_message ("Stack overflow", EN_EXT);
+			GE_raise_with_message(GE_EX_EXT, "Stack overflow");
 			break;
 
 		case STATUS_INTEGER_DIVIDE_BY_ZERO:
-			GE_raise_with_message ("Integer division by Zero", EN_FLOAT);
+			GE_raise_with_message(GE_EX_FLOAT, "Integer division by Zero");
 			break;
 
 		default:
-			GE_raise_with_message ("Unhandled exception", EN_EXT);
+			GE_raise_with_message(GE_EX_EXT, "Unhandled exception");
 			break;
 	}
 
@@ -175,8 +255,11 @@ static LONG WINAPI GE_windows_exception_filter (LPEXCEPTION_POINTERS an_exceptio
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-/* Set default exception handler. */
-void GE_set_windows_exception_filter() {
+/*
+	Set default exception handler.
+*/
+void GE_set_windows_exception_filter()
+{
 	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
 	old_exception_handler = SetUnhandledExceptionFilter (GE_windows_exception_filter);
 }

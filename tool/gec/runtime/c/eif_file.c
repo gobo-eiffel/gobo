@@ -1567,7 +1567,7 @@ EIF_REFERENCE eif_file_owner(int uid) {
 #else
 	sprintf(str, "%d", uid);			/* Not available: use UID */
 #endif
-	return GE_ms8(str, strlen(str));
+	return GE_str8(str);
 }
 
 /*
@@ -1588,7 +1588,7 @@ EIF_REFERENCE eif_file_group(int gid) {
 #else
 	sprintf(str, "%d", gid);			/* Not available: use UID */
 #endif
-	return GE_ms8(str, strlen(str));
+	return GE_str8(str);
 }
 
 /*

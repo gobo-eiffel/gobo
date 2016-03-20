@@ -155,7 +155,7 @@ feature -- Codes
 	codes_by_name: DS_HASH_TABLE [NATURAL_8, ET_CLASS_NAME]
 			-- Class codes indexed by class names
 		once
-			create Result.make_map (26)
+			create Result.make_map (28)
 			Result.set_key_equality_tester (class_name_tester)
 			Result.force_last (boolean_class_code, tokens.boolean_class_name)
 			Result.force_last (character_8_class_code, tokens.character_8_class_name)

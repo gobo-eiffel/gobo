@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -98,6 +98,30 @@ feature -- Class names
 			double_class_name_not_void: Result /= Void
 		end
 
+	exception_class_name: ET_CLASS_NAME
+			-- "EXCEPTION" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_exception_name)
+		ensure
+			exception_class_name_not_void: Result /= Void
+		end
+
+	exception_manager_class_name: ET_CLASS_NAME
+			-- "EXCEPTION_MANAGER" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_name)
+		ensure
+			exception_manager_class_name_not_void: Result /= Void
+		end
+
+	exception_manager_factory_class_name: ET_CLASS_NAME
+			-- "EXCEPTION_MANAGER_FACTORY" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_exception_manager_factory_name)
+		ensure
+			exception_manager_factory_class_name_not_void: Result /= Void
+		end
+
 	function_class_name: ET_CLASS_NAME
 			-- "FUNCTION" class name
 		once
@@ -160,6 +184,14 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_internal_name)
 		ensure
 			internal_class_name_not_void: Result /= Void
+		end
+
+	ise_exception_manager_class_name: ET_CLASS_NAME
+			-- "ISE_EXCEPTION_MANAGER" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_ise_exception_manager_name)
+		ensure
+			ise_exception_manager_class_name_not_void: Result /= Void
 		end
 
 	iterable_class_name: ET_CLASS_NAME
@@ -758,6 +790,14 @@ feature -- Feature names
 			capacity_feature_name_not_void: Result /= Void
 		end
 
+	catch_feature_name: ET_FEATURE_NAME
+			-- 'catch' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (catch_name)
+		ensure
+			catch_feature_name_not_void: Result /= Void
+		end
+
 	ceiling_real_32_feature_name: ET_FEATURE_NAME
 			-- 'ceiling_real_32' feature name
 		once
@@ -894,6 +934,14 @@ feature -- Feature names
 			default_create_feature_name_not_void: Result /= Void
 		end
 
+	developer_raise_feature_name: ET_FEATURE_NAME
+			-- 'developer_raise' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (developer_raise_name)
+		ensure
+			developer_raise_feature_name_not_void: Result /= Void
+		end
+
 	disjuncted_feature_name: ET_FEATURE_NAME
 			-- 'disjuncted' feature name
 		once
@@ -964,6 +1012,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
 			element_size_feature_name_not_void: Result /= Void
+		end
+
+	exception_from_code_feature_name: ET_FEATURE_NAME
+			-- 'exception_from_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (exception_from_code_name)
+		ensure
+			exception_from_code_feature_name_not_void: Result /= Void
+		end
+
+	exception_manager_feature_name: ET_FEATURE_NAME
+			-- 'exception_manager' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (exception_manager_name)
+		ensure
+			exception_manager_feature_name_not_void: Result /= Void
 		end
 
 	extend_feature_name: ET_FEATURE_NAME
@@ -1124,6 +1188,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (identity_name)
 		ensure
 			identity_feature_name_not_void: Result /= Void
+		end
+
+	ignore_feature_name: ET_FEATURE_NAME
+			-- 'ignore' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ignore_name)
+		ensure
+			ignore_feature_name_not_void: Result /= Void
 		end
 
 	implication_feature_name: ET_FEATURE_NAME
@@ -1428,6 +1500,14 @@ feature -- Feature names
 			invariant_feature_name_not_void: Result /= Void
 		end
 
+	is_caught_feature_name: ET_FEATURE_NAME
+			-- 'is_caught' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_caught_name)
+		ensure
+			is_caught_feature_name_not_void: Result /= Void
+		end
+
 	is_deep_equal_feature_name: ET_FEATURE_NAME
 			-- 'is_deep_equal' feature name
 		once
@@ -1468,6 +1548,22 @@ feature -- Feature names
 			is_expanded_feature_name_not_void: Result /= Void
 		end
 
+	is_ignorable_feature_name: ET_FEATURE_NAME
+			-- 'is_ignorable' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_ignorable_name)
+		ensure
+			is_ignorable_feature_name_not_void: Result /= Void
+		end
+
+	is_ignored_feature_name: ET_FEATURE_NAME
+			-- 'is_ignored' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_ignored_name)
+		ensure
+			is_ignored_feature_name_not_void: Result /= Void
+		end
+
 	is_less_feature_name: ET_FEATURE_NAME
 			-- 'is_less' feature name
 		once
@@ -1506,6 +1602,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (is_positive_infinity_name)
 		ensure
 			is_positive_infinity_feature_name_not_void: Result /= Void
+		end
+
+	is_raisable_feature_name: ET_FEATURE_NAME
+			-- 'is_raisable' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_raisable_name)
+		ensure
+			is_raisable_feature_name_not_void: Result /= Void
 		end
 
 	is_scoop_capable_feature_name: ET_FEATURE_NAME
@@ -1578,6 +1682,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (item_code_name)
 		ensure
 			item_code_feature_name_not_void: Result /= Void
+		end
+
+	last_exception_feature_name: ET_FEATURE_NAME
+			-- 'last_exception' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (last_exception_name)
+		ensure
+			last_exception_feature_name_not_void: Result /= Void
 		end
 
 	last_result_feature_name: ET_FEATURE_NAME
@@ -2005,6 +2117,14 @@ feature -- Feature names
 			quotient_feature_name_not_void: Result /= Void
 		end
 
+	raise_feature_name: ET_FEATURE_NAME
+			-- 'raise' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (raise_name)
+		ensure
+			raise_feature_name_not_void: Result /= Void
+		end
+
 	real_32_item_feature_name: ET_FEATURE_NAME
 			-- 'real_32_item' feature name
 		once
@@ -2101,6 +2221,14 @@ feature -- Feature names
 			set_count_feature_name_not_void: Result /= Void
 		end
 
+	set_exception_data_feature_name: ET_FEATURE_NAME
+			-- 'set_exception_data' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_exception_data_name)
+		ensure
+			set_exception_data_feature_name_not_void: Result /= Void
+		end
+
 	set_integer_8_field_feature_name: ET_FEATURE_NAME
 			-- 'set_integer_8_field' feature name
 		once
@@ -2131,6 +2259,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (set_integer_64_field_name)
 		ensure
 			set_integer_64_field_feature_name_not_void: Result /= Void
+		end
+
+	set_is_ignored_feature_name: ET_FEATURE_NAME
+			-- 'set_is_ignored' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_is_ignored_name)
+		ensure
+			set_is_ignored_feature_name_not_void: Result /= Void
 		end
 
 	set_item_feature_name: ET_FEATURE_NAME
@@ -2363,6 +2499,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (type_id_name)
 		ensure
 			type_id_feature_name_not_void: Result /= Void
+		end
+
+	type_of_code_feature_name: ET_FEATURE_NAME
+			-- 'type_of_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (type_of_code_name)
+		ensure
+			type_of_code_feature_name_not_void: Result /= Void
 		end
 
 	type_of_type_feature_name: ET_FEATURE_NAME
@@ -3417,8 +3561,11 @@ feature -- Keyword and symbol names
 	capitalized_character_name: STRING = "CHARACTER"
 	capitalized_character_8_name: STRING = "CHARACTER_8"
 	capitalized_character_32_name: STRING = "CHARACTER_32"
-	capitalized_double_name: STRING = "DOUBLE"
 	capitalized_disposable_name: STRING = "DISPOSABLE"
+	capitalized_double_name: STRING = "DOUBLE"
+	capitalized_exception_name: STRING = "EXCEPTION"
+	capitalized_exception_manager_name: STRING = "EXCEPTION_MANAGER"
+	capitalized_exception_manager_factory_name: STRING = "EXCEPTION_MANAGER_FACTORY"
 	capitalized_function_name: STRING = "FUNCTION"
 	capitalized_identified_routines_name: STRING = "IDENTIFIED_ROUTINES"
 	capitalized_integer_name: STRING = "INTEGER"
@@ -3427,6 +3574,7 @@ feature -- Keyword and symbol names
 	capitalized_integer_32_name: STRING = "INTEGER_32"
 	capitalized_integer_64_name: STRING = "INTEGER_64"
 	capitalized_internal_name: STRING = "INTERNAL"
+	capitalized_ise_exception_manager_name: STRING = "ISE_EXCEPTION_MANAGER"
 	capitalized_iterable_name: STRING = "ITERABLE"
 	capitalized_iteration_cursor_name: STRING = "ITERATION_CURSOR"
 	capitalized_memory_name: STRING = "MEMORY"
@@ -3533,6 +3681,9 @@ feature -- Keyword and symbol names
 	capacity_name: STRING = "capacity"
 			-- Name of Eiffel feature 'capacity'
 
+	catch_name: STRING = "catch"
+			-- Name of Eiffel feature 'catch'
+
 	ceiling_real_32_name: STRING = "ceiling_real_32"
 			-- Name of Eiffel feature 'ceiling_real_32'
 
@@ -3584,6 +3735,9 @@ feature -- Keyword and symbol names
 	default_create_name: STRING = "default_create"
 			-- Name of Eiffel feature 'default_create'
 
+	developer_raise_name: STRING = "developer_raise"
+			-- Name of Eiffel feature 'developer_raise'
+
 	disjuncted_name: STRING = "disjuncted"
 			-- Name of Eiffel feature 'disjuncted'
 
@@ -3610,6 +3764,12 @@ feature -- Keyword and symbol names
 
 	element_size_name: STRING = "element_size"
 			-- Name of Eiffel feature 'element_size'
+
+	exception_from_code_name: STRING = "exception_from_code"
+			-- Name of Eiffel feature 'exception_from_code'
+
+	exception_manager_name: STRING = "exception_manager"
+			-- Name of Eiffel feature 'exception_manager'
 
 	extend_name: STRING = "extend"
 			-- Name of Eiffel feature 'extend'
@@ -3671,6 +3831,9 @@ feature -- Keyword and symbol names
 	identity_name: STRING = "identity"
 			-- Name of Eiffel feature 'identity'
 
+	ignore_name: STRING = "ignore"
+			-- Name of Eiffel feature 'ignore'
+
 	implication_name: STRING = "implication"
 			-- Name of Eiffel feature 'implication'
 
@@ -3707,6 +3870,9 @@ feature -- Keyword and symbol names
 	integer_remainder_name: STRING = "integer_remainder"
 			-- Name of Eiffel feature 'integer_remainder'
 
+	is_caught_name: STRING = "is_caught"
+			-- Name of Eiffel feature 'is_caught'
+
 	is_deep_equal_name: STRING = "is_deep_equal"
 			-- Name of Eiffel feature 'is_deep_equal'
 
@@ -3722,6 +3888,12 @@ feature -- Keyword and symbol names
 	is_expanded_name: STRING = "is_expanded"
 			-- Name of Eiffel feature 'is_expanded'
 
+	is_ignorable_name: STRING = "is_ignorable"
+			-- Name of Eiffel feature 'is_ignorable'
+
+	is_ignored_name: STRING = "is_ignored"
+			-- Name of Eiffel feature 'is_ignored'
+
 	is_less_name: STRING = "is_less"
 			-- Name of Eiffel feature 'is_less'
 
@@ -3736,6 +3908,9 @@ feature -- Keyword and symbol names
 
 	is_positive_infinity_name: STRING = "is_positive_infinity"
 			-- Name of Eiffel feature 'is_positive_infinity'
+
+	is_raisable_name: STRING = "is_raisable"
+			-- Name of Eiffel feature 'is_raisable'
 
 	is_scoop_capable_name: STRING = "is_scoop_capable"
 			-- Name of Eiffel feature 'is_scoop_capable'
@@ -3763,6 +3938,9 @@ feature -- Keyword and symbol names
 
 	item_code_name: STRING = "item_code"
 			-- Name of Eiffel feature 'item_code'
+
+	last_exception_name: STRING = "last_exception"
+			-- Name of Eiffel feature 'last_exception'
 
 	last_result_name: STRING = "last_result"
 			-- Name of Eiffel feature 'last_result'
@@ -3911,6 +4089,9 @@ feature -- Keyword and symbol names
 	quotient_name: STRING = "quotient"
 			-- Name of Eiffel feature 'quotient'
 
+	raise_name: STRING = "raise"
+			-- Name of Eiffel feature 'raise'
+
 	real_32_item_name: STRING = "real_32_item"
 			-- Name of Eiffel feature 'real_32_item'
 
@@ -3947,6 +4128,9 @@ feature -- Keyword and symbol names
 	set_count_name: STRING = "set_count"
 			-- Name of Eiffel feature 'set_count'
 
+	set_exception_data_name: STRING = "set_exception_data"
+			-- Name of Eiffel feature 'set_exception_data'
+
 	set_integer_8_field_name: STRING = "set_integer_8_field"
 			-- Name of Eiffel feature 'set_integer_8_field'
 
@@ -3958,6 +4142,9 @@ feature -- Keyword and symbol names
 
 	set_integer_64_field_name: STRING = "set_integer_64_field"
 			-- Name of Eiffel feature 'set_integer_64_field'
+
+	set_is_ignored_name: STRING = "set_is_ignored"
+			-- Name of Eiffel feature 'set_is_ignored'
 
 	set_item_name: STRING = "set_item"
 			-- Name of Eiffel feature 'set_item'
@@ -4046,8 +4233,11 @@ feature -- Keyword and symbol names
 	type_id_name: STRING = "type_id"
 			-- Name of Eiffel feature 'type_id'
 
+	type_of_code_name: STRING = "type_of_code"
+			-- Name of Eiffel feature 'type_code'
+
 	type_of_type_name: STRING = "type_of_type"
-			-- Name of Eiffel feature 'type_id'
+			-- Name of Eiffel feature 'type_of_type'
 
 	upper_name: STRING = "upper"
 			-- Name of Eiffel feature 'upper'

@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -496,4 +496,44 @@ feature -- Built-in codes
 	builtin_internal_max_type_id: INTEGER = 2
 			-- Codes for built-in features from class "INTERNAL"
 
+	builtin_exception_manager_factory_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "EXCEPTION_MANAGER_FACTORY"
+		do
+			Result := builtin_exception_manager_factory_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_exception_manager_factory_class: INTEGER = 26
+	builtin_exception_manager_factory_exception_manager: INTEGER = 1
+			-- Codes for built-in features from class "EXCEPTION_MANAGER_FACTORY"
+
+	builtin_exception_manager_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "EXCEPTION_MANAGER"
+		do
+			Result := builtin_exception_manager_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_exception_manager_class: INTEGER = 27
+	builtin_exception_manager_catch: INTEGER = 1
+	builtin_exception_manager_exception_from_code: INTEGER = 2
+	builtin_exception_manager_ignore: INTEGER = 3
+	builtin_exception_manager_is_caught: INTEGER = 4
+	builtin_exception_manager_is_ignorable: INTEGER = 5
+	builtin_exception_manager_is_ignored: INTEGER = 6
+	builtin_exception_manager_is_raisable: INTEGER = 7
+	builtin_exception_manager_last_exception: INTEGER = 8
+	builtin_exception_manager_raise: INTEGER = 9
+	builtin_exception_manager_set_is_ignored: INTEGER = 10
+	builtin_exception_manager_type_of_code: INTEGER = 11
+			-- Codes for built-in features from class "EXCEPTION_MANAGER"
+
+	builtin_ise_exception_manager_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "ISE_EXCEPTION_MANAGER"
+		do
+			Result := builtin_ise_exception_manager_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_ise_exception_manager_class: INTEGER = 28
+	builtin_ise_exception_manager_developer_raise: INTEGER = 1
+			-- Codes for built-in features from class "ISE_EXCEPTION_MANAGER"
+			
 end

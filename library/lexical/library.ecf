@@ -36,9 +36,9 @@
 
 		<library name="kernel" location="$GOBO/library/kernel/library.ecf" readonly="true"/>
 
-		<library name="lexical_skl" location="$GOBO/library/lexical/skeleton/library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="$GOBO/library/lexical/library_skl.ecf" readonly="true"/>
 
-		<library name="parse_skl" location="$GOBO/library/parse/skeleton/library.ecf" readonly="true"/>
+		<library name="parse_skl" location="$GOBO/library/parse/library_skl.ecf" readonly="true"/>
 
 		<library name="structure" location="$GOBO/library/structure/library.ecf" readonly="true"/>
 

@@ -37,6 +37,43 @@ extern "C" {
 #endif
 
 /*
+	Predefined exception codes.
+ */
+#define GE_EX_VOID		1			/* Feature applied to void reference */
+#define GE_EX_MEM		2			/* No more memory */
+#define GE_EX_PRE		3			/* Pre-condition violated */
+#define GE_EX_POST		4			/* Post-condition violated */
+#define GE_EX_FLOAT		5			/* Floating point exception (signal SIGFPE) */
+#define GE_EX_CINV		6			/* Class invariant violated */
+#define GE_EX_CHECK		7			/* Check instruction violated */
+#define GE_EX_FAIL		8			/* Routine failure */
+#define GE_EX_WHEN		9			/* Unmatched inspect value */
+#define GE_EX_VAR		10			/* Non-decreasing loop variant */
+#define GE_EX_LINV		11			/* Loop invariant violated */
+#define GE_EX_SIG		12			/* Operating system signal */
+#define GE_EX_BYE		13			/* Eiffel run-time panic */
+#define GE_EX_RESC		14			/* Exception in rescue clause */
+#define GE_EX_OMEM		15			/* Out of memory (cannot be ignored) */
+#define GE_EX_RES		16			/* Resumption failed (retry did not succeed) */
+#define GE_EX_CDEF		17			/* Create on deferred */
+#define GE_EX_EXT		18			/* External event */
+#define GE_EX_VEXP		19			/* Void assigned to expanded */
+#define GE_EX_HDLR		20			/* Exception in signal handler */
+#define GE_EX_IO		21			/* I/O error */
+#define GE_EX_SYS		22			/* Operating system error */
+#define GE_EX_RETR		23			/* Retrieval error */
+#define GE_EX_PROG		24			/* Developer exception */
+#define GE_EX_FATAL		25			/* Eiffel run-time fatal error */
+#define GE_EX_DOL		26			/* $ applied to melted feature */
+#define GE_EX_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
+#define GE_EX_COM		28			/* COM error raised by EiffelCOM runtime */
+#define GE_EX_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
+#define GE_EX_OLD		30			/* Old violation */
+#define GE_EX_SEL		31			/* Serialization failure */
+#define GE_EX_DIRTY		32			/* SCOOP processor dirty exception. */
+#define GE_EX_NEX		32			/* Number of internal exceptions */
+
+/*
 	Information about the feature being executed.
 */
 typedef struct GE_call_struct GE_call;
@@ -62,14 +99,30 @@ struct GE_rescue_struct {
 extern GE_rescue* GE_last_rescue;
 
 /*
+	Exception manager.
+	Can be used from any thread.
+*/
+extern EIF_REFERENCE GE_exception_manager;
+
+/*
+	Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data
+*/
+extern void (*GE_set_exception_data)(EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+
+/*
 	Raise an exception with code 'code'.
 */
-extern void GE_raise(int code);
+extern void GE_raise(long code);
 
 /*
 	Raise an exception with code 'code' and message 'msg'.
 */
-extern void GE_raise_with_message(char* msg, int code);
+extern void GE_raise_with_message(long code, const char *msg);
+
+/*
+	Raise an exception from EXCEPTION_MANAGER.
+*/
+extern void GE_developer_raise(long code, char *meaning, char *message);
 
 /*
 	Check whether the type id of 'obj' is not in 'type_ids'.
@@ -98,7 +151,9 @@ extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 extern void* GE_check_null(void* ptr);
 
 #ifdef EIF_WINDOWS
-/* Set default exception handler. */
+/*
+	Set default exception handler.
+*/
 extern void GE_set_windows_exception_filter();
 #endif
 

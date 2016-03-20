@@ -14,6 +14,7 @@
 		<option name="abstract" value="true"/>
 		<cluster name="fake"/>
 		<cluster name="kernel">
+			<cluster name="exceptions"/>
 			<cluster name="string"/>
 		</cluster>
 		<cluster name="refactoring"/>
@@ -34,5 +35,10 @@
 			<cluster name="tree"/>
 		</cluster>
 		<cluster name="support"/>
+		<cluster name="ise">
+			<cluster name="kernel">
+				<cluster name="exceptions"/>
+			</cluster>
+		</cluster>
 	</cluster>
 </library>

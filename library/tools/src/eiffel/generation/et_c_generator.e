@@ -873,6 +873,10 @@ feature {NONE} -- C code Generation
 				print_object_allocation_functions
 					-- Print Eiffel feature functions.
 				if attached current_dynamic_system.root_creation_procedure as l_root_procedure then
+					if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
+						l_ise_exception_manager_set_exception_data_feature.set_generated (True)
+						called_features.force_last (l_ise_exception_manager_set_exception_data_feature)
+					end
 					l_root_procedure.set_generated (True)
 					called_features.force_last (l_root_procedure)
 					from until called_features.is_empty loop
@@ -1750,12 +1754,18 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_arguments_32_function_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_function_body (a_feature)
+			when builtin_exception_manager_class then
+				print_external_builtin_exception_manager_function_body (a_feature)
+			when builtin_exception_manager_factory_class then
+				print_external_builtin_exception_manager_factory_function_body (a_feature)
 			when builtin_function_class then
 				print_external_builtin_function_function_body (a_feature)
 			when builtin_identified_class then
 				print_external_builtin_identified_function_body (a_feature)
 			when builtin_internal_class then
 				print_external_builtin_internal_function_body (a_feature)
+			when builtin_memory_class then
+				print_external_builtin_memory_function_body (a_feature)
 			when builtin_platform_class then
 				print_external_builtin_platform_function_body (a_feature)
 			when builtin_pointer_class then
@@ -1937,6 +1947,60 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_exception_manager_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "EXCEPTION_MANAGER".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_exception_manager: (a_feature.builtin_code // builtin_capacity) = builtin_exception_manager_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_exception_manager_exception_from_code then
+				print_builtin_exception_manager_exception_from_code_body (a_feature)
+			when builtin_exception_manager_is_caught then
+				print_builtin_exception_manager_is_caught_body (a_feature)
+			when builtin_exception_manager_is_ignorable then
+				print_builtin_exception_manager_is_ignorable_body (a_feature)
+			when builtin_exception_manager_is_ignored then
+				print_builtin_exception_manager_is_ignored_body (a_feature)
+			when builtin_exception_manager_is_raisable then
+				print_builtin_exception_manager_is_raisable_body (a_feature)
+			when builtin_exception_manager_last_exception then
+				print_builtin_exception_manager_last_exception_body (a_feature)
+			when builtin_exception_manager_type_of_code then
+				print_builtin_exception_manager_type_of_code_body (a_feature)
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_exception_manager_factory_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "EXCEPTION_MANAGER_FACTORY".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_exception_manager_factory: (a_feature.builtin_code // builtin_capacity) = builtin_exception_manager_factory_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_exception_manager_factory_exception_manager then
+				print_builtin_exception_manager_factory_exception_manager_body (a_feature)
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_function_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "FUNCTION".
@@ -2010,6 +2074,31 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_internal_max_type_id_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_memory_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "MEMORY" and relates classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_find_referers then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_memory_find_referers_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			else
@@ -2846,8 +2935,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_any_procedure_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_procedure_body (a_feature)
+			when builtin_exception_manager_class then
+				print_external_builtin_exception_manager_procedure_body (a_feature)
 			when builtin_identified_class then
 				print_external_builtin_identified_procedure_body (a_feature)
+			when builtin_ise_exception_manager_class then
+				print_external_builtin_ise_exception_manager_procedure_body (a_feature)
+			when builtin_memory_class then
+				print_external_builtin_memory_procedure_body (a_feature)
 			when builtin_pointer_class then
 				print_external_builtin_pointer_procedure_body (a_feature)
 			when builtin_procedure_class then
@@ -2940,6 +3035,33 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_exception_manager_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "EXCEPTION_MANAGER" and related classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_exception_manager: (a_feature.builtin_code // builtin_capacity) = builtin_exception_manager_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_exception_manager_catch then
+				print_builtin_exception_manager_catch_body (a_feature)
+			when builtin_exception_manager_ignore then
+				print_builtin_exception_manager_ignore_body (a_feature)
+			when builtin_exception_manager_raise then
+				print_builtin_exception_manager_raise_body (a_feature)
+			when builtin_exception_manager_set_is_ignored then
+				print_builtin_exception_manager_set_is_ignored_body (a_feature)
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_identified_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in procedure introduced in class "IDENTIFIED" and related classes.
@@ -2954,6 +3076,52 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			when builtin_identified_eif_object_id_free then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_identified_eif_object_id_free_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_ise_exception_manager_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "ISE_EXCEPTION_MANAGER" and related classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_exception_manager: (a_feature.builtin_code // builtin_capacity) = builtin_ise_exception_manager_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_exception_manager_developer_raise then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_exception_manager_developer_raise_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_memory_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "MEMORY" and related classes.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_free then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_memory_free_call (current_feature, current_type, False)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -4028,7 +4196,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_line (" */")
 			dedent
 			print_indentation
-			current_file.put_line ("GE_raise(24);")
+			current_file.put_string (c_ge_raise)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_prog)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
 			dedent
 			print_indentation
 			current_file.put_character ('}')
@@ -4055,7 +4228,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_line (" */")
 			dedent
 			print_indentation
-			current_file.put_line ("GE_raise(24);")
+			current_file.put_string (c_ge_raise)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_prog)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
 			dedent
 			print_indentation
 			current_file.put_character ('}')
@@ -4666,7 +4844,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation
 				current_file.put_string (c_ge_raise)
 				current_file.put_character ('(')
-				current_file.put_character ('8')
+				current_file.put_string (c_ge_ex_fail)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -5533,7 +5711,7 @@ feature {NONE} -- Instruction generation
 						print_indentation
 						current_file.put_string (c_ge_raise)
 						current_file.put_character ('(')
-						current_file.put_character ('7')
+						current_file.put_string (c_ge_ex_check)
 						current_file.put_character (')')
 						current_file.put_character (';')
 						current_file.put_new_line
@@ -5956,7 +6134,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				print_indentation
 				current_file.put_string (c_ge_raise)
 				current_file.put_character ('(')
-				current_file.put_character ('9')
+				current_file.put_string (c_ge_ex_when)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -6690,6 +6868,10 @@ feature {NONE} -- Procedure call generation
 				print_builtin_sized_integer_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_integer_64_class then
 				print_builtin_sized_integer_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_exception_manager_class then
+				print_builtin_ise_exception_manager_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_memory_class then
+				print_builtin_memory_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_8_class then
 				print_builtin_sized_integer_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_16_class then
@@ -6775,6 +6957,48 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_identified_eif_object_id_free then
 				print_builtin_identified_eif_object_id_free_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_ise_exception_manager_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "ISE_EXCEPTION_MANAGER" and related classes.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_exception_manager: (a_feature.builtin_code // builtin_capacity) = builtin_ise_exception_manager_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_exception_manager_developer_raise then
+				print_builtin_ise_exception_manager_developer_raise_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_memory_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "MEMORY" and related classes.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_free then
+				print_builtin_memory_free_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -12549,6 +12773,8 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_integer_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_internal_class then
 				print_builtin_internal_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_memory_class then
+				print_builtin_memory_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_8_class then
 				print_builtin_sized_integer_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_16_class then
@@ -12753,6 +12979,31 @@ feature {NONE} -- Query call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_internal_max_type_id then
 				print_builtin_internal_max_type_id_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_memory_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "MEMORY".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_find_referers then
+				print_builtin_memory_find_referers_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -17394,6 +17645,551 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_exception_manager_catch_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.catch'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.catch' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_exception_from_code_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.exception_from_code'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.exception_from_code' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_ignore_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.ignore'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.ignore' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_is_caught_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.is_caught'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.is_caught' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_is_ignorable_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.is_ignorable'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.is_ignorable' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_is_ignored_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.is_ignored'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.is_ignored' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_is_raisable_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.is_raisable'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.is_raisable' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_last_exception_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.last_exception'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+				-- Feature 'ISE_EXCEPTION_MANAGER.last_exception' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_raise_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.raise'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.raise' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_set_is_ignored_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.set_is_ignored'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.set_is_ignored' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 2 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (2).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_type_of_code_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER.type_of_code'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		local
+			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+			l_arguments := a_feature.arguments
+				-- Feature 'ISE_EXCEPTION_MANAGER.type_of_code' is called internally.
+			if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+					-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+					-- "EXCEPTION_MANAGER". So it should have a feature with the
+					-- same seed as `a_feature'. Otherwise we get an error when
+					-- flattening the features of "ISE_EXCEPTION_MANAGER".
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_arguments = Void or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not l_ise_exception_manager_feature.is_generated then
+					l_ise_exception_manager_feature.set_generated (True)
+					called_features.force_last (l_ise_exception_manager_feature)
+				end
+				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+				end
+-- TODO: Multi-threading: we should return a different object for each thread.
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_exception_manager_factory_exception_manager_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'EXCEPTION_MANAGER_FACTORY.exception_manager'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+-- TODO: Multi-threading: we should return a different object for each thread.
+			current_file.put_string (c_ge_exception_manager)
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
 	print_builtin_function_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_feature' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item'.
@@ -17497,6 +18293,51 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				print_indentation
 				current_file.put_string (c_ge_object_id_free)
 				current_file.put_character ('(')
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+			end
+		end
+
+	print_builtin_ise_exception_manager_developer_raise_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_EXCEPTION_MANAGER.developer_raise'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 4 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				include_runtime_header_file ("ge_exception.h", False, header_file)
+				print_indentation
+				current_file.put_string (c_ge_developer_raise)
+				current_file.put_character ('(')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_argument := call_operands.item (3)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (2, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_argument := call_operands.item (4)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (3, a_feature).static_type
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
@@ -22794,7 +23635,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_new_line
 				indent
 				print_indentation
-				current_file.put_string ("GE_raise(24);")
+				current_file.put_string (c_ge_raise)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_ex_prog)
+				current_file.put_character (')')
+				current_file.put_character (';')
 				current_file.put_new_line
 				dedent
 				print_indentation
@@ -23003,7 +23848,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		do
 -- TODO: what to do to avoid having a infinite number of types?
 			print_indentation
-			current_file.put_string ("GE_raise(24);")
+			current_file.put_string (c_ge_raise)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_prog)
+			current_file.put_character (')')
+			current_file.put_character (';')
 			current_file.put_new_line
 		end
 
@@ -23127,7 +23976,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_new_line
 					indent
 					print_indentation
-					current_file.put_string ("GE_raise(24);")
+					current_file.put_string (c_ge_raise)
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_ex_prog)
+					current_file.put_character (')')
+					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
 					print_indentation
@@ -23380,8 +24233,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23391,8 +24243,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('1')
-					current_file.put_character ('7')
+					current_file.put_string (c_ge_ex_cdef)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23405,8 +24256,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23418,8 +24268,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23500,8 +24349,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23514,8 +24362,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23527,8 +24374,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character ('(')
 					current_file.put_string (c_ge_raise)
 					current_file.put_character ('(')
-					current_file.put_character ('2')
-					current_file.put_character ('5')
+					current_file.put_string (c_ge_ex_fatal)
 					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
@@ -23985,6 +24831,30 @@ feature {NONE} -- C function generation
 				current_file.put_line ("GE_last_rescue = 0;")
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
+					-- Create 'GE_exception_manager'.
+				print_indentation
+				current_file.put_string (c_ge_exception_manager)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (current_dynamic_system.ise_exception_manager_type.id)
+				current_file.put_character ('(')
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
+					print_indentation
+					current_file.put_string (c_ge_set_exception_data)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					print_routine_name (l_ise_exception_manager_set_exception_data_feature, current_dynamic_system.ise_exception_manager_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 				print_indentation
 				if multithreaded_mode then
 					current_file.put_line ("GE_init_thread();")
@@ -24077,8 +24947,8 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				header_file.put_string (c_ge_ms8)
 				current_file.put_string (c_ge_ms8)
-				header_file.put_string ("(char* s, ")
-				current_file.put_string ("(char* s, ")
+				header_file.put_string ("(const char *s, ")
+				current_file.put_string ("(const char *s, ")
 				print_type_declaration (l_count_type, header_file)
 				print_type_declaration (l_count_type, current_file)
 				header_file.put_character (' ')
@@ -30199,7 +31069,15 @@ feature {NONE} -- Constants
 	c_ge_deep: STRING = "GE_deep"
 	c_ge_deep_twin: STRING = "GE_deep_twin"
 	c_ge_default: STRING = "GE_default"
+	c_ge_developer_raise: STRING = "GE_developer_raise"
 	c_ge_dts: STRING = "GE_dts"
+	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
+	c_ge_ex_check: STRING = "GE_EX_CHECK"
+	c_ge_ex_fail: STRING = "GE_EX_FAIL"
+	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
+	c_ge_ex_prog: STRING = "GE_EX_PROG"
+	c_ge_ex_when: STRING = "GE_EX_WHEN"
+	c_ge_exception_manager: STRING = "GE_exception_manager"
 	c_ge_floor: STRING = "GE_floor"
 	c_ge_id_object: STRING = "GE_id_object"
 	c_ge_int8: STRING = "GE_int8"
@@ -30235,6 +31113,7 @@ feature {NONE} -- Constants
 	c_ge_rescue: STRING = "GE_rescue"
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_setjmp: STRING = "GE_setjmp"
+	c_ge_set_exception_data: STRING = "GE_set_exception_data"
 	c_ge_show_console: STRING = "GE_show_console"
 	c_ge_types: STRING = "GE_types"
 	c_ge_void: STRING = "GE_void"

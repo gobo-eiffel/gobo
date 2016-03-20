@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -129,6 +129,12 @@ feature {NONE} -- Built-in validity
 				check_builtin_arguments_32_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
 				check_builtin_memory_function_validity (a_feature)
+			elseif l_name.same_class_name (tokens.exception_manager_class_name) then
+				check_builtin_exception_manager_function_validity (a_feature)
+			elseif l_name.same_class_name (tokens.exception_manager_factory_class_name) then
+				check_builtin_exception_manager_factory_function_validity (a_feature)
+			elseif l_name.same_class_name (tokens.ise_exception_manager_class_name) then
+				check_builtin_ise_exception_manager_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.identified_routines_class_name) then
 				check_builtin_identified_routines_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.internal_class_name) then
@@ -1627,7 +1633,208 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.free_feature_name) then
 					-- 'MEMORY.free' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_memory_feature (tokens.builtin_memory_free))
+				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, Void)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_exception_manager_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Check validity of built-in `a_feature' from class "EXCEPTION_MANAGER".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			if a_feature.name.same_feature_name (tokens.exception_from_code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_exception_from_code))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'exception_from_code (a_code: INTEGER): detachable EXCEPTION'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_exception_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'exception_from_code (a_code: INTEGER): detachable EXCEPTION'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_exception_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'exception_from_code (a_code: INTEGER): detachable EXCEPTION'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_exception_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_caught_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_caught))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_ignorable_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_ignorable))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_ignored_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_ignored))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_raisable_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_raisable))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.last_exception_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_last_exception))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'last_exception: detachable EXCEPTION'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.detachable_exception_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'last_exception: detachable EXCEPTION'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.detachable_exception_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.type_of_code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_type_of_code))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_exception_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_exception_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.detachable_type_exception_type, current_class, current_class) then
+						-- The signature should be 'type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_exception_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.catch_feature_name) then
+					-- 'EXCEPTION_MANAGER.catch' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_catch))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.ignore_feature_name) then
+					-- 'EXCEPTION_MANAGER.ignore' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_ignore))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.raise_feature_name) then
+					-- 'EXCEPTION_MANAGER.raise' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_raise))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.exception_type.type>>, Void)
+			elseif a_feature.name.same_feature_name (tokens.set_is_ignored_feature_name) then
+					-- 'EXCEPTION_MANAGER.set_is_ignored' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_set_is_ignored))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type, current_universe.boolean_type.type>>, Void)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_exception_manager_factory_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Check validity of built-in `a_feature' from class "EXCEPTION_MANAGER_FACTORY".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			if a_feature.name.same_feature_name (tokens.exception_manager_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_factory_feature (tokens.builtin_exception_manager_factory_exception_manager))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'exception_manager: EXCEPTION_MANAGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.exception_manager_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.exception_manager_type, current_class, current_class) then
+						-- The signature should be 'exception_manager: EXCEPTION_MANAGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.exception_manager_type)
+				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_ise_exception_manager_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Check validity of built-in `a_feature' from class "ISE_EXCEPTION_MANAGER".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+				-- List function names first, then procedure names.
+			if a_feature.name.same_feature_name (tokens.developer_raise_feature_name) then
+					-- 'ISE_EXCEPTION_MANAGER.developer_raise' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_ise_exception_manager_feature (tokens.builtin_ise_exception_manager_developer_raise))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3348,6 +3555,12 @@ feature {NONE} -- Built-in validity
 				check_builtin_arguments_32_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
 				check_builtin_memory_procedure_validity (a_feature)
+			elseif l_name.same_class_name (tokens.exception_manager_class_name) then
+				check_builtin_exception_manager_procedure_validity (a_feature)
+			elseif l_name.same_class_name (tokens.exception_manager_factory_class_name) then
+				check_builtin_exception_manager_factory_procedure_validity (a_feature)
+			elseif l_name.same_class_name (tokens.ise_exception_manager_class_name) then
+				check_builtin_ise_exception_manager_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.identified_routines_class_name) then
 				check_builtin_identified_routines_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.internal_class_name) then
@@ -4415,6 +4628,173 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_memory_feature (tokens.builtin_memory_find_referers))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type, current_universe.integer_type.type>>, current_universe.special_any_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_exception_manager_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Check validity of built-in `a_feature' from class "EXCEPTION_MANAGER".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			if a_feature.name.same_feature_name (tokens.catch_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_catch))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'catch (a_exception: TYPE [detachable EXCEPTION])'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'catch (a_exception: TYPE [detachable EXCEPTION])'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.ignore_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_ignore))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'ignore (a_exception: TYPE [detachable EXCEPTION])'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'ignore (a_exception: TYPE [detachable EXCEPTION])'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.raise_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_raise))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'raise (a_exception: EXCEPTION)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.exception_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.exception_type, current_class, current_class) then
+						-- The signature should be 'raise (a_exception: EXCEPTION)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.exception_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.set_is_ignored_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_set_is_ignored))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 2 then
+						-- The signature should be 'set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type, current_universe.boolean_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.type_detachable_exception_type, current_class, current_class) then
+						-- The signature should be 'set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type, current_universe.boolean_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type, current_universe.boolean_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.exception_from_code_feature_name) then
+					-- 'EXCEPTION_MANAGER.exception_from_code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_exception_from_code))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_exception_type)
+			elseif a_feature.name.same_feature_name (tokens.is_caught_feature_name) then
+					-- 'EXCEPTION_MANAGER.is_caught' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_caught))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+			elseif a_feature.name.same_feature_name (tokens.is_ignorable_feature_name) then
+					-- 'EXCEPTION_MANAGER.is_ignorable' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_ignorable))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+			elseif a_feature.name.same_feature_name (tokens.is_ignored_feature_name) then
+					-- 'EXCEPTION_MANAGER.is_ignored' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_ignored))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+			elseif a_feature.name.same_feature_name (tokens.is_raisable_feature_name) then
+					-- 'EXCEPTION_MANAGER.is_raisable' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_is_raisable))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.type_detachable_exception_type.type>>, current_universe.boolean_type)
+			elseif a_feature.name.same_feature_name (tokens.last_exception_feature_name) then
+					-- 'EXCEPTION_MANAGER.last_exception' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_last_exception))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.detachable_exception_type)
+			elseif a_feature.name.same_feature_name (tokens.type_of_code_feature_name) then
+					-- 'EXCEPTION_MANAGER.type_of_code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_feature (tokens.builtin_exception_manager_type_of_code))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.detachable_type_exception_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_exception_manager_factory_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Check validity of built-in `a_feature' from class "EXCEPTION_MANAGER_FACTORY".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+				-- List procedure names first, then function names.
+			if a_feature.name.same_feature_name (tokens.exception_manager_feature_name) then
+					-- 'EXCEPTION_MANAGER_FACTORY.exception_manager' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_exception_manager_factory_feature (tokens.builtin_exception_manager_factory_exception_manager))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.exception_manager_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_ise_exception_manager_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Check validity of built-in `a_feature' from class "ISE_EXCEPTION_MANAGER".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			if a_feature.name.same_feature_name (tokens.developer_raise_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_ise_exception_manager_feature (tokens.builtin_ise_exception_manager_developer_raise))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 3 then
+						-- The signature should be 'developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type>>, Void)
+				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type>>, Void)
+				end
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

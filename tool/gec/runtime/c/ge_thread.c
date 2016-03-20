@@ -47,7 +47,7 @@ static void GE_create_thread_context(GE_thread_context *context)
 		ge_thread_context->thread_id = GE_current_thread();
 		EIF_TSD_SET(GE_thread_context_key, ge_thread_context, "Couldn't bind thread context to TSD.");
 	} else {
-		GE_raise_with_message("Cannot create thread context", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	}
 }
 
@@ -59,7 +59,7 @@ static void GE_thread_set_priority(EIF_THR_TYPE thread_id, unsigned int priority
 	memset(&l_param, 0, sizeof(struct sched_param));
 	l_param.sched_priority = priority;
 	if (pthread_setschedparam(thread_id, SCHED_OTHER, &l_param) != 0) {
-		GE_raise_with_message("Cannot set priority to thread", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot set priority to thread");
 	}
 #elif defined(EIF_WINDOWS)
 	int l_win_priority;
@@ -80,7 +80,7 @@ static void GE_thread_set_priority(EIF_THR_TYPE thread_id, unsigned int priority
 			}
 	}
 	if (!SetThreadPriority(thread_id, l_win_priority)) {
-		GE_raise_with_message("Cannot set priority to thread", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot set priority to thread");
 	}
 #endif
 }
@@ -122,7 +122,7 @@ void GE_thread_create_with_attr (EIF_REFERENCE current, void (* routine) (EIF_RE
 
 	ge_new_thread_context = (GE_thread_context *) GE_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (!ge_new_thread_context) {
-		GE_raise_with_message("Cannot create thread context", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	} else {
 		ge_new_thread_context->current = current;
 		ge_new_thread_context->routine = routine;
@@ -153,14 +153,14 @@ void GE_thread_create_with_attr (EIF_REFERENCE current, void (* routine) (EIF_RE
 			}
 			if (res != 0) {
 				GE_free(ge_new_thread_context);
-				GE_raise_with_message("Cannot create thread", EN_EXT);
+				GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 			}
 		}
 #elif defined EIF_WINDOWS
 		thread_id = (EIF_THR_TYPE) _beginthreadex(NULL, (unsigned int) attr->stack_size, GE_thread_routine, ge_new_thread_context, 0, NULL);
 		if (thread_id == 0) {
 			GE_free(ge_new_thread_context);
-			GE_raise_with_message("Cannot create thread", EN_EXT);
+			GE_raise_with_message(GE_EX_EXT, "Cannot create thread");
 		}
 #endif
 	}
@@ -226,7 +226,7 @@ void GE_thread_exit(void)
 	pthread_exit(NULL);
 #elif defined EIF_WINDOWS
 	if (!CloseHandle(l_thread_id)) {
-		GE_raise_with_message("Cannot close thread", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot close thread");
 	}
 	_endthreadex(0);
 #endif
@@ -271,7 +271,7 @@ EIF_POINTER GE_mutex_create(void)
 		pthread_mutexattr_destroy(&attr);
 	}
 	if (!mutex) {
-		GE_raise_with_message("Cannot create mutex", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot create mutex");
 	}
 	return (EIF_POINTER) mutex;
 #elif defined EIF_WINDOWS
@@ -285,7 +285,7 @@ EIF_POINTER GE_mutex_create(void)
 		}
 	}
 	if (!section) {
-		GE_raise_with_message("Cannot create mutex", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot create mutex");
 	}
 	return (EIF_POINTER) section;
 #else
@@ -298,7 +298,7 @@ void GE_mutex_lock(EIF_POINTER mutex)
 {
 #ifdef EIF_POSIX_THREADS
 	if (!pthread_mutex_lock((EIF_MUTEX_TYPE *) mutex)) {
-		GE_raise_with_message("Cannot lock mutex", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot lock mutex");
 	}
 #elif defined EIF_WINDOWS
 	EnterCriticalSection((EIF_CS_TYPE *) mutex);
@@ -316,7 +316,7 @@ EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER mutex)
 	} else if (res == 0) {
 		return EIF_TRUE;
 	} else {
-		GE_raise_with_message("Cannot lock mutex", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot lock mutex");
 		return EIF_FALSE;
 	}
 #elif defined EIF_WINDOWS
@@ -335,7 +335,7 @@ void GE_mutex_unlock(EIF_POINTER mutex)
 {
 #ifdef EIF_POSIX_THREADS
 	if (!pthread_mutex_unlock((EIF_MUTEX_TYPE *) mutex)) {
-		GE_raise_with_message("Cannot unlock mutex", EN_EXT);
+		GE_raise_with_message(GE_EX_EXT, "Cannot unlock mutex");
 	}
 #elif defined EIF_WINDOWS
 	LeaveCriticalSection((EIF_CS_TYPE *) mutex);
@@ -348,7 +348,7 @@ void GE_mutex_destroy(EIF_POINTER mutex)
 	if (mutex) {
 #ifdef EIF_POSIX_THREADS
 		if (!pthread_mutex_destroy((EIF_MUTEX_TYPE *) mutex)) {
-			GE_raise_with_message("Cannot destory mutex", EN_EXT);
+			GE_raise_with_message(GE_EX_EXT, "Cannot destory mutex");
 		}
 #elif defined EIF_WINDOWS
 		DeleteCriticalSection((EIF_CS_TYPE *) mutex);

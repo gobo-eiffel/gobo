@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -768,6 +768,15 @@ feature -- Kernel types
 	double_type: ET_CLASS_TYPE
 			-- Class type "DOUBLE"
 
+	exception_type: ET_CLASS_TYPE
+			-- Class type "detachable EXCEPTION", with implicit 'attached' type mark
+
+	detachable_exception_type: ET_CLASS_TYPE
+			-- Class type "detachable EXCEPTION"
+
+	exception_manager_type: ET_CLASS_TYPE
+			-- Class type "EXCEPTION_MANAGER", with implicit 'attached' type mark
+
 	function_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "FUNCTION [ANY, TUPLE, ANY]", with implicit 'attached' type mark
 
@@ -785,6 +794,9 @@ feature -- Kernel types
 
 	integer_64_type: ET_CLASS_TYPE
 			-- Class type "INTEGER_64"
+
+	ise_exception_manager_type: ET_CLASS_TYPE
+			-- Class type "ISE_EXCEPTION_MANAGER", with implicit 'attached' type mark
 
 	iterable_detachable_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ITERABLE [detachable ANY]", with implicit 'attached' type mark
@@ -873,8 +885,14 @@ feature -- Kernel types
 	detachable_type_detachable_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "detachable TYPE [detachable ANY]"
 
+	detachable_type_exception_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "detachable TYPE [EXCEPTION]"
+
+	type_detachable_exception_type: ET_GENERIC_CLASS_TYPE
+			-- Class type "TYPE [detachable EXCEPTION]", with implicit 'attached' type mark"
+
 	type_like_current_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "TYPE [like Current], with implicit 'attached' type mark"
+			-- Class type "TYPE [like Current]", with implicit 'attached' type mark"
 
 	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
@@ -905,12 +923,15 @@ feature -- Kernel types
 			set_character_8_type
 			set_character_32_type
 			set_double_type
+			set_exception_type
+			set_exception_manager_type
 			set_function_type
 			set_integer_type
 			set_integer_8_type
 			set_integer_16_type
 			set_integer_32_type
 			set_integer_64_type
+			set_ise_exception_manager_type
 			set_iterable_type
 			set_natural_type
 			set_natural_8_type
@@ -1048,6 +1069,31 @@ feature -- Kernel types
 			create double_type.make (Void, l_name, l_master_class)
 		end
 
+	set_exception_type
+			-- Set type "EXCEPTION".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.exception_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create exception_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_exception_type.make (tokens.detachable_keyword, l_name, l_master_class)
+		end
+
+	set_exception_manager_type
+			-- Set type "EXCEPTION_MANAGER".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.exception_manager_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create exception_manager_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+		end
+
 	set_function_type
 			-- Set type with base class "FUNCTION".
 		local
@@ -1135,6 +1181,18 @@ feature -- Kernel types
 			create integer_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_64_convert_feature.make (integer_64_type)
+		end
+
+	set_ise_exception_manager_type
+			-- Set type "ISE_EXCEPTION_MANAGER".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.ise_exception_manager_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create ise_exception_manager_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
 	set_iterable_type
@@ -1476,6 +1534,14 @@ feature -- Kernel types
 			create type_detachable_any_type.make (Void, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [detachable ANY]"
 			create detachable_type_detachable_any_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+				-- "detachable TYPE [EXCEPTION]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (detachable_exception_type)
+			create detachable_type_exception_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+				-- "TYPE [detachable EXCEPTION]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (detachable_exception_type)
+			create type_detachable_exception_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- "TYPE [like Current]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
@@ -1540,6 +1606,9 @@ feature -- Kernel types
 			character_32_type := tokens.unknown_class_type
 			character_32_convert_feature := tokens.unknown_convert_feature
 			double_type := tokens.unknown_class_type
+			exception_type := tokens.unknown_class_type
+			detachable_exception_type := tokens.unknown_class_type
+			exception_manager_type := tokens.unknown_class_type
 			function_type := tokens.unknown_generic_class_type
 			integer_type := tokens.unknown_class_type
 			integer_8_type := tokens.unknown_class_type
@@ -1550,6 +1619,7 @@ feature -- Kernel types
 			integer_32_convert_feature := tokens.unknown_convert_feature
 			integer_64_type := tokens.unknown_class_type
 			integer_64_convert_feature := tokens.unknown_convert_feature
+			ise_exception_manager_type := tokens.unknown_class_type
 			iterable_detachable_any_type := tokens.unknown_generic_class_type
 			natural_type := tokens.unknown_class_type
 			natural_8_type := tokens.unknown_class_type
@@ -1583,6 +1653,8 @@ feature -- Kernel types
 			system_string_type := tokens.unknown_class_type
 			type_any_type := tokens.unknown_generic_class_type
 			type_detachable_any_type := tokens.unknown_generic_class_type
+			detachable_type_exception_type := tokens.unknown_generic_class_type
+			type_detachable_exception_type := tokens.unknown_generic_class_type
 			detachable_type_detachable_any_type := tokens.unknown_generic_class_type
 			type_like_current_type := tokens.unknown_generic_class_type
 			typed_pointer_any_type := tokens.unknown_generic_class_type
@@ -2469,11 +2541,15 @@ invariant
 	array_like_current_type_not_void: array_like_current_type /= Void
 	character_8_type_not_void: character_8_type /= Void
 	character_32_type_not_void: character_32_type /= Void
+	exception_type_not_void: detachable_exception_type /= Void
+	detachable_exception_type_not_void: exception_type /= Void
+	exception_manager_type_not_void: exception_manager_type /= Void
 	function_type_not_void: function_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
 	integer_32_type_not_void: integer_32_type /= Void
 	integer_64_type_not_void: integer_64_type /= Void
+	ise_exception_manager_type_not_void: ise_exception_manager_type /= Void
 	iterable_detachable_any_type_not_void: iterable_detachable_any_type /= Void
 	natural_8_type_not_void: natural_8_type /= Void
 	natural_16_type_not_void: natural_16_type /= Void
@@ -2499,6 +2575,8 @@ invariant
 	tuple_like_current_type_not_void: tuple_like_current_type /= Void
 	type_any_type_not_void: type_any_type /= Void
 	type_detachable_any_type_not_void: type_detachable_any_type /= Void
+	detachable_type_exception_type_not_void: detachable_type_exception_type /= Void
+	type_detachable_exception_type_not_void: type_detachable_exception_type /= Void
 	detachable_type_detachable_any_type_not_void: detachable_type_detachable_any_type /= Void
 	type_like_currenttype_not_void: type_like_current_type /= Void
 	typed_pointer_any_type_not_void: typed_pointer_any_type /= Void

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			string_32_type := unknown_type
 			special_character_8_type := unknown_type
 			special_character_32_type := unknown_type
+			ise_exception_manager_type := unknown_type
 			any_type := unknown_type
 			none_type := unknown_type
 		ensure
@@ -96,6 +97,7 @@ feature {NONE} -- Initialization
 			string_32_type_not_void: string_32_type /= Void
 			special_character_8_type_not_void: special_character_8_type /= Void
 			special_character_32_type_not_void: special_character_32_type /= Void
+			ise_exception_manager_type_not_void: ise_exception_manager_type /= Void
 			unknown_type_not_void: unknown_type /= Void
 		end
 
@@ -211,6 +213,9 @@ feature -- Types
 
 	special_character_32_type: ET_DYNAMIC_TYPE
 			-- Type "SPECIAL [CHARACTER_32]"
+
+	ise_exception_manager_type: ET_DYNAMIC_TYPE
+			-- Type "ISE_EXCEPTION_MANAGER"
 
 	unknown_type: ET_DYNAMIC_TYPE
 			-- Type "*UNKNOWN*"
@@ -1001,6 +1006,8 @@ feature -- Compilation
 								l_root_creation_procedure.set_creation (True)
 								root_creation_procedure := l_root_creation_procedure
 								dynamic_type_set_builder.mark_type_alive (l_dynamic_root_type)
+									-- Type "ISE_EXCEPTION_MANAGER" is used from the runtime.
+								dynamic_type_set_builder.mark_type_alive (ise_exception_manager_type)
 								build_dynamic_type_sets
 							end
 						end
@@ -1573,6 +1580,39 @@ feature {NONE} -- Compilation
 						end
 					end
 				end
+					-- Type "ISE_EXCEPTION_MANAGER".
+				ise_exception_manager_set_exception_data_feature := Void
+				l_class_type := current_system.ise_exception_manager_type
+				l_class := l_class_type.base_class
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+					ise_exception_manager_type := unknown_type
+				else
+					ise_exception_manager_type := dynamic_type (l_class_type, l_any)
+					l_class.process (current_system.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
+							-- Error already reported by the previous
+							-- processing on `l_class'.
+						set_fatal_error
+					else
+							-- Check feature 'set_exception_data' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_procedure (tokens.set_exception_data_feature_name) as l_procedure then
+							if attached l_class.named_query (tokens.set_exception_data_feature_name) as l_query then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_query)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.set_exception_data_feature_name)
+							end
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_set_exception_data_feature := l_dynamic_feature
+-- TODO: check the signature of this feature.
+						end
+					end
+				end
 					-- Type "ANY".
 				any_type := dynamic_type (current_system.any_type, l_any)
 					-- Type "NONE".
@@ -1691,6 +1731,11 @@ feature -- Processors
 			dynamic_type_set_builder_set: dynamic_type_set_builder = a_builder
 		end
 
+feature -- Features
+
+	ise_exception_manager_set_exception_data_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'set_exception_data' in class "ISE_EXCEPTION_MANAGER"
+
 feature {NONE} -- Features
 
 	array_area_feature: detachable ET_QUERY
@@ -1753,6 +1798,7 @@ invariant
 	string_32_type_not_void: string_32_type /= Void
 	special_character_8_type_not_void: special_character_8_type /= Void
 	special_character_32_type_not_void: special_character_32_type /= Void
+	ise_exception_manager_type_not_void: ise_exception_manager_type /= Void
 	unknown_type_not_void: unknown_type /= Void
 	root_creation_procedure: attached root_creation_procedure as l_root_creation_procedure implies l_root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void

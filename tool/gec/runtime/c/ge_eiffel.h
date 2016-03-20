@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -160,6 +160,9 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #endif
 #endif
 
+extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
+#define GE_str8(s) GE_ms8((s),strlen(s))
+
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
@@ -188,8 +191,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 typedef int32_t EIF_TYPE_ID;
 #define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
 typedef uint16_t EIF_TYPE_INDEX;
-extern EIF_REFERENCE GE_ms8(char* s, EIF_INTEGER_32 c);
-#define RTMS(s) GE_ms8((s),strlen(s))
+#define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 
 #ifdef __cplusplus

@@ -929,6 +929,32 @@ feature {NONE} -- Feature validity
 				else
 					report_builtin_function (a_feature)
 				end
+			when builtin_exception_manager_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_exception_manager_exception_from_code then
+					report_builtin_exception_manager_exception_from_code (a_feature)
+				when builtin_exception_manager_is_caught then
+					report_builtin_exception_manager_is_caught (a_feature)
+				when builtin_exception_manager_is_ignorable then
+					report_builtin_exception_manager_is_ignorable (a_feature)
+				when builtin_exception_manager_is_ignored then
+					report_builtin_exception_manager_is_ignored (a_feature)
+				when builtin_exception_manager_is_raisable then
+					report_builtin_exception_manager_is_raisable (a_feature)
+				when builtin_exception_manager_last_exception then
+					report_builtin_exception_manager_last_exception (a_feature)
+				when builtin_exception_manager_type_of_code then
+					report_builtin_exception_manager_type_of_code (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when builtin_exception_manager_factory_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_exception_manager_factory_exception_manager then
+					report_builtin_exception_manager_factory_exception_manager (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
 			when builtin_special_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
 				when builtin_special_item then
@@ -992,6 +1018,19 @@ feature {NONE} -- Feature validity
 		do
 			l_builtin_class := a_feature.builtin_code // builtin_capacity
 			inspect l_builtin_class
+			when builtin_exception_manager_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_exception_manager_catch then
+					report_builtin_exception_manager_catch (a_feature)
+				when builtin_exception_manager_ignore then
+					report_builtin_exception_manager_ignore (a_feature)
+				when builtin_exception_manager_raise then
+					report_builtin_exception_manager_raise (a_feature)
+				when builtin_exception_manager_set_is_ignored then
+					report_builtin_exception_manager_set_is_ignored (a_feature)
+				else
+					report_builtin_procedure (a_feature)
+				end
 			when builtin_tuple_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
 				when builtin_tuple_put_reference then
@@ -2777,6 +2816,312 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_exception_manager_catch (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.catch' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.catch' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_exception_from_code (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.exception_from_code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.exception_from_code' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.exception_from_code' is a redefinition
+						-- of 'EXCEPTION_MANAGER.exception_from_code'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_ignore (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.ignore' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.ignore' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_is_caught (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.is_caught' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.is_caught' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.is_caught' is a redefinition
+						-- of 'EXCEPTION_MANAGER.is_caught'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_is_ignorable (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.is_ignorable' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.is_ignorable' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.is_ignorable' is a redefinition
+						-- of 'EXCEPTION_MANAGER.is_ignorable'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_is_ignored (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.is_ignored' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.is_ignored' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.is_ignored' is a redefinition
+						-- of 'EXCEPTION_MANAGER.is_ignored'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_is_raisable (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.is_raisable' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.is_raisable' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.is_raisable' is a redefinition
+						-- of 'EXCEPTION_MANAGER.is_raisable'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_last_exception (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.last_exception' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.last_exception' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.last_exception' is a redefinition
+						-- of 'EXCEPTION_MANAGER.last_exception'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_raise (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.raise' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.raise' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_set_is_ignored (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.set_is_ignored' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.set_is_ignored' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (2), 2, l_ise_exception_manager_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_type_of_code (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER.type_of_code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Feature 'ISE_EXCEPTION_MANAGER.type_of_code' is called internally.
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
+						-- "EXCEPTION_MANAGER". So it should have a feature with the
+						-- same seed as `a_feature'. Otherwise we get an error when
+						-- flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached l_ise_exception_manager_feature.result_type_set as l_result_type_set then
+						-- Internal error: 'ISE_EXCEPTION_MANAGER.type_of_code' is a redefinition
+						-- of 'EXCEPTION_MANAGER.type_of_code'. So it should be a query.
+						-- Otherwise we get an error when flattening the features of "ISE_EXCEPTION_MANAGER".
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_ise_exception_manager_feature.set_regular (True)
+					propagate_builtin_actual_argument_dynamic_types (argument_type_set (1), 1, l_ise_exception_manager_feature)
+					propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_exception_manager_factory_exception_manager (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'EXCEPTION_MANAGER_FACTORY.exception_manager' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_dynamic_system.ise_exception_manager_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
 	report_builtin_function_item (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Report that built-in feature 'FUNCTION.item' is being analyzed.
 		require
@@ -3423,6 +3768,22 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_type_set_not_void: Result /= Void
+		end
+
+	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET
+			-- Dynamic type set associated with the `i'-th argument of feature being processed;
+			-- Report a fatal error if not known
+		do
+			if attached current_dynamic_feature.argument_type_set (i) as l_argumnt_type_set then
+				Result := l_argumnt_type_set
+			else
+					-- Internal error: dynamic type set not known.
+				set_fatal_error
+				error_handler.report_giaaa_error
+				Result := current_dynamic_system.unknown_type
+			end
+		ensure
+			argument_type_set_not_void: Result /= Void
 		end
 
 	set_dynamic_type_set (a_dynamic_type_set: ET_DYNAMIC_TYPE_SET; an_operand: ET_OPERAND)

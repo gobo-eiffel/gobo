@@ -48,15 +48,15 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			/* Get all Std handles and raise an IO exception if we fail getting one. */
 		hconout = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (hconout == INVALID_HANDLE_VALUE) {
-			GE_raise(24);
+			GE_raise(GE_EX_PROG);
 		}
 		hconerr = GetStdHandle(STD_ERROR_HANDLE);
 		if (hconerr == INVALID_HANDLE_VALUE) {
-			GE_raise(24);
+			GE_raise(GE_EX_PROG);
 		}
 		hconin = GetStdHandle(STD_INPUT_HANDLE);
 		if (hconin == INVALID_HANDLE_VALUE) {
-			GE_raise(24);
+			GE_raise(GE_EX_PROG);
 		}
 		if (bSuccess) {
 				/*
