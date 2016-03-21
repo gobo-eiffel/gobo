@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2756,7 +2756,7 @@ feature -- Test
 			a_string.replace_substring (a_string2, 4, 3)
 			assert_equal ("replaced6", "foototobar", a_string.out)
 		end
-
+			
 	test_replace_substring_by_string1
 			-- Test feature `replace_substring_by_string'.
 		local
@@ -2903,6 +2903,61 @@ feature -- Test
 			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
+	test_replace_substring_all1
+			-- Test feature `replace_substring_all'.
+		local
+			l_str_32, l_original_32, l_new_32: STRING_32
+			l_str_utf8, l_original_utf8, l_new_utf8: UC_UTF8_STRING
+		do
+			create l_str_32.make_from_string ("foobar")
+			l_str_32.put_code (300, 2)
+			l_str_32.put_code (300, 5)
+			create l_str_utf8.make_from_string_general (l_str_32)
+			create l_original_32.make_empty
+			l_original_32.append_code (300)
+			create l_original_utf8.make_from_string_general (l_original_32)
+			create l_new_32.make_empty
+			l_new_32.append_code (301)
+			l_new_32.append_code (303)
+			create l_new_utf8.make_from_string_general (l_new_32)
+			l_str_utf8.replace_substring_all (l_original_utf8, l_new_utf8)
+			assert_integers_equal ("count_1", 8, l_str_utf8.count)
+			assert_integers_equal ("item1_1", ('f').code, l_str_utf8.item_code (1))
+			assert_integers_equal ("item2_1", 301, l_str_utf8.item_code (2))
+			assert_integers_equal ("item3_1", 303, l_str_utf8.item_code (3))
+			assert_integers_equal ("item4_1", ('o').code, l_str_utf8.item_code (4))
+			assert_integers_equal ("item5_1", ('b').code, l_str_utf8.item_code (5))
+			assert_integers_equal ("item6_1", 301, l_str_utf8.item_code (6))
+			assert_integers_equal ("item7_1", 303, l_str_utf8.item_code (7))
+			assert_integers_equal ("item8_1", ('r').code, l_str_utf8.item_code (8))
+		end
+
+	test_replace_substring_all2
+			-- Test feature `replace_substring_all'.
+		local
+			l_str_32, l_original_32, l_new_32: STRING_32
+			l_str_utf8, l_original_utf8, l_new_utf8: UC_UTF8_STRING
+		do
+			create l_str_32.make_from_string ("foobar")
+			l_str_32.put_code (301, 2)
+			l_str_32.put_code (303, 3)
+			create l_str_utf8.make_from_string_general (l_str_32)
+			create l_original_32.make_empty
+			l_original_32.append_code (301)
+			l_original_32.append_code (303)
+			create l_original_utf8.make_from_string_general (l_original_32)
+			create l_new_32.make_empty
+			l_new_32.append_code (300)
+			create l_new_utf8.make_from_string_general (l_new_32)
+			l_str_utf8.replace_substring_all (l_original_utf8, l_new_utf8)
+			assert_integers_equal ("count_1", 5, l_str_utf8.count)
+			assert_integers_equal ("item1_1", ('f').code, l_str_utf8.item_code (1))
+			assert_integers_equal ("item2_1", 300, l_str_utf8.item_code (2))
+			assert_integers_equal ("item3_1", ('b').code, l_str_utf8.item_code (3))
+			assert_integers_equal ("item4_1", ('a').code, l_str_utf8.item_code (4))
+			assert_integers_equal ("item5_1", ('r').code, l_str_utf8.item_code (5))
+		end
+		
 	test_insert_unicode_character1
 			-- Test feature `insert_unicode_character'.
 		local
@@ -3974,5 +4029,5 @@ feature {NONE} -- Implementation
 			too_big: Result > Platform.Maximum_character_code
 			different: Result /= too_big_character
 		end
-
+   
 end

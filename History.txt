@@ -104,6 +104,7 @@ Version 3.10 - ?
 	  hash code was not reset properly.
 	* Made it compilable in void-safe mode with ISE 7.3.
 	* KL_FILE.copy_file: now uses 8192 blocks, instead of 512.
+	* Fixed bug in UC_STRING.replace_substring_all.
 
 	Gobo Eiffel Lexical Library:
 
