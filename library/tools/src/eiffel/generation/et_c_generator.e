@@ -180,7 +180,6 @@ feature {NONE} -- Initialization
 			create non_conforming_types.make_with_capacity (100)
 			create equality_type_set.make_empty (current_dynamic_system.unknown_type)
 			create equality_common_types.make_with_capacity (100)
-			current_call_info := "0"
 			create operand_stack.make (5000)
 			create call_operands.make (5000)
 			create attachment_dynamic_type_ids.make (100)
@@ -1281,7 +1280,6 @@ feature {NONE} -- Feature generation
 			l_language_string: STRING
 			l_signature_arguments: detachable STRING
 			l_signature_result: detachable STRING
-			l_comma: BOOLEAN
 			l_alias_value: ET_MANIFEST_STRING
 			l_splitter: ST_SPLITTER
 			l_list: DS_LIST [STRING]
@@ -1293,12 +1291,10 @@ feature {NONE} -- Feature generation
 			l_is_cpp: BOOLEAN
 			l_cpp_class_type: STRING
 			l_dll_file: STRING
-			old_call_info: STRING
 			l_has_include_files: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			old_call_info := current_call_info
 				--
 				-- Print signature to `header_file' and `current_file'.
 				--
@@ -1320,67 +1316,49 @@ feature {NONE} -- Feature generation
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
-				nb_args := l_arguments.count
-			end
 			if a_static then
 				print_static_routine_name (current_feature, current_type, header_file)
 				print_static_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					l_comma := True
-				elseif nb_args = 0 then
-					header_file.put_string (c_void)
-					current_file.put_string (c_void)
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
 			elseif a_creation then
 				print_creation_procedure_name (current_feature, current_type, header_file)
 				print_creation_procedure_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					l_comma := True
-				elseif nb_args = 0 then
-					header_file.put_string (c_void)
-					current_file.put_string (c_void)
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
 			else
 				print_routine_name (current_feature, current_type, header_file)
 				print_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					header_file.put_character (',')
-					header_file.put_character (' ')
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
 				print_type_declaration (current_type, header_file)
 				print_type_declaration (current_type, current_file)
 				if current_type.is_expanded then
@@ -1391,28 +1369,27 @@ feature {NONE} -- Feature generation
 				current_file.put_character (' ')
 				print_current_name (header_file)
 				print_current_name (current_file)
-				l_comma := True
 			end
-			if l_arguments /= Void and then nb_args > 0 then
-				from i := 1 until i > nb_args loop
-					if l_comma then
+			l_arguments := a_feature.arguments
+			if l_arguments /= Void then
+				nb_args := l_arguments.count
+				if nb_args > 0 then
+					from i := 1 until i > nb_args loop
 						header_file.put_character (',')
 						current_file.put_character (',')
 						header_file.put_character (' ')
 						current_file.put_character (' ')
-					else
-						l_comma := True
+						l_argument_type_set := argument_type_set (i)
+						l_argument_type := l_argument_type_set.static_type
+						print_type_declaration (l_argument_type, header_file)
+						print_type_declaration (l_argument_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						l_name := l_arguments.formal_argument (i).name
+						print_argument_name (l_name, header_file)
+						print_argument_name (l_name, current_file)
+						i := i + 1
 					end
-					l_argument_type_set := argument_type_set (i)
-					l_argument_type := l_argument_type_set.static_type
-					print_type_declaration (l_argument_type, header_file)
-					print_type_declaration (l_argument_type, current_file)
-					header_file.put_character (' ')
-					current_file.put_character (' ')
-					l_name := l_arguments.formal_argument (i).name
-					print_argument_name (l_name, header_file)
-					print_argument_name (l_name, current_file)
-					i := i + 1
 				end
 			end
 			header_file.put_character (')')
@@ -1454,10 +1431,11 @@ feature {NONE} -- Feature generation
 				current_file.put_character ('0')
 				current_file.put_character (',')
 				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
 				current_file.put_character ('}')
 				current_file.put_character (';')
 				current_file.put_new_line
-				current_call_info := c_tc_address
 			end
 				-- Variable for 'Result' entity.
 			if not l_is_inline and l_result_type /= Void then
@@ -1476,6 +1454,19 @@ feature {NONE} -- Feature generation
 				-- Instructions.
 				--
 			current_file := current_function_body_buffer
+				-- Call stack.
+			if exception_trace_mode then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tc_address)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			print_feature_trace_message_call (True)
 			if l_result_type_set /= Void and then l_result_type_set.is_empty then
 -- TODO: build full dynamic type sets, recursively.
@@ -1710,7 +1701,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				--
 				-- Clean up.
 				--
-			current_call_info := old_call_info
 			current_file := old_file
 			reset_temp_variables
 				-- Flush to file.
@@ -4485,7 +4475,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_once_feature: detachable ET_FEATURE
 			i, nb_args: INTEGER
-			l_comma: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_name: ET_IDENTIFIER
 		do
@@ -4560,67 +4549,49 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 			header_file.put_character (' ')
 			current_file.put_character (' ')
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
-				nb_args := l_arguments.count
-			end
 			if a_static then
 				print_static_routine_name (current_feature, current_type, header_file)
 				print_static_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					l_comma := True
-				elseif nb_args = 0 then
-					header_file.put_string (c_void)
-					current_file.put_string (c_void)
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
 			elseif a_creation then
 				print_creation_procedure_name (current_feature, current_type, header_file)
 				print_creation_procedure_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					l_comma := True
-				elseif nb_args = 0 then
-					header_file.put_string (c_void)
-					current_file.put_string (c_void)
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
 			else
 				print_routine_name (current_feature, current_type, header_file)
 				print_routine_name (current_feature, current_type, current_file)
 				header_file.put_character ('(')
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					header_file.put_string (c_ge_call)
-					header_file.put_character ('*')
-					header_file.put_character (' ')
-					header_file.put_string (c_ac)
-					header_file.put_character (',')
-					header_file.put_character (' ')
-					current_file.put_string (c_ge_call)
-					current_file.put_character ('*')
-					current_file.put_character (' ')
-					current_file.put_string (c_ac)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
+				header_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string (c_ac)
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
 				print_type_declaration (current_type, header_file)
 				print_type_declaration (current_type, current_file)
 				if current_type.is_expanded then
@@ -4631,28 +4602,27 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				print_current_name (header_file)
 				print_current_name (current_file)
-				l_comma := True
 			end
-			if l_arguments /= Void and then nb_args > 0 then
-				from i := 1 until i > nb_args loop
-					if l_comma then
+			l_arguments := a_feature.arguments
+			if l_arguments /= Void then
+				nb_args := l_arguments.count
+				if nb_args > 0 then
+					from i := 1 until i > nb_args loop
 						header_file.put_character (',')
 						current_file.put_character (',')
 						header_file.put_character (' ')
 						current_file.put_character (' ')
-					else
-						l_comma := True
+						l_argument_type_set := argument_type_set (i)
+						l_argument_type := l_argument_type_set.static_type
+						print_type_declaration (l_argument_type, header_file)
+						print_type_declaration (l_argument_type, current_file)
+						header_file.put_character (' ')
+						current_file.put_character (' ')
+						l_name := l_arguments.formal_argument (i).name
+						print_argument_name (l_name, header_file)
+						print_argument_name (l_name, current_file)
+						i := i + 1
 					end
-					l_argument_type_set := argument_type_set (i)
-					l_argument_type := l_argument_type_set.static_type
-					print_type_declaration (l_argument_type, header_file)
-					print_type_declaration (l_argument_type, current_file)
-					header_file.put_character (' ')
-					current_file.put_character (' ')
-					l_name := l_arguments.formal_argument (i).name
-					print_argument_name (l_name, header_file)
-					print_argument_name (l_name, current_file)
-					i := i + 1
 				end
 			end
 			header_file.put_character (')')
@@ -4667,6 +4637,37 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_new_line
 			indent
 			current_file := current_function_body_buffer
+				-- Call stack.
+			if exception_trace_mode then
+				print_indentation
+				current_file.put_string (c_ge_call)
+				current_file.put_character (' ')
+				current_file.put_string (c_tc)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
+				current_file.put_character ('}')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tc_address)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 			print_feature_trace_message_call (True)
 			if a_creation then
 				print_malloc_current (a_feature)
@@ -4768,7 +4769,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_local_type: ET_DYNAMIC_TYPE
 			l_rescue: detachable ET_COMPOUND
 			old_file: KI_TEXT_OUTPUT_STREAM
-			old_call_info: STRING
 			l_result_written_in_body: BOOLEAN
 			l_result_read_in_body: BOOLEAN
 			l_result_written_in_rescue: BOOLEAN
@@ -4776,30 +4776,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			old_call_info := current_call_info
 				--
 				-- Declaration of variables.
 				--
-				-- Variable for exception trace.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ge_call)
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_string (c_ac)
-				current_file.put_character ('}')
-				current_file.put_character (';')
-				current_file.put_new_line
-				current_call_info := c_tc_address
-			end
 				-- Variable for rescue chain.
 			l_rescue := a_feature.rescue_clause
 			if l_rescue /= Void then
@@ -4807,6 +4786,18 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_string (c_ge_rescue)
 				current_file.put_character (' ')
 				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_uint32_t)
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -4840,6 +4831,32 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc_address)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_in_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tr)
+				current_file.put_character (' ')
+				current_file.put_character ('+')
+				current_file.put_character (' ')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
 				print_compound (l_rescue)
 				print_indentation
 				current_file.put_string (c_ge_raise)
@@ -4856,10 +4873,27 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (':')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("r.previous = GE_last_rescue;")
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_string ("GE_last_rescue = &r;")
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('&')
+				current_file.put_character ('r')
+				current_file.put_character (';')
 				current_file.put_new_line
 			end
 			l_result_written_in_rescue := result_written
@@ -4873,7 +4907,16 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_result_read_in_body := result_read
 			if l_rescue /= Void then
 				print_indentation
-				current_file.put_string ("GE_last_rescue = r.previous;")
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_last_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character ('.')
+				current_file.put_string (c_previous)
+				current_file.put_character (';')
 				current_file.put_new_line
 			end
 			if a_result_type /= Void then
@@ -4951,7 +4994,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 				-- Clean up.
 			reset_rescue_data
-			current_call_info := old_call_info
 			current_file := old_file
 		end
 
@@ -5068,11 +5110,9 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 			l_result_type: detachable ET_DYNAMIC_TYPE
 			l_name: ET_FEATURE_NAME
 			l_result: ET_RESULT
-			old_call_info: STRING
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			old_call_info := current_call_info
 				--
 				-- Print signature to `header_file' and `current_file'.
 				--
@@ -5096,38 +5136,31 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 					print_static_routine_name (current_feature, current_type, current_file)
 					header_file.put_character ('(')
 					current_file.put_character ('(')
-					if exception_trace_mode then
-						header_file.put_string (c_ge_call)
-						header_file.put_character ('*')
-						header_file.put_character (' ')
-						header_file.put_string (c_ac)
-						current_file.put_string (c_ge_call)
-						current_file.put_character ('*')
-						current_file.put_character (' ')
-						current_file.put_string (c_ac)
-					else
-						header_file.put_string (c_void)
-						current_file.put_string (c_void)
-					end
+					header_file.put_string (c_ge_context)
+					header_file.put_character ('*')
+					header_file.put_character (' ')
+					header_file.put_string (c_ac)
+					current_file.put_string (c_ge_context)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
 				else
 					print_routine_name (current_feature, current_type, header_file)
 					print_routine_name (current_feature, current_type, current_file)
 					header_file.put_character ('(')
 					current_file.put_character ('(')
-					if exception_trace_mode then
-						header_file.put_string (c_ge_call)
-						header_file.put_character ('*')
-						header_file.put_character (' ')
-						header_file.put_string (c_ac)
-						header_file.put_character (',')
-						header_file.put_character (' ')
-						current_file.put_string (c_ge_call)
-						current_file.put_character ('*')
-						current_file.put_character (' ')
-						current_file.put_string (c_ac)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
+					header_file.put_string (c_ge_context)
+					header_file.put_character ('*')
+					header_file.put_character (' ')
+					header_file.put_string (c_ac)
+					header_file.put_character (',')
+					header_file.put_character (' ')
+					current_file.put_string (c_ge_context)
+					current_file.put_character ('*')
+					current_file.put_character (' ')
+					current_file.put_string (c_ac)
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					print_type_declaration (current_type, header_file)
 					print_type_declaration (current_type, current_file)
 					if current_type.is_expanded then
@@ -5168,10 +5201,11 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 					current_file.put_character ('0')
 					current_file.put_character (',')
 					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
 					current_file.put_character ('}')
 					current_file.put_character (';')
 					current_file.put_new_line
-					current_call_info := c_tc_address
 				end
 					-- Variable for 'Result' entity.
 				print_indentation
@@ -5188,6 +5222,19 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 					-- Instructions.
 					--
 				current_file := current_function_body_buffer
+					-- Call stack.
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc_address)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 					-- Prepare dynamic type sets of wrapper feature.
 				extra_dynamic_type_sets.force_last (l_result_type_set)
 					-- Prepare call expression to attribute feature.
@@ -5230,7 +5277,6 @@ print ("ET_C_GENERATOR.print_extended_attribute: initialization not supported ye
 				--
 				-- Clean up.
 				--
-			current_call_info := old_call_info
 			current_file := old_file
 			reset_temp_variables
 				-- Flush to file.
@@ -5767,7 +5813,6 @@ feature {NONE} -- Instruction generation
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_comma: BOOLEAN
 		do
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
@@ -5812,17 +5857,10 @@ feature {NONE} -- Instruction generation
 				end
 				print_creation_procedure_name (l_dynamic_procedure, l_dynamic_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					l_comma := True
-				end
+				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					else
-						l_comma := True
-					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					l_actual_type_set := dynamic_type_set (call_operands.item (i))
 					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
 					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -6221,7 +6259,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
 			l_parent_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
-			l_comma: BOOLEAN
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			had_error: BOOLEAN
@@ -6289,28 +6326,18 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 						if l_dynamic_precursor.is_static then
 							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								l_comma := True
-							end
+							current_file.put_string (c_ac)
 						else
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							end
+							current_file.put_string (c_ac)
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							print_current_name (current_file)
-							l_comma := True
 						end
 						from i := 1 until i > nb loop
-							if l_comma then
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							else
-								l_comma := True
-							end
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							l_actual_type_set := dynamic_type_set (call_operands.item (i))
 							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
 							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -6429,11 +6456,9 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 					print_indentation
 					print_call_name (a_call, current_feature, l_target_static_type, current_file)
 					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
+					current_file.put_string (c_ac)
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					print_target_expression (call_operands.first, l_target_static_type, True)
 					if l_manifest_tuple_operand /= Void then
 						nb := l_manifest_tuple_operand.count
@@ -6545,6 +6570,16 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			an_instruction_not_void: an_instruction /= Void
 		do
 			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_rescue)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_tr)
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
 			current_file.put_string (c_goto)
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_retry)
@@ -6565,7 +6600,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			i, nb: INTEGER
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_comma: BOOLEAN
 		do
 			l_type := an_instruction.type
 			if attached an_instruction.arguments as l_actuals then
@@ -6593,17 +6627,10 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				print_indentation
 				print_static_routine_name (l_dynamic_procedure, l_target_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					l_comma := True
-				end
+				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					else
-						l_comma := True
-					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					l_actual_type_set := dynamic_type_set (call_operands.item (i))
 					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
 					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -6814,11 +6841,9 @@ feature {NONE} -- Procedure call generation
 			print_indentation
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
-			if exception_trace_mode then
-				current_file.put_string (current_call_info)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-			end
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			nb := call_operands.count
 			print_target_expression (call_operands.first, a_target_type, a_check_void_target)
 			from i := 2 until i > nb loop
@@ -7961,7 +7986,6 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			l_assignment_target: like assignment_target
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_comma: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -8012,17 +8036,10 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 				end
 				print_creation_procedure_name (l_procedure, l_target_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					l_comma := True
-				end
+				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					else
-						l_comma := True
-					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					l_actual_type_set := dynamic_type_set (call_operands.item (i))
 					l_formal_type_set := argument_type_set_in_feature (i, l_procedure)
 					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -8433,11 +8450,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 							current_file.put_string (l_not_not)
 							print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							end
+							current_file.put_string (c_ac)
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							print_target_expression (l_left_operand, l_dynamic_type, False)
 							current_file.put_character (',')
 							current_file.put_character (' ')
@@ -9735,11 +9750,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 							current_file.put_string (l_not_not)
 							print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							end
+							current_file.put_string (c_ac)
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							print_target_expression (l_left_operand, l_dynamic_type, False)
 							current_file.put_character (',')
 							current_file.put_character (' ')
@@ -9758,6 +9771,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 				current_object_equalities.force_last (an_expression)
 				print_object_equality_function_name (current_object_equalities.count, current_feature, current_type, current_file)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
 				print_expression (l_left_operand)
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -10025,7 +10041,6 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
 			l_parent_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
-			l_comma: BOOLEAN
 			l_temp: detachable ET_IDENTIFIER
 			l_temp_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
@@ -10121,28 +10136,18 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						if l_dynamic_precursor.is_static then
 							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								l_comma := True
-							end
+							current_file.put_string (c_ac)
 						else
 							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							end
+							current_file.put_string (c_ac)
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							print_current_name (current_file)
-							l_comma := True
 						end
 						from i := 1 until i > nb loop
-							if l_comma then
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							else
-								l_comma := True
-							end
+							current_file.put_character (',')
+							current_file.put_character (' ')
 							l_actual_type_set := dynamic_type_set (call_operands.item (i))
 							l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_precursor)
 							print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -10448,11 +10453,9 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					else
 						print_call_name (a_call, current_feature, l_target_static_type, current_file)
 						current_file.put_character ('(')
-						if exception_trace_mode then
-							current_file.put_string (current_call_info)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						end
+						current_file.put_string (c_ac)
+						current_file.put_character (',')
+						current_file.put_character (' ')
 						print_target_expression (call_operands.first, l_target_static_type, True)
 						if l_manifest_tuple_operand /= Void then
 							nb := l_manifest_tuple_operand.count
@@ -10561,7 +10564,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					check in_target: in_target end
 					if has_rescue then
 							-- Keep track of the fact that the value of the 'Result' entity has
-							-- been read. Useful to determine the 'volatile'status of the 'Result'
+							-- been read. Useful to determine the 'volatile' status of the 'Result'
 							-- entity when current feature has a rescue clause.
 						result_read := True
 					end
@@ -10750,7 +10753,6 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_assignment_target: like assignment_target
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
-			l_comma: BOOLEAN
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
 		do
@@ -10832,17 +10834,10 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				end
 				print_static_routine_name (l_dynamic_feature, l_target_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					l_comma := True
-				end
+				current_file.put_string (c_ac)
 				from i := 1 until i > nb loop
-					if l_comma then
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					else
-						l_comma := True
-					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					l_actual_type_set := dynamic_type_set (call_operands.item (i))
 					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
 					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
@@ -11848,11 +11843,9 @@ feature {NONE} -- Equality generation
 								current_file.put_string (l_not_not)
 								print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
 								current_file.put_character ('(')
-								if exception_trace_mode then
-									current_file.put_string (current_call_info)
-									current_file.put_character (',')
-									current_file.put_character (' ')
-								end
+								current_file.put_string (c_ac)
+								current_file.put_character (',')
+								current_file.put_character (' ')
 								print_target_expression (l_left_operand, l_dynamic_type, False)
 								current_file.put_character (',')
 								current_file.put_character (' ')
@@ -11963,6 +11956,18 @@ feature {NONE} -- Equality generation
 			print_object_equality_function_name (i, current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			l_left_operand := formal_argument (1)
 			l_left_operand.set_index (an_expression.left.index)
 			print_type_declaration (l_left_static_type, header_file)
@@ -12186,11 +12191,9 @@ feature {NONE} -- Equality generation
 								current_file.put_string (l_not_not)
 								print_routine_name (l_is_equal_feature, l_dynamic_type, current_file)
 								current_file.put_character ('(')
-								if exception_trace_mode then
-									current_file.put_string (current_call_info)
-									current_file.put_character (',')
-									current_file.put_character (' ')
-								end
+								current_file.put_string (c_ac)
+								current_file.put_character (',')
+								current_file.put_character (' ')
 								print_target_expression (l_left_operand, l_dynamic_type, False)
 								current_file.put_character (',')
 								current_file.put_character (' ')
@@ -12711,11 +12714,9 @@ feature {NONE} -- Query call generation
 			end
 			print_routine_name (a_feature, a_target_type, current_file)
 			current_file.put_character ('(')
-			if exception_trace_mode then
-				current_file.put_string (current_call_info)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-			end
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			nb := call_operands.count
 			print_target_expression (call_operands.first, a_target_type, a_check_void_target)
 			from i := 2 until i > nb loop
@@ -13865,14 +13866,12 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			current_file.put_character (' ')
 			print_agent_function_name (i, current_feature, current_type, current_file)
 			current_file.put_character ('(')
-			if exception_trace_mode then
-				current_file.put_string (c_ge_call)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-			end
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (agent_closed_operands_type, current_file)
 			current_file.put_character (' ')
 			print_argument_name (formal_argument (1), current_file)
@@ -14133,16 +14132,10 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
 			old_file: KI_TEXT_OUTPUT_STREAM
-			old_call_info: STRING
 		do
 			old_file := current_file
-			old_call_info := current_call_info
 			l_name := an_agent.name
 			l_arguments := an_agent.arguments
-				-- Variable for exception trace.
-			if exception_trace_mode then
-				current_call_info := c_ac
-			end
 			l_result := an_agent.implicit_result
 			if l_result /= Void then
 					-- Query or Tuple label.
@@ -14202,7 +14195,6 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 				print_qualified_call_instruction (agent_instruction)
 			end
 				-- Clean up.
-			current_call_info := old_call_info
 			current_file := old_file
 		end
 
@@ -14526,14 +14518,12 @@ feature {NONE} -- Polymorphic call functions generation
 			l_seed: INTEGER
 			l_manifest_tuple: detachable ET_MANIFEST_TUPLE
 			l_manifest_tuple_operand: detachable ET_MANIFEST_TUPLE
-			old_call_info: STRING
 			old_type: ET_DYNAMIC_TYPE
 		do
 			old_type := current_type
 			current_type := a_target_type
 			old_feature := current_feature
 			current_feature := dummy_feature
-			old_call_info := current_call_info
 			old_dynamic_type_sets := current_dynamic_type_sets
 			l_argument_type_sets := standalone_type_sets
 			current_dynamic_type_sets := l_argument_type_sets
@@ -14641,21 +14631,18 @@ feature {NONE} -- Polymorphic call functions generation
 			print_call_name (l_static_call, l_caller, a_target_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
-			if exception_trace_mode then
-				header_file.put_string (c_ge_call)
-				header_file.put_character ('*')
-				header_file.put_character (' ')
-				header_file.put_string (c_ac)
-				header_file.put_character (',')
-				header_file.put_character (' ')
-				current_file.put_string (c_ge_call)
-				current_file.put_character ('*')
-				current_file.put_character (' ')
-				current_file.put_string (c_ac)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_call_info := c_ac
-			end
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			print_type_declaration (a_target_type, header_file)
 			print_type_declaration (a_target_type, current_file)
 			if a_target_type.is_expanded then
@@ -14810,7 +14797,6 @@ feature {NONE} -- Polymorphic call functions generation
 			l_target_dynamic_type_ids.wipe_out
 			l_target_dynamic_types.wipe_out
 			current_dynamic_type_sets := old_dynamic_type_sets
-			current_call_info := old_call_info
 			current_feature := old_feature
 			current_type := old_type
 		end
@@ -17073,11 +17059,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					print_indentation
 					print_routine_name (l_copy_feature, current_type, current_file)
 					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
+					current_file.put_string (c_ac)
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					if current_type.is_expanded then
 						current_file.put_character ('&')
 						print_result_name (current_file)
@@ -17675,13 +17659,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17725,13 +17708,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17771,13 +17753,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17821,13 +17802,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17871,13 +17851,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17921,13 +17900,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -17971,13 +17949,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -18014,13 +17991,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -18057,13 +18033,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -18103,13 +18078,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -18156,13 +18130,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				end
 				print_routine_name (l_ise_exception_manager_feature, current_dynamic_system.ise_exception_manager_type, current_file)
 				current_file.put_character ('(')
-				if exception_trace_mode then
-					current_file.put_string (current_call_info)
-					current_file.put_character (',')
-					current_file.put_character (' ')
-				end
--- TODO: Multi-threading: we should return a different object for each thread.
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_exception_manager)
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
@@ -18184,8 +18157,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_character (' ')
 			current_file.put_character ('=')
 			current_file.put_character (' ')
--- TODO: Multi-threading: we should return a different object for each thread.
-			current_file.put_string (c_ge_exception_manager)
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_exception_manager)
 			current_file.put_character (';')
 			current_file.put_new_line
 		end
@@ -19244,11 +19218,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						print_attribute_routine_function_name (l_routine_type, current_file)
 						current_file.put_character (')')
 						current_file.put_character ('(')
-						if exception_trace_mode then
-							current_file.put_string (current_call_info)
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						end
+						current_file.put_string (c_ac)
+						current_file.put_character (',')
+						current_file.put_character (' ')
 						if l_routine_type.attribute_count < 1 then
 								-- Internal error: the Agent type should have at least
 								-- the attribute 'closed_operands' as first feature.
@@ -19332,11 +19304,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					print_attribute_routine_function_name (l_routine_type, current_file)
 					current_file.put_character (')')
 					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
-						current_file.put_character (',')
-						current_file.put_character (' ')
-					end
+					current_file.put_string (c_ac)
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					if l_routine_type.attribute_count < 1 then
 							-- Internal error: the Agent type should have at least
 							-- the attribute 'closed_operands' as first feature.
@@ -24801,9 +24771,7 @@ feature {NONE} -- C function generation
 			l_root_creation: ET_CREATE_EXPRESSION
 			l_root_call: ET_QUALIFIED_CALL
 			l_temp: ET_IDENTIFIER
-			old_call_info: STRING
 		do
-			old_call_info := current_call_info
 			current_file.put_line ("int GE_main(int argc, EIF_NATIVE_CHAR** argv)")
 			current_file.put_character ('{')
 			current_file.put_new_line
@@ -24811,11 +24779,6 @@ feature {NONE} -- C function generation
 			l_root_creation_procedure := current_dynamic_system.root_creation_procedure
 			if l_root_type /= Void and l_root_creation_procedure /= Void then
 				indent
-				if exception_trace_mode then
-						-- There is no caller for the root creation procedure.
-						-- Hence a null pointer.
-					current_call_info := "0"
-				end
 				print_indentation
 				print_type_declaration (l_root_type, current_file)
 				current_file.put_character (' ')
@@ -24824,24 +24787,43 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
+				current_file.put_string (c_ge_context)
+				current_file.put_character (' ')
+				current_file.put_string (c_tc)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_default_context)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tc_address)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
 				current_file.put_line ("GE_argc = argc;")
 				print_indentation
 				current_file.put_line ("GE_argv = argv;")
 				print_indentation
-				current_file.put_line ("GE_last_rescue = 0;")
+				current_file.put_line ("GE_main_context = ac;")
 				print_indentation
 				current_file.put_line ("GE_init_gc();")
-					-- Create 'GE_exception_manager'.
+					-- Exception handling.
 				print_indentation
-				current_file.put_string (c_ge_exception_manager)
+				current_file.put_string (c_ge_new_exception_manager)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
+				current_file.put_character ('&')
 				current_file.put_string (c_ge_new)
 				current_file.put_integer (current_dynamic_system.ise_exception_manager_type.id)
-				current_file.put_character ('(')
-				current_file.put_string (c_eif_true)
-				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
 				if attached current_dynamic_system.ise_exception_manager_set_exception_data_feature as l_ise_exception_manager_set_exception_data_feature then
@@ -24856,10 +24838,12 @@ feature {NONE} -- C function generation
 					current_file.put_new_line
 				end
 				print_indentation
+				current_file.put_line ("GE_init_exception(ac);")
 				if multithreaded_mode then
-					current_file.put_line ("GE_init_thread();")
 					print_indentation
+					current_file.put_line ("GE_init_thread(ac);")
 				end
+				print_indentation
 				current_file.put_line ("GE_init_identified();")
 				print_indentation
 				current_file.put_line ("GE_const_init();")
@@ -24908,7 +24892,6 @@ feature {NONE} -- C function generation
 			end
 			current_file.put_character ('}')
 			current_file.put_new_line
-			current_call_info := old_call_info
 		end
 
 	print_manifest_string_8_function
@@ -27603,12 +27586,10 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 					print_attribute_routine_function_name (l_function_type, a_file)
 					a_file.put_character (')')
 					a_file.put_character ('(')
-					if exception_trace_mode then
-						a_file.put_string (c_ge_call)
-						a_file.put_character ('*')
-						a_file.put_character (',')
-						a_file.put_character (' ')
-					end
+					a_file.put_string (c_ge_context)
+					a_file.put_character ('*')
+					a_file.put_character (',')
+					a_file.put_character (' ')
 					print_type_declaration (a_type, a_file)
 					l_open_operand_type_sets := l_function_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count
@@ -27632,12 +27613,10 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 					print_attribute_routine_function_name (l_procedure_type, a_file)
 					a_file.put_character (')')
 					a_file.put_character ('(')
-					if exception_trace_mode then
-						a_file.put_string (c_ge_call)
-						a_file.put_character ('*')
-						a_file.put_character (',')
-						a_file.put_character (' ')
-					end
+					a_file.put_string (c_ge_context)
+					a_file.put_character ('*')
+					a_file.put_character (',')
+					a_file.put_character (' ')
 					print_type_declaration (a_type, a_file)
 					l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
 					nb := l_open_operand_type_sets.count
@@ -27757,12 +27736,10 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			a_file.put_new_line
 			a_file.put_character ('%T')
 			a_file.put_string ("void (*dispose) (")
-			if exception_trace_mode then
-				a_file.put_string (c_ge_call)
-				a_file.put_character ('*')
-				a_file.put_character (',')
-				a_file.put_character (' ')
-			end
+			a_file.put_string (c_ge_context)
+			a_file.put_character ('*')
+			a_file.put_character (',')
+			a_file.put_character (' ')
 			a_file.put_string ("EIF_REFERENCE)")
 			a_file.put_character (';')
 			a_file.put_new_line
@@ -30111,10 +30088,6 @@ feature {NONE} -- Access
 			-- Equalities ('=' or '/=') appearing in `current_feature' for which
 			-- a function needs to be generated
 
-	current_call_info: STRING
-			-- Textual representation of a pointer to a 'GE_call'
-			-- C struct corresponding to the current call
-
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
@@ -31001,6 +30974,7 @@ feature {NONE} -- Constants
 	c_and_then: STRING = "&&"
 	c_arrow: STRING = "->"
 	c_break: STRING = "break"
+	c_call: STRING = "call"
 	c_case: STRING = "case"
 	c_char: STRING = "char"
 	c_default: STRING = "default"
@@ -31049,6 +31023,7 @@ feature {NONE} -- Constants
 	c_else: STRING = "else"
 	c_endif: STRING = "#endif"
 	c_equal: STRING = "=="
+	c_exception_manager: STRING = "exception_manager"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
 	c_float: STRING = "float"
@@ -31066,9 +31041,11 @@ feature {NONE} -- Constants
 	c_ge_catcall: STRING = "GE_catcall"
 	c_ge_ceiling: STRING = "GE_ceiling"
 	c_ge_const_init: STRING = "GE_const_init"
+	c_ge_context: STRING = "GE_context"
 	c_ge_deep: STRING = "GE_deep"
 	c_ge_deep_twin: STRING = "GE_deep_twin"
 	c_ge_default: STRING = "GE_default"
+	c_ge_default_context: STRING = "GE_default_context"
 	c_ge_developer_raise: STRING = "GE_developer_raise"
 	c_ge_dts: STRING = "GE_dts"
 	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
@@ -31077,7 +31054,6 @@ feature {NONE} -- Constants
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
 	c_ge_ex_prog: STRING = "GE_EX_PROG"
 	c_ge_ex_when: STRING = "GE_EX_WHEN"
-	c_ge_exception_manager: STRING = "GE_exception_manager"
 	c_ge_floor: STRING = "GE_floor"
 	c_ge_id_object: STRING = "GE_id_object"
 	c_ge_int8: STRING = "GE_int8"
@@ -31093,6 +31069,7 @@ feature {NONE} -- Constants
 	c_ge_nat32: STRING = "GE_nat32"
 	c_ge_nat64: STRING = "GE_nat64"
 	c_ge_new: STRING = "GE_new"
+	c_ge_new_exception_manager: STRING = "GE_new_exception_manager"
 	c_ge_object_id: STRING = "GE_object_id"
 	c_ge_object_id_free: STRING = "GE_object_id_free"
 	c_ge_power: STRING = "GE_power"
@@ -31122,6 +31099,7 @@ feature {NONE} -- Constants
 	c_if: STRING = "if"
 	c_ifdef: STRING = "#ifdef"
 	c_ifndef: STRING = "#ifndef"
+	c_in_rescue: STRING = "in_rescue"
 	c_include: STRING = "#include"
 	c_initialize: STRING = "initialize"
 	c_int: STRING = "int"
@@ -31130,6 +31108,7 @@ feature {NONE} -- Constants
 	c_int32_t: STRING = "int32_t"
 	c_int64_t: STRING = "int64_t"
 	c_is_special: STRING = "is_special"
+	c_last_rescue: STRING = "last_rescue"
 	c_memcmp: STRING = "memcmp"
 	c_memcpy: STRING = "memcpy"
 	c_memset: STRING = "memset"
@@ -31137,6 +31116,7 @@ feature {NONE} -- Constants
 	c_not_equal: STRING = "!="
 	c_not_not: STRING = ""
 	c_or_else: STRING = "||"
+	c_previous: STRING = "previous"
 	c_return: STRING = "return"
 	c_sizeof: STRING = "sizeof"
 	c_stderr: STRING = "stderr"
@@ -31144,8 +31124,10 @@ feature {NONE} -- Constants
 	c_switch: STRING = "switch"
 	c_tc: STRING = "tc"
 	c_tc_address: STRING = "&tc"
+	c_tr: STRING = "tr"
 	c_type_id: STRING = "type_id"
 	c_typedef: STRING = "typedef"
+	c_uint32_t: STRING = "uint32_t"
 	c_undef: STRING = "#undef"
 	c_unsigned: STRING = "unsigned"
 	c_void: STRING = "void"
@@ -31301,6 +31283,5 @@ invariant
 	agent_manifest_tuple_not_void: agent_manifest_tuple /= Void
 	formal_arguments_not_void: formal_arguments /= Void
 	no_void_formal_argument: not formal_arguments.has_void
-	current_call_info_not_void: current_call_info /= Void
 
 end

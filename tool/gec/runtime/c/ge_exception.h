@@ -93,21 +93,42 @@ struct GE_rescue_struct {
 };
 
 /*
-	Context of last feature entered containing a rescue clause.
-	Warning: this is not thread-safe.
+	Information about the execution context.
+	One such struct per thread.
 */
-extern GE_rescue* GE_last_rescue;
+typedef struct GE_context_struct GE_context;
+struct GE_context_struct {
+	GE_call* call; /* Call stack. */
+	EIF_REFERENCE exception_manager; /* Exception manager. */
+	EIF_BOOLEAN exception_trace; /* Should exception trace be displayed? */
+	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause. */
+	uint32_t in_rescue; /* Number of rescue clauses currently being executed. */
+};
 
 /*
-	Exception manager.
-	Can be used from any thread.
+	Default initialization for 'GE_context'.
 */
-extern EIF_REFERENCE GE_exception_manager;
+extern GE_context GE_default_context;
+
+/*
+	Execution context of main thread.
+*/
+extern GE_context* GE_main_context;
+
+/*
+	Initialization of exception handling.
+*/
+extern void GE_init_exception(GE_context* context);
+
+/*
+	Pointer to function to create a new exception manager object.
+*/
+extern EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
 
 /*
 	Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data
 */
-extern void (*GE_set_exception_data)(EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
 	Raise an exception with code 'code'.
@@ -117,12 +138,12 @@ extern void GE_raise(long code);
 /*
 	Raise an exception with code 'code' and message 'msg'.
 */
-extern void GE_raise_with_message(long code, const char *msg);
+extern void GE_raise_with_message(long code, const char* msg);
 
 /*
 	Raise an exception from EXCEPTION_MANAGER.
 */
-extern void GE_developer_raise(long code, char *meaning, char *message);
+extern void GE_developer_raise(long code, char* meaning, char* message);
 
 /*
 	Check whether the type id of 'obj' is not in 'type_ids'.

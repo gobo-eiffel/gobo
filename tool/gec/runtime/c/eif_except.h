@@ -74,7 +74,7 @@ extern void esys(void);
 /*
 	As a special case, an I/O error is raised when a system call which is I/O bound fails.
 */
-extern void eise_io(const char *tag);
+extern void eise_io(const char* tag);
 
 /*
 	Raise a "No more memory" exception.
@@ -84,7 +84,7 @@ extern void enomem(void);
 /*
 	Raise EiffelCOM exception.
 */
-extern void com_eraise(const char *tag, long num);
+extern void com_eraise(const char* tag, long num);
 
 /*
 	Terminate execution with exit status 'code',
@@ -105,7 +105,7 @@ extern EIF_REFERENCE eename(long except);
 extern char eedefined(long ex);
 
 /*
-	Enable/diable printing of the history table.
+	Enable/diable printing of the exception trace.
 	Per thead information.
 */
 extern void eetrace(char b);

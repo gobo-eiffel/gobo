@@ -22,21 +22,36 @@ extern "C" {
 #endif
 
 /*
-	Context of last feature entered containing a rescue clause.
-	Warning: this is not thread-safe.
+	Default initialization for 'GE_context'.
 */
-GE_rescue* GE_last_rescue;
+GE_context GE_default_context = {0, 0, 0, 0, 0};
 
 /*
-	Exception manager.
-	Can be used from any thread.
+	Execution context of main thread.
+	Should be called from the main thread only.
 */
-EIF_REFERENCE GE_exception_manager;
+GE_context* GE_main_context;
+
+/*
+	Initialization of exception handling.
+*/
+void GE_init_exception(GE_context* context)
+{
+	EIF_REFERENCE l_exception_manager;
+
+	l_exception_manager = GE_new_exception_manager(EIF_TRUE);
+	context->exception_manager = l_exception_manager;
+}
+
+/*
+	Pointer to function to create a new exception manager object.
+*/
+EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
 
 /*
 	Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data
 */
-void (*GE_set_exception_data)(EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
 	Jump to execute the rescue of the last routine with a rescue
@@ -44,9 +59,18 @@ void (*GE_set_exception_data)(EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_IN
 */
 static void GE_jump_to_last_rescue()
 {
-	GE_rescue* r = GE_last_rescue;
+	GE_context* context;
+#ifdef EIF_THREADS
+	GE_thread_context* volatile ge_thread_context;
+	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
+	context = ge_thread_context->context;
+#else
+	context = GE_main_context;
+#endif
+
+	GE_rescue* r = context->last_rescue;
 	if (r != 0) {
-		GE_last_rescue = r->previous;
+		context->last_rescue = r->previous;
 		GE_longjmp(r->jb, 1);
 	}
 #ifdef EIF_WINDOWS
@@ -59,7 +83,7 @@ static void GE_jump_to_last_rescue()
 /*
 	Call feature EXCEPTION_MANAGER.set_exception_data.
 */
-static void GE_call_set_exception_data(long code, int new_obj, int signal_code, int error_code, const char *tag, char *recipient, char *eclass, char *rf_routine, char *rf_class, char *trace, int line_number, int is_invariant_entry)
+static void GE_call_set_exception_data(long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
 {
 	EIF_REFERENCE l_tag;
 	EIF_REFERENCE l_recipient;
@@ -67,6 +91,14 @@ static void GE_call_set_exception_data(long code, int new_obj, int signal_code, 
 	EIF_REFERENCE l_rf_routine;
 	EIF_REFERENCE l_rf_class;
 	EIF_REFERENCE l_trace;
+	GE_context* context;
+#ifdef EIF_THREADS
+	GE_thread_context* volatile ge_thread_context;
+	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
+	context = ge_thread_context->context;
+#else
+	context = GE_main_context;
+#endif
 
 	if (tag) {
 		l_tag = GE_str8(tag);
@@ -98,11 +130,7 @@ static void GE_call_set_exception_data(long code, int new_obj, int signal_code, 
 	} else {
 		l_trace = GE_ms8("", 0);
 	}
-	GE_set_exception_data(
-#ifdef EIF_EXCEPTION_TRACE
-		0,
-#endif
-		GE_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
+	GE_set_exception_data(context, context->exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
 }
 
 /*
@@ -117,7 +145,7 @@ void GE_raise(long code)
 /*
 	Raise an exception with code 'code' and message 'msg'.
 */
-void GE_raise_with_message(long code, const char *msg)
+void GE_raise_with_message(long code, const char* msg)
 {
 	GE_call_set_exception_data(code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
 	GE_jump_to_last_rescue();
@@ -126,7 +154,7 @@ void GE_raise_with_message(long code, const char *msg)
 /*
 	Raise an exception from EXCEPTION_MANAGER.
 */
-void GE_developer_raise(long code, char *meaning, char *message)
+void GE_developer_raise(long code, char* meaning, char* message)
 {
 	GE_call_set_exception_data(code, 0, -1, -1, message, NULL, NULL, NULL, NULL, NULL, -1, 0);
 	GE_jump_to_last_rescue();

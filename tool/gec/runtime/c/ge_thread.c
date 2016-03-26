@@ -32,23 +32,11 @@ static EIF_THR_TYPE GE_current_thread(void)
 #endif
 }
 
-/* Create current thread context. */
-/* Use 'context' if not null. */
-static void GE_create_thread_context(GE_thread_context *context)
+/* Initialize context of current thread. */
+static void GE_init_thread_context(GE_thread_context* context)
 {
-	GE_thread_context *ge_thread_context;
-
-	if (context == 0) {
-		ge_thread_context = (GE_thread_context *) GE_calloc_uncollectable(1, sizeof(GE_thread_context));
-	} else {
-		ge_thread_context = context;
-	}
-	if (ge_thread_context) {
-		ge_thread_context->thread_id = GE_current_thread();
-		EIF_TSD_SET(GE_thread_context_key, ge_thread_context, "Couldn't bind thread context to TSD.");
-	} else {
-		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
-	}
+	context->thread_id = GE_current_thread();
+	EIF_TSD_SET(GE_thread_context_key, context, "Couldn't bind thread context to TSD.");
 }
 
 /* Set priority level to thread. */
@@ -85,18 +73,21 @@ static void GE_thread_set_priority(EIF_THR_TYPE thread_id, unsigned int priority
 #endif
 }
 
-/* Routine to be called from the new thread is created. */
+/* Routine to be called from the new thread when created. */
 #ifdef EIF_WINDOWS
-static unsigned __stdcall GE_thread_routine (void *arg)
+static unsigned __stdcall GE_thread_routine (void* arg)
 #else
-static void *GE_thread_routine (void *arg)
+static void* GE_thread_routine (void* arg)
 #endif
 {
-	GE_thread_context *ge_thread_context = (GE_thread_context *) arg;
+	GE_thread_context* ge_thread_context = (GE_thread_context*) arg;
+	GE_context ge_context = GE_default_context;
 
-	GE_create_thread_context(ge_thread_context);
+	GE_init_exception(&ge_context);
+	GE_init_thread_context(ge_thread_context);
 	GE_thread_set_priority(ge_thread_context->thread_id, ge_thread_context->initial_priority);
-	ge_thread_context->routine (ge_thread_context->current);
+	ge_thread_context->context = &ge_context
+	ge_thread_context->routine (&ge_context, ge_thread_context->current);
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
 	return 0;
@@ -107,20 +98,28 @@ static void *GE_thread_routine (void *arg)
 
 /* Initialize data to handle threads. */
 /* To be called at the beginning of the main function. */
-void GE_init_thread(void)
+void GE_init_thread(GE_context* context)
 {
+	GE_thread_context* ge_thread_context;
+
 	EIF_TSD_CREATE(GE_thread_context_key, "Couldn't create GE_thread_context_key");
-	GE_create_thread_context((GE_thread_context *) 0);
+	ge_thread_context = (GE_thread_context*) GE_calloc_uncollectable(1, sizeof(GE_thread_context));
+	if (ge_thread_context) {
+		GE_init_thread_context(ge_thread_context);
+		ge_thread_context->context = context;
+	} else {
+		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
+	}
 }
 
 /* Create a new thread with attributes 'attr' and execute Eiffel routine 'routine' on object 'current'. */
-void GE_thread_create_with_attr (EIF_REFERENCE current, void (* routine) (EIF_REFERENCE), EIF_THR_ATTR_TYPE *attr)
+void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine) (GE_context*, EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr)
 {
 	EIF_THR_TYPE thread_id;
-	GE_thread_context *ge_thread_context;
-	GE_thread_context *ge_new_thread_context;
+	GE_thread_context* ge_thread_context;
+	GE_thread_context* ge_new_thread_context;
 
-	ge_new_thread_context = (GE_thread_context *) GE_calloc_uncollectable(1, sizeof(GE_thread_context));
+	ge_new_thread_context = (GE_thread_context*) GE_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (!ge_new_thread_context) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	} else {
@@ -169,7 +168,7 @@ void GE_thread_create_with_attr (EIF_REFERENCE current, void (* routine) (EIF_RE
 /* Thread ID of current thread. */
 EIF_POINTER GE_thread_id(void)
 {
-	GE_thread_context * volatile ge_thread_context;
+	GE_thread_context* volatile ge_thread_context;
 
 	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
 	return (EIF_POINTER) (ge_thread_context->thread_id);
@@ -216,7 +215,7 @@ void eif_thr_join_all(void)
 /* This function must be called from the thread itself (not the parent). */
 void GE_thread_exit(void)
 {
-	GE_thread_context * volatile ge_thread_context;
+	GE_thread_context* volatile ge_thread_context;
 	EIF_THR_TYPE l_thread_id;
 
 	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
@@ -254,10 +253,10 @@ EIF_INTEGER GE_thread_max_priority(void)
 EIF_POINTER GE_mutex_create(void)
 {
 #ifdef EIF_POSIX_THREAD
-	EIF_MUTEX_TYPE *mutex;
+	EIF_MUTEX_TYPE* mutex;
 	int Result;
 
-	mutex = (EIF_MUTEX_TYPE *) GE_malloc(sizeof(EIF_MUTEX_TYPE));
+	mutex = (EIF_MUTEX_TYPE*) GE_malloc(sizeof(EIF_MUTEX_TYPE));
 	if (mutex) {
 			/* Make the mutex recursive by default. */
 			/* This allows a thread to lock the mutex several times without blocking itself. */
@@ -277,7 +276,7 @@ EIF_POINTER GE_mutex_create(void)
 #elif defined EIF_WINDOWS
 	EIF_CS_TYPE *section;
 
-	section = (EIF_CS_TYPE *) GE_malloc(sizeof(EIF_CS_TYPE));
+	section = (EIF_CS_TYPE*) GE_malloc(sizeof(EIF_CS_TYPE));
 	if (section) {
 		if (!InitializeCriticalSectionAndSpinCount(section, (DWORD) 4000)) {
 			GE_free(section);
@@ -297,11 +296,11 @@ EIF_POINTER GE_mutex_create(void)
 void GE_mutex_lock(EIF_POINTER mutex)
 {
 #ifdef EIF_POSIX_THREADS
-	if (!pthread_mutex_lock((EIF_MUTEX_TYPE *) mutex)) {
+	if (!pthread_mutex_lock((EIF_MUTEX_TYPE*) mutex)) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot lock mutex");
 	}
 #elif defined EIF_WINDOWS
-	EnterCriticalSection((EIF_CS_TYPE *) mutex);
+	EnterCriticalSection((EIF_CS_TYPE*) mutex);
 #endif
 }
 
@@ -310,7 +309,7 @@ EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER mutex)
 {
 #ifdef EIF_POSIX_THREADS
 	int res;
-	res = pthread_mutex_trylock((EIF_MUTEX_TYPE *) mutex);
+	res = pthread_mutex_trylock((EIF_MUTEX_TYPE*) mutex);
 	if (res == EBUSY) {
 		return EIF_FALSE;
 	} else if (res == 0) {
@@ -320,7 +319,7 @@ EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER mutex)
 		return EIF_FALSE;
 	}
 #elif defined EIF_WINDOWS
-	if (TryEnterCriticalSection((EIF_CS_TYPE *) mutex)) {
+	if (TryEnterCriticalSection((EIF_CS_TYPE*) mutex)) {
 		return EIF_TRUE;
 	} else {
 		return EIF_FALSE;
@@ -334,11 +333,11 @@ EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER mutex)
 void GE_mutex_unlock(EIF_POINTER mutex)
 {
 #ifdef EIF_POSIX_THREADS
-	if (!pthread_mutex_unlock((EIF_MUTEX_TYPE *) mutex)) {
+	if (!pthread_mutex_unlock((EIF_MUTEX_TYPE*) mutex)) {
 		GE_raise_with_message(GE_EX_EXT, "Cannot unlock mutex");
 	}
 #elif defined EIF_WINDOWS
-	LeaveCriticalSection((EIF_CS_TYPE *) mutex);
+	LeaveCriticalSection((EIF_CS_TYPE*) mutex);
 #endif
 }
 
@@ -347,11 +346,11 @@ void GE_mutex_destroy(EIF_POINTER mutex)
 {
 	if (mutex) {
 #ifdef EIF_POSIX_THREADS
-		if (!pthread_mutex_destroy((EIF_MUTEX_TYPE *) mutex)) {
+		if (!pthread_mutex_destroy((EIF_MUTEX_TYPE*) mutex)) {
 			GE_raise_with_message(GE_EX_EXT, "Cannot destory mutex");
 		}
 #elif defined EIF_WINDOWS
-		DeleteCriticalSection((EIF_CS_TYPE *) mutex);
+		DeleteCriticalSection((EIF_CS_TYPE*) mutex);
 #endif
 		GE_free(mutex);
 	}

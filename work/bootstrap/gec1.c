@@ -232,7 +232,7 @@ T66 GE_default66 = {66,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 T67 GE_default67 = {67,0,0,0};
 T68 GE_default68 = {68,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 T69 GE_default69 = {69,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T72 GE_default72 = {72,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+T72 GE_default72 = {72,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 T73 GE_default73 = {73,0,0,0,0,0};
 T74 GE_default74 = {74,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 T75 GE_default75 = {75,0,0,0,0,0,0,0,0,0,0,0};
@@ -577,8 +577,8 @@ T508 GE_default508 = {508,0};
 T511 GE_default511 = {511,0,0};
 T512 GE_default512 = {512,0,0,0};
 T513 GE_default513 = {513,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T514 GE_default514 = {514,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-T516 GE_default516 = {516};
+T514 GE_default514 = {514};
+T516 GE_default516 = {516,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 T519 GE_default519 = {519,0,0,0,0};
 T520 GE_default520 = {520,0,0,0,0};
 T521 GE_default521 = {521,0,0,0,0,0,0,0,0,0,0,0};
@@ -1674,7 +1674,7 @@ T0* GE_ms32(char* s, T6 c)
 }
 
 /* Call to ANY.same_type */
-T1 T20x27T0(T0* C, T0* a1)
+T1 T20x27T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=837) {
@@ -1721,7 +1721,7 @@ if (t1==1748) {
 }
 
 /* Call to ET_SYSTEM.is_equal_seed */
-T6 T31x3057(T0* C)
+T6 T31x3057(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1740,7 +1740,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.error_handler */
-T0* T31x3052(T0* C)
+T0* T31x3052(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1759,7 +1759,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.feature_flattener */
-T0* T31x3182(T0* C)
+T0* T31x3182(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1778,7 +1778,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.ancestor_builder */
-T0* T31x3181(T0* C)
+T0* T31x3181(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1797,7 +1797,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.interface_checker */
-T0* T31x3183(T0* C)
+T0* T31x3183(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1816,7 +1816,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.default_create_seed */
-T6 T31x3055(T0* C)
+T6 T31x3055(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1835,7 +1835,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.detachable_any_type */
-T0* T31x3289(T0* C)
+T0* T31x3289(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1854,26 +1854,26 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.is_ise */
-T1 T31x3160(T0* C)
+T1 T31x3160(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-	return (T31f148(C));
+	return (T31f148(ac, C));
 } else {
-	return (T59f154(C));
+	return (T59f158(ac, C));
 }
 } else {
 if (t1==62) {
-	return (T62f164(C));
+	return (T62f155(ac, C));
 } else {
-	return (T68f172(C));
+	return (T68f166(ac, C));
 }
 }
 }
 
 /* Call to ET_SYSTEM.ise_version */
-T0* T31x3161(T0* C)
+T0* T31x3161(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1892,7 +1892,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.is_dotnet */
-T1 T31x3049(T0* C)
+T1 T31x3049(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1911,7 +1911,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.any_type */
-T0* T31x3288(T0* C)
+T0* T31x3288(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1930,7 +1930,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.array_detachable_any_type */
-T0* T31x3294(T0* C)
+T0* T31x3294(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1949,7 +1949,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.array_like_current_type */
-T0* T31x3295(T0* C)
+T0* T31x3295(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1968,7 +1968,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.array_any_type */
-T0* T31x3293(T0* C)
+T0* T31x3293(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -1987,7 +1987,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.detachable_none_type */
-T0* T31x3318(T0* C)
+T0* T31x3318(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2006,7 +2006,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.iteration_cursor_forth_seed */
-T6 T31x3063(T0* C)
+T6 T31x3063(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2025,7 +2025,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.iteration_cursor_after_seed */
-T6 T31x3062(T0* C)
+T6 T31x3062(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2044,7 +2044,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.iterable_new_cursor_seed */
-T6 T31x3061(T0* C)
+T6 T31x3061(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2063,7 +2063,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.routine_call_seed */
-T6 T31x3059(T0* C)
+T6 T31x3059(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2078,7 +2078,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.character_32_type */
-T0* T31x3299(T0* C)
+T0* T31x3299(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2093,7 +2093,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.unknown_builtin_reported */
-T1 T31x3141(T0* C)
+T1 T31x3141(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2112,7 +2112,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.any_clients */
-T0* T31x3292(T0* C)
+T0* T31x3292(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2131,7 +2131,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.eiffel_parser */
-T0* T31x3177(T0* C)
+T0* T31x3177(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2150,7 +2150,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.copy_seed */
-T6 T31x3056(T0* C)
+T6 T31x3056(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2165,7 +2165,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.function_item_seed */
-T6 T31x3060(T0* C)
+T6 T31x3060(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2180,26 +2180,26 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.older_or_same_ise_version */
-T1 T31x3163T0(T0* C, T0* a1)
+T1 T31x3163T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-	return (T31f151(C, a1));
+	return (T31f151(ac, C, a1));
 } else {
-	return (T59f178(C, a1));
+	return (T59f179(ac, C, a1));
 }
 } else {
 if (t1==62) {
-	return (T62f181(C, a1));
+	return (T62f182(ac, C, a1));
 } else {
-	return (T68f174(C, a1));
+	return (T68f175(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_SYSTEM.qualified_anchored_types_cycle_detection_enabled */
-T1 T31x3114(T0* C)
+T1 T31x3114(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2218,7 +2218,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.real_32_type */
-T0* T31x3323(T0* C)
+T0* T31x3323(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2233,7 +2233,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.string_32_type */
-T0* T31x3330(T0* C)
+T0* T31x3330(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2248,7 +2248,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.registered_feature_count */
-T6 T31x3076(T0* C)
+T6 T31x3076(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2263,7 +2263,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.any_parent */
-T0* T31x3290(T0* C)
+T0* T31x3290(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2282,7 +2282,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_reference_keyword */
-T1 T31x3109(T0* C)
+T1 T31x3109(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2301,7 +2301,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_note_keyword */
-T1 T31x3108(T0* C)
+T1 T31x3108(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2320,7 +2320,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_detachable_keyword */
-T1 T31x3107(T0* C)
+T1 T31x3107(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2339,7 +2339,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_attribute_keyword */
-T1 T31x3106(T0* C)
+T1 T31x3106(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2358,7 +2358,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.ast_factory */
-T0* T31x3053(T0* C)
+T0* T31x3053(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2377,7 +2377,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_attached_keyword */
-T1 T31x3105(T0* C)
+T1 T31x3105(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2396,7 +2396,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.flat_implementation_checker */
-T0* T31x3185(T0* C)
+T0* T31x3185(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2415,7 +2415,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.implementation_checker */
-T0* T31x3184(T0* C)
+T0* T31x3184(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2434,7 +2434,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.alias_transition_mode */
-T1 T31x3089(T0* C)
+T1 T31x3089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2453,7 +2453,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.preparse_shallow_mode */
-T1 T31x3116(T0* C)
+T1 T31x3116(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2472,7 +2472,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.preparse_readonly_mode */
-T1 T31x3119(T0* C)
+T1 T31x3119(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2491,7 +2491,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.preparse_override_mode */
-T1 T31x3120(T0* C)
+T1 T31x3120(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2510,7 +2510,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.system_object_parents */
-T0* T31x3332(T0* C)
+T0* T31x3332(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2529,7 +2529,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.any_parents */
-T0* T31x3291(T0* C)
+T0* T31x3291(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2548,7 +2548,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.use_cluster_dependence_pathnames */
-T1 T31x3112(T0* C)
+T1 T31x3112(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2567,7 +2567,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.cluster_dependence_enabled */
-T1 T31x3111(T0* C)
+T1 T31x3111(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2586,7 +2586,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.providers_enabled */
-T1 T31x3110(T0* C)
+T1 T31x3110(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2605,7 +2605,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.preparse_multiple_mode */
-T1 T31x3118(T0* C)
+T1 T31x3118(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2624,7 +2624,7 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.qualified_anchored_types_enabled */
-T1 T31x3113(T0* C)
+T1 T31x3113(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
@@ -2643,26 +2643,26 @@ if (t1==62) {
 }
 
 /* Call to ET_SYSTEM.dotnet_assembly_consumer */
-T0* T31x3179(T0* C)
+T0* T31x3179(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-	return (T31f145(C));
+	return (T31f145(ac, C));
 } else {
-	return (T59f161(C));
+	return (T59f170(ac, C));
 }
 } else {
 if (t1==62) {
-	return (T62f174(C));
+	return (T62f164(ac, C));
 } else {
-	return (T68f155(C));
+	return (T68f148(ac, C));
 }
 }
 }
 
 /* Call to ET_SYSTEM.type_any_type */
-T0* T31x3337(T0* C)
+T0* T31x3337(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2677,7 +2677,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.dispose_seed */
-T6 T31x3058(T0* C)
+T6 T31x3058(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2692,7 +2692,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.console_application_mode */
-T1 T31x3085(T0* C)
+T1 T31x3085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2707,7 +2707,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.exception_trace_mode */
-T1 T31x3087(T0* C)
+T1 T31x3087(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2722,7 +2722,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.trace_mode */
-T1 T31x3088(T0* C)
+T1 T31x3088(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2737,7 +2737,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.multithreaded_mode */
-T1 T31x3086(T0* C)
+T1 T31x3086(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2752,7 +2752,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.external_object_pathnames */
-T0* T31x3093(T0* C)
+T0* T31x3093(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2767,7 +2767,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.external_library_pathnames */
-T0* T31x3094(T0* C)
+T0* T31x3094(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2782,7 +2782,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.external_include_pathnames */
-T0* T31x3092(T0* C)
+T0* T31x3092(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2797,7 +2797,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.use_boehm_gc */
-T1 T31x3090(T0* C)
+T1 T31x3090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2812,22 +2812,22 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.stop_requested */
-T1 T31x3198(T0* C)
+T1 T31x3198(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-	return (T59f169(C));
+	return (T59f172(ac, C));
 } else {
-	return (T62f155(C));
+	return (T62f163(ac, C));
 }
 } else {
-	return (T68f154(C));
+	return (T68f173(ac, C));
 }
 }
 
 /* Call to ET_SYSTEM.ise_exception_manager_type */
-T0* T31x3310(T0* C)
+T0* T31x3310(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2842,7 +2842,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.boolean_type */
-T0* T31x3296(T0* C)
+T0* T31x3296(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2857,7 +2857,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.detachable_tuple_type */
-T0* T31x3335(T0* C)
+T0* T31x3335(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2872,7 +2872,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.routine_type */
-T0* T31x3325(T0* C)
+T0* T31x3325(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2887,7 +2887,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.pointer_type */
-T0* T31x3319(T0* C)
+T0* T31x3319(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2902,7 +2902,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.typed_pointer_any_type */
-T0* T31x3343(T0* C)
+T0* T31x3343(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2917,7 +2917,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.special_any_type */
-T0* T31x3326(T0* C)
+T0* T31x3326(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2932,7 +2932,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.string_8_type */
-T0* T31x3329(T0* C)
+T0* T31x3329(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2947,7 +2947,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.character_8_type */
-T0* T31x3298(T0* C)
+T0* T31x3298(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2962,7 +2962,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.real_64_type */
-T0* T31x3324(T0* C)
+T0* T31x3324(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2977,7 +2977,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.natural_64_type */
-T0* T31x3316(T0* C)
+T0* T31x3316(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -2992,7 +2992,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.natural_32_type */
-T0* T31x3315(T0* C)
+T0* T31x3315(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3007,7 +3007,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.natural_16_type */
-T0* T31x3314(T0* C)
+T0* T31x3314(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3022,7 +3022,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.natural_8_type */
-T0* T31x3313(T0* C)
+T0* T31x3313(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3037,7 +3037,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.integer_64_type */
-T0* T31x3309(T0* C)
+T0* T31x3309(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3052,7 +3052,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.integer_32_type */
-T0* T31x3308(T0* C)
+T0* T31x3308(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3067,7 +3067,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.integer_16_type */
-T0* T31x3307(T0* C)
+T0* T31x3307(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3082,7 +3082,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.integer_8_type */
-T0* T31x3306(T0* C)
+T0* T31x3306(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3097,7 +3097,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.root_creation */
-T0* T31x3051(T0* C)
+T0* T31x3051(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3112,7 +3112,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.none_type */
-T0* T31x3317(T0* C)
+T0* T31x3317(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3127,7 +3127,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.root_type */
-T0* T31x3050(T0* C)
+T0* T31x3050(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3142,7 +3142,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.stop_request */
-T0* T31x3199(T0* C)
+T0* T31x3199(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3157,7 +3157,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.master_classes */
-T0* T31x3264(T0* C)
+T0* T31x3264(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3172,7 +3172,7 @@ if (t1==59) {
 }
 
 /* Call to ET_SYSTEM.system_name */
-T0* T31x3091(T0* C)
+T0* T31x3091(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -3187,71 +3187,71 @@ if (t1==59) {
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.name */
-T0* T33x2134(T0* C)
+T0* T33x2134(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
 	return (((T27*)(C))->a4);
 } else {
-	return (T838f5(C));
+	return (T838f5(ac, C));
 }
 } else {
 if (t1==879) {
-	return (T879f15(C));
+	return (T879f15(ac, C));
 } else {
-	return (T890f6(C));
+	return (T890f6(ac, C));
 }
 }
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.read_to_string */
-T6 T33x2123T0T6T6(T0* C, T0* a1, T6 a2, T6 a3)
+T6 T33x2123T0T6T6(GE_context* ac, T0* C, T0* a1, T6 a2, T6 a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
-	return (T27f36(C, a1, a2, a3));
+	return (T27f36(ac, C, a1, a2, a3));
 } else {
-	return (T838f28(C, a1, a2, a3));
+	return (T838f28(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==879) {
-	return (T879f18(C, a1, a2, a3));
+	return (T879f18(ac, C, a1, a2, a3));
 } else {
-	return (T890f8(C, a1, a2, a3));
+	return (T890f8(ac, C, a1, a2, a3));
 }
 }
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.is_closable */
-T1 T33x2129(T0* C)
+T1 T33x2129(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
-	return (T27f37(C));
+	return (T27f37(ac, C));
 } else {
-	return (T838f7(C));
+	return (T838f7(ac, C));
 }
 } else {
 if (t1==879) {
-	return (T879f12(C));
+	return (T879f12(ac, C));
 } else {
-	return (T890f7(C));
+	return (T890f7(ac, C));
 }
 }
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.end_of_input */
-T1 T33x2132(T0* C)
+T1 T33x2132(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
-	return (T27f33(C));
+	return (T27f33(ac, C));
 } else {
-	return (T838f21(C));
+	return (T838f21(ac, C));
 }
 } else {
 if (t1==879) {
@@ -3263,14 +3263,14 @@ if (t1==879) {
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.last_character */
-T2 T33x2135(T0* C)
+T2 T33x2135(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
 	return (((T27*)(C))->a6);
 } else {
-	return (T838f6(C));
+	return (T838f6(ac, C));
 }
 } else {
 if (t1==879) {
@@ -3282,7 +3282,7 @@ if (t1==879) {
 }
 
 /* Call to AP_OPTION.short_form */
-T2 T45x4516(T0* C)
+T2 T45x4516(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3309,7 +3309,7 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.long_form */
-T0* T45x4511(T0* C)
+T0* T45x4511(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3336,7 +3336,7 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.description */
-T0* T45x4509(T0* C)
+T0* T45x4509(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3363,34 +3363,34 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.names */
-T0* T45x4513(T0* C)
+T0* T45x4513(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f16(C));
+	return (T39f16(ac, C));
 } else {
-	return (T41f22(C));
+	return (T41f22(ac, C));
 }
 } else {
-	return (T42f23(C));
+	return (T42f23(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f20(C));
+	return (T43f20(ac, C));
 } else {
-	return (T44f20(C));
+	return (T44f20(ac, C));
 }
 } else {
-	return (T48f33(C));
+	return (T48f33(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.is_hidden */
-T1 T45x4520(T0* C)
+T1 T45x4520(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3417,88 +3417,88 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.example */
-T0* T45x4510(T0* C)
+T0* T45x4510(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f13(C));
+	return (T39f13(ac, C));
 } else {
-	return (T41f18(C));
+	return (T41f18(ac, C));
 }
 } else {
-	return (T42f16(C));
+	return (T42f16(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f18(C));
+	return (T43f18(ac, C));
 } else {
-	return (T44f16(C));
+	return (T44f16(ac, C));
 }
 } else {
-	return (T48f22(C));
+	return (T48f22(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.name */
-T0* T45x4512(T0* C)
+T0* T45x4512(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f12(C));
+	return (T39f12(ac, C));
 } else {
-	return (T41f12(C));
+	return (T41f12(ac, C));
 }
 } else {
-	return (T42f15(C));
+	return (T42f15(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f17(C));
+	return (T43f17(ac, C));
 } else {
-	return (T44f15(C));
+	return (T44f15(ac, C));
 }
 } else {
-	return (T48f19(C));
+	return (T48f19(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.needs_parameter */
-T1 T45x4522(T0* C)
+T1 T45x4522(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f10(C));
+	return (T39f10(ac, C));
 } else {
 	return (((T41*)(C))->a5);
 }
 } else {
-	return (T42f11(C));
+	return (T42f11(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f14(C));
+	return (T43f14(ac, C));
 } else {
 	return (((T44*)(C))->a4);
 }
 } else {
-	return (T48f18(C));
+	return (T48f18(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.has_short_form */
-T1 T45x4519(T0* C)
+T1 T45x4519(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3525,34 +3525,34 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.allows_parameter */
-T1 T45x4517(T0* C)
+T1 T45x4517(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f11(C));
+	return (T39f11(ac, C));
 } else {
-	return (T41f14(C));
+	return (T41f14(ac, C));
 }
 } else {
-	return (T42f12(C));
+	return (T42f12(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f15(C));
+	return (T43f15(ac, C));
 } else {
-	return (T44f12(C));
+	return (T44f12(ac, C));
 }
 } else {
-	return (T48f20(C));
+	return (T48f20(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.maximum_occurrences */
-T6 T45x4515(T0* C)
+T6 T45x4515(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3579,7 +3579,7 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.occurrences */
-T6 T45x4514(T0* C)
+T6 T45x4514(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3587,17 +3587,17 @@ if (t1<=41) {
 if (t1==39) {
 	return (((T39*)(C))->a1);
 } else {
-	return (T41f16(C));
+	return (T41f16(ac, C));
 }
 } else {
-	return (T42f10(C));
+	return (T42f10(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f10(C));
+	return (T43f10(ac, C));
 } else {
-	return (T44f14(C));
+	return (T44f14(ac, C));
 }
 } else {
 	return (((T48*)(C))->a5);
@@ -3606,34 +3606,34 @@ if (t1==43) {
 }
 
 /* Call to AP_OPTION.was_found */
-T1 T45x4524(T0* C)
+T1 T45x4524(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-	return (T39f9(C));
+	return (T39f9(ac, C));
 } else {
-	return (T41f17(C));
+	return (T41f17(ac, C));
 }
 } else {
-	return (T42f13(C));
+	return (T42f13(ac, C));
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-	return (T43f11(C));
+	return (T43f11(ac, C));
 } else {
-	return (T44f11(C));
+	return (T44f11(ac, C));
 }
 } else {
-	return (T48f24(C));
+	return (T48f24(ac, C));
 }
 }
 }
 
 /* Call to AP_OPTION.is_mandatory */
-T1 T45x4521(T0* C)
+T1 T45x4521(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
@@ -3660,240 +3660,240 @@ if (t1==43) {
 }
 
 /* Call to UT_ERROR.default_message */
-T0* T49x4640(T0* C)
+T0* T49x4640(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 38:
-		return (T38f17(C));
+		return (T38f17(ac, C));
 	case 84:
-		return (T84f3(C));
+		return (T84f3(ac, C));
 	case 85:
-		return (T85f3(C));
+		return (T85f3(ac, C));
 	case 162:
-		return (T162f5(C));
+		return (T162f5(ac, C));
 	case 297:
-		return (T297f3(C));
+		return (T297f3(ac, C));
 	case 414:
-		return (T414f5(C));
+		return (T414f5(ac, C));
 	case 415:
-		return (T415f5(C));
+		return (T415f5(ac, C));
 	case 416:
-		return (T416f5(C));
+		return (T416f5(ac, C));
 	case 417:
-		return (T417f5(C));
+		return (T417f5(ac, C));
 	case 418:
-		return (T418f5(C));
+		return (T418f5(ac, C));
 	case 419:
-		return (T419f5(C));
+		return (T419f5(ac, C));
 	case 519:
-		return (T519f5(C));
+		return (T519f5(ac, C));
 	case 520:
-		return (T520f5(C));
+		return (T520f5(ac, C));
 	case 521:
-		return (T521f32(C));
+		return (T521f32(ac, C));
 	case 765:
-		return (T765f5(C));
+		return (T765f5(ac, C));
 	case 766:
-		return (T766f5(C));
+		return (T766f5(ac, C));
 	case 767:
-		return (T767f5(C));
+		return (T767f5(ac, C));
 	case 768:
-		return (T768f5(C));
+		return (T768f5(ac, C));
 	case 769:
-		return (T769f5(C));
+		return (T769f5(ac, C));
 	case 770:
-		return (T770f5(C));
+		return (T770f5(ac, C));
 	case 771:
-		return (T771f5(C));
+		return (T771f5(ac, C));
 	case 772:
-		return (T772f5(C));
+		return (T772f5(ac, C));
 	case 1327:
-		return (T1327f5(C));
+		return (T1327f5(ac, C));
 	case 1328:
-		return (T1328f5(C));
+		return (T1328f5(ac, C));
 	case 1383:
-		return (T1383f5(C));
+		return (T1383f5(ac, C));
 	case 1540:
-		return (T1540f12(C));
+		return (T1540f12(ac, C));
 	case 1541:
-		return (T1541f11(C));
+		return (T1541f11(ac, C));
 	case 1680:
-		return (T1680f12(C));
+		return (T1680f12(ac, C));
 	case 1738:
-		return (T1738f5(C));
+		return (T1738f5(ac, C));
 	case 1739:
-		return (T1739f5(C));
+		return (T1739f5(ac, C));
 	case 1740:
-		return (T1740f5(C));
+		return (T1740f5(ac, C));
 	case 1741:
-		return (T1741f5(C));
+		return (T1741f5(ac, C));
 	case 1742:
-		return (T1742f5(C));
+		return (T1742f5(ac, C));
 	case 1743:
-		return (T1743f5(C));
+		return (T1743f5(ac, C));
 	case 1744:
-		return (T1744f5(C));
+		return (T1744f5(ac, C));
 	case 1745:
-		return (T1745f5(C));
+		return (T1745f5(ac, C));
 	case 1762:
-		return (T1762f12(C));
+		return (T1762f12(ac, C));
 	case 1806:
-		return (T1806f5(C));
+		return (T1806f5(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to detachable KL_EQUALITY_TESTER [STRING_8].test */
-T1 T56x5657T0T0(T0* C, T0* a1, T0* a2)
+T1 T56x5657T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=56) {
 if (t1==55) {
-	return (T55f1(C, a1, a2));
+	return (T55f1(ac, C, a1, a2));
 } else {
-	return (T56f1(C, a1, a2));
+	return (T56f1(ac, C, a1, a2));
 }
 } else {
 if (t1==137) {
-	return (T137f1(C, a1, a2));
+	return (T137f1(ac, C, a1, a2));
 } else {
-	return (T178f1(C, a1, a2));
+	return (T178f1(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_to_type */
-T1 T71x7066T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T71x7066T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f28(C, a1, a2, a3));
+	return (T78f28(ac, C, a1, a2, a3));
 } else {
-	return (T80f114(C, a1, a2, a3));
+	return (T80f114(ac, C, a1, a2, a3));
 }
 } else {
-	return (T246f11(C, a1, a2, a3));
+	return (T246f11(ac, C, a1, a2, a3));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f19(C, a1, a2, a3));
+	return (T254f19(ac, C, a1, a2, a3));
 } else {
-	return (T1213f27(C, a1, a2, a3));
+	return (T1213f27(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1214f25(C, a1, a2, a3));
+	return (T1214f25(ac, C, a1, a2, a3));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_base_type_with_type_marks */
-T1 T71x7050T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7050T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f41(C, a1, a2, a3, a4, a5));
+	return (T78f41(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f106(C, a1, a2, a3, a4, a5));
+	return (T80f106(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f40(C, a1, a2, a3, a4, a5));
+	return (T246f40(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f40(C, a1, a2, a3, a4, a5));
+	return (T254f40(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f65(C, a1, a2, a3, a4, a5));
+	return (T1213f65(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f67(C, a1, a2, a3, a4, a5));
+	return (T1214f67(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.base_class */
-T0* T71x7120(T0* C)
+T0* T71x7120(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f18(C));
+	return (T78f18(ac, C));
 } else {
-	return (T80f91(C));
+	return (T80f91(ac, C));
 }
 } else {
-	return (T246f6(C));
+	return (T246f6(ac, C));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f12(C));
+	return (T254f12(ac, C));
 } else {
-	return (T1213f23(C));
+	return (T1213f23(ac, C));
 }
 } else {
-	return (T1214f19(C));
+	return (T1214f19(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.is_generic */
-T1 T71x6952(T0* C)
+T1 T71x6952(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f11(C));
+	return (T78f11(ac, C));
 } else {
-	return (T80f121(C));
+	return (T80f121(ac, C));
 }
 } else {
-	return (T246f16(C));
+	return (T246f16(ac, C));
 }
 }
 
 /* Call to ET_BASE_TYPE.base_type_index_of_label */
-T6 T71x7016T0T0(T0* C, T0* a1, T0* a2)
+T6 T71x7016T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f105(C, a1, a2));
+	return (T78f105(ac, C, a1, a2));
 } else {
-	return (T80f199(C, a1, a2));
+	return (T80f199(ac, C, a1, a2));
 }
 } else {
-	return (T246f105(C, a1, a2));
+	return (T246f105(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f103(C, a1, a2));
+	return (T254f103(ac, C, a1, a2));
 } else {
-	return (T1213f103(C, a1, a2));
+	return (T1213f103(ac, C, a1, a2));
 }
 } else {
-	return (T1214f104(C, a1, a2));
+	return (T1214f104(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.actual_parameters */
-T0* T71x6943(T0* C)
+T0* T71x6943(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f14(C));
+	return (T78f14(ac, C));
 } else {
 	return (((T80*)(C))->a22);
 }
@@ -3905,340 +3905,340 @@ if (t1<=1213) {
 if (t1==254) {
 	return (((T254*)(C))->a2);
 } else {
-	return (T1213f40(C));
+	return (T1213f40(ac, C));
 }
 } else {
-	return (T1214f40(C));
+	return (T1214f40(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.base_type_actual */
-T0* T71x7014T6T0(T0* C, T6 a1, T0* a2)
+T0* T71x7014T6T0(GE_context* ac, T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f81(C, a1, a2));
+	return (T78f81(ac, C, a1, a2));
 } else {
-	return (T80f168(C, a1, a2));
+	return (T80f168(ac, C, a1, a2));
 }
 } else {
-	return (T246f83(C, a1, a2));
+	return (T246f83(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f80(C, a1, a2));
+	return (T254f80(ac, C, a1, a2));
 } else {
-	return (T1213f84(C, a1, a2));
+	return (T1213f84(ac, C, a1, a2));
 }
 } else {
-	return (T1214f85(C, a1, a2));
+	return (T1214f85(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.index_of_label */
-T6 T71x6948T0(T0* C, T0* a1)
+T6 T71x6948T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f104(C, a1));
+	return (T78f104(ac, C, a1));
 } else {
-	return (T80f198(C, a1));
+	return (T80f198(ac, C, a1));
 }
 } else {
-	return (T246f104(C, a1));
+	return (T246f104(ac, C, a1));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f102(C, a1));
+	return (T254f102(ac, C, a1));
 } else {
-	return (T1213f102(C, a1));
+	return (T1213f102(ac, C, a1));
 }
 } else {
-	return (T1214f103(C, a1));
+	return (T1214f103(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.is_type_attached_with_type_mark */
-T1 T71x7034T0T0(T0* C, T0* a1, T0* a2)
+T1 T71x7034T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f22(C, a1, a2));
+	return (T78f22(ac, C, a1, a2));
 } else {
-	return (T80f72(C, a1, a2));
+	return (T80f72(ac, C, a1, a2));
 }
 } else {
-	return (T246f28(C, a1, a2));
+	return (T246f28(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f29(C, a1, a2));
+	return (T254f29(ac, C, a1, a2));
 } else {
-	return (T1213f63(C, a1, a2));
+	return (T1213f63(ac, C, a1, a2));
 }
 } else {
-	return (T1214f64(C, a1, a2));
+	return (T1214f64(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.is_type_reference_with_type_mark */
-T1 T71x7032T0T0(T0* C, T0* a1, T0* a2)
+T1 T71x7032T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f75(C, a1, a2));
+	return (T78f75(ac, C, a1, a2));
 } else {
-	return (T80f162(C, a1, a2));
+	return (T80f162(ac, C, a1, a2));
 }
 } else {
-	return (T246f75(C, a1, a2));
+	return (T246f75(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f73(C, a1, a2));
+	return (T254f73(ac, C, a1, a2));
 } else {
-	return (T1213f75(C, a1, a2));
+	return (T1213f75(ac, C, a1, a2));
 }
 } else {
-	return (T1214f76(C, a1, a2));
+	return (T1214f76(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_from_formal_parameter_type_with_type_marks */
-T1 T71x7070T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7070T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f74(C, a1, a2, a3, a4, a5));
+	return (T78f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f161(C, a1, a2, a3, a4, a5));
+	return (T80f161(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f74(C, a1, a2, a3, a4, a5));
+	return (T246f74(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f72(C, a1, a2, a3, a4, a5));
+	return (T254f72(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f74(C, a1, a2, a3, a4, a5));
+	return (T1213f74(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f75(C, a1, a2, a3, a4, a5));
+	return (T1214f75(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_formal_parameter_type_with_type_marks */
-T1 T71x7060T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7060T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f73(C, a1, a2, a3, a4, a5));
+	return (T78f73(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f160(C, a1, a2, a3, a4, a5));
+	return (T80f160(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f73(C, a1, a2, a3, a4, a5));
+	return (T246f73(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f71(C, a1, a2, a3, a4, a5));
+	return (T254f71(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f73(C, a1, a2, a3, a4, a5));
+	return (T1213f73(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f74(C, a1, a2, a3, a4, a5));
+	return (T1214f74(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_base_bit_type_with_type_marks */
-T1 T71x7062T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7062T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f68(C, a1, a2, a3, a4, a5));
+	return (T78f68(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f154(C, a1, a2, a3, a4, a5));
+	return (T80f154(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f68(C, a1, a2, a3, a4, a5));
+	return (T246f68(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f66(C, a1, a2, a3, a4, a5));
+	return (T254f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f66(C, a1, a2, a3, a4, a5));
+	return (T1213f66(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f29(C, a1, a2, a3, a4, a5));
+	return (T1214f29(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_bit_type_with_type_marks */
-T1 T71x7058T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7058T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f67(C, a1, a2, a3, a4, a5));
+	return (T78f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f153(C, a1, a2, a3, a4, a5));
+	return (T80f153(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f67(C, a1, a2, a3, a4, a5));
+	return (T246f67(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f65(C, a1, a2, a3, a4, a5));
+	return (T254f65(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f36(C, a1, a2, a3, a4, a5));
+	return (T1213f36(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f33(C, a1, a2, a3, a4, a5));
+	return (T1214f33(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_from_bit_type_with_type_marks */
-T1 T71x7068T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7068T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f66(C, a1, a2, a3, a4, a5));
+	return (T78f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f152(C, a1, a2, a3, a4, a5));
+	return (T80f152(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f66(C, a1, a2, a3, a4, a5));
+	return (T246f66(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f64(C, a1, a2, a3, a4, a5));
+	return (T254f64(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f26(C, a1, a2, a3, a4, a5));
+	return (T1213f26(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f24(C, a1, a2, a3, a4, a5));
+	return (T1214f24(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.to_text */
-T0* T71x7079(T0* C)
+T0* T71x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f36(C));
+	return (T78f36(ac, C));
 } else {
-	return (T80f98(C));
+	return (T80f98(ac, C));
 }
 } else {
-	return (T246f34(C));
+	return (T246f34(ac, C));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f35(C));
+	return (T254f35(ac, C));
 } else {
-	return (T1213f12(C));
+	return (T1213f12(ac, C));
 }
 } else {
-	return (T1214f41(C));
+	return (T1214f41(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.type_with_type_mark */
-T0* T71x7023T0(T0* C, T0* a1)
+T0* T71x7023T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f35(C, a1));
+	return (T78f35(ac, C, a1));
 } else {
-	return (T80f88(C, a1));
+	return (T80f88(ac, C, a1));
 }
 } else {
-	return (T246f33(C, a1));
+	return (T246f33(ac, C, a1));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f34(C, a1));
+	return (T254f34(ac, C, a1));
 } else {
-	return (T1213f61(C, a1));
+	return (T1213f61(ac, C, a1));
 }
 } else {
-	return (T1214f62(C, a1));
+	return (T1214f62(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_to_type_with_type_marks */
-T1 T71x7067T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7067T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f33(C, a1, a2, a3, a4, a5));
+	return (T78f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f76(C, a1, a2, a3, a4, a5));
+	return (T80f76(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f20(C, a1, a2, a3, a4, a5));
+	return (T246f20(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f30(C, a1, a2, a3, a4, a5));
+	return (T254f30(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f37(C, a1, a2, a3, a4, a5));
+	return (T1213f37(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f36(C, a1, a2, a3, a4, a5));
+	return (T1214f36(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.named_base_class */
-T0* T71x7121(T0* C)
+T0* T71x7121(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
@@ -4265,103 +4265,103 @@ if (t1==254) {
 }
 
 /* Call to ET_BASE_TYPE.actual_parameter_count */
-T6 T71x6951(T0* C)
+T6 T71x6951(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f47(C));
+	return (T78f47(ac, C));
 } else {
-	return (T80f111(C));
+	return (T80f111(ac, C));
 }
 } else {
-	return (T246f45(C));
+	return (T246f45(ac, C));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f46(C));
+	return (T254f46(ac, C));
 } else {
-	return (T1213f38(C));
+	return (T1213f38(ac, C));
 }
 } else {
-	return (T1214f37(C));
+	return (T1214f37(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.shallow_named_type_with_type_mark */
-T0* T71x7020T0T0(T0* C, T0* a1, T0* a2)
+T0* T71x7020T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f83(C, a1, a2));
+	return (T78f83(ac, C, a1, a2));
 } else {
-	return (T80f170(C, a1, a2));
+	return (T80f170(ac, C, a1, a2));
 }
 } else {
-	return (T246f85(C, a1, a2));
+	return (T246f85(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f82(C, a1, a2));
+	return (T254f82(ac, C, a1, a2));
 } else {
-	return (T1213f94(C, a1, a2));
+	return (T1213f94(ac, C, a1, a2));
 }
 } else {
-	return (T1214f95(C, a1, a2));
+	return (T1214f95(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.shallow_base_type_with_type_mark */
-T0* T71x7013T0T0(T0* C, T0* a1, T0* a2)
+T0* T71x7013T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f82(C, a1, a2));
+	return (T78f82(ac, C, a1, a2));
 } else {
-	return (T80f169(C, a1, a2));
+	return (T80f169(ac, C, a1, a2));
 }
 } else {
-	return (T246f84(C, a1, a2));
+	return (T246f84(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f81(C, a1, a2));
+	return (T254f81(ac, C, a1, a2));
 } else {
-	return (T1213f93(C, a1, a2));
+	return (T1213f93(ac, C, a1, a2));
 }
 } else {
-	return (T1214f94(C, a1, a2));
+	return (T1214f94(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.upper_name */
-T0* T71x7000(T0* C)
+T0* T71x7000(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f96(C));
+	return (T78f96(ac, C));
 } else {
-	return (T80f50(C));
+	return (T80f50(ac, C));
 }
 } else {
-	return (T246f96(C));
+	return (T246f96(ac, C));
 }
 }
 
 /* Call to ET_BASE_TYPE.name */
-T0* T71x6999(T0* C)
+T0* T71x6999(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
@@ -4376,369 +4376,369 @@ if (t1==78) {
 }
 
 /* Call to ET_BASE_TYPE.is_type_detachable_with_type_mark */
-T1 T71x7036T0T0(T0* C, T0* a1, T0* a2)
+T1 T71x7036T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f48(C, a1, a2));
+	return (T78f48(ac, C, a1, a2));
 } else {
-	return (T80f112(C, a1, a2));
+	return (T80f112(ac, C, a1, a2));
 }
 } else {
-	return (T246f46(C, a1, a2));
+	return (T246f46(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f27(C, a1, a2));
+	return (T254f27(ac, C, a1, a2));
 } else {
-	return (T1213f22(C, a1, a2));
+	return (T1213f22(ac, C, a1, a2));
 }
 } else {
-	return (T1214f18(C, a1, a2));
+	return (T1214f18(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.is_type_expanded_with_type_mark */
-T1 T71x7030T0T0(T0* C, T0* a1, T0* a2)
+T1 T71x7030T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f9(C, a1, a2));
+	return (T78f9(ac, C, a1, a2));
 } else {
-	return (T80f73(C, a1, a2));
+	return (T80f73(ac, C, a1, a2));
 }
 } else {
-	return (T246f14(C, a1, a2));
+	return (T246f14(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f5(C, a1, a2));
+	return (T254f5(ac, C, a1, a2));
 } else {
-	return (T1213f20(C, a1, a2));
+	return (T1213f20(ac, C, a1, a2));
 }
 } else {
-	return (T1214f16(C, a1, a2));
+	return (T1214f16(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_base_tuple_type_with_type_marks */
-T1 T71x7065T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7065T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f49(C, a1, a2, a3, a4, a5));
+	return (T78f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f124(C, a1, a2, a3, a4, a5));
+	return (T80f124(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f47(C, a1, a2, a3, a4, a5));
+	return (T246f47(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f45(C, a1, a2, a3, a4, a5));
+	return (T254f45(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f16(C, a1, a2, a3, a4, a5));
+	return (T1213f16(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f12(C, a1, a2, a3, a4, a5));
+	return (T1214f12(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_base_class_type_with_type_marks */
-T1 T71x7063T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7063T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f46(C, a1, a2, a3, a4, a5));
+	return (T78f46(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f103(C, a1, a2, a3, a4, a5));
+	return (T80f103(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f39(C, a1, a2, a3, a4, a5));
+	return (T246f39(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f39(C, a1, a2, a3, a4, a5));
+	return (T254f39(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f15(C, a1, a2, a3, a4, a5));
+	return (T1213f15(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f11(C, a1, a2, a3, a4, a5));
+	return (T1214f11(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_from_tuple_type_with_type_marks */
-T1 T71x7071T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7071T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f32(C, a1, a2, a3, a4, a5));
+	return (T78f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f49(C, a1, a2, a3, a4, a5));
+	return (T80f49(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f31(C, a1, a2, a3, a4, a5));
+	return (T246f31(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f32(C, a1, a2, a3, a4, a5));
+	return (T254f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f14(C, a1, a2, a3, a4, a5));
+	return (T1213f14(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f10(C, a1, a2, a3, a4, a5));
+	return (T1214f10(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.conforms_from_class_type_with_type_marks */
-T1 T71x7069T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7069T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f29(C, a1, a2, a3, a4, a5));
+	return (T78f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f46(C, a1, a2, a3, a4, a5));
+	return (T80f46(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f24(C, a1, a2, a3, a4, a5));
+	return (T246f24(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f18(C, a1, a2, a3, a4, a5));
+	return (T254f18(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f13(C, a1, a2, a3, a4, a5));
+	return (T1213f13(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f9(C, a1, a2, a3, a4, a5));
+	return (T1214f9(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_tuple_type_with_type_marks */
-T1 T71x7061T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7061T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f34(C, a1, a2, a3, a4, a5));
+	return (T78f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f141(C, a1, a2, a3, a4, a5));
+	return (T80f141(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f59(C, a1, a2, a3, a4, a5));
+	return (T246f59(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f59(C, a1, a2, a3, a4, a5));
+	return (T254f59(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f19(C, a1, a2, a3, a4, a5));
+	return (T1213f19(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f15(C, a1, a2, a3, a4, a5));
+	return (T1214f15(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_class_type_with_type_marks */
-T1 T71x7059T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7059T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f12(C, a1, a2, a3, a4, a5));
+	return (T78f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f140(C, a1, a2, a3, a4, a5));
+	return (T80f140(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f58(C, a1, a2, a3, a4, a5));
+	return (T246f58(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f58(C, a1, a2, a3, a4, a5));
+	return (T254f58(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f18(C, a1, a2, a3, a4, a5));
+	return (T1213f18(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f14(C, a1, a2, a3, a4, a5));
+	return (T1214f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.unaliased_to_text */
-T0* T71x7081(T0* C)
+T0* T71x7081(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f27(C));
+	return (T78f27(ac, C));
 } else {
-	return (T80f94(C));
+	return (T80f94(ac, C));
 }
 } else {
-	return (T246f7(C));
+	return (T246f7(ac, C));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f14(C));
+	return (T254f14(ac, C));
 } else {
-	return (T1213f32(C));
+	return (T1213f32(ac, C));
 }
 } else {
-	return (T1214f31(C));
+	return (T1214f31(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.base_type_with_type_mark */
-T0* T71x7011T0T0(T0* C, T0* a1, T0* a2)
+T0* T71x7011T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f10(C, a1, a2));
+	return (T78f10(ac, C, a1, a2));
 } else {
-	return (T80f81(C, a1, a2));
+	return (T80f81(ac, C, a1, a2));
 }
 } else {
-	return (T246f15(C, a1, a2));
+	return (T246f15(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f6(C, a1, a2));
+	return (T254f6(ac, C, a1, a2));
 } else {
-	return (T1213f21(C, a1, a2));
+	return (T1213f21(ac, C, a1, a2));
 }
 } else {
-	return (T1214f17(C, a1, a2));
+	return (T1214f17(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.base_type_actual_count */
-T6 T71x7025T0(T0* C, T0* a1)
+T6 T71x7025T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f43(C, a1));
+	return (T78f43(ac, C, a1));
 } else {
-	return (T80f108(C, a1));
+	return (T80f108(ac, C, a1));
 }
 } else {
-	return (T246f42(C, a1));
+	return (T246f42(ac, C, a1));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f42(C, a1));
+	return (T254f42(ac, C, a1));
 } else {
-	return (T1213f17(C, a1));
+	return (T1213f17(ac, C, a1));
 }
 } else {
-	return (T1214f13(C, a1));
+	return (T1214f13(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.named_type_with_type_mark */
-T0* T71x7018T0T0(T0* C, T0* a1, T0* a2)
+T0* T71x7018T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f40(C, a1, a2));
+	return (T78f40(ac, C, a1, a2));
 } else {
-	return (T80f102(C, a1, a2));
+	return (T80f102(ac, C, a1, a2));
 }
 } else {
-	return (T246f38(C, a1, a2));
+	return (T246f38(ac, C, a1, a2));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f47(C, a1, a2));
+	return (T254f47(ac, C, a1, a2));
 } else {
-	return (T1213f24(C, a1, a2));
+	return (T1213f24(ac, C, a1, a2));
 }
 } else {
-	return (T1214f35(C, a1, a2));
+	return (T1214f35(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_type_with_type_marks */
-T1 T71x7048T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T71x7048T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f7(C, a1, a2, a3, a4, a5));
+	return (T78f7(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f79(C, a1, a2, a3, a4, a5));
+	return (T80f79(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f21(C, a1, a2, a3, a4, a5));
+	return (T246f21(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f31(C, a1, a2, a3, a4, a5));
+	return (T254f31(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f10(C, a1, a2, a3, a4, a5));
+	return (T1213f10(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1214f22(C, a1, a2, a3, a4, a5));
+	return (T1214f22(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.is_expanded */
-T1 T71x6955(T0* C)
+T1 T71x6955(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f13(C));
+	return (T78f13(ac, C));
 } else {
-	return (T80f113(C));
+	return (T80f113(ac, C));
 }
 } else {
-	return (T246f10(C));
+	return (T246f10(ac, C));
 }
 } else {
 if (t1<=1213) {
@@ -4754,93 +4754,93 @@ if (t1==254) {
 }
 
 /* Call to ET_BASE_TYPE.same_as_base_class */
-T1 T71x6960(T0* C)
+T1 T71x6960(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f20(C));
+	return (T78f20(ac, C));
 } else {
-	return (T80f59(C));
+	return (T80f59(ac, C));
 }
 } else {
-	return (T246f5(C));
+	return (T246f5(ac, C));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f13(C));
+	return (T254f13(ac, C));
 } else {
-	return (T1213f39(C));
+	return (T1213f39(ac, C));
 }
 } else {
-	return (T1214f39(C));
+	return (T1214f39(ac, C));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_base_type */
-T1 T71x7049T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T71x7049T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f37(C, a1, a2, a3));
+	return (T78f37(ac, C, a1, a2, a3));
 } else {
-	return (T80f99(C, a1, a2, a3));
+	return (T80f99(ac, C, a1, a2, a3));
 }
 } else {
-	return (T246f35(C, a1, a2, a3));
+	return (T246f35(ac, C, a1, a2, a3));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f36(C, a1, a2, a3));
+	return (T254f36(ac, C, a1, a2, a3));
 } else {
-	return (T1213f60(C, a1, a2, a3));
+	return (T1213f60(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1214f61(C, a1, a2, a3));
+	return (T1214f61(ac, C, a1, a2, a3));
 }
 }
 }
 
 /* Call to ET_BASE_TYPE.same_named_type */
-T1 T71x7047T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T71x7047T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f19(C, a1, a2, a3));
+	return (T78f19(ac, C, a1, a2, a3));
 } else {
-	return (T80f45(C, a1, a2, a3));
+	return (T80f45(ac, C, a1, a2, a3));
 }
 } else {
-	return (T246f12(C, a1, a2, a3));
+	return (T246f12(ac, C, a1, a2, a3));
 }
 } else {
 if (t1<=1213) {
 if (t1==254) {
-	return (T254f23(C, a1, a2, a3));
+	return (T254f23(ac, C, a1, a2, a3));
 } else {
-	return (T1213f33(C, a1, a2, a3));
+	return (T1213f33(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1214f32(C, a1, a2, a3));
+	return (T1214f32(ac, C, a1, a2, a3));
 }
 }
 }
 
 /* Call to ET_CLASS_TYPE.actual_parameters */
-T0* T78x6943(T0* C)
+T0* T78x6943(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f14(C));
+	return (T78f14(ac, C));
 } else {
 	return (((T80*)(C))->a22);
 }
@@ -4850,37 +4850,37 @@ if (t1==78) {
 }
 
 /* Call to ET_CLASS_TYPE.base_class */
-T0* T78x7120(T0* C)
+T0* T78x7120(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f18(C));
+	return (T78f18(ac, C));
 } else {
-	return (T80f91(C));
+	return (T80f91(ac, C));
 }
 } else {
-	return (T246f6(C));
+	return (T246f6(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.to_text */
-T0* T78x7079(T0* C)
+T0* T78x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f36(C));
+	return (T78f36(ac, C));
 } else {
-	return (T80f98(C));
+	return (T80f98(ac, C));
 }
 } else {
-	return (T246f34(C));
+	return (T246f34(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.name */
-T0* T78x6999(T0* C)
+T0* T78x6999(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
@@ -4895,67 +4895,67 @@ if (t1==78) {
 }
 
 /* Call to ET_CLASS_TYPE.upper_name */
-T0* T78x7000(T0* C)
+T0* T78x7000(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f96(C));
+	return (T78f96(ac, C));
 } else {
-	return (T80f50(C));
+	return (T80f50(ac, C));
 }
 } else {
-	return (T246f96(C));
+	return (T246f96(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.is_type_separate_with_type_mark */
-T1 T78x10943T0T0(T0* C, T0* a1, T0* a2)
+T1 T78x10951T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f23(C, a1, a2));
+	return (T78f23(ac, C, a1, a2));
 } else {
-	return (T80f87(C, a1, a2));
+	return (T80f87(ac, C, a1, a2));
 }
 } else {
-	return (T246f32(C, a1, a2));
+	return (T246f32(ac, C, a1, a2));
 }
 }
 
 /* Call to ET_CLASS_TYPE.is_type_expanded_with_type_mark */
-T1 T78x7030T0T0(T0* C, T0* a1, T0* a2)
+T1 T78x7030T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f9(C, a1, a2));
+	return (T78f9(ac, C, a1, a2));
 } else {
-	return (T80f73(C, a1, a2));
+	return (T80f73(ac, C, a1, a2));
 }
 } else {
-	return (T246f14(C, a1, a2));
+	return (T246f14(ac, C, a1, a2));
 }
 }
 
 /* Call to ET_CLASS_TYPE.is_type_attached_with_type_mark */
-T1 T78x7034T0T0(T0* C, T0* a1, T0* a2)
+T1 T78x7034T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f22(C, a1, a2));
+	return (T78f22(ac, C, a1, a2));
 } else {
-	return (T80f72(C, a1, a2));
+	return (T80f72(ac, C, a1, a2));
 }
 } else {
-	return (T246f28(C, a1, a2));
+	return (T246f28(ac, C, a1, a2));
 }
 }
 
 /* Call to ET_CLASS_TYPE.named_base_class */
-T0* T78x7121(T0* C)
+T0* T78x7121(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
@@ -4970,97 +4970,97 @@ if (t1==78) {
 }
 
 /* Call to ET_CLASS_TYPE.is_expanded */
-T1 T78x6955(T0* C)
+T1 T78x6955(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f13(C));
+	return (T78f13(ac, C));
 } else {
-	return (T80f113(C));
+	return (T80f113(ac, C));
 }
 } else {
-	return (T246f10(C));
+	return (T246f10(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.position */
-T0* T78x7085(T0* C)
+T0* T78x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f63(C));
+	return (T78f63(ac, C));
 } else {
-	return (T80f151(C));
+	return (T80f151(ac, C));
 }
 } else {
-	return (T246f63(C));
+	return (T246f63(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.is_named_type */
-T1 T78x7027(T0* C)
+T1 T78x7027(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f87(C));
+	return (T78f87(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T246f87(C));
+	return (T246f87(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.is_generic */
-T1 T78x6952(T0* C)
+T1 T78x6952(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f11(C));
+	return (T78f11(ac, C));
 } else {
-	return (T80f121(C));
+	return (T80f121(ac, C));
 }
 } else {
-	return (T246f16(C));
+	return (T246f16(ac, C));
 }
 }
 
 /* Call to ET_CLASS_TYPE.overridden_type_mark */
-T0* T78x7007T0(T0* C, T0* a1)
+T0* T78x7007T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f17(C, a1));
+	return (T78f17(ac, C, a1));
 } else {
-	return (T80f74(C, a1));
+	return (T80f74(ac, C, a1));
 }
 } else {
-	return (T246f22(C, a1));
+	return (T246f22(ac, C, a1));
 }
 }
 
 /* Call to READABLE_STRING_GENERAL.code */
-T10 T97x404T6(T0* C, T6 a1)
+T10 T97x404T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=18) {
 if (t1==17) {
-	return (T17f19(C, a1));
+	return (T17f19(ac, C, a1));
 } else {
-	return (T18f8(C, a1));
+	return (T18f8(ac, C, a1));
 }
 } else {
-	return (T837f44(C, a1));
+	return (T837f44(ac, C, a1));
 }
 }
 
 /* Call to READABLE_STRING_GENERAL.count */
-T6 T97x442(T0* C)
+T6 T97x442(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=18) {
@@ -5075,315 +5075,315 @@ if (t1==17) {
 }
 
 /* Call to READABLE_STRING_GENERAL.substring */
-T0* T97x483T6T6(T0* C, T6 a1, T6 a2)
+T0* T97x483T6T6(GE_context* ac, T0* C, T6 a1, T6 a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=18) {
 if (t1==17) {
-	return (T17f24(C, a1, a2));
+	return (T17f24(ac, C, a1, a2));
 } else {
-	return (T18f10(C, a1, a2));
+	return (T18f10(ac, C, a1, a2));
 }
 } else {
-	return (T837f11(C, a1, a2));
+	return (T837f11(ac, C, a1, a2));
 }
 }
 
 /* Call to READABLE_STRING_GENERAL.item */
-T3 T97x405T6(T0* C, T6 a1)
+T3 T97x405T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=18) {
 if (t1==17) {
-	return (T17f32(C, a1));
+	return (T17f32(ac, C, a1));
 } else {
-	return (T18f9(C, a1));
+	return (T18f9(ac, C, a1));
 }
 } else {
-	return (T837f27(C, a1));
+	return (T837f27(ac, C, a1));
 }
 }
 
 /* Call to ET_POSITION.column */
-T6 T180x12149(T0* C)
+T6 T180x12157(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 174:
-		return (T174f7(C));
+		return (T174f7(ac, C));
 	case 176:
-		return (T176f25(C));
+		return (T176f25(ac, C));
 	case 275:
-		return (T275f12(C));
+		return (T275f12(ac, C));
 	case 302:
-		return (T302f10(C));
+		return (T302f10(ac, C));
 	case 337:
-		return (T337f20(C));
+		return (T337f20(ac, C));
 	case 388:
-		return (T388f28(C));
+		return (T388f28(ac, C));
 	case 638:
-		return (T638f17(C));
+		return (T638f17(ac, C));
 	case 822:
-		return (T822f9(C));
+		return (T822f9(ac, C));
 	case 895:
-		return (T895f11(C));
+		return (T895f11(ac, C));
 	case 898:
-		return (T898f12(C));
+		return (T898f12(ac, C));
 	case 905:
-		return (T905f6(C));
+		return (T905f6(ac, C));
 	case 919:
-		return (T919f20(C));
+		return (T919f20(ac, C));
 	case 925:
-		return (T925f12(C));
+		return (T925f12(ac, C));
 	case 935:
-		return (T935f11(C));
+		return (T935f11(ac, C));
 	case 938:
-		return (T938f18(C));
+		return (T938f18(ac, C));
 	case 941:
-		return (T941f6(C));
+		return (T941f6(ac, C));
 	case 949:
-		return (T949f65(C));
+		return (T949f65(ac, C));
 	case 1190:
-		return (T1190f7(C));
+		return (T1190f7(ac, C));
 	case 1191:
-		return (T1191f15(C));
+		return (T1191f15(ac, C));
 	case 1192:
-		return (T1192f8(C));
+		return (T1192f8(ac, C));
 	case 1193:
-		return (T1193f50(C));
+		return (T1193f50(ac, C));
 	case 1194:
-		return (T1194f50(C));
+		return (T1194f50(ac, C));
 	case 1195:
-		return (T1195f50(C));
+		return (T1195f50(ac, C));
 	case 1196:
-		return (T1196f50(C));
+		return (T1196f50(ac, C));
 	case 1197:
-		return (T1197f50(C));
+		return (T1197f50(ac, C));
 	case 1198:
-		return (T1198f8(C));
+		return (T1198f8(ac, C));
 	case 1199:
-		return (T1199f8(C));
+		return (T1199f8(ac, C));
 	case 1201:
-		return (T1201f6(C));
+		return (T1201f6(ac, C));
 	case 1202:
-		return (T1202f6(C));
+		return (T1202f6(ac, C));
 	case 1203:
-		return (T1203f7(C));
+		return (T1203f7(ac, C));
 	case 1204:
-		return (T1204f7(C));
+		return (T1204f7(ac, C));
 	case 1782:
-		return (T1782f33(C));
+		return (T1782f33(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_POSITION.line */
-T6 T180x12148(T0* C)
+T6 T180x12156(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 174:
-		return (T174f6(C));
+		return (T174f6(ac, C));
 	case 176:
-		return (T176f24(C));
+		return (T176f24(ac, C));
 	case 275:
-		return (T275f11(C));
+		return (T275f11(ac, C));
 	case 302:
-		return (T302f9(C));
+		return (T302f9(ac, C));
 	case 337:
-		return (T337f19(C));
+		return (T337f19(ac, C));
 	case 388:
-		return (T388f27(C));
+		return (T388f27(ac, C));
 	case 638:
-		return (T638f16(C));
+		return (T638f16(ac, C));
 	case 822:
-		return (T822f8(C));
+		return (T822f8(ac, C));
 	case 895:
-		return (T895f10(C));
+		return (T895f10(ac, C));
 	case 898:
-		return (T898f11(C));
+		return (T898f11(ac, C));
 	case 905:
-		return (T905f5(C));
+		return (T905f5(ac, C));
 	case 919:
-		return (T919f19(C));
+		return (T919f19(ac, C));
 	case 925:
-		return (T925f11(C));
+		return (T925f11(ac, C));
 	case 935:
-		return (T935f10(C));
+		return (T935f10(ac, C));
 	case 938:
-		return (T938f17(C));
+		return (T938f17(ac, C));
 	case 941:
-		return (T941f5(C));
+		return (T941f5(ac, C));
 	case 949:
-		return (T949f64(C));
+		return (T949f64(ac, C));
 	case 1190:
-		return (T1190f25(C));
+		return (T1190f25(ac, C));
 	case 1191:
-		return (T1191f14(C));
+		return (T1191f14(ac, C));
 	case 1192:
-		return (T1192f7(C));
+		return (T1192f7(ac, C));
 	case 1193:
-		return (T1193f17(C));
+		return (T1193f17(ac, C));
 	case 1194:
-		return (T1194f17(C));
+		return (T1194f17(ac, C));
 	case 1195:
-		return (T1195f17(C));
+		return (T1195f17(ac, C));
 	case 1196:
-		return (T1196f17(C));
+		return (T1196f17(ac, C));
 	case 1197:
-		return (T1197f17(C));
+		return (T1197f17(ac, C));
 	case 1198:
-		return (T1198f7(C));
+		return (T1198f7(ac, C));
 	case 1199:
-		return (T1199f7(C));
+		return (T1199f7(ac, C));
 	case 1201:
-		return (T1201f5(C));
+		return (T1201f5(ac, C));
 	case 1202:
-		return (T1202f5(C));
+		return (T1202f5(ac, C));
 	case 1203:
-		return (T1203f6(C));
+		return (T1203f6(ac, C));
 	case 1204:
-		return (T1204f6(C));
+		return (T1204f6(ac, C));
 	case 1782:
-		return (T1782f32(C));
+		return (T1782f32(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_POSITION.is_null */
-T1 T180x12150(T0* C)
+T1 T180x12158(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 174:
-		return (T174f8(C));
+		return (T174f8(ac, C));
 	case 176:
-		return (T176f44(C));
+		return (T176f44(ac, C));
 	case 275:
-		return (T275f13(C));
+		return (T275f13(ac, C));
 	case 302:
-		return (T302f11(C));
+		return (T302f11(ac, C));
 	case 337:
-		return (T337f18(C));
+		return (T337f18(ac, C));
 	case 388:
-		return (T388f26(C));
+		return (T388f26(ac, C));
 	case 638:
-		return (T638f18(C));
+		return (T638f18(ac, C));
 	case 822:
-		return (T822f10(C));
+		return (T822f10(ac, C));
 	case 895:
-		return (T895f12(C));
+		return (T895f12(ac, C));
 	case 898:
-		return (T898f13(C));
+		return (T898f13(ac, C));
 	case 905:
-		return (T905f7(C));
+		return (T905f7(ac, C));
 	case 919:
-		return (T919f21(C));
+		return (T919f21(ac, C));
 	case 925:
-		return (T925f6(C));
+		return (T925f6(ac, C));
 	case 935:
-		return (T935f12(C));
+		return (T935f12(ac, C));
 	case 938:
-		return (T938f19(C));
+		return (T938f19(ac, C));
 	case 941:
-		return (T941f7(C));
+		return (T941f7(ac, C));
 	case 949:
-		return (T949f63(C));
+		return (T949f63(ac, C));
 	case 1190:
-		return (T1190f8(C));
+		return (T1190f8(ac, C));
 	case 1191:
-		return (T1191f16(C));
+		return (T1191f16(ac, C));
 	case 1192:
-		return (T1192f9(C));
+		return (T1192f9(ac, C));
 	case 1193:
-		return (T1193f9(C));
+		return (T1193f9(ac, C));
 	case 1194:
-		return (T1194f9(C));
+		return (T1194f9(ac, C));
 	case 1195:
-		return (T1195f9(C));
+		return (T1195f9(ac, C));
 	case 1196:
-		return (T1196f9(C));
+		return (T1196f9(ac, C));
 	case 1197:
-		return (T1197f9(C));
+		return (T1197f9(ac, C));
 	case 1198:
-		return (T1198f9(C));
+		return (T1198f9(ac, C));
 	case 1199:
-		return (T1199f9(C));
+		return (T1199f9(ac, C));
 	case 1201:
-		return (T1201f7(C));
+		return (T1201f7(ac, C));
 	case 1202:
-		return (T1202f7(C));
+		return (T1202f7(ac, C));
 	case 1203:
-		return (T1203f8(C));
+		return (T1203f8(ac, C));
 	case 1204:
-		return (T1204f8(C));
+		return (T1204f8(ac, C));
 	case 1782:
-		return (T1782f34(C));
+		return (T1782f34(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_POSITION.to_text */
-T0* T180x12154(T0* C)
+T0* T180x12162(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=337) {
 if (t1<=176) {
 if (t1==174) {
-	return (T174f9(C));
+	return (T174f9(ac, C));
 } else {
-	return (T176f84(C));
+	return (T176f84(ac, C));
 }
 } else {
 if (t1==275) {
-	return (T275f21(C));
+	return (T275f21(ac, C));
 } else {
-	return (T337f66(C));
+	return (T337f66(ac, C));
 }
 }
 } else {
 if (t1<=638) {
 if (t1==388) {
-	return (T388f33(C));
+	return (T388f33(ac, C));
 } else {
-	return (T638f73(C));
+	return (T638f73(ac, C));
 }
 } else {
-	return (T938f20(C));
+	return (T938f20(ac, C));
 }
 }
 } else {
 if (t1<=1195) {
 if (t1<=1193) {
 if (t1==949) {
-	return (T949f67(C));
+	return (T949f67(ac, C));
 } else {
-	return (T1193f51(C));
+	return (T1193f51(ac, C));
 }
 } else {
 if (t1==1194) {
-	return (T1194f51(C));
+	return (T1194f51(ac, C));
 } else {
-	return (T1195f51(C));
+	return (T1195f51(ac, C));
 }
 }
 } else {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f51(C));
+	return (T1196f51(ac, C));
 } else {
-	return (T1197f51(C));
+	return (T1197f51(ac, C));
 }
 } else {
-	return (T1275f10(C));
+	return (T1275f10(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_ADAPTED_DOTNET_ASSEMBLY.dotnet_assembly */
-T0* T193x3465(T0* C)
+T0* T193x3465(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
@@ -5398,99 +5398,99 @@ if (t1==194) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.conforms_to_type */
-T1 T232x16103T0(T0* C, T0* a1)
+T1 T232x16111T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f27(C, a1));
+	return (T232f27(ac, C, a1));
 } else {
-	return (T295f53(C, a1));
+	return (T295f53(ac, C, a1));
 }
 } else {
-	return (T312f54(C, a1));
+	return (T312f54(ac, C, a1));
 }
 } else {
 if (t1==323) {
-	return (T323f55(C, a1));
+	return (T323f55(ac, C, a1));
 } else {
-	return (T324f55(C, a1));
+	return (T324f55(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_query */
-T0* T232x16129T6T0(T0* C, T6 a1, T0* a2)
+T0* T232x16137T6T0(GE_context* ac, T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f28(C, a1, a2));
+	return (T232f28(ac, C, a1, a2));
 } else {
-	return (T295f55(C, a1, a2));
+	return (T295f55(ac, C, a1, a2));
 }
 } else {
-	return (T312f55(C, a1, a2));
+	return (T312f55(ac, C, a1, a2));
 }
 } else {
 if (t1==323) {
-	return (T323f52(C, a1, a2));
+	return (T323f52(ac, C, a1, a2));
 } else {
-	return (T324f52(C, a1, a2));
+	return (T324f52(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_basic */
-T1 T232x16098(T0* C)
+T1 T232x16106(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f30(C));
+	return (T232f30(ac, C));
 } else {
-	return (T295f48(C));
+	return (T295f48(ac, C));
 }
 } else {
-	return (T312f48(C));
+	return (T312f48(ac, C));
 }
 } else {
 if (t1==323) {
-	return (T323f49(C));
+	return (T323f49(ac, C));
 } else {
-	return (T324f49(C));
+	return (T324f49(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_expanded */
-T1 T232x16151(T0* C)
+T1 T232x16159(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f25(C));
+	return (T232f25(ac, C));
 } else {
-	return (T295f66(C));
+	return (T295f66(ac, C));
 }
 } else {
-	return (T312f51(C));
+	return (T312f51(ac, C));
 }
 } else {
 if (t1==323) {
-	return (T323f67(C));
+	return (T323f67(ac, C));
 } else {
-	return (T324f72(C));
+	return (T324f72(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.base_type */
-T0* T232x16107(T0* C)
+T0* T232x16115(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5513,18 +5513,18 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_agent_type */
-T1 T232x16096(T0* C)
+T1 T232x16104(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f68(C));
+	return (T232f68(ac, C));
 } else {
-	return (T295f70(C));
+	return (T295f70(ac, C));
 }
 } else {
-	return (T312f70(C));
+	return (T312f70(ac, C));
 }
 } else {
 if (t1==323) {
@@ -5536,30 +5536,30 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_procedure */
-T0* T232x16130T6T0(T0* C, T6 a1, T0* a2)
+T0* T232x16138T6T0(GE_context* ac, T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f29(C, a1, a2));
+	return (T232f29(ac, C, a1, a2));
 } else {
-	return (T295f49(C, a1, a2));
+	return (T295f49(ac, C, a1, a2));
 }
 } else {
-	return (T312f49(C, a1, a2));
+	return (T312f49(ac, C, a1, a2));
 }
 } else {
 if (t1==323) {
-	return (T323f50(C, a1, a2));
+	return (T323f50(ac, C, a1, a2));
 } else {
-	return (T324f50(C, a1, a2));
+	return (T324f50(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.base_class */
-T0* T232x16108(T0* C)
+T0* T232x16116(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5582,53 +5582,53 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.dynamic_query */
-T0* T232x16127T0T0(T0* C, T0* a1, T0* a2)
+T0* T232x16135T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f31(C, a1, a2));
+	return (T232f31(ac, C, a1, a2));
 } else {
-	return (T295f47(C, a1, a2));
+	return (T295f47(ac, C, a1, a2));
 }
 } else {
-	return (T312f71(C, a1, a2));
+	return (T312f71(ac, C, a1, a2));
 }
 } else {
 if (t1==323) {
-	return (T323f22(C, a1, a2));
+	return (T323f22(ac, C, a1, a2));
 } else {
-	return (T324f48(C, a1, a2));
+	return (T324f48(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.dynamic_procedure */
-T0* T232x16128T0T0(T0* C, T0* a1, T0* a2)
+T0* T232x16136T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f32(C, a1, a2));
+	return (T232f32(ac, C, a1, a2));
 } else {
-	return (T295f50(C, a1, a2));
+	return (T295f50(ac, C, a1, a2));
 }
 } else {
-	return (T312f50(C, a1, a2));
+	return (T312f50(ac, C, a1, a2));
 }
 } else {
 if (t1==323) {
-	return (T323f51(C, a1, a2));
+	return (T323f51(ac, C, a1, a2));
 } else {
-	return (T324f51(C, a1, a2));
+	return (T324f51(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.queries */
-T0* T232x16125(T0* C)
+T0* T232x16133(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5651,7 +5651,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.attribute_count */
-T6 T232x16121(T0* C)
+T6 T232x16129(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5674,7 +5674,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.id */
-T6 T232x16116(T0* C)
+T6 T232x16124(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5697,53 +5697,53 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_special */
-T1 T232x16097(T0* C)
+T1 T232x16105(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f65(C));
+	return (T232f65(ac, C));
 } else {
-	return (T295f67(C));
+	return (T295f67(ac, C));
 }
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==323) {
-	return (T323f68(C));
+	return (T323f68(ac, C));
 } else {
-	return (T324f67(C));
+	return (T324f67(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_builtin_attribute */
-T1 T232x16132T0T6(T0* C, T0* a1, T6 a2)
+T1 T232x16140T0T6(GE_context* ac, T0* C, T0* a1, T6 a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f35(C, a1, a2));
+	return (T232f35(ac, C, a1, a2));
 } else {
-	return (T295f21(C, a1, a2));
+	return (T295f21(ac, C, a1, a2));
 }
 } else {
-	return (T312f22(C, a1, a2));
+	return (T312f22(ac, C, a1, a2));
 }
 } else {
 if (t1==323) {
-	return (T323f23(C, a1, a2));
+	return (T323f23(ac, C, a1, a2));
 } else {
-	return (T324f21(C, a1, a2));
+	return (T324f21(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.meta_type */
-T0* T232x16109(T0* C)
+T0* T232x16117(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5766,30 +5766,30 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.has_nested_reference_attributes */
-T1 T232x16123(T0* C)
+T1 T232x16131(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f63(C));
+	return (T232f63(ac, C));
 } else {
-	return (T295f65(C));
+	return (T295f65(ac, C));
 }
 } else {
-	return (T312f65(C));
+	return (T312f65(ac, C));
 }
 } else {
 if (t1==323) {
-	return (T323f66(C));
+	return (T323f66(ac, C));
 } else {
-	return (T324f65(C));
+	return (T324f65(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.hash_code */
-T6 T232x22(T0* C)
+T6 T232x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5812,30 +5812,30 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_generic */
-T1 T232x16095(T0* C)
+T1 T232x16103(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f22(C));
+	return (T232f22(ac, C));
 } else {
-	return (T295f51(C));
+	return (T295f51(ac, C));
 }
 } else {
-	return (T312f52(C));
+	return (T312f52(ac, C));
 }
 } else {
 if (t1==323) {
-	return (T323f53(C));
+	return (T323f53(ac, C));
 } else {
-	return (T324f53(C));
+	return (T324f53(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_alive */
-T1 T232x16091(T0* C)
+T1 T232x16099(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5858,7 +5858,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.next_type */
-T0* T232x16145(T0* C)
+T0* T232x16153(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5881,7 +5881,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.procedure_calls */
-T0* T232x16135(T0* C)
+T0* T232x16143(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5904,7 +5904,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.query_calls */
-T0* T232x16134(T0* C)
+T0* T232x16142(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5927,7 +5927,7 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.procedures */
-T0* T232x16126(T0* C)
+T0* T232x16134(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5950,30 +5950,30 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.static_type */
-T0* T232x16156(T0* C)
+T0* T232x16164(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f33(C));
+	return (T232f33(ac, C));
 } else {
-	return (T295f52(C));
+	return (T295f52(ac, C));
 }
 } else {
-	return (T312f53(C));
+	return (T312f53(ac, C));
 }
 } else {
 if (t1==323) {
-	return (T323f54(C));
+	return (T323f54(ac, C));
 } else {
-	return (T324f54(C));
+	return (T324f54(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.has_static */
-T1 T232x16099(T0* C)
+T1 T232x16107(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
@@ -5996,61 +5996,61 @@ if (t1==323) {
 }
 
 /* Call to ET_FEATURE_NAME.last_leaf */
-T0* T238x7089(T0* C)
+T0* T238x7089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f98(C));
+	return (T176f98(ac, C));
 } else {
-	return (T823f64(C));
+	return (T823f64(ac, C));
 }
 } else {
-	return (T1229f63(C));
+	return (T1229f63(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f64(C));
+	return (T1230f64(ac, C));
 } else {
-	return (T1231f77(C));
+	return (T1231f77(ac, C));
 }
 } else {
-	return (T1782f42(C));
+	return (T1782f42(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_tuple_label */
-T1 T238x15101(T0* C)
+T1 T238x15109(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f34(C));
+	return (T176f34(ac, C));
 } else {
-	return (T823f23(C));
+	return (T823f23(ac, C));
 }
 } else {
-	return (T1229f16(C));
+	return (T1229f16(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f16(C));
+	return (T1230f16(ac, C));
 } else {
-	return (T1231f16(C));
+	return (T1231f16(ac, C));
 }
 } else {
-	return (T1782f26(C));
+	return (T1782f26(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.name */
-T0* T238x15092(T0* C)
+T0* T238x15100(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -6058,72 +6058,72 @@ if (t1<=823) {
 if (t1==176) {
 	return (((T176*)(C))->a3);
 } else {
-	return (T823f13(C));
+	return (T823f13(ac, C));
 }
 } else {
-	return (T1229f6(C));
+	return (T1229f6(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f6(C));
+	return (T1230f6(ac, C));
 } else {
-	return (T1231f6(C));
+	return (T1231f6(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.lower_name */
-T0* T238x15093(T0* C)
+T0* T238x15101(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f35(C));
+	return (T176f35(ac, C));
 } else {
-	return (T823f12(C));
+	return (T823f12(ac, C));
 }
 } else {
-	return (T1229f29(C));
+	return (T1229f29(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f22(C));
+	return (T1230f22(ac, C));
 } else {
-	return (T1231f43(C));
+	return (T1231f43(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.position */
-T0* T238x7085(T0* C)
+T0* T238x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T823f14(C));
+	return (T823f14(ac, C));
 }
 } else {
-	return (T1229f7(C));
+	return (T1229f7(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f7(C));
+	return (T1230f7(ac, C));
 } else {
-	return (T1231f7(C));
+	return (T1231f7(ac, C));
 }
 } else {
-	return (T1782f28(C));
+	return (T1782f28(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.seed */
-T6 T238x15094(T0* C)
+T6 T238x15102(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -6146,237 +6146,237 @@ if (t1==1230) {
 }
 
 /* Call to ET_FEATURE_NAME.across_cursor_name */
-T0* T238x15137(T0* C)
+T0* T238x15145(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f74(C));
+	return (T176f74(ac, C));
 } else {
-	return (T823f56(C));
+	return (T823f56(ac, C));
 }
 } else {
-	return (T1229f55(C));
+	return (T1229f55(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f58(C));
+	return (T1230f58(ac, C));
 } else {
-	return (T1231f69(C));
+	return (T1231f69(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_across_cursor */
-T1 T238x15099(T0* C)
+T1 T238x15107(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f30(C));
+	return (T176f30(ac, C));
 } else {
-	return (T823f55(C));
+	return (T823f55(ac, C));
 }
 } else {
-	return (T1229f54(C));
+	return (T1229f54(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f57(C));
+	return (T1230f57(ac, C));
 } else {
-	return (T1231f68(C));
+	return (T1231f68(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.object_test_local_name */
-T0* T238x15136(T0* C)
+T0* T238x15144(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f73(C));
+	return (T176f73(ac, C));
 } else {
-	return (T823f54(C));
+	return (T823f54(ac, C));
 }
 } else {
-	return (T1229f53(C));
+	return (T1229f53(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f56(C));
+	return (T1230f56(ac, C));
 } else {
-	return (T1231f67(C));
+	return (T1231f67(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_object_test_local */
-T1 T238x15098(T0* C)
+T1 T238x15106(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f17(C));
+	return (T176f17(ac, C));
 } else {
-	return (T823f53(C));
+	return (T823f53(ac, C));
 }
 } else {
-	return (T1229f52(C));
+	return (T1229f52(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f55(C));
+	return (T1230f55(ac, C));
 } else {
-	return (T1231f66(C));
+	return (T1231f66(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.local_name */
-T0* T238x15134(T0* C)
+T0* T238x15142(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f72(C));
+	return (T176f72(ac, C));
 } else {
-	return (T823f52(C));
+	return (T823f52(ac, C));
 }
 } else {
-	return (T1229f51(C));
+	return (T1229f51(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f54(C));
+	return (T1230f54(ac, C));
 } else {
-	return (T1231f65(C));
+	return (T1231f65(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_local */
-T1 T238x15097(T0* C)
+T1 T238x15105(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f29(C));
+	return (T176f29(ac, C));
 } else {
-	return (T823f51(C));
+	return (T823f51(ac, C));
 }
 } else {
-	return (T1229f50(C));
+	return (T1229f50(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f53(C));
+	return (T1230f53(ac, C));
 } else {
-	return (T1231f64(C));
+	return (T1231f64(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.argument_name */
-T0* T238x15135(T0* C)
+T0* T238x15143(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f71(C));
+	return (T176f71(ac, C));
 } else {
-	return (T823f50(C));
+	return (T823f50(ac, C));
 }
 } else {
-	return (T1229f49(C));
+	return (T1229f49(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f52(C));
+	return (T1230f52(ac, C));
 } else {
-	return (T1231f63(C));
+	return (T1231f63(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_argument */
-T1 T238x15100(T0* C)
+T1 T238x15108(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f27(C));
+	return (T176f27(ac, C));
 } else {
-	return (T823f49(C));
+	return (T823f49(ac, C));
 }
 } else {
-	return (T1229f48(C));
+	return (T1229f48(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f51(C));
+	return (T1230f51(ac, C));
 } else {
-	return (T1231f62(C));
+	return (T1231f62(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.same_feature_name */
-T1 T238x15090T0(T0* C, T0* a1)
+T1 T238x15098T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f42(C, a1));
+	return (T176f42(ac, C, a1));
 } else {
-	return (T823f11(C, a1));
+	return (T823f11(ac, C, a1));
 }
 } else {
-	return (T1229f28(C, a1));
+	return (T1229f28(ac, C, a1));
 }
 } else {
 if (t1==1230) {
-	return (T1230f21(C, a1));
+	return (T1230f21(ac, C, a1));
 } else {
-	return (T1231f42(C, a1));
+	return (T1231f42(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.first_leaf */
-T0* T238x7088(T0* C)
+T0* T238x7088(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f93(C));
+	return (T176f93(ac, C));
 } else {
-	return (T823f63(C));
+	return (T823f63(ac, C));
 }
 } else {
-	return (T1229f62(C));
+	return (T1229f62(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f63(C));
+	return (T1230f63(ac, C));
 } else {
-	return (T1231f76(C));
+	return (T1231f76(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.hash_code */
-T6 T238x22(T0* C)
+T6 T238x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -6387,27 +6387,27 @@ if (t1==176) {
 	return (((T823*)(C))->a4);
 }
 } else {
-	return (T1229f5(C));
+	return (T1229f5(ac, C));
 }
 } else {
 if (t1==1230) {
 	return (((T1230*)(C))->a1);
 } else {
-	return (T1231f5(C));
+	return (T1231f5(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_prefix */
-T1 T238x15123(T0* C)
+T1 T238x15131(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f52(C));
+	return (T176f52(ac, C));
 } else {
-	return (T823f15(C));
+	return (T823f15(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -6416,28 +6416,28 @@ if (t1==176) {
 if (t1==1230) {
 	return (EIF_TRUE);
 } else {
-	return (T1231f8(C));
+	return (T1231f8(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.is_infix */
-T1 T238x15103(T0* C)
+T1 T238x15111(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f53(C));
+	return (T176f53(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1229f9(C));
+	return (T1229f9(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f9(C));
+	return (T1230f9(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -6445,12 +6445,12 @@ if (t1==1230) {
 }
 
 /* Call to ET_PROCEDURE.hash_code */
-T6 T239x22(T0* C)
+T6 T239x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a5);
+if (t1==516) {
+	return (((T516*)(C))->a5);
 } else {
 	return (((T523*)(C))->a7);
 }
@@ -6464,31 +6464,31 @@ if (t1==1227) {
 }
 
 /* Call to ET_PROCEDURE.is_exported_to */
-T1 T239x17021T0(T0* C, T0* a1)
+T1 T239x17029T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f65(C, a1));
+if (t1==516) {
+	return (T516f65(ac, C, a1));
 } else {
-	return (T523f64(C, a1));
+	return (T523f64(ac, C, a1));
 }
 } else {
 if (t1==1227) {
-	return (T1227f66(C, a1));
+	return (T1227f66(ac, C, a1));
 } else {
-	return (T1228f69(C, a1));
+	return (T1228f69(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.first_seed */
-T6 T239x17061(T0* C)
+T6 T239x17069(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a2);
+if (t1==516) {
+	return (((T516*)(C))->a2);
 } else {
 	return (((T523*)(C))->a3);
 }
@@ -6502,50 +6502,50 @@ if (t1==1227) {
 }
 
 /* Call to ET_PROCEDURE.is_creation_exported_to */
-T1 T239x17023T0T0(T0* C, T0* a1, T0* a2)
+T1 T239x17031T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f59(C, a1, a2));
+if (t1==516) {
+	return (T516f59(ac, C, a1, a2));
 } else {
-	return (T523f58(C, a1, a2));
+	return (T523f58(ac, C, a1, a2));
 }
 } else {
 if (t1==1227) {
-	return (T1227f60(C, a1, a2));
+	return (T1227f60(ac, C, a1, a2));
 } else {
-	return (T1228f62(C, a1, a2));
+	return (T1228f62(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.arguments_count */
-T6 T239x17020(T0* C)
+T6 T239x17028(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f68(C));
+if (t1==516) {
+	return (T516f68(ac, C));
 } else {
-	return (T523f67(C));
+	return (T523f67(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f69(C));
+	return (T1227f69(ac, C));
 } else {
-	return (T1228f72(C));
+	return (T1228f72(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.arguments */
-T0* T239x17060(T0* C)
+T0* T239x17068(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a3);
+if (t1==516) {
+	return (((T516*)(C))->a3);
 } else {
 	return (((T523*)(C))->a4);
 }
@@ -6559,164 +6559,164 @@ if (t1==1227) {
 }
 
 /* Call to ET_PROCEDURE.overloaded_alias_name */
-T0* T239x16980(T0* C)
+T0* T239x16988(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f70(C));
+if (t1==516) {
+	return (T516f70(ac, C));
 } else {
-	return (T523f69(C));
+	return (T523f69(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f71(C));
+	return (T1227f71(ac, C));
 } else {
-	return (T1228f74(C));
+	return (T1228f74(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.alias_name */
-T0* T239x16976(T0* C)
+T0* T239x16984(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f30(C));
+if (t1==516) {
+	return (T516f30(ac, C));
 } else {
-	return (T523f40(C));
+	return (T523f40(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f43(C));
+	return (T1227f43(ac, C));
 } else {
-	return (T1228f30(C));
+	return (T1228f30(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.overloaded_name */
-T0* T239x16979(T0* C)
+T0* T239x16987(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f69(C));
+if (t1==516) {
+	return (T516f69(ac, C));
 } else {
-	return (T523f68(C));
+	return (T523f68(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f70(C));
+	return (T1227f70(ac, C));
 } else {
-	return (T1228f73(C));
+	return (T1228f73(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.name */
-T0* T239x17058(T0* C)
+T0* T239x17066(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f39(C));
+if (t1==516) {
+	return (T516f39(ac, C));
 } else {
-	return (T523f28(C));
+	return (T523f28(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f39(C));
+	return (T1227f39(ac, C));
 } else {
-	return (T1228f43(C));
+	return (T1228f43(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.is_parenthesisable */
-T1 T239x17014(T0* C)
+T1 T239x17022(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f34(C));
+if (t1==516) {
+	return (T516f34(ac, C));
 } else {
-	return (T523f31(C));
+	return (T523f31(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f34(C));
+	return (T1227f34(ac, C));
 } else {
-	return (T1228f36(C));
+	return (T1228f36(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.is_frozen */
-T1 T239x17000(T0* C)
+T1 T239x17008(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f33(C));
+if (t1==516) {
+	return (T516f33(ac, C));
 } else {
-	return (T523f30(C));
+	return (T523f30(ac, C));
 }
 } else {
 if (t1==1227) {
-	return (T1227f33(C));
+	return (T1227f33(ac, C));
 } else {
-	return (T1228f33(C));
+	return (T1228f33(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.is_deferred */
-T1 T239x17001(T0* C)
+T1 T239x17009(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f32(C));
+if (t1==516) {
+	return (T516f32(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==1227) {
-	return (T1227f32(C));
+	return (T1227f32(ac, C));
 } else {
-	return (T1228f32(C));
+	return (T1228f32(ac, C));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.has_seed */
-T1 T239x17056T6(T0* C, T6 a1)
+T1 T239x17064T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f40(C, a1));
+if (t1==516) {
+	return (T516f40(ac, C, a1));
 } else {
-	return (T523f38(C, a1));
+	return (T523f38(ac, C, a1));
 }
 } else {
 if (t1==1227) {
-	return (T1227f42(C, a1));
+	return (T1227f42(ac, C, a1));
 } else {
-	return (T1228f41(C, a1));
+	return (T1228f41(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.implementation_class */
-T0* T239x17071(T0* C)
+T0* T239x17079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a1);
+if (t1==516) {
+	return (((T516*)(C))->a1);
 } else {
 	return (((T523*)(C))->a2);
 }
@@ -6730,31 +6730,31 @@ if (t1==1227) {
 }
 
 /* Call to ET_PROCEDURE.new_synonym */
-T0* T239x17044T0(T0* C, T0* a1)
+T0* T239x17052T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (T514f43(C, a1));
+if (t1==516) {
+	return (T516f43(ac, C, a1));
 } else {
-	return (T523f39(C, a1));
+	return (T523f39(ac, C, a1));
 }
 } else {
 if (t1==1227) {
-	return (T1227f35(C, a1));
+	return (T1227f35(ac, C, a1));
 } else {
-	return (T1228f37(C, a1));
+	return (T1228f37(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_PROCEDURE.postconditions */
-T0* T239x17085(T0* C)
+T0* T239x17093(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a20);
+if (t1==516) {
+	return (((T516*)(C))->a20);
 } else {
 	return (((T523*)(C))->a18);
 }
@@ -6768,12 +6768,12 @@ if (t1==1227) {
 }
 
 /* Call to ET_PROCEDURE.preconditions */
-T0* T239x17084(T0* C)
+T0* T239x17092(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a12);
+if (t1==516) {
+	return (((T516*)(C))->a12);
 } else {
 	return (((T523*)(C))->a12);
 }
@@ -6787,56 +6787,56 @@ if (t1==1227) {
 }
 
 /* Call to ET_QUERY.lower_name */
-T0* T240x16975(T0* C)
+T0* T240x16983(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f50(C));
+	return (T253f50(ac, C));
 } else {
-	return (T320f46(C));
+	return (T320f46(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f28(C));
+	return (T353f28(ac, C));
 } else {
-	return (T355f42(C));
+	return (T355f42(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f42(C));
+	return (T356f42(ac, C));
 } else {
-	return (T1223f45(C));
+	return (T1223f45(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f45(C));
+	return (T1224f45(ac, C));
 } else {
-	return (T1225f45(C));
+	return (T1225f45(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_attribute */
-T1 T240x17004(T0* C)
+T1 T240x17012(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f42(C));
+	return (T253f42(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==353) {
-	return (T353f44(C));
+	return (T353f44(ac, C));
 } else {
-	return (T355f45(C));
+	return (T355f45(ac, C));
 }
 }
 } else {
@@ -6844,20 +6844,20 @@ if (t1<=1223) {
 if (t1==356) {
 	return (EIF_TRUE);
 } else {
-	return (T1223f47(C));
+	return (T1223f47(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f47(C));
+	return (T1224f47(ac, C));
 } else {
-	return (T1225f47(C));
+	return (T1225f47(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.hash_code */
-T6 T240x22(T0* C)
+T6 T240x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -6892,42 +6892,42 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.type */
-T0* T240x17059(T0* C)
+T0* T240x17067(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f44(C));
+	return (T253f44(ac, C));
 } else {
-	return (T320f47(C));
+	return (T320f47(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f47(C));
+	return (T353f47(ac, C));
 } else {
-	return (T355f46(C));
+	return (T355f46(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f46(C));
+	return (T356f46(ac, C));
 } else {
-	return (T1223f49(C));
+	return (T1223f49(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f49(C));
+	return (T1224f49(ac, C));
 } else {
-	return (T1225f31(C));
+	return (T1225f31(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.first_seed */
-T6 T240x17061(T0* C)
+T6 T240x17069(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -6962,7 +6962,7 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.assigner */
-T0* T240x17125(T0* C)
+T0* T240x17133(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -6997,182 +6997,182 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.is_exported_to */
-T1 T240x17021T0(T0* C, T0* a1)
+T1 T240x17029T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f71(C, a1));
+	return (T253f71(ac, C, a1));
 } else {
-	return (T320f66(C, a1));
+	return (T320f66(ac, C, a1));
 }
 } else {
 if (t1==353) {
-	return (T353f65(C, a1));
+	return (T353f65(ac, C, a1));
 } else {
-	return (T355f65(C, a1));
+	return (T355f65(ac, C, a1));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f63(C, a1));
+	return (T356f63(ac, C, a1));
 } else {
-	return (T1223f67(C, a1));
+	return (T1223f67(ac, C, a1));
 }
 } else {
 if (t1==1224) {
-	return (T1224f68(C, a1));
+	return (T1224f68(ac, C, a1));
 } else {
-	return (T1225f66(C, a1));
+	return (T1225f66(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.overloaded_alias_name */
-T0* T240x16980(T0* C)
+T0* T240x16988(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f75(C));
+	return (T253f75(ac, C));
 } else {
-	return (T320f70(C));
+	return (T320f70(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f69(C));
+	return (T353f69(ac, C));
 } else {
-	return (T355f69(C));
+	return (T355f69(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f67(C));
+	return (T356f67(ac, C));
 } else {
-	return (T1223f71(C));
+	return (T1223f71(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f72(C));
+	return (T1224f72(ac, C));
 } else {
-	return (T1225f70(C));
+	return (T1225f70(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.alias_name */
-T0* T240x16976(T0* C)
+T0* T240x16984(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f49(C));
+	return (T253f49(ac, C));
 } else {
-	return (T320f51(C));
+	return (T320f51(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f51(C));
+	return (T353f51(ac, C));
 } else {
-	return (T355f50(C));
+	return (T355f50(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f51(C));
+	return (T356f51(ac, C));
 } else {
-	return (T1223f35(C));
+	return (T1223f35(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f35(C));
+	return (T1224f35(ac, C));
 } else {
-	return (T1225f35(C));
+	return (T1225f35(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.overloaded_name */
-T0* T240x16979(T0* C)
+T0* T240x16987(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f74(C));
+	return (T253f74(ac, C));
 } else {
-	return (T320f69(C));
+	return (T320f69(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f68(C));
+	return (T353f68(ac, C));
 } else {
-	return (T355f68(C));
+	return (T355f68(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f66(C));
+	return (T356f66(ac, C));
 } else {
-	return (T1223f70(C));
+	return (T1223f70(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f71(C));
+	return (T1224f71(ac, C));
 } else {
-	return (T1225f69(C));
+	return (T1225f69(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.name */
-T0* T240x17058(T0* C)
+T0* T240x17066(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f47(C));
+	return (T253f47(ac, C));
 } else {
-	return (T320f45(C));
+	return (T320f45(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f46(C));
+	return (T353f46(ac, C));
 } else {
-	return (T355f27(C));
+	return (T355f27(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f41(C));
+	return (T356f41(ac, C));
 } else {
-	return (T1223f36(C));
+	return (T1223f36(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f36(C));
+	return (T1224f36(ac, C));
 } else {
-	return (T1225f36(C));
+	return (T1225f36(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.arguments */
-T0* T240x17060(T0* C)
+T0* T240x17068(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -7180,19 +7180,19 @@ if (t1<=320) {
 if (t1==253) {
 	return (((T253*)(C))->a9);
 } else {
-	return (T320f49(C));
+	return (T320f49(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f49(C));
+	return (T353f49(ac, C));
 } else {
-	return (T355f48(C));
+	return (T355f48(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f48(C));
+	return (T356f48(ac, C));
 } else {
 	return (((T1223*)(C))->a8);
 }
@@ -7207,77 +7207,77 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.arguments_count */
-T6 T240x17020(T0* C)
+T6 T240x17028(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f48(C));
+	return (T253f48(ac, C));
 } else {
-	return (T320f50(C));
+	return (T320f50(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f50(C));
+	return (T353f50(ac, C));
 } else {
-	return (T355f49(C));
+	return (T355f49(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f49(C));
+	return (T356f49(ac, C));
 } else {
-	return (T1223f34(C));
+	return (T1223f34(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f34(C));
+	return (T1224f34(ac, C));
 } else {
-	return (T1225f34(C));
+	return (T1225f34(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.has_seed */
-T1 T240x17056T6(T0* C, T6 a1)
+T1 T240x17064T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f45(C, a1));
+	return (T253f45(ac, C, a1));
 } else {
-	return (T320f44(C, a1));
+	return (T320f44(ac, C, a1));
 }
 } else {
 if (t1==353) {
-	return (T353f42(C, a1));
+	return (T353f42(ac, C, a1));
 } else {
-	return (T355f41(C, a1));
+	return (T355f41(ac, C, a1));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f40(C, a1));
+	return (T356f40(ac, C, a1));
 } else {
-	return (T1223f33(C, a1));
+	return (T1223f33(ac, C, a1));
 }
 } else {
 if (t1==1224) {
-	return (T1224f33(C, a1));
+	return (T1224f33(ac, C, a1));
 } else {
-	return (T1225f33(C, a1));
+	return (T1225f33(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.implementation_feature */
-T0* T240x17088(T0* C)
+T0* T240x17096(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -7312,19 +7312,19 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.is_unique_attribute */
-T1 T240x17006(T0* C)
+T1 T240x17014(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f46(C));
+	return (T253f46(ac, C));
 } else {
-	return (T320f48(C));
+	return (T320f48(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f48(C));
+	return (T353f48(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -7332,57 +7332,57 @@ if (t1==353) {
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f47(C));
+	return (T356f47(ac, C));
 } else {
-	return (T1223f32(C));
+	return (T1223f32(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f50(C));
+	return (T1224f50(ac, C));
 } else {
-	return (T1225f32(C));
+	return (T1225f32(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_constant_attribute */
-T1 T240x17005(T0* C)
+T1 T240x17013(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f43(C));
+	return (T253f43(ac, C));
 } else {
-	return (T320f43(C));
+	return (T320f43(ac, C));
 }
 } else {
 if (t1==353) {
 	return (EIF_TRUE);
 } else {
-	return (T355f40(C));
+	return (T355f40(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f27(C));
+	return (T356f27(ac, C));
 } else {
-	return (T1223f48(C));
+	return (T1223f48(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f48(C));
+	return (T1224f48(ac, C));
 } else {
-	return (T1225f30(C));
+	return (T1225f30(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.implementation_class */
-T0* T240x17071(T0* C)
+T0* T240x17079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -7417,83 +7417,83 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.is_once */
-T1 T240x17010(T0* C)
+T1 T240x17018(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f59(C));
+	return (T253f59(ac, C));
 } else {
-	return (T320f61(C));
+	return (T320f61(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f27(C));
+	return (T353f27(ac, C));
 } else {
-	return (T355f26(C));
+	return (T355f26(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f26(C));
+	return (T356f26(ac, C));
 } else {
-	return (T1223f43(C));
+	return (T1223f43(ac, C));
 }
 } else {
 if (t1==1224) {
 	return (EIF_TRUE);
 } else {
-	return (T1225f44(C));
+	return (T1225f44(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_infixable */
-T1 T240x17011(T0* C)
+T1 T240x17019(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f51(C));
+	return (T253f51(ac, C));
 } else {
-	return (T320f53(C));
+	return (T320f53(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f54(C));
+	return (T353f54(ac, C));
 } else {
-	return (T355f52(C));
+	return (T355f52(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f54(C));
+	return (T356f54(ac, C));
 } else {
-	return (T1223f37(C));
+	return (T1223f37(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f37(C));
+	return (T1224f37(ac, C));
 } else {
-	return (T1225f37(C));
+	return (T1225f37(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_prefixable */
-T1 T240x17012(T0* C)
+T1 T240x17020(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f52(C));
+	return (T253f52(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -7509,151 +7509,151 @@ if (t1<=1223) {
 if (t1==356) {
 	return (EIF_TRUE);
 } else {
-	return (T1223f38(C));
+	return (T1223f38(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f38(C));
+	return (T1224f38(ac, C));
 } else {
-	return (T1225f38(C));
+	return (T1225f38(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_parenthesisable */
-T1 T240x17014(T0* C)
+T1 T240x17022(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f56(C));
+	return (T253f56(ac, C));
 } else {
-	return (T320f60(C));
+	return (T320f60(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f26(C));
+	return (T353f26(ac, C));
 } else {
-	return (T355f25(C));
+	return (T355f25(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f25(C));
+	return (T356f25(ac, C));
 } else {
-	return (T1223f42(C));
+	return (T1223f42(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f42(C));
+	return (T1224f42(ac, C));
 } else {
-	return (T1225f43(C));
+	return (T1225f43(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_bracketable */
-T1 T240x17013(T0* C)
+T1 T240x17021(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f55(C));
+	return (T253f55(ac, C));
 } else {
-	return (T320f59(C));
+	return (T320f59(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f25(C));
+	return (T353f25(ac, C));
 } else {
-	return (T355f58(C));
+	return (T355f58(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f24(C));
+	return (T356f24(ac, C));
 } else {
-	return (T1223f41(C));
+	return (T1223f41(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f41(C));
+	return (T1224f41(ac, C));
 } else {
-	return (T1225f41(C));
+	return (T1225f41(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_frozen */
-T1 T240x17000(T0* C)
+T1 T240x17008(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f54(C));
+	return (T253f54(ac, C));
 } else {
-	return (T320f57(C));
+	return (T320f57(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f58(C));
+	return (T353f58(ac, C));
 } else {
-	return (T355f57(C));
+	return (T355f57(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f23(C));
+	return (T356f23(ac, C));
 } else {
-	return (T1223f40(C));
+	return (T1223f40(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f40(C));
+	return (T1224f40(ac, C));
 } else {
-	return (T1225f40(C));
+	return (T1225f40(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.is_deferred */
-T1 T240x17001(T0* C)
+T1 T240x17009(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f53(C));
+	return (T253f53(ac, C));
 } else {
-	return (T320f55(C));
+	return (T320f55(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f57(C));
+	return (T353f57(ac, C));
 } else {
-	return (T355f56(C));
+	return (T355f56(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f56(C));
+	return (T356f56(ac, C));
 } else {
-	return (T1223f39(C));
+	return (T1223f39(ac, C));
 }
 } else {
 if (t1==1224) {
-	return (T1224f39(C));
+	return (T1224f39(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -7662,42 +7662,42 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.new_synonym */
-T0* T240x17044T0(T0* C, T0* a1)
+T0* T240x17052T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f60(C, a1));
+	return (T253f60(ac, C, a1));
 } else {
-	return (T320f52(C, a1));
+	return (T320f52(ac, C, a1));
 }
 } else {
 if (t1==353) {
-	return (T353f43(C, a1));
+	return (T353f43(ac, C, a1));
 } else {
-	return (T355f43(C, a1));
+	return (T355f43(ac, C, a1));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f43(C, a1));
+	return (T356f43(ac, C, a1));
 } else {
-	return (T1223f46(C, a1));
+	return (T1223f46(ac, C, a1));
 }
 } else {
 if (t1==1224) {
-	return (T1224f46(C, a1));
+	return (T1224f46(ac, C, a1));
 } else {
-	return (T1225f46(C, a1));
+	return (T1225f46(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_QUERY.postconditions */
-T0* T240x17085(T0* C)
+T0* T240x17093(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -7709,15 +7709,15 @@ if (t1==253) {
 }
 } else {
 if (t1==353) {
-	return (T353f52(C));
+	return (T353f52(ac, C));
 } else {
-	return (T355f51(C));
+	return (T355f51(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f52(C));
+	return (T356f52(ac, C));
 } else {
 	return (((T1223*)(C))->a9);
 }
@@ -7732,7 +7732,7 @@ if (t1==1224) {
 }
 
 /* Call to ET_QUERY.preconditions */
-T0* T240x17084(T0* C)
+T0* T240x17092(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
@@ -7744,15 +7744,15 @@ if (t1==253) {
 }
 } else {
 if (t1==353) {
-	return (T353f45(C));
+	return (T353f45(ac, C));
 } else {
-	return (T355f44(C));
+	return (T355f44(ac, C));
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-	return (T356f44(C));
+	return (T356f44(ac, C));
 } else {
 	return (((T1223*)(C))->a6);
 }
@@ -7767,305 +7767,305 @@ if (t1==1224) {
 }
 
 /* Call to ET_TYPE.position */
-T0* T243x7085(T0* C)
+T0* T243x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f63(C));
+	return (T78f63(ac, C));
 } else {
-	return (T80f151(C));
+	return (T80f151(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f63(C));
+	return (T246f63(ac, C));
 } else {
-	return (T254f63(C));
+	return (T254f63(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f33(C));
+	return (T495f33(ac, C));
 } else {
-	return (T858f13(C));
+	return (T858f13(ac, C));
 }
 } else {
-	return (T1081f67(C));
+	return (T1081f67(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f68(C));
+	return (T1209f68(ac, C));
 } else {
-	return (T1213f11(C));
+	return (T1213f11(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f8(C));
+	return (T1214f8(ac, C));
 } else {
-	return (T1238f8(C));
+	return (T1238f8(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f8(C));
+	return (T1239f8(ac, C));
 } else {
-	return (T1240f8(C));
+	return (T1240f8(ac, C));
 }
 } else {
-	return (T1417f7(C));
+	return (T1417f7(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_type_with_type_marks */
-T1 T243x7048T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7048T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f7(C, a1, a2, a3, a4, a5));
+	return (T78f7(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f79(C, a1, a2, a3, a4, a5));
+	return (T80f79(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f21(C, a1, a2, a3, a4, a5));
+	return (T246f21(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f31(C, a1, a2, a3, a4, a5));
+	return (T254f31(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f32(C, a1, a2, a3, a4, a5));
+	return (T495f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f7(C, a1, a2, a3, a4, a5));
+	return (T858f7(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f32(C, a1, a2, a3, a4, a5));
+	return (T1081f32(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f34(C, a1, a2, a3, a4, a5));
+	return (T1209f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f10(C, a1, a2, a3, a4, a5));
+	return (T1213f10(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f22(C, a1, a2, a3, a4, a5));
+	return (T1214f22(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f38(C, a1, a2, a3, a4, a5));
+	return (T1238f38(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f37(C, a1, a2, a3, a4, a5));
+	return (T1239f37(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f37(C, a1, a2, a3, a4, a5));
+	return (T1240f37(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f20(C, a1, a2, a3, a4, a5));
+	return (T1417f20(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.last_leaf */
-T0* T243x7089(T0* C)
+T0* T243x7089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1213) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f108(C));
+	return (T78f108(ac, C));
 } else {
-	return (T80f203(C));
+	return (T80f203(ac, C));
 }
 } else {
-	return (T246f107(C));
+	return (T246f107(ac, C));
 }
 } else {
 if (t1<=495) {
 if (t1==254) {
-	return (T254f105(C));
+	return (T254f105(ac, C));
 } else {
-	return (T495f71(C));
+	return (T495f71(ac, C));
 }
 } else {
-	return (T1213f107(C));
+	return (T1213f107(ac, C));
 }
 }
 } else {
 if (t1<=1239) {
 if (t1<=1238) {
 if (t1==1214) {
-	return (T1214f108(C));
+	return (T1214f108(ac, C));
 } else {
-	return (T1238f77(C));
+	return (T1238f77(ac, C));
 }
 } else {
-	return (T1239f76(C));
+	return (T1239f76(ac, C));
 }
 } else {
 if (t1==1240) {
-	return (T1240f73(C));
+	return (T1240f73(ac, C));
 } else {
-	return (T1417f69(C));
+	return (T1417f69(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.to_text */
-T0* T243x7079(T0* C)
+T0* T243x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f36(C));
+	return (T78f36(ac, C));
 } else {
-	return (T80f98(C));
+	return (T80f98(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f34(C));
+	return (T246f34(ac, C));
 } else {
-	return (T254f35(C));
+	return (T254f35(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f70(C));
+	return (T495f70(ac, C));
 } else {
-	return (T858f66(C));
+	return (T858f66(ac, C));
 }
 } else {
-	return (T1081f55(C));
+	return (T1081f55(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f61(C));
+	return (T1209f61(ac, C));
 } else {
-	return (T1213f12(C));
+	return (T1213f12(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f41(C));
+	return (T1214f41(ac, C));
 } else {
-	return (T1238f72(C));
+	return (T1238f72(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f73(C));
+	return (T1239f73(ac, C));
 } else {
-	return (T1240f70(C));
+	return (T1240f70(ac, C));
 }
 } else {
-	return (T1417f57(C));
+	return (T1417f57(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_base_type_with_type_marks */
-T1 T243x7050T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7050T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f41(C, a1, a2, a3, a4, a5));
+	return (T78f41(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f106(C, a1, a2, a3, a4, a5));
+	return (T80f106(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f40(C, a1, a2, a3, a4, a5));
+	return (T246f40(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f40(C, a1, a2, a3, a4, a5));
+	return (T254f40(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f62(C, a1, a2, a3, a4, a5));
+	return (T495f62(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f61(C, a1, a2, a3, a4, a5));
+	return (T858f61(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f68(C, a1, a2, a3, a4, a5));
+	return (T1081f68(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f69(C, a1, a2, a3, a4, a5));
+	return (T1209f69(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f65(C, a1, a2, a3, a4, a5));
+	return (T1213f65(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f67(C, a1, a2, a3, a4, a5));
+	return (T1214f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f66(C, a1, a2, a3, a4, a5));
+	return (T1238f66(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f67(C, a1, a2, a3, a4, a5));
+	return (T1239f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f64(C, a1, a2, a3, a4, a5));
+	return (T1240f64(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f63(C, a1, a2, a3, a4, a5));
+	return (T1417f63(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_like_current */
-T1 T243x7026(T0* C)
+T1 T243x7026(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f85(C));
+	return (T78f85(ac, C));
 } else {
-	return (T80f166(C));
+	return (T80f166(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f80(C));
+	return (T246f80(ac, C));
 } else {
-	return (T254f77(C));
+	return (T254f77(ac, C));
 }
 }
 } else {
@@ -8073,3116 +8073,3116 @@ if (t1<=858) {
 if (t1==495) {
 	return (EIF_TRUE);
 } else {
-	return (T858f47(C));
+	return (T858f47(ac, C));
 }
 } else {
-	return (T1081f44(C));
+	return (T1081f44(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f46(C));
+	return (T1209f46(ac, C));
 } else {
-	return (T1213f79(C));
+	return (T1213f79(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f80(C));
+	return (T1214f80(ac, C));
 } else {
-	return (T1238f51(C));
+	return (T1238f51(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f52(C));
+	return (T1239f52(ac, C));
 } else {
-	return (T1240f49(C));
+	return (T1240f49(ac, C));
 }
 } else {
-	return (T1417f47(C));
+	return (T1417f47(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.shallow_named_type */
-T0* T243x7019T0(T0* C, T0* a1)
+T0* T243x7019T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f78(C, a1));
+	return (T78f78(ac, C, a1));
 } else {
-	return (T80f165(C, a1));
+	return (T80f165(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f78(C, a1));
+	return (T246f78(ac, C, a1));
 } else {
-	return (T254f76(C, a1));
+	return (T254f76(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f46(C, a1));
+	return (T495f46(ac, C, a1));
 } else {
-	return (T858f46(C, a1));
+	return (T858f46(ac, C, a1));
 }
 } else {
-	return (T1081f43(C, a1));
+	return (T1081f43(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f45(C, a1));
+	return (T1209f45(ac, C, a1));
 } else {
-	return (T1213f78(C, a1));
+	return (T1213f78(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f79(C, a1));
+	return (T1214f79(ac, C, a1));
 } else {
-	return (T1238f50(C, a1));
+	return (T1238f50(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f51(C, a1));
+	return (T1239f51(ac, C, a1));
 } else {
-	return (T1240f48(C, a1));
+	return (T1240f48(ac, C, a1));
 }
 } else {
-	return (T1417f46(C, a1));
+	return (T1417f46(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.named_type */
-T0* T243x7017T0(T0* C, T0* a1)
+T0* T243x7017T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f45(C, a1));
+	return (T78f45(ac, C, a1));
 } else {
-	return (T80f110(C, a1));
+	return (T80f110(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f44(C, a1));
+	return (T246f44(ac, C, a1));
 } else {
-	return (T254f44(C, a1));
+	return (T254f44(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f19(C, a1));
+	return (T495f19(ac, C, a1));
 } else {
-	return (T858f29(C, a1));
+	return (T858f29(ac, C, a1));
 }
 } else {
-	return (T1081f47(C, a1));
+	return (T1081f47(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f54(C, a1));
+	return (T1209f54(ac, C, a1));
 } else {
-	return (T1213f34(C, a1));
+	return (T1213f34(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f34(C, a1));
+	return (T1214f34(ac, C, a1));
 } else {
-	return (T1238f37(C, a1));
+	return (T1238f37(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f36(C, a1));
+	return (T1239f36(ac, C, a1));
 } else {
-	return (T1240f36(C, a1));
+	return (T1240f36(ac, C, a1));
 }
 } else {
-	return (T1417f38(C, a1));
+	return (T1417f38(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_class */
-T0* T243x7008T0(T0* C, T0* a1)
+T0* T243x7008T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f4(C, a1));
+	return (T78f4(ac, C, a1));
 } else {
-	return (T80f52(C, a1));
+	return (T80f52(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f18(C, a1));
+	return (T246f18(ac, C, a1));
 } else {
-	return (T254f7(C, a1));
+	return (T254f7(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f11(C, a1));
+	return (T495f11(ac, C, a1));
 } else {
-	return (T858f18(C, a1));
+	return (T858f18(ac, C, a1));
 }
 } else {
-	return (T1081f23(C, a1));
+	return (T1081f23(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f25(C, a1));
+	return (T1209f25(ac, C, a1));
 } else {
-	return (T1213f28(C, a1));
+	return (T1213f28(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f26(C, a1));
+	return (T1214f26(ac, C, a1));
 } else {
-	return (T1238f27(C, a1));
+	return (T1238f27(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f26(C, a1));
+	return (T1239f26(ac, C, a1));
 } else {
-	return (T1240f19(C, a1));
+	return (T1240f19(ac, C, a1));
 }
 } else {
-	return (T1417f18(C, a1));
+	return (T1417f18(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_base_type */
-T1 T243x7028(T0* C)
+T1 T243x7028(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f103(C));
+	return (T78f103(ac, C));
 } else {
-	return (T80f195(C));
+	return (T80f195(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f102(C));
+	return (T246f102(ac, C));
 } else {
-	return (T254f101(C));
+	return (T254f101(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f65(C));
+	return (T495f65(ac, C));
 } else {
-	return (T858f64(C));
+	return (T858f64(ac, C));
 }
 } else {
-	return (T1081f72(C));
+	return (T1081f72(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f73(C));
+	return (T1209f73(ac, C));
 } else {
-	return (T1213f101(C));
+	return (T1213f101(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f102(C));
+	return (T1214f102(ac, C));
 } else {
-	return (T1238f69(C));
+	return (T1238f69(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f70(C));
+	return (T1239f70(ac, C));
 } else {
-	return (T1240f67(C));
+	return (T1240f67(ac, C));
 }
 } else {
-	return (T1417f66(C));
+	return (T1417f66(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_to_type */
-T1 T243x7066T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T243x7066T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f28(C, a1, a2, a3));
+	return (T78f28(ac, C, a1, a2, a3));
 } else {
-	return (T80f114(C, a1, a2, a3));
+	return (T80f114(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==246) {
-	return (T246f11(C, a1, a2, a3));
+	return (T246f11(ac, C, a1, a2, a3));
 } else {
-	return (T254f19(C, a1, a2, a3));
+	return (T254f19(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f10(C, a1, a2, a3));
+	return (T495f10(ac, C, a1, a2, a3));
 } else {
-	return (T858f17(C, a1, a2, a3));
+	return (T858f17(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1081f21(C, a1, a2, a3));
+	return (T1081f21(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f23(C, a1, a2, a3));
+	return (T1209f23(ac, C, a1, a2, a3));
 } else {
-	return (T1213f27(C, a1, a2, a3));
+	return (T1213f27(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==1214) {
-	return (T1214f25(C, a1, a2, a3));
+	return (T1214f25(ac, C, a1, a2, a3));
 } else {
-	return (T1238f26(C, a1, a2, a3));
+	return (T1238f26(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f25(C, a1, a2, a3));
+	return (T1239f25(ac, C, a1, a2, a3));
 } else {
-	return (T1240f27(C, a1, a2, a3));
+	return (T1240f27(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1417f27(C, a1, a2, a3));
+	return (T1417f27(ac, C, a1, a2, a3));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_type */
-T1 T243x7047T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T243x7047T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f19(C, a1, a2, a3));
+	return (T78f19(ac, C, a1, a2, a3));
 } else {
-	return (T80f45(C, a1, a2, a3));
+	return (T80f45(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==246) {
-	return (T246f12(C, a1, a2, a3));
+	return (T246f12(ac, C, a1, a2, a3));
 } else {
-	return (T254f23(C, a1, a2, a3));
+	return (T254f23(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f30(C, a1, a2, a3));
+	return (T495f30(ac, C, a1, a2, a3));
 } else {
-	return (T858f26(C, a1, a2, a3));
+	return (T858f26(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1081f22(C, a1, a2, a3));
+	return (T1081f22(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f24(C, a1, a2, a3));
+	return (T1209f24(ac, C, a1, a2, a3));
 } else {
-	return (T1213f33(C, a1, a2, a3));
+	return (T1213f33(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==1214) {
-	return (T1214f32(C, a1, a2, a3));
+	return (T1214f32(ac, C, a1, a2, a3));
 } else {
-	return (T1238f33(C, a1, a2, a3));
+	return (T1238f33(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f32(C, a1, a2, a3));
+	return (T1239f32(ac, C, a1, a2, a3));
 } else {
-	return (T1240f33(C, a1, a2, a3));
+	return (T1240f33(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1417f33(C, a1, a2, a3));
+	return (T1417f33(ac, C, a1, a2, a3));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_named_type */
-T1 T243x7027(T0* C)
+T1 T243x7027(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f87(C));
+	return (T78f87(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==246) {
-	return (T246f87(C));
+	return (T246f87(ac, C));
 } else {
-	return (T254f84(C));
+	return (T254f84(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f51(C));
+	return (T495f51(ac, C));
 } else {
-	return (T858f51(C));
+	return (T858f51(ac, C));
 }
 } else {
-	return (T1081f69(C));
+	return (T1081f69(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f70(C));
+	return (T1209f70(ac, C));
 } else {
-	return (T1213f83(C));
+	return (T1213f83(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f84(C));
+	return (T1214f84(ac, C));
 } else {
-	return (T1238f55(C));
+	return (T1238f55(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f56(C));
+	return (T1239f56(ac, C));
 } else {
-	return (T1240f53(C));
+	return (T1240f53(ac, C));
 }
 } else {
-	return (T1417f52(C));
+	return (T1417f52(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_expanded */
-T1 T243x7029T0(T0* C, T0* a1)
+T1 T243x7029T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f5(C, a1));
+	return (T78f5(ac, C, a1));
 } else {
-	return (T80f53(C, a1));
+	return (T80f53(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f19(C, a1));
+	return (T246f19(ac, C, a1));
 } else {
-	return (T254f8(C, a1));
+	return (T254f8(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f12(C, a1));
+	return (T495f12(ac, C, a1));
 } else {
-	return (T858f19(C, a1));
+	return (T858f19(ac, C, a1));
 }
 } else {
-	return (T1081f24(C, a1));
+	return (T1081f24(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f26(C, a1));
+	return (T1209f26(ac, C, a1));
 } else {
-	return (T1213f29(C, a1));
+	return (T1213f29(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f27(C, a1));
+	return (T1214f27(ac, C, a1));
 } else {
-	return (T1238f28(C, a1));
+	return (T1238f28(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f27(C, a1));
+	return (T1239f27(ac, C, a1));
 } else {
-	return (T1240f28(C, a1));
+	return (T1240f28(ac, C, a1));
 }
 } else {
-	return (T1417f28(C, a1));
+	return (T1417f28(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_detachable */
-T1 T243x7035T0(T0* C, T0* a1)
+T1 T243x7035T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f44(C, a1));
+	return (T78f44(ac, C, a1));
 } else {
-	return (T80f109(C, a1));
+	return (T80f109(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f43(C, a1));
+	return (T246f43(ac, C, a1));
 } else {
-	return (T254f43(C, a1));
+	return (T254f43(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f17(C, a1));
+	return (T495f17(ac, C, a1));
 } else {
-	return (T858f24(C, a1));
+	return (T858f24(ac, C, a1));
 }
 } else {
-	return (T1081f30(C, a1));
+	return (T1081f30(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f32(C, a1));
+	return (T1209f32(ac, C, a1));
 } else {
-	return (T1213f31(C, a1));
+	return (T1213f31(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f30(C, a1));
+	return (T1214f30(ac, C, a1));
 } else {
-	return (T1238f31(C, a1));
+	return (T1238f31(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f30(C, a1));
+	return (T1239f30(ac, C, a1));
 } else {
-	return (T1240f31(C, a1));
+	return (T1240f31(ac, C, a1));
 }
 } else {
-	return (T1417f31(C, a1));
+	return (T1417f31(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.type_with_type_mark */
-T0* T243x7023T0(T0* C, T0* a1)
+T0* T243x7023T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f35(C, a1));
+	return (T78f35(ac, C, a1));
 } else {
-	return (T80f88(C, a1));
+	return (T80f88(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f33(C, a1));
+	return (T246f33(ac, C, a1));
 } else {
-	return (T254f34(C, a1));
+	return (T254f34(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f69(C, a1));
+	return (T495f69(ac, C, a1));
 } else {
-	return (T858f68(C, a1));
+	return (T858f68(ac, C, a1));
 }
 } else {
-	return (T1081f46(C, a1));
+	return (T1081f46(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f48(C, a1));
+	return (T1209f48(ac, C, a1));
 } else {
-	return (T1213f61(C, a1));
+	return (T1213f61(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f62(C, a1));
+	return (T1214f62(ac, C, a1));
 } else {
-	return (T1238f73(C, a1));
+	return (T1238f73(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f74(C, a1));
+	return (T1239f74(ac, C, a1));
 } else {
-	return (T1240f71(C, a1));
+	return (T1240f71(ac, C, a1));
 }
 } else {
-	return (T1417f48(C, a1));
+	return (T1417f48(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_type_index_of_label */
-T6 T243x7016T0T0(T0* C, T0* a1, T0* a2)
+T6 T243x7016T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f105(C, a1, a2));
+	return (T78f105(ac, C, a1, a2));
 } else {
-	return (T80f199(C, a1, a2));
+	return (T80f199(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f105(C, a1, a2));
+	return (T246f105(ac, C, a1, a2));
 } else {
-	return (T254f103(C, a1, a2));
+	return (T254f103(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f66(C, a1, a2));
+	return (T495f66(ac, C, a1, a2));
 } else {
-	return (T858f65(C, a1, a2));
+	return (T858f65(ac, C, a1, a2));
 }
 } else {
-	return (T1081f73(C, a1, a2));
+	return (T1081f73(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f74(C, a1, a2));
+	return (T1209f74(ac, C, a1, a2));
 } else {
-	return (T1213f103(C, a1, a2));
+	return (T1213f103(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f104(C, a1, a2));
+	return (T1214f104(ac, C, a1, a2));
 } else {
-	return (T1238f70(C, a1, a2));
+	return (T1238f70(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f71(C, a1, a2));
+	return (T1239f71(ac, C, a1, a2));
 } else {
-	return (T1240f68(C, a1, a2));
+	return (T1240f68(ac, C, a1, a2));
 }
 } else {
-	return (T1417f67(C, a1, a2));
+	return (T1417f67(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.resolved_formal_parameters */
-T0* T243x7072T0(T0* C, T0* a1)
+T0* T243x7072T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f64(C, a1));
+	return (T78f64(ac, C, a1));
 } else {
-	return (T80f191(C, a1));
+	return (T80f191(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f64(C, a1));
+	return (T246f64(ac, C, a1));
 } else {
-	return (T254f98(C, a1));
+	return (T254f98(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f63(C, a1));
+	return (T495f63(ac, C, a1));
 } else {
-	return (T858f62(C, a1));
+	return (T858f62(ac, C, a1));
 }
 } else {
-	return (T1081f70(C, a1));
+	return (T1081f70(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f71(C, a1));
+	return (T1209f71(ac, C, a1));
 } else {
-	return (T1213f99(C, a1));
+	return (T1213f99(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f100(C, a1));
+	return (T1214f100(ac, C, a1));
 } else {
-	return (T1238f67(C, a1));
+	return (T1238f67(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f68(C, a1));
+	return (T1239f68(ac, C, a1));
 } else {
-	return (T1240f65(C, a1));
+	return (T1240f65(ac, C, a1));
 }
 } else {
-	return (T1417f64(C, a1));
+	return (T1417f64(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_type_actual */
-T0* T243x7014T6T0(T0* C, T6 a1, T0* a2)
+T0* T243x7014T6T0(GE_context* ac, T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f81(C, a1, a2));
+	return (T78f81(ac, C, a1, a2));
 } else {
-	return (T80f168(C, a1, a2));
+	return (T80f168(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f83(C, a1, a2));
+	return (T246f83(ac, C, a1, a2));
 } else {
-	return (T254f80(C, a1, a2));
+	return (T254f80(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f52(C, a1, a2));
+	return (T495f52(ac, C, a1, a2));
 } else {
-	return (T858f52(C, a1, a2));
+	return (T858f52(ac, C, a1, a2));
 }
 } else {
-	return (T1081f66(C, a1, a2));
+	return (T1081f66(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f67(C, a1, a2));
+	return (T1209f67(ac, C, a1, a2));
 } else {
-	return (T1213f84(C, a1, a2));
+	return (T1213f84(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f85(C, a1, a2));
+	return (T1214f85(ac, C, a1, a2));
 } else {
-	return (T1238f56(C, a1, a2));
+	return (T1238f56(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f57(C, a1, a2));
+	return (T1239f57(ac, C, a1, a2));
 } else {
-	return (T1240f54(C, a1, a2));
+	return (T1240f54(ac, C, a1, a2));
 }
 } else {
-	return (T1417f53(C, a1, a2));
+	return (T1417f53(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_qualified_like_identifier_with_type_marks */
-T1 T243x7056T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7056T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f100(C, a1, a2, a3, a4, a5));
+	return (T78f100(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f187(C, a1, a2, a3, a4, a5));
+	return (T80f187(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f100(C, a1, a2, a3, a4, a5));
+	return (T246f100(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f96(C, a1, a2, a3, a4, a5));
+	return (T254f96(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f60(C, a1, a2, a3, a4, a5));
+	return (T495f60(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f59(C, a1, a2, a3, a4, a5));
+	return (T858f59(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f65(C, a1, a2, a3, a4, a5));
+	return (T1081f65(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f66(C, a1, a2, a3, a4, a5));
+	return (T1209f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f97(C, a1, a2, a3, a4, a5));
+	return (T1213f97(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f98(C, a1, a2, a3, a4, a5));
+	return (T1214f98(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f64(C, a1, a2, a3, a4, a5));
+	return (T1238f64(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f64(C, a1, a2, a3, a4, a5));
+	return (T1239f64(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f61(C, a1, a2, a3, a4, a5));
+	return (T1240f61(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f61(C, a1, a2, a3, a4, a5));
+	return (T1417f61(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_like_feature_with_type_marks */
-T1 T243x7055T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7055T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f99(C, a1, a2, a3, a4, a5));
+	return (T78f99(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f186(C, a1, a2, a3, a4, a5));
+	return (T80f186(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f99(C, a1, a2, a3, a4, a5));
+	return (T246f99(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f95(C, a1, a2, a3, a4, a5));
+	return (T254f95(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f59(C, a1, a2, a3, a4, a5));
+	return (T495f59(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f58(C, a1, a2, a3, a4, a5));
+	return (T858f58(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f64(C, a1, a2, a3, a4, a5));
+	return (T1081f64(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f65(C, a1, a2, a3, a4, a5));
+	return (T1209f65(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f96(C, a1, a2, a3, a4, a5));
+	return (T1213f96(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f97(C, a1, a2, a3, a4, a5));
+	return (T1214f97(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f62(C, a1, a2, a3, a4, a5));
+	return (T1238f62(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f63(C, a1, a2, a3, a4, a5));
+	return (T1239f63(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f60(C, a1, a2, a3, a4, a5));
+	return (T1240f60(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f60(C, a1, a2, a3, a4, a5));
+	return (T1417f60(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_bit_type_with_type_marks */
-T1 T243x7051T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7051T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f98(C, a1, a2, a3, a4, a5));
+	return (T78f98(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f185(C, a1, a2, a3, a4, a5));
+	return (T80f185(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f98(C, a1, a2, a3, a4, a5));
+	return (T246f98(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f94(C, a1, a2, a3, a4, a5));
+	return (T254f94(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f58(C, a1, a2, a3, a4, a5));
+	return (T495f58(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f57(C, a1, a2, a3, a4, a5));
+	return (T858f57(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f63(C, a1, a2, a3, a4, a5));
+	return (T1081f63(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f64(C, a1, a2, a3, a4, a5));
+	return (T1209f64(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f64(C, a1, a2, a3, a4, a5));
+	return (T1213f64(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f66(C, a1, a2, a3, a4, a5));
+	return (T1214f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f61(C, a1, a2, a3, a4, a5));
+	return (T1238f61(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f62(C, a1, a2, a3, a4, a5));
+	return (T1239f62(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f59(C, a1, a2, a3, a4, a5));
+	return (T1240f59(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f59(C, a1, a2, a3, a4, a5));
+	return (T1417f59(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.named_base_class */
-T0* T243x7009T0(T0* C, T0* a1)
+T0* T243x7009T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f8(C, a1));
+	return (T78f8(ac, C, a1));
 } else {
-	return (T80f80(C, a1));
+	return (T80f80(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f13(C, a1));
+	return (T246f13(ac, C, a1));
 } else {
-	return (T254f11(C, a1));
+	return (T254f11(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f22(C, a1));
+	return (T495f22(ac, C, a1));
 } else {
-	return (T858f10(C, a1));
+	return (T858f10(ac, C, a1));
 }
 } else {
-	return (T1081f34(C, a1));
+	return (T1081f34(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f36(C, a1));
+	return (T1209f36(ac, C, a1));
 } else {
-	return (T1213f5(C, a1));
+	return (T1213f5(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f38(C, a1));
+	return (T1214f38(ac, C, a1));
 } else {
-	return (T1238f42(C, a1));
+	return (T1238f42(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f41(C, a1));
+	return (T1239f41(ac, C, a1));
 } else {
-	return (T1240f5(C, a1));
+	return (T1240f5(ac, C, a1));
 }
 } else {
-	return (T1417f40(C, a1));
+	return (T1417f40(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_attached_with_type_mark */
-T1 T243x7034T0T0(T0* C, T0* a1, T0* a2)
+T1 T243x7034T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f22(C, a1, a2));
+	return (T78f22(ac, C, a1, a2));
 } else {
-	return (T80f72(C, a1, a2));
+	return (T80f72(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f28(C, a1, a2));
+	return (T246f28(ac, C, a1, a2));
 } else {
-	return (T254f29(C, a1, a2));
+	return (T254f29(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f43(C, a1, a2));
+	return (T495f43(ac, C, a1, a2));
 } else {
-	return (T858f43(C, a1, a2));
+	return (T858f43(ac, C, a1, a2));
 }
 } else {
-	return (T1081f41(C, a1, a2));
+	return (T1081f41(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f43(C, a1, a2));
+	return (T1209f43(ac, C, a1, a2));
 } else {
-	return (T1213f63(C, a1, a2));
+	return (T1213f63(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f64(C, a1, a2));
+	return (T1214f64(ac, C, a1, a2));
 } else {
-	return (T1238f47(C, a1, a2));
+	return (T1238f47(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f48(C, a1, a2));
+	return (T1239f48(ac, C, a1, a2));
 } else {
-	return (T1240f45(C, a1, a2));
+	return (T1240f45(ac, C, a1, a2));
 }
 } else {
-	return (T1417f42(C, a1, a2));
+	return (T1417f42(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_reference_with_type_mark */
-T1 T243x7032T0T0(T0* C, T0* a1, T0* a2)
+T1 T243x7032T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f75(C, a1, a2));
+	return (T78f75(ac, C, a1, a2));
 } else {
-	return (T80f162(C, a1, a2));
+	return (T80f162(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f75(C, a1, a2));
+	return (T246f75(ac, C, a1, a2));
 } else {
-	return (T254f73(C, a1, a2));
+	return (T254f73(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f42(C, a1, a2));
+	return (T495f42(ac, C, a1, a2));
 } else {
-	return (T858f42(C, a1, a2));
+	return (T858f42(ac, C, a1, a2));
 }
 } else {
-	return (T1081f40(C, a1, a2));
+	return (T1081f40(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f42(C, a1, a2));
+	return (T1209f42(ac, C, a1, a2));
 } else {
-	return (T1213f75(C, a1, a2));
+	return (T1213f75(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f76(C, a1, a2));
+	return (T1214f76(ac, C, a1, a2));
 } else {
-	return (T1238f46(C, a1, a2));
+	return (T1238f46(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f47(C, a1, a2));
+	return (T1239f47(ac, C, a1, a2));
 } else {
-	return (T1240f44(C, a1, a2));
+	return (T1240f44(ac, C, a1, a2));
 }
 } else {
-	return (T1417f41(C, a1, a2));
+	return (T1417f41(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_from_formal_parameter_type_with_type_marks */
-T1 T243x7070T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7070T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f74(C, a1, a2, a3, a4, a5));
+	return (T78f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f161(C, a1, a2, a3, a4, a5));
+	return (T80f161(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f74(C, a1, a2, a3, a4, a5));
+	return (T246f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f72(C, a1, a2, a3, a4, a5));
+	return (T254f72(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f41(C, a1, a2, a3, a4, a5));
+	return (T495f41(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f41(C, a1, a2, a3, a4, a5));
+	return (T858f41(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f16(C, a1, a2, a3, a4, a5));
+	return (T1081f16(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f18(C, a1, a2, a3, a4, a5));
+	return (T1209f18(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f74(C, a1, a2, a3, a4, a5));
+	return (T1213f74(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f75(C, a1, a2, a3, a4, a5));
+	return (T1214f75(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f45(C, a1, a2, a3, a4, a5));
+	return (T1238f45(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f46(C, a1, a2, a3, a4, a5));
+	return (T1239f46(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f43(C, a1, a2, a3, a4, a5));
+	return (T1240f43(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f26(C, a1, a2, a3, a4, a5));
+	return (T1417f26(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_formal_parameter_type_with_type_marks */
-T1 T243x7060T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7060T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f73(C, a1, a2, a3, a4, a5));
+	return (T78f73(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f160(C, a1, a2, a3, a4, a5));
+	return (T80f160(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f73(C, a1, a2, a3, a4, a5));
+	return (T246f73(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f71(C, a1, a2, a3, a4, a5));
+	return (T254f71(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f40(C, a1, a2, a3, a4, a5));
+	return (T495f40(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f40(C, a1, a2, a3, a4, a5));
+	return (T858f40(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f20(C, a1, a2, a3, a4, a5));
+	return (T1081f20(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f22(C, a1, a2, a3, a4, a5));
+	return (T1209f22(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f73(C, a1, a2, a3, a4, a5));
+	return (T1213f73(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f74(C, a1, a2, a3, a4, a5));
+	return (T1214f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f44(C, a1, a2, a3, a4, a5));
+	return (T1238f44(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f45(C, a1, a2, a3, a4, a5));
+	return (T1239f45(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f42(C, a1, a2, a3, a4, a5));
+	return (T1240f42(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f35(C, a1, a2, a3, a4, a5));
+	return (T1417f35(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_base_bit_type_with_type_marks */
-T1 T243x7062T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7062T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f68(C, a1, a2, a3, a4, a5));
+	return (T78f68(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f154(C, a1, a2, a3, a4, a5));
+	return (T80f154(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f68(C, a1, a2, a3, a4, a5));
+	return (T246f68(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f66(C, a1, a2, a3, a4, a5));
+	return (T254f66(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f36(C, a1, a2, a3, a4, a5));
+	return (T495f36(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f36(C, a1, a2, a3, a4, a5));
+	return (T858f36(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f28(C, a1, a2, a3, a4, a5));
+	return (T1081f28(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f30(C, a1, a2, a3, a4, a5));
+	return (T1209f30(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f66(C, a1, a2, a3, a4, a5));
+	return (T1213f66(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f29(C, a1, a2, a3, a4, a5));
+	return (T1214f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f30(C, a1, a2, a3, a4, a5));
+	return (T1238f30(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f29(C, a1, a2, a3, a4, a5));
+	return (T1239f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f30(C, a1, a2, a3, a4, a5));
+	return (T1240f30(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f30(C, a1, a2, a3, a4, a5));
+	return (T1417f30(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_bit_type_with_type_marks */
-T1 T243x7058T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7058T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f67(C, a1, a2, a3, a4, a5));
+	return (T78f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f153(C, a1, a2, a3, a4, a5));
+	return (T80f153(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f67(C, a1, a2, a3, a4, a5));
+	return (T246f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f65(C, a1, a2, a3, a4, a5));
+	return (T254f65(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f35(C, a1, a2, a3, a4, a5));
+	return (T495f35(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f35(C, a1, a2, a3, a4, a5));
+	return (T858f35(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f19(C, a1, a2, a3, a4, a5));
+	return (T1081f19(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f21(C, a1, a2, a3, a4, a5));
+	return (T1209f21(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f36(C, a1, a2, a3, a4, a5));
+	return (T1213f36(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f33(C, a1, a2, a3, a4, a5));
+	return (T1214f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f34(C, a1, a2, a3, a4, a5));
+	return (T1238f34(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f33(C, a1, a2, a3, a4, a5));
+	return (T1239f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f34(C, a1, a2, a3, a4, a5));
+	return (T1240f34(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f34(C, a1, a2, a3, a4, a5));
+	return (T1417f34(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_from_bit_type_with_type_marks */
-T1 T243x7068T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7068T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f66(C, a1, a2, a3, a4, a5));
+	return (T78f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f152(C, a1, a2, a3, a4, a5));
+	return (T80f152(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f66(C, a1, a2, a3, a4, a5));
+	return (T246f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f64(C, a1, a2, a3, a4, a5));
+	return (T254f64(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f34(C, a1, a2, a3, a4, a5));
+	return (T495f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f34(C, a1, a2, a3, a4, a5));
+	return (T858f34(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f15(C, a1, a2, a3, a4, a5));
+	return (T1081f15(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f17(C, a1, a2, a3, a4, a5));
+	return (T1209f17(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f26(C, a1, a2, a3, a4, a5));
+	return (T1213f26(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f24(C, a1, a2, a3, a4, a5));
+	return (T1214f24(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f25(C, a1, a2, a3, a4, a5));
+	return (T1238f25(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f24(C, a1, a2, a3, a4, a5));
+	return (T1239f24(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f26(C, a1, a2, a3, a4, a5));
+	return (T1240f26(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f25(C, a1, a2, a3, a4, a5));
+	return (T1417f25(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_type */
-T1 T243x7045T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T1 T243x7045T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f65(C, a1, a2, a3));
+	return (T78f65(ac, C, a1, a2, a3));
 } else {
-	return (T80f188(C, a1, a2, a3));
+	return (T80f188(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==246) {
-	return (T246f65(C, a1, a2, a3));
+	return (T246f65(ac, C, a1, a2, a3));
 } else {
-	return (T254f97(C, a1, a2, a3));
+	return (T254f97(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f61(C, a1, a2, a3));
+	return (T495f61(ac, C, a1, a2, a3));
 } else {
-	return (T858f60(C, a1, a2, a3));
+	return (T858f60(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1081f51(C, a1, a2, a3));
+	return (T1081f51(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f60(C, a1, a2, a3));
+	return (T1209f60(ac, C, a1, a2, a3));
 } else {
-	return (T1213f98(C, a1, a2, a3));
+	return (T1213f98(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==1214) {
-	return (T1214f99(C, a1, a2, a3));
+	return (T1214f99(ac, C, a1, a2, a3));
 } else {
-	return (T1238f65(C, a1, a2, a3));
+	return (T1238f65(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f66(C, a1, a2, a3));
+	return (T1239f66(ac, C, a1, a2, a3));
 } else {
-	return (T1240f62(C, a1, a2, a3));
+	return (T1240f62(ac, C, a1, a2, a3));
 }
 } else {
-	return (T1417f62(C, a1, a2, a3));
+	return (T1417f62(ac, C, a1, a2, a3));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.depends_on_qualified_anchored_type */
-T1 T243x7039T0(T0* C, T0* a1)
+T1 T243x7039T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f71(C, a1));
+	return (T78f71(ac, C, a1));
 } else {
-	return (T80f158(C, a1));
+	return (T80f158(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f71(C, a1));
+	return (T246f71(ac, C, a1));
 } else {
-	return (T254f69(C, a1));
+	return (T254f69(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f39(C, a1));
+	return (T495f39(ac, C, a1));
 } else {
-	return (T858f39(C, a1));
+	return (T858f39(ac, C, a1));
 }
 } else {
-	return (T1081f50(C, a1));
+	return (T1081f50(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f59(C, a1));
+	return (T1209f59(ac, C, a1));
 } else {
-	return (T1213f71(C, a1));
+	return (T1213f71(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f72(C, a1));
+	return (T1214f72(ac, C, a1));
 } else {
-	return (T1238f43(C, a1));
+	return (T1238f43(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f44(C, a1));
+	return (T1239f44(ac, C, a1));
 } else {
-	return (T1240f41(C, a1));
+	return (T1240f41(ac, C, a1));
 }
 } else {
-	return (T1417f37(C, a1));
+	return (T1417f37(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.has_formal_types */
-T1 T243x7040T0(T0* C, T0* a1)
+T1 T243x7040T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f70(C, a1));
+	return (T78f70(ac, C, a1));
 } else {
-	return (T80f156(C, a1));
+	return (T80f156(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f70(C, a1));
+	return (T246f70(ac, C, a1));
 } else {
-	return (T254f68(C, a1));
+	return (T254f68(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f38(C, a1));
+	return (T495f38(ac, C, a1));
 } else {
-	return (T858f38(C, a1));
+	return (T858f38(ac, C, a1));
 }
 } else {
-	return (T1081f38(C, a1));
+	return (T1081f38(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f40(C, a1));
+	return (T1209f40(ac, C, a1));
 } else {
-	return (T1213f70(C, a1));
+	return (T1213f70(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f71(C, a1));
+	return (T1214f71(ac, C, a1));
 } else {
-	return (T1238f36(C, a1));
+	return (T1238f36(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f35(C, a1));
+	return (T1239f35(ac, C, a1));
 } else {
-	return (T1240f20(C, a1));
+	return (T1240f20(ac, C, a1));
 }
 } else {
-	return (T1417f19(C, a1));
+	return (T1417f19(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.has_anchored_type */
-T1 T243x7037(T0* C)
+T1 T243x7037(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f69(C));
+	return (T78f69(ac, C));
 } else {
-	return (T80f155(C));
+	return (T80f155(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f69(C));
+	return (T246f69(ac, C));
 } else {
-	return (T254f67(C));
+	return (T254f67(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f37(C));
+	return (T495f37(ac, C));
 } else {
-	return (T858f37(C));
+	return (T858f37(ac, C));
 }
 } else {
-	return (T1081f49(C));
+	return (T1081f49(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f58(C));
+	return (T1209f58(ac, C));
 } else {
-	return (T1213f69(C));
+	return (T1213f69(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f70(C));
+	return (T1214f70(ac, C));
 } else {
-	return (T1238f35(C));
+	return (T1238f35(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f34(C));
+	return (T1239f34(ac, C));
 } else {
-	return (T1240f35(C));
+	return (T1240f35(ac, C));
 }
 } else {
-	return (T1417f36(C));
+	return (T1417f36(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_class_type_with_type_marks */
-T1 T243x7052T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7052T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f84(C, a1, a2, a3, a4, a5));
+	return (T78f84(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f171(C, a1, a2, a3, a4, a5));
+	return (T80f171(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f79(C, a1, a2, a3, a4, a5));
+	return (T246f79(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f78(C, a1, a2, a3, a4, a5));
+	return (T254f78(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f48(C, a1, a2, a3, a4, a5));
+	return (T495f48(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f48(C, a1, a2, a3, a4, a5));
+	return (T858f48(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f59(C, a1, a2, a3, a4, a5));
+	return (T1081f59(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f50(C, a1, a2, a3, a4, a5));
+	return (T1209f50(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f80(C, a1, a2, a3, a4, a5));
+	return (T1213f80(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f81(C, a1, a2, a3, a4, a5));
+	return (T1214f81(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f52(C, a1, a2, a3, a4, a5));
+	return (T1238f52(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f53(C, a1, a2, a3, a4, a5));
+	return (T1239f53(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f50(C, a1, a2, a3, a4, a5));
+	return (T1240f50(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f49(C, a1, a2, a3, a4, a5));
+	return (T1417f49(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.shallow_base_type */
-T0* T243x7012T0(T0* C, T0* a1)
+T0* T243x7012T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f77(C, a1));
+	return (T78f77(ac, C, a1));
 } else {
-	return (T80f164(C, a1));
+	return (T80f164(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f77(C, a1));
+	return (T246f77(ac, C, a1));
 } else {
-	return (T254f75(C, a1));
+	return (T254f75(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f45(C, a1));
+	return (T495f45(ac, C, a1));
 } else {
-	return (T858f45(C, a1));
+	return (T858f45(ac, C, a1));
 }
 } else {
-	return (T1081f42(C, a1));
+	return (T1081f42(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f44(C, a1));
+	return (T1209f44(ac, C, a1));
 } else {
-	return (T1213f77(C, a1));
+	return (T1213f77(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f78(C, a1));
+	return (T1214f78(ac, C, a1));
 } else {
-	return (T1238f49(C, a1));
+	return (T1238f49(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f50(C, a1));
+	return (T1239f50(ac, C, a1));
 } else {
-	return (T1240f47(C, a1));
+	return (T1240f47(ac, C, a1));
 }
 } else {
-	return (T1417f45(C, a1));
+	return (T1417f45(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_formal_parameter_type_with_type_marks */
-T1 T243x7053T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7053T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f97(C, a1, a2, a3, a4, a5));
+	return (T78f97(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f184(C, a1, a2, a3, a4, a5));
+	return (T80f184(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f97(C, a1, a2, a3, a4, a5));
+	return (T246f97(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f93(C, a1, a2, a3, a4, a5));
+	return (T254f93(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f57(C, a1, a2, a3, a4, a5));
+	return (T495f57(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f56(C, a1, a2, a3, a4, a5));
+	return (T858f56(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f62(C, a1, a2, a3, a4, a5));
+	return (T1081f62(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f53(C, a1, a2, a3, a4, a5));
+	return (T1209f53(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f95(C, a1, a2, a3, a4, a5));
+	return (T1213f95(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f96(C, a1, a2, a3, a4, a5));
+	return (T1214f96(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f60(C, a1, a2, a3, a4, a5));
+	return (T1238f60(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f61(C, a1, a2, a3, a4, a5));
+	return (T1239f61(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f58(C, a1, a2, a3, a4, a5));
+	return (T1240f58(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f58(C, a1, a2, a3, a4, a5));
+	return (T1417f58(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.shallow_named_type_with_type_mark */
-T0* T243x7020T0T0(T0* C, T0* a1, T0* a2)
+T0* T243x7020T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f83(C, a1, a2));
+	return (T78f83(ac, C, a1, a2));
 } else {
-	return (T80f170(C, a1, a2));
+	return (T80f170(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f85(C, a1, a2));
+	return (T246f85(ac, C, a1, a2));
 } else {
-	return (T254f82(C, a1, a2));
+	return (T254f82(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f54(C, a1, a2));
+	return (T495f54(ac, C, a1, a2));
 } else {
-	return (T858f55(C, a1, a2));
+	return (T858f55(ac, C, a1, a2));
 }
 } else {
-	return (T1081f54(C, a1, a2));
+	return (T1081f54(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f57(C, a1, a2));
+	return (T1209f57(ac, C, a1, a2));
 } else {
-	return (T1213f94(C, a1, a2));
+	return (T1213f94(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f95(C, a1, a2));
+	return (T1214f95(ac, C, a1, a2));
 } else {
-	return (T1238f59(C, a1, a2));
+	return (T1238f59(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f60(C, a1, a2));
+	return (T1239f60(ac, C, a1, a2));
 } else {
-	return (T1240f57(C, a1, a2));
+	return (T1240f57(ac, C, a1, a2));
 }
 } else {
-	return (T1417f56(C, a1, a2));
+	return (T1417f56(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.shallow_base_type_with_type_mark */
-T0* T243x7013T0T0(T0* C, T0* a1, T0* a2)
+T0* T243x7013T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f82(C, a1, a2));
+	return (T78f82(ac, C, a1, a2));
 } else {
-	return (T80f169(C, a1, a2));
+	return (T80f169(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f84(C, a1, a2));
+	return (T246f84(ac, C, a1, a2));
 } else {
-	return (T254f81(C, a1, a2));
+	return (T254f81(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f53(C, a1, a2));
+	return (T495f53(ac, C, a1, a2));
 } else {
-	return (T858f54(C, a1, a2));
+	return (T858f54(ac, C, a1, a2));
 }
 } else {
-	return (T1081f53(C, a1, a2));
+	return (T1081f53(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f56(C, a1, a2));
+	return (T1209f56(ac, C, a1, a2));
 } else {
-	return (T1213f93(C, a1, a2));
+	return (T1213f93(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f94(C, a1, a2));
+	return (T1214f94(ac, C, a1, a2));
 } else {
-	return (T1238f58(C, a1, a2));
+	return (T1238f58(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f59(C, a1, a2));
+	return (T1239f59(ac, C, a1, a2));
 } else {
-	return (T1240f56(C, a1, a2));
+	return (T1240f56(ac, C, a1, a2));
 }
 } else {
-	return (T1417f55(C, a1, a2));
+	return (T1417f55(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_like_current_with_type_marks */
-T1 T243x7054T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7054T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f95(C, a1, a2, a3, a4, a5));
+	return (T78f95(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f182(C, a1, a2, a3, a4, a5));
+	return (T80f182(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f95(C, a1, a2, a3, a4, a5));
+	return (T246f95(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f92(C, a1, a2, a3, a4, a5));
+	return (T254f92(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f55(C, a1, a2, a3, a4, a5));
+	return (T495f55(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f53(C, a1, a2, a3, a4, a5));
+	return (T858f53(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f61(C, a1, a2, a3, a4, a5));
+	return (T1081f61(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f52(C, a1, a2, a3, a4, a5));
+	return (T1209f52(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f92(C, a1, a2, a3, a4, a5));
+	return (T1213f92(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f93(C, a1, a2, a3, a4, a5));
+	return (T1214f93(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f57(C, a1, a2, a3, a4, a5));
+	return (T1238f57(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f58(C, a1, a2, a3, a4, a5));
+	return (T1239f58(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f55(C, a1, a2, a3, a4, a5));
+	return (T1240f55(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f54(C, a1, a2, a3, a4, a5));
+	return (T1417f54(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_tuple_type_with_type_marks */
-T1 T243x7057T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7057T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f86(C, a1, a2, a3, a4, a5));
+	return (T78f86(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f173(C, a1, a2, a3, a4, a5));
+	return (T80f173(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f86(C, a1, a2, a3, a4, a5));
+	return (T246f86(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f83(C, a1, a2, a3, a4, a5));
+	return (T254f83(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f50(C, a1, a2, a3, a4, a5));
+	return (T495f50(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f50(C, a1, a2, a3, a4, a5));
+	return (T858f50(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f60(C, a1, a2, a3, a4, a5));
+	return (T1081f60(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f51(C, a1, a2, a3, a4, a5));
+	return (T1209f51(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f82(C, a1, a2, a3, a4, a5));
+	return (T1213f82(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f83(C, a1, a2, a3, a4, a5));
+	return (T1214f83(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f54(C, a1, a2, a3, a4, a5));
+	return (T1238f54(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f55(C, a1, a2, a3, a4, a5));
+	return (T1239f55(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f52(C, a1, a2, a3, a4, a5));
+	return (T1240f52(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f51(C, a1, a2, a3, a4, a5));
+	return (T1417f51(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_syntactical_type_with_type_marks */
-T1 T243x7046T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7046T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f80(C, a1, a2, a3, a4, a5));
+	return (T78f80(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f172(C, a1, a2, a3, a4, a5));
+	return (T80f172(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f82(C, a1, a2, a3, a4, a5));
+	return (T246f82(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f79(C, a1, a2, a3, a4, a5));
+	return (T254f79(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f49(C, a1, a2, a3, a4, a5));
+	return (T495f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f49(C, a1, a2, a3, a4, a5));
+	return (T858f49(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f57(C, a1, a2, a3, a4, a5));
+	return (T1081f57(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f49(C, a1, a2, a3, a4, a5));
+	return (T1209f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f81(C, a1, a2, a3, a4, a5));
+	return (T1213f81(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f82(C, a1, a2, a3, a4, a5));
+	return (T1214f82(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f53(C, a1, a2, a3, a4, a5));
+	return (T1238f53(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f54(C, a1, a2, a3, a4, a5));
+	return (T1239f54(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f51(C, a1, a2, a3, a4, a5));
+	return (T1240f51(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f50(C, a1, a2, a3, a4, a5));
+	return (T1417f50(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_reference */
-T1 T243x7031T0(T0* C, T0* a1)
+T1 T243x7031T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f76(C, a1));
+	return (T78f76(ac, C, a1));
 } else {
-	return (T80f163(C, a1));
+	return (T80f163(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f76(C, a1));
+	return (T246f76(ac, C, a1));
 } else {
-	return (T254f74(C, a1));
+	return (T254f74(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f44(C, a1));
+	return (T495f44(ac, C, a1));
 } else {
-	return (T858f44(C, a1));
+	return (T858f44(ac, C, a1));
 }
 } else {
-	return (T1081f48(C, a1));
+	return (T1081f48(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f55(C, a1));
+	return (T1209f55(ac, C, a1));
 } else {
-	return (T1213f76(C, a1));
+	return (T1213f76(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f77(C, a1));
+	return (T1214f77(ac, C, a1));
 } else {
-	return (T1238f48(C, a1));
+	return (T1238f48(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f49(C, a1));
+	return (T1239f49(ac, C, a1));
 } else {
-	return (T1240f46(C, a1));
+	return (T1240f46(ac, C, a1));
 }
 } else {
-	return (T1417f44(C, a1));
+	return (T1417f44(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.named_type_with_type_mark */
-T0* T243x7018T0T0(T0* C, T0* a1, T0* a2)
+T0* T243x7018T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f40(C, a1, a2));
+	return (T78f40(ac, C, a1, a2));
 } else {
-	return (T80f102(C, a1, a2));
+	return (T80f102(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f38(C, a1, a2));
+	return (T246f38(ac, C, a1, a2));
 } else {
-	return (T254f47(C, a1, a2));
+	return (T254f47(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f26(C, a1, a2));
+	return (T495f26(ac, C, a1, a2));
 } else {
-	return (T858f8(C, a1, a2));
+	return (T858f8(ac, C, a1, a2));
 }
 } else {
-	return (T1081f39(C, a1, a2));
+	return (T1081f39(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f41(C, a1, a2));
+	return (T1209f41(ac, C, a1, a2));
 } else {
-	return (T1213f24(C, a1, a2));
+	return (T1213f24(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f35(C, a1, a2));
+	return (T1214f35(ac, C, a1, a2));
 } else {
-	return (T1238f39(C, a1, a2));
+	return (T1238f39(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f38(C, a1, a2));
+	return (T1239f38(ac, C, a1, a2));
 } else {
-	return (T1240f40(C, a1, a2));
+	return (T1240f40(ac, C, a1, a2));
 }
 } else {
-	return (T1417f21(C, a1, a2));
+	return (T1417f21(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_type_with_type_mark */
-T0* T243x7011T0T0(T0* C, T0* a1, T0* a2)
+T0* T243x7011T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f10(C, a1, a2));
+	return (T78f10(ac, C, a1, a2));
 } else {
-	return (T80f81(C, a1, a2));
+	return (T80f81(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f15(C, a1, a2));
+	return (T246f15(ac, C, a1, a2));
 } else {
-	return (T254f6(C, a1, a2));
+	return (T254f6(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f24(C, a1, a2));
+	return (T495f24(ac, C, a1, a2));
 } else {
-	return (T858f31(C, a1, a2));
+	return (T858f31(ac, C, a1, a2));
 }
 } else {
-	return (T1081f36(C, a1, a2));
+	return (T1081f36(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f38(C, a1, a2));
+	return (T1209f38(ac, C, a1, a2));
 } else {
-	return (T1213f21(C, a1, a2));
+	return (T1213f21(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f17(C, a1, a2));
+	return (T1214f17(ac, C, a1, a2));
 } else {
-	return (T1238f17(C, a1, a2));
+	return (T1238f17(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f17(C, a1, a2));
+	return (T1239f17(ac, C, a1, a2));
 } else {
-	return (T1240f17(C, a1, a2));
+	return (T1240f17(ac, C, a1, a2));
 }
 } else {
-	return (T1417f16(C, a1, a2));
+	return (T1417f16(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_detachable_with_type_mark */
-T1 T243x7036T0T0(T0* C, T0* a1, T0* a2)
+T1 T243x7036T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f48(C, a1, a2));
+	return (T78f48(ac, C, a1, a2));
 } else {
-	return (T80f112(C, a1, a2));
+	return (T80f112(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f46(C, a1, a2));
+	return (T246f46(ac, C, a1, a2));
 } else {
-	return (T254f27(C, a1, a2));
+	return (T254f27(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f25(C, a1, a2));
+	return (T495f25(ac, C, a1, a2));
 } else {
-	return (T858f32(C, a1, a2));
+	return (T858f32(ac, C, a1, a2));
 }
 } else {
-	return (T1081f37(C, a1, a2));
+	return (T1081f37(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f39(C, a1, a2));
+	return (T1209f39(ac, C, a1, a2));
 } else {
-	return (T1213f22(C, a1, a2));
+	return (T1213f22(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f18(C, a1, a2));
+	return (T1214f18(ac, C, a1, a2));
 } else {
-	return (T1238f18(C, a1, a2));
+	return (T1238f18(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f18(C, a1, a2));
+	return (T1239f18(ac, C, a1, a2));
 } else {
-	return (T1240f18(C, a1, a2));
+	return (T1240f18(ac, C, a1, a2));
 }
 } else {
-	return (T1417f17(C, a1, a2));
+	return (T1417f17(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.is_type_expanded_with_type_mark */
-T1 T243x7030T0T0(T0* C, T0* a1, T0* a2)
+T1 T243x7030T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f9(C, a1, a2));
+	return (T78f9(ac, C, a1, a2));
 } else {
-	return (T80f73(C, a1, a2));
+	return (T80f73(ac, C, a1, a2));
 }
 } else {
 if (t1==246) {
-	return (T246f14(C, a1, a2));
+	return (T246f14(ac, C, a1, a2));
 } else {
-	return (T254f5(C, a1, a2));
+	return (T254f5(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f23(C, a1, a2));
+	return (T495f23(ac, C, a1, a2));
 } else {
-	return (T858f30(C, a1, a2));
+	return (T858f30(ac, C, a1, a2));
 }
 } else {
-	return (T1081f35(C, a1, a2));
+	return (T1081f35(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f37(C, a1, a2));
+	return (T1209f37(ac, C, a1, a2));
 } else {
-	return (T1213f20(C, a1, a2));
+	return (T1213f20(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f16(C, a1, a2));
+	return (T1214f16(ac, C, a1, a2));
 } else {
-	return (T1238f16(C, a1, a2));
+	return (T1238f16(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f16(C, a1, a2));
+	return (T1239f16(ac, C, a1, a2));
 } else {
-	return (T1240f16(C, a1, a2));
+	return (T1240f16(ac, C, a1, a2));
 }
 } else {
-	return (T1417f15(C, a1, a2));
+	return (T1417f15(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_to_type_with_type_marks */
-T1 T243x7067T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7067T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f33(C, a1, a2, a3, a4, a5));
+	return (T78f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f76(C, a1, a2, a3, a4, a5));
+	return (T80f76(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f20(C, a1, a2, a3, a4, a5));
+	return (T246f20(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f30(C, a1, a2, a3, a4, a5));
+	return (T254f30(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f21(C, a1, a2, a3, a4, a5));
+	return (T495f21(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f9(C, a1, a2, a3, a4, a5));
+	return (T858f9(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f33(C, a1, a2, a3, a4, a5));
+	return (T1081f33(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f35(C, a1, a2, a3, a4, a5));
+	return (T1209f35(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f37(C, a1, a2, a3, a4, a5));
+	return (T1213f37(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f36(C, a1, a2, a3, a4, a5));
+	return (T1214f36(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f40(C, a1, a2, a3, a4, a5));
+	return (T1238f40(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f40(C, a1, a2, a3, a4, a5));
+	return (T1239f40(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f4(C, a1, a2, a3, a4, a5));
+	return (T1240f4(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f39(C, a1, a2, a3, a4, a5));
+	return (T1417f39(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_type_actual_count */
-T6 T243x7025T0(T0* C, T0* a1)
+T6 T243x7025T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f43(C, a1));
+	return (T78f43(ac, C, a1));
 } else {
-	return (T80f108(C, a1));
+	return (T80f108(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f42(C, a1));
+	return (T246f42(ac, C, a1));
 } else {
-	return (T254f42(C, a1));
+	return (T254f42(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f16(C, a1));
+	return (T495f16(ac, C, a1));
 } else {
-	return (T858f23(C, a1));
+	return (T858f23(ac, C, a1));
 }
 } else {
-	return (T1081f29(C, a1));
+	return (T1081f29(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f31(C, a1));
+	return (T1209f31(ac, C, a1));
 } else {
-	return (T1213f17(C, a1));
+	return (T1213f17(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f13(C, a1));
+	return (T1214f13(ac, C, a1));
 } else {
-	return (T1238f13(C, a1));
+	return (T1238f13(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f13(C, a1));
+	return (T1239f13(ac, C, a1));
 } else {
-	return (T1240f13(C, a1));
+	return (T1240f13(ac, C, a1));
 }
 } else {
-	return (T1417f12(C, a1));
+	return (T1417f12(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_base_tuple_type_with_type_marks */
-T1 T243x7065T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7065T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f49(C, a1, a2, a3, a4, a5));
+	return (T78f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f124(C, a1, a2, a3, a4, a5));
+	return (T80f124(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f47(C, a1, a2, a3, a4, a5));
+	return (T246f47(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f45(C, a1, a2, a3, a4, a5));
+	return (T254f45(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f15(C, a1, a2, a3, a4, a5));
+	return (T495f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f22(C, a1, a2, a3, a4, a5));
+	return (T858f22(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f27(C, a1, a2, a3, a4, a5));
+	return (T1081f27(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f29(C, a1, a2, a3, a4, a5));
+	return (T1209f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f16(C, a1, a2, a3, a4, a5));
+	return (T1213f16(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f12(C, a1, a2, a3, a4, a5));
+	return (T1214f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f12(C, a1, a2, a3, a4, a5));
+	return (T1238f12(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f12(C, a1, a2, a3, a4, a5));
+	return (T1239f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f12(C, a1, a2, a3, a4, a5));
+	return (T1240f12(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f11(C, a1, a2, a3, a4, a5));
+	return (T1417f11(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_base_class_type_with_type_marks */
-T1 T243x7063T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7063T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f46(C, a1, a2, a3, a4, a5));
+	return (T78f46(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f103(C, a1, a2, a3, a4, a5));
+	return (T80f103(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f39(C, a1, a2, a3, a4, a5));
+	return (T246f39(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f39(C, a1, a2, a3, a4, a5));
+	return (T254f39(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f14(C, a1, a2, a3, a4, a5));
+	return (T495f14(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f21(C, a1, a2, a3, a4, a5));
+	return (T858f21(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f26(C, a1, a2, a3, a4, a5));
+	return (T1081f26(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f28(C, a1, a2, a3, a4, a5));
+	return (T1209f28(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f15(C, a1, a2, a3, a4, a5));
+	return (T1213f15(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f11(C, a1, a2, a3, a4, a5));
+	return (T1214f11(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f11(C, a1, a2, a3, a4, a5));
+	return (T1238f11(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f11(C, a1, a2, a3, a4, a5));
+	return (T1239f11(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f11(C, a1, a2, a3, a4, a5));
+	return (T1240f11(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f10(C, a1, a2, a3, a4, a5));
+	return (T1417f10(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_tuple_type_with_type_marks */
-T1 T243x7061T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7061T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f34(C, a1, a2, a3, a4, a5));
+	return (T78f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f141(C, a1, a2, a3, a4, a5));
+	return (T80f141(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f59(C, a1, a2, a3, a4, a5));
+	return (T246f59(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f59(C, a1, a2, a3, a4, a5));
+	return (T254f59(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f29(C, a1, a2, a3, a4, a5));
+	return (T495f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f28(C, a1, a2, a3, a4, a5));
+	return (T858f28(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f18(C, a1, a2, a3, a4, a5));
+	return (T1081f18(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f20(C, a1, a2, a3, a4, a5));
+	return (T1209f20(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f19(C, a1, a2, a3, a4, a5));
+	return (T1213f19(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f15(C, a1, a2, a3, a4, a5));
+	return (T1214f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f15(C, a1, a2, a3, a4, a5));
+	return (T1238f15(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f15(C, a1, a2, a3, a4, a5));
+	return (T1239f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f15(C, a1, a2, a3, a4, a5));
+	return (T1240f15(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f14(C, a1, a2, a3, a4, a5));
+	return (T1417f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.same_named_class_type_with_type_marks */
-T1 T243x7059T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7059T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f12(C, a1, a2, a3, a4, a5));
+	return (T78f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f140(C, a1, a2, a3, a4, a5));
+	return (T80f140(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f58(C, a1, a2, a3, a4, a5));
+	return (T246f58(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f58(C, a1, a2, a3, a4, a5));
+	return (T254f58(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f28(C, a1, a2, a3, a4, a5));
+	return (T495f28(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f27(C, a1, a2, a3, a4, a5));
+	return (T858f27(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f17(C, a1, a2, a3, a4, a5));
+	return (T1081f17(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f19(C, a1, a2, a3, a4, a5));
+	return (T1209f19(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f18(C, a1, a2, a3, a4, a5));
+	return (T1213f18(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f14(C, a1, a2, a3, a4, a5));
+	return (T1214f14(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f14(C, a1, a2, a3, a4, a5));
+	return (T1238f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f14(C, a1, a2, a3, a4, a5));
+	return (T1239f14(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f14(C, a1, a2, a3, a4, a5));
+	return (T1240f14(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f13(C, a1, a2, a3, a4, a5));
+	return (T1417f13(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_from_tuple_type_with_type_marks */
-T1 T243x7071T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7071T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f32(C, a1, a2, a3, a4, a5));
+	return (T78f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f49(C, a1, a2, a3, a4, a5));
+	return (T80f49(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f31(C, a1, a2, a3, a4, a5));
+	return (T246f31(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f32(C, a1, a2, a3, a4, a5));
+	return (T254f32(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f9(C, a1, a2, a3, a4, a5));
+	return (T495f9(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f16(C, a1, a2, a3, a4, a5));
+	return (T858f16(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f14(C, a1, a2, a3, a4, a5));
+	return (T1081f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f16(C, a1, a2, a3, a4, a5));
+	return (T1209f16(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f14(C, a1, a2, a3, a4, a5));
+	return (T1213f14(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f10(C, a1, a2, a3, a4, a5));
+	return (T1214f10(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f10(C, a1, a2, a3, a4, a5));
+	return (T1238f10(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f10(C, a1, a2, a3, a4, a5));
+	return (T1239f10(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f10(C, a1, a2, a3, a4, a5));
+	return (T1240f10(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f9(C, a1, a2, a3, a4, a5));
+	return (T1417f9(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.conforms_from_class_type_with_type_marks */
-T1 T243x7069T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T243x7069T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f29(C, a1, a2, a3, a4, a5));
+	return (T78f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f46(C, a1, a2, a3, a4, a5));
+	return (T80f46(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==246) {
-	return (T246f24(C, a1, a2, a3, a4, a5));
+	return (T246f24(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T254f18(C, a1, a2, a3, a4, a5));
+	return (T254f18(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f8(C, a1, a2, a3, a4, a5));
+	return (T495f8(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T858f15(C, a1, a2, a3, a4, a5));
+	return (T858f15(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1081f13(C, a1, a2, a3, a4, a5));
+	return (T1081f13(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f15(C, a1, a2, a3, a4, a5));
+	return (T1209f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f13(C, a1, a2, a3, a4, a5));
+	return (T1213f13(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f9(C, a1, a2, a3, a4, a5));
+	return (T1214f9(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1238f9(C, a1, a2, a3, a4, a5));
+	return (T1238f9(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f9(C, a1, a2, a3, a4, a5));
+	return (T1239f9(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1240f9(C, a1, a2, a3, a4, a5));
+	return (T1240f9(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T1417f8(C, a1, a2, a3, a4, a5));
+	return (T1417f8(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.base_type */
-T0* T243x7010T0(T0* C, T0* a1)
+T0* T243x7010T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f6(C, a1));
+	return (T78f6(ac, C, a1));
 } else {
-	return (T80f54(C, a1));
+	return (T80f54(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f23(C, a1));
+	return (T246f23(ac, C, a1));
 } else {
-	return (T254f10(C, a1));
+	return (T254f10(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f13(C, a1));
+	return (T495f13(ac, C, a1));
 } else {
-	return (T858f20(C, a1));
+	return (T858f20(ac, C, a1));
 }
 } else {
-	return (T1081f25(C, a1));
+	return (T1081f25(ac, C, a1));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f27(C, a1));
+	return (T1209f27(ac, C, a1));
 } else {
-	return (T1213f30(C, a1));
+	return (T1213f30(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f28(C, a1));
+	return (T1214f28(ac, C, a1));
 } else {
-	return (T1238f29(C, a1));
+	return (T1238f29(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f28(C, a1));
+	return (T1239f28(ac, C, a1));
 } else {
-	return (T1240f29(C, a1));
+	return (T1240f29(ac, C, a1));
 }
 } else {
-	return (T1417f29(C, a1));
+	return (T1417f29(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_TYPE.unaliased_to_text */
-T0* T243x7081(T0* C)
+T0* T243x7081(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f27(C));
+	return (T78f27(ac, C));
 } else {
-	return (T80f94(C));
+	return (T80f94(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f7(C));
+	return (T246f7(ac, C));
 } else {
-	return (T254f14(C));
+	return (T254f14(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f18(C));
+	return (T495f18(ac, C));
 } else {
-	return (T858f25(C));
+	return (T858f25(ac, C));
 }
 } else {
-	return (T1081f31(C));
+	return (T1081f31(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f33(C));
+	return (T1209f33(ac, C));
 } else {
-	return (T1213f32(C));
+	return (T1213f32(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f31(C));
+	return (T1214f31(ac, C));
 } else {
-	return (T1238f32(C));
+	return (T1238f32(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f31(C));
+	return (T1239f31(ac, C));
 } else {
-	return (T1240f32(C));
+	return (T1240f32(ac, C));
 }
 } else {
-	return (T1417f32(C));
+	return (T1417f32(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.base_class */
-T0* T244x7120(T0* C)
+T0* T244x7120(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f18(C));
+	return (T78f18(ac, C));
 } else {
-	return (T80f91(C));
+	return (T80f91(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f6(C));
+	return (T246f6(ac, C));
 } else {
-	return (T254f12(C));
+	return (T254f12(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f32(C));
+	return (T371f32(ac, C));
 } else {
-	return (T1213f23(C));
+	return (T1213f23(ac, C));
 }
 } else {
-	return (T1214f19(C));
+	return (T1214f19(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.named_type */
-T0* T244x7127(T0* C)
+T0* T244x7127(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=80) {
 if (t1==78) {
-	return (T78f102(C));
+	return (T78f102(ac, C));
 } else {
-	return (T80f193(C));
+	return (T80f193(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f103(C));
+	return (T246f103(ac, C));
 } else {
-	return (T371f11(C));
+	return (T371f11(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.root_context */
-T0* T244x7118(T0* C)
+T0* T244x7118(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f16(C));
+	return (T78f16(ac, C));
 } else {
-	return (T80f89(C));
+	return (T80f89(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f9(C));
+	return (T246f9(ac, C));
 } else {
-	return (T254f16(C));
+	return (T254f16(ac, C));
 }
 }
 } else {
@@ -11190,667 +11190,667 @@ if (t1<=1213) {
 if (t1==371) {
 	return (((T371*)(C))->a1);
 } else {
-	return (T1213f47(C));
+	return (T1213f47(ac, C));
 }
 } else {
-	return (T1214f48(C));
+	return (T1214f48(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.as_nested_type_context */
-T0* T244x7166(T0* C)
+T0* T244x7166(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f30(C));
+	return (T78f30(ac, C));
 } else {
-	return (T80f47(C));
+	return (T80f47(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f29(C));
+	return (T246f29(ac, C));
 } else {
-	return (T254f21(C));
+	return (T254f21(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f8(C));
+	return (T371f8(ac, C));
 } else {
-	return (T1213f42(C));
+	return (T1213f42(ac, C));
 }
 } else {
-	return (T1214f43(C));
+	return (T1214f43(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.is_root_context */
-T1 T244x7131(T0* C)
+T1 T244x7131(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f15(C));
+	return (T78f15(ac, C));
 } else {
-	return (T80f95(C));
+	return (T80f95(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f8(C));
+	return (T246f8(ac, C));
 } else {
-	return (T254f15(C));
+	return (T254f15(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f18(C));
+	return (T371f18(ac, C));
 } else {
-	return (T1213f46(C));
+	return (T1213f46(ac, C));
 }
 } else {
-	return (T1214f47(C));
+	return (T1214f47(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.base_type_actual */
-T0* T244x7124T6(T0* C, T6 a1)
+T0* T244x7124T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f72(C, a1));
+	return (T78f72(ac, C, a1));
 } else {
-	return (T80f159(C, a1));
+	return (T80f159(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f72(C, a1));
+	return (T246f72(ac, C, a1));
 } else {
-	return (T254f70(C, a1));
+	return (T254f70(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f33(C, a1));
+	return (T371f33(ac, C, a1));
 } else {
-	return (T1213f72(C, a1));
+	return (T1213f72(ac, C, a1));
 }
 } else {
-	return (T1214f73(C, a1));
+	return (T1214f73(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.base_type_actual_count */
-T6 T244x7129(T0* C)
+T6 T244x7129(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f54(C));
+	return (T78f54(ac, C));
 } else {
-	return (T80f133(C));
+	return (T80f133(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f52(C));
+	return (T246f52(ac, C));
 } else {
-	return (T254f52(C));
+	return (T254f52(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f28(C));
+	return (T371f28(ac, C));
 } else {
-	return (T1213f58(C));
+	return (T1213f58(ac, C));
 }
 } else {
-	return (T1214f59(C));
+	return (T1214f59(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.to_nested_type_context */
-T0* T244x7167(T0* C)
+T0* T244x7167(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f31(C));
+	return (T78f31(ac, C));
 } else {
-	return (T80f48(C));
+	return (T80f48(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f30(C));
+	return (T246f30(ac, C));
 } else {
-	return (T254f22(C));
+	return (T254f22(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f9(C));
+	return (T371f9(ac, C));
 } else {
-	return (T1213f43(C));
+	return (T1213f43(ac, C));
 }
 } else {
-	return (T1214f44(C));
+	return (T1214f44(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_base_type_with_type_marks */
-T1 T244x7149T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7149T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f106(C, a1, a2, a3, a4));
+	return (T78f106(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f200(C, a1, a2, a3, a4));
+	return (T80f200(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f106(C, a1, a2, a3, a4));
+	return (T246f106(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f104(C, a1, a2, a3, a4));
+	return (T254f104(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f50(C, a1, a2, a3, a4));
+	return (T371f50(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f105(C, a1, a2, a3, a4));
+	return (T1213f105(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f106(C, a1, a2, a3, a4));
+	return (T1214f106(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.attachment_type_conformance_mode */
-T1 T244x7143(T0* C)
+T1 T244x7143(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f21(C));
+	return (T78f21(ac, C));
 } else {
-	return (T80f86(C));
+	return (T80f86(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f27(C));
+	return (T246f27(ac, C));
 } else {
-	return (T254f20(C));
+	return (T254f20(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f7(C));
+	return (T371f7(ac, C));
 } else {
-	return (T1213f50(C));
+	return (T1213f50(ac, C));
 }
 } else {
-	return (T1214f51(C));
+	return (T1214f51(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.is_type_attached_with_type_mark */
-T1 T244x7138T0(T0* C, T0* a1)
+T1 T244x7138T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f94(C, a1));
+	return (T78f94(ac, C, a1));
 } else {
-	return (T80f181(C, a1));
+	return (T80f181(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f94(C, a1));
+	return (T246f94(ac, C, a1));
 } else {
-	return (T254f91(C, a1));
+	return (T254f91(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f40(C, a1));
+	return (T371f40(ac, C, a1));
 } else {
-	return (T1213f91(C, a1));
+	return (T1213f91(ac, C, a1));
 }
 } else {
-	return (T1214f92(C, a1));
+	return (T1214f92(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.is_type_reference_with_type_mark */
-T1 T244x7136T0(T0* C, T0* a1)
+T1 T244x7136T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f93(C, a1));
+	return (T78f93(ac, C, a1));
 } else {
-	return (T80f180(C, a1));
+	return (T80f180(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f93(C, a1));
+	return (T246f93(ac, C, a1));
 } else {
-	return (T254f90(C, a1));
+	return (T254f90(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f39(C, a1));
+	return (T371f39(ac, C, a1));
 } else {
-	return (T1213f90(C, a1));
+	return (T1213f90(ac, C, a1));
 }
 } else {
-	return (T1214f91(C, a1));
+	return (T1214f91(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.conforms_from_formal_parameter_type_with_type_marks */
-T1 T244x7164T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7164T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f92(C, a1, a2, a3, a4));
+	return (T78f92(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f179(C, a1, a2, a3, a4));
+	return (T80f179(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f92(C, a1, a2, a3, a4));
+	return (T246f92(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f89(C, a1, a2, a3, a4));
+	return (T254f89(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f38(C, a1, a2, a3, a4));
+	return (T371f38(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f89(C, a1, a2, a3, a4));
+	return (T1213f89(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f90(C, a1, a2, a3, a4));
+	return (T1214f90(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_named_formal_parameter_type_with_type_marks */
-T1 T244x7152T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7152T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f91(C, a1, a2, a3, a4));
+	return (T78f91(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f178(C, a1, a2, a3, a4));
+	return (T80f178(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f91(C, a1, a2, a3, a4));
+	return (T246f91(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f88(C, a1, a2, a3, a4));
+	return (T254f88(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f37(C, a1, a2, a3, a4));
+	return (T371f37(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f88(C, a1, a2, a3, a4));
+	return (T1213f88(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f89(C, a1, a2, a3, a4));
+	return (T1214f89(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_base_bit_type_with_type_marks */
-T1 T244x7154T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7154T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f90(C, a1, a2, a3, a4));
+	return (T78f90(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f177(C, a1, a2, a3, a4));
+	return (T80f177(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f90(C, a1, a2, a3, a4));
+	return (T246f90(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f87(C, a1, a2, a3, a4));
+	return (T254f87(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f36(C, a1, a2, a3, a4));
+	return (T371f36(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f87(C, a1, a2, a3, a4));
+	return (T1213f87(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f88(C, a1, a2, a3, a4));
+	return (T1214f88(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_named_bit_type_with_type_marks */
-T1 T244x7150T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7150T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f89(C, a1, a2, a3, a4));
+	return (T78f89(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f176(C, a1, a2, a3, a4));
+	return (T80f176(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f89(C, a1, a2, a3, a4));
+	return (T246f89(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f86(C, a1, a2, a3, a4));
+	return (T254f86(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f35(C, a1, a2, a3, a4));
+	return (T371f35(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f86(C, a1, a2, a3, a4));
+	return (T1213f86(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f87(C, a1, a2, a3, a4));
+	return (T1214f87(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.conforms_from_bit_type_with_type_marks */
-T1 T244x7162T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7162T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f88(C, a1, a2, a3, a4));
+	return (T78f88(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f175(C, a1, a2, a3, a4));
+	return (T80f175(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f88(C, a1, a2, a3, a4));
+	return (T246f88(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f85(C, a1, a2, a3, a4));
+	return (T254f85(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f34(C, a1, a2, a3, a4));
+	return (T371f34(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f85(C, a1, a2, a3, a4));
+	return (T1213f85(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f86(C, a1, a2, a3, a4));
+	return (T1214f86(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_named_type_with_type_marks */
-T1 T244x7145T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7145T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f62(C, a1, a2, a3, a4));
+	return (T78f62(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f150(C, a1, a2, a3, a4));
+	return (T80f150(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f62(C, a1, a2, a3, a4));
+	return (T246f62(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f62(C, a1, a2, a3, a4));
+	return (T254f62(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f13(C, a1, a2, a3, a4));
+	return (T371f13(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f53(C, a1, a2, a3, a4));
+	return (T1213f53(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f54(C, a1, a2, a3, a4));
+	return (T1214f54(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_named_tuple_type_with_type_marks */
-T1 T244x7153T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7153T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f61(C, a1, a2, a3, a4));
+	return (T78f61(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f149(C, a1, a2, a3, a4));
+	return (T80f149(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f61(C, a1, a2, a3, a4));
+	return (T246f61(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f61(C, a1, a2, a3, a4));
+	return (T254f61(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f23(C, a1, a2, a3, a4));
+	return (T371f23(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f52(C, a1, a2, a3, a4));
+	return (T1213f52(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f53(C, a1, a2, a3, a4));
+	return (T1214f53(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_named_class_type_with_type_marks */
-T1 T244x7151T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7151T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f60(C, a1, a2, a3, a4));
+	return (T78f60(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f148(C, a1, a2, a3, a4));
+	return (T80f148(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f60(C, a1, a2, a3, a4));
+	return (T246f60(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f60(C, a1, a2, a3, a4));
+	return (T254f60(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f22(C, a1, a2, a3, a4));
+	return (T371f22(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f51(C, a1, a2, a3, a4));
+	return (T1213f51(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f52(C, a1, a2, a3, a4));
+	return (T1214f52(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.named_type_with_type_mark */
-T0* T244x7128T0(T0* C, T0* a1)
+T0* T244x7128T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f59(C, a1));
+	return (T78f59(ac, C, a1));
 } else {
-	return (T80f138(C, a1));
+	return (T80f138(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f57(C, a1));
+	return (T246f57(ac, C, a1));
 } else {
-	return (T254f57(C, a1));
+	return (T254f57(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f14(C, a1));
+	return (T371f14(ac, C, a1));
 } else {
-	return (T1213f48(C, a1));
+	return (T1213f48(ac, C, a1));
 }
 } else {
-	return (T1214f49(C, a1));
+	return (T1214f49(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.is_type_detachable_with_type_mark */
-T1 T244x7140T0(T0* C, T0* a1)
+T1 T244x7140T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f58(C, a1));
+	return (T78f58(ac, C, a1));
 } else {
-	return (T80f137(C, a1));
+	return (T80f137(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f56(C, a1));
+	return (T246f56(ac, C, a1));
 } else {
-	return (T254f56(C, a1));
+	return (T254f56(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f31(C, a1));
+	return (T371f31(ac, C, a1));
 } else {
-	return (T1213f59(C, a1));
+	return (T1213f59(ac, C, a1));
 }
 } else {
-	return (T1214f60(C, a1));
+	return (T1214f60(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.base_type_with_type_mark */
-T0* T244x7123T0(T0* C, T0* a1)
+T0* T244x7123T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f57(C, a1));
+	return (T78f57(ac, C, a1));
 } else {
-	return (T80f136(C, a1));
+	return (T80f136(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f55(C, a1));
+	return (T246f55(ac, C, a1));
 } else {
-	return (T254f55(C, a1));
+	return (T254f55(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f30(C, a1));
+	return (T371f30(ac, C, a1));
 } else {
-	return (T1213f49(C, a1));
+	return (T1213f49(ac, C, a1));
 }
 } else {
-	return (T1214f50(C, a1));
+	return (T1214f50(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.is_type_expanded_with_type_mark */
-T1 T244x7134T0(T0* C, T0* a1)
+T1 T244x7134T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f56(C, a1));
+	return (T78f56(ac, C, a1));
 } else {
-	return (T80f135(C, a1));
+	return (T80f135(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f54(C, a1));
+	return (T246f54(ac, C, a1));
 } else {
-	return (T254f54(C, a1));
+	return (T254f54(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f29(C, a1));
+	return (T371f29(ac, C, a1));
 } else {
-	return (T1213f56(C, a1));
+	return (T1213f56(ac, C, a1));
 }
 } else {
-	return (T1214f57(C, a1));
+	return (T1214f57(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.named_base_class */
-T0* T244x7121(T0* C)
+T0* T244x7121(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
@@ -11870,7 +11870,7 @@ if (t1==246) {
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f21(C));
+	return (T371f21(ac, C));
 } else {
 	return (((T1213*)(C))->a3);
 }
@@ -11881,291 +11881,291 @@ if (t1==371) {
 }
 
 /* Call to ET_TYPE_CONTEXT.conforms_to_type_with_type_marks */
-T1 T244x7159T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7159T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f55(C, a1, a2, a3, a4));
+	return (T78f55(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f134(C, a1, a2, a3, a4));
+	return (T80f134(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f53(C, a1, a2, a3, a4));
+	return (T246f53(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f53(C, a1, a2, a3, a4));
+	return (T254f53(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f19(C, a1, a2, a3, a4));
+	return (T371f19(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f57(C, a1, a2, a3, a4));
+	return (T1213f57(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f58(C, a1, a2, a3, a4));
+	return (T1214f58(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_base_tuple_type_with_type_marks */
-T1 T244x7157T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7157T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f53(C, a1, a2, a3, a4));
+	return (T78f53(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f132(C, a1, a2, a3, a4));
+	return (T80f132(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f51(C, a1, a2, a3, a4));
+	return (T246f51(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f51(C, a1, a2, a3, a4));
+	return (T254f51(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f27(C, a1, a2, a3, a4));
+	return (T371f27(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f55(C, a1, a2, a3, a4));
+	return (T1213f55(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f56(C, a1, a2, a3, a4));
+	return (T1214f56(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.same_base_class_type_with_type_marks */
-T1 T244x7155T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7155T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f52(C, a1, a2, a3, a4));
+	return (T78f52(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f131(C, a1, a2, a3, a4));
+	return (T80f131(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f50(C, a1, a2, a3, a4));
+	return (T246f50(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f50(C, a1, a2, a3, a4));
+	return (T254f50(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f26(C, a1, a2, a3, a4));
+	return (T371f26(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f54(C, a1, a2, a3, a4));
+	return (T1213f54(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f55(C, a1, a2, a3, a4));
+	return (T1214f55(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.conforms_from_tuple_type_with_type_marks */
-T1 T244x7165T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7165T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f51(C, a1, a2, a3, a4));
+	return (T78f51(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f130(C, a1, a2, a3, a4));
+	return (T80f130(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f49(C, a1, a2, a3, a4));
+	return (T246f49(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f49(C, a1, a2, a3, a4));
+	return (T254f49(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f25(C, a1, a2, a3, a4));
+	return (T371f25(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f44(C, a1, a2, a3, a4));
+	return (T1213f44(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f45(C, a1, a2, a3, a4));
+	return (T1214f45(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_TYPE_CONTEXT.conforms_from_class_type_with_type_marks */
-T1 T244x7163T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+T1 T244x7163T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f50(C, a1, a2, a3, a4));
+	return (T78f50(ac, C, a1, a2, a3, a4));
 } else {
-	return (T80f129(C, a1, a2, a3, a4));
+	return (T80f129(ac, C, a1, a2, a3, a4));
 }
 } else {
 if (t1==246) {
-	return (T246f48(C, a1, a2, a3, a4));
+	return (T246f48(ac, C, a1, a2, a3, a4));
 } else {
-	return (T254f48(C, a1, a2, a3, a4));
+	return (T254f48(ac, C, a1, a2, a3, a4));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==371) {
-	return (T371f24(C, a1, a2, a3, a4));
+	return (T371f24(ac, C, a1, a2, a3, a4));
 } else {
-	return (T1213f41(C, a1, a2, a3, a4));
+	return (T1213f41(ac, C, a1, a2, a3, a4));
 }
 } else {
-	return (T1214f42(C, a1, a2, a3, a4));
+	return (T1214f42(ac, C, a1, a2, a3, a4));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.adapted_universe */
-T0* T247x3276T0(T0* C, T0* a1)
+T0* T247x3276T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f149(C, a1));
+	return (T31f149(ac, C, a1));
 } else {
-	return (T59f165(C, a1));
+	return (T59f166(ac, C, a1));
 }
 } else {
-	return (T62f170(C, a1));
+	return (T62f171(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f161(C, a1));
+	return (T68f162(ac, C, a1));
 } else {
-	return (T183f96(C, a1));
+	return (T183f96(ac, C, a1));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f85(C, a1));
+	return (T192f85(ac, C, a1));
 } else {
-	return (T210f95(C, a1));
+	return (T210f95(ac, C, a1));
 }
 } else {
-	return (T223f102(C, a1));
+	return (T223f102(ac, C, a1));
 }
 } else {
 if (t1==439) {
-	return (T439f85(C, a1));
+	return (T439f85(ac, C, a1));
 } else {
-	return (T451f86(C, a1));
+	return (T451f86(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.full_lower_name */
-T0* T247x3281T2(T0* C, T2 a1)
+T0* T247x3281T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f153(C, a1));
+	return (T31f153(ac, C, a1));
 } else {
-	return (T59f180(C, a1));
+	return (T59f181(ac, C, a1));
 }
 } else {
-	return (T62f183(C, a1));
+	return (T62f184(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f176(C, a1));
+	return (T68f177(ac, C, a1));
 } else {
-	return (T183f101(C, a1));
+	return (T183f101(ac, C, a1));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f92(C, a1));
+	return (T192f92(ac, C, a1));
 } else {
-	return (T210f97(C, a1));
+	return (T210f97(ac, C, a1));
 }
 } else {
-	return (T223f104(C, a1));
+	return (T223f104(ac, C, a1));
 }
 } else {
 if (t1==439) {
-	return (T439f92(C, a1));
+	return (T439f92(ac, C, a1));
 } else {
-	return (T451f91(C, a1));
+	return (T451f91(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.kind_name */
-T0* T247x3283(T0* C)
+T0* T247x3283(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f152(C));
+	return (T31f152(ac, C));
 } else {
-	return (T59f179(C));
+	return (T59f180(ac, C));
 }
 } else {
-	return (T62f182(C));
+	return (T62f183(ac, C));
 }
 } else {
 if (t1==68) {
-	return (T68f175(C));
+	return (T68f176(ac, C));
 } else {
-	return (T183f105(C));
+	return (T183f105(ac, C));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f93(C));
+	return (T192f93(ac, C));
 } else {
-	return (T210f99(C));
+	return (T210f99(ac, C));
 }
 } else {
-	return (T223f106(C));
+	return (T223f106(ac, C));
 }
 } else {
 if (t1==439) {
-	return (T439f94(C));
+	return (T439f94(ac, C));
 } else {
-	return (T451f93(C));
+	return (T451f93(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.character_32_convert_feature */
-T0* T247x3410(T0* C)
+T0* T247x3410(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12188,7 +12188,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.character_32_type */
-T0* T247x3299(T0* C)
+T0* T247x3299(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12211,7 +12211,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.character_8_convert_feature */
-T0* T247x3409(T0* C)
+T0* T247x3409(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12234,7 +12234,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.character_8_type */
-T0* T247x3298(T0* C)
+T0* T247x3298(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12257,7 +12257,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.real_64_convert_feature */
-T0* T247x3420(T0* C)
+T0* T247x3420(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12280,7 +12280,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.real_64_type */
-T0* T247x3324(T0* C)
+T0* T247x3324(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12303,7 +12303,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.real_32_convert_feature */
-T0* T247x3419(T0* C)
+T0* T247x3419(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12326,7 +12326,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.real_32_type */
-T0* T247x3323(T0* C)
+T0* T247x3323(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12349,7 +12349,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_64_convert_feature */
-T0* T247x3418(T0* C)
+T0* T247x3418(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12372,7 +12372,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_64_type */
-T0* T247x3316(T0* C)
+T0* T247x3316(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12395,7 +12395,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_32_convert_feature */
-T0* T247x3417(T0* C)
+T0* T247x3417(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12418,7 +12418,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_32_type */
-T0* T247x3315(T0* C)
+T0* T247x3315(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12441,7 +12441,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_16_convert_feature */
-T0* T247x3416(T0* C)
+T0* T247x3416(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12464,7 +12464,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_16_type */
-T0* T247x3314(T0* C)
+T0* T247x3314(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12487,7 +12487,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_8_convert_feature */
-T0* T247x3415(T0* C)
+T0* T247x3415(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12510,7 +12510,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.natural_8_type */
-T0* T247x3313(T0* C)
+T0* T247x3313(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12533,7 +12533,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_64_convert_feature */
-T0* T247x3414(T0* C)
+T0* T247x3414(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12556,7 +12556,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_64_type */
-T0* T247x3309(T0* C)
+T0* T247x3309(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12579,7 +12579,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_32_convert_feature */
-T0* T247x3413(T0* C)
+T0* T247x3413(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12602,7 +12602,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_32_type */
-T0* T247x3308(T0* C)
+T0* T247x3308(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12625,7 +12625,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_16_convert_feature */
-T0* T247x3412(T0* C)
+T0* T247x3412(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12648,7 +12648,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_16_type */
-T0* T247x3307(T0* C)
+T0* T247x3307(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12671,7 +12671,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_8_convert_feature */
-T0* T247x3411(T0* C)
+T0* T247x3411(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12694,7 +12694,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_8_type */
-T0* T247x3306(T0* C)
+T0* T247x3306(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12717,7 +12717,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.string_32_convert_feature */
-T0* T247x3422(T0* C)
+T0* T247x3422(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12740,7 +12740,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.string_32_type */
-T0* T247x3330(T0* C)
+T0* T247x3330(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12763,7 +12763,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.string_8_convert_feature */
-T0* T247x3421(T0* C)
+T0* T247x3421(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12786,7 +12786,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.string_8_type */
-T0* T247x3329(T0* C)
+T0* T247x3329(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12809,7 +12809,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.attachment_type_conformance_mode */
-T1 T247x3403(T0* C)
+T1 T247x3403(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12832,7 +12832,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.boolean_type */
-T0* T247x3296(T0* C)
+T0* T247x3296(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12855,7 +12855,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.target_type_attachment_mode */
-T1 T247x3405(T0* C)
+T1 T247x3405(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12878,50 +12878,50 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.shortest_path */
-T0* T247x3277T0(T0* C, T0* a1)
+T0* T247x3277T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f150(C, a1));
+	return (T31f150(ac, C, a1));
 } else {
-	return (T59f166(C, a1));
+	return (T59f167(ac, C, a1));
 }
 } else {
-	return (T62f179(C, a1));
+	return (T62f181(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f162(C, a1));
+	return (T68f163(ac, C, a1));
 } else {
-	return (T183f109(C, a1));
+	return (T183f109(ac, C, a1));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f94(C, a1));
+	return (T192f94(ac, C, a1));
 } else {
-	return (T210f100(C, a1));
+	return (T210f100(ac, C, a1));
 }
 } else {
-	return (T223f107(C, a1));
+	return (T223f107(ac, C, a1));
 }
 } else {
 if (t1==439) {
-	return (T439f95(C, a1));
+	return (T439f95(ac, C, a1));
 } else {
-	return (T451f96(C, a1));
+	return (T451f96(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.tuple_type */
-T0* T247x3334(T0* C)
+T0* T247x3334(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12944,7 +12944,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.function_type */
-T0* T247x3304(T0* C)
+T0* T247x3304(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12967,7 +12967,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.predicate_like_current_type */
-T0* T247x3320(T0* C)
+T0* T247x3320(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -12990,7 +12990,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.procedure_like_current_type */
-T0* T247x3321(T0* C)
+T0* T247x3321(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13013,7 +13013,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_tuple_type */
-T0* T247x3335(T0* C)
+T0* T247x3335(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13036,7 +13036,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.pointer_type */
-T0* T247x3319(T0* C)
+T0* T247x3319(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13059,7 +13059,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.typed_pointer_like_current_type */
-T0* T247x3344(T0* C)
+T0* T247x3344(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13082,7 +13082,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.array_any_type */
-T0* T247x3293(T0* C)
+T0* T247x3293(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13105,7 +13105,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.type_like_current_type */
-T0* T247x3342(T0* C)
+T0* T247x3342(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13128,7 +13128,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.tuple_like_current_type */
-T0* T247x3336(T0* C)
+T0* T247x3336(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13151,7 +13151,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.any_type */
-T0* T247x3288(T0* C)
+T0* T247x3288(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13174,7 +13174,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.integer_type */
-T0* T247x3305(T0* C)
+T0* T247x3305(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13197,7 +13197,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_any_type */
-T0* T247x3289(T0* C)
+T0* T247x3289(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13220,7 +13220,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.iterable_detachable_any_type */
-T0* T247x3311(T0* C)
+T0* T247x3311(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13243,57 +13243,57 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.master_class */
-T0* T247x3265T0(T0* C, T0* a1)
+T0* T247x3265T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f136(C, a1));
+	return (T31f136(ac, C, a1));
 } else {
-	return (T59f159(C, a1));
+	return (T59f162(ac, C, a1));
 }
 } else {
-	return (T62f175(C, a1));
+	return (T62f179(ac, C, a1));
 }
 } else {
 if (t1<=183) {
 if (t1==68) {
-	return (T68f173(C, a1));
+	return (T68f168(ac, C, a1));
 } else {
-	return (T183f102(C, a1));
+	return (T183f102(ac, C, a1));
 }
 } else {
-	return (T451f84(C, a1));
+	return (T451f84(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.has_master_class */
-T1 T247x3259T0(T0* C, T0* a1)
+T1 T247x3259T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f137(C, a1));
+	return (T31f137(ac, C, a1));
 } else {
-	return (T59f170(C, a1));
+	return (T59f171(ac, C, a1));
 }
 } else {
-	return (T62f173(C, a1));
+	return (T62f174(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f166(C, a1));
+	return (T68f167(ac, C, a1));
 } else {
-	return (T183f103(C, a1));
+	return (T183f103(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.system_string_type */
-T0* T247x3333(T0* C)
+T0* T247x3333(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13316,7 +13316,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.string_type */
-T0* T247x3328(T0* C)
+T0* T247x3328(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13339,50 +13339,50 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.hash_code */
-T6 T247x22(T0* C)
+T6 T247x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f138(C));
+	return (T31f138(ac, C));
 } else {
-	return (T59f156(C));
+	return (T59f157(ac, C));
 }
 } else {
-	return (T62f161(C));
+	return (T62f162(ac, C));
 }
 } else {
 if (t1==68) {
-	return (T68f153(C));
+	return (T68f154(ac, C));
 } else {
-	return (T183f95(C));
+	return (T183f95(ac, C));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f84(C));
+	return (T192f84(ac, C));
 } else {
-	return (T210f88(C));
+	return (T210f88(ac, C));
 }
 } else {
-	return (T223f95(C));
+	return (T223f95(ac, C));
 }
 } else {
 if (t1==439) {
-	return (T439f84(C));
+	return (T439f84(ac, C));
 } else {
-	return (T451f85(C));
+	return (T451f85(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.double_type */
-T0* T247x3300(T0* C)
+T0* T247x3300(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13405,7 +13405,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.real_type */
-T0* T247x3322(T0* C)
+T0* T247x3322(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13428,7 +13428,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_type_detachable_any_type */
-T0* T247x3339(T0* C)
+T0* T247x3339(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13451,7 +13451,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.exception_manager_type */
-T0* T247x3303(T0* C)
+T0* T247x3303(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13474,7 +13474,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_type_exception_type */
-T0* T247x3340(T0* C)
+T0* T247x3340(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13497,7 +13497,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_exception_type */
-T0* T247x3302(T0* C)
+T0* T247x3302(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13520,7 +13520,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.type_detachable_exception_type */
-T0* T247x3341(T0* C)
+T0* T247x3341(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13543,7 +13543,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.exception_type */
-T0* T247x3301(T0* C)
+T0* T247x3301(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13566,7 +13566,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.special_any_type */
-T0* T247x3326(T0* C)
+T0* T247x3326(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13589,7 +13589,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.special_detachable_any_type */
-T0* T247x3327(T0* C)
+T0* T247x3327(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13612,7 +13612,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.type_detachable_any_type */
-T0* T247x3338(T0* C)
+T0* T247x3338(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13635,7 +13635,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.type_any_type */
-T0* T247x3337(T0* C)
+T0* T247x3337(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13658,45 +13658,45 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.relative_name */
-T0* T247x3278T0T2(T0* C, T0* a1, T2 a2)
+T0* T247x3278T0T2(GE_context* ac, T0* C, T0* a1, T2 a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-	return (T31f146(C, a1, a2));
+	return (T31f146(ac, C, a1, a2));
 } else {
-	return (T59f164(C, a1, a2));
+	return (T59f165(ac, C, a1, a2));
 }
 } else {
 if (t1==62) {
-	return (T62f169(C, a1, a2));
+	return (T62f170(ac, C, a1, a2));
 } else {
-	return (T68f159(C, a1, a2));
+	return (T68f160(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.relative_lower_name */
-T0* T247x3279T0T2(T0* C, T0* a1, T2 a2)
+T0* T247x3279T0T2(GE_context* ac, T0* C, T0* a1, T2 a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-	return (T31f139(C, a1, a2));
+	return (T31f139(ac, C, a1, a2));
 } else {
-	return (T59f172(C, a1, a2));
+	return (T59f173(ac, C, a1, a2));
 }
 } else {
 if (t1==62) {
-	return (T62f176(C, a1, a2));
+	return (T62f177(ac, C, a1, a2));
 } else {
-	return (T68f168(C, a1, a2));
+	return (T68f169(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.implicit_attachment_type_mark */
-T0* T247x3404(T0* C)
+T0* T247x3404(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13719,7 +13719,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.current_system */
-T0* T247x3275(T0* C)
+T0* T247x3275(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
@@ -13762,7 +13762,7 @@ if (t1==439) {
 }
 
 /* Call to ET_UNIVERSE.none_type */
-T0* T247x3317(T0* C)
+T0* T247x3317(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13785,7 +13785,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.detachable_none_type */
-T0* T247x3318(T0* C)
+T0* T247x3318(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13808,7 +13808,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.system_object_parents */
-T0* T247x3332(T0* C)
+T0* T247x3332(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13831,7 +13831,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.any_parents */
-T0* T247x3291(T0* C)
+T0* T247x3291(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13854,7 +13854,7 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.system_object_type */
-T0* T247x3331(T0* C)
+T0* T247x3331(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13877,73 +13877,73 @@ if (t1==68) {
 }
 
 /* Call to ET_UNIVERSE.full_name */
-T0* T247x3280T2(T0* C, T2 a1)
+T0* T247x3280T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f143(C, a1));
+	return (T31f143(ac, C, a1));
 } else {
-	return (T59f162(C, a1));
+	return (T59f163(ac, C, a1));
 }
 } else {
-	return (T62f167(C, a1));
+	return (T62f168(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f151(C, a1));
+	return (T68f152(ac, C, a1));
 } else {
-	return (T183f97(C, a1));
+	return (T183f97(ac, C, a1));
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-	return (T192f86(C, a1));
+	return (T192f86(ac, C, a1));
 } else {
-	return (T210f89(C, a1));
+	return (T210f89(ac, C, a1));
 }
 } else {
-	return (T223f96(C, a1));
+	return (T223f96(ac, C, a1));
 }
 } else {
 if (t1==439) {
-	return (T439f86(C, a1));
+	return (T439f86(ac, C, a1));
 } else {
-	return (T451f87(C, a1));
+	return (T451f87(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.classes_in_group */
-T0* T247x3270T0(T0* C, T0* a1)
+T0* T247x3270T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-	return (T31f144(C, a1));
+	return (T31f144(ac, C, a1));
 } else {
-	return (T59f155(C, a1));
+	return (T59f156(ac, C, a1));
 }
 } else {
-	return (T62f160(C, a1));
+	return (T62f161(ac, C, a1));
 }
 } else {
 if (t1==68) {
-	return (T68f152(C, a1));
+	return (T68f153(ac, C, a1));
 } else {
-	return (T183f104(C, a1));
+	return (T183f104(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_UNIVERSE.natural_type */
-T0* T247x3312(T0* C)
+T0* T247x3312(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13958,7 +13958,7 @@ if (t1==59) {
 }
 
 /* Call to ET_UNIVERSE.wide_character_type */
-T0* T247x3345(T0* C)
+T0* T247x3345(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13973,7 +13973,7 @@ if (t1==59) {
 }
 
 /* Call to ET_UNIVERSE.character_type */
-T0* T247x3297(T0* C)
+T0* T247x3297(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
@@ -13988,36 +13988,36 @@ if (t1==59) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER_ITEM.label */
-T0* T248x7104(T0* C)
+T0* T248x7104(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f109(C));
+	return (T78f109(ac, C));
 } else {
-	return (T80f204(C));
+	return (T80f204(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f108(C));
+	return (T246f108(ac, C));
 } else {
-	return (T254f106(C));
+	return (T254f106(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f72(C));
+	return (T495f72(ac, C));
 } else {
-	return (T858f70(C));
+	return (T858f70(ac, C));
 }
 } else {
 if (t1==1081) {
-	return (T1081f77(C));
+	return (T1081f77(ac, C));
 } else {
-	return (T1209f78(C));
+	return (T1209f78(ac, C));
 }
 }
 }
@@ -14025,29 +14025,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f108(C));
+	return (T1213f108(ac, C));
 } else {
-	return (T1214f109(C));
+	return (T1214f109(ac, C));
 }
 } else {
 if (t1==1236) {
-	return (T1236f7(C));
+	return (T1236f7(ac, C));
 } else {
-	return (T1238f78(C));
+	return (T1238f78(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f77(C));
+	return (T1239f77(ac, C));
 } else {
-	return (T1240f74(C));
+	return (T1240f74(ac, C));
 }
 } else {
 if (t1==1417) {
-	return (T1417f70(C));
+	return (T1417f70(ac, C));
 } else {
-	return (T1555f7(C));
+	return (T1555f7(ac, C));
 }
 }
 }
@@ -14055,36 +14055,36 @@ if (t1==1417) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER_ITEM.type */
-T0* T248x7103(T0* C)
+T0* T248x7103(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f39(C));
+	return (T78f39(ac, C));
 } else {
-	return (T80f101(C));
+	return (T80f101(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f37(C));
+	return (T246f37(ac, C));
 } else {
-	return (T254f38(C));
+	return (T254f38(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T858f12(C));
+	return (T858f12(ac, C));
 }
 } else {
 if (t1==1081) {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 } else {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 }
 }
 }
@@ -14092,29 +14092,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 } else {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 }
 } else {
 if (t1==1236) {
-	return (T1236f5(C));
+	return (T1236f5(ac, C));
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 } else {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 }
 } else {
 if (t1==1417) {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 } else {
-	return (T1555f5(C));
+	return (T1555f5(ac, C));
 }
 }
 }
@@ -14122,36 +14122,36 @@ if (t1==1417) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER_ITEM.resolved_formal_parameters_with_type */
-T0* T248x7106T0(T0* C, T0* a1)
+T0* T248x7106T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f101(C, a1));
+	return (T78f101(ac, C, a1));
 } else {
-	return (T80f192(C, a1));
+	return (T80f192(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f101(C, a1));
+	return (T246f101(ac, C, a1));
 } else {
-	return (T254f99(C, a1));
+	return (T254f99(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f64(C, a1));
+	return (T495f64(ac, C, a1));
 } else {
-	return (T858f63(C, a1));
+	return (T858f63(ac, C, a1));
 }
 } else {
 if (t1==1081) {
-	return (T1081f71(C, a1));
+	return (T1081f71(ac, C, a1));
 } else {
-	return (T1209f72(C, a1));
+	return (T1209f72(ac, C, a1));
 }
 }
 }
@@ -14159,29 +14159,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f100(C, a1));
+	return (T1213f100(ac, C, a1));
 } else {
-	return (T1214f101(C, a1));
+	return (T1214f101(ac, C, a1));
 }
 } else {
 if (t1==1236) {
-	return (T1236f6(C, a1));
+	return (T1236f6(ac, C, a1));
 } else {
-	return (T1238f68(C, a1));
+	return (T1238f68(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f69(C, a1));
+	return (T1239f69(ac, C, a1));
 } else {
-	return (T1240f66(C, a1));
+	return (T1240f66(ac, C, a1));
 }
 } else {
 if (t1==1417) {
-	return (T1417f65(C, a1));
+	return (T1417f65(ac, C, a1));
 } else {
-	return (T1555f6(C, a1));
+	return (T1555f6(ac, C, a1));
 }
 }
 }
@@ -14189,36 +14189,36 @@ if (t1==1417) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER_ITEM.actual_parameter */
-T0* T248x7102(T0* C)
+T0* T248x7102(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f38(C));
+	return (T78f38(ac, C));
 } else {
-	return (T80f100(C));
+	return (T80f100(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f36(C));
+	return (T246f36(ac, C));
 } else {
-	return (T254f37(C));
+	return (T254f37(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f5(C));
+	return (T495f5(ac, C));
 } else {
-	return (T858f11(C));
+	return (T858f11(ac, C));
 }
 } else {
 if (t1==1081) {
-	return (T1081f56(C));
+	return (T1081f56(ac, C));
 } else {
-	return (T1209f62(C));
+	return (T1209f62(ac, C));
 }
 }
 }
@@ -14226,29 +14226,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f6(C));
+	return (T1213f6(ac, C));
 } else {
-	return (T1214f6(C));
+	return (T1214f6(ac, C));
 }
 } else {
 if (t1==1236) {
-	return (T1236f4(C));
+	return (T1236f4(ac, C));
 } else {
-	return (T1238f6(C));
+	return (T1238f6(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f42(C));
+	return (T1239f42(ac, C));
 } else {
-	return (T1240f6(C));
+	return (T1240f6(ac, C));
 }
 } else {
 if (t1==1417) {
-	return (T1417f5(C));
+	return (T1417f5(ac, C));
 } else {
-	return (T1555f4(C));
+	return (T1555f4(ac, C));
 }
 }
 }
@@ -14256,38 +14256,38 @@ if (t1==1417) {
 }
 
 /* Call to ET_TYPE_MARK.position */
-T0* T250x7085(T0* C)
+T0* T250x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f13(C));
+	return (T336f13(ac, C));
 } else {
-	return (T337f5(C));
+	return (T337f5(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f22(C));
+	return (T388f22(ac, C));
 } else {
-	return (T638f4(C));
+	return (T638f4(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f62(C));
+	return (T949f62(ac, C));
 } else {
-	return (T1211f17(C));
+	return (T1211f17(ac, C));
 }
 } else {
-	return (T1212f17(C));
+	return (T1212f17(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_detachable_mark */
-T1 T250x12121(T0* C)
+T1 T250x12129(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14295,30 +14295,30 @@ if (t1<=337) {
 if (t1==336) {
 	return (((T336*)(C))->a5);
 } else {
-	return (T337f13(C));
+	return (T337f13(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f10(C));
+	return (T388f10(ac, C));
 } else {
-	return (T638f13(C));
+	return (T638f13(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f9(C));
+	return (T949f9(ac, C));
 } else {
-	return (T1211f9(C));
+	return (T1211f9(ac, C));
 }
 } else {
-	return (T1212f9(C));
+	return (T1212f9(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_attached_mark */
-T1 T250x12120(T0* C)
+T1 T250x12128(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14326,61 +14326,61 @@ if (t1<=337) {
 if (t1==336) {
 	return (((T336*)(C))->a3);
 } else {
-	return (T337f12(C));
+	return (T337f12(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f4(C));
+	return (T388f4(ac, C));
 } else {
-	return (T638f12(C));
+	return (T638f12(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f8(C));
+	return (T949f8(ac, C));
 } else {
-	return (T1211f8(C));
+	return (T1211f8(ac, C));
 }
 } else {
-	return (T1212f8(C));
+	return (T1212f8(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_attachment_mark */
-T1 T250x12119(T0* C)
+T1 T250x12127(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f10(C));
+	return (T336f10(ac, C));
 } else {
-	return (T337f4(C));
+	return (T337f4(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f7(C));
+	return (T388f7(ac, C));
 } else {
-	return (T638f5(C));
+	return (T638f5(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f13(C));
+	return (T949f13(ac, C));
 } else {
-	return (T1211f15(C));
+	return (T1211f15(ac, C));
 }
 } else {
-	return (T1212f15(C));
+	return (T1212f15(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_implicit_mark */
-T1 T250x12122(T0* C)
+T1 T250x12130(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14388,61 +14388,61 @@ if (t1<=337) {
 if (t1==336) {
 	return (EIF_TRUE);
 } else {
-	return (T337f7(C));
+	return (T337f7(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f8(C));
+	return (T388f8(ac, C));
 } else {
-	return (T638f7(C));
+	return (T638f7(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f69(C));
+	return (T949f69(ac, C));
 } else {
-	return (T1211f3(C));
+	return (T1211f3(ac, C));
 }
 } else {
-	return (T1212f3(C));
+	return (T1212f3(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_separateness_mark */
-T1 T250x12117(T0* C)
+T1 T250x12125(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f7(C));
+	return (T336f7(ac, C));
 } else {
-	return (T337f15(C));
+	return (T337f15(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f6(C));
+	return (T388f6(ac, C));
 } else {
-	return (T638f15(C));
+	return (T638f15(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f11(C));
+	return (T949f11(ac, C));
 } else {
-	return (T1211f11(C));
+	return (T1211f11(ac, C));
 }
 } else {
-	return (T1212f11(C));
+	return (T1212f11(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_expanded_mark */
-T1 T250x12115(T0* C)
+T1 T250x12123(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14450,123 +14450,123 @@ if (t1<=337) {
 if (t1==336) {
 	return (((T336*)(C))->a1);
 } else {
-	return (T337f9(C));
+	return (T337f9(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f9(C));
+	return (T388f9(ac, C));
 } else {
-	return (T638f9(C));
+	return (T638f9(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f5(C));
+	return (T949f5(ac, C));
 } else {
-	return (T1211f5(C));
+	return (T1211f5(ac, C));
 }
 } else {
-	return (T1212f5(C));
+	return (T1212f5(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_expandedness_mark */
-T1 T250x12114(T0* C)
+T1 T250x12122(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f6(C));
+	return (T336f6(ac, C));
 } else {
-	return (T337f14(C));
+	return (T337f14(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f5(C));
+	return (T388f5(ac, C));
 } else {
-	return (T638f14(C));
+	return (T638f14(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f10(C));
+	return (T949f10(ac, C));
 } else {
-	return (T1211f10(C));
+	return (T1211f10(ac, C));
 }
 } else {
-	return (T1212f10(C));
+	return (T1212f10(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.text */
-T0* T250x12131(T0* C)
+T0* T250x12139(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f9(C));
+	return (T336f9(ac, C));
 } else {
-	return (T337f8(C));
+	return (T337f8(ac, C));
 }
 } else {
 if (t1==388) {
 	return (((T388*)(C))->a1);
 } else {
-	return (T638f8(C));
+	return (T638f8(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f4(C));
+	return (T949f4(ac, C));
 } else {
-	return (T1211f4(C));
+	return (T1211f4(ac, C));
 }
 } else {
-	return (T1212f4(C));
+	return (T1212f4(ac, C));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.overridden_type_mark */
-T0* T250x12130T0(T0* C, T0* a1)
+T0* T250x12138T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1<=337) {
 if (t1==336) {
-	return (T336f12(C, a1));
+	return (T336f12(ac, C, a1));
 } else {
-	return (T337f6(C, a1));
+	return (T337f6(ac, C, a1));
 }
 } else {
 if (t1==388) {
-	return (T388f23(C, a1));
+	return (T388f23(ac, C, a1));
 } else {
-	return (T638f6(C, a1));
+	return (T638f6(ac, C, a1));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f61(C, a1));
+	return (T949f61(ac, C, a1));
 } else {
-	return (T1211f16(C, a1));
+	return (T1211f16(ac, C, a1));
 }
 } else {
-	return (T1212f16(C, a1));
+	return (T1212f16(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_TYPE_MARK.is_separate_mark */
-T1 T250x12118(T0* C)
+T1 T250x12126(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14574,19 +14574,19 @@ if (t1<=337) {
 if (t1==336) {
 	return (((T336*)(C))->a4);
 } else {
-	return (T337f11(C));
+	return (T337f11(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f20(C));
+	return (T388f20(ac, C));
 } else {
-	return (T638f11(C));
+	return (T638f11(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f7(C));
+	return (T949f7(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -14597,7 +14597,7 @@ if (t1==949) {
 }
 
 /* Call to ET_TYPE_MARK.is_reference_mark */
-T1 T250x12116(T0* C)
+T1 T250x12124(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
@@ -14605,52 +14605,52 @@ if (t1<=337) {
 if (t1==336) {
 	return (((T336*)(C))->a2);
 } else {
-	return (T337f10(C));
+	return (T337f10(ac, C));
 }
 } else {
 if (t1==388) {
-	return (T388f18(C));
+	return (T388f18(ac, C));
 } else {
-	return (T638f10(C));
+	return (T638f10(ac, C));
 }
 }
 } else {
 if (t1<=1211) {
 if (t1==949) {
-	return (T949f6(C));
+	return (T949f6(ac, C));
 } else {
-	return (T1211f6(C));
+	return (T1211f6(ac, C));
 }
 } else {
-	return (T1212f6(C));
+	return (T1212f6(ac, C));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.static_type */
-T0* T252x16156(T0* C)
+T0* T252x16164(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f33(C));
+	return (T232f33(ac, C));
 } else {
 	return (((T263*)(C))->a1);
 }
 } else {
 if (t1==295) {
-	return (T295f52(C));
+	return (T295f52(ac, C));
 } else {
-	return (T312f53(C));
+	return (T312f53(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f54(C));
+	return (T323f54(ac, C));
 } else {
-	return (T324f54(C));
+	return (T324f54(ac, C));
 }
 } else {
 if (t1==522) {
@@ -14663,29 +14663,29 @@ if (t1==522) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_never_void */
-T1 T252x16152(T0* C)
+T1 T252x16160(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f34(C));
+	return (T232f34(ac, C));
 } else {
 	return (((T263*)(C))->a3);
 }
 } else {
 if (t1==295) {
-	return (T295f60(C));
+	return (T295f60(ac, C));
 } else {
-	return (T312f60(C));
+	return (T312f60(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f61(C));
+	return (T323f61(ac, C));
 } else {
-	return (T324f60(C));
+	return (T324f60(ac, C));
 }
 } else {
 if (t1==522) {
@@ -14698,99 +14698,99 @@ if (t1==522) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.can_be_void */
-T1 T252x16153(T0* C)
+T1 T252x16161(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f69(C));
+	return (T232f69(ac, C));
 } else {
-	return (T263f8(C));
+	return (T263f8(ac, C));
 }
 } else {
 if (t1==295) {
-	return (T295f58(C));
+	return (T295f58(ac, C));
 } else {
-	return (T312f58(C));
+	return (T312f58(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f59(C));
+	return (T323f59(ac, C));
 } else {
-	return (T324f58(C));
+	return (T324f58(ac, C));
 }
 } else {
 if (t1==522) {
-	return (T522f8(C));
+	return (T522f8(ac, C));
 } else {
-	return (T821f10(C));
+	return (T821f10(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.dynamic_type */
-T0* T252x16165T6(T0* C, T6 a1)
+T0* T252x16173T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f64(C, a1));
+	return (T232f64(ac, C, a1));
 } else {
-	return (T263f5(C, a1));
+	return (T263f5(ac, C, a1));
 }
 } else {
 if (t1==295) {
-	return (T295f57(C, a1));
+	return (T295f57(ac, C, a1));
 } else {
-	return (T312f57(C, a1));
+	return (T312f57(ac, C, a1));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f58(C, a1));
+	return (T323f58(ac, C, a1));
 } else {
-	return (T324f57(C, a1));
+	return (T324f57(ac, C, a1));
 }
 } else {
 if (t1==522) {
-	return (T522f11(C, a1));
+	return (T522f11(ac, C, a1));
 } else {
-	return (T821f13(C, a1));
+	return (T821f13(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.count */
-T6 T252x16168(T0* C)
+T6 T252x16176(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f62(C));
+	return (T232f62(ac, C));
 } else {
 	return (((T263*)(C))->a2);
 }
 } else {
 if (t1==295) {
-	return (T295f56(C));
+	return (T295f56(ac, C));
 } else {
-	return (T312f56(C));
+	return (T312f56(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f57(C));
+	return (T323f57(ac, C));
 } else {
-	return (T324f56(C));
+	return (T324f56(ac, C));
 }
 } else {
 if (t1==522) {
@@ -14803,165 +14803,165 @@ if (t1==522) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.has_expanded */
-T1 T252x16172(T0* C)
+T1 T252x16180(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f70(C));
+	return (T232f70(ac, C));
 } else {
-	return (T263f6(C));
+	return (T263f6(ac, C));
 }
 } else {
 if (t1==295) {
-	return (T295f59(C));
+	return (T295f59(ac, C));
 } else {
-	return (T312f59(C));
+	return (T312f59(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f60(C));
+	return (T323f60(ac, C));
 } else {
-	return (T324f59(C));
+	return (T324f59(ac, C));
 }
 } else {
 if (t1==522) {
-	return (T522f12(C));
+	return (T522f12(ac, C));
 } else {
-	return (T821f12(C));
+	return (T821f12(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_expanded */
-T1 T252x16151(T0* C)
+T1 T252x16159(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f25(C));
+	return (T232f25(ac, C));
 } else {
-	return (T263f10(C));
+	return (T263f10(ac, C));
 }
 } else {
 if (t1==295) {
-	return (T295f66(C));
+	return (T295f66(ac, C));
 } else {
-	return (T312f51(C));
+	return (T312f51(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f67(C));
+	return (T323f67(ac, C));
 } else {
-	return (T324f72(C));
+	return (T324f72(ac, C));
 }
 } else {
 if (t1==522) {
-	return (T522f9(C));
+	return (T522f9(ac, C));
 } else {
-	return (T821f9(C));
+	return (T821f9(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_empty */
-T1 T252x16169(T0* C)
+T1 T252x16177(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f21(C));
+	return (T232f21(ac, C));
 } else {
-	return (T263f9(C));
+	return (T263f9(ac, C));
 }
 } else {
 if (t1==295) {
-	return (T295f62(C));
+	return (T295f62(ac, C));
 } else {
-	return (T312f62(C));
+	return (T312f62(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f63(C));
+	return (T323f63(ac, C));
 } else {
-	return (T324f62(C));
+	return (T324f62(ac, C));
 }
 } else {
 if (t1==522) {
-	return (T522f7(C));
+	return (T522f7(ac, C));
 } else {
-	return (T821f8(C));
+	return (T821f8(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.special_type */
-T0* T252x16166(T0* C)
+T0* T252x16174(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f67(C));
+	return (T232f67(ac, C));
 } else {
-	return (T263f12(C));
+	return (T263f12(ac, C));
 }
 } else {
 if (t1==295) {
-	return (T295f69(C));
+	return (T295f69(ac, C));
 } else {
-	return (T312f69(C));
+	return (T312f69(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f70(C));
+	return (T323f70(ac, C));
 } else {
-	return (T324f69(C));
+	return (T324f69(ac, C));
 }
 } else {
 if (t1==522) {
-	return (T522f14(C));
+	return (T522f14(ac, C));
 } else {
-	return (T821f14(C));
+	return (T821f14(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.dynamic_types */
-T0* T252x16161(T0* C)
+T0* T252x16169(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-	return (T232f61(C));
+	return (T232f61(ac, C));
 } else {
-	return (T295f63(C));
+	return (T295f63(ac, C));
 }
 } else {
-	return (T312f63(C));
+	return (T312f63(ac, C));
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f64(C));
+	return (T323f64(ac, C));
 } else {
-	return (T324f63(C));
+	return (T324f63(ac, C));
 }
 } else {
 	return (((T522*)(C))->a5);
@@ -14970,639 +14970,639 @@ if (t1==323) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.has_type */
-T1 T252x16170T0(T0* C, T0* a1)
+T1 T252x16178T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-	return (T232f20(C, a1));
+	return (T232f20(ac, C, a1));
 } else {
-	return (T263f7(C, a1));
+	return (T263f7(ac, C, a1));
 }
 } else {
 if (t1==295) {
-	return (T295f61(C, a1));
+	return (T295f61(ac, C, a1));
 } else {
-	return (T312f61(C, a1));
+	return (T312f61(ac, C, a1));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f62(C, a1));
+	return (T323f62(ac, C, a1));
 } else {
-	return (T324f61(C, a1));
+	return (T324f61(ac, C, a1));
 }
 } else {
 if (t1==522) {
-	return (T522f10(C, a1));
+	return (T522f10(ac, C, a1));
 } else {
-	return (T821f7(C, a1));
+	return (T821f7(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_EXPRESSION.last_leaf */
-T0* T274x7089(T0* C)
+T0* T274x7089(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f98(C));
+		return (T176f98(ac, C));
 	case 275:
-		return (T275f29(C));
+		return (T275f29(ac, C));
 	case 280:
-		return (T280f23(C));
+		return (T280f23(ac, C));
 	case 281:
-		return (T281f20(C));
+		return (T281f20(ac, C));
 	case 283:
-		return (T283f25(C));
+		return (T283f25(ac, C));
 	case 302:
-		return (T302f27(C));
+		return (T302f27(ac, C));
 	case 309:
-		return (T309f21(C));
+		return (T309f21(ac, C));
 	case 310:
-		return (T310f20(C));
+		return (T310f20(ac, C));
 	case 311:
-		return (T311f18(C));
+		return (T311f18(ac, C));
 	case 315:
-		return (T315f22(C));
+		return (T315f22(ac, C));
 	case 738:
-		return (T738f23(C));
+		return (T738f23(ac, C));
 	case 822:
-		return (T822f34(C));
+		return (T822f34(ac, C));
 	case 905:
-		return (T905f29(C));
+		return (T905f29(ac, C));
 	case 941:
-		return (T941f26(C));
+		return (T941f26(ac, C));
 	case 952:
-		return (T952f30(C));
+		return (T952f30(ac, C));
 	case 980:
-		return (T980f22(C));
+		return (T980f22(ac, C));
 	case 983:
-		return (T983f27(C));
+		return (T983f27(ac, C));
 	case 1131:
-		return (T1131f24(C));
+		return (T1131f24(ac, C));
 	case 1145:
-		return (T1145f19(C));
+		return (T1145f19(ac, C));
 	case 1164:
-		return (T1164f26(C));
+		return (T1164f26(ac, C));
 	case 1167:
-		return (T1167f25(C));
+		return (T1167f25(ac, C));
 	case 1190:
-		return (T1190f36(C));
+		return (T1190f36(ac, C));
 	case 1191:
-		return (T1191f39(C));
+		return (T1191f39(ac, C));
 	case 1192:
-		return (T1192f35(C));
+		return (T1192f35(ac, C));
 	case 1193:
-		return (T1193f65(C));
+		return (T1193f65(ac, C));
 	case 1194:
-		return (T1194f65(C));
+		return (T1194f65(ac, C));
 	case 1195:
-		return (T1195f65(C));
+		return (T1195f65(ac, C));
 	case 1196:
-		return (T1196f65(C));
+		return (T1196f65(ac, C));
 	case 1197:
-		return (T1197f65(C));
+		return (T1197f65(ac, C));
 	case 1198:
-		return (T1198f33(C));
+		return (T1198f33(ac, C));
 	case 1199:
-		return (T1199f33(C));
+		return (T1199f33(ac, C));
 	case 1201:
-		return (T1201f31(C));
+		return (T1201f31(ac, C));
 	case 1202:
-		return (T1202f31(C));
+		return (T1202f31(ac, C));
 	case 1203:
-		return (T1203f35(C));
+		return (T1203f35(ac, C));
 	case 1204:
-		return (T1204f35(C));
+		return (T1204f35(ac, C));
 	case 1252:
-		return (T1252f22(C));
+		return (T1252f22(ac, C));
 	case 1253:
-		return (T1253f18(C));
+		return (T1253f18(ac, C));
 	case 1254:
-		return (T1254f18(C));
+		return (T1254f18(ac, C));
 	case 1255:
-		return (T1255f18(C));
+		return (T1255f18(ac, C));
 	case 1256:
-		return (T1256f18(C));
+		return (T1256f18(ac, C));
 	case 1257:
-		return (T1257f21(C));
+		return (T1257f21(ac, C));
 	case 1260:
-		return (T1260f19(C));
+		return (T1260f19(ac, C));
 	case 1261:
-		return (T1261f23(C));
+		return (T1261f23(ac, C));
 	case 1262:
-		return (T1262f18(C));
+		return (T1262f18(ac, C));
 	case 1263:
-		return (T1263f26(C));
+		return (T1263f26(ac, C));
 	case 1264:
-		return (T1264f21(C));
+		return (T1264f21(ac, C));
 	case 1265:
-		return (T1265f35(C));
+		return (T1265f35(ac, C));
 	case 1266:
-		return (T1266f36(C));
+		return (T1266f36(ac, C));
 	case 1267:
-		return (T1267f34(C));
+		return (T1267f34(ac, C));
 	case 1268:
-		return (T1268f34(C));
+		return (T1268f34(ac, C));
 	case 1269:
-		return (T1269f35(C));
+		return (T1269f35(ac, C));
 	case 1270:
-		return (T1270f33(C));
+		return (T1270f33(ac, C));
 	case 1713:
-		return (T1713f15(C));
+		return (T1713f15(ac, C));
 	case 1852:
-		return (T1852f16(C));
+		return (T1852f16(ac, C));
 	case 1853:
-		return (T1853f20(C));
+		return (T1853f20(ac, C));
 	case 1854:
-		return (T1854f21(C));
+		return (T1854f21(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.position */
-T0* T274x7085(T0* C)
+T0* T274x7085(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f22(C));
+		return (T176f22(ac, C));
 	case 275:
-		return (T275f8(C));
+		return (T275f8(ac, C));
 	case 280:
-		return (T280f10(C));
+		return (T280f10(ac, C));
 	case 281:
-		return (T281f5(C));
+		return (T281f5(ac, C));
 	case 283:
-		return (T283f15(C));
+		return (T283f15(ac, C));
 	case 302:
-		return (T302f8(C));
+		return (T302f8(ac, C));
 	case 309:
-		return (T309f8(C));
+		return (T309f8(ac, C));
 	case 310:
-		return (T310f8(C));
+		return (T310f8(ac, C));
 	case 311:
-		return (T311f8(C));
+		return (T311f8(ac, C));
 	case 315:
-		return (T315f9(C));
+		return (T315f9(ac, C));
 	case 738:
-		return (T738f9(C));
+		return (T738f9(ac, C));
 	case 822:
-		return (T822f27(C));
+		return (T822f27(ac, C));
 	case 905:
-		return (T905f10(C));
+		return (T905f10(ac, C));
 	case 941:
-		return (T941f10(C));
+		return (T941f10(ac, C));
 	case 952:
-		return (T952f18(C));
+		return (T952f18(ac, C));
 	case 980:
-		return (T980f6(C));
+		return (T980f6(ac, C));
 	case 983:
-		return (T983f11(C));
+		return (T983f11(ac, C));
 	case 1131:
-		return (T1131f8(C));
+		return (T1131f8(ac, C));
 	case 1145:
-		return (T1145f6(C));
+		return (T1145f6(ac, C));
 	case 1164:
-		return (T1164f9(C));
+		return (T1164f9(ac, C));
 	case 1167:
-		return (T1167f12(C));
+		return (T1167f12(ac, C));
 	case 1190:
-		return (T1190f9(C));
+		return (T1190f9(ac, C));
 	case 1191:
-		return (T1191f30(C));
+		return (T1191f30(ac, C));
 	case 1192:
-		return (T1192f10(C));
+		return (T1192f10(ac, C));
 	case 1193:
-		return (T1193f16(C));
+		return (T1193f16(ac, C));
 	case 1194:
-		return (T1194f16(C));
+		return (T1194f16(ac, C));
 	case 1195:
-		return (T1195f16(C));
+		return (T1195f16(ac, C));
 	case 1196:
-		return (T1196f16(C));
+		return (T1196f16(ac, C));
 	case 1197:
-		return (T1197f16(C));
+		return (T1197f16(ac, C));
 	case 1198:
-		return (T1198f26(C));
+		return (T1198f26(ac, C));
 	case 1199:
-		return (T1199f26(C));
+		return (T1199f26(ac, C));
 	case 1201:
-		return (T1201f10(C));
+		return (T1201f10(ac, C));
 	case 1202:
-		return (T1202f10(C));
+		return (T1202f10(ac, C));
 	case 1203:
-		return (T1203f9(C));
+		return (T1203f9(ac, C));
 	case 1204:
-		return (T1204f9(C));
+		return (T1204f9(ac, C));
 	case 1252:
-		return (T1252f10(C));
+		return (T1252f10(ac, C));
 	case 1253:
-		return (T1253f7(C));
+		return (T1253f7(ac, C));
 	case 1254:
-		return (T1254f7(C));
+		return (T1254f7(ac, C));
 	case 1255:
-		return (T1255f7(C));
+		return (T1255f7(ac, C));
 	case 1256:
-		return (T1256f7(C));
+		return (T1256f7(ac, C));
 	case 1257:
-		return (T1257f6(C));
+		return (T1257f6(ac, C));
 	case 1260:
-		return (T1260f6(C));
+		return (T1260f6(ac, C));
 	case 1261:
-		return (T1261f6(C));
+		return (T1261f6(ac, C));
 	case 1262:
-		return (T1262f6(C));
+		return (T1262f6(ac, C));
 	case 1263:
-		return (T1263f10(C));
+		return (T1263f10(ac, C));
 	case 1264:
-		return (T1264f6(C));
+		return (T1264f6(ac, C));
 	case 1265:
-		return (T1265f18(C));
+		return (T1265f18(ac, C));
 	case 1266:
-		return (T1266f18(C));
+		return (T1266f18(ac, C));
 	case 1267:
-		return (T1267f15(C));
+		return (T1267f15(ac, C));
 	case 1268:
-		return (T1268f14(C));
+		return (T1268f14(ac, C));
 	case 1269:
-		return (T1269f18(C));
+		return (T1269f18(ac, C));
 	case 1270:
-		return (T1270f16(C));
+		return (T1270f16(ac, C));
 	case 1713:
-		return (T1713f5(C));
+		return (T1713f5(ac, C));
 	case 1852:
-		return (T1852f15(C));
+		return (T1852f15(ac, C));
 	case 1853:
-		return (T1853f16(C));
+		return (T1853f16(ac, C));
 	case 1854:
-		return (T1854f4(C));
+		return (T1854f4(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.manifest_constant_convert_feature */
-T0* T274x15166T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T0* T274x15174T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f99(C, a1, a2, a3));
+		return (T176f99(ac, C, a1, a2, a3));
 	case 275:
-		return (T275f26(C, a1, a2, a3));
+		return (T275f26(ac, C, a1, a2, a3));
 	case 280:
-		return (T280f21(C, a1, a2, a3));
+		return (T280f21(ac, C, a1, a2, a3));
 	case 281:
-		return (T281f18(C, a1, a2, a3));
+		return (T281f18(ac, C, a1, a2, a3));
 	case 283:
-		return (T283f23(C, a1, a2, a3));
+		return (T283f23(ac, C, a1, a2, a3));
 	case 302:
-		return (T302f25(C, a1, a2, a3));
+		return (T302f25(ac, C, a1, a2, a3));
 	case 309:
-		return (T309f19(C, a1, a2, a3));
+		return (T309f19(ac, C, a1, a2, a3));
 	case 310:
-		return (T310f18(C, a1, a2, a3));
+		return (T310f18(ac, C, a1, a2, a3));
 	case 311:
-		return (T311f16(C, a1, a2, a3));
+		return (T311f16(ac, C, a1, a2, a3));
 	case 315:
-		return (T315f23(C, a1, a2, a3));
+		return (T315f23(ac, C, a1, a2, a3));
 	case 738:
-		return (T738f20(C, a1, a2, a3));
+		return (T738f20(ac, C, a1, a2, a3));
 	case 822:
-		return (T822f29(C, a1, a2, a3));
+		return (T822f29(ac, C, a1, a2, a3));
 	case 905:
-		return (T905f26(C, a1, a2, a3));
+		return (T905f26(ac, C, a1, a2, a3));
 	case 941:
-		return (T941f24(C, a1, a2, a3));
+		return (T941f24(ac, C, a1, a2, a3));
 	case 952:
-		return (T952f27(C, a1, a2, a3));
+		return (T952f27(ac, C, a1, a2, a3));
 	case 980:
-		return (T980f20(C, a1, a2, a3));
+		return (T980f20(ac, C, a1, a2, a3));
 	case 983:
-		return (T983f25(C, a1, a2, a3));
+		return (T983f25(ac, C, a1, a2, a3));
 	case 1131:
-		return (T1131f22(C, a1, a2, a3));
+		return (T1131f22(ac, C, a1, a2, a3));
 	case 1145:
-		return (T1145f17(C, a1, a2, a3));
+		return (T1145f17(ac, C, a1, a2, a3));
 	case 1164:
-		return (T1164f20(C, a1, a2, a3));
+		return (T1164f20(ac, C, a1, a2, a3));
 	case 1167:
-		return (T1167f23(C, a1, a2, a3));
+		return (T1167f23(ac, C, a1, a2, a3));
 	case 1190:
-		return (T1190f29(C, a1, a2, a3));
+		return (T1190f29(ac, C, a1, a2, a3));
 	case 1191:
-		return (T1191f34(C, a1, a2, a3));
+		return (T1191f34(ac, C, a1, a2, a3));
 	case 1192:
-		return (T1192f30(C, a1, a2, a3));
+		return (T1192f30(ac, C, a1, a2, a3));
 	case 1193:
-		return (T1193f57(C, a1, a2, a3));
+		return (T1193f57(ac, C, a1, a2, a3));
 	case 1194:
-		return (T1194f57(C, a1, a2, a3));
+		return (T1194f57(ac, C, a1, a2, a3));
 	case 1195:
-		return (T1195f57(C, a1, a2, a3));
+		return (T1195f57(ac, C, a1, a2, a3));
 	case 1196:
-		return (T1196f57(C, a1, a2, a3));
+		return (T1196f57(ac, C, a1, a2, a3));
 	case 1197:
-		return (T1197f57(C, a1, a2, a3));
+		return (T1197f57(ac, C, a1, a2, a3));
 	case 1198:
-		return (T1198f30(C, a1, a2, a3));
+		return (T1198f30(ac, C, a1, a2, a3));
 	case 1199:
-		return (T1199f30(C, a1, a2, a3));
+		return (T1199f30(ac, C, a1, a2, a3));
 	case 1201:
-		return (T1201f28(C, a1, a2, a3));
+		return (T1201f28(ac, C, a1, a2, a3));
 	case 1202:
-		return (T1202f28(C, a1, a2, a3));
+		return (T1202f28(ac, C, a1, a2, a3));
 	case 1203:
-		return (T1203f28(C, a1, a2, a3));
+		return (T1203f28(ac, C, a1, a2, a3));
 	case 1204:
-		return (T1204f28(C, a1, a2, a3));
+		return (T1204f28(ac, C, a1, a2, a3));
 	case 1252:
-		return (T1252f20(C, a1, a2, a3));
+		return (T1252f20(ac, C, a1, a2, a3));
 	case 1253:
-		return (T1253f16(C, a1, a2, a3));
+		return (T1253f16(ac, C, a1, a2, a3));
 	case 1254:
-		return (T1254f16(C, a1, a2, a3));
+		return (T1254f16(ac, C, a1, a2, a3));
 	case 1255:
-		return (T1255f16(C, a1, a2, a3));
+		return (T1255f16(ac, C, a1, a2, a3));
 	case 1256:
-		return (T1256f16(C, a1, a2, a3));
+		return (T1256f16(ac, C, a1, a2, a3));
 	case 1257:
-		return (T1257f19(C, a1, a2, a3));
+		return (T1257f19(ac, C, a1, a2, a3));
 	case 1260:
-		return (T1260f17(C, a1, a2, a3));
+		return (T1260f17(ac, C, a1, a2, a3));
 	case 1261:
-		return (T1261f21(C, a1, a2, a3));
+		return (T1261f21(ac, C, a1, a2, a3));
 	case 1262:
-		return (T1262f16(C, a1, a2, a3));
+		return (T1262f16(ac, C, a1, a2, a3));
 	case 1263:
-		return (T1263f23(C, a1, a2, a3));
+		return (T1263f23(ac, C, a1, a2, a3));
 	case 1264:
-		return (T1264f19(C, a1, a2, a3));
+		return (T1264f19(ac, C, a1, a2, a3));
 	case 1265:
-		return (T1265f33(C, a1, a2, a3));
+		return (T1265f33(ac, C, a1, a2, a3));
 	case 1266:
-		return (T1266f34(C, a1, a2, a3));
+		return (T1266f34(ac, C, a1, a2, a3));
 	case 1267:
-		return (T1267f32(C, a1, a2, a3));
+		return (T1267f32(ac, C, a1, a2, a3));
 	case 1268:
-		return (T1268f32(C, a1, a2, a3));
+		return (T1268f32(ac, C, a1, a2, a3));
 	case 1269:
-		return (T1269f33(C, a1, a2, a3));
+		return (T1269f33(ac, C, a1, a2, a3));
 	case 1270:
-		return (T1270f31(C, a1, a2, a3));
+		return (T1270f31(ac, C, a1, a2, a3));
 	case 1713:
-		return (T1713f6(C, a1, a2, a3));
+		return (T1713f6(ac, C, a1, a2, a3));
 	case 1852:
-		return (T1852f6(C, a1, a2, a3));
+		return (T1852f6(ac, C, a1, a2, a3));
 	case 1853:
-		return (T1853f6(C, a1, a2, a3));
+		return (T1853f6(ac, C, a1, a2, a3));
 	case 1854:
-		return (T1854f6(C, a1, a2, a3));
+		return (T1854f6(ac, C, a1, a2, a3));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.unparenthesized_expression */
-T0* T274x15160(T0* C)
+T0* T274x15168(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f92(C));
+		return (T176f92(ac, C));
 	case 275:
-		return (T275f24(C));
+		return (T275f24(ac, C));
 	case 280:
-		return (T280f19(C));
+		return (T280f19(ac, C));
 	case 281:
-		return (T281f16(C));
+		return (T281f16(ac, C));
 	case 283:
-		return (T283f21(C));
+		return (T283f21(ac, C));
 	case 302:
-		return (T302f22(C));
+		return (T302f22(ac, C));
 	case 309:
-		return (T309f17(C));
+		return (T309f17(ac, C));
 	case 310:
-		return (T310f15(C));
+		return (T310f15(ac, C));
 	case 311:
-		return (T311f14(C));
+		return (T311f14(ac, C));
 	case 315:
-		return (T315f20(C));
+		return (T315f20(ac, C));
 	case 738:
-		return (T738f17(C));
+		return (T738f17(ac, C));
 	case 822:
-		return (T822f25(C));
+		return (T822f25(ac, C));
 	case 905:
-		return (T905f23(C));
+		return (T905f23(ac, C));
 	case 941:
-		return (T941f21(C));
+		return (T941f21(ac, C));
 	case 952:
-		return (T952f24(C));
+		return (T952f24(ac, C));
 	case 980:
-		return (T980f18(C));
+		return (T980f18(ac, C));
 	case 983:
-		return (T983f21(C));
+		return (T983f21(ac, C));
 	case 1131:
-		return (T1131f20(C));
+		return (T1131f20(ac, C));
 	case 1145:
-		return (T1145f15(C));
+		return (T1145f15(ac, C));
 	case 1164:
-		return (T1164f18(C));
+		return (T1164f18(ac, C));
 	case 1167:
-		return (T1167f21(C));
+		return (T1167f21(ac, C));
 	case 1190:
-		return (T1190f27(C));
+		return (T1190f27(ac, C));
 	case 1191:
-		return (T1191f32(C));
+		return (T1191f32(ac, C));
 	case 1192:
-		return (T1192f28(C));
+		return (T1192f28(ac, C));
 	case 1193:
-		return (T1193f53(C));
+		return (T1193f53(ac, C));
 	case 1194:
-		return (T1194f53(C));
+		return (T1194f53(ac, C));
 	case 1195:
-		return (T1195f53(C));
+		return (T1195f53(ac, C));
 	case 1196:
-		return (T1196f53(C));
+		return (T1196f53(ac, C));
 	case 1197:
-		return (T1197f53(C));
+		return (T1197f53(ac, C));
 	case 1198:
-		return (T1198f28(C));
+		return (T1198f28(ac, C));
 	case 1199:
-		return (T1199f28(C));
+		return (T1199f28(ac, C));
 	case 1201:
-		return (T1201f26(C));
+		return (T1201f26(ac, C));
 	case 1202:
-		return (T1202f26(C));
+		return (T1202f26(ac, C));
 	case 1203:
-		return (T1203f26(C));
+		return (T1203f26(ac, C));
 	case 1204:
-		return (T1204f26(C));
+		return (T1204f26(ac, C));
 	case 1252:
-		return (T1252f18(C));
+		return (T1252f18(ac, C));
 	case 1253:
-		return (T1253f14(C));
+		return (T1253f14(ac, C));
 	case 1254:
-		return (T1254f14(C));
+		return (T1254f14(ac, C));
 	case 1255:
-		return (T1255f14(C));
+		return (T1255f14(ac, C));
 	case 1256:
-		return (T1256f14(C));
+		return (T1256f14(ac, C));
 	case 1257:
-		return (T1257f17(C));
+		return (T1257f17(ac, C));
 	case 1260:
-		return (T1260f15(C));
+		return (T1260f15(ac, C));
 	case 1261:
-		return (T1261f19(C));
+		return (T1261f19(ac, C));
 	case 1262:
-		return (T1262f14(C));
+		return (T1262f14(ac, C));
 	case 1263:
-		return (T1263f21(C));
+		return (T1263f21(ac, C));
 	case 1264:
-		return (T1264f17(C));
+		return (T1264f17(ac, C));
 	case 1265:
-		return (T1265f30(C));
+		return (T1265f30(ac, C));
 	case 1266:
-		return (T1266f31(C));
+		return (T1266f31(ac, C));
 	case 1267:
-		return (T1267f29(C));
+		return (T1267f29(ac, C));
 	case 1268:
-		return (T1268f29(C));
+		return (T1268f29(ac, C));
 	case 1269:
-		return (T1269f30(C));
+		return (T1269f30(ac, C));
 	case 1270:
-		return (T1270f28(C));
+		return (T1270f28(ac, C));
 	case 1713:
-		return (T1713f7(C));
+		return (T1713f7(ac, C));
 	case 1852:
-		return (T1852f12(C));
+		return (T1852f12(ac, C));
 	case 1853:
-		return (T1853f12(C));
+		return (T1853f12(ac, C));
 	case 1854:
-		return (T1854f12(C));
+		return (T1854f12(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.is_false */
-T1 T274x15163(T0* C)
+T1 T274x15171(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f100(C));
+		return (T176f100(ac, C));
 	case 275:
-		return (T275f28(C));
+		return (T275f28(ac, C));
 	case 280:
-		return (T280f22(C));
+		return (T280f22(ac, C));
 	case 281:
-		return (T281f19(C));
+		return (T281f19(ac, C));
 	case 283:
-		return (T283f24(C));
+		return (T283f24(ac, C));
 	case 302:
-		return (T302f26(C));
+		return (T302f26(ac, C));
 	case 309:
-		return (T309f20(C));
+		return (T309f20(ac, C));
 	case 310:
-		return (T310f19(C));
+		return (T310f19(ac, C));
 	case 311:
-		return (T311f17(C));
+		return (T311f17(ac, C));
 	case 315:
-		return (T315f24(C));
+		return (T315f24(ac, C));
 	case 738:
-		return (T738f22(C));
+		return (T738f22(ac, C));
 	case 822:
-		return (T822f32(C));
+		return (T822f32(ac, C));
 	case 905:
-		return (T905f27(C));
+		return (T905f27(ac, C));
 	case 941:
-		return (T941f25(C));
+		return (T941f25(ac, C));
 	case 952:
-		return (T952f29(C));
+		return (T952f29(ac, C));
 	case 980:
-		return (T980f21(C));
+		return (T980f21(ac, C));
 	case 983:
-		return (T983f26(C));
+		return (T983f26(ac, C));
 	case 1131:
-		return (T1131f23(C));
+		return (T1131f23(ac, C));
 	case 1145:
-		return (T1145f18(C));
+		return (T1145f18(ac, C));
 	case 1164:
-		return (T1164f21(C));
+		return (T1164f21(ac, C));
 	case 1167:
-		return (T1167f24(C));
+		return (T1167f24(ac, C));
 	case 1190:
-		return (T1190f30(C));
+		return (T1190f30(ac, C));
 	case 1191:
-		return (T1191f36(C));
+		return (T1191f36(ac, C));
 	case 1192:
-		return (T1192f32(C));
+		return (T1192f32(ac, C));
 	case 1193:
-		return (T1193f58(C));
+		return (T1193f58(ac, C));
 	case 1194:
-		return (T1194f58(C));
+		return (T1194f58(ac, C));
 	case 1195:
-		return (T1195f58(C));
+		return (T1195f58(ac, C));
 	case 1196:
-		return (T1196f58(C));
+		return (T1196f58(ac, C));
 	case 1197:
-		return (T1197f58(C));
+		return (T1197f58(ac, C));
 	case 1198:
-		return (T1198f31(C));
+		return (T1198f31(ac, C));
 	case 1199:
-		return (T1199f31(C));
+		return (T1199f31(ac, C));
 	case 1201:
-		return (T1201f29(C));
+		return (T1201f29(ac, C));
 	case 1202:
-		return (T1202f29(C));
+		return (T1202f29(ac, C));
 	case 1203:
-		return (T1203f29(C));
+		return (T1203f29(ac, C));
 	case 1204:
-		return (T1204f29(C));
+		return (T1204f29(ac, C));
 	case 1252:
-		return (T1252f21(C));
+		return (T1252f21(ac, C));
 	case 1253:
-		return (T1253f17(C));
+		return (T1253f17(ac, C));
 	case 1254:
-		return (T1254f17(C));
+		return (T1254f17(ac, C));
 	case 1255:
-		return (T1255f17(C));
+		return (T1255f17(ac, C));
 	case 1256:
-		return (T1256f17(C));
+		return (T1256f17(ac, C));
 	case 1257:
-		return (T1257f20(C));
+		return (T1257f20(ac, C));
 	case 1260:
-		return (T1260f18(C));
+		return (T1260f18(ac, C));
 	case 1261:
-		return (T1261f22(C));
+		return (T1261f22(ac, C));
 	case 1262:
-		return (T1262f17(C));
+		return (T1262f17(ac, C));
 	case 1263:
-		return (T1263f25(C));
+		return (T1263f25(ac, C));
 	case 1264:
-		return (T1264f20(C));
+		return (T1264f20(ac, C));
 	case 1265:
-		return (T1265f34(C));
+		return (T1265f34(ac, C));
 	case 1266:
-		return (T1266f35(C));
+		return (T1266f35(ac, C));
 	case 1267:
-		return (T1267f33(C));
+		return (T1267f33(ac, C));
 	case 1268:
-		return (T1268f33(C));
+		return (T1268f33(ac, C));
 	case 1269:
-		return (T1269f34(C));
+		return (T1269f34(ac, C));
 	case 1270:
-		return (T1270f32(C));
+		return (T1270f32(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.index */
-T6 T274x15183(T0* C)
+T6 T274x15191(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
@@ -15723,170 +15723,170 @@ T6 T274x15183(T0* C)
 }
 
 /* Call to ET_EXPRESSION.is_current */
-T1 T274x15162(T0* C)
+T1 T274x15170(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f87(C));
+		return (T176f87(ac, C));
 	case 275:
 		return (EIF_TRUE);
 	case 280:
-		return (T280f17(C));
+		return (T280f17(ac, C));
 	case 281:
-		return (T281f14(C));
+		return (T281f14(ac, C));
 	case 283:
-		return (T283f20(C));
+		return (T283f20(ac, C));
 	case 302:
-		return (T302f21(C));
+		return (T302f21(ac, C));
 	case 309:
-		return (T309f16(C));
+		return (T309f16(ac, C));
 	case 310:
-		return (T310f13(C));
+		return (T310f13(ac, C));
 	case 311:
-		return (T311f13(C));
+		return (T311f13(ac, C));
 	case 315:
-		return (T315f17(C));
+		return (T315f17(ac, C));
 	case 738:
-		return (T738f16(C));
+		return (T738f16(ac, C));
 	case 822:
-		return (T822f24(C));
+		return (T822f24(ac, C));
 	case 905:
-		return (T905f22(C));
+		return (T905f22(ac, C));
 	case 941:
-		return (T941f20(C));
+		return (T941f20(ac, C));
 	case 952:
-		return (T952f23(C));
+		return (T952f23(ac, C));
 	case 980:
-		return (T980f15(C));
+		return (T980f15(ac, C));
 	case 983:
-		return (T983f19(C));
+		return (T983f19(ac, C));
 	case 1131:
-		return (T1131f19(C));
+		return (T1131f19(ac, C));
 	case 1145:
-		return (T1145f14(C));
+		return (T1145f14(ac, C));
 	case 1164:
-		return (T1164f17(C));
+		return (T1164f17(ac, C));
 	case 1167:
-		return (T1167f19(C));
+		return (T1167f19(ac, C));
 	case 1190:
-		return (T1190f26(C));
+		return (T1190f26(ac, C));
 	case 1191:
-		return (T1191f31(C));
+		return (T1191f31(ac, C));
 	case 1192:
-		return (T1192f27(C));
+		return (T1192f27(ac, C));
 	case 1193:
-		return (T1193f52(C));
+		return (T1193f52(ac, C));
 	case 1194:
-		return (T1194f52(C));
+		return (T1194f52(ac, C));
 	case 1195:
-		return (T1195f52(C));
+		return (T1195f52(ac, C));
 	case 1196:
-		return (T1196f52(C));
+		return (T1196f52(ac, C));
 	case 1197:
-		return (T1197f52(C));
+		return (T1197f52(ac, C));
 	case 1198:
-		return (T1198f27(C));
+		return (T1198f27(ac, C));
 	case 1199:
-		return (T1199f27(C));
+		return (T1199f27(ac, C));
 	case 1201:
-		return (T1201f25(C));
+		return (T1201f25(ac, C));
 	case 1202:
-		return (T1202f25(C));
+		return (T1202f25(ac, C));
 	case 1203:
-		return (T1203f25(C));
+		return (T1203f25(ac, C));
 	case 1204:
-		return (T1204f25(C));
+		return (T1204f25(ac, C));
 	case 1252:
-		return (T1252f17(C));
+		return (T1252f17(ac, C));
 	case 1253:
-		return (T1253f13(C));
+		return (T1253f13(ac, C));
 	case 1254:
-		return (T1254f13(C));
+		return (T1254f13(ac, C));
 	case 1255:
-		return (T1255f13(C));
+		return (T1255f13(ac, C));
 	case 1256:
-		return (T1256f13(C));
+		return (T1256f13(ac, C));
 	case 1257:
-		return (T1257f16(C));
+		return (T1257f16(ac, C));
 	case 1260:
-		return (T1260f14(C));
+		return (T1260f14(ac, C));
 	case 1261:
-		return (T1261f16(C));
+		return (T1261f16(ac, C));
 	case 1262:
-		return (T1262f13(C));
+		return (T1262f13(ac, C));
 	case 1263:
-		return (T1263f20(C));
+		return (T1263f20(ac, C));
 	case 1264:
-		return (T1264f16(C));
+		return (T1264f16(ac, C));
 	case 1265:
-		return (T1265f29(C));
+		return (T1265f29(ac, C));
 	case 1266:
-		return (T1266f30(C));
+		return (T1266f30(ac, C));
 	case 1267:
-		return (T1267f27(C));
+		return (T1267f27(ac, C));
 	case 1268:
-		return (T1268f28(C));
+		return (T1268f28(ac, C));
 	case 1269:
-		return (T1269f29(C));
+		return (T1269f29(ac, C));
 	case 1270:
-		return (T1270f26(C));
+		return (T1270f26(ac, C));
 	case 1713:
-		return (T1713f4(C));
+		return (T1713f4(ac, C));
 	case 1852:
-		return (T1852f5(C));
+		return (T1852f5(ac, C));
 	case 1853:
-		return (T1853f5(C));
+		return (T1853f5(ac, C));
 	case 1854:
-		return (T1854f5(C));
+		return (T1854f5(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION.is_never_void */
-T1 T274x15161(T0* C)
+T1 T274x15169(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f21(C));
+		return (T176f21(ac, C));
 	case 275:
 		return (EIF_TRUE);
 	case 280:
-		return (T280f6(C));
+		return (T280f6(ac, C));
 	case 281:
-		return (T281f11(C));
+		return (T281f11(ac, C));
 	case 283:
 		return (EIF_TRUE);
 	case 302:
-		return (T302f5(C));
+		return (T302f5(ac, C));
 	case 309:
-		return (T309f7(C));
+		return (T309f7(ac, C));
 	case 310:
-		return (T310f7(C));
+		return (T310f7(ac, C));
 	case 311:
-		return (T311f7(C));
+		return (T311f7(ac, C));
 	case 315:
 		return (EIF_TRUE);
 	case 738:
-		return (T738f8(C));
+		return (T738f8(ac, C));
 	case 822:
 		return (EIF_TRUE);
 	case 905:
 		return (EIF_TRUE);
 	case 941:
-		return (T941f8(C));
+		return (T941f8(ac, C));
 	case 952:
-		return (T952f17(C));
+		return (T952f17(ac, C));
 	case 980:
-		return (T980f5(C));
+		return (T980f5(ac, C));
 	case 983:
 		return (EIF_TRUE);
 	case 1131:
 		return (EIF_TRUE);
 	case 1145:
-		return (T1145f5(C));
+		return (T1145f5(ac, C));
 	case 1164:
-		return (T1164f8(C));
+		return (T1164f8(ac, C));
 	case 1167:
 		return (EIF_TRUE);
 	case 1190:
@@ -15918,7 +15918,7 @@ T1 T274x15161(T0* C)
 	case 1204:
 		return (EIF_TRUE);
 	case 1252:
-		return (T1252f8(C));
+		return (T1252f8(ac, C));
 	case 1253:
 		return (EIF_TRUE);
 	case 1254:
@@ -15928,15 +15928,15 @@ T1 T274x15161(T0* C)
 	case 1256:
 		return (EIF_TRUE);
 	case 1257:
-		return (T1257f15(C));
+		return (T1257f15(ac, C));
 	case 1260:
 		return (EIF_TRUE);
 	case 1261:
-		return (T1261f5(C));
+		return (T1261f5(ac, C));
 	case 1262:
-		return (T1262f5(C));
+		return (T1262f5(ac, C));
 	case 1263:
-		return (T1263f13(C));
+		return (T1263f13(ac, C));
 	case 1264:
 		return (EIF_TRUE);
 	case 1265:
@@ -15952,204 +15952,204 @@ T1 T274x15161(T0* C)
 	case 1270:
 		return (EIF_TRUE);
 	case 1713:
-		return (T1713f11(C));
+		return (T1713f11(ac, C));
 	case 1852:
-		return (T1852f11(C));
+		return (T1852f11(ac, C));
 	case 1853:
 		return (EIF_TRUE);
 	case 1854:
-		return (T1854f11(C));
+		return (T1854f11(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_FEATURE.lower_name */
-T0* T278x16975(T0* C)
+T0* T278x16983(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f50(C));
+	return (T253f50(ac, C));
 } else {
-	return (T320f46(C));
+	return (T320f46(ac, C));
 }
 } else {
-	return (T353f28(C));
+	return (T353f28(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f42(C));
+	return (T355f42(ac, C));
 } else {
-	return (T356f42(C));
+	return (T356f42(ac, C));
 }
 } else {
-	return (T514f41(C));
+	return (T516f41(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f32(C));
+	return (T523f32(ac, C));
 } else {
-	return (T1223f45(C));
+	return (T1223f45(ac, C));
 }
 } else {
-	return (T1224f45(C));
+	return (T1224f45(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f45(C));
+	return (T1225f45(ac, C));
 } else {
-	return (T1227f31(C));
+	return (T1227f31(ac, C));
 }
 } else {
-	return (T1228f31(C));
+	return (T1228f31(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.name */
-T0* T278x17058(T0* C)
+T0* T278x17066(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f47(C));
+	return (T253f47(ac, C));
 } else {
-	return (T320f45(C));
+	return (T320f45(ac, C));
 }
 } else {
-	return (T353f46(C));
+	return (T353f46(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f27(C));
+	return (T355f27(ac, C));
 } else {
-	return (T356f41(C));
+	return (T356f41(ac, C));
 }
 } else {
-	return (T514f39(C));
+	return (T516f39(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f28(C));
+	return (T523f28(ac, C));
 } else {
-	return (T1223f36(C));
+	return (T1223f36(ac, C));
 }
 } else {
-	return (T1224f36(C));
+	return (T1224f36(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f36(C));
+	return (T1225f36(ac, C));
 } else {
-	return (T1227f39(C));
+	return (T1227f39(ac, C));
 }
 } else {
-	return (T1228f43(C));
+	return (T1228f43(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.has_seed */
-T1 T278x17056T6(T0* C, T6 a1)
+T1 T278x17064T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f45(C, a1));
+	return (T253f45(ac, C, a1));
 } else {
-	return (T320f44(C, a1));
+	return (T320f44(ac, C, a1));
 }
 } else {
-	return (T353f42(C, a1));
+	return (T353f42(ac, C, a1));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f41(C, a1));
+	return (T355f41(ac, C, a1));
 } else {
-	return (T356f40(C, a1));
+	return (T356f40(ac, C, a1));
 }
 } else {
-	return (T514f40(C, a1));
+	return (T516f40(ac, C, a1));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f38(C, a1));
+	return (T523f38(ac, C, a1));
 } else {
-	return (T1223f33(C, a1));
+	return (T1223f33(ac, C, a1));
 }
 } else {
-	return (T1224f33(C, a1));
+	return (T1224f33(ac, C, a1));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f33(C, a1));
+	return (T1225f33(ac, C, a1));
 } else {
-	return (T1227f42(C, a1));
+	return (T1227f42(ac, C, a1));
 }
 } else {
-	return (T1228f41(C, a1));
+	return (T1228f41(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_once */
-T1 T278x17010(T0* C)
+T1 T278x17018(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f59(C));
+	return (T253f59(ac, C));
 } else {
-	return (T320f61(C));
+	return (T320f61(ac, C));
 }
 } else {
-	return (T353f27(C));
+	return (T353f27(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f26(C));
+	return (T355f26(ac, C));
 } else {
-	return (T356f26(C));
+	return (T356f26(ac, C));
 }
 } else {
-	return (T514f38(C));
+	return (T516f38(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f51(C));
+	return (T523f51(ac, C));
 } else {
-	return (T1223f43(C));
+	return (T1223f43(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -16157,22 +16157,22 @@ if (t1==523) {
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f44(C));
+	return (T1225f44(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1228f54(C));
+	return (T1228f54(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.first_seed */
-T6 T278x17061(T0* C)
+T6 T278x17069(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16191,7 +16191,7 @@ if (t1==355) {
 	return (((T356*)(C))->a1);
 }
 } else {
-	return (((T514*)(C))->a2);
+	return (((T516*)(C))->a2);
 }
 }
 } else {
@@ -16220,61 +16220,61 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.is_exported_to */
-T1 T278x17021T0(T0* C, T0* a1)
+T1 T278x17029T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f71(C, a1));
+	return (T253f71(ac, C, a1));
 } else {
-	return (T320f66(C, a1));
+	return (T320f66(ac, C, a1));
 }
 } else {
-	return (T353f65(C, a1));
+	return (T353f65(ac, C, a1));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f65(C, a1));
+	return (T355f65(ac, C, a1));
 } else {
-	return (T356f63(C, a1));
+	return (T356f63(ac, C, a1));
 }
 } else {
-	return (T514f65(C, a1));
+	return (T516f65(ac, C, a1));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f64(C, a1));
+	return (T523f64(ac, C, a1));
 } else {
-	return (T1223f67(C, a1));
+	return (T1223f67(ac, C, a1));
 }
 } else {
-	return (T1224f68(C, a1));
+	return (T1224f68(ac, C, a1));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f66(C, a1));
+	return (T1225f66(ac, C, a1));
 } else {
-	return (T1227f66(C, a1));
+	return (T1227f66(ac, C, a1));
 }
 } else {
-	return (T1228f69(C, a1));
+	return (T1228f69(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.clients */
-T0* T278x17073(T0* C)
+T0* T278x17081(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16293,7 +16293,7 @@ if (t1==355) {
 	return (((T356*)(C))->a11);
 }
 } else {
-	return (((T514*)(C))->a7);
+	return (((T516*)(C))->a7);
 }
 }
 } else {
@@ -16322,29 +16322,29 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.arguments */
-T0* T278x17060(T0* C)
+T0* T278x17068(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
 	return (((T253*)(C))->a9);
 } else {
-	return (T320f49(C));
+	return (T320f49(ac, C));
 }
 } else {
-	return (T353f49(C));
+	return (T353f49(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f48(C));
+	return (T355f48(ac, C));
 } else {
-	return (T356f48(C));
+	return (T356f48(ac, C));
 }
 } else {
-	return (((T514*)(C))->a3);
+	return (((T516*)(C))->a3);
 }
 }
 } else {
@@ -16373,10 +16373,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.extended_name */
-T0* T278x16977(T0* C)
+T0* T278x16985(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16395,7 +16395,7 @@ if (t1==355) {
 	return (((T356*)(C))->a9);
 }
 } else {
-	return (((T514*)(C))->a4);
+	return (((T516*)(C))->a4);
 }
 }
 } else {
@@ -16424,61 +16424,61 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.arguments_count */
-T6 T278x17020(T0* C)
+T6 T278x17028(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f48(C));
+	return (T253f48(ac, C));
 } else {
-	return (T320f50(C));
+	return (T320f50(ac, C));
 }
 } else {
-	return (T353f50(C));
+	return (T353f50(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f49(C));
+	return (T355f49(ac, C));
 } else {
-	return (T356f49(C));
+	return (T356f49(ac, C));
 }
 } else {
-	return (T514f68(C));
+	return (T516f68(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f67(C));
+	return (T523f67(ac, C));
 } else {
-	return (T1223f34(C));
+	return (T1223f34(ac, C));
 }
 } else {
-	return (T1224f34(C));
+	return (T1224f34(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f34(C));
+	return (T1225f34(ac, C));
 } else {
-	return (T1227f69(C));
+	return (T1227f69(ac, C));
 }
 } else {
-	return (T1228f72(C));
+	return (T1228f72(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.implementation_feature */
-T0* T278x17088(T0* C)
+T0* T278x17096(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16497,7 +16497,7 @@ if (t1==355) {
 	return (((T356*)(C))->a3);
 }
 } else {
-	return (((T514*)(C))->a8);
+	return (((T516*)(C))->a8);
 }
 }
 } else {
@@ -16526,10 +16526,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.implementation_class */
-T0* T278x17071(T0* C)
+T0* T278x17079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16548,7 +16548,7 @@ if (t1==355) {
 	return (((T356*)(C))->a2);
 }
 } else {
-	return (((T514*)(C))->a1);
+	return (((T516*)(C))->a1);
 }
 }
 } else {
@@ -16577,10 +16577,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.version */
-T6 T278x16985(T0* C)
+T6 T278x16993(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16599,7 +16599,7 @@ if (t1==355) {
 	return (((T356*)(C))->a8);
 }
 } else {
-	return (((T514*)(C))->a28);
+	return (((T516*)(C))->a28);
 }
 }
 } else {
@@ -16628,29 +16628,29 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.is_deferred */
-T1 T278x17001(T0* C)
+T1 T278x17009(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f53(C));
+	return (T253f53(ac, C));
 } else {
-	return (T320f55(C));
+	return (T320f55(ac, C));
 }
 } else {
-	return (T353f57(C));
+	return (T353f57(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f56(C));
+	return (T355f56(ac, C));
 } else {
-	return (T356f56(C));
+	return (T356f56(ac, C));
 }
 } else {
-	return (T514f32(C));
+	return (T516f32(ac, C));
 }
 }
 } else {
@@ -16659,81 +16659,81 @@ if (t1<=1223) {
 if (t1==523) {
 	return (EIF_TRUE);
 } else {
-	return (T1223f39(C));
+	return (T1223f39(ac, C));
 }
 } else {
-	return (T1224f39(C));
+	return (T1224f39(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
 	return (EIF_TRUE);
 } else {
-	return (T1227f32(C));
+	return (T1227f32(ac, C));
 }
 } else {
-	return (T1228f32(C));
+	return (T1228f32(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.alias_name */
-T0* T278x16976(T0* C)
+T0* T278x16984(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f49(C));
+	return (T253f49(ac, C));
 } else {
-	return (T320f51(C));
+	return (T320f51(ac, C));
 }
 } else {
-	return (T353f51(C));
+	return (T353f51(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f50(C));
+	return (T355f50(ac, C));
 } else {
-	return (T356f51(C));
+	return (T356f51(ac, C));
 }
 } else {
-	return (T514f30(C));
+	return (T516f30(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f40(C));
+	return (T523f40(ac, C));
 } else {
-	return (T1223f35(C));
+	return (T1223f35(ac, C));
 }
 } else {
-	return (T1224f35(C));
+	return (T1224f35(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f35(C));
+	return (T1225f35(ac, C));
 } else {
-	return (T1227f43(C));
+	return (T1227f43(ac, C));
 }
 } else {
-	return (T1228f30(C));
+	return (T1228f30(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.other_seeds */
-T0* T278x17062(T0* C)
+T0* T278x17070(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -16752,7 +16752,7 @@ if (t1==355) {
 	return (((T356*)(C))->a19);
 }
 } else {
-	return (((T514*)(C))->a15);
+	return (((T516*)(C))->a15);
 }
 }
 } else {
@@ -16781,169 +16781,169 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.is_procedure */
-T1 T278x17008(T0* C)
+T1 T278x17016(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f38(C));
+	return (T253f38(ac, C));
 } else {
-	return (T320f40(C));
+	return (T320f40(ac, C));
 }
 } else {
-	return (T353f38(C));
+	return (T353f38(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f37(C));
+	return (T355f37(ac, C));
 } else {
-	return (T356f37(C));
+	return (T356f37(ac, C));
 }
 } else {
-	return (T514f53(C));
+	return (T516f53(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f50(C));
+	return (T523f50(ac, C));
 } else {
-	return (T1223f59(C));
+	return (T1223f59(ac, C));
 }
 } else {
-	return (T1224f60(C));
+	return (T1224f60(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f57(C));
+	return (T1225f57(ac, C));
 } else {
-	return (T1227f53(C));
+	return (T1227f53(ac, C));
 }
 } else {
-	return (T1228f53(C));
+	return (T1228f53(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.type */
-T0* T278x17059(T0* C)
+T0* T278x17067(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f44(C));
+	return (T253f44(ac, C));
 } else {
-	return (T320f47(C));
+	return (T320f47(ac, C));
 }
 } else {
-	return (T353f47(C));
+	return (T353f47(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f46(C));
+	return (T355f46(ac, C));
 } else {
-	return (T356f46(C));
+	return (T356f46(ac, C));
 }
 } else {
-	return (T514f31(C));
+	return (T516f31(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f35(C));
+	return (T523f35(ac, C));
 } else {
-	return (T1223f49(C));
+	return (T1223f49(ac, C));
 }
 } else {
-	return (T1224f49(C));
+	return (T1224f49(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f31(C));
+	return (T1225f31(ac, C));
 } else {
-	return (T1227f40(C));
+	return (T1227f40(ac, C));
 }
 } else {
-	return (T1228f40(C));
+	return (T1228f40(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_unique_attribute */
-T1 T278x17006(T0* C)
+T1 T278x17014(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f46(C));
+	return (T253f46(ac, C));
 } else {
-	return (T320f48(C));
+	return (T320f48(ac, C));
 }
 } else {
-	return (T353f48(C));
+	return (T353f48(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
 	return (EIF_TRUE);
 } else {
-	return (T356f47(C));
+	return (T356f47(ac, C));
 }
 } else {
-	return (T514f37(C));
+	return (T516f37(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f37(C));
+	return (T523f37(ac, C));
 } else {
-	return (T1223f32(C));
+	return (T1223f32(ac, C));
 }
 } else {
-	return (T1224f50(C));
+	return (T1224f50(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f32(C));
+	return (T1225f32(ac, C));
 } else {
-	return (T1227f41(C));
+	return (T1227f41(ac, C));
 }
 } else {
-	return (T1228f42(C));
+	return (T1228f42(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_constant_attribute */
-T1 T278x17005(T0* C)
+T1 T278x17013(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f43(C));
+	return (T253f43(ac, C));
 } else {
-	return (T320f43(C));
+	return (T320f43(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -16951,95 +16951,95 @@ if (t1==253) {
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f40(C));
+	return (T355f40(ac, C));
 } else {
-	return (T356f27(C));
+	return (T356f27(ac, C));
 }
 } else {
-	return (T514f36(C));
+	return (T516f36(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f36(C));
+	return (T523f36(ac, C));
 } else {
-	return (T1223f48(C));
+	return (T1223f48(ac, C));
 }
 } else {
-	return (T1224f48(C));
+	return (T1224f48(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f30(C));
+	return (T1225f30(ac, C));
 } else {
-	return (T1227f38(C));
+	return (T1227f38(ac, C));
 }
 } else {
-	return (T1228f39(C));
+	return (T1228f39(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_attribute */
-T1 T278x17004(T0* C)
+T1 T278x17012(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f42(C));
+	return (T253f42(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T353f44(C));
+	return (T353f44(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f45(C));
+	return (T355f45(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T514f42(C));
+	return (T516f42(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f33(C));
+	return (T523f33(ac, C));
 } else {
-	return (T1223f47(C));
+	return (T1223f47(ac, C));
 }
 } else {
-	return (T1224f47(C));
+	return (T1224f47(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f47(C));
+	return (T1225f47(ac, C));
 } else {
-	return (T1227f36(C));
+	return (T1227f36(ac, C));
 }
 } else {
-	return (T1228f38(C));
+	return (T1228f38(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.id */
-T6 T278x16984(T0* C)
+T6 T278x16992(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17058,7 +17058,7 @@ if (t1==355) {
 	return (((T356*)(C))->a18);
 }
 } else {
-	return (((T514*)(C))->a27);
+	return (((T516*)(C))->a27);
 }
 }
 } else {
@@ -17087,116 +17087,116 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.is_frozen */
-T1 T278x17000(T0* C)
+T1 T278x17008(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f54(C));
+	return (T253f54(ac, C));
 } else {
-	return (T320f57(C));
+	return (T320f57(ac, C));
 }
 } else {
-	return (T353f58(C));
+	return (T353f58(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f57(C));
+	return (T355f57(ac, C));
 } else {
-	return (T356f23(C));
+	return (T356f23(ac, C));
 }
 } else {
-	return (T514f33(C));
+	return (T516f33(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f30(C));
+	return (T523f30(ac, C));
 } else {
-	return (T1223f40(C));
+	return (T1223f40(ac, C));
 }
 } else {
-	return (T1224f40(C));
+	return (T1224f40(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f40(C));
+	return (T1225f40(ac, C));
 } else {
-	return (T1227f33(C));
+	return (T1227f33(ac, C));
 }
 } else {
-	return (T1228f33(C));
+	return (T1228f33(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_infixable */
-T1 T278x17011(T0* C)
+T1 T278x17019(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f51(C));
+	return (T253f51(ac, C));
 } else {
-	return (T320f53(C));
+	return (T320f53(ac, C));
 }
 } else {
-	return (T353f54(C));
+	return (T353f54(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f52(C));
+	return (T355f52(ac, C));
 } else {
-	return (T356f54(C));
+	return (T356f54(ac, C));
 }
 } else {
-	return (T514f56(C));
+	return (T516f56(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f55(C));
+	return (T523f55(ac, C));
 } else {
-	return (T1223f37(C));
+	return (T1223f37(ac, C));
 }
 } else {
-	return (T1224f37(C));
+	return (T1224f37(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f37(C));
+	return (T1225f37(ac, C));
 } else {
-	return (T1227f57(C));
+	return (T1227f57(ac, C));
 }
 } else {
-	return (T1228f57(C));
+	return (T1228f57(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_prefixable */
-T1 T278x17012(T0* C)
+T1 T278x17020(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f52(C));
+	return (T253f52(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -17211,243 +17211,243 @@ if (t1==355) {
 	return (EIF_TRUE);
 }
 } else {
-	return (T514f57(C));
+	return (T516f57(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f56(C));
+	return (T523f56(ac, C));
 } else {
-	return (T1223f38(C));
+	return (T1223f38(ac, C));
 }
 } else {
-	return (T1224f38(C));
+	return (T1224f38(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f38(C));
+	return (T1225f38(ac, C));
 } else {
-	return (T1227f58(C));
+	return (T1227f58(ac, C));
 }
 } else {
-	return (T1228f58(C));
+	return (T1228f58(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_parenthesisable */
-T1 T278x17014(T0* C)
+T1 T278x17022(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f56(C));
+	return (T253f56(ac, C));
 } else {
-	return (T320f60(C));
+	return (T320f60(ac, C));
 }
 } else {
-	return (T353f26(C));
+	return (T353f26(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f25(C));
+	return (T355f25(ac, C));
 } else {
-	return (T356f25(C));
+	return (T356f25(ac, C));
 }
 } else {
-	return (T514f34(C));
+	return (T516f34(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f31(C));
+	return (T523f31(ac, C));
 } else {
-	return (T1223f42(C));
+	return (T1223f42(ac, C));
 }
 } else {
-	return (T1224f42(C));
+	return (T1224f42(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f43(C));
+	return (T1225f43(ac, C));
 } else {
-	return (T1227f34(C));
+	return (T1227f34(ac, C));
 }
 } else {
-	return (T1228f36(C));
+	return (T1228f36(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_bracketable */
-T1 T278x17013(T0* C)
+T1 T278x17021(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f55(C));
+	return (T253f55(ac, C));
 } else {
-	return (T320f59(C));
+	return (T320f59(ac, C));
 }
 } else {
-	return (T353f25(C));
+	return (T353f25(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f58(C));
+	return (T355f58(ac, C));
 } else {
-	return (T356f24(C));
+	return (T356f24(ac, C));
 }
 } else {
-	return (T514f58(C));
+	return (T516f58(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f57(C));
+	return (T523f57(ac, C));
 } else {
-	return (T1223f41(C));
+	return (T1223f41(ac, C));
 }
 } else {
-	return (T1224f41(C));
+	return (T1224f41(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f41(C));
+	return (T1225f41(ac, C));
 } else {
-	return (T1227f59(C));
+	return (T1227f59(ac, C));
 }
 } else {
-	return (T1228f59(C));
+	return (T1228f59(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.renamed_feature */
-T0* T278x17045T0(T0* C, T0* a1)
+T0* T278x17053T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f65(C, a1));
+	return (T253f65(ac, C, a1));
 } else {
-	return (T320f63(C, a1));
+	return (T320f63(ac, C, a1));
 }
 } else {
-	return (T353f60(C, a1));
+	return (T353f60(ac, C, a1));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f60(C, a1));
+	return (T355f60(ac, C, a1));
 } else {
-	return (T356f58(C, a1));
+	return (T356f58(ac, C, a1));
 }
 } else {
-	return (T514f62(C, a1));
+	return (T516f62(ac, C, a1));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f60(C, a1));
+	return (T523f60(ac, C, a1));
 } else {
-	return (T1223f64(C, a1));
+	return (T1223f64(ac, C, a1));
 }
 } else {
-	return (T1224f65(C, a1));
+	return (T1224f65(ac, C, a1));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f62(C, a1));
+	return (T1225f62(ac, C, a1));
 } else {
-	return (T1227f63(C, a1));
+	return (T1227f63(ac, C, a1));
 }
 } else {
-	return (T1228f65(C, a1));
+	return (T1228f65(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.undefined_feature */
-T0* T278x17046T0(T0* C, T0* a1)
+T0* T278x17054T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f64(C, a1));
+	return (T253f64(ac, C, a1));
 } else {
-	return (T320f62(C, a1));
+	return (T320f62(ac, C, a1));
 }
 } else {
-	return (T353f59(C, a1));
+	return (T353f59(ac, C, a1));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f59(C, a1));
+	return (T355f59(ac, C, a1));
 } else {
-	return (T356f57(C, a1));
+	return (T356f57(ac, C, a1));
 }
 } else {
-	return (T514f61(C, a1));
+	return (T516f61(ac, C, a1));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f59(C, a1));
+	return (T523f59(ac, C, a1));
 } else {
-	return (T1223f63(C, a1));
+	return (T1223f63(ac, C, a1));
 }
 } else {
-	return (T1224f64(C, a1));
+	return (T1224f64(ac, C, a1));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f61(C, a1));
+	return (T1225f61(ac, C, a1));
 } else {
-	return (T1227f62(C, a1));
+	return (T1227f62(ac, C, a1));
 }
 } else {
-	return (T1228f64(C, a1));
+	return (T1228f64(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.postconditions */
-T0* T278x17085(T0* C)
+T0* T278x17093(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17456,17 +17456,17 @@ if (t1==253) {
 	return (((T320*)(C))->a11);
 }
 } else {
-	return (T353f52(C));
+	return (T353f52(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f51(C));
+	return (T355f51(ac, C));
 } else {
-	return (T356f52(C));
+	return (T356f52(ac, C));
 }
 } else {
-	return (((T514*)(C))->a20);
+	return (((T516*)(C))->a20);
 }
 }
 } else {
@@ -17495,10 +17495,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.preconditions */
-T0* T278x17084(T0* C)
+T0* T278x17092(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17507,17 +17507,17 @@ if (t1==253) {
 	return (((T320*)(C))->a9);
 }
 } else {
-	return (T353f45(C));
+	return (T353f45(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f44(C));
+	return (T355f44(ac, C));
 } else {
-	return (T356f44(C));
+	return (T356f44(ac, C));
 }
 } else {
-	return (((T514*)(C))->a12);
+	return (((T516*)(C))->a12);
 }
 }
 } else {
@@ -17546,163 +17546,163 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.same_version */
-T1 T278x17027T0(T0* C, T0* a1)
+T1 T278x17035T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f40(C, a1));
+	return (T253f40(ac, C, a1));
 } else {
-	return (T320f42(C, a1));
+	return (T320f42(ac, C, a1));
 }
 } else {
-	return (T353f40(C, a1));
+	return (T353f40(ac, C, a1));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f39(C, a1));
+	return (T355f39(ac, C, a1));
 } else {
-	return (T356f39(C, a1));
+	return (T356f39(ac, C, a1));
 }
 } else {
-	return (T514f55(C, a1));
+	return (T516f55(ac, C, a1));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f54(C, a1));
+	return (T523f54(ac, C, a1));
 } else {
-	return (T1223f61(C, a1));
+	return (T1223f61(ac, C, a1));
 }
 } else {
-	return (T1224f62(C, a1));
+	return (T1224f62(ac, C, a1));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f59(C, a1));
+	return (T1225f59(ac, C, a1));
 } else {
-	return (T1227f56(C, a1));
+	return (T1227f56(ac, C, a1));
 }
 } else {
-	return (T1228f56(C, a1));
+	return (T1228f56(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_dotnet */
-T1 T278x17055(T0* C)
+T1 T278x17063(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f58(C));
+	return (T253f58(ac, C));
 } else {
-	return (T320f56(C));
+	return (T320f56(ac, C));
 }
 } else {
-	return (T353f53(C));
+	return (T353f53(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f53(C));
+	return (T355f53(ac, C));
 } else {
-	return (T356f50(C));
+	return (T356f50(ac, C));
 }
 } else {
-	return (T514f60(C));
+	return (T516f60(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f53(C));
+	return (T523f53(ac, C));
 } else {
-	return (T1223f62(C));
+	return (T1223f62(ac, C));
 }
 } else {
-	return (T1224f63(C));
+	return (T1224f63(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f60(C));
+	return (T1225f60(ac, C));
 } else {
-	return (T1227f61(C));
+	return (T1227f61(ac, C));
 }
 } else {
-	return (T1228f63(C));
+	return (T1228f63(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.is_query */
-T1 T278x17007(T0* C)
+T1 T278x17015(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f39(C));
+	return (T253f39(ac, C));
 } else {
-	return (T320f41(C));
+	return (T320f41(ac, C));
 }
 } else {
-	return (T353f39(C));
+	return (T353f39(ac, C));
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-	return (T355f38(C));
+	return (T355f38(ac, C));
 } else {
-	return (T356f38(C));
+	return (T356f38(ac, C));
 }
 } else {
-	return (T514f54(C));
+	return (T516f54(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-	return (T523f52(C));
+	return (T523f52(ac, C));
 } else {
-	return (T1223f60(C));
+	return (T1223f60(ac, C));
 }
 } else {
-	return (T1224f61(C));
+	return (T1224f61(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f58(C));
+	return (T1225f58(ac, C));
 } else {
-	return (T1227f55(C));
+	return (T1227f55(ac, C));
 }
 } else {
-	return (T1228f55(C));
+	return (T1228f55(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.other_precursors */
-T0* T278x16987(T0* C)
+T0* T278x16995(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17721,7 +17721,7 @@ if (t1==355) {
 	return (((T356*)(C))->a5);
 }
 } else {
-	return (((T514*)(C))->a14);
+	return (((T516*)(C))->a14);
 }
 }
 } else {
@@ -17750,10 +17750,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.first_precursor */
-T0* T278x17070(T0* C)
+T0* T278x17078(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17772,7 +17772,7 @@ if (t1==355) {
 	return (((T356*)(C))->a4);
 }
 } else {
-	return (((T514*)(C))->a13);
+	return (((T516*)(C))->a13);
 }
 }
 } else {
@@ -17801,10 +17801,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.has_validity_error */
-T1 T278x17075(T0* C)
+T1 T278x17083(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17823,7 +17823,7 @@ if (t1==355) {
 	return (((T356*)(C))->a21);
 }
 } else {
-	return (((T514*)(C))->a11);
+	return (((T516*)(C))->a11);
 }
 }
 } else {
@@ -17852,10 +17852,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.validity_checked */
-T1 T278x17074(T0* C)
+T1 T278x17082(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17874,7 +17874,7 @@ if (t1==355) {
 	return (((T356*)(C))->a20);
 }
 } else {
-	return (((T514*)(C))->a10);
+	return (((T516*)(C))->a10);
 }
 }
 } else {
@@ -17903,10 +17903,10 @@ if (t1==1225) {
 }
 
 /* Call to ET_FEATURE.hash_code */
-T6 T278x22(T0* C)
+T6 T278x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
@@ -17925,7 +17925,7 @@ if (t1==355) {
 	return (((T356*)(C))->a6);
 }
 } else {
-	return (((T514*)(C))->a5);
+	return (((T516*)(C))->a5);
 }
 }
 } else {
@@ -17954,75 +17954,75 @@ if (t1==1225) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_NAME.last_leaf */
-T0* T279x7089(T0* C)
+T0* T279x7089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f98(C));
+	return (T176f98(ac, C));
 } else {
-	return (T823f64(C));
+	return (T823f64(ac, C));
 }
 } else {
-	return (T1229f63(C));
+	return (T1229f63(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f64(C));
+	return (T1230f64(ac, C));
 } else {
-	return (T1231f77(C));
+	return (T1231f77(ac, C));
 }
 } else {
-	return (T1782f42(C));
+	return (T1782f42(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_NAME.feature_name */
-T0* T279x15145(T0* C)
+T0* T279x15153(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f43(C));
+	return (T176f43(ac, C));
 } else {
-	return (T823f9(C));
+	return (T823f9(ac, C));
 }
 } else {
-	return (T1229f10(C));
+	return (T1229f10(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f31(C));
+	return (T1230f31(ac, C));
 } else {
-	return (T1231f10(C));
+	return (T1231f10(ac, C));
 }
 } else {
-	return (T1782f24(C));
+	return (T1782f24(ac, C));
 }
 }
 }
 
 /* Call to ET_CALL_COMPONENT.name */
-T0* T304x15212(T0* C)
+T0* T304x15220(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
 if (t1<=280) {
 if (t1==277) {
-	return (T277f7(C));
+	return (T277f7(ac, C));
 } else {
-	return (T280f7(C));
+	return (T280f7(ac, C));
 }
 } else {
 if (t1==980) {
 	return (((T980*)(C))->a3);
 } else {
-	return (T983f7(C));
+	return (T983f7(ac, C));
 }
 }
 } else {
@@ -18036,14 +18036,14 @@ if (t1==1241) {
 if (t1==1261) {
 	return (((T1261*)(C))->a2);
 } else {
-	return (T1854f15(C));
+	return (T1854f15(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_COMPONENT.arguments */
-T0* T304x15213(T0* C)
+T0* T304x15221(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
@@ -18063,104 +18063,104 @@ if (t1==980) {
 } else {
 if (t1<=1257) {
 if (t1==1241) {
-	return (T1241f8(C));
+	return (T1241f8(ac, C));
 } else {
 	return (((T1257*)(C))->a4);
 }
 } else {
 if (t1==1261) {
-	return (T1261f9(C));
+	return (T1261f9(ac, C));
 } else {
-	return (T1854f14(C));
+	return (T1854f14(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_COMPONENT.position */
-T0* T304x7085(T0* C)
+T0* T304x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
 if (t1<=280) {
 if (t1==277) {
-	return (T277f8(C));
+	return (T277f8(ac, C));
 } else {
-	return (T280f10(C));
+	return (T280f10(ac, C));
 }
 } else {
 if (t1==980) {
-	return (T980f6(C));
+	return (T980f6(ac, C));
 } else {
-	return (T983f11(C));
+	return (T983f11(ac, C));
 }
 }
 } else {
 if (t1<=1257) {
 if (t1==1241) {
-	return (T1241f11(C));
+	return (T1241f11(ac, C));
 } else {
-	return (T1257f6(C));
+	return (T1257f6(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f6(C));
+	return (T1261f6(ac, C));
 } else {
-	return (T1854f4(C));
+	return (T1854f4(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_COMPONENT.is_tuple_label */
-T1 T304x15215(T0* C)
+T1 T304x15223(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
 if (t1<=280) {
 if (t1==277) {
-	return (T277f5(C));
+	return (T277f5(ac, C));
 } else {
-	return (T280f8(C));
+	return (T280f8(ac, C));
 }
 } else {
 if (t1==980) {
-	return (T980f8(C));
+	return (T980f8(ac, C));
 } else {
-	return (T983f23(C));
+	return (T983f23(ac, C));
 }
 }
 } else {
 if (t1<=1257) {
 if (t1==1241) {
-	return (T1241f9(C));
+	return (T1241f9(ac, C));
 } else {
-	return (T1257f10(C));
+	return (T1257f10(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f10(C));
+	return (T1261f10(ac, C));
 } else {
-	return (T1854f16(C));
+	return (T1854f16(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_COMPONENT.is_call_agent */
-T1 T304x15216(T0* C)
+T1 T304x15224(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
 if (t1<=280) {
 if (t1==277) {
-	return (T277f6(C));
+	return (T277f6(ac, C));
 } else {
-	return (T280f9(C));
+	return (T280f9(ac, C));
 }
 } else {
 if (t1==980) {
-	return (T980f9(C));
+	return (T980f9(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -18168,77 +18168,77 @@ if (t1==980) {
 } else {
 if (t1<=1257) {
 if (t1==1241) {
-	return (T1241f10(C));
+	return (T1241f10(ac, C));
 } else {
-	return (T1257f11(C));
+	return (T1257f11(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f11(C));
+	return (T1261f11(ac, C));
 } else {
-	return (T1854f17(C));
+	return (T1854f17(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.position */
-T0* T305x7085(T0* C)
+T0* T305x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=898) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T638f4(C));
+	return (T638f4(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f14(C));
+	return (T823f14(ac, C));
 } else {
-	return (T898f9(C));
+	return (T898f9(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f11(C));
+	return (T919f11(ac, C));
 } else {
-	return (T925f5(C));
+	return (T925f5(ac, C));
 }
 } else {
-	return (T938f8(C));
+	return (T938f8(ac, C));
 }
 }
 } else {
 if (t1<=1231) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f7(C));
+	return (T1229f7(ac, C));
 } else {
-	return (T1230f7(C));
+	return (T1230f7(ac, C));
 }
 } else {
-	return (T1231f7(C));
+	return (T1231f7(ac, C));
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f30(C));
+	return (T1258f30(ac, C));
 } else {
-	return (T1259f30(C));
+	return (T1259f30(ac, C));
 }
 } else {
-	return (T1782f28(C));
+	return (T1782f28(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.seed */
-T6 T305x15094(T0* C)
+T6 T305x15102(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
@@ -18289,272 +18289,272 @@ if (t1==1258) {
 }
 
 /* Call to ET_CALL_NAME.is_tuple_label */
-T1 T305x15101(T0* C)
+T1 T305x15109(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=823) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f34(C));
+	return (T176f34(ac, C));
 } else {
-	return (T638f72(C));
+	return (T638f72(ac, C));
 }
 } else {
-	return (T823f23(C));
+	return (T823f23(ac, C));
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f18(C));
+	return (T919f18(ac, C));
 } else {
-	return (T925f19(C));
+	return (T925f19(ac, C));
 }
 } else {
-	return (T938f15(C));
+	return (T938f15(ac, C));
 }
 }
 } else {
 if (t1<=1231) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f16(C));
+	return (T1229f16(ac, C));
 } else {
-	return (T1230f16(C));
+	return (T1230f16(ac, C));
 }
 } else {
-	return (T1231f16(C));
+	return (T1231f16(ac, C));
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f10(C));
+	return (T1258f10(ac, C));
 } else {
-	return (T1259f10(C));
+	return (T1259f10(ac, C));
 }
 } else {
-	return (T1782f26(C));
+	return (T1782f26(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.lower_name */
-T0* T305x15093(T0* C)
+T0* T305x15101(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=898) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f35(C));
+	return (T176f35(ac, C));
 } else {
-	return (T638f98(C));
+	return (T638f98(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f12(C));
+	return (T823f12(ac, C));
 } else {
-	return (T898f16(C));
+	return (T898f16(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f43(C));
+	return (T919f43(ac, C));
 } else {
-	return (T925f40(C));
+	return (T925f40(ac, C));
 }
 } else {
-	return (T938f42(C));
+	return (T938f42(ac, C));
 }
 }
 } else {
 if (t1<=1231) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f29(C));
+	return (T1229f29(ac, C));
 } else {
-	return (T1230f22(C));
+	return (T1230f22(ac, C));
 }
 } else {
-	return (T1231f43(C));
+	return (T1231f43(ac, C));
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f29(C));
+	return (T1258f29(ac, C));
 } else {
-	return (T1259f29(C));
+	return (T1259f29(ac, C));
 }
 } else {
-	return (T1782f27(C));
+	return (T1782f27(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_or_else */
-T1 T305x15117(T0* C)
+T1 T305x15125(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f48(C));
+	return (T176f48(ac, C));
 } else {
-	return (T638f67(C));
+	return (T638f67(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f19(C));
+	return (T823f19(ac, C));
 } else {
-	return (T850f54(C));
+	return (T850f54(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f13(C));
+	return (T919f13(ac, C));
 } else {
-	return (T925f14(C));
+	return (T925f14(ac, C));
 }
 } else {
-	return (T938f10(C));
+	return (T938f10(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f12(C));
+	return (T1229f12(ac, C));
 } else {
-	return (T1230f12(C));
+	return (T1230f12(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f12(C));
+	return (T1231f12(ac, C));
 } else {
-	return (T1233f34(C));
+	return (T1233f34(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f5(C));
+	return (T1258f5(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1782f16(C));
+	return (T1782f16(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_implies */
-T1 T305x15111(T0* C)
+T1 T305x15119(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f49(C));
+	return (T176f49(ac, C));
 } else {
-	return (T638f68(C));
+	return (T638f68(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f20(C));
+	return (T823f20(ac, C));
 } else {
-	return (T850f49(C));
+	return (T850f49(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f14(C));
+	return (T919f14(ac, C));
 } else {
-	return (T925f15(C));
+	return (T925f15(ac, C));
 }
 } else {
-	return (T938f11(C));
+	return (T938f11(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f13(C));
+	return (T1229f13(ac, C));
 } else {
-	return (T1230f13(C));
+	return (T1230f13(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f13(C));
+	return (T1231f13(ac, C));
 } else {
-	return (T1233f28(C));
+	return (T1233f28(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f6(C));
+	return (T1258f6(ac, C));
 } else {
-	return (T1259f6(C));
+	return (T1259f6(ac, C));
 }
 } else {
-	return (T1782f10(C));
+	return (T1782f10(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_and_then */
-T1 T305x15105(T0* C)
+T1 T305x15113(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f47(C));
+	return (T176f47(ac, C));
 } else {
-	return (T638f66(C));
+	return (T638f66(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f18(C));
+	return (T823f18(ac, C));
 } else {
-	return (T850f44(C));
+	return (T850f44(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f12(C));
+	return (T919f12(ac, C));
 } else {
-	return (T925f13(C));
+	return (T925f13(ac, C));
 }
 } else {
-	return (T938f9(C));
+	return (T938f9(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f11(C));
+	return (T1229f11(ac, C));
 } else {
-	return (T1230f11(C));
+	return (T1230f11(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f11(C));
+	return (T1231f11(ac, C));
 } else {
-	return (T1233f23(C));
+	return (T1233f23(ac, C));
 }
 }
 } else {
@@ -18562,111 +18562,111 @@ if (t1<=1259) {
 if (t1==1258) {
 	return (EIF_TRUE);
 } else {
-	return (T1259f4(C));
+	return (T1259f4(ac, C));
 }
 } else {
-	return (T1782f5(C));
+	return (T1782f5(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.precursor_keyword */
-T0* T305x15133(T0* C)
+T0* T305x15141(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=925) {
 if (t1<=823) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f91(C));
+	return (T176f91(ac, C));
 } else {
-	return (T638f95(C));
+	return (T638f95(ac, C));
 }
 } else {
-	return (T823f62(C));
+	return (T823f62(ac, C));
 }
 } else {
 if (t1<=919) {
 if (t1==898) {
-	return (T898f15(C));
+	return (T898f15(ac, C));
 } else {
-	return (T919f42(C));
+	return (T919f42(ac, C));
 }
 } else {
-	return (T925f39(C));
+	return (T925f39(ac, C));
 }
 }
 } else {
 if (t1<=1230) {
 if (t1<=1229) {
 if (t1==938) {
-	return (T938f40(C));
+	return (T938f40(ac, C));
 } else {
-	return (T1229f61(C));
+	return (T1229f61(ac, C));
 }
 } else {
-	return (T1230f62(C));
+	return (T1230f62(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f75(C));
+	return (T1231f75(ac, C));
 } else {
-	return (T1782f30(C));
+	return (T1782f30(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_precursor */
-T1 T305x15131(T0* C)
+T1 T305x15139(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=925) {
 if (t1<=823) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f90(C));
+	return (T176f90(ac, C));
 } else {
-	return (T638f94(C));
+	return (T638f94(ac, C));
 }
 } else {
-	return (T823f61(C));
+	return (T823f61(ac, C));
 }
 } else {
 if (t1<=919) {
 if (t1==898) {
-	return (T898f14(C));
+	return (T898f14(ac, C));
 } else {
-	return (T919f41(C));
+	return (T919f41(ac, C));
 }
 } else {
-	return (T925f38(C));
+	return (T925f38(ac, C));
 }
 }
 } else {
 if (t1<=1230) {
 if (t1<=1229) {
 if (t1==938) {
-	return (T938f39(C));
+	return (T938f39(ac, C));
 } else {
-	return (T1229f60(C));
+	return (T1229f60(ac, C));
 }
 } else {
-	return (T1230f61(C));
+	return (T1230f61(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f74(C));
+	return (T1231f74(ac, C));
 } else {
-	return (T1782f29(C));
+	return (T1782f29(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.hash_code */
-T6 T305x22(T0* C)
+T6 T305x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -18678,9 +18678,9 @@ if (t1==176) {
 }
 } else {
 if (t1==850) {
-	return (T850f41(C));
+	return (T850f41(ac, C));
 } else {
-	return (T1229f5(C));
+	return (T1229f5(ac, C));
 }
 }
 } else {
@@ -18688,7 +18688,7 @@ if (t1<=1231) {
 if (t1==1230) {
 	return (((T1230*)(C))->a1);
 } else {
-	return (T1231f5(C));
+	return (T1231f5(ac, C));
 }
 } else {
 	return (((T1233*)(C))->a1);
@@ -18697,1118 +18697,1118 @@ if (t1==1230) {
 }
 
 /* Call to ET_CALL_NAME.is_prefix_not */
-T1 T305x15127(T0* C)
+T1 T305x15135(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f57(C));
+	return (T176f57(ac, C));
 } else {
-	return (T638f78(C));
+	return (T638f78(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f35(C));
+	return (T823f35(ac, C));
 } else {
-	return (T850f42(C));
+	return (T850f42(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f25(C));
+	return (T919f25(ac, C));
 } else {
-	return (T925f22(C));
+	return (T925f22(ac, C));
 }
 } else {
-	return (T938f23(C));
+	return (T938f23(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f34(C));
+	return (T1229f34(ac, C));
 } else {
-	return (T1230f37(C));
+	return (T1230f37(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f48(C));
+	return (T1231f48(ac, C));
 } else {
-	return (T1233f21(C));
+	return (T1233f21(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f13(C));
+	return (T1258f13(ac, C));
 } else {
-	return (T1259f13(C));
+	return (T1259f13(ac, C));
 }
 } else {
-	return (T1782f38(C));
+	return (T1782f38(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_prefix_plus */
-T1 T305x15125(T0* C)
+T1 T305x15133(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f56(C));
+	return (T176f56(ac, C));
 } else {
-	return (T638f77(C));
+	return (T638f77(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f34(C));
+	return (T823f34(ac, C));
 } else {
-	return (T850f37(C));
+	return (T850f37(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f24(C));
+	return (T919f24(ac, C));
 } else {
-	return (T925f21(C));
+	return (T925f21(ac, C));
 }
 } else {
-	return (T938f22(C));
+	return (T938f22(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f33(C));
+	return (T1229f33(ac, C));
 } else {
-	return (T1230f36(C));
+	return (T1230f36(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f47(C));
+	return (T1231f47(ac, C));
 } else {
-	return (T1233f20(C));
+	return (T1233f20(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f12(C));
+	return (T1258f12(ac, C));
 } else {
-	return (T1259f12(C));
+	return (T1259f12(ac, C));
 }
 } else {
-	return (T1782f36(C));
+	return (T1782f36(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_prefix_minus */
-T1 T305x15124(T0* C)
+T1 T305x15132(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f55(C));
+	return (T176f55(ac, C));
 } else {
-	return (T638f76(C));
+	return (T638f76(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f33(C));
+	return (T823f33(ac, C));
 } else {
-	return (T850f38(C));
+	return (T850f38(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f23(C));
+	return (T919f23(ac, C));
 } else {
-	return (T925f20(C));
+	return (T925f20(ac, C));
 }
 } else {
-	return (T938f21(C));
+	return (T938f21(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f32(C));
+	return (T1229f32(ac, C));
 } else {
-	return (T1230f35(C));
+	return (T1230f35(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f46(C));
+	return (T1231f46(ac, C));
 } else {
-	return (T1233f19(C));
+	return (T1233f19(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f11(C));
+	return (T1258f11(ac, C));
 } else {
-	return (T1259f11(C));
+	return (T1259f11(ac, C));
 }
 } else {
-	return (T1782f25(C));
+	return (T1782f25(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_dotdot */
-T1 T305x15122(T0* C)
+T1 T305x15130(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f81(C));
+	return (T176f81(ac, C));
 } else {
-	return (T638f93(C));
+	return (T638f93(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f59(C));
+	return (T823f59(ac, C));
 } else {
-	return (T850f58(C));
+	return (T850f58(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f40(C));
+	return (T919f40(ac, C));
 } else {
-	return (T925f37(C));
+	return (T925f37(ac, C));
 }
 } else {
-	return (T938f38(C));
+	return (T938f38(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f56(C));
+	return (T1229f56(ac, C));
 } else {
-	return (T1230f59(C));
+	return (T1230f59(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f70(C));
+	return (T1231f70(ac, C));
 } else {
-	return (T1233f39(C));
+	return (T1233f39(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f28(C));
+	return (T1258f28(ac, C));
 } else {
-	return (T1259f28(C));
+	return (T1259f28(ac, C));
 }
 } else {
-	return (T1782f23(C));
+	return (T1782f23(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_xor */
-T1 T305x15121(T0* C)
+T1 T305x15129(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f69(C));
+	return (T176f69(ac, C));
 } else {
-	return (T638f90(C));
+	return (T638f90(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f47(C));
+	return (T823f47(ac, C));
 } else {
-	return (T850f57(C));
+	return (T850f57(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f37(C));
+	return (T919f37(ac, C));
 } else {
-	return (T925f34(C));
+	return (T925f34(ac, C));
 }
 } else {
-	return (T938f35(C));
+	return (T938f35(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f46(C));
+	return (T1229f46(ac, C));
 } else {
-	return (T1230f49(C));
+	return (T1230f49(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f60(C));
+	return (T1231f60(ac, C));
 } else {
-	return (T1233f38(C));
+	return (T1233f38(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f25(C));
+	return (T1258f25(ac, C));
 } else {
-	return (T1259f25(C));
+	return (T1259f25(ac, C));
 }
 } else {
-	return (T1782f20(C));
+	return (T1782f20(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_times */
-T1 T305x15120(T0* C)
+T1 T305x15128(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f68(C));
+	return (T176f68(ac, C));
 } else {
-	return (T638f89(C));
+	return (T638f89(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f46(C));
+	return (T823f46(ac, C));
 } else {
-	return (T850f56(C));
+	return (T850f56(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f36(C));
+	return (T919f36(ac, C));
 } else {
-	return (T925f33(C));
+	return (T925f33(ac, C));
 }
 } else {
-	return (T938f34(C));
+	return (T938f34(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f45(C));
+	return (T1229f45(ac, C));
 } else {
-	return (T1230f48(C));
+	return (T1230f48(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f59(C));
+	return (T1231f59(ac, C));
 } else {
-	return (T1233f37(C));
+	return (T1233f37(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f24(C));
+	return (T1258f24(ac, C));
 } else {
-	return (T1259f24(C));
+	return (T1259f24(ac, C));
 }
 } else {
-	return (T1782f19(C));
+	return (T1782f19(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_power */
-T1 T305x15119(T0* C)
+T1 T305x15127(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f67(C));
+	return (T176f67(ac, C));
 } else {
-	return (T638f88(C));
+	return (T638f88(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f45(C));
+	return (T823f45(ac, C));
 } else {
-	return (T850f55(C));
+	return (T850f55(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f35(C));
+	return (T919f35(ac, C));
 } else {
-	return (T925f32(C));
+	return (T925f32(ac, C));
 }
 } else {
-	return (T938f33(C));
+	return (T938f33(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f44(C));
+	return (T1229f44(ac, C));
 } else {
-	return (T1230f47(C));
+	return (T1230f47(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f58(C));
+	return (T1231f58(ac, C));
 } else {
-	return (T1233f36(C));
+	return (T1233f36(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f23(C));
+	return (T1258f23(ac, C));
 } else {
-	return (T1259f23(C));
+	return (T1259f23(ac, C));
 }
 } else {
-	return (T1782f18(C));
+	return (T1782f18(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_plus */
-T1 T305x15118(T0* C)
+T1 T305x15126(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f66(C));
+	return (T176f66(ac, C));
 } else {
-	return (T638f87(C));
+	return (T638f87(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f44(C));
+	return (T823f44(ac, C));
 } else {
-	return (T850f39(C));
+	return (T850f39(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f34(C));
+	return (T919f34(ac, C));
 } else {
-	return (T925f31(C));
+	return (T925f31(ac, C));
 }
 } else {
-	return (T938f32(C));
+	return (T938f32(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f43(C));
+	return (T1229f43(ac, C));
 } else {
-	return (T1230f46(C));
+	return (T1230f46(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f57(C));
+	return (T1231f57(ac, C));
 } else {
-	return (T1233f35(C));
+	return (T1233f35(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f22(C));
+	return (T1258f22(ac, C));
 } else {
-	return (T1259f22(C));
+	return (T1259f22(ac, C));
 }
 } else {
-	return (T1782f17(C));
+	return (T1782f17(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_or */
-T1 T305x15116(T0* C)
+T1 T305x15124(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f51(C));
+	return (T176f51(ac, C));
 } else {
-	return (T638f70(C));
+	return (T638f70(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f22(C));
+	return (T823f22(ac, C));
 } else {
-	return (T850f53(C));
+	return (T850f53(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f16(C));
+	return (T919f16(ac, C));
 } else {
-	return (T925f17(C));
+	return (T925f17(ac, C));
 }
 } else {
-	return (T938f13(C));
+	return (T938f13(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f15(C));
+	return (T1229f15(ac, C));
 } else {
-	return (T1230f15(C));
+	return (T1230f15(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f15(C));
+	return (T1231f15(ac, C));
 } else {
-	return (T1233f33(C));
+	return (T1233f33(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f8(C));
+	return (T1258f8(ac, C));
 } else {
-	return (T1259f8(C));
+	return (T1259f8(ac, C));
 }
 } else {
-	return (T1782f15(C));
+	return (T1782f15(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_mod */
-T1 T305x15115(T0* C)
+T1 T305x15123(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f65(C));
+	return (T176f65(ac, C));
 } else {
-	return (T638f86(C));
+	return (T638f86(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f43(C));
+	return (T823f43(ac, C));
 } else {
-	return (T850f52(C));
+	return (T850f52(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f33(C));
+	return (T919f33(ac, C));
 } else {
-	return (T925f30(C));
+	return (T925f30(ac, C));
 }
 } else {
-	return (T938f31(C));
+	return (T938f31(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f42(C));
+	return (T1229f42(ac, C));
 } else {
-	return (T1230f45(C));
+	return (T1230f45(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f56(C));
+	return (T1231f56(ac, C));
 } else {
-	return (T1233f32(C));
+	return (T1233f32(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f21(C));
+	return (T1258f21(ac, C));
 } else {
-	return (T1259f21(C));
+	return (T1259f21(ac, C));
 }
 } else {
-	return (T1782f14(C));
+	return (T1782f14(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_minus */
-T1 T305x15114(T0* C)
+T1 T305x15122(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f64(C));
+	return (T176f64(ac, C));
 } else {
-	return (T638f85(C));
+	return (T638f85(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f42(C));
+	return (T823f42(ac, C));
 } else {
-	return (T850f40(C));
+	return (T850f40(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f32(C));
+	return (T919f32(ac, C));
 } else {
-	return (T925f29(C));
+	return (T925f29(ac, C));
 }
 } else {
-	return (T938f30(C));
+	return (T938f30(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f41(C));
+	return (T1229f41(ac, C));
 } else {
-	return (T1230f44(C));
+	return (T1230f44(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f55(C));
+	return (T1231f55(ac, C));
 } else {
-	return (T1233f31(C));
+	return (T1233f31(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f20(C));
+	return (T1258f20(ac, C));
 } else {
-	return (T1259f20(C));
+	return (T1259f20(ac, C));
 }
 } else {
-	return (T1782f13(C));
+	return (T1782f13(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_lt */
-T1 T305x15113(T0* C)
+T1 T305x15121(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f63(C));
+	return (T176f63(ac, C));
 } else {
-	return (T638f84(C));
+	return (T638f84(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f41(C));
+	return (T823f41(ac, C));
 } else {
-	return (T850f51(C));
+	return (T850f51(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f31(C));
+	return (T919f31(ac, C));
 } else {
-	return (T925f28(C));
+	return (T925f28(ac, C));
 }
 } else {
-	return (T938f29(C));
+	return (T938f29(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f40(C));
+	return (T1229f40(ac, C));
 } else {
-	return (T1230f43(C));
+	return (T1230f43(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f54(C));
+	return (T1231f54(ac, C));
 } else {
-	return (T1233f30(C));
+	return (T1233f30(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f19(C));
+	return (T1258f19(ac, C));
 } else {
-	return (T1259f19(C));
+	return (T1259f19(ac, C));
 }
 } else {
-	return (T1782f12(C));
+	return (T1782f12(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_le */
-T1 T305x15112(T0* C)
+T1 T305x15120(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f62(C));
+	return (T176f62(ac, C));
 } else {
-	return (T638f83(C));
+	return (T638f83(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f40(C));
+	return (T823f40(ac, C));
 } else {
-	return (T850f50(C));
+	return (T850f50(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f30(C));
+	return (T919f30(ac, C));
 } else {
-	return (T925f27(C));
+	return (T925f27(ac, C));
 }
 } else {
-	return (T938f28(C));
+	return (T938f28(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f39(C));
+	return (T1229f39(ac, C));
 } else {
-	return (T1230f42(C));
+	return (T1230f42(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f53(C));
+	return (T1231f53(ac, C));
 } else {
-	return (T1233f29(C));
+	return (T1233f29(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f18(C));
+	return (T1258f18(ac, C));
 } else {
-	return (T1259f18(C));
+	return (T1259f18(ac, C));
 }
 } else {
-	return (T1782f11(C));
+	return (T1782f11(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_gt */
-T1 T305x15110(T0* C)
+T1 T305x15118(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f61(C));
+	return (T176f61(ac, C));
 } else {
-	return (T638f82(C));
+	return (T638f82(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f39(C));
+	return (T823f39(ac, C));
 } else {
-	return (T850f48(C));
+	return (T850f48(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f29(C));
+	return (T919f29(ac, C));
 } else {
-	return (T925f26(C));
+	return (T925f26(ac, C));
 }
 } else {
-	return (T938f27(C));
+	return (T938f27(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f38(C));
+	return (T1229f38(ac, C));
 } else {
-	return (T1230f41(C));
+	return (T1230f41(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f52(C));
+	return (T1231f52(ac, C));
 } else {
-	return (T1233f27(C));
+	return (T1233f27(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f17(C));
+	return (T1258f17(ac, C));
 } else {
-	return (T1259f17(C));
+	return (T1259f17(ac, C));
 }
 } else {
-	return (T1782f9(C));
+	return (T1782f9(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_ge */
-T1 T305x15109(T0* C)
+T1 T305x15117(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f60(C));
+	return (T176f60(ac, C));
 } else {
-	return (T638f81(C));
+	return (T638f81(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f38(C));
+	return (T823f38(ac, C));
 } else {
-	return (T850f47(C));
+	return (T850f47(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f28(C));
+	return (T919f28(ac, C));
 } else {
-	return (T925f25(C));
+	return (T925f25(ac, C));
 }
 } else {
-	return (T938f26(C));
+	return (T938f26(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f37(C));
+	return (T1229f37(ac, C));
 } else {
-	return (T1230f40(C));
+	return (T1230f40(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f51(C));
+	return (T1231f51(ac, C));
 } else {
-	return (T1233f26(C));
+	return (T1233f26(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f16(C));
+	return (T1258f16(ac, C));
 } else {
-	return (T1259f16(C));
+	return (T1259f16(ac, C));
 }
 } else {
-	return (T1782f8(C));
+	return (T1782f8(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_divide */
-T1 T305x15107(T0* C)
+T1 T305x15115(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f59(C));
+	return (T176f59(ac, C));
 } else {
-	return (T638f80(C));
+	return (T638f80(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f37(C));
+	return (T823f37(ac, C));
 } else {
-	return (T850f46(C));
+	return (T850f46(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f27(C));
+	return (T919f27(ac, C));
 } else {
-	return (T925f24(C));
+	return (T925f24(ac, C));
 }
 } else {
-	return (T938f25(C));
+	return (T938f25(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f36(C));
+	return (T1229f36(ac, C));
 } else {
-	return (T1230f39(C));
+	return (T1230f39(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f50(C));
+	return (T1231f50(ac, C));
 } else {
-	return (T1233f25(C));
+	return (T1233f25(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f15(C));
+	return (T1258f15(ac, C));
 } else {
-	return (T1259f15(C));
+	return (T1259f15(ac, C));
 }
 } else {
-	return (T1782f7(C));
+	return (T1782f7(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_div */
-T1 T305x15106(T0* C)
+T1 T305x15114(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f58(C));
+	return (T176f58(ac, C));
 } else {
-	return (T638f79(C));
+	return (T638f79(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f36(C));
+	return (T823f36(ac, C));
 } else {
-	return (T850f45(C));
+	return (T850f45(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f26(C));
+	return (T919f26(ac, C));
 } else {
-	return (T925f23(C));
+	return (T925f23(ac, C));
 }
 } else {
-	return (T938f24(C));
+	return (T938f24(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f35(C));
+	return (T1229f35(ac, C));
 } else {
-	return (T1230f38(C));
+	return (T1230f38(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f49(C));
+	return (T1231f49(ac, C));
 } else {
-	return (T1233f24(C));
+	return (T1233f24(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f14(C));
+	return (T1258f14(ac, C));
 } else {
-	return (T1259f14(C));
+	return (T1259f14(ac, C));
 }
 } else {
-	return (T1782f6(C));
+	return (T1782f6(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_infix_and */
-T1 T305x15104(T0* C)
+T1 T305x15112(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f50(C));
+	return (T176f50(ac, C));
 } else {
-	return (T638f69(C));
+	return (T638f69(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f21(C));
+	return (T823f21(ac, C));
 } else {
-	return (T850f43(C));
+	return (T850f43(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f15(C));
+	return (T919f15(ac, C));
 } else {
-	return (T925f16(C));
+	return (T925f16(ac, C));
 }
 } else {
-	return (T938f12(C));
+	return (T938f12(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f14(C));
+	return (T1229f14(ac, C));
 } else {
-	return (T1230f14(C));
+	return (T1230f14(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f14(C));
+	return (T1231f14(ac, C));
 } else {
-	return (T1233f22(C));
+	return (T1233f22(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f7(C));
+	return (T1258f7(ac, C));
 } else {
-	return (T1259f7(C));
+	return (T1259f7(ac, C));
 }
 } else {
-	return (T1782f4(C));
+	return (T1782f4(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.is_parenthesis */
-T1 T305x15129(T0* C)
+T1 T305x15137(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f80(C));
+	return (T176f80(ac, C));
 } else {
-	return (T638f92(C));
+	return (T638f92(ac, C));
 }
 } else {
 if (t1==823) {
-	return (T823f26(C));
+	return (T823f26(ac, C));
 } else {
-	return (T850f8(C));
+	return (T850f8(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f39(C));
+	return (T919f39(ac, C));
 } else {
-	return (T925f36(C));
+	return (T925f36(ac, C));
 }
 } else {
-	return (T938f37(C));
+	return (T938f37(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f19(C));
+	return (T1229f19(ac, C));
 } else {
-	return (T1230f24(C));
+	return (T1230f24(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f19(C));
+	return (T1231f19(ac, C));
 } else {
-	return (T1233f13(C));
+	return (T1233f13(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f27(C));
+	return (T1258f27(ac, C));
 } else {
-	return (T1259f27(C));
+	return (T1259f27(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -19818,120 +19818,120 @@ if (t1==1258) {
 }
 
 /* Call to ET_CALL_NAME.is_bracket */
-T1 T305x15128(T0* C)
+T1 T305x15136(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=850) {
 if (t1<=638) {
 if (t1==176) {
-	return (T176f79(C));
+	return (T176f79(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==823) {
-	return (T823f25(C));
+	return (T823f25(ac, C));
 } else {
-	return (T850f7(C));
+	return (T850f7(ac, C));
 }
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f38(C));
+	return (T919f38(ac, C));
 } else {
-	return (T925f35(C));
+	return (T925f35(ac, C));
 }
 } else {
-	return (T938f36(C));
+	return (T938f36(ac, C));
 }
 }
 } else {
 if (t1<=1233) {
 if (t1<=1230) {
 if (t1==1229) {
-	return (T1229f18(C));
+	return (T1229f18(ac, C));
 } else {
-	return (T1230f23(C));
+	return (T1230f23(ac, C));
 }
 } else {
 if (t1==1231) {
-	return (T1231f18(C));
+	return (T1231f18(ac, C));
 } else {
-	return (T1233f11(C));
+	return (T1233f11(ac, C));
 }
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-	return (T1258f26(C));
+	return (T1258f26(ac, C));
 } else {
-	return (T1259f26(C));
+	return (T1259f26(ac, C));
 }
 } else {
-	return (T1782f21(C));
+	return (T1782f21(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.same_call_name */
-T1 T305x15132T0(T0* C, T0* a1)
+T1 T305x15140T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f70(C, a1));
+	return (T176f70(ac, C, a1));
 } else {
-	return (T823f24(C, a1));
+	return (T823f24(ac, C, a1));
 }
 } else {
 if (t1==850) {
-	return (T850f6(C, a1));
+	return (T850f6(ac, C, a1));
 } else {
-	return (T1229f17(C, a1));
+	return (T1229f17(ac, C, a1));
 }
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f18(C, a1));
+	return (T1230f18(ac, C, a1));
 } else {
-	return (T1231f17(C, a1));
+	return (T1231f17(ac, C, a1));
 }
 } else {
-	return (T1233f7(C, a1));
+	return (T1233f7(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_CALL_NAME.feature_name */
-T0* T305x15138(T0* C)
+T0* T305x15146(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f43(C));
+	return (T176f43(ac, C));
 } else {
-	return (T823f9(C));
+	return (T823f9(ac, C));
 }
 } else {
-	return (T1229f10(C));
+	return (T1229f10(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f31(C));
+	return (T1230f31(ac, C));
 } else {
-	return (T1231f10(C));
+	return (T1231f10(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT.target */
-T0* T308x17846(T0* C)
+T0* T308x17854(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -19962,7 +19962,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_AGENT.arguments */
-T0* T308x17847(T0* C)
+T0* T308x17855(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -19993,38 +19993,38 @@ if (t1==1268) {
 }
 
 /* Call to ET_AGENT.implicit_target_position */
-T0* T308x17856(T0* C)
+T0* T308x17864(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1265) {
 if (t1==983) {
-	return (T983f18(C));
+	return (T983f18(ac, C));
 } else {
-	return (T1265f28(C));
+	return (T1265f28(ac, C));
 }
 } else {
 if (t1==1266) {
-	return (T1266f29(C));
+	return (T1266f29(ac, C));
 } else {
-	return (T1267f26(C));
+	return (T1267f26(ac, C));
 }
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-	return (T1268f27(C));
+	return (T1268f27(ac, C));
 } else {
-	return (T1269f28(C));
+	return (T1269f28(ac, C));
 }
 } else {
-	return (T1270f25(C));
+	return (T1270f25(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT.implicit_result */
-T0* T308x17848(T0* C)
+T0* T308x17856(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -20044,37 +20044,37 @@ if (t1==1266) {
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-	return (T1268f21(C));
+	return (T1268f21(ac, C));
 } else {
-	return (T1269f22(C));
+	return (T1269f22(ac, C));
 }
 } else {
-	return (T1270f20(C));
+	return (T1270f20(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT.position */
-T0* T308x7085(T0* C)
+T0* T308x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1266) {
 if (t1==1265) {
-	return (T1265f18(C));
+	return (T1265f18(ac, C));
 } else {
-	return (T1266f18(C));
+	return (T1266f18(ac, C));
 }
 } else {
 if (t1==1268) {
-	return (T1268f14(C));
+	return (T1268f14(ac, C));
 } else {
-	return (T1269f18(C));
+	return (T1269f18(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT.is_inline_agent */
-T1 T308x17852(T0* C)
+T1 T308x17860(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1266) {
@@ -20093,7 +20093,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_AGENT.index */
-T6 T308x15183(T0* C)
+T6 T308x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -20124,13 +20124,13 @@ if (t1==1268) {
 }
 
 /* Call to ET_AGENT.is_qualified_call */
-T1 T308x17849(T0* C)
+T1 T308x17857(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1265) {
 if (t1==983) {
-	return (T983f14(C));
+	return (T983f14(ac, C));
 } else {
 	return (EIF_FALSE);
 }
@@ -20155,7 +20155,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_OBJECT_TEST.expression */
-T0* T309x17815(T0* C)
+T0* T309x17823(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=738) {
@@ -20170,7 +20170,7 @@ if (t1==309) {
 }
 
 /* Call to ET_OBJECT_TEST.index */
-T6 T309x15183(T0* C)
+T6 T309x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=738) {
@@ -20185,27 +20185,27 @@ if (t1==309) {
 }
 
 /* Call to ET_OBJECT_TEST.type */
-T0* T309x17814(T0* C)
+T0* T309x17822(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=738) {
 if (t1==309) {
-	return (T309f14(C));
+	return (T309f14(ac, C));
 } else {
-	return (T738f11(C));
+	return (T738f11(ac, C));
 }
 } else {
-	return (T1263f14(C));
+	return (T1263f14(ac, C));
 }
 }
 
 /* Call to ET_OBJECT_TEST.name */
-T0* T309x17816(T0* C)
+T0* T309x17824(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=738) {
 if (t1==309) {
-	return (T309f13(C));
+	return (T309f13(ac, C));
 } else {
 	return (((T738*)(C))->a2);
 }
@@ -20215,28 +20215,28 @@ if (t1==309) {
 }
 
 /* Call to ET_CONSTANT.is_integer_constant */
-T1 T314x18108(T0* C)
+T1 T314x18116(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-	return (T822f33(C));
+	return (T822f33(ac, C));
 } else {
-	return (T905f28(C));
+	return (T905f28(ac, C));
 }
 } else {
 if (t1==1190) {
-	return (T1190f31(C));
+	return (T1190f31(ac, C));
 } else {
-	return (T1191f38(C));
+	return (T1191f38(ac, C));
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-	return (T1192f34(C));
+	return (T1192f34(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -20258,23 +20258,23 @@ if (t1==1196) {
 }
 } else {
 if (t1==1198) {
-	return (T1198f32(C));
+	return (T1198f32(ac, C));
 } else {
-	return (T1199f32(C));
+	return (T1199f32(ac, C));
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-	return (T1201f30(C));
+	return (T1201f30(ac, C));
 } else {
-	return (T1202f30(C));
+	return (T1202f30(ac, C));
 }
 } else {
 if (t1==1203) {
-	return (T1203f30(C));
+	return (T1203f30(ac, C));
 } else {
-	return (T1204f30(C));
+	return (T1204f30(ac, C));
 }
 }
 }
@@ -20282,36 +20282,36 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.is_character_constant */
-T1 T314x18107(T0* C)
+T1 T314x18115(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-	return (T822f19(C));
+	return (T822f19(ac, C));
 } else {
-	return (T905f17(C));
+	return (T905f17(ac, C));
 }
 } else {
 if (t1==1190) {
 	return (EIF_TRUE);
 } else {
-	return (T1191f24(C));
+	return (T1191f24(ac, C));
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-	return (T1192f20(C));
+	return (T1192f20(ac, C));
 } else {
-	return (T1193f38(C));
+	return (T1193f38(ac, C));
 }
 } else {
 if (t1==1194) {
-	return (T1194f38(C));
+	return (T1194f38(ac, C));
 } else {
-	return (T1195f38(C));
+	return (T1195f38(ac, C));
 }
 }
 }
@@ -20319,23 +20319,23 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f38(C));
+	return (T1196f38(ac, C));
 } else {
-	return (T1197f38(C));
+	return (T1197f38(ac, C));
 }
 } else {
 if (t1==1198) {
-	return (T1198f20(C));
+	return (T1198f20(ac, C));
 } else {
-	return (T1199f20(C));
+	return (T1199f20(ac, C));
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-	return (T1201f19(C));
+	return (T1201f19(ac, C));
 } else {
-	return (T1202f19(C));
+	return (T1202f19(ac, C));
 }
 } else {
 if (t1==1203) {
@@ -20349,36 +20349,36 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.is_bit_constant */
-T1 T314x18111(T0* C)
+T1 T314x18119(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-	return (T822f21(C));
+	return (T822f21(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==1190) {
-	return (T1190f21(C));
+	return (T1190f21(ac, C));
 } else {
-	return (T1191f26(C));
+	return (T1191f26(ac, C));
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-	return (T1192f22(C));
+	return (T1192f22(ac, C));
 } else {
-	return (T1193f40(C));
+	return (T1193f40(ac, C));
 }
 } else {
 if (t1==1194) {
-	return (T1194f40(C));
+	return (T1194f40(ac, C));
 } else {
-	return (T1195f40(C));
+	return (T1195f40(ac, C));
 }
 }
 }
@@ -20386,29 +20386,29 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f40(C));
+	return (T1196f40(ac, C));
 } else {
-	return (T1197f40(C));
+	return (T1197f40(ac, C));
 }
 } else {
 if (t1==1198) {
-	return (T1198f22(C));
+	return (T1198f22(ac, C));
 } else {
-	return (T1199f22(C));
+	return (T1199f22(ac, C));
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-	return (T1201f21(C));
+	return (T1201f21(ac, C));
 } else {
-	return (T1202f21(C));
+	return (T1202f21(ac, C));
 }
 } else {
 if (t1==1203) {
-	return (T1203f20(C));
+	return (T1203f20(ac, C));
 } else {
-	return (T1204f20(C));
+	return (T1204f20(ac, C));
 }
 }
 }
@@ -20416,7 +20416,7 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.is_string_constant */
-T1 T314x18110(T0* C)
+T1 T314x18118(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -20425,11 +20425,11 @@ if (t1<=905) {
 if (t1==822) {
 	return (EIF_TRUE);
 } else {
-	return (T905f18(C));
+	return (T905f18(ac, C));
 }
 } else {
 if (t1==1190) {
-	return (T1190f20(C));
+	return (T1190f20(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -20439,13 +20439,13 @@ if (t1<=1193) {
 if (t1==1192) {
 	return (EIF_TRUE);
 } else {
-	return (T1193f39(C));
+	return (T1193f39(ac, C));
 }
 } else {
 if (t1==1194) {
-	return (T1194f39(C));
+	return (T1194f39(ac, C));
 } else {
-	return (T1195f39(C));
+	return (T1195f39(ac, C));
 }
 }
 }
@@ -20453,29 +20453,29 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f39(C));
+	return (T1196f39(ac, C));
 } else {
-	return (T1197f39(C));
+	return (T1197f39(ac, C));
 }
 } else {
 if (t1==1198) {
-	return (T1198f21(C));
+	return (T1198f21(ac, C));
 } else {
-	return (T1199f21(C));
+	return (T1199f21(ac, C));
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-	return (T1201f20(C));
+	return (T1201f20(ac, C));
 } else {
-	return (T1202f20(C));
+	return (T1202f20(ac, C));
 }
 } else {
 if (t1==1203) {
-	return (T1203f19(C));
+	return (T1203f19(ac, C));
 } else {
-	return (T1204f19(C));
+	return (T1204f19(ac, C));
 }
 }
 }
@@ -20483,36 +20483,36 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.is_boolean_constant */
-T1 T314x18106(T0* C)
+T1 T314x18114(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-	return (T822f18(C));
+	return (T822f18(ac, C));
 } else {
-	return (T905f16(C));
+	return (T905f16(ac, C));
 }
 } else {
 if (t1==1190) {
-	return (T1190f18(C));
+	return (T1190f18(ac, C));
 } else {
-	return (T1191f23(C));
+	return (T1191f23(ac, C));
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-	return (T1192f19(C));
+	return (T1192f19(ac, C));
 } else {
-	return (T1193f37(C));
+	return (T1193f37(ac, C));
 }
 } else {
 if (t1==1194) {
-	return (T1194f37(C));
+	return (T1194f37(ac, C));
 } else {
-	return (T1195f37(C));
+	return (T1195f37(ac, C));
 }
 }
 }
@@ -20520,15 +20520,15 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f37(C));
+	return (T1196f37(ac, C));
 } else {
-	return (T1197f37(C));
+	return (T1197f37(ac, C));
 }
 } else {
 if (t1==1198) {
-	return (T1198f19(C));
+	return (T1198f19(ac, C));
 } else {
-	return (T1199f19(C));
+	return (T1199f19(ac, C));
 }
 }
 } else {
@@ -20540,9 +20540,9 @@ if (t1==1201) {
 }
 } else {
 if (t1==1203) {
-	return (T1203f17(C));
+	return (T1203f17(ac, C));
 } else {
-	return (T1204f17(C));
+	return (T1204f17(ac, C));
 }
 }
 }
@@ -20550,7 +20550,7 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.index */
-T6 T314x15183(T0* C)
+T6 T314x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -20617,315 +20617,315 @@ if (t1==1203) {
 }
 
 /* Call to ET_TARGET_TYPE.position */
-T0* T317x7085(T0* C)
+T0* T317x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f63(C));
+	return (T78f63(ac, C));
 } else {
-	return (T80f151(C));
+	return (T80f151(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f63(C));
+	return (T246f63(ac, C));
 } else {
-	return (T254f63(C));
+	return (T254f63(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f33(C));
+	return (T495f33(ac, C));
 } else {
-	return (T858f13(C));
+	return (T858f13(ac, C));
 }
 } else {
-	return (T1081f67(C));
+	return (T1081f67(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f68(C));
+	return (T1209f68(ac, C));
 } else {
-	return (T1213f11(C));
+	return (T1213f11(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f8(C));
+	return (T1214f8(ac, C));
 } else {
-	return (T1238f8(C));
+	return (T1238f8(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f8(C));
+	return (T1239f8(ac, C));
 } else {
-	return (T1240f8(C));
+	return (T1240f8(ac, C));
 }
 } else {
-	return (T1417f7(C));
+	return (T1417f7(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TARGET_TYPE.type */
-T0* T317x7117(T0* C)
+T0* T317x7117(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f39(C));
+	return (T78f39(ac, C));
 } else {
-	return (T80f101(C));
+	return (T80f101(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f37(C));
+	return (T246f37(ac, C));
 } else {
-	return (T254f38(C));
+	return (T254f38(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T858f12(C));
+	return (T858f12(ac, C));
 }
 } else {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 } else {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 } else {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 }
 } else {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_TARGET_TYPE.last_leaf */
-T0* T317x7089(T0* C)
+T0* T317x7089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f108(C));
+	return (T78f108(ac, C));
 } else {
-	return (T80f203(C));
+	return (T80f203(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f107(C));
+	return (T246f107(ac, C));
 } else {
-	return (T254f105(C));
+	return (T254f105(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f71(C));
+	return (T495f71(ac, C));
 } else {
-	return (T858f69(C));
+	return (T858f69(ac, C));
 }
 } else {
-	return (T1081f76(C));
+	return (T1081f76(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f77(C));
+	return (T1209f77(ac, C));
 } else {
-	return (T1213f107(C));
+	return (T1213f107(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f108(C));
+	return (T1214f108(ac, C));
 } else {
-	return (T1238f77(C));
+	return (T1238f77(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f76(C));
+	return (T1239f76(ac, C));
 } else {
-	return (T1240f73(C));
+	return (T1240f73(ac, C));
 }
 } else {
-	return (T1417f69(C));
+	return (T1417f69(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.actual_argument */
-T0* T325x15177T6(T0* C, T6 a1)
+T0* T325x15185T6(GE_context* ac, T0* C, T6 a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f76(C, a1));
+		return (T176f76(ac, C, a1));
 	case 275:
-		return (T275f10(C, a1));
+		return (T275f10(ac, C, a1));
 	case 276:
-		return (T276f6(C, a1));
+		return (T276f6(ac, C, a1));
 	case 280:
-		return (T280f13(C, a1));
+		return (T280f13(ac, C, a1));
 	case 281:
-		return (T281f8(C, a1));
+		return (T281f8(ac, C, a1));
 	case 283:
-		return (T283f11(C, a1));
+		return (T283f11(ac, C, a1));
 	case 302:
-		return (T302f14(C, a1));
+		return (T302f14(ac, C, a1));
 	case 309:
-		return (T309f6(C, a1));
+		return (T309f6(ac, C, a1));
 	case 310:
-		return (T310f6(C, a1));
+		return (T310f6(ac, C, a1));
 	case 311:
-		return (T311f6(C, a1));
+		return (T311f6(ac, C, a1));
 	case 315:
-		return (T315f12(C, a1));
+		return (T315f12(ac, C, a1));
 	case 738:
-		return (T738f13(C, a1));
+		return (T738f13(ac, C, a1));
 	case 822:
-		return (T822f16(C, a1));
+		return (T822f16(ac, C, a1));
 	case 905:
-		return (T905f15(C, a1));
+		return (T905f15(ac, C, a1));
 	case 941:
-		return (T941f17(C, a1));
+		return (T941f17(ac, C, a1));
 	case 952:
-		return (T952f20(C, a1));
+		return (T952f20(ac, C, a1));
 	case 967:
-		return (T967f7(C, a1));
+		return (T967f7(ac, C, a1));
 	case 977:
-		return (T977f7(C, a1));
+		return (T977f7(ac, C, a1));
 	case 980:
-		return (T980f11(C, a1));
+		return (T980f11(ac, C, a1));
 	case 983:
-		return (T983f13(C, a1));
+		return (T983f13(ac, C, a1));
 	case 1131:
-		return (T1131f15(C, a1));
+		return (T1131f15(ac, C, a1));
 	case 1145:
-		return (T1145f10(C, a1));
+		return (T1145f10(ac, C, a1));
 	case 1164:
-		return (T1164f13(C, a1));
+		return (T1164f13(ac, C, a1));
 	case 1167:
-		return (T1167f15(C, a1));
+		return (T1167f15(ac, C, a1));
 	case 1190:
-		return (T1190f17(C, a1));
+		return (T1190f17(ac, C, a1));
 	case 1191:
-		return (T1191f21(C, a1));
+		return (T1191f21(ac, C, a1));
 	case 1192:
-		return (T1192f17(C, a1));
+		return (T1192f17(ac, C, a1));
 	case 1193:
-		return (T1193f22(C, a1));
+		return (T1193f22(ac, C, a1));
 	case 1194:
-		return (T1194f22(C, a1));
+		return (T1194f22(ac, C, a1));
 	case 1195:
-		return (T1195f22(C, a1));
+		return (T1195f22(ac, C, a1));
 	case 1196:
-		return (T1196f22(C, a1));
+		return (T1196f22(ac, C, a1));
 	case 1197:
-		return (T1197f22(C, a1));
+		return (T1197f22(ac, C, a1));
 	case 1198:
-		return (T1198f18(C, a1));
+		return (T1198f18(ac, C, a1));
 	case 1199:
-		return (T1199f18(C, a1));
+		return (T1199f18(ac, C, a1));
 	case 1201:
-		return (T1201f17(C, a1));
+		return (T1201f17(ac, C, a1));
 	case 1202:
-		return (T1202f17(C, a1));
+		return (T1202f17(ac, C, a1));
 	case 1203:
-		return (T1203f16(C, a1));
+		return (T1203f16(ac, C, a1));
 	case 1204:
-		return (T1204f16(C, a1));
+		return (T1204f16(ac, C, a1));
 	case 1241:
-		return (T1241f13(C, a1));
+		return (T1241f13(ac, C, a1));
 	case 1252:
-		return (T1252f13(C, a1));
+		return (T1252f13(ac, C, a1));
 	case 1253:
-		return (T1253f9(C, a1));
+		return (T1253f9(ac, C, a1));
 	case 1254:
-		return (T1254f9(C, a1));
+		return (T1254f9(ac, C, a1));
 	case 1255:
-		return (T1255f9(C, a1));
+		return (T1255f9(ac, C, a1));
 	case 1256:
-		return (T1256f9(C, a1));
+		return (T1256f9(ac, C, a1));
 	case 1257:
-		return (T1257f9(C, a1));
+		return (T1257f9(ac, C, a1));
 	case 1260:
-		return (T1260f10(C, a1));
+		return (T1260f10(ac, C, a1));
 	case 1261:
-		return (T1261f8(C, a1));
+		return (T1261f8(ac, C, a1));
 	case 1262:
-		return (T1262f9(C, a1));
+		return (T1262f9(ac, C, a1));
 	case 1263:
-		return (T1263f16(C, a1));
+		return (T1263f16(ac, C, a1));
 	case 1264:
-		return (T1264f10(C, a1));
+		return (T1264f10(ac, C, a1));
 	case 1265:
-		return (T1265f21(C, a1));
+		return (T1265f21(ac, C, a1));
 	case 1266:
-		return (T1266f22(C, a1));
+		return (T1266f22(ac, C, a1));
 	case 1267:
-		return (T1267f20(C, a1));
+		return (T1267f20(ac, C, a1));
 	case 1268:
-		return (T1268f19(C, a1));
+		return (T1268f19(ac, C, a1));
 	case 1269:
-		return (T1269f20(C, a1));
+		return (T1269f20(ac, C, a1));
 	case 1270:
-		return (T1270f18(C, a1));
+		return (T1270f18(ac, C, a1));
 	case 1713:
-		return (T1713f9(C, a1));
+		return (T1713f9(ac, C, a1));
 	case 1787:
-		return (T1787f4(C, a1));
+		return (T1787f4(ac, C, a1));
 	case 1852:
-		return (T1852f9(C, a1));
+		return (T1852f9(ac, C, a1));
 	case 1853:
-		return (T1853f9(C, a1));
+		return (T1853f9(ac, C, a1));
 	case 1854:
-		return (T1854f9(C, a1));
+		return (T1854f9(ac, C, a1));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.count */
-T6 T325x15178(T0* C)
+T6 T325x15186(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
@@ -21005,7 +21005,7 @@ T6 T325x15178(T0* C)
 	case 1204:
 		return ((T6)(GE_int32(1)));
 	case 1241:
-		return (T1241f12(C));
+		return (T1241f12(ac, C));
 	case 1252:
 		return ((T6)(GE_int32(1)));
 	case 1253:
@@ -21056,380 +21056,380 @@ T6 T325x15178(T0* C)
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.is_empty */
-T1 T325x15175(T0* C)
+T1 T325x15183(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f96(C));
+		return (T176f96(ac, C));
 	case 275:
-		return (T275f25(C));
+		return (T275f25(ac, C));
 	case 276:
-		return (T276f10(C));
+		return (T276f10(ac, C));
 	case 280:
-		return (T280f20(C));
+		return (T280f20(ac, C));
 	case 281:
-		return (T281f17(C));
+		return (T281f17(ac, C));
 	case 283:
-		return (T283f22(C));
+		return (T283f22(ac, C));
 	case 302:
-		return (T302f24(C));
+		return (T302f24(ac, C));
 	case 309:
-		return (T309f18(C));
+		return (T309f18(ac, C));
 	case 310:
-		return (T310f16(C));
+		return (T310f16(ac, C));
 	case 311:
-		return (T311f15(C));
+		return (T311f15(ac, C));
 	case 315:
-		return (T315f21(C));
+		return (T315f21(ac, C));
 	case 738:
-		return (T738f19(C));
+		return (T738f19(ac, C));
 	case 822:
-		return (T822f28(C));
+		return (T822f28(ac, C));
 	case 905:
-		return (T905f25(C));
+		return (T905f25(ac, C));
 	case 941:
-		return (T941f23(C));
+		return (T941f23(ac, C));
 	case 952:
-		return (T952f26(C));
+		return (T952f26(ac, C));
 	case 967:
-		return (T967f9(C));
+		return (T967f9(ac, C));
 	case 977:
-		return (T977f9(C));
+		return (T977f9(ac, C));
 	case 980:
-		return (T980f19(C));
+		return (T980f19(ac, C));
 	case 983:
-		return (T983f22(C));
+		return (T983f22(ac, C));
 	case 1131:
-		return (T1131f21(C));
+		return (T1131f21(ac, C));
 	case 1145:
-		return (T1145f16(C));
+		return (T1145f16(ac, C));
 	case 1164:
-		return (T1164f19(C));
+		return (T1164f19(ac, C));
 	case 1167:
-		return (T1167f22(C));
+		return (T1167f22(ac, C));
 	case 1190:
-		return (T1190f28(C));
+		return (T1190f28(ac, C));
 	case 1191:
-		return (T1191f33(C));
+		return (T1191f33(ac, C));
 	case 1192:
-		return (T1192f29(C));
+		return (T1192f29(ac, C));
 	case 1193:
-		return (T1193f56(C));
+		return (T1193f56(ac, C));
 	case 1194:
-		return (T1194f56(C));
+		return (T1194f56(ac, C));
 	case 1195:
-		return (T1195f56(C));
+		return (T1195f56(ac, C));
 	case 1196:
-		return (T1196f56(C));
+		return (T1196f56(ac, C));
 	case 1197:
-		return (T1197f56(C));
+		return (T1197f56(ac, C));
 	case 1198:
-		return (T1198f29(C));
+		return (T1198f29(ac, C));
 	case 1199:
-		return (T1199f29(C));
+		return (T1199f29(ac, C));
 	case 1201:
-		return (T1201f27(C));
+		return (T1201f27(ac, C));
 	case 1202:
-		return (T1202f27(C));
+		return (T1202f27(ac, C));
 	case 1203:
-		return (T1203f27(C));
+		return (T1203f27(ac, C));
 	case 1204:
-		return (T1204f27(C));
+		return (T1204f27(ac, C));
 	case 1241:
-		return (T1241f14(C));
+		return (T1241f14(ac, C));
 	case 1252:
-		return (T1252f19(C));
+		return (T1252f19(ac, C));
 	case 1253:
-		return (T1253f15(C));
+		return (T1253f15(ac, C));
 	case 1254:
-		return (T1254f15(C));
+		return (T1254f15(ac, C));
 	case 1255:
-		return (T1255f15(C));
+		return (T1255f15(ac, C));
 	case 1256:
-		return (T1256f15(C));
+		return (T1256f15(ac, C));
 	case 1257:
-		return (T1257f18(C));
+		return (T1257f18(ac, C));
 	case 1260:
-		return (T1260f16(C));
+		return (T1260f16(ac, C));
 	case 1261:
-		return (T1261f20(C));
+		return (T1261f20(ac, C));
 	case 1262:
-		return (T1262f15(C));
+		return (T1262f15(ac, C));
 	case 1263:
-		return (T1263f22(C));
+		return (T1263f22(ac, C));
 	case 1264:
-		return (T1264f18(C));
+		return (T1264f18(ac, C));
 	case 1265:
-		return (T1265f32(C));
+		return (T1265f32(ac, C));
 	case 1266:
-		return (T1266f33(C));
+		return (T1266f33(ac, C));
 	case 1267:
-		return (T1267f31(C));
+		return (T1267f31(ac, C));
 	case 1268:
-		return (T1268f31(C));
+		return (T1268f31(ac, C));
 	case 1269:
-		return (T1269f32(C));
+		return (T1269f32(ac, C));
 	case 1270:
-		return (T1270f30(C));
+		return (T1270f30(ac, C));
 	case 1713:
-		return (T1713f10(C));
+		return (T1713f10(ac, C));
 	case 1787:
-		return (T1787f3(C));
+		return (T1787f3(ac, C));
 	case 1852:
-		return (T1852f10(C));
+		return (T1852f10(ac, C));
 	case 1853:
-		return (T1853f10(C));
+		return (T1853f10(ac, C));
 	case 1854:
-		return (T1854f10(C));
+		return (T1854f10(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION_ITEM.expression */
-T0* T328x15167(T0* C)
+T0* T328x15175(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f46(C));
+		return (T176f46(ac, C));
 	case 275:
-		return (T275f7(C));
+		return (T275f7(ac, C));
 	case 280:
-		return (T280f11(C));
+		return (T280f11(ac, C));
 	case 281:
-		return (T281f6(C));
+		return (T281f6(ac, C));
 	case 283:
-		return (T283f14(C));
+		return (T283f14(ac, C));
 	case 302:
-		return (T302f7(C));
+		return (T302f7(ac, C));
 	case 309:
-		return (T309f9(C));
+		return (T309f9(ac, C));
 	case 310:
-		return (T310f9(C));
+		return (T310f9(ac, C));
 	case 311:
-		return (T311f9(C));
+		return (T311f9(ac, C));
 	case 315:
-		return (T315f10(C));
+		return (T315f10(ac, C));
 	case 738:
-		return (T738f7(C));
+		return (T738f7(ac, C));
 	case 822:
-		return (T822f6(C));
+		return (T822f6(ac, C));
 	case 905:
-		return (T905f4(C));
+		return (T905f4(ac, C));
 	case 941:
-		return (T941f15(C));
+		return (T941f15(ac, C));
 	case 952:
-		return (T952f15(C));
+		return (T952f15(ac, C));
 	case 980:
-		return (T980f7(C));
+		return (T980f7(ac, C));
 	case 983:
-		return (T983f8(C));
+		return (T983f8(ac, C));
 	case 1131:
-		return (T1131f9(C));
+		return (T1131f9(ac, C));
 	case 1145:
-		return (T1145f8(C));
+		return (T1145f8(ac, C));
 	case 1164:
-		return (T1164f7(C));
+		return (T1164f7(ac, C));
 	case 1167:
-		return (T1167f9(C));
+		return (T1167f9(ac, C));
 	case 1190:
-		return (T1190f11(C));
+		return (T1190f11(ac, C));
 	case 1191:
-		return (T1191f12(C));
+		return (T1191f12(ac, C));
 	case 1192:
-		return (T1192f12(C));
+		return (T1192f12(ac, C));
 	case 1193:
-		return (T1193f10(C));
+		return (T1193f10(ac, C));
 	case 1194:
-		return (T1194f10(C));
+		return (T1194f10(ac, C));
 	case 1195:
-		return (T1195f10(C));
+		return (T1195f10(ac, C));
 	case 1196:
-		return (T1196f10(C));
+		return (T1196f10(ac, C));
 	case 1197:
-		return (T1197f10(C));
+		return (T1197f10(ac, C));
 	case 1198:
-		return (T1198f10(C));
+		return (T1198f10(ac, C));
 	case 1199:
-		return (T1199f10(C));
+		return (T1199f10(ac, C));
 	case 1201:
-		return (T1201f15(C));
+		return (T1201f15(ac, C));
 	case 1202:
-		return (T1202f15(C));
+		return (T1202f15(ac, C));
 	case 1203:
-		return (T1203f11(C));
+		return (T1203f11(ac, C));
 	case 1204:
-		return (T1204f11(C));
+		return (T1204f11(ac, C));
 	case 1252:
-		return (T1252f11(C));
+		return (T1252f11(ac, C));
 	case 1253:
-		return (T1253f4(C));
+		return (T1253f4(ac, C));
 	case 1254:
-		return (T1254f4(C));
+		return (T1254f4(ac, C));
 	case 1255:
-		return (T1255f4(C));
+		return (T1255f4(ac, C));
 	case 1256:
-		return (T1256f4(C));
+		return (T1256f4(ac, C));
 	case 1257:
-		return (T1257f7(C));
+		return (T1257f7(ac, C));
 	case 1260:
-		return (T1260f8(C));
+		return (T1260f8(ac, C));
 	case 1261:
-		return (T1261f15(C));
+		return (T1261f15(ac, C));
 	case 1262:
-		return (T1262f4(C));
+		return (T1262f4(ac, C));
 	case 1263:
-		return (T1263f11(C));
+		return (T1263f11(ac, C));
 	case 1264:
-		return (T1264f8(C));
+		return (T1264f8(ac, C));
 	case 1265:
-		return (T1265f19(C));
+		return (T1265f19(ac, C));
 	case 1266:
-		return (T1266f19(C));
+		return (T1266f19(ac, C));
 	case 1267:
-		return (T1267f17(C));
+		return (T1267f17(ac, C));
 	case 1268:
-		return (T1268f15(C));
+		return (T1268f15(ac, C));
 	case 1269:
-		return (T1269f15(C));
+		return (T1269f15(ac, C));
 	case 1270:
-		return (T1270f13(C));
+		return (T1270f13(ac, C));
 	case 1713:
-		return (T1713f12(C));
+		return (T1713f12(ac, C));
 	case 1852:
-		return (T1852f7(C));
+		return (T1852f7(ac, C));
 	case 1853:
-		return (T1853f7(C));
+		return (T1853f7(ac, C));
 	case 1854:
-		return (T1854f7(C));
+		return (T1854f7(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_EXPRESSION_ITEM.position */
-T0* T328x7085(T0* C)
+T0* T328x7085(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f22(C));
+		return (T176f22(ac, C));
 	case 275:
-		return (T275f8(C));
+		return (T275f8(ac, C));
 	case 280:
-		return (T280f10(C));
+		return (T280f10(ac, C));
 	case 281:
-		return (T281f5(C));
+		return (T281f5(ac, C));
 	case 283:
-		return (T283f15(C));
+		return (T283f15(ac, C));
 	case 302:
-		return (T302f8(C));
+		return (T302f8(ac, C));
 	case 309:
-		return (T309f8(C));
+		return (T309f8(ac, C));
 	case 310:
-		return (T310f8(C));
+		return (T310f8(ac, C));
 	case 311:
-		return (T311f8(C));
+		return (T311f8(ac, C));
 	case 315:
-		return (T315f9(C));
+		return (T315f9(ac, C));
 	case 738:
-		return (T738f9(C));
+		return (T738f9(ac, C));
 	case 822:
-		return (T822f27(C));
+		return (T822f27(ac, C));
 	case 905:
-		return (T905f10(C));
+		return (T905f10(ac, C));
 	case 941:
-		return (T941f10(C));
+		return (T941f10(ac, C));
 	case 952:
-		return (T952f18(C));
+		return (T952f18(ac, C));
 	case 980:
-		return (T980f6(C));
+		return (T980f6(ac, C));
 	case 983:
-		return (T983f11(C));
+		return (T983f11(ac, C));
 	case 1131:
-		return (T1131f8(C));
+		return (T1131f8(ac, C));
 	case 1145:
-		return (T1145f6(C));
+		return (T1145f6(ac, C));
 	case 1164:
-		return (T1164f9(C));
+		return (T1164f9(ac, C));
 	case 1167:
-		return (T1167f12(C));
+		return (T1167f12(ac, C));
 	case 1190:
-		return (T1190f9(C));
+		return (T1190f9(ac, C));
 	case 1191:
-		return (T1191f30(C));
+		return (T1191f30(ac, C));
 	case 1192:
-		return (T1192f10(C));
+		return (T1192f10(ac, C));
 	case 1193:
-		return (T1193f16(C));
+		return (T1193f16(ac, C));
 	case 1194:
-		return (T1194f16(C));
+		return (T1194f16(ac, C));
 	case 1195:
-		return (T1195f16(C));
+		return (T1195f16(ac, C));
 	case 1196:
-		return (T1196f16(C));
+		return (T1196f16(ac, C));
 	case 1197:
-		return (T1197f16(C));
+		return (T1197f16(ac, C));
 	case 1198:
-		return (T1198f26(C));
+		return (T1198f26(ac, C));
 	case 1199:
-		return (T1199f26(C));
+		return (T1199f26(ac, C));
 	case 1201:
-		return (T1201f10(C));
+		return (T1201f10(ac, C));
 	case 1202:
-		return (T1202f10(C));
+		return (T1202f10(ac, C));
 	case 1203:
-		return (T1203f9(C));
+		return (T1203f9(ac, C));
 	case 1204:
-		return (T1204f9(C));
+		return (T1204f9(ac, C));
 	case 1252:
-		return (T1252f10(C));
+		return (T1252f10(ac, C));
 	case 1253:
-		return (T1253f7(C));
+		return (T1253f7(ac, C));
 	case 1254:
-		return (T1254f7(C));
+		return (T1254f7(ac, C));
 	case 1255:
-		return (T1255f7(C));
+		return (T1255f7(ac, C));
 	case 1256:
-		return (T1256f7(C));
+		return (T1256f7(ac, C));
 	case 1257:
-		return (T1257f6(C));
+		return (T1257f6(ac, C));
 	case 1260:
-		return (T1260f6(C));
+		return (T1260f6(ac, C));
 	case 1261:
-		return (T1261f6(C));
+		return (T1261f6(ac, C));
 	case 1262:
-		return (T1262f6(C));
+		return (T1262f6(ac, C));
 	case 1263:
-		return (T1263f10(C));
+		return (T1263f10(ac, C));
 	case 1264:
-		return (T1264f6(C));
+		return (T1264f6(ac, C));
 	case 1265:
-		return (T1265f18(C));
+		return (T1265f18(ac, C));
 	case 1266:
-		return (T1266f18(C));
+		return (T1266f18(ac, C));
 	case 1267:
-		return (T1267f15(C));
+		return (T1267f15(ac, C));
 	case 1268:
-		return (T1268f14(C));
+		return (T1268f14(ac, C));
 	case 1269:
-		return (T1269f18(C));
+		return (T1269f18(ac, C));
 	case 1270:
-		return (T1270f16(C));
+		return (T1270f16(ac, C));
 	case 1713:
-		return (T1713f5(C));
+		return (T1713f5(ac, C));
 	case 1852:
-		return (T1852f15(C));
+		return (T1852f15(ac, C));
 	case 1853:
-		return (T1853f16(C));
+		return (T1853f16(ac, C));
 	case 1854:
-		return (T1854f4(C));
+		return (T1854f4(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_OPERAND.index */
-T6 T331x15183(T0* C)
+T6 T331x15191(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
@@ -21560,138 +21560,138 @@ T6 T331x15183(T0* C)
 }
 
 /* Call to ET_OPERAND.is_open_operand */
-T1 T331x15182(T0* C)
+T1 T331x15190(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f78(C));
+		return (T176f78(ac, C));
 	case 275:
-		return (T275f18(C));
+		return (T275f18(ac, C));
 	case 280:
-		return (T280f16(C));
+		return (T280f16(ac, C));
 	case 281:
-		return (T281f13(C));
+		return (T281f13(ac, C));
 	case 283:
-		return (T283f19(C));
+		return (T283f19(ac, C));
 	case 302:
-		return (T302f18(C));
+		return (T302f18(ac, C));
 	case 309:
-		return (T309f15(C));
+		return (T309f15(ac, C));
 	case 310:
-		return (T310f12(C));
+		return (T310f12(ac, C));
 	case 311:
-		return (T311f12(C));
+		return (T311f12(ac, C));
 	case 315:
-		return (T315f15(C));
+		return (T315f15(ac, C));
 	case 738:
-		return (T738f18(C));
+		return (T738f18(ac, C));
 	case 822:
-		return (T822f26(C));
+		return (T822f26(ac, C));
 	case 905:
-		return (T905f24(C));
+		return (T905f24(ac, C));
 	case 941:
-		return (T941f22(C));
+		return (T941f22(ac, C));
 	case 949:
 		return (EIF_TRUE);
 	case 952:
-		return (T952f25(C));
+		return (T952f25(ac, C));
 	case 980:
-		return (T980f14(C));
+		return (T980f14(ac, C));
 	case 983:
-		return (T983f17(C));
+		return (T983f17(ac, C));
 	case 1131:
-		return (T1131f18(C));
+		return (T1131f18(ac, C));
 	case 1145:
-		return (T1145f11(C));
+		return (T1145f11(ac, C));
 	case 1164:
-		return (T1164f16(C));
+		return (T1164f16(ac, C));
 	case 1167:
-		return (T1167f18(C));
+		return (T1167f18(ac, C));
 	case 1190:
-		return (T1190f24(C));
+		return (T1190f24(ac, C));
 	case 1191:
-		return (T1191f29(C));
+		return (T1191f29(ac, C));
 	case 1192:
-		return (T1192f25(C));
+		return (T1192f25(ac, C));
 	case 1193:
-		return (T1193f49(C));
+		return (T1193f49(ac, C));
 	case 1194:
-		return (T1194f49(C));
+		return (T1194f49(ac, C));
 	case 1195:
-		return (T1195f49(C));
+		return (T1195f49(ac, C));
 	case 1196:
-		return (T1196f49(C));
+		return (T1196f49(ac, C));
 	case 1197:
-		return (T1197f49(C));
+		return (T1197f49(ac, C));
 	case 1198:
-		return (T1198f25(C));
+		return (T1198f25(ac, C));
 	case 1199:
-		return (T1199f25(C));
+		return (T1199f25(ac, C));
 	case 1201:
-		return (T1201f24(C));
+		return (T1201f24(ac, C));
 	case 1202:
-		return (T1202f24(C));
+		return (T1202f24(ac, C));
 	case 1203:
-		return (T1203f23(C));
+		return (T1203f23(ac, C));
 	case 1204:
-		return (T1204f23(C));
+		return (T1204f23(ac, C));
 	case 1252:
-		return (T1252f16(C));
+		return (T1252f16(ac, C));
 	case 1253:
-		return (T1253f12(C));
+		return (T1253f12(ac, C));
 	case 1254:
-		return (T1254f12(C));
+		return (T1254f12(ac, C));
 	case 1255:
-		return (T1255f12(C));
+		return (T1255f12(ac, C));
 	case 1256:
-		return (T1256f12(C));
+		return (T1256f12(ac, C));
 	case 1257:
-		return (T1257f14(C));
+		return (T1257f14(ac, C));
 	case 1260:
-		return (T1260f13(C));
+		return (T1260f13(ac, C));
 	case 1261:
-		return (T1261f14(C));
+		return (T1261f14(ac, C));
 	case 1262:
-		return (T1262f12(C));
+		return (T1262f12(ac, C));
 	case 1263:
-		return (T1263f19(C));
+		return (T1263f19(ac, C));
 	case 1264:
-		return (T1264f14(C));
+		return (T1264f14(ac, C));
 	case 1265:
-		return (T1265f26(C));
+		return (T1265f26(ac, C));
 	case 1266:
-		return (T1266f27(C));
+		return (T1266f27(ac, C));
 	case 1267:
-		return (T1267f24(C));
+		return (T1267f24(ac, C));
 	case 1268:
-		return (T1268f25(C));
+		return (T1268f25(ac, C));
 	case 1269:
-		return (T1269f26(C));
+		return (T1269f26(ac, C));
 	case 1270:
-		return (T1270f23(C));
+		return (T1270f23(ac, C));
 	case 1271:
 		return (EIF_TRUE);
 	case 1272:
 		return (EIF_TRUE);
 	case 1588:
-		return (T1588f3(C));
+		return (T1588f3(ac, C));
 	case 1713:
-		return (T1713f14(C));
+		return (T1713f14(ac, C));
 	case 1788:
 		return (EIF_TRUE);
 	case 1852:
-		return (T1852f14(C));
+		return (T1852f14(ac, C));
 	case 1853:
-		return (T1853f15(C));
+		return (T1853f15(ac, C));
 	case 1854:
-		return (T1854f18(C));
+		return (T1854f18(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_AGENT_TARGET.index */
-T6 T333x15183(T0* C)
+T6 T333x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
@@ -21718,188 +21718,188 @@ if (t1==1145) {
 }
 
 /* Call to ET_AGENT_TARGET.position */
-T0* T333x7085(T0* C)
+T0* T333x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
 if (t1<=275) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T275f8(C));
+	return (T275f8(ac, C));
 }
 } else {
-	return (T302f8(C));
+	return (T302f8(ac, C));
 }
 } else {
 if (t1<=1271) {
 if (t1==1145) {
-	return (T1145f6(C));
+	return (T1145f6(ac, C));
 } else {
-	return (T1271f5(C));
+	return (T1271f5(ac, C));
 }
 } else {
-	return (T1588f4(C));
+	return (T1588f4(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT_TARGET.is_open_operand */
-T1 T333x15182(T0* C)
+T1 T333x15190(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
 if (t1<=275) {
 if (t1==176) {
-	return (T176f78(C));
+	return (T176f78(ac, C));
 } else {
-	return (T275f18(C));
+	return (T275f18(ac, C));
 }
 } else {
-	return (T302f18(C));
+	return (T302f18(ac, C));
 }
 } else {
 if (t1<=1271) {
 if (t1==1145) {
-	return (T1145f11(C));
+	return (T1145f11(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1588f3(C));
+	return (T1588f3(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.is_open_operand */
-T1 T335x15182(T0* C)
+T1 T335x15190(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f78(C));
+		return (T176f78(ac, C));
 	case 275:
-		return (T275f18(C));
+		return (T275f18(ac, C));
 	case 280:
-		return (T280f16(C));
+		return (T280f16(ac, C));
 	case 281:
-		return (T281f13(C));
+		return (T281f13(ac, C));
 	case 283:
-		return (T283f19(C));
+		return (T283f19(ac, C));
 	case 302:
-		return (T302f18(C));
+		return (T302f18(ac, C));
 	case 309:
-		return (T309f15(C));
+		return (T309f15(ac, C));
 	case 310:
-		return (T310f12(C));
+		return (T310f12(ac, C));
 	case 311:
-		return (T311f12(C));
+		return (T311f12(ac, C));
 	case 315:
-		return (T315f15(C));
+		return (T315f15(ac, C));
 	case 738:
-		return (T738f18(C));
+		return (T738f18(ac, C));
 	case 822:
-		return (T822f26(C));
+		return (T822f26(ac, C));
 	case 905:
-		return (T905f24(C));
+		return (T905f24(ac, C));
 	case 941:
-		return (T941f22(C));
+		return (T941f22(ac, C));
 	case 949:
 		return (EIF_TRUE);
 	case 952:
-		return (T952f25(C));
+		return (T952f25(ac, C));
 	case 980:
-		return (T980f14(C));
+		return (T980f14(ac, C));
 	case 983:
-		return (T983f17(C));
+		return (T983f17(ac, C));
 	case 1131:
-		return (T1131f18(C));
+		return (T1131f18(ac, C));
 	case 1145:
-		return (T1145f11(C));
+		return (T1145f11(ac, C));
 	case 1164:
-		return (T1164f16(C));
+		return (T1164f16(ac, C));
 	case 1167:
-		return (T1167f18(C));
+		return (T1167f18(ac, C));
 	case 1190:
-		return (T1190f24(C));
+		return (T1190f24(ac, C));
 	case 1191:
-		return (T1191f29(C));
+		return (T1191f29(ac, C));
 	case 1192:
-		return (T1192f25(C));
+		return (T1192f25(ac, C));
 	case 1193:
-		return (T1193f49(C));
+		return (T1193f49(ac, C));
 	case 1194:
-		return (T1194f49(C));
+		return (T1194f49(ac, C));
 	case 1195:
-		return (T1195f49(C));
+		return (T1195f49(ac, C));
 	case 1196:
-		return (T1196f49(C));
+		return (T1196f49(ac, C));
 	case 1197:
-		return (T1197f49(C));
+		return (T1197f49(ac, C));
 	case 1198:
-		return (T1198f25(C));
+		return (T1198f25(ac, C));
 	case 1199:
-		return (T1199f25(C));
+		return (T1199f25(ac, C));
 	case 1201:
-		return (T1201f24(C));
+		return (T1201f24(ac, C));
 	case 1202:
-		return (T1202f24(C));
+		return (T1202f24(ac, C));
 	case 1203:
-		return (T1203f23(C));
+		return (T1203f23(ac, C));
 	case 1204:
-		return (T1204f23(C));
+		return (T1204f23(ac, C));
 	case 1252:
-		return (T1252f16(C));
+		return (T1252f16(ac, C));
 	case 1253:
-		return (T1253f12(C));
+		return (T1253f12(ac, C));
 	case 1254:
-		return (T1254f12(C));
+		return (T1254f12(ac, C));
 	case 1255:
-		return (T1255f12(C));
+		return (T1255f12(ac, C));
 	case 1256:
-		return (T1256f12(C));
+		return (T1256f12(ac, C));
 	case 1257:
-		return (T1257f14(C));
+		return (T1257f14(ac, C));
 	case 1260:
-		return (T1260f13(C));
+		return (T1260f13(ac, C));
 	case 1261:
-		return (T1261f14(C));
+		return (T1261f14(ac, C));
 	case 1262:
-		return (T1262f12(C));
+		return (T1262f12(ac, C));
 	case 1263:
-		return (T1263f19(C));
+		return (T1263f19(ac, C));
 	case 1264:
-		return (T1264f14(C));
+		return (T1264f14(ac, C));
 	case 1265:
-		return (T1265f26(C));
+		return (T1265f26(ac, C));
 	case 1266:
-		return (T1266f27(C));
+		return (T1266f27(ac, C));
 	case 1267:
-		return (T1267f24(C));
+		return (T1267f24(ac, C));
 	case 1268:
-		return (T1268f25(C));
+		return (T1268f25(ac, C));
 	case 1269:
-		return (T1269f26(C));
+		return (T1269f26(ac, C));
 	case 1270:
-		return (T1270f23(C));
+		return (T1270f23(ac, C));
 	case 1272:
 		return (EIF_TRUE);
 	case 1713:
-		return (T1713f14(C));
+		return (T1713f14(ac, C));
 	case 1788:
 		return (EIF_TRUE);
 	case 1852:
-		return (T1852f14(C));
+		return (T1852f14(ac, C));
 	case 1853:
-		return (T1853f15(C));
+		return (T1853f15(ac, C));
 	case 1854:
-		return (T1854f18(C));
+		return (T1854f18(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.index */
-T6 T335x15183(T0* C)
+T6 T335x15191(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
@@ -22026,177 +22026,177 @@ T6 T335x15183(T0* C)
 }
 
 /* Call to ET_SYMBOL.position */
-T0* T337x7085(T0* C)
+T0* T337x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1==337) {
-	return (T337f5(C));
+	return (T337f5(ac, C));
 } else {
-	return (T638f4(C));
+	return (T638f4(ac, C));
 }
 } else {
-	return (T949f62(C));
+	return (T949f62(ac, C));
 }
 }
 
 /* Call to ET_SYMBOL.is_question_mark */
-T1 T337x12128(T0* C)
+T1 T337x12136(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1==337) {
-	return (T337f17(C));
+	return (T337f17(ac, C));
 } else {
-	return (T638f61(C));
+	return (T638f61(ac, C));
 }
 } else {
-	return (T949f56(C));
+	return (T949f56(ac, C));
 }
 }
 
 /* Call to ET_SYMBOL.is_bang */
-T1 T337x12129(T0* C)
+T1 T337x12137(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=638) {
 if (t1==337) {
-	return (T337f16(C));
+	return (T337f16(ac, C));
 } else {
-	return (T638f59(C));
+	return (T638f59(ac, C));
 }
 } else {
-	return (T949f54(C));
+	return (T949f54(ac, C));
 }
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.actual_argument */
-T0* T345x15177T6(T0* C, T6 a1)
+T0* T345x15185T6(GE_context* ac, T0* C, T6 a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f76(C, a1));
+		return (T176f76(ac, C, a1));
 	case 275:
-		return (T275f10(C, a1));
+		return (T275f10(ac, C, a1));
 	case 276:
-		return (T276f6(C, a1));
+		return (T276f6(ac, C, a1));
 	case 280:
-		return (T280f13(C, a1));
+		return (T280f13(ac, C, a1));
 	case 281:
-		return (T281f8(C, a1));
+		return (T281f8(ac, C, a1));
 	case 283:
-		return (T283f11(C, a1));
+		return (T283f11(ac, C, a1));
 	case 302:
-		return (T302f14(C, a1));
+		return (T302f14(ac, C, a1));
 	case 309:
-		return (T309f6(C, a1));
+		return (T309f6(ac, C, a1));
 	case 310:
-		return (T310f6(C, a1));
+		return (T310f6(ac, C, a1));
 	case 311:
-		return (T311f6(C, a1));
+		return (T311f6(ac, C, a1));
 	case 315:
-		return (T315f12(C, a1));
+		return (T315f12(ac, C, a1));
 	case 738:
-		return (T738f13(C, a1));
+		return (T738f13(ac, C, a1));
 	case 822:
-		return (T822f16(C, a1));
+		return (T822f16(ac, C, a1));
 	case 905:
-		return (T905f15(C, a1));
+		return (T905f15(ac, C, a1));
 	case 941:
-		return (T941f17(C, a1));
+		return (T941f17(ac, C, a1));
 	case 952:
-		return (T952f20(C, a1));
+		return (T952f20(ac, C, a1));
 	case 977:
-		return (T977f7(C, a1));
+		return (T977f7(ac, C, a1));
 	case 980:
-		return (T980f11(C, a1));
+		return (T980f11(ac, C, a1));
 	case 983:
-		return (T983f13(C, a1));
+		return (T983f13(ac, C, a1));
 	case 1131:
-		return (T1131f15(C, a1));
+		return (T1131f15(ac, C, a1));
 	case 1145:
-		return (T1145f10(C, a1));
+		return (T1145f10(ac, C, a1));
 	case 1164:
-		return (T1164f13(C, a1));
+		return (T1164f13(ac, C, a1));
 	case 1167:
-		return (T1167f15(C, a1));
+		return (T1167f15(ac, C, a1));
 	case 1190:
-		return (T1190f17(C, a1));
+		return (T1190f17(ac, C, a1));
 	case 1191:
-		return (T1191f21(C, a1));
+		return (T1191f21(ac, C, a1));
 	case 1192:
-		return (T1192f17(C, a1));
+		return (T1192f17(ac, C, a1));
 	case 1193:
-		return (T1193f22(C, a1));
+		return (T1193f22(ac, C, a1));
 	case 1194:
-		return (T1194f22(C, a1));
+		return (T1194f22(ac, C, a1));
 	case 1195:
-		return (T1195f22(C, a1));
+		return (T1195f22(ac, C, a1));
 	case 1196:
-		return (T1196f22(C, a1));
+		return (T1196f22(ac, C, a1));
 	case 1197:
-		return (T1197f22(C, a1));
+		return (T1197f22(ac, C, a1));
 	case 1198:
-		return (T1198f18(C, a1));
+		return (T1198f18(ac, C, a1));
 	case 1199:
-		return (T1199f18(C, a1));
+		return (T1199f18(ac, C, a1));
 	case 1201:
-		return (T1201f17(C, a1));
+		return (T1201f17(ac, C, a1));
 	case 1202:
-		return (T1202f17(C, a1));
+		return (T1202f17(ac, C, a1));
 	case 1203:
-		return (T1203f16(C, a1));
+		return (T1203f16(ac, C, a1));
 	case 1204:
-		return (T1204f16(C, a1));
+		return (T1204f16(ac, C, a1));
 	case 1252:
-		return (T1252f13(C, a1));
+		return (T1252f13(ac, C, a1));
 	case 1253:
-		return (T1253f9(C, a1));
+		return (T1253f9(ac, C, a1));
 	case 1254:
-		return (T1254f9(C, a1));
+		return (T1254f9(ac, C, a1));
 	case 1255:
-		return (T1255f9(C, a1));
+		return (T1255f9(ac, C, a1));
 	case 1256:
-		return (T1256f9(C, a1));
+		return (T1256f9(ac, C, a1));
 	case 1257:
-		return (T1257f9(C, a1));
+		return (T1257f9(ac, C, a1));
 	case 1260:
-		return (T1260f10(C, a1));
+		return (T1260f10(ac, C, a1));
 	case 1261:
-		return (T1261f8(C, a1));
+		return (T1261f8(ac, C, a1));
 	case 1262:
-		return (T1262f9(C, a1));
+		return (T1262f9(ac, C, a1));
 	case 1263:
-		return (T1263f16(C, a1));
+		return (T1263f16(ac, C, a1));
 	case 1264:
-		return (T1264f10(C, a1));
+		return (T1264f10(ac, C, a1));
 	case 1265:
-		return (T1265f21(C, a1));
+		return (T1265f21(ac, C, a1));
 	case 1266:
-		return (T1266f22(C, a1));
+		return (T1266f22(ac, C, a1));
 	case 1267:
-		return (T1267f20(C, a1));
+		return (T1267f20(ac, C, a1));
 	case 1268:
-		return (T1268f19(C, a1));
+		return (T1268f19(ac, C, a1));
 	case 1269:
-		return (T1269f20(C, a1));
+		return (T1269f20(ac, C, a1));
 	case 1270:
-		return (T1270f18(C, a1));
+		return (T1270f18(ac, C, a1));
 	case 1713:
-		return (T1713f9(C, a1));
+		return (T1713f9(ac, C, a1));
 	case 1852:
-		return (T1852f9(C, a1));
+		return (T1852f9(ac, C, a1));
 	case 1853:
-		return (T1853f9(C, a1));
+		return (T1853f9(ac, C, a1));
 	case 1854:
-		return (T1854f9(C, a1));
+		return (T1854f9(ac, C, a1));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.count */
-T6 T345x15178(T0* C)
+T6 T345x15186(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
@@ -22321,178 +22321,178 @@ T6 T345x15178(T0* C)
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.is_empty */
-T1 T345x15175(T0* C)
+T1 T345x15183(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f96(C));
+		return (T176f96(ac, C));
 	case 275:
-		return (T275f25(C));
+		return (T275f25(ac, C));
 	case 276:
-		return (T276f10(C));
+		return (T276f10(ac, C));
 	case 280:
-		return (T280f20(C));
+		return (T280f20(ac, C));
 	case 281:
-		return (T281f17(C));
+		return (T281f17(ac, C));
 	case 283:
-		return (T283f22(C));
+		return (T283f22(ac, C));
 	case 302:
-		return (T302f24(C));
+		return (T302f24(ac, C));
 	case 309:
-		return (T309f18(C));
+		return (T309f18(ac, C));
 	case 310:
-		return (T310f16(C));
+		return (T310f16(ac, C));
 	case 311:
-		return (T311f15(C));
+		return (T311f15(ac, C));
 	case 315:
-		return (T315f21(C));
+		return (T315f21(ac, C));
 	case 738:
-		return (T738f19(C));
+		return (T738f19(ac, C));
 	case 822:
-		return (T822f28(C));
+		return (T822f28(ac, C));
 	case 905:
-		return (T905f25(C));
+		return (T905f25(ac, C));
 	case 941:
-		return (T941f23(C));
+		return (T941f23(ac, C));
 	case 952:
-		return (T952f26(C));
+		return (T952f26(ac, C));
 	case 977:
-		return (T977f9(C));
+		return (T977f9(ac, C));
 	case 980:
-		return (T980f19(C));
+		return (T980f19(ac, C));
 	case 983:
-		return (T983f22(C));
+		return (T983f22(ac, C));
 	case 1131:
-		return (T1131f21(C));
+		return (T1131f21(ac, C));
 	case 1145:
-		return (T1145f16(C));
+		return (T1145f16(ac, C));
 	case 1164:
-		return (T1164f19(C));
+		return (T1164f19(ac, C));
 	case 1167:
-		return (T1167f22(C));
+		return (T1167f22(ac, C));
 	case 1190:
-		return (T1190f28(C));
+		return (T1190f28(ac, C));
 	case 1191:
-		return (T1191f33(C));
+		return (T1191f33(ac, C));
 	case 1192:
-		return (T1192f29(C));
+		return (T1192f29(ac, C));
 	case 1193:
-		return (T1193f56(C));
+		return (T1193f56(ac, C));
 	case 1194:
-		return (T1194f56(C));
+		return (T1194f56(ac, C));
 	case 1195:
-		return (T1195f56(C));
+		return (T1195f56(ac, C));
 	case 1196:
-		return (T1196f56(C));
+		return (T1196f56(ac, C));
 	case 1197:
-		return (T1197f56(C));
+		return (T1197f56(ac, C));
 	case 1198:
-		return (T1198f29(C));
+		return (T1198f29(ac, C));
 	case 1199:
-		return (T1199f29(C));
+		return (T1199f29(ac, C));
 	case 1201:
-		return (T1201f27(C));
+		return (T1201f27(ac, C));
 	case 1202:
-		return (T1202f27(C));
+		return (T1202f27(ac, C));
 	case 1203:
-		return (T1203f27(C));
+		return (T1203f27(ac, C));
 	case 1204:
-		return (T1204f27(C));
+		return (T1204f27(ac, C));
 	case 1252:
-		return (T1252f19(C));
+		return (T1252f19(ac, C));
 	case 1253:
-		return (T1253f15(C));
+		return (T1253f15(ac, C));
 	case 1254:
-		return (T1254f15(C));
+		return (T1254f15(ac, C));
 	case 1255:
-		return (T1255f15(C));
+		return (T1255f15(ac, C));
 	case 1256:
-		return (T1256f15(C));
+		return (T1256f15(ac, C));
 	case 1257:
-		return (T1257f18(C));
+		return (T1257f18(ac, C));
 	case 1260:
-		return (T1260f16(C));
+		return (T1260f16(ac, C));
 	case 1261:
-		return (T1261f20(C));
+		return (T1261f20(ac, C));
 	case 1262:
-		return (T1262f15(C));
+		return (T1262f15(ac, C));
 	case 1263:
-		return (T1263f22(C));
+		return (T1263f22(ac, C));
 	case 1264:
-		return (T1264f18(C));
+		return (T1264f18(ac, C));
 	case 1265:
-		return (T1265f32(C));
+		return (T1265f32(ac, C));
 	case 1266:
-		return (T1266f33(C));
+		return (T1266f33(ac, C));
 	case 1267:
-		return (T1267f31(C));
+		return (T1267f31(ac, C));
 	case 1268:
-		return (T1268f31(C));
+		return (T1268f31(ac, C));
 	case 1269:
-		return (T1269f32(C));
+		return (T1269f32(ac, C));
 	case 1270:
-		return (T1270f30(C));
+		return (T1270f30(ac, C));
 	case 1713:
-		return (T1713f10(C));
+		return (T1713f10(ac, C));
 	case 1852:
-		return (T1852f10(C));
+		return (T1852f10(ac, C));
 	case 1853:
-		return (T1853f10(C));
+		return (T1853f10(ac, C));
 	case 1854:
-		return (T1854f10(C));
+		return (T1854f10(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_DYNAMIC_TYPES.dynamic_type */
-T0* T348x16165T6(T0* C, T6 a1)
+T0* T348x16173T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1<=262) {
 if (t1==232) {
-	return (T232f64(C, a1));
+	return (T232f64(ac, C, a1));
 } else {
-	return (T262f6(C, a1));
+	return (T262f6(ac, C, a1));
 }
 } else {
-	return (T263f5(C, a1));
+	return (T263f5(ac, C, a1));
 }
 } else {
 if (t1==295) {
-	return (T295f57(C, a1));
+	return (T295f57(ac, C, a1));
 } else {
-	return (T312f57(C, a1));
+	return (T312f57(ac, C, a1));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f58(C, a1));
+	return (T323f58(ac, C, a1));
 } else {
-	return (T324f57(C, a1));
+	return (T324f57(ac, C, a1));
 }
 } else {
 if (t1==522) {
-	return (T522f11(C, a1));
+	return (T522f11(ac, C, a1));
 } else {
-	return (T821f13(C, a1));
+	return (T821f13(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPES.count */
-T6 T348x16168(T0* C)
+T6 T348x16176(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1<=262) {
 if (t1==232) {
-	return (T232f62(C));
+	return (T232f62(ac, C));
 } else {
 	return (((T262*)(C))->a1);
 }
@@ -22501,17 +22501,17 @@ if (t1==232) {
 }
 } else {
 if (t1==295) {
-	return (T295f56(C));
+	return (T295f56(ac, C));
 } else {
-	return (T312f56(C));
+	return (T312f56(ac, C));
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-	return (T323f57(C));
+	return (T323f57(ac, C));
 } else {
-	return (T324f56(C));
+	return (T324f56(ac, C));
 }
 } else {
 if (t1==522) {
@@ -22524,61 +22524,61 @@ if (t1==522) {
 }
 
 /* Call to ET_DYNAMIC_TYPES.index_of */
-T6 T348x16167T0(T0* C, T0* a1)
+T6 T348x16175T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=295) {
 if (t1<=262) {
 if (t1==232) {
-	return (T232f66(C, a1));
+	return (T232f66(ac, C, a1));
 } else {
-	return (T262f16(C, a1));
+	return (T262f16(ac, C, a1));
 }
 } else {
-	return (T295f68(C, a1));
+	return (T295f68(ac, C, a1));
 }
 } else {
 if (t1<=323) {
 if (t1==312) {
-	return (T312f68(C, a1));
+	return (T312f68(ac, C, a1));
 } else {
-	return (T323f69(C, a1));
+	return (T323f69(ac, C, a1));
 }
 } else {
-	return (T324f68(C, a1));
+	return (T324f68(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPES.has_type */
-T1 T348x16170T0(T0* C, T0* a1)
+T1 T348x16178T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=295) {
 if (t1<=262) {
 if (t1==232) {
-	return (T232f20(C, a1));
+	return (T232f20(ac, C, a1));
 } else {
-	return (T262f14(C, a1));
+	return (T262f14(ac, C, a1));
 }
 } else {
-	return (T295f61(C, a1));
+	return (T295f61(ac, C, a1));
 }
 } else {
 if (t1<=323) {
 if (t1==312) {
-	return (T312f61(C, a1));
+	return (T312f61(ac, C, a1));
 } else {
-	return (T323f62(C, a1));
+	return (T323f62(ac, C, a1));
 }
 } else {
-	return (T324f61(C, a1));
+	return (T324f61(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_MANIFEST_STRING.cast_type */
-T0* T354x20214(T0* C)
+T0* T354x20222(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
@@ -22593,7 +22593,7 @@ if (t1==822) {
 }
 
 /* Call to ET_MANIFEST_STRING.index */
-T6 T354x15183(T0* C)
+T6 T354x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
@@ -22608,7 +22608,7 @@ if (t1==822) {
 }
 
 /* Call to ET_MANIFEST_STRING.value */
-T0* T354x20212(T0* C)
+T0* T354x20220(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
@@ -22623,22 +22623,22 @@ if (t1==822) {
 }
 
 /* Call to ET_MANIFEST_STRING.position */
-T0* T354x7085(T0* C)
+T0* T354x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-	return (T822f27(C));
+	return (T822f27(ac, C));
 } else {
-	return (T1191f30(C));
+	return (T1191f30(ac, C));
 }
 } else {
-	return (T1192f10(C));
+	return (T1192f10(ac, C));
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.has_validity_error */
-T1 T365x17075(T0* C)
+T1 T365x17083(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22657,11 +22657,11 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (((T356*)(C))->a21);
 } else {
-	return (((T514*)(C))->a11);
+	return (((T516*)(C))->a11);
 }
 } else {
 	return (((T523*)(C))->a11);
@@ -22693,7 +22693,7 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.implementation_feature */
-T0* T365x17088(T0* C)
+T0* T365x17096(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22712,11 +22712,11 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (((T356*)(C))->a3);
 } else {
-	return (((T514*)(C))->a8);
+	return (((T516*)(C))->a8);
 }
 } else {
 	return (((T523*)(C))->a1);
@@ -22726,7 +22726,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f22(C));
+	return (T878f22(ac, C));
 } else {
 	return (((T1223*)(C))->a3);
 }
@@ -22748,7 +22748,7 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.postconditions */
-T0* T365x17085(T0* C)
+T0* T365x17093(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22761,17 +22761,17 @@ if (t1==253) {
 }
 } else {
 if (t1==353) {
-	return (T353f52(C));
+	return (T353f52(ac, C));
 } else {
-	return (T355f51(C));
+	return (T355f51(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f52(C));
+	return (T356f52(ac, C));
 } else {
-	return (((T514*)(C))->a20);
+	return (((T516*)(C))->a20);
 }
 } else {
 	return (((T523*)(C))->a18);
@@ -22781,7 +22781,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f24(C));
+	return (T878f24(ac, C));
 } else {
 	return (((T1223*)(C))->a9);
 }
@@ -22803,7 +22803,7 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.preconditions */
-T0* T365x17084(T0* C)
+T0* T365x17092(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22816,17 +22816,17 @@ if (t1==253) {
 }
 } else {
 if (t1==353) {
-	return (T353f45(C));
+	return (T353f45(ac, C));
 } else {
-	return (T355f44(C));
+	return (T355f44(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f44(C));
+	return (T356f44(ac, C));
 } else {
-	return (((T514*)(C))->a12);
+	return (((T516*)(C))->a12);
 }
 } else {
 	return (((T523*)(C))->a12);
@@ -22836,7 +22836,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f23(C));
+	return (T878f23(ac, C));
 } else {
 	return (((T1223*)(C))->a6);
 }
@@ -22858,62 +22858,62 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.as_feature */
-T0* T365x17079(T0* C)
+T0* T365x17087(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f69(C));
+	return (T253f69(ac, C));
 } else {
-	return (T320f65(C));
+	return (T320f65(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f63(C));
+	return (T353f63(ac, C));
 } else {
-	return (T355f63(C));
+	return (T355f63(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f61(C));
+	return (T356f61(ac, C));
 } else {
-	return (T514f64(C));
+	return (T516f64(ac, C));
 }
 } else {
-	return (T523f62(C));
+	return (T523f62(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f15(C));
+	return (T878f15(ac, C));
 } else {
-	return (T1223f66(C));
+	return (T1223f66(ac, C));
 }
 } else {
-	return (T1224f67(C));
+	return (T1224f67(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f64(C));
+	return (T1225f64(ac, C));
 } else {
-	return (T1227f65(C));
+	return (T1227f65(ac, C));
 }
 } else {
-	return (T1228f67(C));
+	return (T1228f67(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.is_feature */
-T1 T365x17068(T0* C)
+T1 T365x17076(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22932,7 +22932,7 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (EIF_TRUE);
 } else {
@@ -22946,7 +22946,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f14(C));
+	return (T878f14(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -22968,7 +22968,7 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.first_precursor */
-T0* T365x17070(T0* C)
+T0* T365x17078(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -22987,11 +22987,11 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (((T356*)(C))->a4);
 } else {
-	return (((T514*)(C))->a13);
+	return (((T516*)(C))->a13);
 }
 } else {
 	return (((T523*)(C))->a13);
@@ -23001,7 +23001,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f13(C));
+	return (T878f13(ac, C));
 } else {
 	return (((T1223*)(C))->a4);
 }
@@ -23023,40 +23023,40 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.locals */
-T0* T365x17083(T0* C)
+T0* T365x17091(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f70(C));
+	return (T253f70(ac, C));
 } else {
 	return (((T320*)(C))->a4);
 }
 } else {
 if (t1==353) {
-	return (T353f64(C));
+	return (T353f64(ac, C));
 } else {
-	return (T355f64(C));
+	return (T355f64(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f62(C));
+	return (T356f62(ac, C));
 } else {
-	return (((T514*)(C))->a17);
+	return (((T516*)(C))->a17);
 }
 } else {
-	return (T523f63(C));
+	return (T523f63(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f17(C));
+	return (T878f17(ac, C));
 } else {
 	return (((T1223*)(C))->a13);
 }
@@ -23066,19 +23066,19 @@ if (t1==878) {
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f65(C));
+	return (T1225f65(ac, C));
 } else {
 	return (((T1227*)(C))->a12);
 }
 } else {
-	return (T1228f68(C));
+	return (T1228f68(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.arguments */
-T0* T365x17082(T0* C)
+T0* T365x17090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -23087,21 +23087,21 @@ if (t1<=320) {
 if (t1==253) {
 	return (((T253*)(C))->a9);
 } else {
-	return (T320f49(C));
+	return (T320f49(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f49(C));
+	return (T353f49(ac, C));
 } else {
-	return (T355f48(C));
+	return (T355f48(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f48(C));
+	return (T356f48(ac, C));
 } else {
-	return (((T514*)(C))->a3);
+	return (((T516*)(C))->a3);
 }
 } else {
 	return (((T523*)(C))->a4);
@@ -23111,7 +23111,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f16(C));
+	return (T878f16(ac, C));
 } else {
 	return (((T1223*)(C))->a8);
 }
@@ -23133,62 +23133,62 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.type */
-T0* T365x17081(T0* C)
+T0* T365x17089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f44(C));
+	return (T253f44(ac, C));
 } else {
-	return (T320f47(C));
+	return (T320f47(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f47(C));
+	return (T353f47(ac, C));
 } else {
-	return (T355f46(C));
+	return (T355f46(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f46(C));
+	return (T356f46(ac, C));
 } else {
-	return (T514f31(C));
+	return (T516f31(ac, C));
 }
 } else {
-	return (T523f35(C));
+	return (T523f35(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f18(C));
+	return (T878f18(ac, C));
 } else {
-	return (T1223f49(C));
+	return (T1223f49(ac, C));
 }
 } else {
-	return (T1224f49(C));
+	return (T1224f49(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f31(C));
+	return (T1225f31(ac, C));
 } else {
-	return (T1227f40(C));
+	return (T1227f40(ac, C));
 }
 } else {
-	return (T1228f40(C));
+	return (T1228f40(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.clients */
-T0* T365x17073(T0* C)
+T0* T365x17081(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -23207,11 +23207,11 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (((T356*)(C))->a11);
 } else {
-	return (((T514*)(C))->a7);
+	return (((T516*)(C))->a7);
 }
 } else {
 	return (((T523*)(C))->a9);
@@ -23221,7 +23221,7 @@ if (t1==356) {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f19(C));
+	return (T878f19(ac, C));
 } else {
 	return (((T1223*)(C))->a16);
 }
@@ -23243,88 +23243,88 @@ if (t1==1225) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.as_invariants */
-T0* T365x17080(T0* C)
+T0* T365x17088(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f73(C));
+	return (T253f73(ac, C));
 } else {
-	return (T320f68(C));
+	return (T320f68(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f67(C));
+	return (T353f67(ac, C));
 } else {
-	return (T355f67(C));
+	return (T355f67(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f65(C));
+	return (T356f65(ac, C));
 } else {
-	return (T514f67(C));
+	return (T516f67(ac, C));
 }
 } else {
-	return (T523f66(C));
+	return (T523f66(ac, C));
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==878) {
-	return (T878f21(C));
+	return (T878f21(ac, C));
 } else {
-	return (T1223f69(C));
+	return (T1223f69(ac, C));
 }
 } else {
-	return (T1224f70(C));
+	return (T1224f70(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f68(C));
+	return (T1225f68(ac, C));
 } else {
-	return (T1227f68(C));
+	return (T1227f68(ac, C));
 }
 } else {
-	return (T1228f71(C));
+	return (T1228f71(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.is_invariants */
-T1 T365x17069(T0* C)
+T1 T365x17077(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f72(C));
+	return (T253f72(ac, C));
 } else {
-	return (T320f67(C));
+	return (T320f67(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f66(C));
+	return (T353f66(ac, C));
 } else {
-	return (T355f66(C));
+	return (T355f66(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f64(C));
+	return (T356f64(ac, C));
 } else {
-	return (T514f66(C));
+	return (T516f66(ac, C));
 }
 } else {
-	return (T523f65(C));
+	return (T523f65(ac, C));
 }
 }
 } else {
@@ -23333,27 +23333,27 @@ if (t1<=1223) {
 if (t1==878) {
 	return (EIF_TRUE);
 } else {
-	return (T1223f68(C));
+	return (T1223f68(ac, C));
 }
 } else {
-	return (T1224f69(C));
+	return (T1224f69(ac, C));
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f67(C));
+	return (T1225f67(ac, C));
 } else {
-	return (T1227f67(C));
+	return (T1227f67(ac, C));
 }
 } else {
-	return (T1228f70(C));
+	return (T1228f70(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_STANDALONE_CLOSURE.implementation_class */
-T0* T365x17071(T0* C)
+T0* T365x17079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -23372,11 +23372,11 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (((T356*)(C))->a2);
 } else {
-	return (((T514*)(C))->a1);
+	return (((T516*)(C))->a1);
 }
 } else {
 	return (((T523*)(C))->a2);
@@ -23408,113 +23408,113 @@ if (t1==1225) {
 }
 
 /* Call to ET_ASSERTION.expression */
-T0* T384x15170(T0* C)
+T0* T384x15178(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f46(C));
+		return (T176f46(ac, C));
 	case 275:
-		return (T275f7(C));
+		return (T275f7(ac, C));
 	case 280:
-		return (T280f11(C));
+		return (T280f11(ac, C));
 	case 281:
-		return (T281f6(C));
+		return (T281f6(ac, C));
 	case 283:
-		return (T283f14(C));
+		return (T283f14(ac, C));
 	case 302:
-		return (T302f7(C));
+		return (T302f7(ac, C));
 	case 309:
-		return (T309f9(C));
+		return (T309f9(ac, C));
 	case 310:
-		return (T310f9(C));
+		return (T310f9(ac, C));
 	case 311:
-		return (T311f9(C));
+		return (T311f9(ac, C));
 	case 315:
-		return (T315f10(C));
+		return (T315f10(ac, C));
 	case 738:
-		return (T738f7(C));
+		return (T738f7(ac, C));
 	case 822:
-		return (T822f6(C));
+		return (T822f6(ac, C));
 	case 905:
-		return (T905f4(C));
+		return (T905f4(ac, C));
 	case 941:
-		return (T941f15(C));
+		return (T941f15(ac, C));
 	case 952:
-		return (T952f15(C));
+		return (T952f15(ac, C));
 	case 980:
-		return (T980f7(C));
+		return (T980f7(ac, C));
 	case 983:
-		return (T983f8(C));
+		return (T983f8(ac, C));
 	case 1131:
-		return (T1131f9(C));
+		return (T1131f9(ac, C));
 	case 1145:
-		return (T1145f8(C));
+		return (T1145f8(ac, C));
 	case 1164:
-		return (T1164f7(C));
+		return (T1164f7(ac, C));
 	case 1167:
-		return (T1167f9(C));
+		return (T1167f9(ac, C));
 	case 1190:
-		return (T1190f11(C));
+		return (T1190f11(ac, C));
 	case 1191:
-		return (T1191f12(C));
+		return (T1191f12(ac, C));
 	case 1192:
-		return (T1192f12(C));
+		return (T1192f12(ac, C));
 	case 1193:
-		return (T1193f10(C));
+		return (T1193f10(ac, C));
 	case 1194:
-		return (T1194f10(C));
+		return (T1194f10(ac, C));
 	case 1195:
-		return (T1195f10(C));
+		return (T1195f10(ac, C));
 	case 1196:
-		return (T1196f10(C));
+		return (T1196f10(ac, C));
 	case 1197:
-		return (T1197f10(C));
+		return (T1197f10(ac, C));
 	case 1198:
-		return (T1198f10(C));
+		return (T1198f10(ac, C));
 	case 1199:
-		return (T1199f10(C));
+		return (T1199f10(ac, C));
 	case 1201:
-		return (T1201f15(C));
+		return (T1201f15(ac, C));
 	case 1202:
-		return (T1202f15(C));
+		return (T1202f15(ac, C));
 	case 1203:
-		return (T1203f11(C));
+		return (T1203f11(ac, C));
 	case 1204:
-		return (T1204f11(C));
+		return (T1204f11(ac, C));
 	case 1252:
-		return (T1252f11(C));
+		return (T1252f11(ac, C));
 	case 1253:
-		return (T1253f4(C));
+		return (T1253f4(ac, C));
 	case 1254:
-		return (T1254f4(C));
+		return (T1254f4(ac, C));
 	case 1255:
-		return (T1255f4(C));
+		return (T1255f4(ac, C));
 	case 1256:
-		return (T1256f4(C));
+		return (T1256f4(ac, C));
 	case 1257:
-		return (T1257f7(C));
+		return (T1257f7(ac, C));
 	case 1260:
-		return (T1260f8(C));
+		return (T1260f8(ac, C));
 	case 1261:
-		return (T1261f15(C));
+		return (T1261f15(ac, C));
 	case 1262:
-		return (T1262f4(C));
+		return (T1262f4(ac, C));
 	case 1263:
-		return (T1263f11(C));
+		return (T1263f11(ac, C));
 	case 1264:
-		return (T1264f8(C));
+		return (T1264f8(ac, C));
 	case 1265:
-		return (T1265f19(C));
+		return (T1265f19(ac, C));
 	case 1266:
-		return (T1266f19(C));
+		return (T1266f19(ac, C));
 	case 1267:
-		return (T1267f17(C));
+		return (T1267f17(ac, C));
 	case 1268:
-		return (T1268f15(C));
+		return (T1268f15(ac, C));
 	case 1269:
-		return (T1269f15(C));
+		return (T1269f15(ac, C));
 	case 1270:
-		return (T1270f13(C));
+		return (T1270f13(ac, C));
 	case 1274:
 		return (((T1274*)(C))->a2);
 	default:
@@ -23523,76 +23523,76 @@ T0* T384x15170(T0* C)
 }
 
 /* Call to ET_PRIMARY_GROUP.relative_lower_name */
-T0* T386x15321T0T2(T0* C, T0* a1, T2 a2)
+T0* T386x15329T0T2(GE_context* ac, T0* C, T0* a1, T2 a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f49(C, a1, a2));
+	return (T208f49(ac, C, a1, a2));
 } else {
-	return (T385f17(C, a1, a2));
+	return (T385f17(ac, C, a1, a2));
 }
 } else {
-	return (T402f48(C, a1, a2));
+	return (T402f48(ac, C, a1, a2));
 }
 } else {
 if (t1==496) {
-	return (T496f16(C, a1, a2));
+	return (T496f16(ac, C, a1, a2));
 } else {
-	return (T789f47(C, a1, a2));
+	return (T789f47(ac, C, a1, a2));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.kind_name */
-T0* T386x15327(T0* C)
+T0* T386x15335(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f51(C));
+	return (T208f51(ac, C));
 } else {
-	return (T385f29(C));
+	return (T385f29(ac, C));
 }
 } else {
-	return (T402f54(C));
+	return (T402f54(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f28(C));
+	return (T496f28(ac, C));
 } else {
-	return (T789f54(C));
+	return (T789f54(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.full_lower_name */
-T0* T386x15323T2(T0* C, T2 a1)
+T0* T386x15331T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f46(C, a1));
+	return (T208f46(ac, C, a1));
 } else {
-	return (T385f13(C, a1));
+	return (T385f13(ac, C, a1));
 }
 } else {
-	return (T402f32(C, a1));
+	return (T402f32(ac, C, a1));
 }
 } else {
 if (t1==496) {
-	return (T496f12(C, a1));
+	return (T496f12(ac, C, a1));
 } else {
-	return (T789f32(C, a1));
+	return (T789f32(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.use_obsolete_syntax */
-T1 T386x15311(T0* C)
+T1 T386x15319(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23615,30 +23615,30 @@ if (t1==496) {
 }
 
 /* Call to ET_PRIMARY_GROUP.current_system */
-T0* T386x15317(T0* C)
+T0* T386x15325(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f34(C));
+	return (T208f34(ac, C));
 } else {
-	return (T385f10(C));
+	return (T385f10(ac, C));
 }
 } else {
-	return (T402f39(C));
+	return (T402f39(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f9(C));
+	return (T496f9(ac, C));
 } else {
-	return (T789f26(C));
+	return (T789f26(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.universe */
-T0* T386x15316(T0* C)
+T0* T386x15324(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23646,7 +23646,7 @@ if (t1<=385) {
 if (t1==208) {
 	return (((T208*)(C))->a4);
 } else {
-	return (T385f19(C));
+	return (T385f19(ac, C));
 }
 } else {
 	return (((T402*)(C))->a4);
@@ -23661,30 +23661,30 @@ if (t1==496) {
 }
 
 /* Call to ET_PRIMARY_GROUP.dotnet_assembly */
-T0* T386x15342(T0* C)
+T0* T386x15350(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f36(C));
+	return (T208f36(ac, C));
 } else {
-	return (T385f12(C));
+	return (T385f12(ac, C));
 }
 } else {
-	return (T402f28(C));
+	return (T402f28(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f11(C));
+	return (T496f11(ac, C));
 } else {
-	return (T789f29(C));
+	return (T789f29(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.is_cluster */
-T1 T386x15304(T0* C)
+T1 T386x15312(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23692,14 +23692,14 @@ if (t1<=385) {
 if (t1==208) {
 	return (EIF_TRUE);
 } else {
-	return (T385f8(C));
+	return (T385f8(ac, C));
 }
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==496) {
-	return (T496f7(C));
+	return (T496f7(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -23707,30 +23707,30 @@ if (t1==496) {
 }
 
 /* Call to ET_PRIMARY_GROUP.cluster */
-T0* T386x15340(T0* C)
+T0* T386x15348(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f32(C));
+	return (T208f32(ac, C));
 } else {
-	return (T385f7(C));
+	return (T385f7(ac, C));
 }
 } else {
-	return (T402f27(C));
+	return (T402f27(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f5(C));
+	return (T496f5(ac, C));
 } else {
-	return (T789f28(C));
+	return (T789f28(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.is_override */
-T1 T386x15309(T0* C)
+T1 T386x15317(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23753,106 +23753,106 @@ if (t1==496) {
 }
 
 /* Call to ET_PRIMARY_GROUP.is_dotnet_assembly */
-T1 T386x15306(T0* C)
+T1 T386x15314(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f31(C));
+	return (T208f31(ac, C));
 } else {
-	return (T385f6(C));
+	return (T385f6(ac, C));
 }
 } else {
-	return (T402f38(C));
+	return (T402f38(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f18(C));
+	return (T496f18(ac, C));
 } else {
-	return (T789f25(C));
+	return (T789f25(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.is_unknown */
-T1 T386x15308(T0* C)
+T1 T386x15316(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f30(C));
+	return (T208f30(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T402f33(C));
+	return (T402f33(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f10(C));
+	return (T496f10(ac, C));
 } else {
-	return (T789f43(C));
+	return (T789f43(ac, C));
 }
 }
 }
 
 /* Call to ET_PRIMARY_GROUP.is_none */
-T1 T386x15307(T0* C)
+T1 T386x15315(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f29(C));
+	return (T208f29(ac, C));
 } else {
-	return (T385f4(C));
+	return (T385f4(ac, C));
 }
 } else {
-	return (T402f31(C));
+	return (T402f31(ac, C));
 }
 } else {
 if (t1==496) {
 	return (EIF_TRUE);
 } else {
-	return (T789f39(C));
+	return (T789f39(ac, C));
 }
 }
 }
 
 /* Call to ET_CLUSTER.full_lower_name */
-T0* T407x15323T2(T0* C, T2 a1)
+T0* T407x15331T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f46(C, a1));
+	return (T208f46(ac, C, a1));
 } else {
-	return (T402f32(C, a1));
+	return (T402f32(ac, C, a1));
 }
 } else {
-	return (T789f32(C, a1));
+	return (T789f32(ac, C, a1));
 }
 }
 
 /* Call to ET_CLUSTER.scm_write_mapping_recursive */
-T0* T407x15889(T0* C)
+T0* T407x15897(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f45(C));
+	return (T208f45(ac, C));
 } else {
-	return (T402f43(C));
+	return (T402f43(ac, C));
 }
 } else {
-	return (T789f42(C));
+	return (T789f42(ac, C));
 }
 }
 
 /* Call to ET_CLUSTER.dependant_constraint */
-T0* T407x15883(T0* C)
+T0* T407x15891(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23867,7 +23867,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.overridden_constraint_enabled */
-T1 T407x15884(T0* C)
+T1 T407x15892(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23882,7 +23882,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.scm_mapping_constraint_enabled */
-T1 T407x15885(T0* C)
+T1 T407x15893(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23897,7 +23897,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.provider_constraint */
-T0* T407x15882(T0* C)
+T0* T407x15890(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23912,22 +23912,22 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.absolute_pathname */
-T0* T407x15326(T0* C)
+T0* T407x15334(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f37(C));
+	return (T208f37(ac, C));
 } else {
-	return (T402f29(C));
+	return (T402f29(ac, C));
 }
 } else {
-	return (T789f30(C));
+	return (T789f30(ac, C));
 }
 }
 
 /* Call to ET_CLUSTER.is_abstract */
-T1 T407x15851(T0* C)
+T1 T407x15859(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23942,7 +23942,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.is_read_only */
-T1 T407x15310(T0* C)
+T1 T407x15318(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23957,7 +23957,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.is_override */
-T1 T407x15309(T0* C)
+T1 T407x15317(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -23972,22 +23972,22 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.full_pathname */
-T0* T407x15324(T0* C)
+T0* T407x15332(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f35(C));
+	return (T208f35(ac, C));
 } else {
-	return (T402f34(C));
+	return (T402f34(ac, C));
 }
 } else {
-	return (T789f35(C));
+	return (T789f35(ac, C));
 }
 }
 
 /* Call to ET_CLUSTER.is_implicit */
-T1 T407x15859(T0* C)
+T1 T407x15867(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24002,7 +24002,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.is_preparsed */
-T1 T407x15312(T0* C)
+T1 T407x15320(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24017,7 +24017,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.parent */
-T0* T407x15343(T0* C)
+T0* T407x15351(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24032,7 +24032,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.universe */
-T0* T407x15316(T0* C)
+T0* T407x15324(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24047,7 +24047,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.subclusters */
-T0* T407x15881(T0* C)
+T0* T407x15889(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24062,22 +24062,22 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.is_valid_directory_name */
-T1 T407x15865T0(T0* C, T0* a1)
+T1 T407x15873T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f27(C, a1));
+	return (T208f27(ac, C, a1));
 } else {
-	return (T402f36(C, a1));
+	return (T402f36(ac, C, a1));
 }
 } else {
-	return (T789f37(C, a1));
+	return (T789f37(ac, C, a1));
 }
 }
 
 /* Call to ET_CLUSTER.is_recursive */
-T1 T407x15853(T0* C)
+T1 T407x15861(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24092,22 +24092,22 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.is_valid_eiffel_filename */
-T1 T407x15864T0(T0* C, T0* a1)
+T1 T407x15872T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-	return (T208f26(C, a1));
+	return (T208f26(ac, C, a1));
 } else {
-	return (T402f35(C, a1));
+	return (T402f35(ac, C, a1));
 }
 } else {
-	return (T789f36(C, a1));
+	return (T789f36(ac, C, a1));
 }
 }
 
 /* Call to ET_CLUSTER.scm_write_mapping */
-T0* T407x15887(T0* C)
+T0* T407x15895(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24122,7 +24122,7 @@ if (t1==208) {
 }
 
 /* Call to ET_CLUSTER.scm_read_mapping */
-T0* T407x15886(T0* C)
+T0* T407x15894(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -24137,49 +24137,49 @@ if (t1==208) {
 }
 
 /* Call to ET_INTERNAL_UNIVERSE.hash_code */
-T6 T436x22(T0* C)
+T6 T436x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=68) {
 if (t1<=62) {
 if (t1==59) {
-	return (T59f156(C));
+	return (T59f157(ac, C));
 } else {
-	return (T62f161(C));
+	return (T62f162(ac, C));
 }
 } else {
-	return (T68f153(C));
+	return (T68f154(ac, C));
 }
 } else {
 if (t1==183) {
-	return (T183f95(C));
+	return (T183f95(ac, C));
 } else {
-	return (T451f85(C));
+	return (T451f85(ac, C));
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.full_lower_name */
-T0* T439x15323T2(T0* C, T2 a1)
+T0* T439x15331T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-	return (T192f92(C, a1));
+	return (T192f92(ac, C, a1));
 } else {
-	return (T210f97(C, a1));
+	return (T210f97(ac, C, a1));
 }
 } else {
 if (t1==223) {
-	return (T223f104(C, a1));
+	return (T223f104(ac, C, a1));
 } else {
-	return (T439f92(C, a1));
+	return (T439f92(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.dotnet_assembly */
-T0* T439x3465(T0* C)
+T0* T439x3465(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
@@ -24198,63 +24198,63 @@ if (t1==223) {
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.hash_code */
-T6 T439x22(T0* C)
+T6 T439x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-	return (T192f84(C));
+	return (T192f84(ac, C));
 } else {
-	return (T210f88(C));
+	return (T210f88(ac, C));
 }
 } else {
 if (t1==223) {
-	return (T223f95(C));
+	return (T223f95(ac, C));
 } else {
-	return (T439f84(C));
+	return (T439f84(ac, C));
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.is_consumable */
-T1 T439x15407(T0* C)
+T1 T439x15415(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-	return (T192f87(C));
+	return (T192f87(ac, C));
 } else {
-	return (T210f90(C));
+	return (T210f90(ac, C));
 }
 } else {
 if (t1==223) {
-	return (T223f97(C));
+	return (T223f97(ac, C));
 } else {
-	return (T439f87(C));
+	return (T439f87(ac, C));
 }
 }
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.alias_name */
-T0* T515x15142(T0* C)
+T0* T517x15150(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f54(C));
+	return (T176f54(ac, C));
 } else {
-	return (T823f10(C));
+	return (T823f10(ac, C));
 }
 } else {
-	return (T1229f23(C));
+	return (T1229f23(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f10(C));
+	return (T1230f10(ac, C));
 } else {
-	return (T1231f23(C));
+	return (T1231f23(ac, C));
 }
 } else {
 	return (((T1232*)(C))->a2);
@@ -24263,25 +24263,25 @@ if (t1==1230) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.feature_name */
-T0* T515x15141(T0* C)
+T0* T517x15149(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f43(C));
+	return (T176f43(ac, C));
 } else {
-	return (T823f9(C));
+	return (T823f9(ac, C));
 }
 } else {
-	return (T1229f10(C));
+	return (T1229f10(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f31(C));
+	return (T1230f31(ac, C));
 } else {
-	return (T1231f10(C));
+	return (T1231f10(ac, C));
 }
 } else {
 	return (((T1232*)(C))->a1);
@@ -24290,145 +24290,145 @@ if (t1==1230) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.same_call_name */
-T1 T515x15144T0(T0* C, T0* a1)
+T1 T517x15152T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f70(C, a1));
+	return (T176f70(ac, C, a1));
 } else {
-	return (T823f24(C, a1));
+	return (T823f24(ac, C, a1));
 }
 } else {
-	return (T1229f17(C, a1));
+	return (T1229f17(ac, C, a1));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f18(C, a1));
+	return (T1230f18(ac, C, a1));
 } else {
-	return (T1231f17(C, a1));
+	return (T1231f17(ac, C, a1));
 }
 } else {
-	return (T1232f6(C, a1));
+	return (T1232f6(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.position */
-T0* T515x7085(T0* C)
+T0* T517x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T823f14(C));
+	return (T823f14(ac, C));
 }
 } else {
-	return (T1229f7(C));
+	return (T1229f7(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f7(C));
+	return (T1230f7(ac, C));
 } else {
-	return (T1231f7(C));
+	return (T1231f7(ac, C));
 }
 } else {
-	return (T1232f4(C));
+	return (T1232f4(ac, C));
 }
 }
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.same_extended_feature_name */
-T1 T515x15143T0(T0* C, T0* a1)
+T1 T517x15151T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f85(C, a1));
+	return (T176f85(ac, C, a1));
 } else {
-	return (T823f60(C, a1));
+	return (T823f60(ac, C, a1));
 }
 } else {
-	return (T1229f59(C, a1));
+	return (T1229f59(ac, C, a1));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f60(C, a1));
+	return (T1230f60(ac, C, a1));
 } else {
-	return (T1231f73(C, a1));
+	return (T1231f73(ac, C, a1));
 }
 } else {
-	return (T1232f3(C, a1));
+	return (T1232f3(ac, C, a1));
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.start_condition */
-T6 T559x6457(T0* C)
+T6 T559x6457(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-	return (T559f44(C));
+	return (T559f44(ac, C));
 } else {
-	return (T597f60(C));
+	return (T597f60(ac, C));
 }
 } else {
 if (t1==598) {
-	return (T598f51(C));
+	return (T598f51(ac, C));
 } else {
-	return (T600f62(C));
+	return (T600f62(ac, C));
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.is_applicable_encoding */
-T1 T559x28495T0(T0* C, T0* a1)
+T1 T559x28503T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-	return (T559f68(C, a1));
+	return (T559f68(ac, C, a1));
 } else {
-	return (T597f59(C, a1));
+	return (T597f59(ac, C, a1));
 }
 } else {
 if (t1==598) {
-	return (T598f49(C, a1));
+	return (T598f49(ac, C, a1));
 } else {
-	return (T600f61(C, a1));
+	return (T600f61(ac, C, a1));
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.end_of_file */
-T1 T559x6462(T0* C)
+T1 T559x6462(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-	return (T559f67(C));
+	return (T559f67(ac, C));
 } else {
-	return (T597f58(C));
+	return (T597f58(ac, C));
 }
 } else {
 if (t1==598) {
-	return (T598f63(C));
+	return (T598f63(ac, C));
 } else {
-	return (T600f60(C));
+	return (T600f60(ac, C));
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.last_value */
-T0* T559x28506(T0* C)
+T0* T559x28514(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
@@ -24447,7 +24447,7 @@ if (t1==598) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.last_token */
-T6 T559x6453(T0* C)
+T6 T559x6453(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
@@ -24466,1313 +24466,1313 @@ if (t1==598) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.error_position */
-T0* T559x28504(T0* C)
+T0* T559x28512(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-	return (T559f66(C));
+	return (T559f66(ac, C));
 } else {
-	return (T597f56(C));
+	return (T597f56(ac, C));
 }
 } else {
 if (t1==598) {
-	return (T598f56(C));
+	return (T598f56(ac, C));
 } else {
-	return (T600f58(C));
+	return (T600f58(ac, C));
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.to_text */
-T0* T709x7079(T0* C)
+T0* T709x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f36(C));
+	return (T78f36(ac, C));
 } else {
-	return (T80f98(C));
+	return (T80f98(ac, C));
 }
 } else {
-	return (T246f34(C));
+	return (T246f34(ac, C));
 }
 } else {
 if (t1==254) {
-	return (T254f35(C));
+	return (T254f35(ac, C));
 } else {
-	return (T1081f55(C));
+	return (T1081f55(ac, C));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f61(C));
+	return (T1209f61(ac, C));
 } else {
-	return (T1213f12(C));
+	return (T1213f12(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f41(C));
+	return (T1214f41(ac, C));
 } else {
-	return (T1417f57(C));
+	return (T1417f57(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.base_type_index_of_label */
-T6 T709x7016T0T0(T0* C, T0* a1, T0* a2)
+T6 T709x7016T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f105(C, a1, a2));
+	return (T78f105(ac, C, a1, a2));
 } else {
-	return (T80f199(C, a1, a2));
+	return (T80f199(ac, C, a1, a2));
 }
 } else {
-	return (T246f105(C, a1, a2));
+	return (T246f105(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f103(C, a1, a2));
+	return (T254f103(ac, C, a1, a2));
 } else {
-	return (T1081f73(C, a1, a2));
+	return (T1081f73(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f74(C, a1, a2));
+	return (T1209f74(ac, C, a1, a2));
 } else {
-	return (T1213f103(C, a1, a2));
+	return (T1213f103(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f104(C, a1, a2));
+	return (T1214f104(ac, C, a1, a2));
 } else {
-	return (T1417f67(C, a1, a2));
+	return (T1417f67(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_base_type_with_type_marks */
-T1 T709x7050T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7050T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f41(C, a1, a2, a3, a4, a5));
+	return (T78f41(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f106(C, a1, a2, a3, a4, a5));
+	return (T80f106(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f40(C, a1, a2, a3, a4, a5));
+	return (T246f40(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f40(C, a1, a2, a3, a4, a5));
+	return (T254f40(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f68(C, a1, a2, a3, a4, a5));
+	return (T1081f68(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f69(C, a1, a2, a3, a4, a5));
+	return (T1209f69(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f65(C, a1, a2, a3, a4, a5));
+	return (T1213f65(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f67(C, a1, a2, a3, a4, a5));
+	return (T1214f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f63(C, a1, a2, a3, a4, a5));
+	return (T1417f63(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.base_type_actual */
-T0* T709x7014T6T0(T0* C, T6 a1, T0* a2)
+T0* T709x7014T6T0(GE_context* ac, T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f81(C, a1, a2));
+	return (T78f81(ac, C, a1, a2));
 } else {
-	return (T80f168(C, a1, a2));
+	return (T80f168(ac, C, a1, a2));
 }
 } else {
-	return (T246f83(C, a1, a2));
+	return (T246f83(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f80(C, a1, a2));
+	return (T254f80(ac, C, a1, a2));
 } else {
-	return (T1081f66(C, a1, a2));
+	return (T1081f66(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f67(C, a1, a2));
+	return (T1209f67(ac, C, a1, a2));
 } else {
-	return (T1213f84(C, a1, a2));
+	return (T1213f84(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f85(C, a1, a2));
+	return (T1214f85(ac, C, a1, a2));
 } else {
-	return (T1417f53(C, a1, a2));
+	return (T1417f53(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_qualified_like_identifier_with_type_marks */
-T1 T709x7056T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7056T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f100(C, a1, a2, a3, a4, a5));
+	return (T78f100(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f187(C, a1, a2, a3, a4, a5));
+	return (T80f187(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f100(C, a1, a2, a3, a4, a5));
+	return (T246f100(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f96(C, a1, a2, a3, a4, a5));
+	return (T254f96(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f65(C, a1, a2, a3, a4, a5));
+	return (T1081f65(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f66(C, a1, a2, a3, a4, a5));
+	return (T1209f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f97(C, a1, a2, a3, a4, a5));
+	return (T1213f97(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f98(C, a1, a2, a3, a4, a5));
+	return (T1214f98(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f61(C, a1, a2, a3, a4, a5));
+	return (T1417f61(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_like_feature_with_type_marks */
-T1 T709x7055T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7055T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f99(C, a1, a2, a3, a4, a5));
+	return (T78f99(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f186(C, a1, a2, a3, a4, a5));
+	return (T80f186(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f99(C, a1, a2, a3, a4, a5));
+	return (T246f99(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f95(C, a1, a2, a3, a4, a5));
+	return (T254f95(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f64(C, a1, a2, a3, a4, a5));
+	return (T1081f64(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f65(C, a1, a2, a3, a4, a5));
+	return (T1209f65(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f96(C, a1, a2, a3, a4, a5));
+	return (T1213f96(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f97(C, a1, a2, a3, a4, a5));
+	return (T1214f97(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f60(C, a1, a2, a3, a4, a5));
+	return (T1417f60(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_bit_type_with_type_marks */
-T1 T709x7051T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7051T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f98(C, a1, a2, a3, a4, a5));
+	return (T78f98(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f185(C, a1, a2, a3, a4, a5));
+	return (T80f185(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f98(C, a1, a2, a3, a4, a5));
+	return (T246f98(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f94(C, a1, a2, a3, a4, a5));
+	return (T254f94(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f63(C, a1, a2, a3, a4, a5));
+	return (T1081f63(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f64(C, a1, a2, a3, a4, a5));
+	return (T1209f64(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f64(C, a1, a2, a3, a4, a5));
+	return (T1213f64(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f66(C, a1, a2, a3, a4, a5));
+	return (T1214f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f59(C, a1, a2, a3, a4, a5));
+	return (T1417f59(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_formal_parameter_type_with_type_marks */
-T1 T709x7053T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7053T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f97(C, a1, a2, a3, a4, a5));
+	return (T78f97(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f184(C, a1, a2, a3, a4, a5));
+	return (T80f184(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f97(C, a1, a2, a3, a4, a5));
+	return (T246f97(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f93(C, a1, a2, a3, a4, a5));
+	return (T254f93(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f62(C, a1, a2, a3, a4, a5));
+	return (T1081f62(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f53(C, a1, a2, a3, a4, a5));
+	return (T1209f53(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f95(C, a1, a2, a3, a4, a5));
+	return (T1213f95(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f96(C, a1, a2, a3, a4, a5));
+	return (T1214f96(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f58(C, a1, a2, a3, a4, a5));
+	return (T1417f58(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.type_with_type_mark */
-T0* T709x7023T0(T0* C, T0* a1)
+T0* T709x7023T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f35(C, a1));
+	return (T78f35(ac, C, a1));
 } else {
-	return (T80f88(C, a1));
+	return (T80f88(ac, C, a1));
 }
 } else {
-	return (T246f33(C, a1));
+	return (T246f33(ac, C, a1));
 }
 } else {
 if (t1==254) {
-	return (T254f34(C, a1));
+	return (T254f34(ac, C, a1));
 } else {
-	return (T1081f46(C, a1));
+	return (T1081f46(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f48(C, a1));
+	return (T1209f48(ac, C, a1));
 } else {
-	return (T1213f61(C, a1));
+	return (T1213f61(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f62(C, a1));
+	return (T1214f62(ac, C, a1));
 } else {
-	return (T1417f48(C, a1));
+	return (T1417f48(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_like_current_with_type_marks */
-T1 T709x7054T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7054T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f95(C, a1, a2, a3, a4, a5));
+	return (T78f95(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f182(C, a1, a2, a3, a4, a5));
+	return (T80f182(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f95(C, a1, a2, a3, a4, a5));
+	return (T246f95(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f92(C, a1, a2, a3, a4, a5));
+	return (T254f92(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f61(C, a1, a2, a3, a4, a5));
+	return (T1081f61(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f52(C, a1, a2, a3, a4, a5));
+	return (T1209f52(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f92(C, a1, a2, a3, a4, a5));
+	return (T1213f92(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f93(C, a1, a2, a3, a4, a5));
+	return (T1214f93(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f54(C, a1, a2, a3, a4, a5));
+	return (T1417f54(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_tuple_type_with_type_marks */
-T1 T709x7057T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7057T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f86(C, a1, a2, a3, a4, a5));
+	return (T78f86(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f173(C, a1, a2, a3, a4, a5));
+	return (T80f173(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f86(C, a1, a2, a3, a4, a5));
+	return (T246f86(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f83(C, a1, a2, a3, a4, a5));
+	return (T254f83(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f60(C, a1, a2, a3, a4, a5));
+	return (T1081f60(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f51(C, a1, a2, a3, a4, a5));
+	return (T1209f51(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f82(C, a1, a2, a3, a4, a5));
+	return (T1213f82(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f83(C, a1, a2, a3, a4, a5));
+	return (T1214f83(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f51(C, a1, a2, a3, a4, a5));
+	return (T1417f51(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_type_with_type_marks */
-T1 T709x7046T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7046T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f80(C, a1, a2, a3, a4, a5));
+	return (T78f80(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f172(C, a1, a2, a3, a4, a5));
+	return (T80f172(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f82(C, a1, a2, a3, a4, a5));
+	return (T246f82(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f79(C, a1, a2, a3, a4, a5));
+	return (T254f79(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f57(C, a1, a2, a3, a4, a5));
+	return (T1081f57(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f49(C, a1, a2, a3, a4, a5));
+	return (T1209f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f81(C, a1, a2, a3, a4, a5));
+	return (T1213f81(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f82(C, a1, a2, a3, a4, a5));
+	return (T1214f82(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f50(C, a1, a2, a3, a4, a5));
+	return (T1417f50(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_syntactical_class_type_with_type_marks */
-T1 T709x7052T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7052T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f84(C, a1, a2, a3, a4, a5));
+	return (T78f84(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f171(C, a1, a2, a3, a4, a5));
+	return (T80f171(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f79(C, a1, a2, a3, a4, a5));
+	return (T246f79(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f78(C, a1, a2, a3, a4, a5));
+	return (T254f78(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f59(C, a1, a2, a3, a4, a5));
+	return (T1081f59(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f50(C, a1, a2, a3, a4, a5));
+	return (T1209f50(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f80(C, a1, a2, a3, a4, a5));
+	return (T1213f80(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f81(C, a1, a2, a3, a4, a5));
+	return (T1214f81(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f49(C, a1, a2, a3, a4, a5));
+	return (T1417f49(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.is_type_attached_with_type_mark */
-T1 T709x7034T0T0(T0* C, T0* a1, T0* a2)
+T1 T709x7034T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f22(C, a1, a2));
+	return (T78f22(ac, C, a1, a2));
 } else {
-	return (T80f72(C, a1, a2));
+	return (T80f72(ac, C, a1, a2));
 }
 } else {
-	return (T246f28(C, a1, a2));
+	return (T246f28(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f29(C, a1, a2));
+	return (T254f29(ac, C, a1, a2));
 } else {
-	return (T1081f41(C, a1, a2));
+	return (T1081f41(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f43(C, a1, a2));
+	return (T1209f43(ac, C, a1, a2));
 } else {
-	return (T1213f63(C, a1, a2));
+	return (T1213f63(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f64(C, a1, a2));
+	return (T1214f64(ac, C, a1, a2));
 } else {
-	return (T1417f42(C, a1, a2));
+	return (T1417f42(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.is_type_reference_with_type_mark */
-T1 T709x7032T0T0(T0* C, T0* a1, T0* a2)
+T1 T709x7032T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f75(C, a1, a2));
+	return (T78f75(ac, C, a1, a2));
 } else {
-	return (T80f162(C, a1, a2));
+	return (T80f162(ac, C, a1, a2));
 }
 } else {
-	return (T246f75(C, a1, a2));
+	return (T246f75(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f73(C, a1, a2));
+	return (T254f73(ac, C, a1, a2));
 } else {
-	return (T1081f40(C, a1, a2));
+	return (T1081f40(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f42(C, a1, a2));
+	return (T1209f42(ac, C, a1, a2));
 } else {
-	return (T1213f75(C, a1, a2));
+	return (T1213f75(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f76(C, a1, a2));
+	return (T1214f76(ac, C, a1, a2));
 } else {
-	return (T1417f41(C, a1, a2));
+	return (T1417f41(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.has_formal_types */
-T1 T709x7040T0(T0* C, T0* a1)
+T1 T709x7040T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f70(C, a1));
+	return (T78f70(ac, C, a1));
 } else {
-	return (T80f156(C, a1));
+	return (T80f156(ac, C, a1));
 }
 } else {
-	return (T246f70(C, a1));
+	return (T246f70(ac, C, a1));
 }
 } else {
 if (t1==254) {
-	return (T254f68(C, a1));
+	return (T254f68(ac, C, a1));
 } else {
-	return (T1081f38(C, a1));
+	return (T1081f38(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f40(C, a1));
+	return (T1209f40(ac, C, a1));
 } else {
-	return (T1213f70(C, a1));
+	return (T1213f70(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f71(C, a1));
+	return (T1214f71(ac, C, a1));
 } else {
-	return (T1417f19(C, a1));
+	return (T1417f19(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.is_type_detachable_with_type_mark */
-T1 T709x7036T0T0(T0* C, T0* a1, T0* a2)
+T1 T709x7036T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f48(C, a1, a2));
+	return (T78f48(ac, C, a1, a2));
 } else {
-	return (T80f112(C, a1, a2));
+	return (T80f112(ac, C, a1, a2));
 }
 } else {
-	return (T246f46(C, a1, a2));
+	return (T246f46(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f27(C, a1, a2));
+	return (T254f27(ac, C, a1, a2));
 } else {
-	return (T1081f37(C, a1, a2));
+	return (T1081f37(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f39(C, a1, a2));
+	return (T1209f39(ac, C, a1, a2));
 } else {
-	return (T1213f22(C, a1, a2));
+	return (T1213f22(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f18(C, a1, a2));
+	return (T1214f18(ac, C, a1, a2));
 } else {
-	return (T1417f17(C, a1, a2));
+	return (T1417f17(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.is_type_expanded_with_type_mark */
-T1 T709x7030T0T0(T0* C, T0* a1, T0* a2)
+T1 T709x7030T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f9(C, a1, a2));
+	return (T78f9(ac, C, a1, a2));
 } else {
-	return (T80f73(C, a1, a2));
+	return (T80f73(ac, C, a1, a2));
 }
 } else {
-	return (T246f14(C, a1, a2));
+	return (T246f14(ac, C, a1, a2));
 }
 } else {
 if (t1==254) {
-	return (T254f5(C, a1, a2));
+	return (T254f5(ac, C, a1, a2));
 } else {
-	return (T1081f35(C, a1, a2));
+	return (T1081f35(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f37(C, a1, a2));
+	return (T1209f37(ac, C, a1, a2));
 } else {
-	return (T1213f20(C, a1, a2));
+	return (T1213f20(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f16(C, a1, a2));
+	return (T1214f16(ac, C, a1, a2));
 } else {
-	return (T1417f15(C, a1, a2));
+	return (T1417f15(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.named_base_class */
-T0* T709x7009T0(T0* C, T0* a1)
+T0* T709x7009T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f8(C, a1));
+	return (T78f8(ac, C, a1));
 } else {
-	return (T80f80(C, a1));
+	return (T80f80(ac, C, a1));
 }
 } else {
-	return (T246f13(C, a1));
+	return (T246f13(ac, C, a1));
 }
 } else {
 if (t1==254) {
-	return (T254f11(C, a1));
+	return (T254f11(ac, C, a1));
 } else {
-	return (T1081f34(C, a1));
+	return (T1081f34(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f36(C, a1));
+	return (T1209f36(ac, C, a1));
 } else {
-	return (T1213f5(C, a1));
+	return (T1213f5(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f38(C, a1));
+	return (T1214f38(ac, C, a1));
 } else {
-	return (T1417f40(C, a1));
+	return (T1417f40(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.conforms_to_type_with_type_marks */
-T1 T709x7067T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7067T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f33(C, a1, a2, a3, a4, a5));
+	return (T78f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f76(C, a1, a2, a3, a4, a5));
+	return (T80f76(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f20(C, a1, a2, a3, a4, a5));
+	return (T246f20(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f30(C, a1, a2, a3, a4, a5));
+	return (T254f30(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f33(C, a1, a2, a3, a4, a5));
+	return (T1081f33(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f35(C, a1, a2, a3, a4, a5));
+	return (T1209f35(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f37(C, a1, a2, a3, a4, a5));
+	return (T1213f37(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f36(C, a1, a2, a3, a4, a5));
+	return (T1214f36(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f39(C, a1, a2, a3, a4, a5));
+	return (T1417f39(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_named_type_with_type_marks */
-T1 T709x7048T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7048T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f7(C, a1, a2, a3, a4, a5));
+	return (T78f7(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f79(C, a1, a2, a3, a4, a5));
+	return (T80f79(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f21(C, a1, a2, a3, a4, a5));
+	return (T246f21(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f31(C, a1, a2, a3, a4, a5));
+	return (T254f31(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f32(C, a1, a2, a3, a4, a5));
+	return (T1081f32(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f34(C, a1, a2, a3, a4, a5));
+	return (T1209f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f10(C, a1, a2, a3, a4, a5));
+	return (T1213f10(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f22(C, a1, a2, a3, a4, a5));
+	return (T1214f22(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f20(C, a1, a2, a3, a4, a5));
+	return (T1417f20(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_base_bit_type_with_type_marks */
-T1 T709x7062T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7062T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f68(C, a1, a2, a3, a4, a5));
+	return (T78f68(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f154(C, a1, a2, a3, a4, a5));
+	return (T80f154(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f68(C, a1, a2, a3, a4, a5));
+	return (T246f68(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f66(C, a1, a2, a3, a4, a5));
+	return (T254f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f28(C, a1, a2, a3, a4, a5));
+	return (T1081f28(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f30(C, a1, a2, a3, a4, a5));
+	return (T1209f30(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f66(C, a1, a2, a3, a4, a5));
+	return (T1213f66(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f29(C, a1, a2, a3, a4, a5));
+	return (T1214f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f30(C, a1, a2, a3, a4, a5));
+	return (T1417f30(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_base_tuple_type_with_type_marks */
-T1 T709x7065T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7065T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f49(C, a1, a2, a3, a4, a5));
+	return (T78f49(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f124(C, a1, a2, a3, a4, a5));
+	return (T80f124(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f47(C, a1, a2, a3, a4, a5));
+	return (T246f47(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f45(C, a1, a2, a3, a4, a5));
+	return (T254f45(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f27(C, a1, a2, a3, a4, a5));
+	return (T1081f27(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f29(C, a1, a2, a3, a4, a5));
+	return (T1209f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f16(C, a1, a2, a3, a4, a5));
+	return (T1213f16(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f12(C, a1, a2, a3, a4, a5));
+	return (T1214f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f11(C, a1, a2, a3, a4, a5));
+	return (T1417f11(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_base_class_type_with_type_marks */
-T1 T709x7063T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7063T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f46(C, a1, a2, a3, a4, a5));
+	return (T78f46(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f103(C, a1, a2, a3, a4, a5));
+	return (T80f103(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f39(C, a1, a2, a3, a4, a5));
+	return (T246f39(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f39(C, a1, a2, a3, a4, a5));
+	return (T254f39(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f26(C, a1, a2, a3, a4, a5));
+	return (T1081f26(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f28(C, a1, a2, a3, a4, a5));
+	return (T1209f28(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f15(C, a1, a2, a3, a4, a5));
+	return (T1213f15(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f11(C, a1, a2, a3, a4, a5));
+	return (T1214f11(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f10(C, a1, a2, a3, a4, a5));
+	return (T1417f10(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_named_formal_parameter_type_with_type_marks */
-T1 T709x7060T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7060T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f73(C, a1, a2, a3, a4, a5));
+	return (T78f73(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f160(C, a1, a2, a3, a4, a5));
+	return (T80f160(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f73(C, a1, a2, a3, a4, a5));
+	return (T246f73(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f71(C, a1, a2, a3, a4, a5));
+	return (T254f71(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f20(C, a1, a2, a3, a4, a5));
+	return (T1081f20(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f22(C, a1, a2, a3, a4, a5));
+	return (T1209f22(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f73(C, a1, a2, a3, a4, a5));
+	return (T1213f73(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f74(C, a1, a2, a3, a4, a5));
+	return (T1214f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f35(C, a1, a2, a3, a4, a5));
+	return (T1417f35(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_named_bit_type_with_type_marks */
-T1 T709x7058T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7058T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f67(C, a1, a2, a3, a4, a5));
+	return (T78f67(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f153(C, a1, a2, a3, a4, a5));
+	return (T80f153(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f67(C, a1, a2, a3, a4, a5));
+	return (T246f67(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f65(C, a1, a2, a3, a4, a5));
+	return (T254f65(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f19(C, a1, a2, a3, a4, a5));
+	return (T1081f19(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f21(C, a1, a2, a3, a4, a5));
+	return (T1209f21(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f36(C, a1, a2, a3, a4, a5));
+	return (T1213f36(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f33(C, a1, a2, a3, a4, a5));
+	return (T1214f33(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f34(C, a1, a2, a3, a4, a5));
+	return (T1417f34(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_named_tuple_type_with_type_marks */
-T1 T709x7061T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7061T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f34(C, a1, a2, a3, a4, a5));
+	return (T78f34(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f141(C, a1, a2, a3, a4, a5));
+	return (T80f141(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f59(C, a1, a2, a3, a4, a5));
+	return (T246f59(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f59(C, a1, a2, a3, a4, a5));
+	return (T254f59(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f18(C, a1, a2, a3, a4, a5));
+	return (T1081f18(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f20(C, a1, a2, a3, a4, a5));
+	return (T1209f20(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f19(C, a1, a2, a3, a4, a5));
+	return (T1213f19(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f15(C, a1, a2, a3, a4, a5));
+	return (T1214f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f14(C, a1, a2, a3, a4, a5));
+	return (T1417f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.same_named_class_type_with_type_marks */
-T1 T709x7059T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7059T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f12(C, a1, a2, a3, a4, a5));
+	return (T78f12(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f140(C, a1, a2, a3, a4, a5));
+	return (T80f140(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f58(C, a1, a2, a3, a4, a5));
+	return (T246f58(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f58(C, a1, a2, a3, a4, a5));
+	return (T254f58(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f17(C, a1, a2, a3, a4, a5));
+	return (T1081f17(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f19(C, a1, a2, a3, a4, a5));
+	return (T1209f19(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f18(C, a1, a2, a3, a4, a5));
+	return (T1213f18(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f14(C, a1, a2, a3, a4, a5));
+	return (T1214f14(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f13(C, a1, a2, a3, a4, a5));
+	return (T1417f13(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.conforms_from_formal_parameter_type_with_type_marks */
-T1 T709x7070T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7070T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f74(C, a1, a2, a3, a4, a5));
+	return (T78f74(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f161(C, a1, a2, a3, a4, a5));
+	return (T80f161(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f74(C, a1, a2, a3, a4, a5));
+	return (T246f74(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f72(C, a1, a2, a3, a4, a5));
+	return (T254f72(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f16(C, a1, a2, a3, a4, a5));
+	return (T1081f16(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f18(C, a1, a2, a3, a4, a5));
+	return (T1209f18(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f74(C, a1, a2, a3, a4, a5));
+	return (T1213f74(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f75(C, a1, a2, a3, a4, a5));
+	return (T1214f75(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f26(C, a1, a2, a3, a4, a5));
+	return (T1417f26(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.conforms_from_bit_type_with_type_marks */
-T1 T709x7068T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7068T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f66(C, a1, a2, a3, a4, a5));
+	return (T78f66(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f152(C, a1, a2, a3, a4, a5));
+	return (T80f152(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f66(C, a1, a2, a3, a4, a5));
+	return (T246f66(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f64(C, a1, a2, a3, a4, a5));
+	return (T254f64(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f15(C, a1, a2, a3, a4, a5));
+	return (T1081f15(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f17(C, a1, a2, a3, a4, a5));
+	return (T1209f17(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f26(C, a1, a2, a3, a4, a5));
+	return (T1213f26(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f24(C, a1, a2, a3, a4, a5));
+	return (T1214f24(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f25(C, a1, a2, a3, a4, a5));
+	return (T1417f25(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.conforms_from_tuple_type_with_type_marks */
-T1 T709x7071T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7071T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f32(C, a1, a2, a3, a4, a5));
+	return (T78f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f49(C, a1, a2, a3, a4, a5));
+	return (T80f49(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f31(C, a1, a2, a3, a4, a5));
+	return (T246f31(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f32(C, a1, a2, a3, a4, a5));
+	return (T254f32(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f14(C, a1, a2, a3, a4, a5));
+	return (T1081f14(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f16(C, a1, a2, a3, a4, a5));
+	return (T1209f16(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f14(C, a1, a2, a3, a4, a5));
+	return (T1213f14(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f10(C, a1, a2, a3, a4, a5));
+	return (T1214f10(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f9(C, a1, a2, a3, a4, a5));
+	return (T1417f9(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.conforms_from_class_type_with_type_marks */
-T1 T709x7069T0T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
+T1 T709x7069T0T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f29(C, a1, a2, a3, a4, a5));
+	return (T78f29(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T80f46(C, a1, a2, a3, a4, a5));
+	return (T80f46(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
-	return (T246f24(C, a1, a2, a3, a4, a5));
+	return (T246f24(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==254) {
-	return (T254f18(C, a1, a2, a3, a4, a5));
+	return (T254f18(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1081f13(C, a1, a2, a3, a4, a5));
+	return (T1081f13(ac, C, a1, a2, a3, a4, a5));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f15(C, a1, a2, a3, a4, a5));
+	return (T1209f15(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1213f13(C, a1, a2, a3, a4, a5));
+	return (T1213f13(ac, C, a1, a2, a3, a4, a5));
 }
 } else {
 if (t1==1214) {
-	return (T1214f9(C, a1, a2, a3, a4, a5));
+	return (T1214f9(ac, C, a1, a2, a3, a4, a5));
 } else {
-	return (T1417f8(C, a1, a2, a3, a4, a5));
+	return (T1417f8(ac, C, a1, a2, a3, a4, a5));
 }
 }
 }
 }
 
 /* Call to ET_NAMED_TYPE.base_class */
-T0* T709x7008T0(T0* C, T0* a1)
+T0* T709x7008T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=246) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f4(C, a1));
+	return (T78f4(ac, C, a1));
 } else {
-	return (T80f52(C, a1));
+	return (T80f52(ac, C, a1));
 }
 } else {
-	return (T246f18(C, a1));
+	return (T246f18(ac, C, a1));
 }
 } else {
 if (t1==254) {
-	return (T254f7(C, a1));
+	return (T254f7(ac, C, a1));
 } else {
-	return (T1081f23(C, a1));
+	return (T1081f23(ac, C, a1));
 }
 }
 } else {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f25(C, a1));
+	return (T1209f25(ac, C, a1));
 } else {
-	return (T1213f28(C, a1));
+	return (T1213f28(ac, C, a1));
 }
 } else {
 if (t1==1214) {
-	return (T1214f26(C, a1));
+	return (T1214f26(ac, C, a1));
 } else {
-	return (T1417f18(C, a1));
+	return (T1417f18(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_CLOSURE.locals */
-T0* T713x17083(T0* C)
+T0* T713x17091(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1224) {
@@ -25780,30 +25780,30 @@ if (t1<=356) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f70(C));
+	return (T253f70(ac, C));
 } else {
 	return (((T320*)(C))->a4);
 }
 } else {
-	return (T353f64(C));
+	return (T353f64(ac, C));
 }
 } else {
 if (t1==355) {
-	return (T355f64(C));
+	return (T355f64(ac, C));
 } else {
-	return (T356f62(C));
+	return (T356f62(ac, C));
 }
 }
 } else {
 if (t1<=878) {
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a17);
+if (t1==516) {
+	return (((T516*)(C))->a17);
 } else {
-	return (T523f63(C));
+	return (T523f63(ac, C));
 }
 } else {
-	return (T878f17(C));
+	return (T878f17(ac, C));
 }
 } else {
 if (t1==1223) {
@@ -25818,12 +25818,12 @@ if (t1<=1266) {
 if (t1<=1228) {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f65(C));
+	return (T1225f65(ac, C));
 } else {
 	return (((T1227*)(C))->a12);
 }
 } else {
-	return (T1228f68(C));
+	return (T1228f68(ac, C));
 }
 } else {
 if (t1==1265) {
@@ -25835,7 +25835,7 @@ if (t1==1265) {
 } else {
 if (t1<=1268) {
 if (t1==1267) {
-	return (T1267f28(C));
+	return (T1267f28(ac, C));
 } else {
 	return (((T1268*)(C))->a9);
 }
@@ -25843,7 +25843,7 @@ if (t1==1267) {
 if (t1==1269) {
 	return (((T1269*)(C))->a9);
 } else {
-	return (T1270f27(C));
+	return (T1270f27(ac, C));
 }
 }
 }
@@ -25851,7 +25851,7 @@ if (t1==1269) {
 }
 
 /* Call to ET_CLOSURE.type */
-T0* T713x17081(T0* C)
+T0* T713x17089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1224) {
@@ -25859,36 +25859,36 @@ if (t1<=356) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f44(C));
+	return (T253f44(ac, C));
 } else {
-	return (T320f47(C));
+	return (T320f47(ac, C));
 }
 } else {
-	return (T353f47(C));
+	return (T353f47(ac, C));
 }
 } else {
 if (t1==355) {
-	return (T355f46(C));
+	return (T355f46(ac, C));
 } else {
-	return (T356f46(C));
+	return (T356f46(ac, C));
 }
 }
 } else {
 if (t1<=878) {
 if (t1<=523) {
-if (t1==514) {
-	return (T514f31(C));
+if (t1==516) {
+	return (T516f31(ac, C));
 } else {
-	return (T523f35(C));
+	return (T523f35(ac, C));
 }
 } else {
-	return (T878f18(C));
+	return (T878f18(ac, C));
 }
 } else {
 if (t1==1223) {
-	return (T1223f49(C));
+	return (T1223f49(ac, C));
 } else {
-	return (T1224f49(C));
+	return (T1224f49(ac, C));
 }
 }
 }
@@ -25897,32 +25897,32 @@ if (t1<=1266) {
 if (t1<=1228) {
 if (t1<=1227) {
 if (t1==1225) {
-	return (T1225f31(C));
+	return (T1225f31(ac, C));
 } else {
-	return (T1227f40(C));
+	return (T1227f40(ac, C));
 }
 } else {
-	return (T1228f40(C));
+	return (T1228f40(ac, C));
 }
 } else {
 if (t1==1265) {
-	return (T1265f27(C));
+	return (T1265f27(ac, C));
 } else {
-	return (T1266f28(C));
+	return (T1266f28(ac, C));
 }
 }
 } else {
 if (t1<=1268) {
 if (t1==1267) {
-	return (T1267f25(C));
+	return (T1267f25(ac, C));
 } else {
-	return (T1268f26(C));
+	return (T1268f26(ac, C));
 }
 } else {
 if (t1==1269) {
-	return (T1269f27(C));
+	return (T1269f27(ac, C));
 } else {
-	return (T1270f24(C));
+	return (T1270f24(ac, C));
 }
 }
 }
@@ -25930,7 +25930,7 @@ if (t1==1269) {
 }
 
 /* Call to ET_CLOSURE.arguments */
-T0* T713x17082(T0* C)
+T0* T713x17090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1224) {
@@ -25940,28 +25940,28 @@ if (t1<=320) {
 if (t1==253) {
 	return (((T253*)(C))->a9);
 } else {
-	return (T320f49(C));
+	return (T320f49(ac, C));
 }
 } else {
-	return (T353f49(C));
+	return (T353f49(ac, C));
 }
 } else {
 if (t1==355) {
-	return (T355f48(C));
+	return (T355f48(ac, C));
 } else {
-	return (T356f48(C));
+	return (T356f48(ac, C));
 }
 }
 } else {
 if (t1<=878) {
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a3);
+if (t1==516) {
+	return (((T516*)(C))->a3);
 } else {
 	return (((T523*)(C))->a4);
 }
 } else {
-	return (T878f16(C));
+	return (T878f16(ac, C));
 }
 } else {
 if (t1==1223) {
@@ -26009,7 +26009,7 @@ if (t1==1269) {
 }
 
 /* Call to ET_CLOSURE.across_components */
-T0* T713x17087(T0* C)
+T0* T713x17095(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1224) {
@@ -26034,8 +26034,8 @@ if (t1==355) {
 } else {
 if (t1<=878) {
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a19);
+if (t1==516) {
+	return (((T516*)(C))->a19);
 } else {
 	return (((T523*)(C))->a17);
 }
@@ -26088,7 +26088,7 @@ if (t1==1269) {
 }
 
 /* Call to ET_CLOSURE.object_tests */
-T0* T713x17086(T0* C)
+T0* T713x17094(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1224) {
@@ -26113,8 +26113,8 @@ if (t1==355) {
 } else {
 if (t1<=878) {
 if (t1<=523) {
-if (t1==514) {
-	return (((T514*)(C))->a18);
+if (t1==516) {
+	return (((T516*)(C))->a18);
 } else {
 	return (((T523*)(C))->a16);
 }
@@ -26167,7 +26167,7 @@ if (t1==1269) {
 }
 
 /* Call to ET_INLINE_AGENT.implicit_result */
-T0* T715x17848(T0* C)
+T0* T715x17856(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -26183,18 +26183,18 @@ if (t1==1265) {
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-	return (T1268f21(C));
+	return (T1268f21(ac, C));
 } else {
-	return (T1269f22(C));
+	return (T1269f22(ac, C));
 }
 } else {
-	return (T1270f20(C));
+	return (T1270f20(ac, C));
 }
 }
 }
 
 /* Call to ET_INLINE_AGENT.formal_arguments */
-T0* T715x17082(T0* C)
+T0* T715x17090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -26221,7 +26221,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_INLINE_AGENT.actual_arguments */
-T0* T715x17847(T0* C)
+T0* T715x17855(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -26248,7 +26248,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_INLINE_AGENT.target */
-T0* T715x17846(T0* C)
+T0* T715x17854(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -26275,7 +26275,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_INLINE_AGENT.locals */
-T0* T715x17083(T0* C)
+T0* T715x17091(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
@@ -26286,7 +26286,7 @@ if (t1==1265) {
 	return (((T1266*)(C))->a11);
 }
 } else {
-	return (T1267f28(C));
+	return (T1267f28(ac, C));
 }
 } else {
 if (t1<=1269) {
@@ -26296,40 +26296,40 @@ if (t1==1268) {
 	return (((T1269*)(C))->a9);
 }
 } else {
-	return (T1270f27(C));
+	return (T1270f27(ac, C));
 }
 }
 }
 
 /* Call to ET_INLINE_AGENT.type */
-T0* T715x17081(T0* C)
+T0* T715x17089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1266) {
 if (t1==1265) {
-	return (T1265f27(C));
+	return (T1265f27(ac, C));
 } else {
-	return (T1266f28(C));
+	return (T1266f28(ac, C));
 }
 } else {
-	return (T1267f25(C));
+	return (T1267f25(ac, C));
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-	return (T1268f26(C));
+	return (T1268f26(ac, C));
 } else {
-	return (T1269f27(C));
+	return (T1269f27(ac, C));
 }
 } else {
-	return (T1270f24(C));
+	return (T1270f24(ac, C));
 }
 }
 }
 
 /* Call to ET_CLUSTERS.clusters */
-T0* T761x5684(T0* C)
+T0* T761x5684(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=403) {
@@ -26344,52 +26344,52 @@ if (t1==207) {
 }
 
 /* Call to ET_ECF_CONDITION.is_enabled */
-T1 T807x29849T0(T0* C, T0* a1)
+T1 T807x29857T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=811) {
 if (t1<=809) {
 if (t1<=808) {
 if (t1==804) {
-	return (T804f4(C, a1));
+	return (T804f4(ac, C, a1));
 } else {
-	return (T808f3(C, a1));
+	return (T808f3(ac, C, a1));
 }
 } else {
-	return (T809f3(C, a1));
+	return (T809f3(ac, C, a1));
 }
 } else {
 if (t1==810) {
-	return (T810f2(C, a1));
+	return (T810f2(ac, C, a1));
 } else {
-	return (T811f3(C, a1));
+	return (T811f3(ac, C, a1));
 }
 }
 } else {
 if (t1<=813) {
 if (t1==812) {
-	return (T812f2(C, a1));
+	return (T812f2(ac, C, a1));
 } else {
-	return (T813f2(C, a1));
+	return (T813f2(ac, C, a1));
 }
 } else {
 if (t1==814) {
-	return (T814f4(C, a1));
+	return (T814f4(ac, C, a1));
 } else {
-	return (T816f3(C, a1));
+	return (T816f3(ac, C, a1));
 }
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.name */
-T0* T819x15212(T0* C)
+T0* T819x15220(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
 if (t1<=980) {
 if (t1==280) {
-	return (T280f7(C));
+	return (T280f7(ac, C));
 } else {
 	return (((T980*)(C))->a3);
 }
@@ -26400,13 +26400,13 @@ if (t1==280) {
 if (t1==1261) {
 	return (((T1261*)(C))->a2);
 } else {
-	return (T1854f15(C));
+	return (T1854f15(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.target */
-T0* T819x15211(T0* C)
+T0* T819x15219(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
@@ -26429,45 +26429,45 @@ if (t1==1261) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.arguments_count */
-T6 T819x15210(T0* C)
+T6 T819x15218(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
 if (t1==280) {
-	return (T280f18(C));
+	return (T280f18(ac, C));
 } else {
-	return (T980f17(C));
+	return (T980f17(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f18(C));
+	return (T1261f18(ac, C));
 } else {
-	return (T1854f20(C));
+	return (T1854f20(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.parenthesis_call */
-T0* T819x15209(T0* C)
+T0* T819x15217(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
 if (t1==280) {
 	return (((T280*)(C))->a5);
 } else {
-	return (T980f16(C));
+	return (T980f16(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f17(C));
+	return (T1261f17(ac, C));
 } else {
-	return (T1854f19(C));
+	return (T1854f19(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.arguments */
-T0* T819x15213(T0* C)
+T0* T819x15221(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
@@ -26482,15 +26482,15 @@ if (t1==280) {
 }
 } else {
 if (t1==1261) {
-	return (T1261f9(C));
+	return (T1261f9(ac, C));
 } else {
-	return (T1854f14(C));
+	return (T1854f14(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.index */
-T6 T819x15183(T0* C)
+T6 T819x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
@@ -26513,53 +26513,53 @@ if (t1==1261) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.is_call_agent */
-T1 T819x15216(T0* C)
+T1 T819x15224(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
 if (t1<=980) {
 if (t1==280) {
-	return (T280f9(C));
+	return (T280f9(ac, C));
 } else {
-	return (T980f9(C));
+	return (T980f9(ac, C));
 }
 } else {
-	return (T1257f11(C));
+	return (T1257f11(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f11(C));
+	return (T1261f11(ac, C));
 } else {
-	return (T1854f17(C));
+	return (T1854f17(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.is_tuple_label */
-T1 T819x15215(T0* C)
+T1 T819x15223(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1257) {
 if (t1<=980) {
 if (t1==280) {
-	return (T280f8(C));
+	return (T280f8(ac, C));
 } else {
-	return (T980f8(C));
+	return (T980f8(ac, C));
 }
 } else {
-	return (T1257f10(C));
+	return (T1257f10(ac, C));
 }
 } else {
 if (t1==1261) {
-	return (T1261f10(C));
+	return (T1261f10(ac, C));
 } else {
-	return (T1854f16(C));
+	return (T1854f16(ac, C));
 }
 }
 }
 
 /* Call to XM_DOCUMENT_NODE.parent */
-T0* T828x14081(T0* C)
+T0* T828x14089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1403) {
@@ -26574,34 +26574,34 @@ if (t1==148) {
 }
 
 /* Call to ET_ADAPTED_UNIVERSE.lower_name */
-T0* T843x3462(T0* C)
+T0* T843x3462(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=194) {
 if (t1<=192) {
 if (t1==190) {
-	return (T190f13(C));
+	return (T190f13(ac, C));
 } else {
-	return (T192f88(C));
+	return (T192f88(ac, C));
 }
 } else {
-	return (T194f13(C));
+	return (T194f13(ac, C));
 }
 } else {
 if (t1<=223) {
 if (t1==210) {
-	return (T210f96(C));
+	return (T210f96(ac, C));
 } else {
-	return (T223f103(C));
+	return (T223f103(ac, C));
 }
 } else {
-	return (T439f88(C));
+	return (T439f88(ac, C));
 }
 }
 }
 
 /* Call to ET_ADAPTED_UNIVERSE.name */
-T0* T843x3461(T0* C)
+T0* T843x3461(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=194) {
@@ -26628,36 +26628,36 @@ if (t1==210) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER.named_parameter_with_type */
-T0* T848x7098T0(T0* C, T0* a1)
+T0* T848x7098T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f42(C, a1));
+	return (T78f42(ac, C, a1));
 } else {
-	return (T80f107(C, a1));
+	return (T80f107(ac, C, a1));
 }
 } else {
 if (t1==246) {
-	return (T246f41(C, a1));
+	return (T246f41(ac, C, a1));
 } else {
-	return (T254f41(C, a1));
+	return (T254f41(ac, C, a1));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f7(C, a1));
+	return (T495f7(ac, C, a1));
 } else {
-	return (T858f14(C, a1));
+	return (T858f14(ac, C, a1));
 }
 } else {
 if (t1==1081) {
-	return (T1081f58(C, a1));
+	return (T1081f58(ac, C, a1));
 } else {
-	return (T1209f63(C, a1));
+	return (T1209f63(ac, C, a1));
 }
 }
 }
@@ -26665,29 +26665,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f25(C, a1));
+	return (T1213f25(ac, C, a1));
 } else {
-	return (T1214f23(C, a1));
+	return (T1214f23(ac, C, a1));
 }
 } else {
 if (t1==1236) {
-	return (T1236f3(C, a1));
+	return (T1236f3(ac, C, a1));
 } else {
-	return (T1238f24(C, a1));
+	return (T1238f24(ac, C, a1));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f23(C, a1));
+	return (T1239f23(ac, C, a1));
 } else {
-	return (T1240f25(C, a1));
+	return (T1240f25(ac, C, a1));
 }
 } else {
 if (t1==1417) {
-	return (T1417f24(C, a1));
+	return (T1417f24(ac, C, a1));
 } else {
-	return (T1555f3(C, a1));
+	return (T1555f3(ac, C, a1));
 }
 }
 }
@@ -26695,36 +26695,36 @@ if (t1==1417) {
 }
 
 /* Call to ET_ACTUAL_PARAMETER.type */
-T0* T848x7103(T0* C)
+T0* T848x7103(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f39(C));
+	return (T78f39(ac, C));
 } else {
-	return (T80f101(C));
+	return (T80f101(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f37(C));
+	return (T246f37(ac, C));
 } else {
-	return (T254f38(C));
+	return (T254f38(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T858f12(C));
+	return (T858f12(ac, C));
 }
 } else {
 if (t1==1081) {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 } else {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 }
 }
 }
@@ -26732,29 +26732,29 @@ if (t1==1081) {
 if (t1<=1238) {
 if (t1<=1214) {
 if (t1==1213) {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 } else {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 }
 } else {
 if (t1==1236) {
-	return (T1236f5(C));
+	return (T1236f5(ac, C));
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 } else {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 }
 } else {
 if (t1==1417) {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 } else {
-	return (T1555f5(C));
+	return (T1555f5(ac, C));
 }
 }
 }
@@ -26762,88 +26762,88 @@ if (t1==1417) {
 }
 
 /* Call to ET_ALIAS_NAME.same_call_name */
-T1 T850x15132T0(T0* C, T0* a1)
+T1 T850x15140T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f24(C, a1));
+	return (T823f24(ac, C, a1));
 } else {
-	return (T850f6(C, a1));
+	return (T850f6(ac, C, a1));
 }
 } else {
-	return (T1229f17(C, a1));
+	return (T1229f17(ac, C, a1));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f18(C, a1));
+	return (T1230f18(ac, C, a1));
 } else {
-	return (T1231f17(C, a1));
+	return (T1231f17(ac, C, a1));
 }
 } else {
-	return (T1233f7(C, a1));
+	return (T1233f7(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.alias_lower_name */
-T0* T850x29971(T0* C)
+T0* T850x29979(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f65(C));
+	return (T823f65(ac, C));
 } else {
-	return (T850f61(C));
+	return (T850f61(ac, C));
 }
 } else {
-	return (T1229f64(C));
+	return (T1229f64(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f65(C));
+	return (T1230f65(ac, C));
 } else {
-	return (T1231f78(C));
+	return (T1231f78(ac, C));
 }
 } else {
-	return (T1233f41(C));
+	return (T1233f41(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.same_alias_name */
-T1 T850x29982T0(T0* C, T0* a1)
+T1 T850x29990T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f48(C, a1));
+	return (T823f48(ac, C, a1));
 } else {
-	return (T850f13(C, a1));
+	return (T850f13(ac, C, a1));
 }
 } else {
-	return (T1229f47(C, a1));
+	return (T1229f47(ac, C, a1));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f50(C, a1));
+	return (T1230f50(ac, C, a1));
 } else {
-	return (T1231f61(C, a1));
+	return (T1231f61(ac, C, a1));
 }
 } else {
-	return (T1233f17(C, a1));
+	return (T1233f17(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.hash_code */
-T6 T850x22(T0* C)
+T6 T850x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -26851,17 +26851,17 @@ if (t1<=850) {
 if (t1==823) {
 	return (((T823*)(C))->a4);
 } else {
-	return (T850f41(C));
+	return (T850f41(ac, C));
 }
 } else {
-	return (T1229f5(C));
+	return (T1229f5(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
 	return (((T1230*)(C))->a1);
 } else {
-	return (T1231f5(C));
+	return (T1231f5(ac, C));
 }
 } else {
 	return (((T1233*)(C))->a1);
@@ -26870,115 +26870,115 @@ if (t1==1230) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infix_minus */
-T1 T850x15114(T0* C)
+T1 T850x15122(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f42(C));
+	return (T823f42(ac, C));
 } else {
-	return (T850f40(C));
+	return (T850f40(ac, C));
 }
 } else {
-	return (T1229f41(C));
+	return (T1229f41(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f44(C));
+	return (T1230f44(ac, C));
 } else {
-	return (T1231f55(C));
+	return (T1231f55(ac, C));
 }
 } else {
-	return (T1233f31(C));
+	return (T1233f31(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_infix_plus */
-T1 T850x15118(T0* C)
+T1 T850x15126(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f44(C));
+	return (T823f44(ac, C));
 } else {
-	return (T850f39(C));
+	return (T850f39(ac, C));
 }
 } else {
-	return (T1229f43(C));
+	return (T1229f43(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f46(C));
+	return (T1230f46(ac, C));
 } else {
-	return (T1231f57(C));
+	return (T1231f57(ac, C));
 }
 } else {
-	return (T1233f35(C));
+	return (T1233f35(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix_minus */
-T1 T850x15124(T0* C)
+T1 T850x15132(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f33(C));
+	return (T823f33(ac, C));
 } else {
-	return (T850f38(C));
+	return (T850f38(ac, C));
 }
 } else {
-	return (T1229f32(C));
+	return (T1229f32(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f35(C));
+	return (T1230f35(ac, C));
 } else {
-	return (T1231f46(C));
+	return (T1231f46(ac, C));
 }
 } else {
-	return (T1233f19(C));
+	return (T1233f19(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix_plus */
-T1 T850x15125(T0* C)
+T1 T850x15133(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f34(C));
+	return (T823f34(ac, C));
 } else {
-	return (T850f37(C));
+	return (T850f37(ac, C));
 }
 } else {
-	return (T1229f33(C));
+	return (T1229f33(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f36(C));
+	return (T1230f36(ac, C));
 } else {
-	return (T1231f47(C));
+	return (T1231f47(ac, C));
 }
 } else {
-	return (T1233f20(C));
+	return (T1233f20(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_infix */
-T1 T850x15103(T0* C)
+T1 T850x15111(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -26986,26 +26986,26 @@ if (t1<=850) {
 if (t1==823) {
 	return (EIF_TRUE);
 } else {
-	return (T850f9(C));
+	return (T850f9(ac, C));
 }
 } else {
-	return (T1229f9(C));
+	return (T1229f9(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f9(C));
+	return (T1230f9(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1233f14(C));
+	return (T1233f14(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_infixable */
-T1 T850x29967(T0* C)
+T1 T850x29975(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -27013,7 +27013,7 @@ if (t1<=850) {
 if (t1==823) {
 	return (EIF_TRUE);
 } else {
-	return (T850f10(C));
+	return (T850f10(ac, C));
 }
 } else {
 	return (EIF_FALSE);
@@ -27026,13 +27026,13 @@ if (t1==1230) {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1233f18(C));
+	return (T1233f18(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_prefixable */
-T1 T850x29966(T0* C)
+T1 T850x29974(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
@@ -27040,7 +27040,7 @@ if (t1<=850) {
 if (t1==823) {
 	return (EIF_FALSE);
 } else {
-	return (T850f11(C));
+	return (T850f11(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -27053,75 +27053,75 @@ if (t1==1230) {
 	return (EIF_FALSE);
 }
 } else {
-	return (T1233f6(C));
+	return (T1233f6(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_parenthesis */
-T1 T850x15129(T0* C)
+T1 T850x15137(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f26(C));
+	return (T823f26(ac, C));
 } else {
-	return (T850f8(C));
+	return (T850f8(ac, C));
 }
 } else {
-	return (T1229f19(C));
+	return (T1229f19(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f24(C));
+	return (T1230f24(ac, C));
 } else {
-	return (T1231f19(C));
+	return (T1231f19(ac, C));
 }
 } else {
-	return (T1233f13(C));
+	return (T1233f13(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_bracket */
-T1 T850x15128(T0* C)
+T1 T850x15136(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f25(C));
+	return (T823f25(ac, C));
 } else {
-	return (T850f7(C));
+	return (T850f7(ac, C));
 }
 } else {
-	return (T1229f18(C));
+	return (T1229f18(ac, C));
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-	return (T1230f23(C));
+	return (T1230f23(ac, C));
 } else {
-	return (T1231f18(C));
+	return (T1231f18(ac, C));
 }
 } else {
-	return (T1233f11(C));
+	return (T1233f11(ac, C));
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix */
-T1 T850x15123(T0* C)
+T1 T850x15131(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-	return (T823f15(C));
+	return (T823f15(ac, C));
 } else {
-	return (T850f12(C));
+	return (T850f12(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -27131,16 +27131,16 @@ if (t1<=1231) {
 if (t1==1230) {
 	return (EIF_TRUE);
 } else {
-	return (T1231f8(C));
+	return (T1231f8(ac, C));
 }
 } else {
-	return (T1233f16(C));
+	return (T1233f16(ac, C));
 }
 }
 }
 
 /* Call to ET_CHARACTER_CONSTANT.cast_type */
-T0* T914x31243(T0* C)
+T0* T914x31251(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
@@ -27155,7 +27155,7 @@ if (t1==1190) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.index */
-T6 T914x15183(T0* C)
+T6 T914x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
@@ -27170,7 +27170,7 @@ if (t1==1190) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.value */
-T3 T914x31242(T0* C)
+T3 T914x31250(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
@@ -27185,7 +27185,7 @@ if (t1==1190) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.cast_type */
-T0* T922x31680(T0* C)
+T0* T922x31688(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -27208,7 +27208,7 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.index */
-T6 T922x15183(T0* C)
+T6 T922x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -27231,30 +27231,30 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_32 */
-T6 T922x31673(T0* C)
+T6 T922x31681(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f20(C));
+	return (T1193f20(ac, C));
 } else {
-	return (T1194f20(C));
+	return (T1194f20(ac, C));
 }
 } else {
-	return (T1195f20(C));
+	return (T1195f20(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f20(C));
+	return (T1196f20(ac, C));
 } else {
-	return (T1197f20(C));
+	return (T1197f20(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.literal */
-T0* T922x31669(T0* C)
+T0* T922x31677(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -27277,7 +27277,7 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.sign */
-T0* T922x31679(T0* C)
+T0* T922x31687(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -27300,76 +27300,76 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.value_position */
-T0* T922x31683(T0* C)
+T0* T922x31691(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f54(C));
+	return (T1193f54(ac, C));
 } else {
-	return (T1194f54(C));
+	return (T1194f54(ac, C));
 }
 } else {
-	return (T1195f54(C));
+	return (T1195f54(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f54(C));
+	return (T1196f54(ac, C));
 } else {
-	return (T1197f54(C));
+	return (T1197f54(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_negative */
-T1 T922x31686(T0* C)
+T1 T922x31694(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f18(C));
+	return (T1193f18(ac, C));
 } else {
-	return (T1194f18(C));
+	return (T1194f18(ac, C));
 }
 } else {
-	return (T1195f18(C));
+	return (T1195f18(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f18(C));
+	return (T1196f18(ac, C));
 } else {
-	return (T1197f18(C));
+	return (T1197f18(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_64 */
-T1 T922x31698(T0* C)
+T1 T922x31706(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f35(C));
+	return (T1193f35(ac, C));
 } else {
-	return (T1194f35(C));
+	return (T1194f35(ac, C));
 }
 } else {
-	return (T1195f35(C));
+	return (T1195f35(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f35(C));
+	return (T1196f35(ac, C));
 } else {
-	return (T1197f35(C));
+	return (T1197f35(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.value */
-T11 T922x31670(T0* C)
+T11 T922x31678(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
@@ -27392,22 +27392,22 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_binary */
-T1 T922x31689(T0* C)
+T1 T922x31697(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f42(C));
+	return (T1193f42(ac, C));
 } else {
-	return (T1194f42(C));
+	return (T1194f42(ac, C));
 }
 } else {
-	return (T1195f42(C));
+	return (T1195f42(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f42(C));
+	return (T1196f42(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -27415,561 +27415,561 @@ if (t1==1196) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_hexadecimal */
-T1 T922x31688(T0* C)
+T1 T922x31696(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f41(C));
+	return (T1193f41(ac, C));
 } else {
-	return (T1194f41(C));
+	return (T1194f41(ac, C));
 }
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==1196) {
-	return (T1196f41(C));
+	return (T1196f41(ac, C));
 } else {
-	return (T1197f41(C));
+	return (T1197f41(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_64 */
-T1 T922x31694(T0* C)
+T1 T922x31702(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f27(C));
+	return (T1193f27(ac, C));
 } else {
-	return (T1194f27(C));
+	return (T1194f27(ac, C));
 }
 } else {
-	return (T1195f27(C));
+	return (T1195f27(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f27(C));
+	return (T1196f27(ac, C));
 } else {
-	return (T1197f27(C));
+	return (T1197f27(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_32 */
-T1 T922x31693(T0* C)
+T1 T922x31701(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f19(C));
+	return (T1193f19(ac, C));
 } else {
-	return (T1194f19(C));
+	return (T1194f19(ac, C));
 }
 } else {
-	return (T1195f19(C));
+	return (T1195f19(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f19(C));
+	return (T1196f19(ac, C));
 } else {
-	return (T1197f19(C));
+	return (T1197f19(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_32 */
-T1 T922x31697(T0* C)
+T1 T922x31705(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f33(C));
+	return (T1193f33(ac, C));
 } else {
-	return (T1194f33(C));
+	return (T1194f33(ac, C));
 }
 } else {
-	return (T1195f33(C));
+	return (T1195f33(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f33(C));
+	return (T1196f33(ac, C));
 } else {
-	return (T1197f33(C));
+	return (T1197f33(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_16 */
-T1 T922x31696(T0* C)
+T1 T922x31704(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f31(C));
+	return (T1193f31(ac, C));
 } else {
-	return (T1194f31(C));
+	return (T1194f31(ac, C));
 }
 } else {
-	return (T1195f31(C));
+	return (T1195f31(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f31(C));
+	return (T1196f31(ac, C));
 } else {
-	return (T1197f31(C));
+	return (T1197f31(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_8 */
-T1 T922x31695(T0* C)
+T1 T922x31703(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f29(C));
+	return (T1193f29(ac, C));
 } else {
-	return (T1194f29(C));
+	return (T1194f29(ac, C));
 }
 } else {
-	return (T1195f29(C));
+	return (T1195f29(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f29(C));
+	return (T1196f29(ac, C));
 } else {
-	return (T1197f29(C));
+	return (T1197f29(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_16 */
-T1 T922x31692(T0* C)
+T1 T922x31700(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f25(C));
+	return (T1193f25(ac, C));
 } else {
-	return (T1194f25(C));
+	return (T1194f25(ac, C));
 }
 } else {
-	return (T1195f25(C));
+	return (T1195f25(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f25(C));
+	return (T1196f25(ac, C));
 } else {
-	return (T1197f25(C));
+	return (T1197f25(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_8 */
-T1 T922x31691(T0* C)
+T1 T922x31699(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f23(C));
+	return (T1193f23(ac, C));
 } else {
-	return (T1194f23(C));
+	return (T1194f23(ac, C));
 }
 } else {
-	return (T1195f23(C));
+	return (T1195f23(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f23(C));
+	return (T1196f23(ac, C));
 } else {
-	return (T1197f23(C));
+	return (T1197f23(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_64 */
-T11 T922x31678(T0* C)
+T11 T922x31686(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f36(C));
+	return (T1193f36(ac, C));
 } else {
-	return (T1194f36(C));
+	return (T1194f36(ac, C));
 }
 } else {
-	return (T1195f36(C));
+	return (T1195f36(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f36(C));
+	return (T1196f36(ac, C));
 } else {
-	return (T1197f36(C));
+	return (T1197f36(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_32 */
-T10 T922x31677(T0* C)
+T10 T922x31685(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f34(C));
+	return (T1193f34(ac, C));
 } else {
-	return (T1194f34(C));
+	return (T1194f34(ac, C));
 }
 } else {
-	return (T1195f34(C));
+	return (T1195f34(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f34(C));
+	return (T1196f34(ac, C));
 } else {
-	return (T1197f34(C));
+	return (T1197f34(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_16 */
-T9 T922x31676(T0* C)
+T9 T922x31684(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f32(C));
+	return (T1193f32(ac, C));
 } else {
-	return (T1194f32(C));
+	return (T1194f32(ac, C));
 }
 } else {
-	return (T1195f32(C));
+	return (T1195f32(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f32(C));
+	return (T1196f32(ac, C));
 } else {
-	return (T1197f32(C));
+	return (T1197f32(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_8 */
-T8 T922x31675(T0* C)
+T8 T922x31683(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f30(C));
+	return (T1193f30(ac, C));
 } else {
-	return (T1194f30(C));
+	return (T1194f30(ac, C));
 }
 } else {
-	return (T1195f30(C));
+	return (T1195f30(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f30(C));
+	return (T1196f30(ac, C));
 } else {
-	return (T1197f30(C));
+	return (T1197f30(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_64 */
-T7 T922x31674(T0* C)
+T7 T922x31682(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f28(C));
+	return (T1193f28(ac, C));
 } else {
-	return (T1194f28(C));
+	return (T1194f28(ac, C));
 }
 } else {
-	return (T1195f28(C));
+	return (T1195f28(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f28(C));
+	return (T1196f28(ac, C));
 } else {
-	return (T1197f28(C));
+	return (T1197f28(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_16 */
-T5 T922x31672(T0* C)
+T5 T922x31680(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f26(C));
+	return (T1193f26(ac, C));
 } else {
-	return (T1194f26(C));
+	return (T1194f26(ac, C));
 }
 } else {
-	return (T1195f26(C));
+	return (T1195f26(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f26(C));
+	return (T1196f26(ac, C));
 } else {
-	return (T1197f26(C));
+	return (T1197f26(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_8 */
-T4 T922x31671(T0* C)
+T4 T922x31679(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f24(C));
+	return (T1193f24(ac, C));
 } else {
-	return (T1194f24(C));
+	return (T1194f24(ac, C));
 }
 } else {
-	return (T1195f24(C));
+	return (T1195f24(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f24(C));
+	return (T1196f24(ac, C));
 } else {
-	return (T1197f24(C));
+	return (T1197f24(ac, C));
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.position */
-T0* T922x7085(T0* C)
+T0* T922x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f16(C));
+	return (T1193f16(ac, C));
 } else {
-	return (T1194f16(C));
+	return (T1194f16(ac, C));
 }
 } else {
-	return (T1195f16(C));
+	return (T1195f16(ac, C));
 }
 } else {
 if (t1==1196) {
-	return (T1196f16(C));
+	return (T1196f16(ac, C));
 } else {
-	return (T1197f16(C));
+	return (T1197f16(ac, C));
 }
 }
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND_ITEM.agent_actual_argument */
-T0* T964x15186(T0* C)
+T0* T964x15194(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f83(C));
+		return (T176f83(ac, C));
 	case 275:
-		return (T275f20(C));
+		return (T275f20(ac, C));
 	case 280:
-		return (T280f15(C));
+		return (T280f15(ac, C));
 	case 281:
-		return (T281f10(C));
+		return (T281f10(ac, C));
 	case 283:
-		return (T283f18(C));
+		return (T283f18(ac, C));
 	case 302:
-		return (T302f20(C));
+		return (T302f20(ac, C));
 	case 309:
-		return (T309f12(C));
+		return (T309f12(ac, C));
 	case 310:
-		return (T310f11(C));
+		return (T310f11(ac, C));
 	case 311:
-		return (T311f11(C));
+		return (T311f11(ac, C));
 	case 315:
-		return (T315f14(C));
+		return (T315f14(ac, C));
 	case 738:
-		return (T738f15(C));
+		return (T738f15(ac, C));
 	case 822:
-		return (T822f23(C));
+		return (T822f23(ac, C));
 	case 905:
-		return (T905f21(C));
+		return (T905f21(ac, C));
 	case 941:
-		return (T941f19(C));
+		return (T941f19(ac, C));
 	case 949:
-		return (T949f66(C));
+		return (T949f66(ac, C));
 	case 952:
-		return (T952f22(C));
+		return (T952f22(ac, C));
 	case 980:
-		return (T980f13(C));
+		return (T980f13(ac, C));
 	case 983:
-		return (T983f16(C));
+		return (T983f16(ac, C));
 	case 1131:
-		return (T1131f17(C));
+		return (T1131f17(ac, C));
 	case 1145:
-		return (T1145f13(C));
+		return (T1145f13(ac, C));
 	case 1164:
-		return (T1164f15(C));
+		return (T1164f15(ac, C));
 	case 1167:
-		return (T1167f17(C));
+		return (T1167f17(ac, C));
 	case 1190:
-		return (T1190f23(C));
+		return (T1190f23(ac, C));
 	case 1191:
-		return (T1191f28(C));
+		return (T1191f28(ac, C));
 	case 1192:
-		return (T1192f24(C));
+		return (T1192f24(ac, C));
 	case 1193:
-		return (T1193f44(C));
+		return (T1193f44(ac, C));
 	case 1194:
-		return (T1194f44(C));
+		return (T1194f44(ac, C));
 	case 1195:
-		return (T1195f44(C));
+		return (T1195f44(ac, C));
 	case 1196:
-		return (T1196f44(C));
+		return (T1196f44(ac, C));
 	case 1197:
-		return (T1197f44(C));
+		return (T1197f44(ac, C));
 	case 1198:
-		return (T1198f24(C));
+		return (T1198f24(ac, C));
 	case 1199:
-		return (T1199f24(C));
+		return (T1199f24(ac, C));
 	case 1201:
-		return (T1201f23(C));
+		return (T1201f23(ac, C));
 	case 1202:
-		return (T1202f23(C));
+		return (T1202f23(ac, C));
 	case 1203:
-		return (T1203f22(C));
+		return (T1203f22(ac, C));
 	case 1204:
-		return (T1204f22(C));
+		return (T1204f22(ac, C));
 	case 1252:
-		return (T1252f15(C));
+		return (T1252f15(ac, C));
 	case 1253:
-		return (T1253f11(C));
+		return (T1253f11(ac, C));
 	case 1254:
-		return (T1254f11(C));
+		return (T1254f11(ac, C));
 	case 1255:
-		return (T1255f11(C));
+		return (T1255f11(ac, C));
 	case 1256:
-		return (T1256f11(C));
+		return (T1256f11(ac, C));
 	case 1257:
-		return (T1257f13(C));
+		return (T1257f13(ac, C));
 	case 1260:
-		return (T1260f12(C));
+		return (T1260f12(ac, C));
 	case 1261:
-		return (T1261f13(C));
+		return (T1261f13(ac, C));
 	case 1262:
-		return (T1262f11(C));
+		return (T1262f11(ac, C));
 	case 1263:
-		return (T1263f18(C));
+		return (T1263f18(ac, C));
 	case 1264:
-		return (T1264f13(C));
+		return (T1264f13(ac, C));
 	case 1265:
-		return (T1265f25(C));
+		return (T1265f25(ac, C));
 	case 1266:
-		return (T1266f26(C));
+		return (T1266f26(ac, C));
 	case 1267:
-		return (T1267f23(C));
+		return (T1267f23(ac, C));
 	case 1268:
-		return (T1268f24(C));
+		return (T1268f24(ac, C));
 	case 1269:
-		return (T1269f25(C));
+		return (T1269f25(ac, C));
 	case 1270:
-		return (T1270f22(C));
+		return (T1270f22(ac, C));
 	case 1272:
-		return (T1272f6(C));
+		return (T1272f6(ac, C));
 	case 1713:
-		return (T1713f13(C));
+		return (T1713f13(ac, C));
 	case 1852:
-		return (T1852f13(C));
+		return (T1852f13(ac, C));
 	case 1853:
-		return (T1853f13(C));
+		return (T1853f13(ac, C));
 	case 1854:
-		return (T1854f13(C));
+		return (T1854f13(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_ASSIGNER.feature_name */
-T0* T974x15147(T0* C)
+T0* T974x15155(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f43(C));
+	return (T176f43(ac, C));
 } else {
-	return (T823f9(C));
+	return (T823f9(ac, C));
 }
 } else {
-	return (T1229f10(C));
+	return (T1229f10(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f31(C));
+	return (T1230f31(ac, C));
 } else {
-	return (T1231f10(C));
+	return (T1231f10(ac, C));
 }
 }
 }
 
 /* Call to ET_CHOICE.upper */
-T0* T989x15197(T0* C)
+T0* T989x15205(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-	return (T176f105(C));
+	return (T176f105(ac, C));
 } else {
-	return (T1164f25(C));
+	return (T1164f25(ac, C));
 }
 } else {
-	return (T1190f35(C));
+	return (T1190f35(ac, C));
 }
 } else {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f64(C));
+	return (T1193f64(ac, C));
 } else {
-	return (T1194f64(C));
+	return (T1194f64(ac, C));
 }
 } else {
-	return (T1195f64(C));
+	return (T1195f64(ac, C));
 }
 }
 } else {
 if (t1<=1203) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f64(C));
+	return (T1196f64(ac, C));
 } else {
-	return (T1197f64(C));
+	return (T1197f64(ac, C));
 }
 } else {
-	return (T1203f34(C));
+	return (T1203f34(ac, C));
 }
 } else {
 if (t1==1204) {
-	return (T1204f34(C));
+	return (T1204f34(ac, C));
 } else {
 	return (((T1248*)(C))->a2);
 }
@@ -27978,45 +27978,45 @@ if (t1==1204) {
 }
 
 /* Call to ET_CHOICE.is_range */
-T1 T989x15195(T0* C)
+T1 T989x15203(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-	return (T176f103(C));
+	return (T176f103(ac, C));
 } else {
-	return (T1164f23(C));
+	return (T1164f23(ac, C));
 }
 } else {
-	return (T1190f33(C));
+	return (T1190f33(ac, C));
 }
 } else {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f62(C));
+	return (T1193f62(ac, C));
 } else {
-	return (T1194f62(C));
+	return (T1194f62(ac, C));
 }
 } else {
-	return (T1195f62(C));
+	return (T1195f62(ac, C));
 }
 }
 } else {
 if (t1<=1203) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f62(C));
+	return (T1196f62(ac, C));
 } else {
-	return (T1197f62(C));
+	return (T1197f62(ac, C));
 }
 } else {
-	return (T1203f32(C));
+	return (T1203f32(ac, C));
 }
 } else {
 if (t1==1204) {
-	return (T1204f32(C));
+	return (T1204f32(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -28025,45 +28025,45 @@ if (t1==1204) {
 }
 
 /* Call to ET_CHOICE.lower */
-T0* T989x15196(T0* C)
+T0* T989x15204(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-	return (T176f104(C));
+	return (T176f104(ac, C));
 } else {
-	return (T1164f24(C));
+	return (T1164f24(ac, C));
 }
 } else {
-	return (T1190f34(C));
+	return (T1190f34(ac, C));
 }
 } else {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f63(C));
+	return (T1193f63(ac, C));
 } else {
-	return (T1194f63(C));
+	return (T1194f63(ac, C));
 }
 } else {
-	return (T1195f63(C));
+	return (T1195f63(ac, C));
 }
 }
 } else {
 if (t1<=1203) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f63(C));
+	return (T1196f63(ac, C));
 } else {
-	return (T1197f63(C));
+	return (T1197f63(ac, C));
 }
 } else {
-	return (T1203f33(C));
+	return (T1203f33(ac, C));
 }
 } else {
 if (t1==1204) {
-	return (T1204f33(C));
+	return (T1204f33(ac, C));
 } else {
 	return (((T1248*)(C))->a1);
 }
@@ -28072,203 +28072,203 @@ if (t1==1204) {
 }
 
 /* Call to ET_CHOICE_CONSTANT.position */
-T0* T992x7085(T0* C)
+T0* T992x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1194) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T1164f9(C));
+	return (T1164f9(ac, C));
 }
 } else {
-	return (T1190f9(C));
+	return (T1190f9(ac, C));
 }
 } else {
 if (t1==1193) {
-	return (T1193f16(C));
+	return (T1193f16(ac, C));
 } else {
-	return (T1194f16(C));
+	return (T1194f16(ac, C));
 }
 }
 } else {
 if (t1<=1197) {
 if (t1<=1196) {
 if (t1==1195) {
-	return (T1195f16(C));
+	return (T1195f16(ac, C));
 } else {
-	return (T1196f16(C));
+	return (T1196f16(ac, C));
 }
 } else {
-	return (T1197f16(C));
+	return (T1197f16(ac, C));
 }
 } else {
 if (t1==1203) {
-	return (T1203f9(C));
+	return (T1203f9(ac, C));
 } else {
-	return (T1204f9(C));
+	return (T1204f9(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CHOICE_ITEM.choice */
-T0* T995x15199(T0* C)
+T0* T995x15207(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-	return (T176f102(C));
+	return (T176f102(ac, C));
 } else {
-	return (T1164f22(C));
+	return (T1164f22(ac, C));
 }
 } else {
-	return (T1190f32(C));
+	return (T1190f32(ac, C));
 }
 } else {
 if (t1<=1194) {
 if (t1==1193) {
-	return (T1193f61(C));
+	return (T1193f61(ac, C));
 } else {
-	return (T1194f61(C));
+	return (T1194f61(ac, C));
 }
 } else {
-	return (T1195f61(C));
+	return (T1195f61(ac, C));
 }
 }
 } else {
 if (t1<=1203) {
 if (t1<=1197) {
 if (t1==1196) {
-	return (T1196f61(C));
+	return (T1196f61(ac, C));
 } else {
-	return (T1197f61(C));
+	return (T1197f61(ac, C));
 }
 } else {
-	return (T1203f31(C));
+	return (T1203f31(ac, C));
 }
 } else {
 if (t1==1204) {
-	return (T1204f31(C));
+	return (T1204f31(ac, C));
 } else {
-	return (T1248f5(C));
+	return (T1248f5(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CONDITIONAL.expression */
-T0* T1010x15168(T0* C)
+T0* T1010x15176(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f46(C));
+		return (T176f46(ac, C));
 	case 275:
-		return (T275f7(C));
+		return (T275f7(ac, C));
 	case 280:
-		return (T280f11(C));
+		return (T280f11(ac, C));
 	case 281:
-		return (T281f6(C));
+		return (T281f6(ac, C));
 	case 283:
-		return (T283f14(C));
+		return (T283f14(ac, C));
 	case 302:
-		return (T302f7(C));
+		return (T302f7(ac, C));
 	case 309:
-		return (T309f9(C));
+		return (T309f9(ac, C));
 	case 310:
-		return (T310f9(C));
+		return (T310f9(ac, C));
 	case 311:
-		return (T311f9(C));
+		return (T311f9(ac, C));
 	case 315:
-		return (T315f10(C));
+		return (T315f10(ac, C));
 	case 738:
-		return (T738f7(C));
+		return (T738f7(ac, C));
 	case 822:
-		return (T822f6(C));
+		return (T822f6(ac, C));
 	case 905:
-		return (T905f4(C));
+		return (T905f4(ac, C));
 	case 941:
-		return (T941f15(C));
+		return (T941f15(ac, C));
 	case 952:
-		return (T952f15(C));
+		return (T952f15(ac, C));
 	case 980:
-		return (T980f7(C));
+		return (T980f7(ac, C));
 	case 983:
-		return (T983f8(C));
+		return (T983f8(ac, C));
 	case 1131:
-		return (T1131f9(C));
+		return (T1131f9(ac, C));
 	case 1145:
-		return (T1145f8(C));
+		return (T1145f8(ac, C));
 	case 1164:
-		return (T1164f7(C));
+		return (T1164f7(ac, C));
 	case 1167:
-		return (T1167f9(C));
+		return (T1167f9(ac, C));
 	case 1190:
-		return (T1190f11(C));
+		return (T1190f11(ac, C));
 	case 1191:
-		return (T1191f12(C));
+		return (T1191f12(ac, C));
 	case 1192:
-		return (T1192f12(C));
+		return (T1192f12(ac, C));
 	case 1193:
-		return (T1193f10(C));
+		return (T1193f10(ac, C));
 	case 1194:
-		return (T1194f10(C));
+		return (T1194f10(ac, C));
 	case 1195:
-		return (T1195f10(C));
+		return (T1195f10(ac, C));
 	case 1196:
-		return (T1196f10(C));
+		return (T1196f10(ac, C));
 	case 1197:
-		return (T1197f10(C));
+		return (T1197f10(ac, C));
 	case 1198:
-		return (T1198f10(C));
+		return (T1198f10(ac, C));
 	case 1199:
-		return (T1199f10(C));
+		return (T1199f10(ac, C));
 	case 1201:
-		return (T1201f15(C));
+		return (T1201f15(ac, C));
 	case 1202:
-		return (T1202f15(C));
+		return (T1202f15(ac, C));
 	case 1203:
-		return (T1203f11(C));
+		return (T1203f11(ac, C));
 	case 1204:
-		return (T1204f11(C));
+		return (T1204f11(ac, C));
 	case 1252:
-		return (T1252f11(C));
+		return (T1252f11(ac, C));
 	case 1253:
-		return (T1253f4(C));
+		return (T1253f4(ac, C));
 	case 1254:
-		return (T1254f4(C));
+		return (T1254f4(ac, C));
 	case 1255:
-		return (T1255f4(C));
+		return (T1255f4(ac, C));
 	case 1256:
-		return (T1256f4(C));
+		return (T1256f4(ac, C));
 	case 1257:
-		return (T1257f7(C));
+		return (T1257f7(ac, C));
 	case 1260:
-		return (T1260f8(C));
+		return (T1260f8(ac, C));
 	case 1261:
-		return (T1261f15(C));
+		return (T1261f15(ac, C));
 	case 1262:
-		return (T1262f4(C));
+		return (T1262f4(ac, C));
 	case 1263:
-		return (T1263f11(C));
+		return (T1263f11(ac, C));
 	case 1264:
-		return (T1264f8(C));
+		return (T1264f8(ac, C));
 	case 1265:
-		return (T1265f19(C));
+		return (T1265f19(ac, C));
 	case 1266:
-		return (T1266f19(C));
+		return (T1266f19(ac, C));
 	case 1267:
-		return (T1267f17(C));
+		return (T1267f17(ac, C));
 	case 1268:
-		return (T1268f15(C));
+		return (T1268f15(ac, C));
 	case 1269:
-		return (T1269f15(C));
+		return (T1269f15(ac, C));
 	case 1270:
-		return (T1270f13(C));
+		return (T1270f13(ac, C));
 	case 1557:
 		return (((T1557*)(C))->a1);
 	default:
@@ -28277,66 +28277,66 @@ T0* T1010x15168(T0* C)
 }
 
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.resolved_syntactical_constraint_with_type */
-T0* T1013x7112T0T0(T0* C, T0* a1, T0* a2)
+T0* T1013x7112T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1215) {
 if (t1<=1213) {
 if (t1<=1210) {
 if (t1==495) {
-	return (T495f67(C, a1, a2));
+	return (T495f67(ac, C, a1, a2));
 } else {
-	return (T1210f6(C, a1, a2));
+	return (T1210f6(ac, C, a1, a2));
 }
 } else {
-	return (T1213f104(C, a1, a2));
+	return (T1213f104(ac, C, a1, a2));
 }
 } else {
 if (t1==1214) {
-	return (T1214f105(C, a1, a2));
+	return (T1214f105(ac, C, a1, a2));
 } else {
-	return (T1215f5(C, a1, a2));
+	return (T1215f5(ac, C, a1, a2));
 }
 }
 } else {
 if (t1<=1239) {
 if (t1<=1238) {
 if (t1==1216) {
-	return (T1216f5(C, a1, a2));
+	return (T1216f5(ac, C, a1, a2));
 } else {
-	return (T1238f71(C, a1, a2));
+	return (T1238f71(ac, C, a1, a2));
 }
 } else {
-	return (T1239f72(C, a1, a2));
+	return (T1239f72(ac, C, a1, a2));
 }
 } else {
 if (t1==1240) {
-	return (T1240f69(C, a1, a2));
+	return (T1240f69(ac, C, a1, a2));
 } else {
-	return (T1416f7(C, a1, a2));
+	return (T1416f7(ac, C, a1, a2));
 }
 }
 }
 }
 
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.type */
-T0* T1013x7110(T0* C)
+T0* T1013x7110(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1215) {
 if (t1<=1213) {
 if (t1<=1210) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T1210f4(C));
+	return (T1210f4(ac, C));
 }
 } else {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 } else {
 	return (((T1215*)(C))->a3);
 }
@@ -28347,101 +28347,101 @@ if (t1<=1238) {
 if (t1==1216) {
 	return (((T1216*)(C))->a3);
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 } else {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 }
 } else {
 if (t1==1240) {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 } else {
-	return (T1416f5(C));
+	return (T1416f5(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM.position */
-T0* T1013x7111(T0* C)
+T0* T1013x7111(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1215) {
 if (t1<=1213) {
 if (t1<=1210) {
 if (t1==495) {
-	return (T495f33(C));
+	return (T495f33(ac, C));
 } else {
-	return (T1210f5(C));
+	return (T1210f5(ac, C));
 }
 } else {
-	return (T1213f11(C));
+	return (T1213f11(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f8(C));
+	return (T1214f8(ac, C));
 } else {
-	return (T1215f4(C));
+	return (T1215f4(ac, C));
 }
 }
 } else {
 if (t1<=1239) {
 if (t1<=1238) {
 if (t1==1216) {
-	return (T1216f4(C));
+	return (T1216f4(ac, C));
 } else {
-	return (T1238f8(C));
+	return (T1238f8(ac, C));
 }
 } else {
-	return (T1239f8(C));
+	return (T1239f8(ac, C));
 }
 } else {
 if (t1==1240) {
-	return (T1240f8(C));
+	return (T1240f8(ac, C));
 } else {
-	return (T1416f6(C));
+	return (T1416f6(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_CONSTRAINT_TYPE.resolved_syntactical_constraint */
-T0* T1022x7114T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+T0* T1022x7114T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1214) {
 if (t1<=1210) {
 if (t1==495) {
-	return (T495f31(C, a1, a2, a3));
+	return (T495f31(ac, C, a1, a2, a3));
 } else {
-	return (T1210f3(C, a1, a2, a3));
+	return (T1210f3(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==1213) {
-	return (T1213f9(C, a1, a2, a3));
+	return (T1213f9(ac, C, a1, a2, a3));
 } else {
-	return (T1214f21(C, a1, a2, a3));
+	return (T1214f21(ac, C, a1, a2, a3));
 }
 }
 } else {
 if (t1<=1239) {
 if (t1==1238) {
-	return (T1238f19(C, a1, a2, a3));
+	return (T1238f19(ac, C, a1, a2, a3));
 } else {
-	return (T1239f20(C, a1, a2, a3));
+	return (T1239f20(ac, C, a1, a2, a3));
 }
 } else {
 if (t1==1240) {
-	return (T1240f22(C, a1, a2, a3));
+	return (T1240f22(ac, C, a1, a2, a3));
 } else {
-	return (T1416f4(C, a1, a2, a3));
+	return (T1416f4(ac, C, a1, a2, a3));
 }
 }
 }
 }
 
 /* Call to ET_CONVERT_FEATURE.name */
-T0* T1025x25958(T0* C)
+T0* T1025x25966(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1220) {
@@ -28456,29 +28456,29 @@ if (t1==461) {
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_to */
-T1 T1025x25957(T0* C)
+T1 T1025x25965(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1220) {
 if (t1==461) {
-	return (T461f5(C));
+	return (T461f5(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1221f7(C));
+	return (T1221f7(ac, C));
 }
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_from */
-T1 T1025x25956(T0* C)
+T1 T1025x25964(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1220) {
 if (t1==461) {
-	return (T461f4(C));
+	return (T461f4(ac, C));
 } else {
-	return (T1220f7(C));
+	return (T1220f7(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -28486,125 +28486,125 @@ if (t1==461) {
 }
 
 /* Call to ET_EXTERNAL_ALIAS.manifest_string */
-T0* T1057x20224(T0* C)
+T0* T1057x20232(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-	return (T822f17(C));
+	return (T822f17(ac, C));
 } else {
-	return (T1191f22(C));
+	return (T1191f22(ac, C));
 }
 } else {
-	return (T1192f18(C));
+	return (T1192f18(ac, C));
 }
 }
 
 /* Call to ET_FEATURE_NAME_ITEM.feature_name */
-T0* T1071x15141(T0* C)
+T0* T1071x15149(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f43(C));
+	return (T176f43(ac, C));
 } else {
-	return (T823f9(C));
+	return (T823f9(ac, C));
 }
 } else {
-	return (T1229f10(C));
+	return (T1229f10(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f31(C));
+	return (T1230f31(ac, C));
 } else {
-	return (T1231f10(C));
+	return (T1231f10(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME_ITEM.position */
-T0* T1071x7085(T0* C)
+T0* T1071x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-	return (T176f22(C));
+	return (T176f22(ac, C));
 } else {
-	return (T823f14(C));
+	return (T823f14(ac, C));
 }
 } else {
-	return (T1229f7(C));
+	return (T1229f7(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f7(C));
+	return (T1230f7(ac, C));
 } else {
-	return (T1231f7(C));
+	return (T1231f7(ac, C));
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.to_text */
-T0* T1117x7079(T0* C)
+T0* T1117x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-	return (T495f70(C));
+	return (T495f70(ac, C));
 } else {
-	return (T1238f72(C));
+	return (T1238f72(ac, C));
 }
 } else {
 if (t1==1239) {
-	return (T1239f73(C));
+	return (T1239f73(ac, C));
 } else {
-	return (T1240f70(C));
+	return (T1240f70(ac, C));
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.position */
-T0* T1117x7085(T0* C)
+T0* T1117x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-	return (T495f33(C));
+	return (T495f33(ac, C));
 } else {
-	return (T1238f8(C));
+	return (T1238f8(ac, C));
 }
 } else {
 if (t1==1239) {
-	return (T1239f8(C));
+	return (T1239f8(ac, C));
 } else {
-	return (T1240f8(C));
+	return (T1240f8(ac, C));
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.resolved_formal_parameters */
-T0* T1117x7072T0(T0* C, T0* a1)
+T0* T1117x7072T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-	return (T495f63(C, a1));
+	return (T495f63(ac, C, a1));
 } else {
-	return (T1238f67(C, a1));
+	return (T1238f67(ac, C, a1));
 }
 } else {
 if (t1==1239) {
-	return (T1239f68(C, a1));
+	return (T1239f68(ac, C, a1));
 } else {
-	return (T1240f65(C, a1));
+	return (T1240f65(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.like_keyword */
-T0* T1117x26937(T0* C)
+T0* T1117x26945(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
@@ -28617,457 +28617,457 @@ if (t1==495) {
 if (t1==1239) {
 	return (((T1239*)(C))->a3);
 } else {
-	return (T1240f38(C));
+	return (T1240f38(ac, C));
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.has_formal_types */
-T1 T1117x7040T0(T0* C, T0* a1)
+T1 T1117x7040T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-	return (T495f38(C, a1));
+	return (T495f38(ac, C, a1));
 } else {
-	return (T1238f36(C, a1));
+	return (T1238f36(ac, C, a1));
 }
 } else {
 if (t1==1239) {
-	return (T1239f35(C, a1));
+	return (T1239f35(ac, C, a1));
 } else {
-	return (T1240f20(C, a1));
+	return (T1240f20(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_MANIFEST_STRING_ITEM.manifest_string */
-T0* T1134x20222(T0* C)
+T0* T1134x20230(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-	return (T822f17(C));
+	return (T822f17(ac, C));
 } else {
-	return (T1191f22(C));
+	return (T1191f22(ac, C));
 }
 } else {
-	return (T1192f18(C));
+	return (T1192f18(ac, C));
 }
 }
 
 /* Call to ET_TYPE_ITEM.type */
-T0* T1170x7084(T0* C)
+T0* T1170x7084(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f39(C));
+	return (T78f39(ac, C));
 } else {
-	return (T80f101(C));
+	return (T80f101(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f37(C));
+	return (T246f37(ac, C));
 } else {
-	return (T254f38(C));
+	return (T254f38(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T858f12(C));
+	return (T858f12(ac, C));
 }
 } else {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 } else {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 } else {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 }
 } else {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_DECLARED_TYPE.type */
-T0* T1222x7116(T0* C)
+T0* T1222x7116(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-	return (T78f39(C));
+	return (T78f39(ac, C));
 } else {
-	return (T80f101(C));
+	return (T80f101(ac, C));
 }
 } else {
 if (t1==246) {
-	return (T246f37(C));
+	return (T246f37(ac, C));
 } else {
-	return (T254f38(C));
+	return (T254f38(ac, C));
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-	return (T495f6(C));
+	return (T495f6(ac, C));
 } else {
-	return (T858f12(C));
+	return (T858f12(ac, C));
 }
 } else {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 } else {
-	return (T1213f7(C));
+	return (T1213f7(ac, C));
 }
 } else {
 if (t1==1214) {
-	return (T1214f7(C));
+	return (T1214f7(ac, C));
 } else {
-	return (T1238f7(C));
+	return (T1238f7(ac, C));
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-	return (T1239f7(C));
+	return (T1239f7(ac, C));
 } else {
-	return (T1240f7(C));
+	return (T1240f7(ac, C));
 }
 } else {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_EXTERNAL_LANGUAGE.manifest_string */
-T0* T1226x20223(T0* C)
+T0* T1226x20231(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-	return (T822f17(C));
+	return (T822f17(ac, C));
 } else {
-	return (T1191f22(C));
+	return (T1191f22(ac, C));
 }
 } else {
-	return (T1192f18(C));
+	return (T1192f18(ac, C));
 }
 }
 
 /* Call to ET_ASSERTION_ITEM.assertion */
-T0* T1273x15172(T0* C)
+T0* T1273x15180(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f82(C));
+		return (T176f82(ac, C));
 	case 275:
-		return (T275f19(C));
+		return (T275f19(ac, C));
 	case 280:
-		return (T280f14(C));
+		return (T280f14(ac, C));
 	case 281:
-		return (T281f9(C));
+		return (T281f9(ac, C));
 	case 283:
-		return (T283f17(C));
+		return (T283f17(ac, C));
 	case 302:
-		return (T302f19(C));
+		return (T302f19(ac, C));
 	case 309:
-		return (T309f11(C));
+		return (T309f11(ac, C));
 	case 310:
-		return (T310f10(C));
+		return (T310f10(ac, C));
 	case 311:
-		return (T311f10(C));
+		return (T311f10(ac, C));
 	case 315:
-		return (T315f13(C));
+		return (T315f13(ac, C));
 	case 738:
-		return (T738f14(C));
+		return (T738f14(ac, C));
 	case 822:
-		return (T822f22(C));
+		return (T822f22(ac, C));
 	case 905:
-		return (T905f20(C));
+		return (T905f20(ac, C));
 	case 941:
-		return (T941f18(C));
+		return (T941f18(ac, C));
 	case 952:
-		return (T952f21(C));
+		return (T952f21(ac, C));
 	case 980:
-		return (T980f12(C));
+		return (T980f12(ac, C));
 	case 983:
-		return (T983f15(C));
+		return (T983f15(ac, C));
 	case 1131:
-		return (T1131f16(C));
+		return (T1131f16(ac, C));
 	case 1145:
-		return (T1145f12(C));
+		return (T1145f12(ac, C));
 	case 1164:
-		return (T1164f14(C));
+		return (T1164f14(ac, C));
 	case 1167:
-		return (T1167f16(C));
+		return (T1167f16(ac, C));
 	case 1190:
-		return (T1190f22(C));
+		return (T1190f22(ac, C));
 	case 1191:
-		return (T1191f27(C));
+		return (T1191f27(ac, C));
 	case 1192:
-		return (T1192f23(C));
+		return (T1192f23(ac, C));
 	case 1193:
-		return (T1193f43(C));
+		return (T1193f43(ac, C));
 	case 1194:
-		return (T1194f43(C));
+		return (T1194f43(ac, C));
 	case 1195:
-		return (T1195f43(C));
+		return (T1195f43(ac, C));
 	case 1196:
-		return (T1196f43(C));
+		return (T1196f43(ac, C));
 	case 1197:
-		return (T1197f43(C));
+		return (T1197f43(ac, C));
 	case 1198:
-		return (T1198f23(C));
+		return (T1198f23(ac, C));
 	case 1199:
-		return (T1199f23(C));
+		return (T1199f23(ac, C));
 	case 1201:
-		return (T1201f22(C));
+		return (T1201f22(ac, C));
 	case 1202:
-		return (T1202f22(C));
+		return (T1202f22(ac, C));
 	case 1203:
-		return (T1203f21(C));
+		return (T1203f21(ac, C));
 	case 1204:
-		return (T1204f21(C));
+		return (T1204f21(ac, C));
 	case 1252:
-		return (T1252f14(C));
+		return (T1252f14(ac, C));
 	case 1253:
-		return (T1253f10(C));
+		return (T1253f10(ac, C));
 	case 1254:
-		return (T1254f10(C));
+		return (T1254f10(ac, C));
 	case 1255:
-		return (T1255f10(C));
+		return (T1255f10(ac, C));
 	case 1256:
-		return (T1256f10(C));
+		return (T1256f10(ac, C));
 	case 1257:
-		return (T1257f12(C));
+		return (T1257f12(ac, C));
 	case 1260:
-		return (T1260f11(C));
+		return (T1260f11(ac, C));
 	case 1261:
-		return (T1261f12(C));
+		return (T1261f12(ac, C));
 	case 1262:
-		return (T1262f10(C));
+		return (T1262f10(ac, C));
 	case 1263:
-		return (T1263f17(C));
+		return (T1263f17(ac, C));
 	case 1264:
-		return (T1264f12(C));
+		return (T1264f12(ac, C));
 	case 1265:
-		return (T1265f24(C));
+		return (T1265f24(ac, C));
 	case 1266:
-		return (T1266f25(C));
+		return (T1266f25(ac, C));
 	case 1267:
-		return (T1267f22(C));
+		return (T1267f22(ac, C));
 	case 1268:
-		return (T1268f23(C));
+		return (T1268f23(ac, C));
 	case 1269:
-		return (T1269f24(C));
+		return (T1269f24(ac, C));
 	case 1270:
-		return (T1270f21(C));
+		return (T1270f21(ac, C));
 	case 1274:
-		return (T1274f3(C));
+		return (T1274f3(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_ASSERTION_ITEM.position */
-T0* T1273x7085(T0* C)
+T0* T1273x7085(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f22(C));
+		return (T176f22(ac, C));
 	case 275:
-		return (T275f8(C));
+		return (T275f8(ac, C));
 	case 280:
-		return (T280f10(C));
+		return (T280f10(ac, C));
 	case 281:
-		return (T281f5(C));
+		return (T281f5(ac, C));
 	case 283:
-		return (T283f15(C));
+		return (T283f15(ac, C));
 	case 302:
-		return (T302f8(C));
+		return (T302f8(ac, C));
 	case 309:
-		return (T309f8(C));
+		return (T309f8(ac, C));
 	case 310:
-		return (T310f8(C));
+		return (T310f8(ac, C));
 	case 311:
-		return (T311f8(C));
+		return (T311f8(ac, C));
 	case 315:
-		return (T315f9(C));
+		return (T315f9(ac, C));
 	case 738:
-		return (T738f9(C));
+		return (T738f9(ac, C));
 	case 822:
-		return (T822f27(C));
+		return (T822f27(ac, C));
 	case 905:
-		return (T905f10(C));
+		return (T905f10(ac, C));
 	case 941:
-		return (T941f10(C));
+		return (T941f10(ac, C));
 	case 952:
-		return (T952f18(C));
+		return (T952f18(ac, C));
 	case 980:
-		return (T980f6(C));
+		return (T980f6(ac, C));
 	case 983:
-		return (T983f11(C));
+		return (T983f11(ac, C));
 	case 1131:
-		return (T1131f8(C));
+		return (T1131f8(ac, C));
 	case 1145:
-		return (T1145f6(C));
+		return (T1145f6(ac, C));
 	case 1164:
-		return (T1164f9(C));
+		return (T1164f9(ac, C));
 	case 1167:
-		return (T1167f12(C));
+		return (T1167f12(ac, C));
 	case 1190:
-		return (T1190f9(C));
+		return (T1190f9(ac, C));
 	case 1191:
-		return (T1191f30(C));
+		return (T1191f30(ac, C));
 	case 1192:
-		return (T1192f10(C));
+		return (T1192f10(ac, C));
 	case 1193:
-		return (T1193f16(C));
+		return (T1193f16(ac, C));
 	case 1194:
-		return (T1194f16(C));
+		return (T1194f16(ac, C));
 	case 1195:
-		return (T1195f16(C));
+		return (T1195f16(ac, C));
 	case 1196:
-		return (T1196f16(C));
+		return (T1196f16(ac, C));
 	case 1197:
-		return (T1197f16(C));
+		return (T1197f16(ac, C));
 	case 1198:
-		return (T1198f26(C));
+		return (T1198f26(ac, C));
 	case 1199:
-		return (T1199f26(C));
+		return (T1199f26(ac, C));
 	case 1201:
-		return (T1201f10(C));
+		return (T1201f10(ac, C));
 	case 1202:
-		return (T1202f10(C));
+		return (T1202f10(ac, C));
 	case 1203:
-		return (T1203f9(C));
+		return (T1203f9(ac, C));
 	case 1204:
-		return (T1204f9(C));
+		return (T1204f9(ac, C));
 	case 1252:
-		return (T1252f10(C));
+		return (T1252f10(ac, C));
 	case 1253:
-		return (T1253f7(C));
+		return (T1253f7(ac, C));
 	case 1254:
-		return (T1254f7(C));
+		return (T1254f7(ac, C));
 	case 1255:
-		return (T1255f7(C));
+		return (T1255f7(ac, C));
 	case 1256:
-		return (T1256f7(C));
+		return (T1256f7(ac, C));
 	case 1257:
-		return (T1257f6(C));
+		return (T1257f6(ac, C));
 	case 1260:
-		return (T1260f6(C));
+		return (T1260f6(ac, C));
 	case 1261:
-		return (T1261f6(C));
+		return (T1261f6(ac, C));
 	case 1262:
-		return (T1262f6(C));
+		return (T1262f6(ac, C));
 	case 1263:
-		return (T1263f10(C));
+		return (T1263f10(ac, C));
 	case 1264:
-		return (T1264f6(C));
+		return (T1264f6(ac, C));
 	case 1265:
-		return (T1265f18(C));
+		return (T1265f18(ac, C));
 	case 1266:
-		return (T1266f18(C));
+		return (T1266f18(ac, C));
 	case 1267:
-		return (T1267f15(C));
+		return (T1267f15(ac, C));
 	case 1268:
-		return (T1268f14(C));
+		return (T1268f14(ac, C));
 	case 1269:
-		return (T1269f18(C));
+		return (T1269f18(ac, C));
 	case 1270:
-		return (T1270f16(C));
+		return (T1270f16(ac, C));
 	case 1274:
-		return (T1274f4(C));
+		return (T1274f4(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_FLATTENED_FEATURE.flattened_feature */
-T0* T1301x17063(T0* C)
+T0* T1301x17071(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f61(C));
+	return (T253f61(ac, C));
 } else {
-	return (T320f31(C));
+	return (T320f31(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f29(C));
+	return (T353f29(ac, C));
 } else {
-	return (T355f28(C));
+	return (T355f28(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f28(C));
+	return (T356f28(ac, C));
 } else {
-	return (T514f44(C));
+	return (T516f44(ac, C));
 }
 } else {
-	return (T523f41(C));
+	return (T523f41(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f50(C));
+	return (T1223f50(ac, C));
 } else {
-	return (T1224f51(C));
+	return (T1224f51(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f48(C));
+	return (T1225f48(ac, C));
 } else {
-	return (T1227f44(C));
+	return (T1227f44(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f44(C));
+	return (T1228f44(ac, C));
 } else {
 	return (((T1303*)(C))->a3);
 }
@@ -29079,233 +29079,233 @@ if (t1==1228) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.inherited_feature */
-T0* T1301x17065(T0* C)
+T0* T1301x17073(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f36(C));
+	return (T253f36(ac, C));
 } else {
-	return (T320f38(C));
+	return (T320f38(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f36(C));
+	return (T353f36(ac, C));
 } else {
-	return (T355f35(C));
+	return (T355f35(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f35(C));
+	return (T356f35(ac, C));
 } else {
-	return (T514f51(C));
+	return (T516f51(ac, C));
 }
 } else {
-	return (T523f48(C));
+	return (T523f48(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f57(C));
+	return (T1223f57(ac, C));
 } else {
-	return (T1224f58(C));
+	return (T1224f58(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f55(C));
+	return (T1225f55(ac, C));
 } else {
-	return (T1227f51(C));
+	return (T1227f51(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f51(C));
+	return (T1228f51(ac, C));
 } else {
-	return (T1303f16(C));
+	return (T1303f16(ac, C));
 }
 } else {
-	return (T1505f9(C));
+	return (T1505f9(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_inherited */
-T1 T1301x17052(T0* C)
+T1 T1301x17060(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f35(C));
+	return (T253f35(ac, C));
 } else {
-	return (T320f37(C));
+	return (T320f37(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f35(C));
+	return (T353f35(ac, C));
 } else {
-	return (T355f34(C));
+	return (T355f34(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f34(C));
+	return (T356f34(ac, C));
 } else {
-	return (T514f50(C));
+	return (T516f50(ac, C));
 }
 } else {
-	return (T523f47(C));
+	return (T523f47(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f56(C));
+	return (T1223f56(ac, C));
 } else {
-	return (T1224f57(C));
+	return (T1224f57(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f54(C));
+	return (T1225f54(ac, C));
 } else {
-	return (T1227f50(C));
+	return (T1227f50(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f50(C));
+	return (T1228f50(ac, C));
 } else {
 	return (EIF_TRUE);
 }
 } else {
-	return (T1505f18(C));
+	return (T1505f18(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FLATTENED_FEATURE.redeclared_feature */
-T0* T1301x17066(T0* C)
+T0* T1301x17074(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f34(C));
+	return (T253f34(ac, C));
 } else {
-	return (T320f36(C));
+	return (T320f36(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f34(C));
+	return (T353f34(ac, C));
 } else {
-	return (T355f33(C));
+	return (T355f33(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f33(C));
+	return (T356f33(ac, C));
 } else {
-	return (T514f49(C));
+	return (T516f49(ac, C));
 }
 } else {
-	return (T523f46(C));
+	return (T523f46(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f55(C));
+	return (T1223f55(ac, C));
 } else {
-	return (T1224f56(C));
+	return (T1224f56(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f53(C));
+	return (T1225f53(ac, C));
 } else {
-	return (T1227f49(C));
+	return (T1227f49(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f49(C));
+	return (T1228f49(ac, C));
 } else {
-	return (T1303f14(C));
+	return (T1303f14(ac, C));
 }
 } else {
-	return (T1505f16(C));
+	return (T1505f16(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_redeclared */
-T1 T1301x17053(T0* C)
+T1 T1301x17061(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f33(C));
+	return (T253f33(ac, C));
 } else {
-	return (T320f35(C));
+	return (T320f35(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f33(C));
+	return (T353f33(ac, C));
 } else {
-	return (T355f32(C));
+	return (T355f32(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f32(C));
+	return (T356f32(ac, C));
 } else {
-	return (T514f48(C));
+	return (T516f48(ac, C));
 }
 } else {
-	return (T523f45(C));
+	return (T523f45(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f54(C));
+	return (T1223f54(ac, C));
 } else {
-	return (T1224f55(C));
+	return (T1224f55(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f52(C));
+	return (T1225f52(ac, C));
 } else {
-	return (T1227f48(C));
+	return (T1227f48(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f48(C));
+	return (T1228f48(ac, C));
 } else {
-	return (T1303f13(C));
+	return (T1303f13(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -29315,125 +29315,125 @@ if (t1==1228) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.adapted_feature */
-T0* T1301x17067(T0* C)
+T0* T1301x17075(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f32(C));
+	return (T253f32(ac, C));
 } else {
-	return (T320f34(C));
+	return (T320f34(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f32(C));
+	return (T353f32(ac, C));
 } else {
-	return (T355f31(C));
+	return (T355f31(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f31(C));
+	return (T356f31(ac, C));
 } else {
-	return (T514f47(C));
+	return (T516f47(ac, C));
 }
 } else {
-	return (T523f44(C));
+	return (T523f44(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f53(C));
+	return (T1223f53(ac, C));
 } else {
-	return (T1224f54(C));
+	return (T1224f54(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f51(C));
+	return (T1225f51(ac, C));
 } else {
-	return (T1227f47(C));
+	return (T1227f47(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f47(C));
+	return (T1228f47(ac, C));
 } else {
-	return (T1303f12(C));
+	return (T1303f12(ac, C));
 }
 } else {
-	return (T1505f13(C));
+	return (T1505f13(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FLATTENED_FEATURE.immediate_feature */
-T0* T1301x17064(T0* C)
+T0* T1301x17072(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f63(C));
+	return (T253f63(ac, C));
 } else {
-	return (T320f33(C));
+	return (T320f33(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f31(C));
+	return (T353f31(ac, C));
 } else {
-	return (T355f30(C));
+	return (T355f30(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f30(C));
+	return (T356f30(ac, C));
 } else {
-	return (T514f46(C));
+	return (T516f46(ac, C));
 }
 } else {
-	return (T523f43(C));
+	return (T523f43(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f52(C));
+	return (T1223f52(ac, C));
 } else {
-	return (T1224f53(C));
+	return (T1224f53(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f50(C));
+	return (T1225f50(ac, C));
 } else {
-	return (T1227f46(C));
+	return (T1227f46(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f46(C));
+	return (T1228f46(ac, C));
 } else {
-	return (T1303f11(C));
+	return (T1303f11(ac, C));
 }
 } else {
-	return (T1505f12(C));
+	return (T1505f12(ac, C));
 }
 }
 }
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_immediate */
-T1 T1301x17051(T0* C)
+T1 T1301x17059(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
@@ -29452,7 +29452,7 @@ if (t1==353) {
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
 	return (EIF_TRUE);
 } else {
@@ -29492,54 +29492,54 @@ if (t1==1228) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_adapted */
-T1 T1301x17054(T0* C)
+T1 T1301x17062(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-	return (T253f37(C));
+	return (T253f37(ac, C));
 } else {
-	return (T320f39(C));
+	return (T320f39(ac, C));
 }
 } else {
 if (t1==353) {
-	return (T353f37(C));
+	return (T353f37(ac, C));
 } else {
-	return (T355f36(C));
+	return (T355f36(ac, C));
 }
 }
 } else {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==356) {
-	return (T356f36(C));
+	return (T356f36(ac, C));
 } else {
-	return (T514f52(C));
+	return (T516f52(ac, C));
 }
 } else {
-	return (T523f49(C));
+	return (T523f49(ac, C));
 }
 }
 } else {
 if (t1<=1227) {
 if (t1<=1224) {
 if (t1==1223) {
-	return (T1223f58(C));
+	return (T1223f58(ac, C));
 } else {
-	return (T1224f59(C));
+	return (T1224f59(ac, C));
 }
 } else {
 if (t1==1225) {
-	return (T1225f56(C));
+	return (T1225f56(ac, C));
 } else {
-	return (T1227f52(C));
+	return (T1227f52(ac, C));
 }
 }
 } else {
 if (t1<=1303) {
 if (t1==1228) {
-	return (T1228f52(C));
+	return (T1228f52(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -29551,7 +29551,7 @@ if (t1==1228) {
 }
 
 /* Call to XM_ELEMENT_NODE.parent */
-T0* T1408x14081(T0* C)
+T0* T1408x14089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1403) {
@@ -29574,22 +29574,22 @@ if (t1==1404) {
 }
 
 /* Call to DS_ARRAYED_LIST [ET_CLUSTER].item */
-T0* T1415x4464T6(T0* C, T6 a1)
+T0* T1415x4464T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=864) {
 if (t1==623) {
-	return (T623f9(C, a1));
+	return (T623f9(ac, C, a1));
 } else {
-	return (T864f9(C, a1));
+	return (T864f9(ac, C, a1));
 }
 } else {
-	return (T1438f9(C, a1));
+	return (T1438f9(ac, C, a1));
 }
 }
 
 /* Call to DS_ARRAYED_LIST [ET_CLUSTER].count */
-T6 T1415x4445(T0* C)
+T6 T1415x4445(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=864) {
@@ -29604,7 +29604,7 @@ if (t1==623) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.index */
-T6 T1417x32055(T0* C)
+T6 T1417x32063(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
@@ -29619,7 +29619,7 @@ if (t1==1081) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.implementation_class */
-T0* T1417x32056(T0* C)
+T0* T1417x32064(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
@@ -29634,7 +29634,7 @@ if (t1==1081) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.name */
-T0* T1417x6999(T0* C)
+T0* T1417x6999(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
@@ -29649,113 +29649,113 @@ if (t1==1081) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.is_type_detachable_with_type_mark */
-T1 T1417x7036T0T0(T0* C, T0* a1, T0* a2)
+T1 T1417x7036T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1==1081) {
-	return (T1081f37(C, a1, a2));
+	return (T1081f37(ac, C, a1, a2));
 } else {
-	return (T1209f39(C, a1, a2));
+	return (T1209f39(ac, C, a1, a2));
 }
 } else {
-	return (T1417f17(C, a1, a2));
+	return (T1417f17(ac, C, a1, a2));
 }
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.is_type_attached_with_type_mark */
-T1 T1417x7034T0T0(T0* C, T0* a1, T0* a2)
+T1 T1417x7034T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1==1081) {
-	return (T1081f41(C, a1, a2));
+	return (T1081f41(ac, C, a1, a2));
 } else {
-	return (T1209f43(C, a1, a2));
+	return (T1209f43(ac, C, a1, a2));
 }
 } else {
-	return (T1417f42(C, a1, a2));
+	return (T1417f42(ac, C, a1, a2));
 }
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.type */
-T0* T1417x7084(T0* C)
+T0* T1417x7084(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1==1081) {
-	return (T1081f7(C));
+	return (T1081f7(ac, C));
 } else {
-	return (T1209f10(C));
+	return (T1209f10(ac, C));
 }
 } else {
-	return (T1417f6(C));
+	return (T1417f6(ac, C));
 }
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.overridden_type_mark */
-T0* T1417x7007T0(T0* C, T0* a1)
+T0* T1417x7007T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1209) {
 if (t1==1081) {
-	return (T1081f45(C, a1));
+	return (T1081f45(ac, C, a1));
 } else {
-	return (T1209f47(C, a1));
+	return (T1209f47(ac, C, a1));
 }
 } else {
-	return (T1417f22(C, a1));
+	return (T1417f22(ac, C, a1));
 }
 }
 
 /* Call to ET_GROUP.full_lower_name */
-T0* T1419x15323T2(T0* C, T2 a1)
+T0* T1419x15331T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=208) {
 if (t1==183) {
-	return (T183f101(C, a1));
+	return (T183f101(ac, C, a1));
 } else {
-	return (T208f46(C, a1));
+	return (T208f46(ac, C, a1));
 }
 } else {
-	return (T402f32(C, a1));
+	return (T402f32(ac, C, a1));
 }
 } else {
 if (t1==451) {
-	return (T451f91(C, a1));
+	return (T451f91(ac, C, a1));
 } else {
-	return (T789f32(C, a1));
+	return (T789f32(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_GROUP.kind_lower_name */
-T0* T1419x15328(T0* C)
+T0* T1419x15336(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=208) {
 if (t1==183) {
-	return (T183f100(C));
+	return (T183f100(ac, C));
 } else {
-	return (T208f48(C));
+	return (T208f48(ac, C));
 }
 } else {
-	return (T402f37(C));
+	return (T402f37(ac, C));
 }
 } else {
 if (t1==451) {
-	return (T451f90(C));
+	return (T451f90(ac, C));
 } else {
-	return (T789f38(C));
+	return (T789f38(ac, C));
 }
 }
 }
 
 /* Call to ET_GROUP.is_cluster */
-T1 T1419x15304(T0* C)
+T1 T1419x15312(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -29763,14 +29763,14 @@ if (t1<=385) {
 if (t1==208) {
 	return (EIF_TRUE);
 } else {
-	return (T385f8(C));
+	return (T385f8(ac, C));
 }
 } else {
 	return (EIF_TRUE);
 }
 } else {
 if (t1==496) {
-	return (T496f7(C));
+	return (T496f7(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -29778,30 +29778,30 @@ if (t1==496) {
 }
 
 /* Call to ET_GROUP.absolute_pathname */
-T0* T1419x15326(T0* C)
+T0* T1419x15334(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f37(C));
+	return (T208f37(ac, C));
 } else {
-	return (T385f16(C));
+	return (T385f16(ac, C));
 }
 } else {
-	return (T402f29(C));
+	return (T402f29(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f15(C));
+	return (T496f15(ac, C));
 } else {
-	return (T789f30(C));
+	return (T789f30(ac, C));
 }
 }
 }
 
 /* Call to ET_GROUP.universe */
-T0* T1419x15316(T0* C)
+T0* T1419x15324(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -29809,7 +29809,7 @@ if (t1<=385) {
 if (t1==208) {
 	return (((T208*)(C))->a4);
 } else {
-	return (T385f19(C));
+	return (T385f19(ac, C));
 }
 } else {
 	return (((T402*)(C))->a4);
@@ -29824,7 +29824,7 @@ if (t1==496) {
 }
 
 /* Call to ET_GROUP.parent */
-T0* T1419x15343(T0* C)
+T0* T1419x15351(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
@@ -29832,14 +29832,14 @@ if (t1<=385) {
 if (t1==208) {
 	return (((T208*)(C))->a12);
 } else {
-	return (T385f15(C));
+	return (T385f15(ac, C));
 }
 } else {
 	return (((T402*)(C))->a21);
 }
 } else {
 if (t1==496) {
-	return (T496f14(C));
+	return (T496f14(ac, C));
 } else {
 	return (((T789*)(C))->a18);
 }
@@ -29847,211 +29847,211 @@ if (t1==496) {
 }
 
 /* Call to ET_GROUP.full_name */
-T0* T1419x15322T2(T0* C, T2 a1)
+T0* T1419x15330T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f47(C, a1));
+	return (T208f47(ac, C, a1));
 } else {
-	return (T385f14(C, a1));
+	return (T385f14(ac, C, a1));
 }
 } else {
-	return (T402f30(C, a1));
+	return (T402f30(ac, C, a1));
 }
 } else {
 if (t1==496) {
-	return (T496f13(C, a1));
+	return (T496f13(ac, C, a1));
 } else {
-	return (T789f31(C, a1));
+	return (T789f31(ac, C, a1));
 }
 }
 }
 
 /* Call to ET_GROUP.cluster */
-T0* T1419x15340(T0* C)
+T0* T1419x15348(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1<=385) {
 if (t1==208) {
-	return (T208f32(C));
+	return (T208f32(ac, C));
 } else {
-	return (T385f7(C));
+	return (T385f7(ac, C));
 }
 } else {
-	return (T402f27(C));
+	return (T402f27(ac, C));
 }
 } else {
 if (t1==496) {
-	return (T496f5(C));
+	return (T496f5(ac, C));
 } else {
-	return (T789f28(C));
+	return (T789f28(ac, C));
 }
 }
 }
 
 /* Call to ET_AST_LEAF.last_position */
-T0* T1427x7087(T0* C)
+T0* T1427x7087(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		return (T176f101(C));
+		return (T176f101(ac, C));
 	case 275:
-		return (T275f27(C));
+		return (T275f27(ac, C));
 	case 302:
-		return (T302f28(C));
+		return (T302f28(ac, C));
 	case 337:
-		return (T337f71(C));
+		return (T337f71(ac, C));
 	case 388:
-		return (T388f35(C));
+		return (T388f35(ac, C));
 	case 638:
-		return (T638f101(C));
+		return (T638f101(ac, C));
 	case 822:
-		return (T822f31(C));
+		return (T822f31(ac, C));
 	case 898:
-		return (T898f17(C));
+		return (T898f17(ac, C));
 	case 905:
-		return (T905f30(C));
+		return (T905f30(ac, C));
 	case 941:
-		return (T941f27(C));
+		return (T941f27(ac, C));
 	case 1190:
-		return (T1190f37(C));
+		return (T1190f37(ac, C));
 	case 1191:
-		return (T1191f35(C));
+		return (T1191f35(ac, C));
 	case 1192:
-		return (T1192f31(C));
+		return (T1192f31(ac, C));
 	case 1193:
-		return (T1193f59(C));
+		return (T1193f59(ac, C));
 	case 1194:
-		return (T1194f59(C));
+		return (T1194f59(ac, C));
 	case 1195:
-		return (T1195f59(C));
+		return (T1195f59(ac, C));
 	case 1196:
-		return (T1196f59(C));
+		return (T1196f59(ac, C));
 	case 1197:
-		return (T1197f59(C));
+		return (T1197f59(ac, C));
 	case 1198:
-		return (T1198f34(C));
+		return (T1198f34(ac, C));
 	case 1199:
-		return (T1199f34(C));
+		return (T1199f34(ac, C));
 	case 1201:
-		return (T1201f32(C));
+		return (T1201f32(ac, C));
 	case 1202:
-		return (T1202f32(C));
+		return (T1202f32(ac, C));
 	case 1203:
-		return (T1203f36(C));
+		return (T1203f36(ac, C));
 	case 1204:
-		return (T1204f36(C));
+		return (T1204f36(ac, C));
 	case 1782:
-		return (T1782f43(C));
+		return (T1782f43(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_OPERATOR.is_prefix_not */
-T1 T1428x15127(T0* C)
+T1 T1428x15135(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=925) {
 if (t1==919) {
-	return (T919f25(C));
+	return (T919f25(ac, C));
 } else {
-	return (T925f22(C));
+	return (T925f22(ac, C));
 }
 } else {
-	return (T938f23(C));
+	return (T938f23(ac, C));
 }
 }
 
 /* Call to ET_OPERATOR.is_infix_and_then */
-T1 T1428x15105(T0* C)
+T1 T1428x15113(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f12(C));
+	return (T919f12(ac, C));
 } else {
-	return (T925f13(C));
+	return (T925f13(ac, C));
 }
 } else {
-	return (T938f9(C));
+	return (T938f9(ac, C));
 }
 } else {
 if (t1==1258) {
 	return (EIF_TRUE);
 } else {
-	return (T1259f4(C));
+	return (T1259f4(ac, C));
 }
 }
 }
 
 /* Call to ET_OPERATOR.is_infix_and */
-T1 T1428x15104(T0* C)
+T1 T1428x15112(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f15(C));
+	return (T919f15(ac, C));
 } else {
-	return (T925f16(C));
+	return (T925f16(ac, C));
 }
 } else {
-	return (T938f12(C));
+	return (T938f12(ac, C));
 }
 } else {
 if (t1==1258) {
-	return (T1258f7(C));
+	return (T1258f7(ac, C));
 } else {
-	return (T1259f7(C));
+	return (T1259f7(ac, C));
 }
 }
 }
 
 /* Call to ET_OPERATOR.is_infix_implies */
-T1 T1428x15111(T0* C)
+T1 T1428x15119(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f14(C));
+	return (T919f14(ac, C));
 } else {
-	return (T925f15(C));
+	return (T925f15(ac, C));
 }
 } else {
-	return (T938f11(C));
+	return (T938f11(ac, C));
 }
 } else {
 if (t1==1258) {
-	return (T1258f6(C));
+	return (T1258f6(ac, C));
 } else {
-	return (T1259f6(C));
+	return (T1259f6(ac, C));
 }
 }
 }
 
 /* Call to ET_OPERATOR.is_infix_or_else */
-T1 T1428x15117(T0* C)
+T1 T1428x15125(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f13(C));
+	return (T919f13(ac, C));
 } else {
-	return (T925f14(C));
+	return (T925f14(ac, C));
 }
 } else {
-	return (T938f10(C));
+	return (T938f10(ac, C));
 }
 } else {
 if (t1==1258) {
-	return (T1258f5(C));
+	return (T1258f5(ac, C));
 } else {
 	return (EIF_TRUE);
 }
@@ -30059,105 +30059,105 @@ if (t1==1258) {
 }
 
 /* Call to ET_OPERATOR.is_infix_or */
-T1 T1428x15116(T0* C)
+T1 T1428x15124(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f16(C));
+	return (T919f16(ac, C));
 } else {
-	return (T925f17(C));
+	return (T925f17(ac, C));
 }
 } else {
-	return (T938f13(C));
+	return (T938f13(ac, C));
 }
 } else {
 if (t1==1258) {
-	return (T1258f8(C));
+	return (T1258f8(ac, C));
 } else {
-	return (T1259f8(C));
+	return (T1259f8(ac, C));
 }
 }
 }
 
 /* Call to ET_OPERATOR.is_tuple_label */
-T1 T1428x15101(T0* C)
+T1 T1428x15109(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-	return (T919f18(C));
+	return (T919f18(ac, C));
 } else {
-	return (T925f19(C));
+	return (T925f19(ac, C));
 }
 } else {
-	return (T938f15(C));
+	return (T938f15(ac, C));
 }
 } else {
 if (t1==1258) {
-	return (T1258f10(C));
+	return (T1258f10(ac, C));
 } else {
-	return (T1259f10(C));
+	return (T1259f10(ac, C));
 }
 }
 }
 
 /* Call to ET_OPERATOR.position */
-T0* T1428x7085(T0* C)
+T0* T1428x7085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=925) {
 if (t1==919) {
-	return (T919f11(C));
+	return (T919f11(ac, C));
 } else {
-	return (T925f5(C));
+	return (T925f5(ac, C));
 }
 } else {
-	return (T938f8(C));
+	return (T938f8(ac, C));
 }
 }
 
 /* Call to ET_REPLICABLE_FEATURE.first_feature */
-T0* T1507x36155(T0* C)
+T0* T1507x36163(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1505) {
 if (t1==1303) {
-	return (T1303f25(C));
+	return (T1303f25(ac, C));
 } else {
-	return (T1505f24(C));
+	return (T1505f24(ac, C));
 }
 } else {
-	return (T1508f5(C));
+	return (T1508f5(ac, C));
 }
 }
 
 /* Call to ET_REPLICABLE_FEATURE.replicated_feature */
-T0* T1507x36154(T0* C)
+T0* T1507x36162(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1505) {
 if (t1==1303) {
-	return (T1303f24(C));
+	return (T1303f24(ac, C));
 } else {
-	return (T1505f23(C));
+	return (T1505f23(ac, C));
 }
 } else {
-	return (T1508f4(C));
+	return (T1508f4(ac, C));
 }
 }
 
 /* Call to ET_REPLICABLE_FEATURE.has_replication */
-T1 T1507x36153(T0* C)
+T1 T1507x36161(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1505) {
 if (t1==1303) {
-	return (T1303f23(C));
+	return (T1303f23(ac, C));
 } else {
-	return (T1505f22(C));
+	return (T1505f22(ac, C));
 }
 } else {
 	return (EIF_TRUE);
@@ -30165,14 +30165,14 @@ if (t1==1303) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.selected_count */
-T6 T1507x36156(T0* C)
+T6 T1507x36164(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1505) {
 if (t1==1303) {
-	return (T1303f26(C));
+	return (T1303f26(ac, C));
 } else {
-	return (T1505f25(C));
+	return (T1505f25(ac, C));
 }
 } else {
 	return (((T1508*)(C))->a2);
@@ -30180,12 +30180,12 @@ if (t1==1303) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.arguments */
-T0* T1548x17060(T0* C)
+T0* T1548x17068(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1223) {
-if (t1==514) {
-	return (((T514*)(C))->a3);
+if (t1==516) {
+	return (((T516*)(C))->a3);
 } else {
 	return (((T1223*)(C))->a8);
 }
@@ -30199,12 +30199,12 @@ if (t1==1224) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.implementation_feature */
-T0* T1548x17088(T0* C)
+T0* T1548x17096(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1223) {
-if (t1==514) {
-	return (((T514*)(C))->a8);
+if (t1==516) {
+	return (((T516*)(C))->a8);
 } else {
 	return (((T1223*)(C))->a3);
 }
@@ -30218,14 +30218,14 @@ if (t1==1224) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.is_once */
-T1 T1548x17010(T0* C)
+T1 T1548x17018(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1223) {
-if (t1==514) {
-	return (T514f38(C));
+if (t1==516) {
+	return (T516f38(ac, C));
 } else {
-	return (T1223f43(C));
+	return (T1223f43(ac, C));
 }
 } else {
 if (t1==1224) {
@@ -30237,13 +30237,13 @@ if (t1==1224) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.locals */
-T0* T1549x17083(T0* C)
+T0* T1549x17091(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1227) {
 if (t1<=1223) {
-if (t1==514) {
-	return (((T514*)(C))->a17);
+if (t1==516) {
+	return (((T516*)(C))->a17);
 } else {
 	return (((T1223*)(C))->a13);
 }
@@ -30272,13 +30272,13 @@ if (t1==1268) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.compound */
-T0* T1549x20187(T0* C)
+T0* T1549x20195(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1227) {
 if (t1<=1223) {
-if (t1==514) {
-	return (((T514*)(C))->a9);
+if (t1==516) {
+	return (((T516*)(C))->a9);
 } else {
 	return (((T1223*)(C))->a14);
 }
@@ -30307,13 +30307,13 @@ if (t1==1268) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.rescue_clause */
-T0* T1549x20189(T0* C)
+T0* T1549x20197(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1227) {
 if (t1<=1223) {
-if (t1==514) {
-	return (((T514*)(C))->a16);
+if (t1==516) {
+	return (((T516*)(C))->a16);
 } else {
 	return (((T1223*)(C))->a15);
 }
@@ -30342,15 +30342,15 @@ if (t1==1268) {
 }
 
 /* Call to ET_ROUTINE.implementation_feature */
-T0* T1550x17088(T0* C)
+T0* T1550x17096(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1223) {
-if (t1<=514) {
+if (t1<=516) {
 if (t1==253) {
 	return (((T253*)(C))->a3);
 } else {
-	return (((T514*)(C))->a8);
+	return (((T516*)(C))->a8);
 }
 } else {
 if (t1==523) {
@@ -30377,26 +30377,26 @@ if (t1==1227) {
 }
 
 /* Call to ET_FREE_NAME.free_operator_name */
-T0* T1577x30003(T0* C)
+T0* T1577x30011(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=919) {
 if (t1==823) {
-	return (T823f8(C));
+	return (T823f8(ac, C));
 } else {
 	return (((T919*)(C))->a4);
 }
 } else {
 if (t1==1230) {
-	return (T1230f19(C));
+	return (T1230f19(ac, C));
 } else {
-	return (T1233f9(C));
+	return (T1233f9(ac, C));
 }
 }
 }
 
 /* Call to ET_FREE_NAME.hash_code */
-T6 T1577x22(T0* C)
+T6 T1577x22(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=919) {
@@ -30415,26 +30415,26 @@ if (t1==1230) {
 }
 
 /* Call to ET_FREE_NAME.is_infix_freeop */
-T1 T1577x15108(T0* C)
+T1 T1577x15116(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=919) {
 if (t1==823) {
 	return (EIF_TRUE);
 } else {
-	return (T919f22(C));
+	return (T919f22(ac, C));
 }
 } else {
 if (t1==1230) {
-	return (T1230f28(C));
+	return (T1230f28(ac, C));
 } else {
-	return (T1233f8(C));
+	return (T1233f8(ac, C));
 }
 }
 }
 
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.implicit_result */
-T0* T1685x17848(T0* C)
+T0* T1685x17856(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1266) {
@@ -30445,100 +30445,100 @@ if (t1==1265) {
 }
 } else {
 if (t1==1268) {
-	return (T1268f21(C));
+	return (T1268f21(ac, C));
 } else {
-	return (T1269f22(C));
+	return (T1269f22(ac, C));
 }
 }
 }
 
 /* Call to ET_LIKE_IDENTIFIER.name */
-T0* T1697x32256(T0* C)
+T0* T1697x32264(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1239) {
 if (t1==1238) {
 	return (((T1238*)(C))->a4);
 } else {
-	return (T1239f39(C));
+	return (T1239f39(ac, C));
 }
 } else {
-	return (T1240f39(C));
+	return (T1240f39(ac, C));
 }
 }
 
 /* Call to ET_LIKE_IDENTIFIER.to_text */
-T0* T1697x7079(T0* C)
+T0* T1697x7079(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1239) {
 if (t1==1238) {
-	return (T1238f72(C));
+	return (T1238f72(ac, C));
 } else {
-	return (T1239f73(C));
+	return (T1239f73(ac, C));
 }
 } else {
-	return (T1240f70(C));
+	return (T1240f70(ac, C));
 }
 }
 
 /* Call to ET_AST_NODE.position */
-T0* T1709x7085(T0* C)
+T0* T1709x7085(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 78:
-		return (T78f63(C));
+		return (T78f63(ac, C));
 	case 80:
-		return (T80f151(C));
+		return (T80f151(ac, C));
 	case 176:
-		return (T176f22(C));
+		return (T176f22(ac, C));
 	case 246:
-		return (T246f63(C));
+		return (T246f63(ac, C));
 	case 254:
-		return (T254f63(C));
+		return (T254f63(ac, C));
 	case 388:
-		return (T388f22(C));
+		return (T388f22(ac, C));
 	case 495:
-		return (T495f33(C));
+		return (T495f33(ac, C));
 	case 823:
-		return (T823f14(C));
+		return (T823f14(ac, C));
 	case 850:
-		return (T850f59(C));
+		return (T850f59(ac, C));
 	case 858:
-		return (T858f13(C));
+		return (T858f13(ac, C));
 	case 895:
-		return (T895f9(C));
+		return (T895f9(ac, C));
 	case 1081:
-		return (T1081f67(C));
+		return (T1081f67(ac, C));
 	case 1209:
-		return (T1209f68(C));
+		return (T1209f68(ac, C));
 	case 1213:
-		return (T1213f11(C));
+		return (T1213f11(ac, C));
 	case 1214:
-		return (T1214f8(C));
+		return (T1214f8(ac, C));
 	case 1229:
-		return (T1229f7(C));
+		return (T1229f7(ac, C));
 	case 1230:
-		return (T1230f7(C));
+		return (T1230f7(ac, C));
 	case 1231:
-		return (T1231f7(C));
+		return (T1231f7(ac, C));
 	case 1233:
-		return (T1233f40(C));
+		return (T1233f40(ac, C));
 	case 1238:
-		return (T1238f8(C));
+		return (T1238f8(ac, C));
 	case 1239:
-		return (T1239f8(C));
+		return (T1239f8(ac, C));
 	case 1240:
-		return (T1240f8(C));
+		return (T1240f8(ac, C));
 	case 1417:
-		return (T1417f7(C));
+		return (T1417f7(ac, C));
 	default:
 		return 0;
 	}
 }
 
 /* Call to ET_CONVERT_EXPRESSION.expression */
-T0* T1711x37678(T0* C)
+T0* T1711x37686(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1853) {
@@ -30553,7 +30553,7 @@ if (t1==1852) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.convert_feature */
-T0* T1711x37679(T0* C)
+T0* T1711x37687(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1853) {
@@ -30568,7 +30568,7 @@ if (t1==1852) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.index */
-T6 T1711x15183(T0* C)
+T6 T1711x15191(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1853) {
@@ -30583,22 +30583,22 @@ if (t1==1852) {
 }
 
 /* Call to ET_QUERY_INLINE_AGENT.type */
-T0* T1778x17081(T0* C)
+T0* T1778x17089(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1266) {
 if (t1==1265) {
-	return (T1265f27(C));
+	return (T1265f27(ac, C));
 } else {
-	return (T1266f28(C));
+	return (T1266f28(ac, C));
 }
 } else {
-	return (T1267f25(C));
+	return (T1267f25(ac, C));
 }
 }
 
 /* Call to ET_QUERY_INLINE_AGENT.formal_arguments */
-T0* T1778x17082(T0* C)
+T0* T1778x17090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1266) {
@@ -30613,7 +30613,7 @@ if (t1==1265) {
 }
 
 /* Call to ET_PROCEDURE_INLINE_AGENT.formal_arguments */
-T0* T1781x17082(T0* C)
+T0* T1781x17090(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1269) {
@@ -30628,7 +30628,7 @@ if (t1==1268) {
 }
 
 /* Call to ET_REGULAR_FEATURE_CALL.parenthesis_call */
-T0* T1783x15209(T0* C)
+T0* T1783x15217(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=280) {
@@ -30647,14 +30647,14 @@ if (t1==281) {
 }
 
 /* Call to ET_REGULAR_FEATURE_CALL.name */
-T0* T1783x15212(T0* C)
+T0* T1783x15220(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=280) {
 if (t1==277) {
-	return (T277f7(C));
+	return (T277f7(ac, C));
 } else {
-	return (T280f7(C));
+	return (T280f7(ac, C));
 }
 } else {
 if (t1==281) {
@@ -30666,7 +30666,7 @@ if (t1==281) {
 }
 
 /* Call to ET_REGULAR_FEATURE_CALL.target */
-T0* T1783x15211(T0* C)
+T0* T1783x15219(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=280) {
@@ -30677,15 +30677,15 @@ if (t1==277) {
 }
 } else {
 if (t1==281) {
-	return (T281f15(C));
+	return (T281f15(ac, C));
 } else {
-	return (T1418f5(C));
+	return (T1418f5(ac, C));
 }
 }
 }
 
 /* Call to ET_REGULAR_FEATURE_CALL.arguments */
-T0* T1783x15213(T0* C)
+T0* T1783x15221(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=280) {
@@ -30704,7 +30704,7 @@ if (t1==281) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL.arguments */
-T0* T1784x15213(T0* C)
+T0* T1784x15221(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
@@ -30719,15 +30719,15 @@ if (t1==277) {
 }
 } else {
 if (t1==1261) {
-	return (T1261f9(C));
+	return (T1261f9(ac, C));
 } else {
-	return (T1854f14(C));
+	return (T1854f14(ac, C));
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL.target */
-T0* T1784x15211(T0* C)
+T0* T1784x15219(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
@@ -30750,15 +30750,15 @@ if (t1==1261) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL.name */
-T0* T1784x15212(T0* C)
+T0* T1784x15220(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
 if (t1<=280) {
 if (t1==277) {
-	return (T277f7(C));
+	return (T277f7(ac, C));
 } else {
-	return (T280f7(C));
+	return (T280f7(ac, C));
 }
 } else {
 	return (((T980*)(C))->a3);
@@ -30767,19 +30767,19 @@ if (t1==277) {
 if (t1==1261) {
 	return (((T1261*)(C))->a2);
 } else {
-	return (T1854f15(C));
+	return (T1854f15(ac, C));
 }
 }
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.arguments */
-T0* T1785x15213(T0* C)
+T0* T1785x15221(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=281) {
 if (t1<=280) {
 if (t1==176) {
-	return (T176f89(C));
+	return (T176f89(ac, C));
 } else {
 	return (((T280*)(C))->a4);
 }
@@ -30791,16 +30791,16 @@ if (t1<=1261) {
 if (t1==980) {
 	return (((T980*)(C))->a4);
 } else {
-	return (T1261f9(C));
+	return (T1261f9(ac, C));
 }
 } else {
-	return (T1854f14(C));
+	return (T1854f14(ac, C));
 }
 }
 }
 
 /* Call to detachable LX_TRANSITION [LX_NFA_STATE].target */
-T0* T1820x38004(T0* C)
+T0* T1820x38012(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1821) {
@@ -30815,7103 +30815,7103 @@ if (t1==1819) {
 }
 
 /* Call to detachable LX_TRANSITION [LX_NFA_STATE].labeled */
-T1 T1820x38007T6(T0* C, T6 a1)
+T1 T1820x38015T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1821) {
 if (t1==1819) {
-	return (T1819f3(C, a1));
+	return (T1819f3(ac, C, a1));
 } else {
-	return (T1821f2(C, a1));
+	return (T1821f2(ac, C, a1));
 }
 } else {
-	return (T1823f3(C, a1));
+	return (T1823f3(ac, C, a1));
 }
 }
 
 /* Call to EXCEPTION.set_type_name */
-void T25x2088T0(T0* C, T0* a1)
+void T25x2088T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 86:
-		T86f15(C, a1);
+		T86f15(ac, C, a1);
 		break;
 	case 87:
-		T87f11(C, a1);
+		T87f11(ac, C, a1);
 		break;
 	case 88:
-		T88f13(C, a1);
+		T88f13(ac, C, a1);
 		break;
 	case 89:
-		T89f13(C, a1);
+		T89f13(ac, C, a1);
 		break;
 	case 90:
-		T90f15(C, a1);
+		T90f15(ac, C, a1);
 		break;
 	case 91:
-		T91f13(C, a1);
+		T91f13(ac, C, a1);
 		break;
 	case 92:
-		T92f20(C, a1);
+		T92f20(ac, C, a1);
 		break;
 	case 93:
-		T93f14(C, a1);
+		T93f14(ac, C, a1);
 		break;
 	case 94:
-		T94f14(C, a1);
+		T94f14(ac, C, a1);
 		break;
 	case 96:
-		T96f11(C, a1);
+		T96f11(ac, C, a1);
 		break;
 	case 99:
-		T99f11(C, a1);
+		T99f11(ac, C, a1);
 		break;
 	case 100:
-		T100f11(C, a1);
+		T100f11(ac, C, a1);
 		break;
 	case 101:
-		T101f11(C, a1);
+		T101f11(ac, C, a1);
 		break;
 	case 102:
-		T102f11(C, a1);
+		T102f11(ac, C, a1);
 		break;
 	case 103:
-		T103f11(C, a1);
+		T103f11(ac, C, a1);
 		break;
 	case 104:
-		T104f11(C, a1);
+		T104f11(ac, C, a1);
 		break;
 	case 105:
-		T105f11(C, a1);
+		T105f11(ac, C, a1);
 		break;
 	case 106:
-		T106f11(C, a1);
+		T106f11(ac, C, a1);
 		break;
 	case 107:
-		T107f11(C, a1);
+		T107f11(ac, C, a1);
 		break;
 	case 108:
-		T108f11(C, a1);
+		T108f11(ac, C, a1);
 		break;
 	case 109:
-		T109f11(C, a1);
+		T109f11(ac, C, a1);
 		break;
 	case 110:
-		T110f11(C, a1);
+		T110f11(ac, C, a1);
 		break;
 	case 111:
-		T111f11(C, a1);
+		T111f11(ac, C, a1);
 		break;
 	case 112:
-		T112f11(C, a1);
+		T112f11(ac, C, a1);
 		break;
 	case 113:
-		T113f15(C, a1);
+		T113f15(ac, C, a1);
 		break;
 	case 114:
-		T114f11(C, a1);
+		T114f11(ac, C, a1);
 		break;
 	case 115:
-		T115f11(C, a1);
+		T115f11(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to EXCEPTION.set_recipient_name */
-void T25x2084T0(T0* C, T0* a1)
+void T25x2084T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 86:
-		T86f14(C, a1);
+		T86f14(ac, C, a1);
 		break;
 	case 87:
-		T87f10(C, a1);
+		T87f10(ac, C, a1);
 		break;
 	case 88:
-		T88f12(C, a1);
+		T88f12(ac, C, a1);
 		break;
 	case 89:
-		T89f12(C, a1);
+		T89f12(ac, C, a1);
 		break;
 	case 90:
-		T90f14(C, a1);
+		T90f14(ac, C, a1);
 		break;
 	case 91:
-		T91f12(C, a1);
+		T91f12(ac, C, a1);
 		break;
 	case 92:
-		T92f19(C, a1);
+		T92f19(ac, C, a1);
 		break;
 	case 93:
-		T93f13(C, a1);
+		T93f13(ac, C, a1);
 		break;
 	case 94:
-		T94f13(C, a1);
+		T94f13(ac, C, a1);
 		break;
 	case 96:
-		T96f10(C, a1);
+		T96f10(ac, C, a1);
 		break;
 	case 99:
-		T99f10(C, a1);
+		T99f10(ac, C, a1);
 		break;
 	case 100:
-		T100f10(C, a1);
+		T100f10(ac, C, a1);
 		break;
 	case 101:
-		T101f10(C, a1);
+		T101f10(ac, C, a1);
 		break;
 	case 102:
-		T102f10(C, a1);
+		T102f10(ac, C, a1);
 		break;
 	case 103:
-		T103f10(C, a1);
+		T103f10(ac, C, a1);
 		break;
 	case 104:
-		T104f10(C, a1);
+		T104f10(ac, C, a1);
 		break;
 	case 105:
-		T105f10(C, a1);
+		T105f10(ac, C, a1);
 		break;
 	case 106:
-		T106f10(C, a1);
+		T106f10(ac, C, a1);
 		break;
 	case 107:
-		T107f10(C, a1);
+		T107f10(ac, C, a1);
 		break;
 	case 108:
-		T108f10(C, a1);
+		T108f10(ac, C, a1);
 		break;
 	case 109:
-		T109f10(C, a1);
+		T109f10(ac, C, a1);
 		break;
 	case 110:
-		T110f10(C, a1);
+		T110f10(ac, C, a1);
 		break;
 	case 111:
-		T111f10(C, a1);
+		T111f10(ac, C, a1);
 		break;
 	case 112:
-		T112f10(C, a1);
+		T112f10(ac, C, a1);
 		break;
 	case 113:
-		T113f14(C, a1);
+		T113f14(ac, C, a1);
 		break;
 	case 114:
-		T114f10(C, a1);
+		T114f10(ac, C, a1);
 		break;
 	case 115:
-		T115f10(C, a1);
+		T115f10(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to EXCEPTION.set_description */
-void T25x2076T0(T0* C, T0* a1)
+void T25x2076T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 86:
-		T86f13(C, a1);
+		T86f13(ac, C, a1);
 		break;
 	case 87:
-		T87f9(C, a1);
+		T87f9(ac, C, a1);
 		break;
 	case 88:
-		T88f11(C, a1);
+		T88f11(ac, C, a1);
 		break;
 	case 89:
-		T89f11(C, a1);
+		T89f11(ac, C, a1);
 		break;
 	case 90:
-		T90f13(C, a1);
+		T90f13(ac, C, a1);
 		break;
 	case 91:
-		T91f11(C, a1);
+		T91f11(ac, C, a1);
 		break;
 	case 92:
-		T92f18(C, a1);
+		T92f18(ac, C, a1);
 		break;
 	case 93:
-		T93f12(C, a1);
+		T93f12(ac, C, a1);
 		break;
 	case 94:
-		T94f12(C, a1);
+		T94f12(ac, C, a1);
 		break;
 	case 96:
-		T96f9(C, a1);
+		T96f9(ac, C, a1);
 		break;
 	case 99:
-		T99f9(C, a1);
+		T99f9(ac, C, a1);
 		break;
 	case 100:
-		T100f9(C, a1);
+		T100f9(ac, C, a1);
 		break;
 	case 101:
-		T101f9(C, a1);
+		T101f9(ac, C, a1);
 		break;
 	case 102:
-		T102f9(C, a1);
+		T102f9(ac, C, a1);
 		break;
 	case 103:
-		T103f9(C, a1);
+		T103f9(ac, C, a1);
 		break;
 	case 104:
-		T104f9(C, a1);
+		T104f9(ac, C, a1);
 		break;
 	case 105:
-		T105f9(C, a1);
+		T105f9(ac, C, a1);
 		break;
 	case 106:
-		T106f9(C, a1);
+		T106f9(ac, C, a1);
 		break;
 	case 107:
-		T107f9(C, a1);
+		T107f9(ac, C, a1);
 		break;
 	case 108:
-		T108f9(C, a1);
+		T108f9(ac, C, a1);
 		break;
 	case 109:
-		T109f9(C, a1);
+		T109f9(ac, C, a1);
 		break;
 	case 110:
-		T110f9(C, a1);
+		T110f9(ac, C, a1);
 		break;
 	case 111:
-		T111f9(C, a1);
+		T111f9(ac, C, a1);
 		break;
 	case 112:
-		T112f9(C, a1);
+		T112f9(ac, C, a1);
 		break;
 	case 113:
-		T113f13(C, a1);
+		T113f13(ac, C, a1);
 		break;
 	case 114:
-		T114f9(C, a1);
+		T114f9(ac, C, a1);
 		break;
 	case 115:
-		T115f9(C, a1);
+		T115f9(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to EXCEPTION.set_exception_trace */
-void T25x2090T0(T0* C, T0* a1)
+void T25x2090T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 86:
-		T86f12(C, a1);
+		T86f12(ac, C, a1);
 		break;
 	case 87:
-		T87f8(C, a1);
+		T87f8(ac, C, a1);
 		break;
 	case 88:
-		T88f10(C, a1);
+		T88f10(ac, C, a1);
 		break;
 	case 89:
-		T89f10(C, a1);
+		T89f10(ac, C, a1);
 		break;
 	case 90:
-		T90f12(C, a1);
+		T90f12(ac, C, a1);
 		break;
 	case 91:
-		T91f10(C, a1);
+		T91f10(ac, C, a1);
 		break;
 	case 92:
-		T92f17(C, a1);
+		T92f17(ac, C, a1);
 		break;
 	case 93:
-		T93f11(C, a1);
+		T93f11(ac, C, a1);
 		break;
 	case 94:
-		T94f9(C, a1);
+		T94f9(ac, C, a1);
 		break;
 	case 96:
-		T96f8(C, a1);
+		T96f8(ac, C, a1);
 		break;
 	case 99:
-		T99f8(C, a1);
+		T99f8(ac, C, a1);
 		break;
 	case 100:
-		T100f8(C, a1);
+		T100f8(ac, C, a1);
 		break;
 	case 101:
-		T101f8(C, a1);
+		T101f8(ac, C, a1);
 		break;
 	case 102:
-		T102f8(C, a1);
+		T102f8(ac, C, a1);
 		break;
 	case 103:
-		T103f8(C, a1);
+		T103f8(ac, C, a1);
 		break;
 	case 104:
-		T104f8(C, a1);
+		T104f8(ac, C, a1);
 		break;
 	case 105:
-		T105f8(C, a1);
+		T105f8(ac, C, a1);
 		break;
 	case 106:
-		T106f8(C, a1);
+		T106f8(ac, C, a1);
 		break;
 	case 107:
-		T107f8(C, a1);
+		T107f8(ac, C, a1);
 		break;
 	case 108:
-		T108f8(C, a1);
+		T108f8(ac, C, a1);
 		break;
 	case 109:
-		T109f8(C, a1);
+		T109f8(ac, C, a1);
 		break;
 	case 110:
-		T110f8(C, a1);
+		T110f8(ac, C, a1);
 		break;
 	case 111:
-		T111f8(C, a1);
+		T111f8(ac, C, a1);
 		break;
 	case 112:
-		T112f8(C, a1);
+		T112f8(ac, C, a1);
 		break;
 	case 113:
-		T113f12(C, a1);
+		T113f12(ac, C, a1);
 		break;
 	case 114:
-		T114f8(C, a1);
+		T114f8(ac, C, a1);
 		break;
 	case 115:
-		T115f8(C, a1);
+		T115f8(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to EXCEPTION.set_throwing_exception */
-void T25x2083T0(T0* C, T0* a1)
+void T25x2083T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 86:
-		T86f11(C, a1);
+		T86f11(ac, C, a1);
 		break;
 	case 87:
-		T87f7(C, a1);
+		T87f7(ac, C, a1);
 		break;
 	case 88:
-		T88f8(C, a1);
+		T88f8(ac, C, a1);
 		break;
 	case 89:
-		T89f8(C, a1);
+		T89f8(ac, C, a1);
 		break;
 	case 90:
-		T90f10(C, a1);
+		T90f10(ac, C, a1);
 		break;
 	case 91:
-		T91f8(C, a1);
+		T91f8(ac, C, a1);
 		break;
 	case 92:
-		T92f14(C, a1);
+		T92f14(ac, C, a1);
 		break;
 	case 93:
-		T93f10(C, a1);
+		T93f10(ac, C, a1);
 		break;
 	case 94:
-		T94f11(C, a1);
+		T94f11(ac, C, a1);
 		break;
 	case 96:
-		T96f7(C, a1);
+		T96f7(ac, C, a1);
 		break;
 	case 99:
-		T99f7(C, a1);
+		T99f7(ac, C, a1);
 		break;
 	case 100:
-		T100f7(C, a1);
+		T100f7(ac, C, a1);
 		break;
 	case 101:
-		T101f7(C, a1);
+		T101f7(ac, C, a1);
 		break;
 	case 102:
-		T102f7(C, a1);
+		T102f7(ac, C, a1);
 		break;
 	case 103:
-		T103f7(C, a1);
+		T103f7(ac, C, a1);
 		break;
 	case 104:
-		T104f7(C, a1);
+		T104f7(ac, C, a1);
 		break;
 	case 105:
-		T105f7(C, a1);
+		T105f7(ac, C, a1);
 		break;
 	case 106:
-		T106f7(C, a1);
+		T106f7(ac, C, a1);
 		break;
 	case 107:
-		T107f7(C, a1);
+		T107f7(ac, C, a1);
 		break;
 	case 108:
-		T108f7(C, a1);
+		T108f7(ac, C, a1);
 		break;
 	case 109:
-		T109f7(C, a1);
+		T109f7(ac, C, a1);
 		break;
 	case 110:
-		T110f7(C, a1);
+		T110f7(ac, C, a1);
 		break;
 	case 111:
-		T111f7(C, a1);
+		T111f7(ac, C, a1);
 		break;
 	case 112:
-		T112f7(C, a1);
+		T112f7(ac, C, a1);
 		break;
 	case 113:
-		T113f11(C, a1);
+		T113f11(ac, C, a1);
 		break;
 	case 114:
-		T114f7(C, a1);
+		T114f7(ac, C, a1);
 		break;
 	case 115:
-		T115f7(C, a1);
+		T115f7(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_SYSTEM.set_error_handler */
-void T31x3083T0(T0* C, T0* a1)
+void T31x3083T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f245(C, a1);
+		T31f245(ac, C, a1);
 } else {
-		T59f183(C, a1);
+		T59f184(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f186(C, a1);
+		T62f187(ac, C, a1);
 } else {
-		T68f187(C, a1);
+		T68f188(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.register_feature */
-void T31x3075T0(T0* C, T0* a1)
+void T31x3075T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f224(C, a1);
+		T31f224(ac, C, a1);
 } else {
-		T59f303(C, a1);
+		T59f304(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f299(C, a1);
+		T62f300(ac, C, a1);
 } else {
-		T68f295(C, a1);
+		T68f296(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_iteration_cursor_forth_seed */
-void T31x3072T6(T0* C, T6 a1)
+void T31x3072T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f243(C, a1);
+		T31f243(ac, C, a1);
 } else {
-		T59f324(C, a1);
+		T59f325(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f328(C, a1);
+		T62f329(ac, C, a1);
 } else {
-		T68f315(C, a1);
+		T68f316(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_iteration_cursor_after_seed */
-void T31x3071T6(T0* C, T6 a1)
+void T31x3071T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f242(C, a1);
+		T31f242(ac, C, a1);
 } else {
-		T59f323(C, a1);
+		T59f324(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f327(C, a1);
+		T62f328(ac, C, a1);
 } else {
-		T68f314(C, a1);
+		T68f315(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_iterable_new_cursor_seed */
-void T31x3070T6(T0* C, T6 a1)
+void T31x3070T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f241(C, a1);
+		T31f241(ac, C, a1);
 } else {
-		T59f322(C, a1);
+		T59f323(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f326(C, a1);
+		T62f327(ac, C, a1);
 } else {
-		T68f313(C, a1);
+		T68f314(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_dispose_seed */
-void T31x3067T6(T0* C, T6 a1)
+void T31x3067T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f240(C, a1);
+		T31f240(ac, C, a1);
 } else {
-		T59f321(C, a1);
+		T59f322(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f325(C, a1);
+		T62f326(ac, C, a1);
 } else {
-		T68f312(C, a1);
+		T68f313(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_function_item_seed */
-void T31x3069T6(T0* C, T6 a1)
+void T31x3069T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f239(C, a1);
+		T31f239(ac, C, a1);
 } else {
-		T59f320(C, a1);
+		T59f321(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f324(C, a1);
+		T62f325(ac, C, a1);
 } else {
-		T68f311(C, a1);
+		T68f312(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_routine_call_seed */
-void T31x3068T6(T0* C, T6 a1)
+void T31x3068T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f238(C, a1);
+		T31f238(ac, C, a1);
 } else {
-		T59f319(C, a1);
+		T59f320(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f323(C, a1);
+		T62f324(ac, C, a1);
 } else {
-		T68f310(C, a1);
+		T68f311(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_is_equal_seed */
-void T31x3066T6(T0* C, T6 a1)
+void T31x3066T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f237(C, a1);
+		T31f237(ac, C, a1);
 } else {
-		T59f318(C, a1);
+		T59f319(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f322(C, a1);
+		T62f323(ac, C, a1);
 } else {
-		T68f309(C, a1);
+		T68f310(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_copy_seed */
-void T31x3065T6(T0* C, T6 a1)
+void T31x3065T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f236(C, a1);
+		T31f236(ac, C, a1);
 } else {
-		T59f317(C, a1);
+		T59f318(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f321(C, a1);
+		T62f322(ac, C, a1);
 } else {
-		T68f308(C, a1);
+		T68f309(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.set_default_create_seed */
-void T31x3064T6(T0* C, T6 a1)
+void T31x3064T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f235(C, a1);
+		T31f235(ac, C, a1);
 } else {
-		T59f316(C, a1);
+		T59f317(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f320(C, a1);
+		T62f321(ac, C, a1);
 } else {
-		T68f307(C, a1);
+		T68f308(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.register_inline_constant */
-void T31x3077T0(T0* C, T0* a1)
+void T31x3077T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f225(C, a1);
+		T31f225(ac, C, a1);
 } else {
-		T59f304(C, a1);
+		T59f305(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f300(C, a1);
+		T62f301(ac, C, a1);
 } else {
-		T68f296(C, a1);
+		T68f297(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.register_class */
-void T31x3073T0(T0* C, T0* a1)
+void T31x3073T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=59) {
 if (t1==31) {
-		T31f221(C, a1);
+		T31f221(ac, C, a1);
 } else {
-		T59f300(C, a1);
+		T59f301(ac, C, a1);
 }
 } else {
 if (t1==62) {
-		T62f295(C, a1);
+		T62f296(ac, C, a1);
 } else {
-		T68f291(C, a1);
+		T68f292(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_SYSTEM.print_time */
-void T31x3201T0T0(T0* C, T0* a1, T0* a2)
+void T31x3201T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f189(C, a1, a2);
+		T59f190(ac, C, a1, a2);
 } else {
-		T62f192(C, a1, a2);
+		T62f193(ac, C, a1, a2);
 }
 } else {
-		T68f193(C, a1, a2);
+		T68f194(ac, C, a1, a2);
 }
 }
 
 /* Call to ET_SYSTEM.preparse_recursive */
-void T31x3450(T0* C)
+void T31x3450(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f191(C);
+		T59f192(ac, C);
 } else {
-		T62f194(C);
+		T62f195(ac, C);
 }
 } else {
-		T68f195(C);
+		T68f196(ac, C);
 }
 }
 
 /* Call to ET_SYSTEM.activate_processors */
-void T31x3187(T0* C)
+void T31x3187(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f190(C);
+		T59f191(ac, C);
 } else {
-		T62f193(C);
+		T62f194(ac, C);
 }
 } else {
-		T68f194(C);
+		T68f195(ac, C);
 }
 }
 
 /* Call to ET_SYSTEM.classes_do_recursive_until */
-void T31x3428T0T0(T0* C, T0* a1, T0* a2)
+void T31x3428T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f188(C, a1, a2);
+		T59f189(ac, C, a1, a2);
 } else {
-		T62f191(C, a1, a2);
+		T62f192(ac, C, a1, a2);
 }
 } else {
-		T68f192(C, a1, a2);
+		T68f193(ac, C, a1, a2);
 }
 }
 
 /* Call to ET_SYSTEM.compile_all */
-void T31x3170(T0* C)
+void T31x3170(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f187(C);
+		T59f188(ac, C);
 } else {
-		T62f190(C);
+		T62f191(ac, C);
 }
 } else {
-		T68f191(C);
+		T68f192(ac, C);
 }
 }
 
 /* Call to ET_SYSTEM.classes_do_recursive */
-void T31x3427T0(T0* C, T0* a1)
+void T31x3427T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f186(C, a1);
+		T59f187(ac, C, a1);
 } else {
-		T62f189(C, a1);
+		T62f190(ac, C, a1);
 }
 } else {
-		T68f190(C, a1);
+		T68f191(ac, C, a1);
 }
 }
 
 /* Call to ET_SYSTEM.set_flat_dbc_mode */
-void T31x3143T1(T0* C, T1 a1)
+void T31x3143T1(GE_context* ac, T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f193(C, a1);
+		T59f194(ac, C, a1);
 } else {
-		T62f196(C, a1);
+		T62f197(ac, C, a1);
 }
 } else {
-		T68f197(C, a1);
+		T68f198(ac, C, a1);
 }
 }
 
 /* Call to ET_SYSTEM.set_flat_mode */
-void T31x3142T1(T0* C, T1 a1)
+void T31x3142T1(GE_context* ac, T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f192(C, a1);
+		T59f193(ac, C, a1);
 } else {
-		T62f195(C, a1);
+		T62f196(ac, C, a1);
 }
 } else {
-		T68f196(C, a1);
+		T68f197(ac, C, a1);
 }
 }
 
 /* Call to ET_SYSTEM.set_qualified_anchored_types_enabled */
-void T31x3130T1(T0* C, T1 a1)
+void T31x3130T1(GE_context* ac, T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f185(C, a1);
+		T59f186(ac, C, a1);
 } else {
-		T62f188(C, a1);
+		T62f189(ac, C, a1);
 }
 } else {
-		T68f189(C, a1);
+		T68f190(ac, C, a1);
 }
 }
 
 /* Call to ET_SYSTEM.set_ise_version */
-void T31x3167T0(T0* C, T0* a1)
+void T31x3167T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1==59) {
-		T59f184(C, a1);
+		T59f185(ac, C, a1);
 } else {
-		T62f187(C, a1);
+		T62f188(ac, C, a1);
 }
 } else {
-		T68f188(C, a1);
+		T68f189(ac, C, a1);
 }
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.close */
-void T33x2136(T0* C)
+void T33x2136(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
-		T27f48(C);
+		T27f48(ac, C);
 } else {
-		T838f33(C);
+		T838f33(ac, C);
 }
 } else {
 if (t1==879) {
-		T879f27(C);
+		T879f27(ac, C);
 } else {
-		T890f11(C);
+		T890f11(ac, C);
 }
 }
 }
 
 /* Call to KI_CHARACTER_INPUT_STREAM.read_character */
-void T33x2126(T0* C)
+void T33x2126(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=838) {
 if (t1==27) {
-		T27f53(C);
+		T27f53(ac, C);
 } else {
-		T838f32(C);
+		T838f32(ac, C);
 }
 } else {
 if (t1==879) {
-		T879f26(C);
+		T879f26(ac, C);
 } else {
-		T890f10(C);
+		T890f10(ac, C);
 }
 }
 }
 
 /* Call to AP_OPTION.record_occurrence */
-void T45x4535T0(T0* C, T0* a1)
+void T45x4535T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-		T39f24(C, a1);
+		T39f24(ac, C, a1);
 } else {
-		T41f32(C, a1);
+		T41f32(ac, C, a1);
 }
 } else {
-		T42f31(C, a1);
+		T42f31(ac, C, a1);
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-		T43f28(C, a1);
+		T43f28(ac, C, a1);
 } else {
-		T44f28(C, a1);
+		T44f28(ac, C, a1);
 }
 } else {
-		T48f41(C, a1);
+		T48f41(ac, C, a1);
 }
 }
 }
 
 /* Call to AP_OPTION.reset */
-void T45x4536(T0* C)
+void T45x4536(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=42) {
 if (t1<=41) {
 if (t1==39) {
-		T39f22(C);
+		T39f22(ac, C);
 } else {
-		T41f30(C);
+		T41f30(ac, C);
 }
 } else {
-		T42f30(C);
+		T42f30(ac, C);
 }
 } else {
 if (t1<=44) {
 if (t1==43) {
-		T43f27(C);
+		T43f27(ac, C);
 } else {
-		T44f27(C);
+		T44f27(ac, C);
 }
 } else {
-		T48f40(C);
+		T48f40(ac, C);
 }
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_integer */
-void T81x12230T6(T0* C, T6 a1)
+void T81x12238T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f8(C, a1);
+		T257f8(ac, C, a1);
 } else {
-		T259f9(C, a1);
+		T259f9(ac, C, a1);
 }
 } else {
-		T294f37(C, a1);
+		T294f37(ac, C, a1);
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_character */
-void T81x12244T2(T0* C, T2 a1)
+void T81x12252T2(GE_context* ac, T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f7(C, a1);
+		T257f7(ac, C, a1);
 } else {
-		T259f7(C, a1);
+		T259f7(ac, C, a1);
 }
 } else {
-		T294f31(C, a1);
+		T294f31(ac, C, a1);
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_new_line */
-void T81x12226(T0* C)
+void T81x12234(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f4(C);
+		T257f4(ac, C);
 } else {
-		T259f5(C);
+		T259f5(ac, C);
 }
 } else {
-		T294f33(C);
+		T294f33(ac, C);
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_string */
-void T81x12228T0(T0* C, T0* a1)
+void T81x12236T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f9(C, a1);
+		T257f9(ac, C, a1);
 } else {
-		T259f8(C, a1);
+		T259f8(ac, C, a1);
 }
 } else {
-		T294f30(C, a1);
+		T294f30(ac, C, a1);
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.append */
-void T81x12245T0(T0* C, T0* a1)
+void T81x12253T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f6(C, a1);
+		T257f6(ac, C, a1);
 } else {
-		T259f10(C, a1);
+		T259f10(ac, C, a1);
 }
 } else {
-		T294f38(C, a1);
+		T294f38(ac, C, a1);
 }
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_line */
-void T81x12225T0(T0* C, T0* a1)
+void T81x12233T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=259) {
 if (t1==257) {
-		T257f5(C, a1);
+		T257f5(ac, C, a1);
 } else {
-		T259f6(C, a1);
+		T259f6(ac, C, a1);
 }
 } else {
-		T294f32(C, a1);
+		T294f32(ac, C, a1);
 }
 }
 
 /* Call to XM_CALLBACKS_FILTER.set_next */
-void T159x14203T0(T0* C, T0* a1)
+void T159x14211T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f8(C, a1);
+		T152f8(ac, C, a1);
 } else {
-		T153f13(C, a1);
+		T153f13(ac, C, a1);
 }
 } else {
-		T546f41(C, a1);
+		T546f41(ac, C, a1);
 }
 }
 
 /* Call to XM_CALLBACKS.on_xml_declaration */
-void T160x14264T0T0T1(T0* C, T0* a1, T0* a2, T1 a3)
+void T160x14272T0T0T1(GE_context* ac, T0* C, T0* a1, T0* a2, T1 a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f19(C, a1, a2, a3);
+		T152f19(ac, C, a1, a2, a3);
 } else {
-		T153f25(C, a1, a2, a3);
+		T153f25(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==546) {
-		T546f44(C, a1, a2, a3);
+		T546f44(ac, C, a1, a2, a3);
 } else {
-		T549f12(C, a1, a2, a3);
+		T549f12(ac, C, a1, a2, a3);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_error */
-void T160x14265T0(T0* C, T0* a1)
+void T160x14273T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f17(C, a1);
+		T152f17(ac, C, a1);
 } else {
-		T153f22(C, a1);
+		T153f22(ac, C, a1);
 }
 } else {
 if (t1==546) {
-		T546f36(C, a1);
+		T546f36(ac, C, a1);
 } else {
-		T549f11(C, a1);
+		T549f11(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_start_tag_finish */
-void T160x14270(T0* C)
+void T160x14278(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f15(C);
+		T152f15(ac, C);
 } else {
-		T153f20(C);
+		T153f20(ac, C);
 }
 } else {
 if (t1==546) {
-		T546f32(C);
+		T546f32(ac, C);
 } else {
-		T549f7(C);
+		T549f7(ac, C);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_finish */
-void T160x14263(T0* C)
+void T160x14271(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f10(C);
+		T152f10(ac, C);
 } else {
-		T153f15(C);
+		T153f15(ac, C);
 }
 } else {
 if (t1==546) {
-		T546f28(C);
+		T546f28(ac, C);
 } else {
-		T549f3(C);
+		T549f3(ac, C);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_attribute */
-void T160x14269T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+void T160x14277T0T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f18(C, a1, a2, a3, a4);
+		T152f18(ac, C, a1, a2, a3, a4);
 } else {
-		T153f23(C, a1, a2, a3, a4);
+		T153f23(ac, C, a1, a2, a3, a4);
 }
 } else {
 if (t1==546) {
-		T546f35(C, a1, a2, a3, a4);
+		T546f35(ac, C, a1, a2, a3, a4);
 } else {
-		T549f10(C, a1, a2, a3, a4);
+		T549f10(ac, C, a1, a2, a3, a4);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_end_tag */
-void T160x14271T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T160x14279T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f16(C, a1, a2, a3);
+		T152f16(ac, C, a1, a2, a3);
 } else {
-		T153f21(C, a1, a2, a3);
+		T153f21(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==546) {
-		T546f33(C, a1, a2, a3);
+		T546f33(ac, C, a1, a2, a3);
 } else {
-		T549f8(C, a1, a2, a3);
+		T549f8(ac, C, a1, a2, a3);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_start_tag */
-void T160x14268T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T160x14276T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f14(C, a1, a2, a3);
+		T152f14(ac, C, a1, a2, a3);
 } else {
-		T153f19(C, a1, a2, a3);
+		T153f19(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==546) {
-		T546f34(C, a1, a2, a3);
+		T546f34(ac, C, a1, a2, a3);
 } else {
-		T549f9(C, a1, a2, a3);
+		T549f9(ac, C, a1, a2, a3);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_content */
-void T160x14272T0(T0* C, T0* a1)
+void T160x14280T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f13(C, a1);
+		T152f13(ac, C, a1);
 } else {
-		T153f18(C, a1);
+		T153f18(ac, C, a1);
 }
 } else {
 if (t1==546) {
-		T546f31(C, a1);
+		T546f31(ac, C, a1);
 } else {
-		T549f6(C, a1);
+		T549f6(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_processing_instruction */
-void T160x14266T0T0(T0* C, T0* a1, T0* a2)
+void T160x14274T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f12(C, a1, a2);
+		T152f12(ac, C, a1, a2);
 } else {
-		T153f17(C, a1, a2);
+		T153f17(ac, C, a1, a2);
 }
 } else {
 if (t1==546) {
-		T546f30(C, a1, a2);
+		T546f30(ac, C, a1, a2);
 } else {
-		T549f5(C, a1, a2);
+		T549f5(ac, C, a1, a2);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_comment */
-void T160x14267T0(T0* C, T0* a1)
+void T160x14275T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f11(C, a1);
+		T152f11(ac, C, a1);
 } else {
-		T153f16(C, a1);
+		T153f16(ac, C, a1);
 }
 } else {
 if (t1==546) {
-		T546f29(C, a1);
+		T546f29(ac, C, a1);
 } else {
-		T549f4(C, a1);
+		T549f4(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_CALLBACKS.on_start */
-void T160x14262(T0* C)
+void T160x14270(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=153) {
 if (t1==152) {
-		T152f9(C);
+		T152f9(ac, C);
 } else {
-		T153f14(C);
+		T153f14(ac, C);
 }
 } else {
 if (t1==546) {
-		T546f27(C);
+		T546f27(ac, C);
 } else {
-		T549f2(C);
+		T549f2(ac, C);
 }
 }
 }
 
 /* Call to ET_ADAPTED_DOTNET_ASSEMBLY.export_classes */
-void T193x3470T0(T0* C, T0* a1)
+void T193x3470T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==194) {
-		T194f21(C, a1);
+		T194f21(ac, C, a1);
 } else {
-		T210f171(C, a1);
+		T210f171(ac, C, a1);
 }
 } else {
-		T223f185(C, a1);
+		T223f185(ac, C, a1);
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_query_call */
-void T232x16136T0(T0* C, T0* a1)
+void T232x16144T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f78(C, a1);
+		T232f78(ac, C, a1);
 } else {
-		T295f79(C, a1);
+		T295f79(ac, C, a1);
 }
 } else {
-		T312f79(C, a1);
+		T312f79(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f80(C, a1);
+		T323f80(ac, C, a1);
 } else {
-		T324f80(C, a1);
+		T324f80(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_procedure_call */
-void T232x16137T0(T0* C, T0* a1)
+void T232x16145T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f85(C, a1);
+		T232f85(ac, C, a1);
 } else {
-		T295f88(C, a1);
+		T295f88(ac, C, a1);
 }
 } else {
-		T312f88(C, a1);
+		T312f88(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f89(C, a1);
+		T323f89(ac, C, a1);
 } else {
-		T324f89(C, a1);
+		T324f89(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_target */
-void T232x16158T0T0(T0* C, T0* a1, T0* a2)
+void T232x16166T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f79(C, a1, a2);
+		T232f79(ac, C, a1, a2);
 } else {
-		T295f82(C, a1, a2);
+		T295f82(ac, C, a1, a2);
 }
 } else {
-		T312f82(C, a1, a2);
+		T312f82(ac, C, a1, a2);
 }
 } else {
 if (t1==323) {
-		T323f83(C, a1, a2);
+		T323f83(ac, C, a1, a2);
 } else {
-		T324f83(C, a1, a2);
+		T324f83(ac, C, a1, a2);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_object_equality_expression */
-void T232x16141T0(T0* C, T0* a1)
+void T232x16149T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f87(C, a1);
+		T232f87(ac, C, a1);
 } else {
-		T295f90(C, a1);
+		T295f90(ac, C, a1);
 }
 } else {
-		T312f90(C, a1);
+		T312f90(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f91(C, a1);
+		T323f91(ac, C, a1);
 } else {
-		T324f91(C, a1);
+		T324f91(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_equality_expression */
-void T232x16140T0(T0* C, T0* a1)
+void T232x16148T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f86(C, a1);
+		T232f86(ac, C, a1);
 } else {
-		T295f89(C, a1);
+		T295f89(ac, C, a1);
 }
 } else {
-		T312f89(C, a1);
+		T312f89(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f90(C, a1);
+		T323f90(ac, C, a1);
 } else {
-		T324f90(C, a1);
+		T324f90(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_static */
-void T232x16106T1(T0* C, T1 a1)
+void T232x16114T1(GE_context* ac, T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f84(C, a1);
+		T232f84(ac, C, a1);
 } else {
-		T295f87(C, a1);
+		T295f87(ac, C, a1);
 }
 } else {
-		T312f87(C, a1);
+		T312f87(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f88(C, a1);
+		T323f88(ac, C, a1);
 } else {
-		T324f88(C, a1);
+		T324f88(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.use_all_attributes */
-void T232x16131T0(T0* C, T0* a1)
+void T232x16139T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f83(C, a1);
+		T232f83(ac, C, a1);
 } else {
-		T295f86(C, a1);
+		T295f86(ac, C, a1);
 }
 } else {
-		T312f86(C, a1);
+		T312f86(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f87(C, a1);
+		T323f87(ac, C, a1);
 } else {
-		T324f87(C, a1);
+		T324f87(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_meta_type */
-void T232x16118T0(T0* C, T0* a1)
+void T232x16126T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f75(C, a1);
+		T232f75(ac, C, a1);
 } else {
-		T295f77(C, a1);
+		T295f77(ac, C, a1);
 }
 } else {
-		T312f77(C, a1);
+		T312f77(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f78(C, a1);
+		T323f78(ac, C, a1);
 } else {
-		T324f78(C, a1);
+		T324f78(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_alive */
-void T232x16104(T0* C)
+void T232x16112(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f72(C);
+		T232f72(ac, C);
 } else {
-		T295f76(C);
+		T295f76(ac, C);
 }
 } else {
-		T312f76(C);
+		T312f76(ac, C);
 }
 } else {
 if (t1==323) {
-		T323f77(C);
+		T323f77(ac, C);
 } else {
-		T324f77(C);
+		T324f77(ac, C);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_next_type */
-void T232x16146T0(T0* C, T0* a1)
+void T232x16154T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f74(C, a1);
+		T232f74(ac, C, a1);
 } else {
-		T295f75(C, a1);
+		T295f75(ac, C, a1);
 }
 } else {
-		T312f75(C, a1);
+		T312f75(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f76(C, a1);
+		T323f76(ac, C, a1);
 } else {
-		T324f76(C, a1);
+		T324f76(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_hash_code */
-void T232x16120T6(T0* C, T6 a1)
+void T232x16128T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f73(C, a1);
+		T232f73(ac, C, a1);
 } else {
-		T295f74(C, a1);
+		T295f74(ac, C, a1);
 }
 } else {
-		T312f74(C, a1);
+		T312f74(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f75(C, a1);
+		T323f75(ac, C, a1);
 } else {
-		T324f75(C, a1);
+		T324f75(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_id */
-void T232x16119T6(T0* C, T6 a1)
+void T232x16127T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f82(C, a1);
+		T232f82(ac, C, a1);
 } else {
-		T295f85(C, a1);
+		T295f85(ac, C, a1);
 }
 } else {
-		T312f85(C, a1);
+		T312f85(ac, C, a1);
 }
 } else {
 if (t1==323) {
-		T323f86(C, a1);
+		T323f86(ac, C, a1);
 } else {
-		T324f86(C, a1);
+		T324f86(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.set_seed */
-void T238x15095T6(T0* C, T6 a1)
+void T238x15103T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-		T176f108(C, a1);
+		T176f108(ac, C, a1);
 } else {
-		T823f71(C, a1);
+		T823f71(ac, C, a1);
 }
 } else {
-		T1229f89(C, a1);
+		T1229f89(ac, C, a1);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f71(C, a1);
+		T1230f71(ac, C, a1);
 } else {
-		T1231f103(C, a1);
+		T1231f103(ac, C, a1);
 }
 } else {
-		T1782f82(C, a1);
+		T1782f82(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_FEATURE_NAME.reset */
-void T238x15091(T0* C)
+void T238x15099(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T823f70(C);
+		T823f70(ac, C);
 }
 } else {
-		T1229f88(C);
+		T1229f88(ac, C);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f70(C);
+		T1230f70(ac, C);
 } else {
-		T1231f102(C);
+		T1231f102(ac, C);
 }
 } else {
-		T1782f84(C);
+		T1782f84(ac, C);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.reset_after_interface_checked */
-void T239x16972(T0* C)
+void T239x16980(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f83(C);
+if (t1==516) {
+		T516f83(ac, C);
 } else {
-		T523f82(C);
+		T523f82(ac, C);
 }
 } else {
 if (t1==1227) {
-		T1227f84(C);
+		T1227f84(ac, C);
 } else {
-		T1228f87(C);
+		T1228f87(ac, C);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.reset_after_features_flattened */
-void T239x16971(T0* C)
+void T239x16979(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f82(C);
+if (t1==516) {
+		T516f82(ac, C);
 } else {
-		T523f81(C);
+		T523f81(ac, C);
 }
 } else {
 if (t1==1227) {
-		T1227f83(C);
+		T1227f83(ac, C);
 } else {
-		T1228f86(C);
+		T1228f86(ac, C);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.reset */
-void T239x16970(T0* C)
+void T239x16978(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f81(C);
+if (t1==516) {
+		T516f81(ac, C);
 } else {
-		T523f80(C);
+		T523f80(ac, C);
 }
 } else {
 if (t1==1227) {
-		T1227f82(C);
+		T1227f82(ac, C);
 } else {
-		T1228f85(C);
+		T1228f85(ac, C);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.set_across_components */
-void T239x17090T0(T0* C, T0* a1)
+void T239x17098T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f77(C, a1);
+if (t1==516) {
+		T516f77(ac, C, a1);
 } else {
-		T523f76(C, a1);
+		T523f76(ac, C, a1);
 }
 } else {
 if (t1==1227) {
-		T1227f75(C, a1);
+		T1227f75(ac, C, a1);
 } else {
-		T1228f78(C, a1);
+		T1228f78(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.set_object_tests */
-void T239x17089T0(T0* C, T0* a1)
+void T239x17097T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f76(C, a1);
+if (t1==516) {
+		T516f76(ac, C, a1);
 } else {
-		T523f75(C, a1);
+		T523f75(ac, C, a1);
 }
 } else {
 if (t1==1227) {
-		T1227f74(C, a1);
+		T1227f74(ac, C, a1);
 } else {
-		T1228f77(C, a1);
+		T1228f77(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.set_frozen_keyword */
-void T239x17038T0(T0* C, T0* a1)
+void T239x17046T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f79(C, a1);
+if (t1==516) {
+		T516f79(ac, C, a1);
 } else {
-		T523f78(C, a1);
+		T523f78(ac, C, a1);
 }
 } else {
 if (t1==1227) {
-		T1227f77(C, a1);
+		T1227f77(ac, C, a1);
 } else {
-		T1228f80(C, a1);
+		T1228f80(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_PROCEDURE.reset_validity_checked */
-void T239x17078(T0* C)
+void T239x17086(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=523) {
-if (t1==514) {
-		T514f80(C);
+if (t1==516) {
+		T516f80(ac, C);
 } else {
-		T523f79(C);
+		T523f79(ac, C);
 }
 } else {
 if (t1==1227) {
-		T1227f81(C);
+		T1227f81(ac, C);
 } else {
-		T1228f84(C);
+		T1228f84(ac, C);
 }
 }
 }
 
 /* Call to ET_QUERY.reset_after_interface_checked */
-void T240x16972(T0* C)
+void T240x16980(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f88(C);
+		T253f88(ac, C);
 } else {
-		T320f83(C);
+		T320f83(ac, C);
 }
 } else {
 if (t1==353) {
-		T353f82(C);
+		T353f82(ac, C);
 } else {
-		T355f82(C);
+		T355f82(ac, C);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f80(C);
+		T356f80(ac, C);
 } else {
-		T1223f84(C);
+		T1223f84(ac, C);
 }
 } else {
 if (t1==1224) {
-		T1224f85(C);
+		T1224f85(ac, C);
 } else {
-		T1225f83(C);
+		T1225f83(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.reset_after_features_flattened */
-void T240x16971(T0* C)
+void T240x16979(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f87(C);
+		T253f87(ac, C);
 } else {
-		T320f82(C);
+		T320f82(ac, C);
 }
 } else {
 if (t1==353) {
-		T353f81(C);
+		T353f81(ac, C);
 } else {
-		T355f81(C);
+		T355f81(ac, C);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f79(C);
+		T356f79(ac, C);
 } else {
-		T1223f83(C);
+		T1223f83(ac, C);
 }
 } else {
 if (t1==1224) {
-		T1224f84(C);
+		T1224f84(ac, C);
 } else {
-		T1225f82(C);
+		T1225f82(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.reset */
-void T240x16970(T0* C)
+void T240x16978(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f86(C);
+		T253f86(ac, C);
 } else {
-		T320f81(C);
+		T320f81(ac, C);
 }
 } else {
 if (t1==353) {
-		T353f80(C);
+		T353f80(ac, C);
 } else {
-		T355f80(C);
+		T355f80(ac, C);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f78(C);
+		T356f78(ac, C);
 } else {
-		T1223f82(C);
+		T1223f82(ac, C);
 }
 } else {
 if (t1==1224) {
-		T1224f83(C);
+		T1224f83(ac, C);
 } else {
-		T1225f81(C);
+		T1225f81(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.set_across_components */
-void T240x17090T0(T0* C, T0* a1)
+void T240x17098T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f79(C, a1);
+		T253f79(ac, C, a1);
 } else {
-		T320f74(C, a1);
+		T320f74(ac, C, a1);
 }
 } else {
 if (t1==353) {
-		T353f73(C, a1);
+		T353f73(ac, C, a1);
 } else {
-		T355f73(C, a1);
+		T355f73(ac, C, a1);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f71(C, a1);
+		T356f71(ac, C, a1);
 } else {
-		T1223f75(C, a1);
+		T1223f75(ac, C, a1);
 }
 } else {
 if (t1==1224) {
-		T1224f76(C, a1);
+		T1224f76(ac, C, a1);
 } else {
-		T1225f74(C, a1);
+		T1225f74(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.set_object_tests */
-void T240x17089T0(T0* C, T0* a1)
+void T240x17097T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f78(C, a1);
+		T253f78(ac, C, a1);
 } else {
-		T320f73(C, a1);
+		T320f73(ac, C, a1);
 }
 } else {
 if (t1==353) {
-		T353f72(C, a1);
+		T353f72(ac, C, a1);
 } else {
-		T355f72(C, a1);
+		T355f72(ac, C, a1);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f70(C, a1);
+		T356f70(ac, C, a1);
 } else {
-		T1223f74(C, a1);
+		T1223f74(ac, C, a1);
 }
 } else {
 if (t1==1224) {
-		T1224f75(C, a1);
+		T1224f75(ac, C, a1);
 } else {
-		T1225f73(C, a1);
+		T1225f73(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.set_frozen_keyword */
-void T240x17038T0(T0* C, T0* a1)
+void T240x17046T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f81(C, a1);
+		T253f81(ac, C, a1);
 } else {
-		T320f76(C, a1);
+		T320f76(ac, C, a1);
 }
 } else {
 if (t1==353) {
-		T353f75(C, a1);
+		T353f75(ac, C, a1);
 } else {
-		T355f75(C, a1);
+		T355f75(ac, C, a1);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f73(C, a1);
+		T356f73(ac, C, a1);
 } else {
-		T1223f77(C, a1);
+		T1223f77(ac, C, a1);
 }
 } else {
 if (t1==1224) {
-		T1224f78(C, a1);
+		T1224f78(ac, C, a1);
 } else {
-		T1225f76(C, a1);
+		T1225f76(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_QUERY.reset_validity_checked */
-void T240x17078(T0* C)
+void T240x17086(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=355) {
 if (t1<=320) {
 if (t1==253) {
-		T253f85(C);
+		T253f85(ac, C);
 } else {
-		T320f80(C);
+		T320f80(ac, C);
 }
 } else {
 if (t1==353) {
-		T353f79(C);
+		T353f79(ac, C);
 } else {
-		T355f79(C);
+		T355f79(ac, C);
 }
 }
 } else {
 if (t1<=1223) {
 if (t1==356) {
-		T356f77(C);
+		T356f77(ac, C);
 } else {
-		T1223f81(C);
+		T1223f81(ac, C);
 }
 } else {
 if (t1==1224) {
-		T1224f82(C);
+		T1224f82(ac, C);
 } else {
-		T1225f80(C);
+		T1225f80(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_convert_to_expression */
-void T242x8491T0(T0* C, T0* a1)
+void T242x8499T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1221(C, a1);
+		T72f1229(ac, C, a1);
 } else {
-		T77f539(C, a1);
+		T77f539(ac, C, a1);
 }
 } else {
-		T361f406(C, a1);
+		T361f406(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f67(C, a1);
+		T374f67(ac, C, a1);
 } else {
-		T378f61(C, a1);
+		T378f61(ac, C, a1);
 }
 } else {
-		T1296f110(C, a1);
+		T1296f110(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_convert_from_expression */
-void T242x8489T0(T0* C, T0* a1)
+void T242x8497T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1220(C, a1);
+		T72f1228(ac, C, a1);
 } else {
-		T77f538(C, a1);
+		T77f538(ac, C, a1);
 }
 } else {
-		T361f405(C, a1);
+		T361f405(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f66(C, a1);
+		T374f66(ac, C, a1);
 } else {
-		T378f60(C, a1);
+		T378f60(ac, C, a1);
 }
 } else {
-		T1296f109(C, a1);
+		T1296f109(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_convert_builtin_expression */
-void T242x8485T0(T0* C, T0* a1)
+void T242x8493T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1219(C, a1);
+		T72f1227(ac, C, a1);
 } else {
-		T77f537(C, a1);
+		T77f537(ac, C, a1);
 }
 } else {
-		T361f404(C, a1);
+		T361f404(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f65(C, a1);
+		T374f65(ac, C, a1);
 } else {
-		T378f59(C, a1);
+		T378f59(ac, C, a1);
 }
 } else {
-		T1296f108(C, a1);
+		T1296f108(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_infix_cast_expression */
-void T242x8550T0(T0* C, T0* a1)
+void T242x8558T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1201(C, a1);
+		T72f1209(ac, C, a1);
 } else {
-		T77f465(C, a1);
+		T77f465(ac, C, a1);
 }
 } else {
-		T361f371(C, a1);
+		T361f371(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f64(C, a1);
+		T374f64(ac, C, a1);
 } else {
-		T378f58(C, a1);
+		T378f58(ac, C, a1);
 }
 } else {
-		T1296f101(C, a1);
+		T1296f101(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_unqualified_call_instruction */
-void T242x8635T0(T0* C, T0* a1)
+void T242x8643T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1200(C, a1);
+		T72f1208(ac, C, a1);
 } else {
-		T77f250(C, a1);
+		T77f250(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f370(C, a1);
+		T361f370(ac, C, a1);
 } else {
-		T1296f99(C, a1);
+		T1296f99(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_static_call_instruction */
-void T242x8622T0(T0* C, T0* a1)
+void T242x8630T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1199(C, a1);
+		T72f1207(ac, C, a1);
 } else {
-		T77f249(C, a1);
+		T77f249(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f369(C, a1);
+		T361f369(ac, C, a1);
 } else {
-		T1296f39(C, a1);
+		T1296f39(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_precursor_instruction */
-void T242x8599T0(T0* C, T0* a1)
+void T242x8607T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1198(C, a1);
+		T72f1206(ac, C, a1);
 } else {
-		T77f248(C, a1);
+		T77f248(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f368(C, a1);
+		T361f368(ac, C, a1);
 } else {
-		T1296f38(C, a1);
+		T1296f38(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_create_instruction */
-void T242x8493T0(T0* C, T0* a1)
+void T242x8501T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1197(C, a1);
+		T72f1205(ac, C, a1);
 } else {
-		T77f247(C, a1);
+		T77f247(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f367(C, a1);
+		T361f367(ac, C, a1);
 } else {
-		T1296f37(C, a1);
+		T1296f37(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_bang_instruction */
-void T242x8456T0(T0* C, T0* a1)
+void T242x8464T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1196(C, a1);
+		T72f1204(ac, C, a1);
 } else {
-		T77f246(C, a1);
+		T77f246(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f366(C, a1);
+		T361f366(ac, C, a1);
 } else {
-		T1296f36(C, a1);
+		T1296f36(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_loop_instruction */
-void T242x8573T0(T0* C, T0* a1)
+void T242x8581T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1195(C, a1);
+		T72f1203(ac, C, a1);
 } else {
-		T77f245(C, a1);
+		T77f245(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f365(C, a1);
+		T361f365(ac, C, a1);
 } else {
-		T1296f35(C, a1);
+		T1296f35(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_assignment_attempt */
-void T242x8451T0(T0* C, T0* a1)
+void T242x8459T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1194(C, a1);
+		T72f1202(ac, C, a1);
 } else {
-		T77f244(C, a1);
+		T77f244(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f364(C, a1);
+		T361f364(ac, C, a1);
 } else {
-		T1296f34(C, a1);
+		T1296f34(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_assignment */
-void T242x8450T0(T0* C, T0* a1)
+void T242x8458T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1193(C, a1);
+		T72f1201(ac, C, a1);
 } else {
-		T77f243(C, a1);
+		T77f243(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f363(C, a1);
+		T361f363(ac, C, a1);
 } else {
-		T1296f33(C, a1);
+		T1296f33(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_assigner_instruction */
-void T242x8449T0(T0* C, T0* a1)
+void T242x8457T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1192(C, a1);
+		T72f1200(ac, C, a1);
 } else {
-		T77f242(C, a1);
+		T77f242(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f362(C, a1);
+		T361f362(ac, C, a1);
 } else {
-		T1296f32(C, a1);
+		T1296f32(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_inspect_instruction */
-void T242x8556T0(T0* C, T0* a1)
+void T242x8564T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1191(C, a1);
+		T72f1199(ac, C, a1);
 } else {
-		T77f241(C, a1);
+		T77f241(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f361(C, a1);
+		T361f361(ac, C, a1);
 } else {
-		T1296f31(C, a1);
+		T1296f31(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_if_instruction */
-void T242x8543T0(T0* C, T0* a1)
+void T242x8551T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1190(C, a1);
+		T72f1198(ac, C, a1);
 } else {
-		T77f240(C, a1);
+		T77f240(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f360(C, a1);
+		T361f360(ac, C, a1);
 } else {
-		T1296f30(C, a1);
+		T1296f30(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_debug_instruction */
-void T242x8499T0(T0* C, T0* a1)
+void T242x8507T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1189(C, a1);
+		T72f1197(ac, C, a1);
 } else {
-		T77f239(C, a1);
+		T77f239(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f359(C, a1);
+		T361f359(ac, C, a1);
 } else {
-		T1296f29(C, a1);
+		T1296f29(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_check_instruction */
-void T242x8471T0(T0* C, T0* a1)
+void T242x8479T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1188(C, a1);
+		T72f1196(ac, C, a1);
 } else {
-		T77f238(C, a1);
+		T77f238(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f358(C, a1);
+		T361f358(ac, C, a1);
 } else {
-		T1296f28(C, a1);
+		T1296f28(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_across_instruction */
-void T242x8432T0(T0* C, T0* a1)
+void T242x8440T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1187(C, a1);
+		T72f1195(ac, C, a1);
 } else {
-		T77f237(C, a1);
+		T77f237(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f357(C, a1);
+		T361f357(ac, C, a1);
 } else {
-		T1296f27(C, a1);
+		T1296f27(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_retry_instruction */
-void T242x8618T0(T0* C, T0* a1)
+void T242x8626T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1186(C, a1);
+		T72f1194(ac, C, a1);
 } else {
-		T77f236(C, a1);
+		T77f236(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f356(C, a1);
+		T361f356(ac, C, a1);
 } else {
-		T1296f26(C, a1);
+		T1296f26(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_cluster */
-void T242x8641T0(T0* C, T0* a1)
+void T242x8649T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=429) {
 if (t1==421) {
-		T421f3(C, a1);
+		T421f3(ac, C, a1);
 } else {
-		T429f137(C, a1);
+		T429f137(ac, C, a1);
 }
 } else {
-		T431f1973(C, a1);
+		T431f1973(ac, C, a1);
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_bit_feature */
-void T242x8459T0(T0* C, T0* a1)
+void T242x8467T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f39(C, a1);
+		T364f39(ac, C, a1);
 } else {
-		T1278f18(C, a1);
+		T1278f18(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f26(C, a1);
+		T1279f26(ac, C, a1);
 } else {
-		T1290f27(C, a1);
+		T1290f27(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f27(C, a1);
+		T1291f27(ac, C, a1);
 } else {
-		T1292f29(C, a1);
+		T1292f29(ac, C, a1);
 }
 } else {
-		T1293f18(C, a1);
+		T1293f18(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f21(C, a1);
+		T1294f21(ac, C, a1);
 } else {
-		T1299f19(C, a1);
+		T1299f19(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f28(C, a1);
+		T1300f28(ac, C, a1);
 } else {
-		T1321f14(C, a1);
+		T1321f14(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f20(C, a1);
+		T1322f20(ac, C, a1);
 } else {
-		T1323f23(C, a1);
+		T1323f23(ac, C, a1);
 }
 } else {
-		T1324f14(C, a1);
+		T1324f14(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_bit_n */
-void T242x8460T0(T0* C, T0* a1)
+void T242x8468T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f38(C, a1);
+		T364f38(ac, C, a1);
 } else {
-		T1278f17(C, a1);
+		T1278f17(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f25(C, a1);
+		T1279f25(ac, C, a1);
 } else {
-		T1290f26(C, a1);
+		T1290f26(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f26(C, a1);
+		T1291f26(ac, C, a1);
 } else {
-		T1292f28(C, a1);
+		T1292f28(ac, C, a1);
 }
 } else {
-		T1293f17(C, a1);
+		T1293f17(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f20(C, a1);
+		T1294f20(ac, C, a1);
 } else {
-		T1299f18(C, a1);
+		T1299f18(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f27(C, a1);
+		T1300f27(ac, C, a1);
 } else {
-		T1321f13(C, a1);
+		T1321f13(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f19(C, a1);
+		T1322f19(ac, C, a1);
 } else {
-		T1323f22(C, a1);
+		T1323f22(ac, C, a1);
 }
 } else {
-		T1324f13(C, a1);
+		T1324f13(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_constrained_formal_parameter */
-void T242x8483T0(T0* C, T0* a1)
+void T242x8491T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f37(C, a1);
+		T364f37(ac, C, a1);
 } else {
-		T1278f24(C, a1);
+		T1278f24(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f36(C, a1);
+		T1279f36(ac, C, a1);
 } else {
-		T1290f25(C, a1);
+		T1290f25(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f25(C, a1);
+		T1291f25(ac, C, a1);
 } else {
-		T1292f27(C, a1);
+		T1292f27(ac, C, a1);
 }
 } else {
-		T1293f24(C, a1);
+		T1293f24(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f26(C, a1);
+		T1294f26(ac, C, a1);
 } else {
-		T1299f25(C, a1);
+		T1299f25(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f26(C, a1);
+		T1300f26(ac, C, a1);
 } else {
-		T1321f22(C, a1);
+		T1321f22(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f18(C, a1);
+		T1322f18(ac, C, a1);
 } else {
-		T1323f21(C, a1);
+		T1323f21(ac, C, a1);
 }
 } else {
-		T1324f22(C, a1);
+		T1324f22(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_formal_parameter */
-void T242x8533T0(T0* C, T0* a1)
+void T242x8541T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f36(C, a1);
+		T364f36(ac, C, a1);
 } else {
-		T1278f23(C, a1);
+		T1278f23(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f35(C, a1);
+		T1279f35(ac, C, a1);
 } else {
-		T1290f24(C, a1);
+		T1290f24(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f24(C, a1);
+		T1291f24(ac, C, a1);
 } else {
-		T1292f26(C, a1);
+		T1292f26(ac, C, a1);
 }
 } else {
-		T1293f23(C, a1);
+		T1293f23(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f25(C, a1);
+		T1294f25(ac, C, a1);
 } else {
-		T1299f24(C, a1);
+		T1299f24(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f25(C, a1);
+		T1300f25(ac, C, a1);
 } else {
-		T1321f21(C, a1);
+		T1321f21(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f17(C, a1);
+		T1322f17(ac, C, a1);
 } else {
-		T1323f20(C, a1);
+		T1323f20(ac, C, a1);
 }
 } else {
-		T1324f21(C, a1);
+		T1324f21(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_like_n */
-void T242x8568T0(T0* C, T0* a1)
+void T242x8576T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f35(C, a1);
+		T364f35(ac, C, a1);
 } else {
-		T1278f16(C, a1);
+		T1278f16(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f34(C, a1);
+		T1279f34(ac, C, a1);
 } else {
-		T1290f23(C, a1);
+		T1290f23(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f23(C, a1);
+		T1291f23(ac, C, a1);
 } else {
-		T1292f25(C, a1);
+		T1292f25(ac, C, a1);
 }
 } else {
-		T1293f16(C, a1);
+		T1293f16(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f24(C, a1);
+		T1294f24(ac, C, a1);
 } else {
-		T1299f17(C, a1);
+		T1299f17(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f24(C, a1);
+		T1300f24(ac, C, a1);
 } else {
-		T1321f20(C, a1);
+		T1321f20(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f16(C, a1);
+		T1322f16(ac, C, a1);
 } else {
-		T1323f19(C, a1);
+		T1323f19(ac, C, a1);
 }
 } else {
-		T1324f20(C, a1);
+		T1324f20(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_like_current */
-void T242x8566T0(T0* C, T0* a1)
+void T242x8574T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f34(C, a1);
+		T364f34(ac, C, a1);
 } else {
-		T1278f15(C, a1);
+		T1278f15(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f17(C, a1);
+		T1279f17(ac, C, a1);
 } else {
-		T1290f22(C, a1);
+		T1290f22(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f22(C, a1);
+		T1291f22(ac, C, a1);
 } else {
-		T1292f24(C, a1);
+		T1292f24(ac, C, a1);
 }
 } else {
-		T1293f15(C, a1);
+		T1293f15(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f12(C, a1);
+		T1294f12(ac, C, a1);
 } else {
-		T1299f16(C, a1);
+		T1299f16(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f23(C, a1);
+		T1300f23(ac, C, a1);
 } else {
-		T1321f7(C, a1);
+		T1321f7(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f15(C, a1);
+		T1322f15(ac, C, a1);
 } else {
-		T1323f18(C, a1);
+		T1323f18(ac, C, a1);
 }
 } else {
-		T1324f7(C, a1);
+		T1324f7(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_attribute */
-void T242x8455T0(T0* C, T0* a1)
+void T242x8463T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1177(C, a1);
+		T72f1185(ac, C, a1);
 } else {
-		T77f191(C, a1);
+		T77f191(ac, C, a1);
 }
 } else {
-		T361f87(C, a1);
+		T361f87(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f20(C, a1);
+		T1295f20(ac, C, a1);
 } else {
-		T1296f16(C, a1);
+		T1296f16(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_unique_attribute */
-void T242x8633T0(T0* C, T0* a1)
+void T242x8641T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1176(C, a1);
+		T72f1184(ac, C, a1);
 } else {
-		T77f190(C, a1);
+		T77f190(ac, C, a1);
 }
 } else {
-		T361f86(C, a1);
+		T361f86(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f19(C, a1);
+		T1295f19(ac, C, a1);
 } else {
-		T1296f15(C, a1);
+		T1296f15(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_constant_attribute */
-void T242x8482T0(T0* C, T0* a1)
+void T242x8490T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1175(C, a1);
+		T72f1183(ac, C, a1);
 } else {
-		T77f189(C, a1);
+		T77f189(ac, C, a1);
 }
 } else {
-		T361f85(C, a1);
+		T361f85(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f18(C, a1);
+		T1295f18(ac, C, a1);
 } else {
-		T1296f14(C, a1);
+		T1296f14(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_extended_attribute */
-void T242x8517T0(T0* C, T0* a1)
+void T242x8525T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1174(C, a1);
+		T72f1182(ac, C, a1);
 } else {
-		T77f188(C, a1);
+		T77f188(ac, C, a1);
 }
 } else {
-		T361f84(C, a1);
+		T361f84(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f17(C, a1);
+		T1295f17(ac, C, a1);
 } else {
-		T1296f13(C, a1);
+		T1296f13(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_create_expression */
-void T242x8492T0(T0* C, T0* a1)
+void T242x8500T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1173(C, a1);
+		T72f1181(ac, C, a1);
 } else {
-		T77f337(C, a1);
+		T77f337(ac, C, a1);
 }
 } else {
-		T361f172(C, a1);
+		T361f172(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f55(C, a1);
+		T374f55(ac, C, a1);
 } else {
-		T378f50(C, a1);
+		T378f50(ac, C, a1);
 }
 } else {
-		T1296f57(C, a1);
+		T1296f57(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_equality_expression */
-void T242x8513T0(T0* C, T0* a1)
+void T242x8521T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1172(C, a1);
+		T72f1180(ac, C, a1);
 } else {
-		T77f345(C, a1);
+		T77f345(ac, C, a1);
 }
 } else {
-		T361f174(C, a1);
+		T361f174(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f57(C, a1);
+		T374f57(ac, C, a1);
 } else {
-		T378f52(C, a1);
+		T378f52(ac, C, a1);
 }
 } else {
-		T1296f65(C, a1);
+		T1296f65(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_object_equality_expression */
-void T242x8581T0(T0* C, T0* a1)
+void T242x8589T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1171(C, a1);
+		T72f1179(ac, C, a1);
 } else {
-		T77f346(C, a1);
+		T77f346(ac, C, a1);
 }
 } else {
-		T361f175(C, a1);
+		T361f175(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f58(C, a1);
+		T374f58(ac, C, a1);
 } else {
-		T378f53(C, a1);
+		T378f53(ac, C, a1);
 }
 } else {
-		T1296f66(C, a1);
+		T1296f66(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_object_test */
-void T242x8582T0(T0* C, T0* a1)
+void T242x8590T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1170(C, a1);
+		T72f1178(ac, C, a1);
 } else {
-		T77f350(C, a1);
+		T77f350(ac, C, a1);
 }
 } else {
-		T361f176(C, a1);
+		T361f176(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f59(C, a1);
+		T374f59(ac, C, a1);
 } else {
-		T378f54(C, a1);
+		T378f54(ac, C, a1);
 }
 } else {
-		T1296f70(C, a1);
+		T1296f70(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_unqualified_call_expression */
-void T242x8634T0(T0* C, T0* a1)
+void T242x8642T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1169(C, a1);
+		T72f1177(ac, C, a1);
 } else {
-		T77f362(C, a1);
+		T77f362(ac, C, a1);
 }
 } else {
-		T361f177(C, a1);
+		T361f177(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f60(C, a1);
+		T374f60(ac, C, a1);
 } else {
-		T378f55(C, a1);
+		T378f55(ac, C, a1);
 }
 } else {
-		T1296f82(C, a1);
+		T1296f82(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_qualified_call_instruction */
-void T242x8606T0(T0* C, T0* a1)
+void T242x8614T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=77) {
 if (t1==72) {
-		T72f1168(C, a1);
+		T72f1176(ac, C, a1);
 } else {
-		T77f235(C, a1);
+		T77f235(ac, C, a1);
 }
 } else {
 if (t1==361) {
-		T361f179(C, a1);
+		T361f179(ac, C, a1);
 } else {
-		T1296f25(C, a1);
+		T1296f25(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_tuple_type */
-void T242x8629T0(T0* C, T0* a1)
+void T242x8637T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f27(C, a1);
+		T364f27(ac, C, a1);
 } else {
-		T1278f14(C, a1);
+		T1278f14(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f22(C, a1);
+		T1279f22(ac, C, a1);
 } else {
-		T1290f21(C, a1);
+		T1290f21(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f21(C, a1);
+		T1291f21(ac, C, a1);
 } else {
-		T1292f23(C, a1);
+		T1292f23(ac, C, a1);
 }
 } else {
-		T1293f14(C, a1);
+		T1293f14(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f17(C, a1);
+		T1294f17(ac, C, a1);
 } else {
-		T1299f15(C, a1);
+		T1299f15(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f22(C, a1);
+		T1300f22(ac, C, a1);
 } else {
-		T1321f12(C, a1);
+		T1321f12(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f14(C, a1);
+		T1322f14(ac, C, a1);
 } else {
-		T1323f17(C, a1);
+		T1323f17(ac, C, a1);
 }
 } else {
-		T1324f12(C, a1);
+		T1324f12(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_external_function */
-void T242x8519T0(T0* C, T0* a1)
+void T242x8527T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f1167(C, a1);
+		T72f1175(ac, C, a1);
 } else {
-		T77f187(C, a1);
+		T77f187(ac, C, a1);
 }
 } else {
-		T361f83(C, a1);
+		T361f83(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f16(C, a1);
+		T1295f16(ac, C, a1);
 } else {
-		T1296f12(C, a1);
+		T1296f12(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_generic_class_type */
-void T242x8538T0(T0* C, T0* a1)
+void T242x8546T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f26(C, a1);
+		T364f26(ac, C, a1);
 } else {
-		T1278f10(C, a1);
+		T1278f10(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f24(C, a1);
+		T1279f24(ac, C, a1);
 } else {
-		T1290f20(C, a1);
+		T1290f20(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f20(C, a1);
+		T1291f20(ac, C, a1);
 } else {
-		T1292f22(C, a1);
+		T1292f22(ac, C, a1);
 }
 } else {
-		T1293f10(C, a1);
+		T1293f10(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f19(C, a1);
+		T1294f19(ac, C, a1);
 } else {
-		T1299f11(C, a1);
+		T1299f11(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f21(C, a1);
+		T1300f21(ac, C, a1);
 } else {
-		T1321f5(C, a1);
+		T1321f5(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f13(C, a1);
+		T1322f13(ac, C, a1);
 } else {
-		T1323f16(C, a1);
+		T1323f16(ac, C, a1);
 }
 } else {
-		T1324f5(C, a1);
+		T1324f5(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_class_type */
-void T242x8476T0(T0* C, T0* a1)
+void T242x8484T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f25(C, a1);
+		T364f25(ac, C, a1);
 } else {
-		T1278f9(C, a1);
+		T1278f9(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f23(C, a1);
+		T1279f23(ac, C, a1);
 } else {
-		T1290f13(C, a1);
+		T1290f13(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f15(C, a1);
+		T1291f15(ac, C, a1);
 } else {
-		T1292f18(C, a1);
+		T1292f18(ac, C, a1);
 }
 } else {
-		T1293f9(C, a1);
+		T1293f9(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f18(C, a1);
+		T1294f18(ac, C, a1);
 } else {
-		T1299f10(C, a1);
+		T1299f10(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f15(C, a1);
+		T1300f15(ac, C, a1);
 } else {
-		T1321f4(C, a1);
+		T1321f4(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f8(C, a1);
+		T1322f8(ac, C, a1);
 } else {
-		T1323f11(C, a1);
+		T1323f11(ac, C, a1);
 }
 } else {
-		T1324f4(C, a1);
+		T1324f4(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_formal_parameter_type */
-void T242x8536T0(T0* C, T0* a1)
+void T242x8544T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f24(C, a1);
+		T364f24(ac, C, a1);
 } else {
-		T1278f22(C, a1);
+		T1278f22(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f21(C, a1);
+		T1279f21(ac, C, a1);
 } else {
-		T1290f19(C, a1);
+		T1290f19(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f19(C, a1);
+		T1291f19(ac, C, a1);
 } else {
-		T1292f21(C, a1);
+		T1292f21(ac, C, a1);
 }
 } else {
-		T1293f22(C, a1);
+		T1293f22(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f16(C, a1);
+		T1294f16(ac, C, a1);
 } else {
-		T1299f23(C, a1);
+		T1299f23(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f20(C, a1);
+		T1300f20(ac, C, a1);
 } else {
-		T1321f11(C, a1);
+		T1321f11(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f12(C, a1);
+		T1322f12(ac, C, a1);
 } else {
-		T1323f15(C, a1);
+		T1323f15(ac, C, a1);
 }
 } else {
-		T1324f11(C, a1);
+		T1324f11(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_external_procedure_inline_agent */
-void T242x8522T0(T0* C, T0* a1)
+void T242x8530T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f967(C, a1);
+		T72f975(ac, C, a1);
 } else {
-		T77f361(C, a1);
+		T77f361(ac, C, a1);
 }
 } else {
-		T361f166(C, a1);
+		T361f166(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f49(C, a1);
+		T374f49(ac, C, a1);
 } else {
-		T378f44(C, a1);
+		T378f44(ac, C, a1);
 }
 } else {
-		T1296f81(C, a1);
+		T1296f81(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_once_procedure_inline_agent */
-void T242x8590T0(T0* C, T0* a1)
+void T242x8598T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f966(C, a1);
+		T72f974(ac, C, a1);
 } else {
-		T77f360(C, a1);
+		T77f360(ac, C, a1);
 }
 } else {
-		T361f165(C, a1);
+		T361f165(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f48(C, a1);
+		T374f48(ac, C, a1);
 } else {
-		T378f43(C, a1);
+		T378f43(ac, C, a1);
 }
 } else {
-		T1296f80(C, a1);
+		T1296f80(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_do_procedure_inline_agent */
-void T242x8505T0(T0* C, T0* a1)
+void T242x8513T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f965(C, a1);
+		T72f973(ac, C, a1);
 } else {
-		T77f359(C, a1);
+		T77f359(ac, C, a1);
 }
 } else {
-		T361f164(C, a1);
+		T361f164(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f47(C, a1);
+		T374f47(ac, C, a1);
 } else {
-		T378f42(C, a1);
+		T378f42(ac, C, a1);
 }
 } else {
-		T1296f79(C, a1);
+		T1296f79(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_external_function_inline_agent */
-void T242x8520T0(T0* C, T0* a1)
+void T242x8528T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f964(C, a1);
+		T72f972(ac, C, a1);
 } else {
-		T77f358(C, a1);
+		T77f358(ac, C, a1);
 }
 } else {
-		T361f163(C, a1);
+		T361f163(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f46(C, a1);
+		T374f46(ac, C, a1);
 } else {
-		T378f41(C, a1);
+		T378f41(ac, C, a1);
 }
 } else {
-		T1296f78(C, a1);
+		T1296f78(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_once_function_inline_agent */
-void T242x8587T0(T0* C, T0* a1)
+void T242x8595T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f963(C, a1);
+		T72f971(ac, C, a1);
 } else {
-		T77f357(C, a1);
+		T77f357(ac, C, a1);
 }
 } else {
-		T361f162(C, a1);
+		T361f162(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f45(C, a1);
+		T374f45(ac, C, a1);
 } else {
-		T378f40(C, a1);
+		T378f40(ac, C, a1);
 }
 } else {
-		T1296f77(C, a1);
+		T1296f77(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_do_function_inline_agent */
-void T242x8503T0(T0* C, T0* a1)
+void T242x8511T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f962(C, a1);
+		T72f970(ac, C, a1);
 } else {
-		T77f356(C, a1);
+		T77f356(ac, C, a1);
 }
 } else {
-		T361f161(C, a1);
+		T361f161(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f44(C, a1);
+		T374f44(ac, C, a1);
 } else {
-		T378f39(C, a1);
+		T378f39(ac, C, a1);
 }
 } else {
-		T1296f76(C, a1);
+		T1296f76(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_once_manifest_string */
-void T242x8588T0(T0* C, T0* a1)
+void T242x8596T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f961(C, a1);
+		T72f969(ac, C, a1);
 } else {
-		T77f366(C, a1);
+		T77f366(ac, C, a1);
 }
 } else {
-		T361f160(C, a1);
+		T361f160(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f43(C, a1);
+		T374f43(ac, C, a1);
 } else {
-		T378f38(C, a1);
+		T378f38(ac, C, a1);
 }
 } else {
-		T1296f86(C, a1);
+		T1296f86(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_old_object_test */
-void T242x8585T0(T0* C, T0* a1)
+void T242x8593T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f960(C, a1);
+		T72f968(ac, C, a1);
 } else {
-		T77f364(C, a1);
+		T77f364(ac, C, a1);
 }
 } else {
-		T361f159(C, a1);
+		T361f159(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f42(C, a1);
+		T374f42(ac, C, a1);
 } else {
-		T378f37(C, a1);
+		T378f37(ac, C, a1);
 }
 } else {
-		T1296f84(C, a1);
+		T1296f84(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_old_expression */
-void T242x8584T0(T0* C, T0* a1)
+void T242x8592T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f959(C, a1);
+		T72f967(ac, C, a1);
 } else {
-		T77f349(C, a1);
+		T77f349(ac, C, a1);
 }
 } else {
-		T361f158(C, a1);
+		T361f158(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f41(C, a1);
+		T374f41(ac, C, a1);
 } else {
-		T378f36(C, a1);
+		T378f36(ac, C, a1);
 }
 } else {
-		T1296f69(C, a1);
+		T1296f69(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_prefix_expression */
-void T242x8601T0(T0* C, T0* a1)
+void T242x8609T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f958(C, a1);
+		T72f966(ac, C, a1);
 } else {
-		T77f348(C, a1);
+		T77f348(ac, C, a1);
 }
 } else {
-		T361f157(C, a1);
+		T361f157(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f40(C, a1);
+		T374f40(ac, C, a1);
 } else {
-		T378f35(C, a1);
+		T378f35(ac, C, a1);
 }
 } else {
-		T1296f68(C, a1);
+		T1296f68(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_manifest_type */
-void T242x8579T0(T0* C, T0* a1)
+void T242x8587T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f957(C, a1);
+		T72f965(ac, C, a1);
 } else {
-		T77f347(C, a1);
+		T77f347(ac, C, a1);
 }
 } else {
-		T361f156(C, a1);
+		T361f156(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f39(C, a1);
+		T374f39(ac, C, a1);
 } else {
-		T378f34(C, a1);
+		T378f34(ac, C, a1);
 }
 } else {
-		T1296f67(C, a1);
+		T1296f67(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_infix_expression */
-void T242x8552T0(T0* C, T0* a1)
+void T242x8560T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f956(C, a1);
+		T72f964(ac, C, a1);
 } else {
-		T77f344(C, a1);
+		T77f344(ac, C, a1);
 }
 } else {
-		T361f155(C, a1);
+		T361f155(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f38(C, a1);
+		T374f38(ac, C, a1);
 } else {
-		T378f33(C, a1);
+		T378f33(ac, C, a1);
 }
 } else {
-		T1296f64(C, a1);
+		T1296f64(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_expression_address */
-void T242x8515T0(T0* C, T0* a1)
+void T242x8523T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f955(C, a1);
+		T72f963(ac, C, a1);
 } else {
-		T77f343(C, a1);
+		T77f343(ac, C, a1);
 }
 } else {
-		T361f154(C, a1);
+		T361f154(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f37(C, a1);
+		T374f37(ac, C, a1);
 } else {
-		T378f32(C, a1);
+		T378f32(ac, C, a1);
 }
 } else {
-		T1296f63(C, a1);
+		T1296f63(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_result_address */
-void T242x8617T0(T0* C, T0* a1)
+void T242x8625T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f954(C, a1);
+		T72f962(ac, C, a1);
 } else {
-		T77f342(C, a1);
+		T77f342(ac, C, a1);
 }
 } else {
-		T361f153(C, a1);
+		T361f153(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f36(C, a1);
+		T374f36(ac, C, a1);
 } else {
-		T378f31(C, a1);
+		T378f31(ac, C, a1);
 }
 } else {
-		T1296f62(C, a1);
+		T1296f62(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_current_address */
-void T242x8497T0(T0* C, T0* a1)
+void T242x8505T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f953(C, a1);
+		T72f961(ac, C, a1);
 } else {
-		T77f341(C, a1);
+		T77f341(ac, C, a1);
 }
 } else {
-		T361f152(C, a1);
+		T361f152(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f35(C, a1);
+		T374f35(ac, C, a1);
 } else {
-		T378f30(C, a1);
+		T378f30(ac, C, a1);
 }
 } else {
-		T1296f61(C, a1);
+		T1296f61(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_feature_address */
-void T242x8524T0(T0* C, T0* a1)
+void T242x8532T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f952(C, a1);
+		T72f960(ac, C, a1);
 } else {
-		T77f363(C, a1);
+		T77f363(ac, C, a1);
 }
 } else {
-		T361f151(C, a1);
+		T361f151(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f34(C, a1);
+		T374f34(ac, C, a1);
 } else {
-		T378f29(C, a1);
+		T378f29(ac, C, a1);
 }
 } else {
-		T1296f83(C, a1);
+		T1296f83(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_precursor_expression */
-void T242x8598T0(T0* C, T0* a1)
+void T242x8606T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f951(C, a1);
+		T72f959(ac, C, a1);
 } else {
-		T77f340(C, a1);
+		T77f340(ac, C, a1);
 }
 } else {
-		T361f150(C, a1);
+		T361f150(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f33(C, a1);
+		T374f33(ac, C, a1);
 } else {
-		T378f28(C, a1);
+		T378f28(ac, C, a1);
 }
 } else {
-		T1296f60(C, a1);
+		T1296f60(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_qualified_like_type */
-void T242x8608T0(T0* C, T0* a1)
+void T242x8616T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f23(C, a1);
+		T364f23(ac, C, a1);
 } else {
-		T1278f21(C, a1);
+		T1278f21(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f20(C, a1);
+		T1279f20(ac, C, a1);
 } else {
-		T1290f12(C, a1);
+		T1290f12(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f13(C, a1);
+		T1291f13(ac, C, a1);
 } else {
-		T1292f17(C, a1);
+		T1292f17(ac, C, a1);
 }
 } else {
-		T1293f21(C, a1);
+		T1293f21(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f15(C, a1);
+		T1294f15(ac, C, a1);
 } else {
-		T1299f22(C, a1);
+		T1299f22(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f14(C, a1);
+		T1300f14(ac, C, a1);
 } else {
-		T1321f10(C, a1);
+		T1321f10(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f7(C, a1);
+		T1322f7(ac, C, a1);
 } else {
-		T1323f10(C, a1);
+		T1323f10(ac, C, a1);
 }
 } else {
-		T1324f10(C, a1);
+		T1324f10(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_qualified_like_braced_type */
-void T242x8607T0(T0* C, T0* a1)
+void T242x8615T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f22(C, a1);
+		T364f22(ac, C, a1);
 } else {
-		T1278f20(C, a1);
+		T1278f20(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f19(C, a1);
+		T1279f19(ac, C, a1);
 } else {
-		T1290f11(C, a1);
+		T1290f11(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f12(C, a1);
+		T1291f12(ac, C, a1);
 } else {
-		T1292f16(C, a1);
+		T1292f16(ac, C, a1);
 }
 } else {
-		T1293f20(C, a1);
+		T1293f20(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f14(C, a1);
+		T1294f14(ac, C, a1);
 } else {
-		T1299f21(C, a1);
+		T1299f21(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f13(C, a1);
+		T1300f13(ac, C, a1);
 } else {
-		T1321f9(C, a1);
+		T1321f9(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f6(C, a1);
+		T1322f6(ac, C, a1);
 } else {
-		T1323f9(C, a1);
+		T1323f9(ac, C, a1);
 }
 } else {
-		T1324f9(C, a1);
+		T1324f9(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_like_feature */
-void T242x8567T0(T0* C, T0* a1)
+void T242x8575T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1293) {
 if (t1<=1290) {
 if (t1<=1278) {
 if (t1==364) {
-		T364f21(C, a1);
+		T364f21(ac, C, a1);
 } else {
-		T1278f19(C, a1);
+		T1278f19(ac, C, a1);
 }
 } else {
 if (t1==1279) {
-		T1279f18(C, a1);
+		T1279f18(ac, C, a1);
 } else {
-		T1290f10(C, a1);
+		T1290f10(ac, C, a1);
 }
 }
 } else {
 if (t1<=1292) {
 if (t1==1291) {
-		T1291f11(C, a1);
+		T1291f11(ac, C, a1);
 } else {
-		T1292f15(C, a1);
+		T1292f15(ac, C, a1);
 }
 } else {
-		T1293f19(C, a1);
+		T1293f19(ac, C, a1);
 }
 }
 } else {
 if (t1<=1321) {
 if (t1<=1299) {
 if (t1==1294) {
-		T1294f13(C, a1);
+		T1294f13(ac, C, a1);
 } else {
-		T1299f20(C, a1);
+		T1299f20(ac, C, a1);
 }
 } else {
 if (t1==1300) {
-		T1300f12(C, a1);
+		T1300f12(ac, C, a1);
 } else {
-		T1321f8(C, a1);
+		T1321f8(ac, C, a1);
 }
 }
 } else {
 if (t1<=1323) {
 if (t1==1322) {
-		T1322f5(C, a1);
+		T1322f5(ac, C, a1);
 } else {
-		T1323f8(C, a1);
+		T1323f8(ac, C, a1);
 }
 } else {
-		T1324f8(C, a1);
+		T1324f8(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_external_procedure */
-void T242x8521T0(T0* C, T0* a1)
+void T242x8529T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f950(C, a1);
+		T72f958(ac, C, a1);
 } else {
-		T77f167(C, a1);
+		T77f167(ac, C, a1);
 }
 } else {
-		T361f82(C, a1);
+		T361f82(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f26(C, a1);
+		T1295f26(ac, C, a1);
 } else {
-		T1296f22(C, a1);
+		T1296f22(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_once_procedure */
-void T242x8589T0(T0* C, T0* a1)
+void T242x8597T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f949(C, a1);
+		T72f957(ac, C, a1);
 } else {
-		T77f166(C, a1);
+		T77f166(ac, C, a1);
 }
 } else {
-		T361f81(C, a1);
+		T361f81(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f25(C, a1);
+		T1295f25(ac, C, a1);
 } else {
-		T1296f21(C, a1);
+		T1296f21(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_deferred_function */
-void T242x8500T0(T0* C, T0* a1)
+void T242x8508T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f948(C, a1);
+		T72f956(ac, C, a1);
 } else {
-		T77f165(C, a1);
+		T77f165(ac, C, a1);
 }
 } else {
-		T361f80(C, a1);
+		T361f80(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f24(C, a1);
+		T1295f24(ac, C, a1);
 } else {
-		T1296f20(C, a1);
+		T1296f20(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_once_function */
-void T242x8586T0(T0* C, T0* a1)
+void T242x8594T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f947(C, a1);
+		T72f955(ac, C, a1);
 } else {
-		T77f164(C, a1);
+		T77f164(ac, C, a1);
 }
 } else {
-		T361f79(C, a1);
+		T361f79(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f23(C, a1);
+		T1295f23(ac, C, a1);
 } else {
-		T1296f19(C, a1);
+		T1296f19(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_do_function */
-void T242x8502T0(T0* C, T0* a1)
+void T242x8510T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f946(C, a1);
+		T72f954(ac, C, a1);
 } else {
-		T77f163(C, a1);
+		T77f163(ac, C, a1);
 }
 } else {
-		T361f78(C, a1);
+		T361f78(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f22(C, a1);
+		T1295f22(ac, C, a1);
 } else {
-		T1296f18(C, a1);
+		T1296f18(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_c2_character_constant */
-void T242x8468T0(T0* C, T0* a1)
+void T242x8476T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f945(C, a1);
+		T72f953(ac, C, a1);
 } else {
-		T77f336(C, a1);
+		T77f336(ac, C, a1);
 }
 } else {
-		T361f149(C, a1);
+		T361f149(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f32(C, a1);
+		T374f32(ac, C, a1);
 } else {
-		T378f27(C, a1);
+		T378f27(ac, C, a1);
 }
 } else {
-		T1296f56(C, a1);
+		T1296f56(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_c1_character_constant */
-void T242x8467T0(T0* C, T0* a1)
+void T242x8475T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f944(C, a1);
+		T72f952(ac, C, a1);
 } else {
-		T77f335(C, a1);
+		T77f335(ac, C, a1);
 }
 } else {
-		T361f148(C, a1);
+		T361f148(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f31(C, a1);
+		T374f31(ac, C, a1);
 } else {
-		T378f26(C, a1);
+		T378f26(ac, C, a1);
 }
 } else {
-		T1296f55(C, a1);
+		T1296f55(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_false_constant */
-void T242x8523T0(T0* C, T0* a1)
+void T242x8531T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f943(C, a1);
+		T72f951(ac, C, a1);
 } else {
-		T77f334(C, a1);
+		T77f334(ac, C, a1);
 }
 } else {
-		T361f147(C, a1);
+		T361f147(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f30(C, a1);
+		T374f30(ac, C, a1);
 } else {
-		T378f25(C, a1);
+		T378f25(ac, C, a1);
 }
 } else {
-		T1296f54(C, a1);
+		T1296f54(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_true_constant */
-void T242x8628T0(T0* C, T0* a1)
+void T242x8636T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f942(C, a1);
+		T72f950(ac, C, a1);
 } else {
-		T77f332(C, a1);
+		T77f332(ac, C, a1);
 }
 } else {
-		T361f146(C, a1);
+		T361f146(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f29(C, a1);
+		T374f29(ac, C, a1);
 } else {
-		T378f24(C, a1);
+		T378f24(ac, C, a1);
 }
 } else {
-		T1296f52(C, a1);
+		T1296f52(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_underscored_real_constant */
-void T242x8632T0(T0* C, T0* a1)
+void T242x8640T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f941(C, a1);
+		T72f949(ac, C, a1);
 } else {
-		T77f331(C, a1);
+		T77f331(ac, C, a1);
 }
 } else {
-		T361f145(C, a1);
+		T361f145(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f28(C, a1);
+		T374f28(ac, C, a1);
 } else {
-		T378f23(C, a1);
+		T378f23(ac, C, a1);
 }
 } else {
-		T1296f51(C, a1);
+		T1296f51(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_regular_real_constant */
-void T242x8612T0(T0* C, T0* a1)
+void T242x8620T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f940(C, a1);
+		T72f948(ac, C, a1);
 } else {
-		T77f330(C, a1);
+		T77f330(ac, C, a1);
 }
 } else {
-		T361f144(C, a1);
+		T361f144(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f27(C, a1);
+		T374f27(ac, C, a1);
 } else {
-		T378f22(C, a1);
+		T378f22(ac, C, a1);
 }
 } else {
-		T1296f50(C, a1);
+		T1296f50(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_binary_integer_constant */
-void T242x8457T0(T0* C, T0* a1)
+void T242x8465T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f939(C, a1);
+		T72f947(ac, C, a1);
 } else {
-		T77f329(C, a1);
+		T77f329(ac, C, a1);
 }
 } else {
-		T361f143(C, a1);
+		T361f143(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f26(C, a1);
+		T374f26(ac, C, a1);
 } else {
-		T378f21(C, a1);
+		T378f21(ac, C, a1);
 }
 } else {
-		T1296f49(C, a1);
+		T1296f49(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_octal_integer_constant */
-void T242x8583T0(T0* C, T0* a1)
+void T242x8591T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f938(C, a1);
+		T72f946(ac, C, a1);
 } else {
-		T77f328(C, a1);
+		T77f328(ac, C, a1);
 }
 } else {
-		T361f142(C, a1);
+		T361f142(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f25(C, a1);
+		T374f25(ac, C, a1);
 } else {
-		T378f20(C, a1);
+		T378f20(ac, C, a1);
 }
 } else {
-		T1296f48(C, a1);
+		T1296f48(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_hexadecimal_integer_constant */
-void T242x8539T0(T0* C, T0* a1)
+void T242x8547T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f937(C, a1);
+		T72f945(ac, C, a1);
 } else {
-		T77f327(C, a1);
+		T77f327(ac, C, a1);
 }
 } else {
-		T361f141(C, a1);
+		T361f141(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f24(C, a1);
+		T374f24(ac, C, a1);
 } else {
-		T378f19(C, a1);
+		T378f19(ac, C, a1);
 }
 } else {
-		T1296f47(C, a1);
+		T1296f47(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_underscored_integer_constant */
-void T242x8631T0(T0* C, T0* a1)
+void T242x8639T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f936(C, a1);
+		T72f944(ac, C, a1);
 } else {
-		T77f326(C, a1);
+		T77f326(ac, C, a1);
 }
 } else {
-		T361f140(C, a1);
+		T361f140(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f23(C, a1);
+		T374f23(ac, C, a1);
 } else {
-		T378f18(C, a1);
+		T378f18(ac, C, a1);
 }
 } else {
-		T1296f46(C, a1);
+		T1296f46(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_regular_integer_constant */
-void T242x8610T0(T0* C, T0* a1)
+void T242x8618T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f935(C, a1);
+		T72f943(ac, C, a1);
 } else {
-		T77f325(C, a1);
+		T77f325(ac, C, a1);
 }
 } else {
-		T361f139(C, a1);
+		T361f139(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f22(C, a1);
+		T374f22(ac, C, a1);
 } else {
-		T378f17(C, a1);
+		T378f17(ac, C, a1);
 }
 } else {
-		T1296f45(C, a1);
+		T1296f45(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_special_manifest_string */
-void T242x8620T0(T0* C, T0* a1)
+void T242x8628T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f934(C, a1);
+		T72f942(ac, C, a1);
 } else {
-		T77f370(C, a1);
+		T77f370(ac, C, a1);
 }
 } else {
-		T361f138(C, a1);
+		T361f138(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f21(C, a1);
+		T374f21(ac, C, a1);
 } else {
-		T378f16(C, a1);
+		T378f16(ac, C, a1);
 }
 } else {
-		T1296f90(C, a1);
+		T1296f90(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_verbatim_string */
-void T242x8637T0(T0* C, T0* a1)
+void T242x8645T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f933(C, a1);
+		T72f941(ac, C, a1);
 } else {
-		T77f369(C, a1);
+		T77f369(ac, C, a1);
 }
 } else {
-		T361f137(C, a1);
+		T361f137(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f20(C, a1);
+		T374f20(ac, C, a1);
 } else {
-		T378f15(C, a1);
+		T378f15(ac, C, a1);
 }
 } else {
-		T1296f89(C, a1);
+		T1296f89(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_c3_character_constant */
-void T242x8469T0(T0* C, T0* a1)
+void T242x8477T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f932(C, a1);
+		T72f940(ac, C, a1);
 } else {
-		T77f368(C, a1);
+		T77f368(ac, C, a1);
 }
 } else {
-		T361f136(C, a1);
+		T361f136(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f19(C, a1);
+		T374f19(ac, C, a1);
 } else {
-		T378f14(C, a1);
+		T378f14(ac, C, a1);
 }
 } else {
-		T1296f88(C, a1);
+		T1296f88(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_strip_expression */
-void T242x8623T0(T0* C, T0* a1)
+void T242x8631T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f931(C, a1);
+		T72f939(ac, C, a1);
 } else {
-		T77f354(C, a1);
+		T77f354(ac, C, a1);
 }
 } else {
-		T361f135(C, a1);
+		T361f135(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f18(C, a1);
+		T374f18(ac, C, a1);
 } else {
-		T378f13(C, a1);
+		T378f13(ac, C, a1);
 }
 } else {
-		T1296f74(C, a1);
+		T1296f74(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_static_call_expression */
-void T242x8621T0(T0* C, T0* a1)
+void T242x8629T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f930(C, a1);
+		T72f938(ac, C, a1);
 } else {
-		T77f339(C, a1);
+		T77f339(ac, C, a1);
 }
 } else {
-		T361f134(C, a1);
+		T361f134(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f17(C, a1);
+		T374f17(ac, C, a1);
 } else {
-		T378f12(C, a1);
+		T378f12(ac, C, a1);
 }
 } else {
-		T1296f59(C, a1);
+		T1296f59(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_parenthesized_expression */
-void T242x8594T0(T0* C, T0* a1)
+void T242x8602T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f929(C, a1);
+		T72f937(ac, C, a1);
 } else {
-		T77f352(C, a1);
+		T77f352(ac, C, a1);
 }
 } else {
-		T361f133(C, a1);
+		T361f133(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f16(C, a1);
+		T374f16(ac, C, a1);
 } else {
-		T378f11(C, a1);
+		T378f11(ac, C, a1);
 }
 } else {
-		T1296f72(C, a1);
+		T1296f72(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_manifest_array */
-void T242x8575T0(T0* C, T0* a1)
+void T242x8583T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f928(C, a1);
+		T72f936(ac, C, a1);
 } else {
-		T77f353(C, a1);
+		T77f353(ac, C, a1);
 }
 } else {
-		T361f132(C, a1);
+		T361f132(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f15(C, a1);
+		T374f15(ac, C, a1);
 } else {
-		T378f10(C, a1);
+		T378f10(ac, C, a1);
 }
 } else {
-		T1296f73(C, a1);
+		T1296f73(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_call_agent */
-void T242x8470T0(T0* C, T0* a1)
+void T242x8478T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f927(C, a1);
+		T72f935(ac, C, a1);
 } else {
-		T77f355(C, a1);
+		T77f355(ac, C, a1);
 }
 } else {
-		T361f131(C, a1);
+		T361f131(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f14(C, a1);
+		T374f14(ac, C, a1);
 } else {
-		T378f9(C, a1);
+		T378f9(ac, C, a1);
 }
 } else {
-		T1296f75(C, a1);
+		T1296f75(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_bracket_expression */
-void T242x8465T0(T0* C, T0* a1)
+void T242x8473T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f926(C, a1);
+		T72f934(ac, C, a1);
 } else {
-		T77f351(C, a1);
+		T77f351(ac, C, a1);
 }
 } else {
-		T361f130(C, a1);
+		T361f130(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f13(C, a1);
+		T374f13(ac, C, a1);
 } else {
-		T378f8(C, a1);
+		T378f8(ac, C, a1);
 }
 } else {
-		T1296f71(C, a1);
+		T1296f71(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_across_expression */
-void T242x8431T0(T0* C, T0* a1)
+void T242x8439T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f925(C, a1);
+		T72f933(ac, C, a1);
 } else {
-		T77f367(C, a1);
+		T77f367(ac, C, a1);
 }
 } else {
-		T361f129(C, a1);
+		T361f129(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f12(C, a1);
+		T374f12(ac, C, a1);
 } else {
-		T378f7(C, a1);
+		T378f7(ac, C, a1);
 }
 } else {
-		T1296f87(C, a1);
+		T1296f87(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_void */
-void T242x8638T0(T0* C, T0* a1)
+void T242x8646T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f924(C, a1);
+		T72f932(ac, C, a1);
 } else {
-		T77f333(C, a1);
+		T77f333(ac, C, a1);
 }
 } else {
-		T361f128(C, a1);
+		T361f128(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f11(C, a1);
+		T374f11(ac, C, a1);
 } else {
-		T378f6(C, a1);
+		T378f6(ac, C, a1);
 }
 } else {
-		T1296f53(C, a1);
+		T1296f53(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_bit_constant */
-void T242x8458T0(T0* C, T0* a1)
+void T242x8466T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f923(C, a1);
+		T72f931(ac, C, a1);
 } else {
-		T77f324(C, a1);
+		T77f324(ac, C, a1);
 }
 } else {
-		T361f127(C, a1);
+		T361f127(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f10(C, a1);
+		T374f10(ac, C, a1);
 } else {
-		T378f5(C, a1);
+		T378f5(ac, C, a1);
 }
 } else {
-		T1296f44(C, a1);
+		T1296f44(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_regular_manifest_string */
-void T242x8611T0(T0* C, T0* a1)
+void T242x8619T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f922(C, a1);
+		T72f930(ac, C, a1);
 } else {
-		T77f323(C, a1);
+		T77f323(ac, C, a1);
 }
 } else {
-		T361f171(C, a1);
+		T361f171(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f54(C, a1);
+		T374f54(ac, C, a1);
 } else {
-		T378f49(C, a1);
+		T378f49(ac, C, a1);
 }
 } else {
-		T1296f43(C, a1);
+		T1296f43(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_named_object_test */
-void T242x8580T0(T0* C, T0* a1)
+void T242x8588T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f921(C, a1);
+		T72f929(ac, C, a1);
 } else {
-		T77f365(C, a1);
+		T77f365(ac, C, a1);
 }
 } else {
-		T361f178(C, a1);
+		T361f178(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f61(C, a1);
+		T374f61(ac, C, a1);
 } else {
-		T378f56(C, a1);
+		T378f56(ac, C, a1);
 }
 } else {
-		T1296f85(C, a1);
+		T1296f85(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_deferred_procedure */
-void T242x8501T0(T0* C, T0* a1)
+void T242x8509T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f906(C, a1);
+		T72f914(ac, C, a1);
 } else {
-		T77f147(C, a1);
+		T77f147(ac, C, a1);
 }
 } else {
-		T361f77(C, a1);
+		T361f77(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f15(C, a1);
+		T1295f15(ac, C, a1);
 } else {
-		T1296f11(C, a1);
+		T1296f11(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_do_procedure */
-void T242x8504T0(T0* C, T0* a1)
+void T242x8512T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f905(C, a1);
+		T72f913(ac, C, a1);
 } else {
-		T77f146(C, a1);
+		T77f146(ac, C, a1);
 }
 } else {
-		T361f76(C, a1);
+		T361f76(ac, C, a1);
 }
 } else {
 if (t1==1295) {
-		T1295f21(C, a1);
+		T1295f21(ac, C, a1);
 } else {
-		T1296f17(C, a1);
+		T1296f17(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_manifest_tuple */
-void T242x8578T0(T0* C, T0* a1)
+void T242x8586T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f904(C, a1);
+		T72f912(ac, C, a1);
 } else {
-		T77f321(C, a1);
+		T77f321(ac, C, a1);
 }
 } else {
-		T361f167(C, a1);
+		T361f167(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f50(C, a1);
+		T374f50(ac, C, a1);
 } else {
-		T378f45(C, a1);
+		T378f45(ac, C, a1);
 }
 } else {
-		T1296f41(C, a1);
+		T1296f41(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_result */
-void T242x8616T0(T0* C, T0* a1)
+void T242x8624T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f891(C, a1);
+		T72f899(ac, C, a1);
 } else {
-		T77f322(C, a1);
+		T77f322(ac, C, a1);
 }
 } else {
-		T361f170(C, a1);
+		T361f170(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f53(C, a1);
+		T374f53(ac, C, a1);
 } else {
-		T378f48(C, a1);
+		T378f48(ac, C, a1);
 }
 } else {
-		T1296f42(C, a1);
+		T1296f42(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_qualified_call_expression */
-void T242x8605T0(T0* C, T0* a1)
+void T242x8613T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f890(C, a1);
+		T72f898(ac, C, a1);
 } else {
-		T77f338(C, a1);
+		T77f338(ac, C, a1);
 }
 } else {
-		T361f173(C, a1);
+		T361f173(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f56(C, a1);
+		T374f56(ac, C, a1);
 } else {
-		T378f51(C, a1);
+		T378f51(ac, C, a1);
 }
 } else {
-		T1296f58(C, a1);
+		T1296f58(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_current */
-void T242x8496T0(T0* C, T0* a1)
+void T242x8504T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f889(C, a1);
+		T72f897(ac, C, a1);
 } else {
-		T77f320(C, a1);
+		T77f320(ac, C, a1);
 }
 } else {
-		T361f168(C, a1);
+		T361f168(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f51(C, a1);
+		T374f51(ac, C, a1);
 } else {
-		T378f46(C, a1);
+		T378f46(ac, C, a1);
 }
 } else {
-		T1296f40(C, a1);
+		T1296f40(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_identifier */
-void T242x8540T0(T0* C, T0* a1)
+void T242x8548T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=361) {
 if (t1<=77) {
 if (t1==72) {
-		T72f888(C, a1);
+		T72f896(ac, C, a1);
 } else {
-		T77f234(C, a1);
+		T77f234(ac, C, a1);
 }
 } else {
-		T361f169(C, a1);
+		T361f169(ac, C, a1);
 }
 } else {
 if (t1<=378) {
 if (t1==374) {
-		T374f52(C, a1);
+		T374f52(ac, C, a1);
 } else {
-		T378f47(C, a1);
+		T378f47(ac, C, a1);
 }
 } else {
-		T1296f24(C, a1);
+		T1296f24(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AST_PROCESSOR.process_class */
-void T242x8475T0(T0* C, T0* a1)
+void T242x8483T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 364:
-		T364f20(C, a1);
+		T364f20(ac, C, a1);
 		break;
 	case 421:
-		T421f2(C, a1);
+		T421f2(ac, C, a1);
 		break;
 	case 428:
-		T428f18(C, a1);
+		T428f18(ac, C, a1);
 		break;
 	case 431:
-		T431f950(C, a1);
+		T431f950(ac, C, a1);
 		break;
 	case 432:
-		T432f7(C, a1);
+		T432f7(ac, C, a1);
 		break;
 	case 433:
-		T433f12(C, a1);
+		T433f12(ac, C, a1);
 		break;
 	case 434:
-		T434f28(C, a1);
+		T434f28(ac, C, a1);
 		break;
 	case 435:
-		T435f15(C, a1);
+		T435f15(ac, C, a1);
 		break;
 	case 1278:
-		T1278f13(C, a1);
+		T1278f13(ac, C, a1);
 		break;
 	case 1279:
-		T1279f16(C, a1);
+		T1279f16(ac, C, a1);
 		break;
 	case 1290:
-		T1290f9(C, a1);
+		T1290f9(ac, C, a1);
 		break;
 	case 1291:
-		T1291f10(C, a1);
+		T1291f10(ac, C, a1);
 		break;
 	case 1292:
-		T1292f14(C, a1);
+		T1292f14(ac, C, a1);
 		break;
 	case 1293:
-		T1293f13(C, a1);
+		T1293f13(ac, C, a1);
 		break;
 	case 1294:
-		T1294f11(C, a1);
+		T1294f11(ac, C, a1);
 		break;
 	case 1299:
-		T1299f14(C, a1);
+		T1299f14(ac, C, a1);
 		break;
 	case 1300:
-		T1300f11(C, a1);
+		T1300f11(ac, C, a1);
 		break;
 	case 1321:
-		T1321f6(C, a1);
+		T1321f6(ac, C, a1);
 		break;
 	case 1322:
-		T1322f4(C, a1);
+		T1322f4(ac, C, a1);
 		break;
 	case 1323:
-		T1323f7(C, a1);
+		T1323f7(ac, C, a1);
 		break;
 	case 1324:
-		T1324f6(C, a1);
+		T1324f6(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_TYPE.reset */
-void T243x7004(T0* C)
+void T243x7004(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-		T78f114(C);
+		T78f114(ac, C);
 } else {
-		T80f267(C);
+		T80f267(ac, C);
 }
 } else {
 if (t1==246) {
-		T246f113(C);
+		T246f113(ac, C);
 } else {
-		T254f112(C);
+		T254f112(ac, C);
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-		T495f78(C);
+		T495f78(ac, C);
 } else {
-		T858f75(C);
+		T858f75(ac, C);
 }
 } else {
-		T1081f85(C);
+		T1081f85(ac, C);
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-		T1209f88(C);
+		T1209f88(ac, C);
 } else {
-		T1213f115(C);
+		T1213f115(ac, C);
 }
 } else {
 if (t1==1214) {
-		T1214f116(C);
+		T1214f116(ac, C);
 } else {
-		T1238f84(C);
+		T1238f84(ac, C);
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-		T1239f83(C);
+		T1239f83(ac, C);
 } else {
-		T1240f77(C);
+		T1240f77(ac, C);
 }
 } else {
-		T1417f73(C);
+		T1417f73(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_TYPE.reset_qualified_anchored_types */
-void T243x7005(T0* C)
+void T243x7005(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-		T78f115(C);
+		T78f115(ac, C);
 } else {
-		T80f268(C);
+		T80f268(ac, C);
 }
 } else {
 if (t1==246) {
-		T246f114(C);
+		T246f114(ac, C);
 } else {
-		T254f113(C);
+		T254f113(ac, C);
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-		T495f79(C);
+		T495f79(ac, C);
 } else {
-		T858f76(C);
+		T858f76(ac, C);
 }
 } else {
-		T1081f86(C);
+		T1081f86(ac, C);
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-		T1209f89(C);
+		T1209f89(ac, C);
 } else {
-		T1213f116(C);
+		T1213f116(ac, C);
 }
 } else {
 if (t1==1214) {
-		T1214f117(C);
+		T1214f117(ac, C);
 } else {
-		T1238f85(C);
+		T1238f85(ac, C);
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-		T1239f84(C);
+		T1239f84(ac, C);
 } else {
-		T1240f78(C);
+		T1240f78(ac, C);
 }
 } else {
-		T1417f74(C);
+		T1417f74(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_TYPE.process */
-void T243x7094T0(T0* C, T0* a1)
+void T243x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-		T78f113(C, a1);
+		T78f113(ac, C, a1);
 } else {
-		T80f218(C, a1);
+		T80f218(ac, C, a1);
 }
 } else {
 if (t1==246) {
-		T246f112(C, a1);
+		T246f112(ac, C, a1);
 } else {
-		T254f111(C, a1);
+		T254f111(ac, C, a1);
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-		T495f77(C, a1);
+		T495f77(ac, C, a1);
 } else {
-		T858f74(C, a1);
+		T858f74(ac, C, a1);
 }
 } else {
-		T1081f84(C, a1);
+		T1081f84(ac, C, a1);
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-		T1209f87(C, a1);
+		T1209f87(ac, C, a1);
 } else {
-		T1213f114(C, a1);
+		T1213f114(ac, C, a1);
 }
 } else {
 if (t1==1214) {
-		T1214f115(C, a1);
+		T1214f115(ac, C, a1);
 } else {
-		T1238f83(C, a1);
+		T1238f83(ac, C, a1);
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-		T1239f82(C, a1);
+		T1239f82(ac, C, a1);
 } else {
-		T1240f80(C, a1);
+		T1240f80(ac, C, a1);
 }
 } else {
-		T1417f75(C, a1);
+		T1417f75(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_TYPE.append_to_string */
-void T243x7080T0(T0* C, T0* a1)
+void T243x7080T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-		T78f112(C, a1);
+		T78f112(ac, C, a1);
 } else {
-		T80f227(C, a1);
+		T80f227(ac, C, a1);
 }
 } else {
 if (t1==246) {
-		T246f111(C, a1);
+		T246f111(ac, C, a1);
 } else {
-		T254f110(C, a1);
+		T254f110(ac, C, a1);
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-		T495f75(C, a1);
+		T495f75(ac, C, a1);
 } else {
-		T858f73(C, a1);
+		T858f73(ac, C, a1);
 }
 } else {
-		T1081f83(C, a1);
+		T1081f83(ac, C, a1);
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-		T1209f86(C, a1);
+		T1209f86(ac, C, a1);
 } else {
-		T1213f113(C, a1);
+		T1213f113(ac, C, a1);
 }
 } else {
 if (t1==1214) {
-		T1214f114(C, a1);
+		T1214f114(ac, C, a1);
 } else {
-		T1238f82(C, a1);
+		T1238f82(ac, C, a1);
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-		T1239f81(C, a1);
+		T1239f81(ac, C, a1);
 } else {
-		T1240f76(C, a1);
+		T1240f76(ac, C, a1);
 }
 } else {
-		T1417f72(C, a1);
+		T1417f72(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_TYPE.append_unaliased_to_string */
-void T243x7082T0(T0* C, T0* a1)
+void T243x7082T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1081) {
 if (t1<=254) {
 if (t1<=80) {
 if (t1==78) {
-		T78f111(C, a1);
+		T78f111(ac, C, a1);
 } else {
-		T80f220(C, a1);
+		T80f220(ac, C, a1);
 }
 } else {
 if (t1==246) {
-		T246f110(C, a1);
+		T246f110(ac, C, a1);
 } else {
-		T254f109(C, a1);
+		T254f109(ac, C, a1);
 }
 }
 } else {
 if (t1<=858) {
 if (t1==495) {
-		T495f74(C, a1);
+		T495f74(ac, C, a1);
 } else {
-		T858f72(C, a1);
+		T858f72(ac, C, a1);
 }
 } else {
-		T1081f82(C, a1);
+		T1081f82(ac, C, a1);
 }
 }
 } else {
 if (t1<=1238) {
 if (t1<=1213) {
 if (t1==1209) {
-		T1209f85(C, a1);
+		T1209f85(ac, C, a1);
 } else {
-		T1213f112(C, a1);
+		T1213f112(ac, C, a1);
 }
 } else {
 if (t1==1214) {
-		T1214f113(C, a1);
+		T1214f113(ac, C, a1);
 } else {
-		T1238f81(C, a1);
+		T1238f81(ac, C, a1);
 }
 }
 } else {
 if (t1<=1240) {
 if (t1==1239) {
-		T1239f80(C, a1);
+		T1239f80(ac, C, a1);
 } else {
-		T1240f79(C, a1);
+		T1240f79(ac, C, a1);
 }
 } else {
-		T1417f76(C, a1);
+		T1417f76(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.universes_do_if */
-void T247x3440T0T0(T0* C, T0* a1, T0* a2)
+void T247x3440T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f244(C, a1, a2);
+		T31f244(ac, C, a1, a2);
 } else {
-		T59f325(C, a1, a2);
+		T59f326(ac, C, a1, a2);
 }
 } else {
-		T62f329(C, a1, a2);
+		T62f330(ac, C, a1, a2);
 }
 } else {
 if (t1==68) {
-		T68f316(C, a1, a2);
+		T68f317(ac, C, a1, a2);
 } else {
-		T183f197(C, a1, a2);
+		T183f197(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f172(C, a1, a2);
+		T192f172(ac, C, a1, a2);
 } else {
-		T210f183(C, a1, a2);
+		T210f183(ac, C, a1, a2);
 }
 } else {
-		T223f197(C, a1, a2);
+		T223f197(ac, C, a1, a2);
 }
 } else {
 if (t1==439) {
-		T439f172(C, a1, a2);
+		T439f172(ac, C, a1, a2);
 } else {
-		T451f173(C, a1, a2);
+		T451f173(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.universes_do_all */
-void T247x3439T0(T0* C, T0* a1)
+void T247x3439T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f223(C, a1);
+		T31f223(ac, C, a1);
 } else {
-		T59f315(C, a1);
+		T59f316(ac, C, a1);
 }
 } else {
-		T62f330(C, a1);
+		T62f331(ac, C, a1);
 }
 } else {
 if (t1==68) {
-		T68f294(C, a1);
+		T68f295(ac, C, a1);
 } else {
-		T183f201(C, a1);
+		T183f201(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_UNIVERSE.master_classes_do_if_until */
-void T247x3434T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T247x3434T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f234(C, a1, a2, a3);
+		T31f234(ac, C, a1, a2, a3);
 } else {
-		T59f311(C, a1, a2, a3);
+		T59f312(ac, C, a1, a2, a3);
 }
 } else {
-		T62f307(C, a1, a2, a3);
+		T62f308(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==68) {
-		T68f303(C, a1, a2, a3);
+		T68f304(ac, C, a1, a2, a3);
 } else {
-		T183f196(C, a1, a2, a3);
+		T183f196(ac, C, a1, a2, a3);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f171(C, a1, a2, a3);
+		T192f171(ac, C, a1, a2, a3);
 } else {
-		T210f179(C, a1, a2, a3);
+		T210f179(ac, C, a1, a2, a3);
 }
 } else {
-		T223f193(C, a1, a2, a3);
+		T223f193(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==439) {
-		T439f171(C, a1, a2, a3);
+		T439f171(ac, C, a1, a2, a3);
 } else {
-		T451f172(C, a1, a2, a3);
+		T451f172(ac, C, a1, a2, a3);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.master_classes_do_if */
-void T247x3433T0T0(T0* C, T0* a1, T0* a2)
+void T247x3433T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f233(C, a1, a2);
+		T31f233(ac, C, a1, a2);
 } else {
-		T59f310(C, a1, a2);
+		T59f311(ac, C, a1, a2);
 }
 } else {
-		T62f306(C, a1, a2);
+		T62f307(ac, C, a1, a2);
 }
 } else {
 if (t1==68) {
-		T68f302(C, a1, a2);
+		T68f303(ac, C, a1, a2);
 } else {
-		T183f195(C, a1, a2);
+		T183f195(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f170(C, a1, a2);
+		T192f170(ac, C, a1, a2);
 } else {
-		T210f178(C, a1, a2);
+		T210f178(ac, C, a1, a2);
 }
 } else {
-		T223f192(C, a1, a2);
+		T223f192(ac, C, a1, a2);
 }
 } else {
 if (t1==439) {
-		T439f170(C, a1, a2);
+		T439f170(ac, C, a1, a2);
 } else {
-		T451f171(C, a1, a2);
+		T451f171(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.classes_do_if */
-void T247x3425T0T0(T0* C, T0* a1, T0* a2)
+void T247x3425T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f230(C, a1, a2);
+		T31f230(ac, C, a1, a2);
 } else {
-		T59f307(C, a1, a2);
+		T59f308(ac, C, a1, a2);
 }
 } else {
-		T62f303(C, a1, a2);
+		T62f304(ac, C, a1, a2);
 }
 } else {
 if (t1==68) {
-		T68f299(C, a1, a2);
+		T68f300(ac, C, a1, a2);
 } else {
-		T183f191(C, a1, a2);
+		T183f191(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f166(C, a1, a2);
+		T192f166(ac, C, a1, a2);
 } else {
-		T210f174(C, a1, a2);
+		T210f174(ac, C, a1, a2);
 }
 } else {
-		T223f188(C, a1, a2);
+		T223f188(ac, C, a1, a2);
 }
 } else {
 if (t1==439) {
-		T439f166(C, a1, a2);
+		T439f166(ac, C, a1, a2);
 } else {
-		T451f167(C, a1, a2);
+		T451f167(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.master_classes_do_all */
-void T247x3431T0(T0* C, T0* a1)
+void T247x3431T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f226(C, a1);
+		T31f226(ac, C, a1);
 } else {
-		T59f297(C, a1);
+		T59f298(ac, C, a1);
 }
 } else {
-		T62f239(C, a1);
+		T62f240(ac, C, a1);
 }
 } else {
 if (t1==68) {
-		T68f288(C, a1);
+		T68f289(ac, C, a1);
 } else {
-		T183f193(C, a1);
+		T183f193(ac, C, a1);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f168(C, a1);
+		T192f168(ac, C, a1);
 } else {
-		T210f176(C, a1);
+		T210f176(ac, C, a1);
 }
 } else {
-		T223f190(C, a1);
+		T223f190(ac, C, a1);
 }
 } else {
 if (t1==439) {
-		T439f168(C, a1);
+		T439f168(ac, C, a1);
 } else {
-		T451f169(C, a1);
+		T451f169(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.master_classes_do_until */
-void T247x3432T0T0(T0* C, T0* a1, T0* a2)
+void T247x3432T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f232(C, a1, a2);
+		T31f232(ac, C, a1, a2);
 } else {
-		T59f309(C, a1, a2);
+		T59f310(ac, C, a1, a2);
 }
 } else {
-		T62f305(C, a1, a2);
+		T62f306(ac, C, a1, a2);
 }
 } else {
 if (t1==68) {
-		T68f301(C, a1, a2);
+		T68f302(ac, C, a1, a2);
 } else {
-		T183f194(C, a1, a2);
+		T183f194(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f169(C, a1, a2);
+		T192f169(ac, C, a1, a2);
 } else {
-		T210f177(C, a1, a2);
+		T210f177(ac, C, a1, a2);
 }
 } else {
-		T223f191(C, a1, a2);
+		T223f191(ac, C, a1, a2);
 }
 } else {
 if (t1==439) {
-		T439f169(C, a1, a2);
+		T439f169(ac, C, a1, a2);
 } else {
-		T451f170(C, a1, a2);
+		T451f170(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.classes_do_if_until */
-void T247x3426T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T247x3426T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f231(C, a1, a2, a3);
+		T31f231(ac, C, a1, a2, a3);
 } else {
-		T59f308(C, a1, a2, a3);
+		T59f309(ac, C, a1, a2, a3);
 }
 } else {
-		T62f304(C, a1, a2, a3);
+		T62f305(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==68) {
-		T68f300(C, a1, a2, a3);
+		T68f301(ac, C, a1, a2, a3);
 } else {
-		T183f192(C, a1, a2, a3);
+		T183f192(ac, C, a1, a2, a3);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f167(C, a1, a2, a3);
+		T192f167(ac, C, a1, a2, a3);
 } else {
-		T210f175(C, a1, a2, a3);
+		T210f175(ac, C, a1, a2, a3);
 }
 } else {
-		T223f189(C, a1, a2, a3);
+		T223f189(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==439) {
-		T439f167(C, a1, a2, a3);
+		T439f167(ac, C, a1, a2, a3);
 } else {
-		T451f168(C, a1, a2, a3);
+		T451f168(ac, C, a1, a2, a3);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.classes_do_until */
-void T247x3424T0T0(T0* C, T0* a1, T0* a2)
+void T247x3424T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f229(C, a1, a2);
+		T31f229(ac, C, a1, a2);
 } else {
-		T59f306(C, a1, a2);
+		T59f307(ac, C, a1, a2);
 }
 } else {
-		T62f302(C, a1, a2);
+		T62f303(ac, C, a1, a2);
 }
 } else {
 if (t1==68) {
-		T68f298(C, a1, a2);
+		T68f299(ac, C, a1, a2);
 } else {
-		T183f190(C, a1, a2);
+		T183f190(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f165(C, a1, a2);
+		T192f165(ac, C, a1, a2);
 } else {
-		T210f173(C, a1, a2);
+		T210f173(ac, C, a1, a2);
 }
 } else {
-		T223f187(C, a1, a2);
+		T223f187(ac, C, a1, a2);
 }
 } else {
 if (t1==439) {
-		T439f165(C, a1, a2);
+		T439f165(ac, C, a1, a2);
 } else {
-		T451f166(C, a1, a2);
+		T451f166(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_UNIVERSE.classes_do_all */
-void T247x3423T0(T0* C, T0* a1)
+void T247x3423T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=183) {
 if (t1<=62) {
 if (t1<=59) {
 if (t1==31) {
-		T31f228(C, a1);
+		T31f228(ac, C, a1);
 } else {
-		T59f305(C, a1);
+		T59f306(ac, C, a1);
 }
 } else {
-		T62f301(C, a1);
+		T62f302(ac, C, a1);
 }
 } else {
 if (t1==68) {
-		T68f297(C, a1);
+		T68f298(ac, C, a1);
 } else {
-		T183f189(C, a1);
+		T183f189(ac, C, a1);
 }
 }
 } else {
 if (t1<=223) {
 if (t1<=210) {
 if (t1==192) {
-		T192f164(C, a1);
+		T192f164(ac, C, a1);
 } else {
-		T210f172(C, a1);
+		T210f172(ac, C, a1);
 }
 } else {
-		T223f186(C, a1);
+		T223f186(ac, C, a1);
 }
 } else {
 if (t1==439) {
-		T439f164(C, a1);
+		T439f164(ac, C, a1);
 } else {
-		T451f165(C, a1);
+		T451f165(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.put_target */
-void T252x16158T0T0(T0* C, T0* a1, T0* a2)
+void T252x16166T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-		T232f79(C, a1, a2);
+		T232f79(ac, C, a1, a2);
 } else {
-		T263f22(C, a1, a2);
+		T263f22(ac, C, a1, a2);
 }
 } else {
 if (t1==295) {
-		T295f82(C, a1, a2);
+		T295f82(ac, C, a1, a2);
 } else {
-		T312f82(C, a1, a2);
+		T312f82(ac, C, a1, a2);
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-		T323f83(C, a1, a2);
+		T323f83(ac, C, a1, a2);
 } else {
-		T324f83(C, a1, a2);
+		T324f83(ac, C, a1, a2);
 }
 } else {
 if (t1==522) {
-		T522f20(C, a1, a2);
+		T522f20(ac, C, a1, a2);
 } else {
-		T821f17(C, a1, a2);
+		T821f17(ac, C, a1, a2);
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.set_never_void */
-void T252x16155(T0* C)
+void T252x16163(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=263) {
 if (t1==232) {
-		T232f76(C);
+		T232f76(ac, C);
 } else {
-		T263f15(C);
+		T263f15(ac, C);
 }
 } else {
 if (t1==295) {
-		T295f78(C);
+		T295f78(ac, C);
 } else {
-		T312f78(C);
+		T312f78(ac, C);
 }
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-		T323f79(C);
+		T323f79(ac, C);
 } else {
-		T324f79(C);
+		T324f79(ac, C);
 }
 } else {
 if (t1==522) {
-		T522f16(C);
+		T522f16(ac, C);
 } else {
-		T821f16(C);
+		T821f16(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.propagate_can_be_void */
-void T252x16164T0(T0* C, T0* a1)
+void T252x16172T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1==232) {
-		T232f81(C, a1);
+		T232f81(ac, C, a1);
 } else {
-		T295f84(C, a1);
+		T295f84(ac, C, a1);
 }
 } else {
-		T312f84(C, a1);
+		T312f84(ac, C, a1);
 }
 } else {
 if (t1<=324) {
 if (t1==323) {
-		T323f85(C, a1);
+		T323f85(ac, C, a1);
 } else {
-		T324f85(C, a1);
+		T324f85(ac, C, a1);
 }
 } else {
-		T522f18(C, a1);
+		T522f18(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_EXPRESSION.process */
-void T274x7094T0(T0* C, T0* a1)
+void T274x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f112(C, a1);
+		T176f112(ac, C, a1);
 		break;
 	case 275:
-		T275f31(C, a1);
+		T275f31(ac, C, a1);
 		break;
 	case 280:
-		T280f27(C, a1);
+		T280f27(ac, C, a1);
 		break;
 	case 281:
-		T281f22(C, a1);
+		T281f22(ac, C, a1);
 		break;
 	case 283:
-		T283f31(C, a1);
+		T283f31(ac, C, a1);
 		break;
 	case 302:
-		T302f30(C, a1);
+		T302f30(ac, C, a1);
 		break;
 	case 309:
-		T309f23(C, a1);
+		T309f23(ac, C, a1);
 		break;
 	case 310:
-		T310f22(C, a1);
+		T310f22(ac, C, a1);
 		break;
 	case 311:
-		T311f20(C, a1);
+		T311f20(ac, C, a1);
 		break;
 	case 315:
-		T315f27(C, a1);
+		T315f27(ac, C, a1);
 		break;
 	case 738:
-		T738f25(C, a1);
+		T738f25(ac, C, a1);
 		break;
 	case 822:
-		T822f37(C, a1);
+		T822f37(ac, C, a1);
 		break;
 	case 905:
-		T905f32(C, a1);
+		T905f32(ac, C, a1);
 		break;
 	case 941:
-		T941f29(C, a1);
+		T941f29(ac, C, a1);
 		break;
 	case 952:
-		T952f32(C, a1);
+		T952f32(ac, C, a1);
 		break;
 	case 980:
-		T980f24(C, a1);
+		T980f24(ac, C, a1);
 		break;
 	case 983:
-		T983f29(C, a1);
+		T983f29(ac, C, a1);
 		break;
 	case 1131:
-		T1131f26(C, a1);
+		T1131f26(ac, C, a1);
 		break;
 	case 1145:
-		T1145f21(C, a1);
+		T1145f21(ac, C, a1);
 		break;
 	case 1164:
-		T1164f28(C, a1);
+		T1164f28(ac, C, a1);
 		break;
 	case 1167:
-		T1167f27(C, a1);
+		T1167f27(ac, C, a1);
 		break;
 	case 1190:
-		T1190f39(C, a1);
+		T1190f39(ac, C, a1);
 		break;
 	case 1191:
-		T1191f41(C, a1);
+		T1191f41(ac, C, a1);
 		break;
 	case 1192:
-		T1192f37(C, a1);
+		T1192f37(ac, C, a1);
 		break;
 	case 1193:
-		T1193f67(C, a1);
+		T1193f67(ac, C, a1);
 		break;
 	case 1194:
-		T1194f67(C, a1);
+		T1194f67(ac, C, a1);
 		break;
 	case 1195:
-		T1195f67(C, a1);
+		T1195f67(ac, C, a1);
 		break;
 	case 1196:
-		T1196f67(C, a1);
+		T1196f67(ac, C, a1);
 		break;
 	case 1197:
-		T1197f67(C, a1);
+		T1197f67(ac, C, a1);
 		break;
 	case 1198:
-		T1198f36(C, a1);
+		T1198f36(ac, C, a1);
 		break;
 	case 1199:
-		T1199f36(C, a1);
+		T1199f36(ac, C, a1);
 		break;
 	case 1201:
-		T1201f34(C, a1);
+		T1201f34(ac, C, a1);
 		break;
 	case 1202:
-		T1202f34(C, a1);
+		T1202f34(ac, C, a1);
 		break;
 	case 1203:
-		T1203f38(C, a1);
+		T1203f38(ac, C, a1);
 		break;
 	case 1204:
-		T1204f38(C, a1);
+		T1204f38(ac, C, a1);
 		break;
 	case 1252:
-		T1252f24(C, a1);
+		T1252f24(ac, C, a1);
 		break;
 	case 1253:
-		T1253f20(C, a1);
+		T1253f20(ac, C, a1);
 		break;
 	case 1254:
-		T1254f20(C, a1);
+		T1254f20(ac, C, a1);
 		break;
 	case 1255:
-		T1255f20(C, a1);
+		T1255f20(ac, C, a1);
 		break;
 	case 1256:
-		T1256f20(C, a1);
+		T1256f20(ac, C, a1);
 		break;
 	case 1257:
-		T1257f23(C, a1);
+		T1257f23(ac, C, a1);
 		break;
 	case 1260:
-		T1260f21(C, a1);
+		T1260f21(ac, C, a1);
 		break;
 	case 1261:
-		T1261f25(C, a1);
+		T1261f25(ac, C, a1);
 		break;
 	case 1262:
-		T1262f20(C, a1);
+		T1262f20(ac, C, a1);
 		break;
 	case 1263:
-		T1263f28(C, a1);
+		T1263f28(ac, C, a1);
 		break;
 	case 1264:
-		T1264f23(C, a1);
+		T1264f23(ac, C, a1);
 		break;
 	case 1265:
-		T1265f39(C, a1);
+		T1265f39(ac, C, a1);
 		break;
 	case 1266:
-		T1266f40(C, a1);
+		T1266f40(ac, C, a1);
 		break;
 	case 1267:
-		T1267f38(C, a1);
+		T1267f38(ac, C, a1);
 		break;
 	case 1268:
-		T1268f38(C, a1);
+		T1268f38(ac, C, a1);
 		break;
 	case 1269:
-		T1269f39(C, a1);
+		T1269f39(ac, C, a1);
 		break;
 	case 1270:
-		T1270f37(C, a1);
+		T1270f37(ac, C, a1);
 		break;
 	case 1713:
-		T1713f18(C, a1);
+		T1713f18(ac, C, a1);
 		break;
 	case 1852:
-		T1852f18(C, a1);
+		T1852f18(ac, C, a1);
 		break;
 	case 1853:
-		T1853f22(C, a1);
+		T1853f22(ac, C, a1);
 		break;
 	case 1854:
-		T1854f23(C, a1);
+		T1854f23(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_EXPRESSION.reset */
-void T274x15169(T0* C)
+void T274x15177(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f122(C);
+		T176f122(ac, C);
 		break;
 	case 275:
-		T275f36(C);
+		T275f36(ac, C);
 		break;
 	case 280:
-		T280f31(C);
+		T280f31(ac, C);
 		break;
 	case 281:
-		T281f24(C);
+		T281f24(ac, C);
 		break;
 	case 283:
-		T283f33(C);
+		T283f33(ac, C);
 		break;
 	case 302:
-		T302f35(C);
+		T302f35(ac, C);
 		break;
 	case 309:
-		T309f26(C);
+		T309f26(ac, C);
 		break;
 	case 310:
-		T310f24(C);
+		T310f24(ac, C);
 		break;
 	case 311:
-		T311f22(C);
+		T311f22(ac, C);
 		break;
 	case 315:
-		T315f29(C);
+		T315f29(ac, C);
 		break;
 	case 738:
-		T738f29(C);
+		T738f29(ac, C);
 		break;
 	case 822:
-		T822f41(C);
+		T822f41(ac, C);
 		break;
 	case 905:
-		T905f36(C);
+		T905f36(ac, C);
 		break;
 	case 941:
-		T941f34(C);
+		T941f34(ac, C);
 		break;
 	case 952:
-		T952f42(C);
+		T952f42(ac, C);
 		break;
 	case 980:
-		T980f26(C);
+		T980f26(ac, C);
 		break;
 	case 983:
-		T983f33(C);
+		T983f33(ac, C);
 		break;
 	case 1131:
-		T1131f30(C);
+		T1131f30(ac, C);
 		break;
 	case 1145:
-		T1145f24(C);
+		T1145f24(ac, C);
 		break;
 	case 1164:
-		T1164f32(C);
+		T1164f32(ac, C);
 		break;
 	case 1167:
-		T1167f31(C);
+		T1167f31(ac, C);
 		break;
 	case 1190:
-		T1190f44(C);
+		T1190f44(ac, C);
 		break;
 	case 1191:
-		T1191f46(C);
+		T1191f46(ac, C);
 		break;
 	case 1192:
-		T1192f42(C);
+		T1192f42(ac, C);
 		break;
 	case 1193:
-		T1193f75(C);
+		T1193f75(ac, C);
 		break;
 	case 1194:
-		T1194f75(C);
+		T1194f75(ac, C);
 		break;
 	case 1195:
-		T1195f75(C);
+		T1195f75(ac, C);
 		break;
 	case 1196:
-		T1196f75(C);
+		T1196f75(ac, C);
 		break;
 	case 1197:
-		T1197f75(C);
+		T1197f75(ac, C);
 		break;
 	case 1198:
-		T1198f43(C);
+		T1198f43(ac, C);
 		break;
 	case 1199:
-		T1199f43(C);
+		T1199f43(ac, C);
 		break;
 	case 1201:
-		T1201f39(C);
+		T1201f39(ac, C);
 		break;
 	case 1202:
-		T1202f39(C);
+		T1202f39(ac, C);
 		break;
 	case 1203:
-		T1203f43(C);
+		T1203f43(ac, C);
 		break;
 	case 1204:
-		T1204f43(C);
+		T1204f43(ac, C);
 		break;
 	case 1252:
-		T1252f28(C);
+		T1252f28(ac, C);
 		break;
 	case 1253:
-		T1253f23(C);
+		T1253f23(ac, C);
 		break;
 	case 1254:
-		T1254f23(C);
+		T1254f23(ac, C);
 		break;
 	case 1255:
-		T1255f23(C);
+		T1255f23(ac, C);
 		break;
 	case 1256:
-		T1256f23(C);
+		T1256f23(ac, C);
 		break;
 	case 1257:
-		T1257f25(C);
+		T1257f25(ac, C);
 		break;
 	case 1260:
-		T1260f23(C);
+		T1260f23(ac, C);
 		break;
 	case 1261:
-		T1261f27(C);
+		T1261f27(ac, C);
 		break;
 	case 1262:
-		T1262f23(C);
+		T1262f23(ac, C);
 		break;
 	case 1263:
-		T1263f31(C);
+		T1263f31(ac, C);
 		break;
 	case 1264:
-		T1264f27(C);
+		T1264f27(ac, C);
 		break;
 	case 1265:
-		T1265f49(C);
+		T1265f49(ac, C);
 		break;
 	case 1266:
-		T1266f51(C);
+		T1266f51(ac, C);
 		break;
 	case 1267:
-		T1267f47(C);
+		T1267f47(ac, C);
 		break;
 	case 1268:
-		T1268f48(C);
+		T1268f48(ac, C);
 		break;
 	case 1269:
-		T1269f50(C);
+		T1269f50(ac, C);
 		break;
 	case 1270:
-		T1270f46(C);
+		T1270f46(ac, C);
 		break;
 	case 1713:
-		T1713f19(C);
+		T1713f19(ac, C);
 		break;
 	case 1852:
-		T1852f19(C);
+		T1852f19(ac, C);
 		break;
 	case 1853:
-		T1853f23(C);
+		T1853f23(ac, C);
 		break;
 	case 1854:
-		T1854f24(C);
+		T1854f24(ac, C);
 		break;
 	}
 }
 
 /* Call to ET_EXPRESSION.set_index */
-void T274x15184T6(T0* C, T6 a1)
+void T274x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f109(C, a1);
+		T176f109(ac, C, a1);
 		break;
 	case 275:
-		T275f34(C, a1);
+		T275f34(ac, C, a1);
 		break;
 	case 280:
-		T280f26(C, a1);
+		T280f26(ac, C, a1);
 		break;
 	case 281:
-		T281f23(C, a1);
+		T281f23(ac, C, a1);
 		break;
 	case 283:
-		T283f29(C, a1);
+		T283f29(ac, C, a1);
 		break;
 	case 302:
-		T302f33(C, a1);
+		T302f33(ac, C, a1);
 		break;
 	case 309:
-		T309f24(C, a1);
+		T309f24(ac, C, a1);
 		break;
 	case 310:
-		T310f23(C, a1);
+		T310f23(ac, C, a1);
 		break;
 	case 311:
-		T311f21(C, a1);
+		T311f21(ac, C, a1);
 		break;
 	case 315:
-		T315f26(C, a1);
+		T315f26(ac, C, a1);
 		break;
 	case 738:
-		T738f26(C, a1);
+		T738f26(ac, C, a1);
 		break;
 	case 822:
-		T822f38(C, a1);
+		T822f38(ac, C, a1);
 		break;
 	case 905:
-		T905f33(C, a1);
+		T905f33(ac, C, a1);
 		break;
 	case 941:
-		T941f30(C, a1);
+		T941f30(ac, C, a1);
 		break;
 	case 952:
-		T952f33(C, a1);
+		T952f33(ac, C, a1);
 		break;
 	case 980:
-		T980f25(C, a1);
+		T980f25(ac, C, a1);
 		break;
 	case 983:
-		T983f30(C, a1);
+		T983f30(ac, C, a1);
 		break;
 	case 1131:
-		T1131f27(C, a1);
+		T1131f27(ac, C, a1);
 		break;
 	case 1145:
-		T1145f22(C, a1);
+		T1145f22(ac, C, a1);
 		break;
 	case 1164:
-		T1164f29(C, a1);
+		T1164f29(ac, C, a1);
 		break;
 	case 1167:
-		T1167f28(C, a1);
+		T1167f28(ac, C, a1);
 		break;
 	case 1190:
-		T1190f40(C, a1);
+		T1190f40(ac, C, a1);
 		break;
 	case 1191:
-		T1191f42(C, a1);
+		T1191f42(ac, C, a1);
 		break;
 	case 1192:
-		T1192f38(C, a1);
+		T1192f38(ac, C, a1);
 		break;
 	case 1193:
-		T1193f68(C, a1);
+		T1193f68(ac, C, a1);
 		break;
 	case 1194:
-		T1194f68(C, a1);
+		T1194f68(ac, C, a1);
 		break;
 	case 1195:
-		T1195f68(C, a1);
+		T1195f68(ac, C, a1);
 		break;
 	case 1196:
-		T1196f68(C, a1);
+		T1196f68(ac, C, a1);
 		break;
 	case 1197:
-		T1197f68(C, a1);
+		T1197f68(ac, C, a1);
 		break;
 	case 1198:
-		T1198f37(C, a1);
+		T1198f37(ac, C, a1);
 		break;
 	case 1199:
-		T1199f37(C, a1);
+		T1199f37(ac, C, a1);
 		break;
 	case 1201:
-		T1201f35(C, a1);
+		T1201f35(ac, C, a1);
 		break;
 	case 1202:
-		T1202f35(C, a1);
+		T1202f35(ac, C, a1);
 		break;
 	case 1203:
-		T1203f39(C, a1);
+		T1203f39(ac, C, a1);
 		break;
 	case 1204:
-		T1204f39(C, a1);
+		T1204f39(ac, C, a1);
 		break;
 	case 1252:
-		T1252f25(C, a1);
+		T1252f25(ac, C, a1);
 		break;
 	case 1253:
-		T1253f21(C, a1);
+		T1253f21(ac, C, a1);
 		break;
 	case 1254:
-		T1254f21(C, a1);
+		T1254f21(ac, C, a1);
 		break;
 	case 1255:
-		T1255f21(C, a1);
+		T1255f21(ac, C, a1);
 		break;
 	case 1256:
-		T1256f21(C, a1);
+		T1256f21(ac, C, a1);
 		break;
 	case 1257:
-		T1257f24(C, a1);
+		T1257f24(ac, C, a1);
 		break;
 	case 1260:
-		T1260f22(C, a1);
+		T1260f22(ac, C, a1);
 		break;
 	case 1261:
-		T1261f26(C, a1);
+		T1261f26(ac, C, a1);
 		break;
 	case 1262:
-		T1262f21(C, a1);
+		T1262f21(ac, C, a1);
 		break;
 	case 1263:
-		T1263f29(C, a1);
+		T1263f29(ac, C, a1);
 		break;
 	case 1264:
-		T1264f24(C, a1);
+		T1264f24(ac, C, a1);
 		break;
 	case 1265:
-		T1265f40(C, a1);
+		T1265f40(ac, C, a1);
 		break;
 	case 1266:
-		T1266f41(C, a1);
+		T1266f41(ac, C, a1);
 		break;
 	case 1267:
-		T1267f39(C, a1);
+		T1267f39(ac, C, a1);
 		break;
 	case 1268:
-		T1268f39(C, a1);
+		T1268f39(ac, C, a1);
 		break;
 	case 1269:
-		T1269f40(C, a1);
+		T1269f40(ac, C, a1);
 		break;
 	case 1270:
-		T1270f38(C, a1);
+		T1270f38(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_FEATURE.process */
-void T278x7094T0(T0* C, T0* a1)
+void T278x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f82(C, a1);
+		T253f82(ac, C, a1);
 } else {
-		T320f77(C, a1);
+		T320f77(ac, C, a1);
 }
 } else {
-		T353f76(C, a1);
+		T353f76(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f76(C, a1);
+		T355f76(ac, C, a1);
 } else {
-		T356f74(C, a1);
+		T356f74(ac, C, a1);
 }
 } else {
-		T514f73(C, a1);
+		T516f73(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f72(C, a1);
+		T523f72(ac, C, a1);
 } else {
-		T1223f78(C, a1);
+		T1223f78(ac, C, a1);
 }
 } else {
-		T1224f79(C, a1);
+		T1224f79(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f77(C, a1);
+		T1225f77(ac, C, a1);
 } else {
-		T1227f78(C, a1);
+		T1227f78(ac, C, a1);
 }
 } else {
-		T1228f81(C, a1);
+		T1228f81(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_other_seeds */
-void T278x17035T0(T0* C, T0* a1)
+void T278x17043T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f103(C, a1);
+		T253f103(ac, C, a1);
 } else {
-		T320f98(C, a1);
+		T320f98(ac, C, a1);
 }
 } else {
-		T353f91(C, a1);
+		T353f91(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f92(C, a1);
+		T355f92(ac, C, a1);
 } else {
-		T356f88(C, a1);
+		T356f88(ac, C, a1);
 }
 } else {
-		T514f100(C, a1);
+		T516f100(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f97(C, a1);
+		T523f97(ac, C, a1);
 } else {
-		T1223f102(C, a1);
+		T1223f102(ac, C, a1);
 }
 } else {
-		T1224f104(C, a1);
+		T1224f104(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f99(C, a1);
+		T1225f99(ac, C, a1);
 } else {
-		T1227f102(C, a1);
+		T1227f102(ac, C, a1);
 }
 } else {
-		T1228f103(C, a1);
+		T1228f103(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_first_seed */
-void T278x17034T6(T0* C, T6 a1)
+void T278x17042T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f102(C, a1);
+		T253f102(ac, C, a1);
 } else {
-		T320f97(C, a1);
+		T320f97(ac, C, a1);
 }
 } else {
-		T353f90(C, a1);
+		T353f90(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f91(C, a1);
+		T355f91(ac, C, a1);
 } else {
-		T356f87(C, a1);
+		T356f87(ac, C, a1);
 }
 } else {
-		T514f97(C, a1);
+		T516f97(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f94(C, a1);
+		T523f94(ac, C, a1);
 } else {
-		T1223f99(C, a1);
+		T1223f99(ac, C, a1);
 }
 } else {
-		T1224f101(C, a1);
+		T1224f101(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f96(C, a1);
+		T1225f96(ac, C, a1);
 } else {
-		T1227f99(C, a1);
+		T1227f99(ac, C, a1);
 }
 } else {
-		T1228f100(C, a1);
+		T1228f100(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_clients */
-void T278x17026T0(T0* C, T0* a1)
+void T278x17034T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f95(C, a1);
+		T253f95(ac, C, a1);
 } else {
-		T320f91(C, a1);
+		T320f91(ac, C, a1);
 }
 } else {
-		T353f84(C, a1);
+		T353f84(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f84(C, a1);
+		T355f84(ac, C, a1);
 } else {
-		T356f82(C, a1);
+		T356f82(ac, C, a1);
 }
 } else {
-		T514f91(C, a1);
+		T516f91(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f87(C, a1);
+		T523f87(ac, C, a1);
 } else {
-		T1223f93(C, a1);
+		T1223f93(ac, C, a1);
 }
 } else {
-		T1224f95(C, a1);
+		T1224f95(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f89(C, a1);
+		T1225f89(ac, C, a1);
 } else {
-		T1227f93(C, a1);
+		T1227f93(ac, C, a1);
 }
 } else {
-		T1228f93(C, a1);
+		T1228f93(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_version */
-void T278x17031T6(T0* C, T6 a1)
+void T278x17039T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f106(C, a1);
+		T253f106(ac, C, a1);
 } else {
-		T320f101(C, a1);
+		T320f101(ac, C, a1);
 }
 } else {
-		T353f94(C, a1);
+		T353f94(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f95(C, a1);
+		T355f95(ac, C, a1);
 } else {
-		T356f91(C, a1);
+		T356f91(ac, C, a1);
 }
 } else {
-		T514f98(C, a1);
+		T516f98(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f95(C, a1);
+		T523f95(ac, C, a1);
 } else {
-		T1223f100(C, a1);
+		T1223f100(ac, C, a1);
 }
 } else {
-		T1224f102(C, a1);
+		T1224f102(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f97(C, a1);
+		T1225f97(ac, C, a1);
 } else {
-		T1227f100(C, a1);
+		T1227f100(ac, C, a1);
 }
 } else {
-		T1228f101(C, a1);
+		T1228f101(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_other_precursors */
-void T278x17037T0(T0* C, T0* a1)
+void T278x17045T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f105(C, a1);
+		T253f105(ac, C, a1);
 } else {
-		T320f100(C, a1);
+		T320f100(ac, C, a1);
 }
 } else {
-		T353f93(C, a1);
+		T353f93(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f94(C, a1);
+		T355f94(ac, C, a1);
 } else {
-		T356f90(C, a1);
+		T356f90(ac, C, a1);
 }
 } else {
-		T514f102(C, a1);
+		T516f102(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f99(C, a1);
+		T523f99(ac, C, a1);
 } else {
-		T1223f104(C, a1);
+		T1223f104(ac, C, a1);
 }
 } else {
-		T1224f106(C, a1);
+		T1224f106(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f101(C, a1);
+		T1225f101(ac, C, a1);
 } else {
-		T1227f104(C, a1);
+		T1227f104(ac, C, a1);
 }
 } else {
-		T1228f105(C, a1);
+		T1228f105(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_first_precursor */
-void T278x17036T0(T0* C, T0* a1)
+void T278x17044T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f104(C, a1);
+		T253f104(ac, C, a1);
 } else {
-		T320f99(C, a1);
+		T320f99(ac, C, a1);
 }
 } else {
-		T353f92(C, a1);
+		T353f92(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f93(C, a1);
+		T355f93(ac, C, a1);
 } else {
-		T356f89(C, a1);
+		T356f89(ac, C, a1);
 }
 } else {
-		T514f101(C, a1);
+		T516f101(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f98(C, a1);
+		T523f98(ac, C, a1);
 } else {
-		T1223f103(C, a1);
+		T1223f103(ac, C, a1);
 }
 } else {
-		T1224f105(C, a1);
+		T1224f105(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f100(C, a1);
+		T1225f100(ac, C, a1);
 } else {
-		T1227f103(C, a1);
+		T1227f103(ac, C, a1);
 }
 } else {
-		T1228f104(C, a1);
+		T1228f104(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.reset_postconditions */
-void T278x17042(T0* C)
+void T278x17050(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f109(C);
+		T253f109(ac, C);
 } else {
-		T320f104(C);
+		T320f104(ac, C);
 }
 } else {
-		T353f97(C);
+		T353f97(ac, C);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f98(C);
+		T355f98(ac, C);
 } else {
-		T356f94(C);
+		T356f94(ac, C);
 }
 } else {
-		T514f104(C);
+		T516f104(ac, C);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f101(C);
+		T523f101(ac, C);
 } else {
-		T1223f106(C);
+		T1223f106(ac, C);
 }
 } else {
-		T1224f108(C);
+		T1224f108(ac, C);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f103(C);
+		T1225f103(ac, C);
 } else {
-		T1227f106(C);
+		T1227f106(ac, C);
 }
 } else {
-		T1228f107(C);
+		T1228f107(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.reset_preconditions */
-void T278x17041(T0* C)
+void T278x17049(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f108(C);
+		T253f108(ac, C);
 } else {
-		T320f103(C);
+		T320f103(ac, C);
 }
 } else {
-		T353f96(C);
+		T353f96(ac, C);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f97(C);
+		T355f97(ac, C);
 } else {
-		T356f93(C);
+		T356f93(ac, C);
 }
 } else {
-		T514f103(C);
+		T516f103(ac, C);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f100(C);
+		T523f100(ac, C);
 } else {
-		T1223f105(C);
+		T1223f105(ac, C);
 }
 } else {
-		T1224f107(C);
+		T1224f107(ac, C);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f102(C);
+		T1225f102(ac, C);
 } else {
-		T1227f105(C);
+		T1227f105(ac, C);
 }
 } else {
-		T1228f106(C);
+		T1228f106(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_implementation_class */
-void T278x17032T0(T0* C, T0* a1)
+void T278x17040T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f111(C, a1);
+		T253f111(ac, C, a1);
 } else {
-		T320f106(C, a1);
+		T320f106(ac, C, a1);
 }
 } else {
-		T353f99(C, a1);
+		T353f99(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f100(C, a1);
+		T355f100(ac, C, a1);
 } else {
-		T356f96(C, a1);
+		T356f96(ac, C, a1);
 }
 } else {
-		T514f106(C, a1);
+		T516f106(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f103(C, a1);
+		T523f103(ac, C, a1);
 } else {
-		T1223f108(C, a1);
+		T1223f108(ac, C, a1);
 }
 } else {
-		T1224f110(C, a1);
+		T1224f110(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f105(C, a1);
+		T1225f105(ac, C, a1);
 } else {
-		T1227f108(C, a1);
+		T1227f108(ac, C, a1);
 }
 } else {
-		T1228f109(C, a1);
+		T1228f109(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_implementation_feature */
-void T278x17033T0(T0* C, T0* a1)
+void T278x17041T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f110(C, a1);
+		T253f110(ac, C, a1);
 } else {
-		T320f105(C, a1);
+		T320f105(ac, C, a1);
 }
 } else {
-		T353f98(C, a1);
+		T353f98(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f99(C, a1);
+		T355f99(ac, C, a1);
 } else {
-		T356f95(C, a1);
+		T356f95(ac, C, a1);
 }
 } else {
-		T514f105(C, a1);
+		T516f105(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f102(C, a1);
+		T523f102(ac, C, a1);
 } else {
-		T1223f107(C, a1);
+		T1223f107(ac, C, a1);
 }
 } else {
-		T1224f109(C, a1);
+		T1224f109(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f104(C, a1);
+		T1225f104(ac, C, a1);
 } else {
-		T1227f107(C, a1);
+		T1227f107(ac, C, a1);
 }
 } else {
-		T1228f108(C, a1);
+		T1228f108(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_id */
-void T278x17028T6(T0* C, T6 a1)
+void T278x17036T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f80(C, a1);
+		T253f80(ac, C, a1);
 } else {
-		T320f75(C, a1);
+		T320f75(ac, C, a1);
 }
 } else {
-		T353f74(C, a1);
+		T353f74(ac, C, a1);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f74(C, a1);
+		T355f74(ac, C, a1);
 } else {
-		T356f72(C, a1);
+		T356f72(ac, C, a1);
 }
 } else {
-		T514f78(C, a1);
+		T516f78(ac, C, a1);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f77(C, a1);
+		T523f77(ac, C, a1);
 } else {
-		T1223f76(C, a1);
+		T1223f76(ac, C, a1);
 }
 } else {
-		T1224f77(C, a1);
+		T1224f77(ac, C, a1);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f75(C, a1);
+		T1225f75(ac, C, a1);
 } else {
-		T1227f76(C, a1);
+		T1227f76(ac, C, a1);
 }
 } else {
-		T1228f79(C, a1);
+		T1228f79(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_validity_error */
-void T278x17077(T0* C)
+void T278x17085(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f84(C);
+		T253f84(ac, C);
 } else {
-		T320f79(C);
+		T320f79(ac, C);
 }
 } else {
-		T353f78(C);
+		T353f78(ac, C);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f78(C);
+		T355f78(ac, C);
 } else {
-		T356f76(C);
+		T356f76(ac, C);
 }
 } else {
-		T514f75(C);
+		T516f75(ac, C);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f74(C);
+		T523f74(ac, C);
 } else {
-		T1223f80(C);
+		T1223f80(ac, C);
 }
 } else {
-		T1224f81(C);
+		T1224f81(ac, C);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f79(C);
+		T1225f79(ac, C);
 } else {
-		T1227f80(C);
+		T1227f80(ac, C);
 }
 } else {
-		T1228f83(C);
+		T1228f83(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_FEATURE.set_validity_checked */
-void T278x17076(T0* C)
+void T278x17084(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
-if (t1<=514) {
+if (t1<=516) {
 if (t1<=353) {
 if (t1<=320) {
 if (t1==253) {
-		T253f83(C);
+		T253f83(ac, C);
 } else {
-		T320f78(C);
+		T320f78(ac, C);
 }
 } else {
-		T353f77(C);
+		T353f77(ac, C);
 }
 } else {
 if (t1<=356) {
 if (t1==355) {
-		T355f77(C);
+		T355f77(ac, C);
 } else {
-		T356f75(C);
+		T356f75(ac, C);
 }
 } else {
-		T514f74(C);
+		T516f74(ac, C);
 }
 }
 } else {
 if (t1<=1224) {
 if (t1<=1223) {
 if (t1==523) {
-		T523f73(C);
+		T523f73(ac, C);
 } else {
-		T1223f79(C);
+		T1223f79(ac, C);
 }
 } else {
-		T1224f80(C);
+		T1224f80(ac, C);
 }
 } else {
 if (t1<=1227) {
 if (t1==1225) {
-		T1225f78(C);
+		T1225f78(ac, C);
 } else {
-		T1227f79(C);
+		T1227f79(ac, C);
 }
 } else {
-		T1228f82(C);
+		T1228f82(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_CALL_NAME.set_seed */
-void T305x15095T6(T0* C, T6 a1)
+void T305x15103T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=823) {
 if (t1<=638) {
 if (t1==176) {
-		T176f108(C, a1);
+		T176f108(ac, C, a1);
 } else {
-		T638f106(C, a1);
+		T638f106(ac, C, a1);
 }
 } else {
-		T823f71(C, a1);
+		T823f71(ac, C, a1);
 }
 } else {
 if (t1<=925) {
 if (t1==919) {
-		T919f54(C, a1);
+		T919f54(ac, C, a1);
 } else {
-		T925f56(C, a1);
+		T925f56(ac, C, a1);
 }
 } else {
-		T938f76(C, a1);
+		T938f76(ac, C, a1);
 }
 }
 } else {
 if (t1<=1231) {
 if (t1<=1230) {
 if (t1==1229) {
-		T1229f89(C, a1);
+		T1229f89(ac, C, a1);
 } else {
-		T1230f71(C, a1);
+		T1230f71(ac, C, a1);
 }
 } else {
-		T1231f103(C, a1);
+		T1231f103(ac, C, a1);
 }
 } else {
 if (t1<=1259) {
 if (t1==1258) {
-		T1258f35(C, a1);
+		T1258f35(ac, C, a1);
 } else {
-		T1259f35(C, a1);
+		T1259f35(ac, C, a1);
 }
 } else {
-		T1782f82(C, a1);
+		T1782f82(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_AGENT.set_arguments */
-void T308x17855T0(T0* C, T0* a1)
+void T308x17863T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1265) {
 if (t1==983) {
-		T983f35(C, a1);
+		T983f35(ac, C, a1);
 } else {
-		T1265f41(C, a1);
+		T1265f41(ac, C, a1);
 }
 } else {
 if (t1==1266) {
-		T1266f42(C, a1);
+		T1266f42(ac, C, a1);
 } else {
-		T1267f40(C, a1);
+		T1267f40(ac, C, a1);
 }
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-		T1268f40(C, a1);
+		T1268f40(ac, C, a1);
 } else {
-		T1269f41(C, a1);
+		T1269f41(ac, C, a1);
 }
 } else {
-		T1270f39(C, a1);
+		T1270f39(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AGENT.process */
-void T308x7094T0(T0* C, T0* a1)
+void T308x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1265) {
 if (t1==983) {
-		T983f29(C, a1);
+		T983f29(ac, C, a1);
 } else {
-		T1265f39(C, a1);
+		T1265f39(ac, C, a1);
 }
 } else {
 if (t1==1266) {
-		T1266f40(C, a1);
+		T1266f40(ac, C, a1);
 } else {
-		T1267f38(C, a1);
+		T1267f38(ac, C, a1);
 }
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-		T1268f38(C, a1);
+		T1268f38(ac, C, a1);
 } else {
-		T1269f39(C, a1);
+		T1269f39(ac, C, a1);
 }
 } else {
-		T1270f37(C, a1);
+		T1270f37(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_CONSTANT.set_index */
-void T314x15184T6(T0* C, T6 a1)
+void T314x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-		T822f38(C, a1);
+		T822f38(ac, C, a1);
 } else {
-		T905f33(C, a1);
+		T905f33(ac, C, a1);
 }
 } else {
 if (t1==1190) {
-		T1190f40(C, a1);
+		T1190f40(ac, C, a1);
 } else {
-		T1191f42(C, a1);
+		T1191f42(ac, C, a1);
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-		T1192f38(C, a1);
+		T1192f38(ac, C, a1);
 } else {
-		T1193f68(C, a1);
+		T1193f68(ac, C, a1);
 }
 } else {
 if (t1==1194) {
-		T1194f68(C, a1);
+		T1194f68(ac, C, a1);
 } else {
-		T1195f68(C, a1);
+		T1195f68(ac, C, a1);
 }
 }
 }
@@ -37919,29 +37919,29 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-		T1196f68(C, a1);
+		T1196f68(ac, C, a1);
 } else {
-		T1197f68(C, a1);
+		T1197f68(ac, C, a1);
 }
 } else {
 if (t1==1198) {
-		T1198f37(C, a1);
+		T1198f37(ac, C, a1);
 } else {
-		T1199f37(C, a1);
+		T1199f37(ac, C, a1);
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-		T1201f35(C, a1);
+		T1201f35(ac, C, a1);
 } else {
-		T1202f35(C, a1);
+		T1202f35(ac, C, a1);
 }
 } else {
 if (t1==1203) {
-		T1203f39(C, a1);
+		T1203f39(ac, C, a1);
 } else {
-		T1204f39(C, a1);
+		T1204f39(ac, C, a1);
 }
 }
 }
@@ -37949,36 +37949,36 @@ if (t1==1203) {
 }
 
 /* Call to ET_CONSTANT.process */
-void T314x7094T0(T0* C, T0* a1)
+void T314x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1191) {
 if (t1<=905) {
 if (t1==822) {
-		T822f37(C, a1);
+		T822f37(ac, C, a1);
 } else {
-		T905f32(C, a1);
+		T905f32(ac, C, a1);
 }
 } else {
 if (t1==1190) {
-		T1190f39(C, a1);
+		T1190f39(ac, C, a1);
 } else {
-		T1191f41(C, a1);
+		T1191f41(ac, C, a1);
 }
 }
 } else {
 if (t1<=1193) {
 if (t1==1192) {
-		T1192f37(C, a1);
+		T1192f37(ac, C, a1);
 } else {
-		T1193f67(C, a1);
+		T1193f67(ac, C, a1);
 }
 } else {
 if (t1==1194) {
-		T1194f67(C, a1);
+		T1194f67(ac, C, a1);
 } else {
-		T1195f67(C, a1);
+		T1195f67(ac, C, a1);
 }
 }
 }
@@ -37986,29 +37986,29 @@ if (t1==1194) {
 if (t1<=1199) {
 if (t1<=1197) {
 if (t1==1196) {
-		T1196f67(C, a1);
+		T1196f67(ac, C, a1);
 } else {
-		T1197f67(C, a1);
+		T1197f67(ac, C, a1);
 }
 } else {
 if (t1==1198) {
-		T1198f36(C, a1);
+		T1198f36(ac, C, a1);
 } else {
-		T1199f36(C, a1);
+		T1199f36(ac, C, a1);
 }
 }
 } else {
 if (t1<=1202) {
 if (t1==1201) {
-		T1201f34(C, a1);
+		T1201f34(ac, C, a1);
 } else {
-		T1202f34(C, a1);
+		T1202f34(ac, C, a1);
 }
 } else {
 if (t1==1203) {
-		T1203f38(C, a1);
+		T1203f38(ac, C, a1);
 } else {
-		T1204f38(C, a1);
+		T1204f38(ac, C, a1);
 }
 }
 }
@@ -38016,1971 +38016,1971 @@ if (t1==1203) {
 }
 
 /* Call to ET_OPERAND.set_index */
-void T331x15184T6(T0* C, T6 a1)
+void T331x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f109(C, a1);
+		T176f109(ac, C, a1);
 		break;
 	case 275:
-		T275f34(C, a1);
+		T275f34(ac, C, a1);
 		break;
 	case 280:
-		T280f26(C, a1);
+		T280f26(ac, C, a1);
 		break;
 	case 281:
-		T281f23(C, a1);
+		T281f23(ac, C, a1);
 		break;
 	case 283:
-		T283f29(C, a1);
+		T283f29(ac, C, a1);
 		break;
 	case 302:
-		T302f33(C, a1);
+		T302f33(ac, C, a1);
 		break;
 	case 309:
-		T309f24(C, a1);
+		T309f24(ac, C, a1);
 		break;
 	case 310:
-		T310f23(C, a1);
+		T310f23(ac, C, a1);
 		break;
 	case 311:
-		T311f21(C, a1);
+		T311f21(ac, C, a1);
 		break;
 	case 315:
-		T315f26(C, a1);
+		T315f26(ac, C, a1);
 		break;
 	case 738:
-		T738f26(C, a1);
+		T738f26(ac, C, a1);
 		break;
 	case 822:
-		T822f38(C, a1);
+		T822f38(ac, C, a1);
 		break;
 	case 905:
-		T905f33(C, a1);
+		T905f33(ac, C, a1);
 		break;
 	case 941:
-		T941f30(C, a1);
+		T941f30(ac, C, a1);
 		break;
 	case 949:
-		T949f77(C, a1);
+		T949f77(ac, C, a1);
 		break;
 	case 952:
-		T952f33(C, a1);
+		T952f33(ac, C, a1);
 		break;
 	case 980:
-		T980f25(C, a1);
+		T980f25(ac, C, a1);
 		break;
 	case 983:
-		T983f30(C, a1);
+		T983f30(ac, C, a1);
 		break;
 	case 1131:
-		T1131f27(C, a1);
+		T1131f27(ac, C, a1);
 		break;
 	case 1145:
-		T1145f22(C, a1);
+		T1145f22(ac, C, a1);
 		break;
 	case 1164:
-		T1164f29(C, a1);
+		T1164f29(ac, C, a1);
 		break;
 	case 1167:
-		T1167f28(C, a1);
+		T1167f28(ac, C, a1);
 		break;
 	case 1190:
-		T1190f40(C, a1);
+		T1190f40(ac, C, a1);
 		break;
 	case 1191:
-		T1191f42(C, a1);
+		T1191f42(ac, C, a1);
 		break;
 	case 1192:
-		T1192f38(C, a1);
+		T1192f38(ac, C, a1);
 		break;
 	case 1193:
-		T1193f68(C, a1);
+		T1193f68(ac, C, a1);
 		break;
 	case 1194:
-		T1194f68(C, a1);
+		T1194f68(ac, C, a1);
 		break;
 	case 1195:
-		T1195f68(C, a1);
+		T1195f68(ac, C, a1);
 		break;
 	case 1196:
-		T1196f68(C, a1);
+		T1196f68(ac, C, a1);
 		break;
 	case 1197:
-		T1197f68(C, a1);
+		T1197f68(ac, C, a1);
 		break;
 	case 1198:
-		T1198f37(C, a1);
+		T1198f37(ac, C, a1);
 		break;
 	case 1199:
-		T1199f37(C, a1);
+		T1199f37(ac, C, a1);
 		break;
 	case 1201:
-		T1201f35(C, a1);
+		T1201f35(ac, C, a1);
 		break;
 	case 1202:
-		T1202f35(C, a1);
+		T1202f35(ac, C, a1);
 		break;
 	case 1203:
-		T1203f39(C, a1);
+		T1203f39(ac, C, a1);
 		break;
 	case 1204:
-		T1204f39(C, a1);
+		T1204f39(ac, C, a1);
 		break;
 	case 1252:
-		T1252f25(C, a1);
+		T1252f25(ac, C, a1);
 		break;
 	case 1253:
-		T1253f21(C, a1);
+		T1253f21(ac, C, a1);
 		break;
 	case 1254:
-		T1254f21(C, a1);
+		T1254f21(ac, C, a1);
 		break;
 	case 1255:
-		T1255f21(C, a1);
+		T1255f21(ac, C, a1);
 		break;
 	case 1256:
-		T1256f21(C, a1);
+		T1256f21(ac, C, a1);
 		break;
 	case 1257:
-		T1257f24(C, a1);
+		T1257f24(ac, C, a1);
 		break;
 	case 1260:
-		T1260f22(C, a1);
+		T1260f22(ac, C, a1);
 		break;
 	case 1261:
-		T1261f26(C, a1);
+		T1261f26(ac, C, a1);
 		break;
 	case 1262:
-		T1262f21(C, a1);
+		T1262f21(ac, C, a1);
 		break;
 	case 1263:
-		T1263f29(C, a1);
+		T1263f29(ac, C, a1);
 		break;
 	case 1264:
-		T1264f24(C, a1);
+		T1264f24(ac, C, a1);
 		break;
 	case 1265:
-		T1265f40(C, a1);
+		T1265f40(ac, C, a1);
 		break;
 	case 1266:
-		T1266f41(C, a1);
+		T1266f41(ac, C, a1);
 		break;
 	case 1267:
-		T1267f39(C, a1);
+		T1267f39(ac, C, a1);
 		break;
 	case 1268:
-		T1268f39(C, a1);
+		T1268f39(ac, C, a1);
 		break;
 	case 1269:
-		T1269f40(C, a1);
+		T1269f40(ac, C, a1);
 		break;
 	case 1270:
-		T1270f38(C, a1);
+		T1270f38(ac, C, a1);
 		break;
 	case 1271:
-		T1271f11(C, a1);
+		T1271f11(ac, C, a1);
 		break;
 	case 1272:
-		T1272f12(C, a1);
+		T1272f12(ac, C, a1);
 		break;
 	case 1588:
-		T1588f8(C, a1);
+		T1588f8(ac, C, a1);
 		break;
 	case 1713:
-		T1713f17(C, a1);
+		T1713f17(ac, C, a1);
 		break;
 	case 1788:
-		T1788f6(C, a1);
+		T1788f6(ac, C, a1);
 		break;
 	case 1852:
-		T1852f20(C, a1);
+		T1852f20(ac, C, a1);
 		break;
 	case 1853:
-		T1853f24(C, a1);
+		T1853f24(ac, C, a1);
 		break;
 	case 1854:
-		T1854f25(C, a1);
+		T1854f25(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_AGENT_TARGET.set_index */
-void T333x15184T6(T0* C, T6 a1)
+void T333x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
 if (t1<=275) {
 if (t1==176) {
-		T176f109(C, a1);
+		T176f109(ac, C, a1);
 } else {
-		T275f34(C, a1);
+		T275f34(ac, C, a1);
 }
 } else {
-		T302f33(C, a1);
+		T302f33(ac, C, a1);
 }
 } else {
 if (t1<=1271) {
 if (t1==1145) {
-		T1145f22(C, a1);
+		T1145f22(ac, C, a1);
 } else {
-		T1271f11(C, a1);
+		T1271f11(ac, C, a1);
 }
 } else {
-		T1588f8(C, a1);
+		T1588f8(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AGENT_TARGET.process */
-void T333x7094T0(T0* C, T0* a1)
+void T333x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
 if (t1<=275) {
 if (t1==176) {
-		T176f112(C, a1);
+		T176f112(ac, C, a1);
 } else {
-		T275f31(C, a1);
+		T275f31(ac, C, a1);
 }
 } else {
-		T302f30(C, a1);
+		T302f30(ac, C, a1);
 }
 } else {
 if (t1<=1271) {
 if (t1==1145) {
-		T1145f21(C, a1);
+		T1145f21(ac, C, a1);
 } else {
-		T1271f10(C, a1);
+		T1271f10(ac, C, a1);
 }
 } else {
-		T1588f7(C, a1);
+		T1588f7(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_AGENT_TARGET.reset */
-void T333x15181(T0* C)
+void T333x15189(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=302) {
 if (t1<=275) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T275f36(C);
+		T275f36(ac, C);
 }
 } else {
-		T302f35(C);
+		T302f35(ac, C);
 }
 } else {
 if (t1<=1271) {
 if (t1==1145) {
-		T1145f24(C);
+		T1145f24(ac, C);
 } else {
-		T1271f9(C);
+		T1271f9(ac, C);
 }
 } else {
-		T1588f6(C);
+		T1588f6(ac, C);
 }
 }
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.process */
-void T335x7094T0(T0* C, T0* a1)
+void T335x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f112(C, a1);
+		T176f112(ac, C, a1);
 		break;
 	case 275:
-		T275f31(C, a1);
+		T275f31(ac, C, a1);
 		break;
 	case 280:
-		T280f27(C, a1);
+		T280f27(ac, C, a1);
 		break;
 	case 281:
-		T281f22(C, a1);
+		T281f22(ac, C, a1);
 		break;
 	case 283:
-		T283f31(C, a1);
+		T283f31(ac, C, a1);
 		break;
 	case 302:
-		T302f30(C, a1);
+		T302f30(ac, C, a1);
 		break;
 	case 309:
-		T309f23(C, a1);
+		T309f23(ac, C, a1);
 		break;
 	case 310:
-		T310f22(C, a1);
+		T310f22(ac, C, a1);
 		break;
 	case 311:
-		T311f20(C, a1);
+		T311f20(ac, C, a1);
 		break;
 	case 315:
-		T315f27(C, a1);
+		T315f27(ac, C, a1);
 		break;
 	case 738:
-		T738f25(C, a1);
+		T738f25(ac, C, a1);
 		break;
 	case 822:
-		T822f37(C, a1);
+		T822f37(ac, C, a1);
 		break;
 	case 905:
-		T905f32(C, a1);
+		T905f32(ac, C, a1);
 		break;
 	case 941:
-		T941f29(C, a1);
+		T941f29(ac, C, a1);
 		break;
 	case 949:
-		T949f76(C, a1);
+		T949f76(ac, C, a1);
 		break;
 	case 952:
-		T952f32(C, a1);
+		T952f32(ac, C, a1);
 		break;
 	case 980:
-		T980f24(C, a1);
+		T980f24(ac, C, a1);
 		break;
 	case 983:
-		T983f29(C, a1);
+		T983f29(ac, C, a1);
 		break;
 	case 1131:
-		T1131f26(C, a1);
+		T1131f26(ac, C, a1);
 		break;
 	case 1145:
-		T1145f21(C, a1);
+		T1145f21(ac, C, a1);
 		break;
 	case 1164:
-		T1164f28(C, a1);
+		T1164f28(ac, C, a1);
 		break;
 	case 1167:
-		T1167f27(C, a1);
+		T1167f27(ac, C, a1);
 		break;
 	case 1190:
-		T1190f39(C, a1);
+		T1190f39(ac, C, a1);
 		break;
 	case 1191:
-		T1191f41(C, a1);
+		T1191f41(ac, C, a1);
 		break;
 	case 1192:
-		T1192f37(C, a1);
+		T1192f37(ac, C, a1);
 		break;
 	case 1193:
-		T1193f67(C, a1);
+		T1193f67(ac, C, a1);
 		break;
 	case 1194:
-		T1194f67(C, a1);
+		T1194f67(ac, C, a1);
 		break;
 	case 1195:
-		T1195f67(C, a1);
+		T1195f67(ac, C, a1);
 		break;
 	case 1196:
-		T1196f67(C, a1);
+		T1196f67(ac, C, a1);
 		break;
 	case 1197:
-		T1197f67(C, a1);
+		T1197f67(ac, C, a1);
 		break;
 	case 1198:
-		T1198f36(C, a1);
+		T1198f36(ac, C, a1);
 		break;
 	case 1199:
-		T1199f36(C, a1);
+		T1199f36(ac, C, a1);
 		break;
 	case 1201:
-		T1201f34(C, a1);
+		T1201f34(ac, C, a1);
 		break;
 	case 1202:
-		T1202f34(C, a1);
+		T1202f34(ac, C, a1);
 		break;
 	case 1203:
-		T1203f38(C, a1);
+		T1203f38(ac, C, a1);
 		break;
 	case 1204:
-		T1204f38(C, a1);
+		T1204f38(ac, C, a1);
 		break;
 	case 1252:
-		T1252f24(C, a1);
+		T1252f24(ac, C, a1);
 		break;
 	case 1253:
-		T1253f20(C, a1);
+		T1253f20(ac, C, a1);
 		break;
 	case 1254:
-		T1254f20(C, a1);
+		T1254f20(ac, C, a1);
 		break;
 	case 1255:
-		T1255f20(C, a1);
+		T1255f20(ac, C, a1);
 		break;
 	case 1256:
-		T1256f20(C, a1);
+		T1256f20(ac, C, a1);
 		break;
 	case 1257:
-		T1257f23(C, a1);
+		T1257f23(ac, C, a1);
 		break;
 	case 1260:
-		T1260f21(C, a1);
+		T1260f21(ac, C, a1);
 		break;
 	case 1261:
-		T1261f25(C, a1);
+		T1261f25(ac, C, a1);
 		break;
 	case 1262:
-		T1262f20(C, a1);
+		T1262f20(ac, C, a1);
 		break;
 	case 1263:
-		T1263f28(C, a1);
+		T1263f28(ac, C, a1);
 		break;
 	case 1264:
-		T1264f23(C, a1);
+		T1264f23(ac, C, a1);
 		break;
 	case 1265:
-		T1265f39(C, a1);
+		T1265f39(ac, C, a1);
 		break;
 	case 1266:
-		T1266f40(C, a1);
+		T1266f40(ac, C, a1);
 		break;
 	case 1267:
-		T1267f38(C, a1);
+		T1267f38(ac, C, a1);
 		break;
 	case 1268:
-		T1268f38(C, a1);
+		T1268f38(ac, C, a1);
 		break;
 	case 1269:
-		T1269f39(C, a1);
+		T1269f39(ac, C, a1);
 		break;
 	case 1270:
-		T1270f37(C, a1);
+		T1270f37(ac, C, a1);
 		break;
 	case 1272:
-		T1272f11(C, a1);
+		T1272f11(ac, C, a1);
 		break;
 	case 1713:
-		T1713f18(C, a1);
+		T1713f18(ac, C, a1);
 		break;
 	case 1852:
-		T1852f18(C, a1);
+		T1852f18(ac, C, a1);
 		break;
 	case 1853:
-		T1853f22(C, a1);
+		T1853f22(ac, C, a1);
 		break;
 	case 1854:
-		T1854f23(C, a1);
+		T1854f23(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.reset */
-void T335x15181(T0* C)
+void T335x15189(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f122(C);
+		T176f122(ac, C);
 		break;
 	case 275:
-		T275f36(C);
+		T275f36(ac, C);
 		break;
 	case 280:
-		T280f31(C);
+		T280f31(ac, C);
 		break;
 	case 281:
-		T281f24(C);
+		T281f24(ac, C);
 		break;
 	case 283:
-		T283f33(C);
+		T283f33(ac, C);
 		break;
 	case 302:
-		T302f35(C);
+		T302f35(ac, C);
 		break;
 	case 309:
-		T309f26(C);
+		T309f26(ac, C);
 		break;
 	case 310:
-		T310f24(C);
+		T310f24(ac, C);
 		break;
 	case 311:
-		T311f22(C);
+		T311f22(ac, C);
 		break;
 	case 315:
-		T315f29(C);
+		T315f29(ac, C);
 		break;
 	case 738:
-		T738f29(C);
+		T738f29(ac, C);
 		break;
 	case 822:
-		T822f41(C);
+		T822f41(ac, C);
 		break;
 	case 905:
-		T905f36(C);
+		T905f36(ac, C);
 		break;
 	case 941:
-		T941f34(C);
+		T941f34(ac, C);
 		break;
 	case 949:
-		T949f75(C);
+		T949f75(ac, C);
 		break;
 	case 952:
-		T952f42(C);
+		T952f42(ac, C);
 		break;
 	case 980:
-		T980f26(C);
+		T980f26(ac, C);
 		break;
 	case 983:
-		T983f33(C);
+		T983f33(ac, C);
 		break;
 	case 1131:
-		T1131f30(C);
+		T1131f30(ac, C);
 		break;
 	case 1145:
-		T1145f24(C);
+		T1145f24(ac, C);
 		break;
 	case 1164:
-		T1164f32(C);
+		T1164f32(ac, C);
 		break;
 	case 1167:
-		T1167f31(C);
+		T1167f31(ac, C);
 		break;
 	case 1190:
-		T1190f44(C);
+		T1190f44(ac, C);
 		break;
 	case 1191:
-		T1191f46(C);
+		T1191f46(ac, C);
 		break;
 	case 1192:
-		T1192f42(C);
+		T1192f42(ac, C);
 		break;
 	case 1193:
-		T1193f75(C);
+		T1193f75(ac, C);
 		break;
 	case 1194:
-		T1194f75(C);
+		T1194f75(ac, C);
 		break;
 	case 1195:
-		T1195f75(C);
+		T1195f75(ac, C);
 		break;
 	case 1196:
-		T1196f75(C);
+		T1196f75(ac, C);
 		break;
 	case 1197:
-		T1197f75(C);
+		T1197f75(ac, C);
 		break;
 	case 1198:
-		T1198f43(C);
+		T1198f43(ac, C);
 		break;
 	case 1199:
-		T1199f43(C);
+		T1199f43(ac, C);
 		break;
 	case 1201:
-		T1201f39(C);
+		T1201f39(ac, C);
 		break;
 	case 1202:
-		T1202f39(C);
+		T1202f39(ac, C);
 		break;
 	case 1203:
-		T1203f43(C);
+		T1203f43(ac, C);
 		break;
 	case 1204:
-		T1204f43(C);
+		T1204f43(ac, C);
 		break;
 	case 1252:
-		T1252f28(C);
+		T1252f28(ac, C);
 		break;
 	case 1253:
-		T1253f23(C);
+		T1253f23(ac, C);
 		break;
 	case 1254:
-		T1254f23(C);
+		T1254f23(ac, C);
 		break;
 	case 1255:
-		T1255f23(C);
+		T1255f23(ac, C);
 		break;
 	case 1256:
-		T1256f23(C);
+		T1256f23(ac, C);
 		break;
 	case 1257:
-		T1257f25(C);
+		T1257f25(ac, C);
 		break;
 	case 1260:
-		T1260f23(C);
+		T1260f23(ac, C);
 		break;
 	case 1261:
-		T1261f27(C);
+		T1261f27(ac, C);
 		break;
 	case 1262:
-		T1262f23(C);
+		T1262f23(ac, C);
 		break;
 	case 1263:
-		T1263f31(C);
+		T1263f31(ac, C);
 		break;
 	case 1264:
-		T1264f27(C);
+		T1264f27(ac, C);
 		break;
 	case 1265:
-		T1265f49(C);
+		T1265f49(ac, C);
 		break;
 	case 1266:
-		T1266f51(C);
+		T1266f51(ac, C);
 		break;
 	case 1267:
-		T1267f47(C);
+		T1267f47(ac, C);
 		break;
 	case 1268:
-		T1268f48(C);
+		T1268f48(ac, C);
 		break;
 	case 1269:
-		T1269f50(C);
+		T1269f50(ac, C);
 		break;
 	case 1270:
-		T1270f46(C);
+		T1270f46(ac, C);
 		break;
 	case 1272:
-		T1272f10(C);
+		T1272f10(ac, C);
 		break;
 	case 1713:
-		T1713f19(C);
+		T1713f19(ac, C);
 		break;
 	case 1852:
-		T1852f19(C);
+		T1852f19(ac, C);
 		break;
 	case 1853:
-		T1853f23(C);
+		T1853f23(ac, C);
 		break;
 	case 1854:
-		T1854f24(C);
+		T1854f24(ac, C);
 		break;
 	}
 }
 
 /* Call to ET_MANIFEST_STRING.set_index */
-void T354x15184T6(T0* C, T6 a1)
+void T354x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-		T822f38(C, a1);
+		T822f38(ac, C, a1);
 } else {
-		T1191f42(C, a1);
+		T1191f42(ac, C, a1);
 }
 } else {
-		T1192f38(C, a1);
+		T1192f38(ac, C, a1);
 }
 }
 
 /* Call to ET_MANIFEST_STRING.set_type */
-void T354x20220T0(T0* C, T0* a1)
+void T354x20228T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-		T822f42(C, a1);
+		T822f42(ac, C, a1);
 } else {
-		T1191f47(C, a1);
+		T1191f47(ac, C, a1);
 }
 } else {
-		T1192f43(C, a1);
+		T1192f43(ac, C, a1);
 }
 }
 
 /* Call to ET_MANIFEST_STRING.set_cast_type */
-void T354x20219T0(T0* C, T0* a1)
+void T354x20227T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1191) {
 if (t1==822) {
-		T822f39(C, a1);
+		T822f39(ac, C, a1);
 } else {
-		T1191f43(C, a1);
+		T1191f43(ac, C, a1);
 }
 } else {
-		T1192f39(C, a1);
+		T1192f39(ac, C, a1);
 }
 }
 
 /* Call to ET_ASSERTION.process */
-void T384x7094T0(T0* C, T0* a1)
+void T384x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f112(C, a1);
+		T176f112(ac, C, a1);
 		break;
 	case 275:
-		T275f31(C, a1);
+		T275f31(ac, C, a1);
 		break;
 	case 280:
-		T280f27(C, a1);
+		T280f27(ac, C, a1);
 		break;
 	case 281:
-		T281f22(C, a1);
+		T281f22(ac, C, a1);
 		break;
 	case 283:
-		T283f31(C, a1);
+		T283f31(ac, C, a1);
 		break;
 	case 302:
-		T302f30(C, a1);
+		T302f30(ac, C, a1);
 		break;
 	case 309:
-		T309f23(C, a1);
+		T309f23(ac, C, a1);
 		break;
 	case 310:
-		T310f22(C, a1);
+		T310f22(ac, C, a1);
 		break;
 	case 311:
-		T311f20(C, a1);
+		T311f20(ac, C, a1);
 		break;
 	case 315:
-		T315f27(C, a1);
+		T315f27(ac, C, a1);
 		break;
 	case 738:
-		T738f25(C, a1);
+		T738f25(ac, C, a1);
 		break;
 	case 822:
-		T822f37(C, a1);
+		T822f37(ac, C, a1);
 		break;
 	case 905:
-		T905f32(C, a1);
+		T905f32(ac, C, a1);
 		break;
 	case 941:
-		T941f29(C, a1);
+		T941f29(ac, C, a1);
 		break;
 	case 952:
-		T952f32(C, a1);
+		T952f32(ac, C, a1);
 		break;
 	case 980:
-		T980f24(C, a1);
+		T980f24(ac, C, a1);
 		break;
 	case 983:
-		T983f29(C, a1);
+		T983f29(ac, C, a1);
 		break;
 	case 1131:
-		T1131f26(C, a1);
+		T1131f26(ac, C, a1);
 		break;
 	case 1145:
-		T1145f21(C, a1);
+		T1145f21(ac, C, a1);
 		break;
 	case 1164:
-		T1164f28(C, a1);
+		T1164f28(ac, C, a1);
 		break;
 	case 1167:
-		T1167f27(C, a1);
+		T1167f27(ac, C, a1);
 		break;
 	case 1190:
-		T1190f39(C, a1);
+		T1190f39(ac, C, a1);
 		break;
 	case 1191:
-		T1191f41(C, a1);
+		T1191f41(ac, C, a1);
 		break;
 	case 1192:
-		T1192f37(C, a1);
+		T1192f37(ac, C, a1);
 		break;
 	case 1193:
-		T1193f67(C, a1);
+		T1193f67(ac, C, a1);
 		break;
 	case 1194:
-		T1194f67(C, a1);
+		T1194f67(ac, C, a1);
 		break;
 	case 1195:
-		T1195f67(C, a1);
+		T1195f67(ac, C, a1);
 		break;
 	case 1196:
-		T1196f67(C, a1);
+		T1196f67(ac, C, a1);
 		break;
 	case 1197:
-		T1197f67(C, a1);
+		T1197f67(ac, C, a1);
 		break;
 	case 1198:
-		T1198f36(C, a1);
+		T1198f36(ac, C, a1);
 		break;
 	case 1199:
-		T1199f36(C, a1);
+		T1199f36(ac, C, a1);
 		break;
 	case 1201:
-		T1201f34(C, a1);
+		T1201f34(ac, C, a1);
 		break;
 	case 1202:
-		T1202f34(C, a1);
+		T1202f34(ac, C, a1);
 		break;
 	case 1203:
-		T1203f38(C, a1);
+		T1203f38(ac, C, a1);
 		break;
 	case 1204:
-		T1204f38(C, a1);
+		T1204f38(ac, C, a1);
 		break;
 	case 1252:
-		T1252f24(C, a1);
+		T1252f24(ac, C, a1);
 		break;
 	case 1253:
-		T1253f20(C, a1);
+		T1253f20(ac, C, a1);
 		break;
 	case 1254:
-		T1254f20(C, a1);
+		T1254f20(ac, C, a1);
 		break;
 	case 1255:
-		T1255f20(C, a1);
+		T1255f20(ac, C, a1);
 		break;
 	case 1256:
-		T1256f20(C, a1);
+		T1256f20(ac, C, a1);
 		break;
 	case 1257:
-		T1257f23(C, a1);
+		T1257f23(ac, C, a1);
 		break;
 	case 1260:
-		T1260f21(C, a1);
+		T1260f21(ac, C, a1);
 		break;
 	case 1261:
-		T1261f25(C, a1);
+		T1261f25(ac, C, a1);
 		break;
 	case 1262:
-		T1262f20(C, a1);
+		T1262f20(ac, C, a1);
 		break;
 	case 1263:
-		T1263f28(C, a1);
+		T1263f28(ac, C, a1);
 		break;
 	case 1264:
-		T1264f23(C, a1);
+		T1264f23(ac, C, a1);
 		break;
 	case 1265:
-		T1265f39(C, a1);
+		T1265f39(ac, C, a1);
 		break;
 	case 1266:
-		T1266f40(C, a1);
+		T1266f40(ac, C, a1);
 		break;
 	case 1267:
-		T1267f38(C, a1);
+		T1267f38(ac, C, a1);
 		break;
 	case 1268:
-		T1268f38(C, a1);
+		T1268f38(ac, C, a1);
 		break;
 	case 1269:
-		T1269f39(C, a1);
+		T1269f39(ac, C, a1);
 		break;
 	case 1270:
-		T1270f37(C, a1);
+		T1270f37(ac, C, a1);
 		break;
 	case 1274:
-		T1274f8(C, a1);
+		T1274f8(ac, C, a1);
 		break;
 	}
 }
 
 /* Call to ET_ASSERTION.reset */
-void T384x15169(T0* C)
+void T384x15177(GE_context* ac, T0* C)
 {
 	switch (((T0*)(C))->id) {
 	case 176:
-		T176f122(C);
+		T176f122(ac, C);
 		break;
 	case 275:
-		T275f36(C);
+		T275f36(ac, C);
 		break;
 	case 280:
-		T280f31(C);
+		T280f31(ac, C);
 		break;
 	case 281:
-		T281f24(C);
+		T281f24(ac, C);
 		break;
 	case 283:
-		T283f33(C);
+		T283f33(ac, C);
 		break;
 	case 302:
-		T302f35(C);
+		T302f35(ac, C);
 		break;
 	case 309:
-		T309f26(C);
+		T309f26(ac, C);
 		break;
 	case 310:
-		T310f24(C);
+		T310f24(ac, C);
 		break;
 	case 311:
-		T311f22(C);
+		T311f22(ac, C);
 		break;
 	case 315:
-		T315f29(C);
+		T315f29(ac, C);
 		break;
 	case 738:
-		T738f29(C);
+		T738f29(ac, C);
 		break;
 	case 822:
-		T822f41(C);
+		T822f41(ac, C);
 		break;
 	case 905:
-		T905f36(C);
+		T905f36(ac, C);
 		break;
 	case 941:
-		T941f34(C);
+		T941f34(ac, C);
 		break;
 	case 952:
-		T952f42(C);
+		T952f42(ac, C);
 		break;
 	case 980:
-		T980f26(C);
+		T980f26(ac, C);
 		break;
 	case 983:
-		T983f33(C);
+		T983f33(ac, C);
 		break;
 	case 1131:
-		T1131f30(C);
+		T1131f30(ac, C);
 		break;
 	case 1145:
-		T1145f24(C);
+		T1145f24(ac, C);
 		break;
 	case 1164:
-		T1164f32(C);
+		T1164f32(ac, C);
 		break;
 	case 1167:
-		T1167f31(C);
+		T1167f31(ac, C);
 		break;
 	case 1190:
-		T1190f44(C);
+		T1190f44(ac, C);
 		break;
 	case 1191:
-		T1191f46(C);
+		T1191f46(ac, C);
 		break;
 	case 1192:
-		T1192f42(C);
+		T1192f42(ac, C);
 		break;
 	case 1193:
-		T1193f75(C);
+		T1193f75(ac, C);
 		break;
 	case 1194:
-		T1194f75(C);
+		T1194f75(ac, C);
 		break;
 	case 1195:
-		T1195f75(C);
+		T1195f75(ac, C);
 		break;
 	case 1196:
-		T1196f75(C);
+		T1196f75(ac, C);
 		break;
 	case 1197:
-		T1197f75(C);
+		T1197f75(ac, C);
 		break;
 	case 1198:
-		T1198f43(C);
+		T1198f43(ac, C);
 		break;
 	case 1199:
-		T1199f43(C);
+		T1199f43(ac, C);
 		break;
 	case 1201:
-		T1201f39(C);
+		T1201f39(ac, C);
 		break;
 	case 1202:
-		T1202f39(C);
+		T1202f39(ac, C);
 		break;
 	case 1203:
-		T1203f43(C);
+		T1203f43(ac, C);
 		break;
 	case 1204:
-		T1204f43(C);
+		T1204f43(ac, C);
 		break;
 	case 1252:
-		T1252f28(C);
+		T1252f28(ac, C);
 		break;
 	case 1253:
-		T1253f23(C);
+		T1253f23(ac, C);
 		break;
 	case 1254:
-		T1254f23(C);
+		T1254f23(ac, C);
 		break;
 	case 1255:
-		T1255f23(C);
+		T1255f23(ac, C);
 		break;
 	case 1256:
-		T1256f23(C);
+		T1256f23(ac, C);
 		break;
 	case 1257:
-		T1257f25(C);
+		T1257f25(ac, C);
 		break;
 	case 1260:
-		T1260f23(C);
+		T1260f23(ac, C);
 		break;
 	case 1261:
-		T1261f27(C);
+		T1261f27(ac, C);
 		break;
 	case 1262:
-		T1262f23(C);
+		T1262f23(ac, C);
 		break;
 	case 1263:
-		T1263f31(C);
+		T1263f31(ac, C);
 		break;
 	case 1264:
-		T1264f27(C);
+		T1264f27(ac, C);
 		break;
 	case 1265:
-		T1265f49(C);
+		T1265f49(ac, C);
 		break;
 	case 1266:
-		T1266f51(C);
+		T1266f51(ac, C);
 		break;
 	case 1267:
-		T1267f47(C);
+		T1267f47(ac, C);
 		break;
 	case 1268:
-		T1268f48(C);
+		T1268f48(ac, C);
 		break;
 	case 1269:
-		T1269f50(C);
+		T1269f50(ac, C);
 		break;
 	case 1270:
-		T1270f46(C);
+		T1270f46(ac, C);
 		break;
 	case 1274:
-		T1274f7(C);
+		T1274f7(ac, C);
 		break;
 	}
 }
 
 /* Call to ET_CLUSTER.process */
-void T407x15922T0(T0* C, T0* a1)
+void T407x15930T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f67(C, a1);
+		T208f67(ac, C, a1);
 } else {
-		T402f73(C, a1);
+		T402f73(ac, C, a1);
 }
 } else {
-		T789f69(C, a1);
+		T789f69(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.set_dependant_constraint */
-void T407x15907T0(T0* C, T0* a1)
+void T407x15915T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f64(C, a1);
+		T208f64(ac, C, a1);
 } else {
-		T402f81(C, a1);
+		T402f81(ac, C, a1);
 }
 } else {
-		T789f73(C, a1);
+		T789f73(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.set_provider_constraint */
-void T407x15906T0(T0* C, T0* a1)
+void T407x15914T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f63(C, a1);
+		T208f63(ac, C, a1);
 } else {
-		T402f80(C, a1);
+		T402f80(ac, C, a1);
 }
 } else {
-		T789f72(C, a1);
+		T789f72(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.add_recursive_cluster */
-void T407x15911T0(T0* C, T0* a1)
+void T407x15919T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f69(C, a1);
+		T208f69(ac, C, a1);
 } else {
-		T402f79(C, a1);
+		T402f79(ac, C, a1);
 }
 } else {
-		T789f75(C, a1);
+		T789f75(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.set_preparsed */
-void T407x15901T1(T0* C, T1 a1)
+void T407x15909T1(GE_context* ac, T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f68(C, a1);
+		T208f68(ac, C, a1);
 } else {
-		T402f78(C, a1);
+		T402f78(ac, C, a1);
 }
 } else {
-		T789f74(C, a1);
+		T789f74(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.set_scm_write_mapping */
-void T407x15909T0(T0* C, T0* a1)
+void T407x15917T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f66(C, a1);
+		T208f66(ac, C, a1);
 } else {
-		T402f72(C, a1);
+		T402f72(ac, C, a1);
 }
 } else {
-		T789f68(C, a1);
+		T789f68(ac, C, a1);
 }
 }
 
 /* Call to ET_CLUSTER.set_scm_read_mapping */
-void T407x15908T0(T0* C, T0* a1)
+void T407x15916T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=402) {
 if (t1==208) {
-		T208f65(C, a1);
+		T208f65(ac, C, a1);
 } else {
-		T402f71(C, a1);
+		T402f71(ac, C, a1);
 }
 } else {
-		T789f67(C, a1);
+		T789f67(ac, C, a1);
 }
 }
 
 /* Call to ET_INTERNAL_UNIVERSE.clusters_do_explicit */
-void T436x3235T0(T0* C, T0* a1)
+void T436x3235T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=68) {
 if (t1<=62) {
 if (t1==59) {
-		T59f313(C, a1);
+		T59f314(ac, C, a1);
 } else {
-		T62f309(C, a1);
+		T62f310(ac, C, a1);
 }
 } else {
-		T68f305(C, a1);
+		T68f306(ac, C, a1);
 }
 } else {
 if (t1==183) {
-		T183f199(C, a1);
+		T183f199(ac, C, a1);
 } else {
-		T451f176(C, a1);
+		T451f176(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INTERNAL_UNIVERSE.dotnet_assemblies_do_if */
-void T436x3243T0T0(T0* C, T0* a1, T0* a2)
+void T436x3243T0T0(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=68) {
 if (t1<=62) {
 if (t1==59) {
-		T59f312(C, a1, a2);
+		T59f313(ac, C, a1, a2);
 } else {
-		T62f308(C, a1, a2);
+		T62f309(ac, C, a1, a2);
 }
 } else {
-		T68f304(C, a1, a2);
+		T68f305(ac, C, a1, a2);
 }
 } else {
 if (t1==183) {
-		T183f198(C, a1, a2);
+		T183f198(ac, C, a1, a2);
 } else {
-		T451f175(C, a1, a2);
+		T451f175(ac, C, a1, a2);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.add_dotnet_assembly_recursive */
-void T439x15406T0(T0* C, T0* a1)
+void T439x15414T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f163(C, a1);
+		T192f163(ac, C, a1);
 } else {
-		T210f170(C, a1);
+		T210f170(ac, C, a1);
 }
 } else {
 if (t1==223) {
-		T223f184(C, a1);
+		T223f184(ac, C, a1);
 } else {
-		T439f163(C, a1);
+		T439f163(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.add_universe_recursive */
-void T439x3445T0(T0* C, T0* a1)
+void T439x3445T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f162(C, a1);
+		T192f162(ac, C, a1);
 } else {
-		T210f169(C, a1);
+		T210f169(ac, C, a1);
 }
 } else {
 if (t1==223) {
-		T223f183(C, a1);
+		T223f183(ac, C, a1);
 } else {
-		T439f162(C, a1);
+		T439f162(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.consume */
-void T439x15412T0(T0* C, T0* a1)
+void T439x15420T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f158(C, a1);
+		T192f158(ac, C, a1);
 } else {
-		T210f182(C, a1);
+		T210f182(ac, C, a1);
 }
 } else {
 if (t1==223) {
-		T223f196(C, a1);
+		T223f196(ac, C, a1);
 } else {
-		T439f158(C, a1);
+		T439f158(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.import_classes */
-void T439x3453(T0* C)
+void T439x3453(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f160(C);
+		T192f160(ac, C);
 } else {
-		T210f167(C);
+		T210f167(ac, C);
 }
 } else {
 if (t1==223) {
-		T223f181(C);
+		T223f181(ac, C);
 } else {
-		T439f160(C);
+		T439f160(ac, C);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.parse_all */
-void T439x3451(T0* C)
+void T439x3451(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f161(C);
+		T192f161(ac, C);
 } else {
-		T210f168(C);
+		T210f168(ac, C);
 }
 } else {
 if (t1==223) {
-		T223f182(C);
+		T223f182(ac, C);
 } else {
-		T439f161(C);
+		T439f161(ac, C);
 }
 }
 }
 
 /* Call to ET_DOTNET_ASSEMBLY.preparse */
-void T439x3449(T0* C)
+void T439x3449(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=210) {
 if (t1==192) {
-		T192f159(C);
+		T192f159(ac, C);
 } else {
-		T210f166(C);
+		T210f166(ac, C);
 }
 } else {
 if (t1==223) {
-		T223f180(C);
+		T223f180(ac, C);
 } else {
-		T439f159(C);
+		T439f159(ac, C);
 }
 }
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.reset */
-void T515x15140(T0* C)
+void T517x15148(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T823f70(C);
+		T823f70(ac, C);
 }
 } else {
-		T1229f88(C);
+		T1229f88(ac, C);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f70(C);
+		T1230f70(ac, C);
 } else {
-		T1231f102(C);
+		T1231f102(ac, C);
 }
 } else {
-		T1232f8(C);
+		T1232f8(ac, C);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.close_input */
-void T559x28491(T0* C)
+void T559x28499(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f200(C);
+		T559f200(ac, C);
 } else {
-		T597f232(C);
+		T597f232(ac, C);
 }
 } else {
 if (t1==598) {
-		T598f202(C);
+		T598f202(ac, C);
 } else {
-		T600f236(C);
+		T600f236(ac, C);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_from_resolver */
-void T559x28490T0(T0* C, T0* a1)
+void T559x28498T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f203(C, a1);
+		T559f203(ac, C, a1);
 } else {
-		T597f235(C, a1);
+		T597f235(ac, C, a1);
 }
 } else {
 if (t1==598) {
-		T598f205(C, a1);
+		T598f205(ac, C, a1);
 } else {
-		T600f239(C, a1);
+		T600f239(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_encoding */
-void T559x28496T0(T0* C, T0* a1)
+void T559x28504T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f202(C, a1);
+		T559f202(ac, C, a1);
 } else {
-		T597f234(C, a1);
+		T597f234(ac, C, a1);
 }
 } else {
 if (t1==598) {
-		T598f204(C, a1);
+		T598f204(ac, C, a1);
 } else {
-		T600f238(C, a1);
+		T600f238(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.push_start_condition_dtd_ignore */
-void T559x28487(T0* C)
+void T559x28495(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f201(C);
+		T559f201(ac, C);
 } else {
-		T597f233(C);
+		T597f233(ac, C);
 }
 } else {
 if (t1==598) {
-		T598f203(C);
+		T598f203(ac, C);
 } else {
-		T600f237(C);
+		T600f237(ac, C);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.read_token */
-void T559x6468(T0* C)
+void T559x6468(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f199(C);
+		T559f199(ac, C);
 } else {
-		T597f231(C);
+		T597f231(ac, C);
 }
 } else {
 if (t1==598) {
-		T598f201(C);
+		T598f201(ac, C);
 } else {
-		T600f235(C);
+		T600f235(ac, C);
 }
 }
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_stream */
-void T559x28489T0(T0* C, T0* a1)
+void T559x28497T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=597) {
 if (t1==559) {
-		T559f198(C, a1);
+		T559f198(ac, C, a1);
 } else {
-		T597f230(C, a1);
+		T597f230(ac, C, a1);
 }
 } else {
 if (t1==598) {
-		T598f200(C, a1);
+		T598f200(ac, C, a1);
 } else {
-		T600f234(C, a1);
+		T600f234(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TARGET.propagate_can_be_void */
-void T635x16164T0(T0* C, T0* a1)
+void T635x16172T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1<=263) {
 if (t1==232) {
-		T232f81(C, a1);
+		T232f81(ac, C, a1);
 } else {
-		T263f21(C, a1);
+		T263f21(ac, C, a1);
 }
 } else {
-		T295f84(C, a1);
+		T295f84(ac, C, a1);
 }
 } else {
 if (t1<=307) {
 if (t1==303) {
-		T303f15(C, a1);
+		T303f15(ac, C, a1);
 } else {
-		T307f13(C, a1);
+		T307f13(ac, C, a1);
 }
 } else {
-		T312f84(C, a1);
+		T312f84(ac, C, a1);
 }
 }
 } else {
 if (t1<=522) {
 if (t1<=324) {
 if (t1==323) {
-		T323f85(C, a1);
+		T323f85(ac, C, a1);
 } else {
-		T324f85(C, a1);
+		T324f85(ac, C, a1);
 }
 } else {
-		T522f18(C, a1);
+		T522f18(ac, C, a1);
 }
 } else {
 if (t1<=1850) {
 if (t1==821) {
-		T821f19(C, a1);
+		T821f19(ac, C, a1);
 } else {
-		T1850f9(C, a1);
+		T1850f9(ac, C, a1);
 }
 } else {
-		T1851f9(C, a1);
+		T1851f9(ac, C, a1);
 }
 }
 }
 }
 
 /* Call to ET_DYNAMIC_TARGET.put_type_from_type_set */
-void T635x16162T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T635x16170T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=312) {
 if (t1<=295) {
 if (t1<=263) {
 if (t1==232) {
-		T232f80(C, a1, a2, a3);
+		T232f80(ac, C, a1, a2, a3);
 } else {
-		T263f23(C, a1, a2, a3);
+		T263f23(ac, C, a1, a2, a3);
 }
 } else {
-		T295f83(C, a1, a2, a3);
+		T295f83(ac, C, a1, a2, a3);
 }
 } else {
 if (t1<=307) {
 if (t1==303) {
-		T303f14(C, a1, a2, a3);
+		T303f14(ac, C, a1, a2, a3);
 } else {
-		T307f12(C, a1, a2, a3);
+		T307f12(ac, C, a1, a2, a3);
 }
 } else {
-		T312f83(C, a1, a2, a3);
+		T312f83(ac, C, a1, a2, a3);
 }
 }
 } else {
 if (t1<=522) {
 if (t1<=324) {
 if (t1==323) {
-		T323f84(C, a1, a2, a3);
+		T323f84(ac, C, a1, a2, a3);
 } else {
-		T324f84(C, a1, a2, a3);
+		T324f84(ac, C, a1, a2, a3);
 }
 } else {
-		T522f17(C, a1, a2, a3);
+		T522f17(ac, C, a1, a2, a3);
 }
 } else {
 if (t1<=1850) {
 if (t1==821) {
-		T821f18(C, a1, a2, a3);
+		T821f18(ac, C, a1, a2, a3);
 } else {
-		T1850f8(C, a1, a2, a3);
+		T1850f8(ac, C, a1, a2, a3);
 }
 } else {
-		T1851f8(C, a1, a2, a3);
+		T1851f8(ac, C, a1, a2, a3);
 }
 }
 }
 }
 
 /* Call to ET_INLINE_AGENT.set_across_components */
-void T715x17090T0(T0* C, T0* a1)
+void T715x17098T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1266) {
 if (t1==1265) {
-		T1265f38(C, a1);
+		T1265f38(ac, C, a1);
 } else {
-		T1266f39(C, a1);
+		T1266f39(ac, C, a1);
 }
 } else {
-		T1267f37(C, a1);
+		T1267f37(ac, C, a1);
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-		T1268f37(C, a1);
+		T1268f37(ac, C, a1);
 } else {
-		T1269f38(C, a1);
+		T1269f38(ac, C, a1);
 }
 } else {
-		T1270f36(C, a1);
+		T1270f36(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INLINE_AGENT.set_object_tests */
-void T715x17089T0(T0* C, T0* a1)
+void T715x17097T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1266) {
 if (t1==1265) {
-		T1265f37(C, a1);
+		T1265f37(ac, C, a1);
 } else {
-		T1266f38(C, a1);
+		T1266f38(ac, C, a1);
 }
 } else {
-		T1267f36(C, a1);
+		T1267f36(ac, C, a1);
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-		T1268f36(C, a1);
+		T1268f36(ac, C, a1);
 } else {
-		T1269f37(C, a1);
+		T1269f37(ac, C, a1);
 }
 } else {
-		T1270f35(C, a1);
+		T1270f35(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INLINE_AGENT.set_actual_arguments */
-void T715x17855T0(T0* C, T0* a1)
+void T715x17863T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1267) {
 if (t1<=1266) {
 if (t1==1265) {
-		T1265f41(C, a1);
+		T1265f41(ac, C, a1);
 } else {
-		T1266f42(C, a1);
+		T1266f42(ac, C, a1);
 }
 } else {
-		T1267f40(C, a1);
+		T1267f40(ac, C, a1);
 }
 } else {
 if (t1<=1269) {
 if (t1==1268) {
-		T1268f40(C, a1);
+		T1268f40(ac, C, a1);
 } else {
-		T1269f41(C, a1);
+		T1269f41(ac, C, a1);
 }
 } else {
-		T1270f39(C, a1);
+		T1270f39(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_QUALIFIED_FEATURE_CALL_EXPRESSION.set_index */
-void T819x15184T6(T0* C, T6 a1)
+void T819x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=980) {
 if (t1==280) {
-		T280f26(C, a1);
+		T280f26(ac, C, a1);
 } else {
-		T980f25(C, a1);
+		T980f25(ac, C, a1);
 }
 } else {
 if (t1==1261) {
-		T1261f26(C, a1);
+		T1261f26(ac, C, a1);
 } else {
-		T1854f25(C, a1);
+		T1854f25(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_DOCUMENT_NODE.node_set_parent */
-void T828x14115T0(T0* C, T0* a1)
+void T828x14123T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1403) {
 if (t1==148) {
-		T148f24(C, a1);
+		T148f24(ac, C, a1);
 } else {
-		T1403f5(C, a1);
+		T1403f5(ac, C, a1);
 }
 } else {
-		T1404f6(C, a1);
+		T1404f6(ac, C, a1);
 }
 }
 
 /* Call to ET_ALIAS_NAME.reset */
-void T850x15091(T0* C)
+void T850x15099(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-		T823f70(C);
+		T823f70(ac, C);
 } else {
-		T850f87(C);
+		T850f87(ac, C);
 }
 } else {
-		T1229f88(C);
+		T1229f88(ac, C);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f70(C);
+		T1230f70(ac, C);
 } else {
-		T1231f102(C);
+		T1231f102(ac, C);
 }
 } else {
-		T1233f48(C);
+		T1233f48(ac, C);
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.set_infix */
-void T850x29980(T0* C)
+void T850x29988(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-		T823f72(C);
+		T823f72(ac, C);
 } else {
-		T850f85(C);
+		T850f85(ac, C);
 }
 } else {
-		T1229f90(C);
+		T1229f90(ac, C);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f72(C);
+		T1230f72(ac, C);
 } else {
-		T1231f104(C);
+		T1231f104(ac, C);
 }
 } else {
-		T1233f46(C);
+		T1233f46(ac, C);
 }
 }
 }
 
 /* Call to ET_ALIAS_NAME.set_prefix */
-void T850x29979(T0* C)
+void T850x29987(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=850) {
 if (t1==823) {
-		T823f73(C);
+		T823f73(ac, C);
 } else {
-		T850f86(C);
+		T850f86(ac, C);
 }
 } else {
-		T1229f91(C);
+		T1229f91(ac, C);
 }
 } else {
 if (t1<=1231) {
 if (t1==1230) {
-		T1230f73(C);
+		T1230f73(ac, C);
 } else {
-		T1231f105(C);
+		T1231f105(ac, C);
 }
 } else {
-		T1233f47(C);
+		T1233f47(ac, C);
 }
 }
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_index */
-void T914x15184T6(T0* C, T6 a1)
+void T914x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
 if (t1==1190) {
-		T1190f40(C, a1);
+		T1190f40(ac, C, a1);
 } else {
-		T1203f39(C, a1);
+		T1203f39(ac, C, a1);
 }
 } else {
-		T1204f39(C, a1);
+		T1204f39(ac, C, a1);
 }
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_cast_type */
-void T914x31247T0(T0* C, T0* a1)
+void T914x31255T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
 if (t1==1190) {
-		T1190f41(C, a1);
+		T1190f41(ac, C, a1);
 } else {
-		T1203f40(C, a1);
+		T1203f40(ac, C, a1);
 }
 } else {
-		T1204f40(C, a1);
+		T1204f40(ac, C, a1);
 }
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_type */
-void T914x31248T0(T0* C, T0* a1)
+void T914x31256T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1203) {
 if (t1==1190) {
-		T1190f45(C, a1);
+		T1190f45(ac, C, a1);
 } else {
-		T1203f44(C, a1);
+		T1203f44(ac, C, a1);
 }
 } else {
-		T1204f44(C, a1);
+		T1204f44(ac, C, a1);
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_index */
-void T922x15184T6(T0* C, T6 a1)
+void T922x15192T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-		T1193f68(C, a1);
+		T1193f68(ac, C, a1);
 } else {
-		T1194f68(C, a1);
+		T1194f68(ac, C, a1);
 }
 } else {
-		T1195f68(C, a1);
+		T1195f68(ac, C, a1);
 }
 } else {
 if (t1==1196) {
-		T1196f68(C, a1);
+		T1196f68(ac, C, a1);
 } else {
-		T1197f68(C, a1);
+		T1197f68(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_cast_type */
-void T922x31700T0(T0* C, T0* a1)
+void T922x31708T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-		T1193f70(C, a1);
+		T1193f70(ac, C, a1);
 } else {
-		T1194f70(C, a1);
+		T1194f70(ac, C, a1);
 }
 } else {
-		T1195f70(C, a1);
+		T1195f70(ac, C, a1);
 }
 } else {
 if (t1==1196) {
-		T1196f70(C, a1);
+		T1196f70(ac, C, a1);
 } else {
-		T1197f70(C, a1);
+		T1197f70(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_type */
-void T922x31701T0(T0* C, T0* a1)
+void T922x31709T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-		T1193f74(C, a1);
+		T1193f74(ac, C, a1);
 } else {
-		T1194f74(C, a1);
+		T1194f74(ac, C, a1);
 }
 } else {
-		T1195f74(C, a1);
+		T1195f74(ac, C, a1);
 }
 } else {
 if (t1==1196) {
-		T1196f74(C, a1);
+		T1196f74(ac, C, a1);
 } else {
-		T1197f74(C, a1);
+		T1197f74(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_sign */
-void T922x31699T0(T0* C, T0* a1)
+void T922x31707T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1194) {
 if (t1==1193) {
-		T1193f69(C, a1);
+		T1193f69(ac, C, a1);
 } else {
-		T1194f69(C, a1);
+		T1194f69(ac, C, a1);
 }
 } else {
-		T1195f69(C, a1);
+		T1195f69(ac, C, a1);
 }
 } else {
 if (t1==1196) {
-		T1196f69(C, a1);
+		T1196f69(ac, C, a1);
 } else {
-		T1197f69(C, a1);
+		T1197f69(ac, C, a1);
 }
 }
 }
 
 /* Call to ET_ASSIGNER.reset */
-void T974x15146(T0* C)
+void T974x15154(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1229) {
 if (t1<=823) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T823f70(C);
+		T823f70(ac, C);
 }
 } else {
-		T1229f88(C);
+		T1229f88(ac, C);
 }
 } else {
 if (t1==1230) {
-		T1230f70(C);
+		T1230f70(ac, C);
 } else {
-		T1231f102(C);
+		T1231f102(ac, C);
 }
 }
 }
 
 /* Call to ET_CHOICE.reset */
-void T989x15194(T0* C)
+void T989x15202(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1195) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T1164f32(C);
+		T1164f32(ac, C);
 }
 } else {
-		T1190f44(C);
+		T1190f44(ac, C);
 }
 } else {
 if (t1<=1194) {
 if (t1==1193) {
-		T1193f75(C);
+		T1193f75(ac, C);
 } else {
-		T1194f75(C);
+		T1194f75(ac, C);
 }
 } else {
-		T1195f75(C);
+		T1195f75(ac, C);
 }
 }
 } else {
 if (t1<=1203) {
 if (t1<=1197) {
 if (t1==1196) {
-		T1196f75(C);
+		T1196f75(ac, C);
 } else {
-		T1197f75(C);
+		T1197f75(ac, C);
 }
 } else {
-		T1203f43(C);
+		T1203f43(ac, C);
 }
 } else {
 if (t1==1204) {
-		T1204f43(C);
+		T1204f43(ac, C);
 } else {
-		T1248f8(C);
+		T1248f8(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_CHOICE_CONSTANT.reset */
-void T992x15194(T0* C)
+void T992x15202(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1194) {
 if (t1<=1190) {
 if (t1<=1164) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T1164f32(C);
+		T1164f32(ac, C);
 }
 } else {
-		T1190f44(C);
+		T1190f44(ac, C);
 }
 } else {
 if (t1==1193) {
-		T1193f75(C);
+		T1193f75(ac, C);
 } else {
-		T1194f75(C);
+		T1194f75(ac, C);
 }
 }
 } else {
 if (t1<=1197) {
 if (t1<=1196) {
 if (t1==1195) {
-		T1195f75(C);
+		T1195f75(ac, C);
 } else {
-		T1196f75(C);
+		T1196f75(ac, C);
 }
 } else {
-		T1197f75(C);
+		T1197f75(ac, C);
 }
 } else {
 if (t1==1203) {
-		T1203f43(C);
+		T1203f43(ac, C);
 } else {
-		T1204f43(C);
+		T1204f43(ac, C);
 }
 }
 }
 }
 
 /* Call to ET_INSTRUCTION.process */
-void T1110x7094T0(T0* C, T0* a1)
+void T1110x7094T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1241) {
@@ -39988,32 +39988,32 @@ if (t1<=986) {
 if (t1<=935) {
 if (t1<=277) {
 if (t1==176) {
-		T176f112(C, a1);
+		T176f112(ac, C, a1);
 } else {
-		T277f11(C, a1);
+		T277f11(ac, C, a1);
 }
 } else {
-		T935f17(C, a1);
+		T935f17(ac, C, a1);
 }
 } else {
 if (t1==955) {
-		T955f24(C, a1);
+		T955f24(ac, C, a1);
 } else {
-		T986f14(C, a1);
+		T986f14(ac, C, a1);
 }
 }
 } else {
 if (t1<=1089) {
 if (t1==1041) {
-		T1041f6(C, a1);
+		T1041f6(ac, C, a1);
 } else {
-		T1089f11(C, a1);
+		T1089f11(ac, C, a1);
 }
 } else {
 if (t1==1107) {
-		T1107f9(C, a1);
+		T1107f9(ac, C, a1);
 } else {
-		T1241f16(C, a1);
+		T1241f16(ac, C, a1);
 }
 }
 }
@@ -40021,29 +40021,29 @@ if (t1==1107) {
 if (t1<=1246) {
 if (t1<=1243) {
 if (t1==1242) {
-		T1242f6(C, a1);
+		T1242f6(ac, C, a1);
 } else {
-		T1243f6(C, a1);
+		T1243f6(ac, C, a1);
 }
 } else {
 if (t1==1244) {
-		T1244f14(C, a1);
+		T1244f14(ac, C, a1);
 } else {
-		T1246f13(C, a1);
+		T1246f13(ac, C, a1);
 }
 }
 } else {
 if (t1<=1249) {
 if (t1==1247) {
-		T1247f13(C, a1);
+		T1247f13(ac, C, a1);
 } else {
-		T1249f12(C, a1);
+		T1249f12(ac, C, a1);
 }
 } else {
 if (t1==1251) {
-		T1251f11(C, a1);
+		T1251f11(ac, C, a1);
 } else {
-		T1418f7(C, a1);
+		T1418f7(ac, C, a1);
 }
 }
 }
@@ -40051,7 +40051,7 @@ if (t1==1251) {
 }
 
 /* Call to ET_INSTRUCTION.reset */
-void T1110x15219(T0* C)
+void T1110x15227(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1241) {
@@ -40059,32 +40059,32 @@ if (t1<=986) {
 if (t1<=935) {
 if (t1<=277) {
 if (t1==176) {
-		T176f122(C);
+		T176f122(ac, C);
 } else {
-		T277f15(C);
+		T277f15(ac, C);
 }
 } else {
-		T935f18(C);
+		T935f18(ac, C);
 }
 } else {
 if (t1==955) {
-		T955f25(C);
+		T955f25(ac, C);
 } else {
-		T986f15(C);
+		T986f15(ac, C);
 }
 }
 } else {
 if (t1<=1089) {
 if (t1==1041) {
-		T1041f7(C);
+		T1041f7(ac, C);
 } else {
-		T1089f12(C);
+		T1089f12(ac, C);
 }
 } else {
 if (t1==1107) {
-		T1107f10(C);
+		T1107f10(ac, C);
 } else {
-		T1241f17(C);
+		T1241f17(ac, C);
 }
 }
 }
@@ -40092,29 +40092,29 @@ if (t1==1107) {
 if (t1<=1246) {
 if (t1<=1243) {
 if (t1==1242) {
-		T1242f7(C);
+		T1242f7(ac, C);
 } else {
-		T1243f7(C);
+		T1243f7(ac, C);
 }
 } else {
 if (t1==1244) {
-		T1244f15(C);
+		T1244f15(ac, C);
 } else {
-		T1246f14(C);
+		T1246f14(ac, C);
 }
 }
 } else {
 if (t1<=1249) {
 if (t1==1247) {
-		T1247f14(C);
+		T1247f14(ac, C);
 } else {
-		T1249f13(C);
+		T1249f13(ac, C);
 }
 } else {
 if (t1==1251) {
-		T1251f12(C);
+		T1251f12(ac, C);
 } else {
-		T1418f8(C);
+		T1418f8(ac, C);
 }
 }
 }
@@ -40122,154 +40122,154 @@ if (t1==1251) {
 }
 
 /* Call to ET_LIKE_TYPE.reset_qualified_anchored_types */
-void T1117x7005(T0* C)
+void T1117x7005(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-		T495f79(C);
+		T495f79(ac, C);
 } else {
-		T1238f85(C);
+		T1238f85(ac, C);
 }
 } else {
 if (t1==1239) {
-		T1239f84(C);
+		T1239f84(ac, C);
 } else {
-		T1240f78(C);
+		T1240f78(ac, C);
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.reset */
-void T1117x7004(T0* C)
+void T1117x7004(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-		T495f78(C);
+		T495f78(ac, C);
 } else {
-		T1238f84(C);
+		T1238f84(ac, C);
 }
 } else {
 if (t1==1239) {
-		T1239f83(C);
+		T1239f83(ac, C);
 } else {
-		T1240f77(C);
+		T1240f77(ac, C);
 }
 }
 }
 
 /* Call to ET_LIKE_TYPE.append_to_string */
-void T1117x7080T0(T0* C, T0* a1)
+void T1117x7080T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1238) {
 if (t1==495) {
-		T495f75(C, a1);
+		T495f75(ac, C, a1);
 } else {
-		T1238f82(C, a1);
+		T1238f82(ac, C, a1);
 }
 } else {
 if (t1==1239) {
-		T1239f81(C, a1);
+		T1239f81(ac, C, a1);
 } else {
-		T1240f76(C, a1);
+		T1240f76(ac, C, a1);
 }
 }
 }
 
 /* Call to XM_ELEMENT_NODE.node_set_parent */
-void T1408x14115T0(T0* C, T0* a1)
+void T1408x14123T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1403) {
 if (t1<=397) {
 if (t1==148) {
-		T148f24(C, a1);
+		T148f24(ac, C, a1);
 } else {
-		T397f6(C, a1);
+		T397f6(ac, C, a1);
 }
 } else {
-		T1403f5(C, a1);
+		T1403f5(ac, C, a1);
 }
 } else {
 if (t1==1404) {
-		T1404f6(C, a1);
+		T1404f6(ac, C, a1);
 } else {
-		T1405f4(C, a1);
+		T1405f4(ac, C, a1);
 }
 }
 }
 
 /* Call to DS_ARRAYED_LIST [ET_CLUSTER].remove */
-void T1415x4484T6(T0* C, T6 a1)
+void T1415x4484T6(GE_context* ac, T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=864) {
 if (t1==623) {
-		T623f15(C, a1);
+		T623f15(ac, C, a1);
 } else {
-		T864f15(C, a1);
+		T864f15(ac, C, a1);
 }
 } else {
-		T1438f15(C, a1);
+		T1438f15(ac, C, a1);
 }
 }
 
 /* Call to ET_OPERATOR.reset */
-void T1428x15091(T0* C)
+void T1428x15099(GE_context* ac, T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=938) {
 if (t1<=925) {
 if (t1==919) {
-		T919f53(C);
+		T919f53(ac, C);
 } else {
-		T925f55(C);
+		T925f55(ac, C);
 }
 } else {
-		T938f75(C);
+		T938f75(ac, C);
 }
 } else {
 if (t1==1258) {
-		T1258f34(C);
+		T1258f34(ac, C);
 } else {
-		T1259f34(C);
+		T1259f34(ac, C);
 }
 }
 }
 
 /* Call to ET_REGULAR_FEATURE_CALL.set_parenthesis_call */
-void T1783x15246T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T1783x15254T0T0T0(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=280) {
 if (t1==277) {
-		T277f16(C, a1, a2, a3);
+		T277f16(ac, C, a1, a2, a3);
 } else {
-		T280f32(C, a1, a2, a3);
+		T280f32(ac, C, a1, a2, a3);
 }
 } else {
 if (t1==281) {
-		T281f27(C, a1, a2, a3);
+		T281f27(ac, C, a1, a2, a3);
 } else {
-		T1418f9(C, a1, a2, a3);
+		T1418f9(ac, C, a1, a2, a3);
 }
 }
 }
 
 /* Call to detachable LX_TRANSITION [LX_NFA_STATE].record */
-void T1820x38008T0(T0* C, T0* a1)
+void T1820x38016T0(GE_context* ac, T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1821) {
 if (t1==1819) {
-		T1819f5(C, a1);
+		T1819f5(ac, C, a1);
 } else {
-		T1821f4(C, a1);
+		T1821f4(ac, C, a1);
 }
 } else {
-		T1823f5(C, a1);
+		T1823f5(ac, C, a1);
 }
 }
 
@@ -44605,22 +44605,22 @@ T0* GE_new513(T1 initialize)
 	return R;
 }
 
-/* New instance of type ET_DO_PROCEDURE */
+/* New instance of type KL_COMPARABLE_COMPARATOR [INTEGER_32] */
 T0* GE_new514(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc(sizeof(T514));
+	R = (T0*)GE_alloc_atomic(sizeof(T514));
 	if (initialize) {
 		*(T514*)R = GE_default514;
 	}
 	return R;
 }
 
-/* New instance of type KL_COMPARABLE_COMPARATOR [INTEGER_32] */
+/* New instance of type ET_DO_PROCEDURE */
 T0* GE_new516(T1 initialize)
 {
 	T0* R;
-	R = (T0*)GE_alloc_atomic(sizeof(T516));
+	R = (T0*)GE_alloc(sizeof(T516));
 	if (initialize) {
 		*(T516*)R = GE_default516;
 	}
@@ -57213,2459 +57213,6 @@ T0* GE_new1883(T1 initialize)
 		*(T1883*)R = GE_default1883;
 	}
 	return R;
-}
-
-/* New instance of type [attached] PREDICATE [[attached] NONE, [attached] TUPLE [RX_PCRE_REGULAR_EXPRESSION]] */
-T0* GE_new1884(T1 initialize)
-{
-	T0* R;
-	R = (T0*)GE_alloc(sizeof(T1884));
-	if (initialize) {
-		*(T1884*)R = GE_default1884;
-	}
-	return R;
-}
-
-/* GEC.execute */
-T0* T22c42(void)
-{
-	T0* C;
-	GE_rescue r;
-	T0* t1;
-	T1 t2;
-	T6 t3;
-	T0* t4;
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T6 l3 = 0;
-	C = GE_new22(EIF_TRUE);
-	if (GE_setjmp(r.jb) != 0) {
-		t1 = (T22f19(C));
-		T35f2(GE_void(t1), (T6)(GE_int32(4)));
-		GE_raise(GE_EX_FAIL);
-	}
-GE_retry:
-	r.previous = GE_last_rescue;
-	GE_last_rescue = &r;
-	t1 = (T22f24(C));
-	T28f6(GE_void(t1), GE_ms8("gec", 3));
-	t1 = (T22f20(C));
-	T29f7(GE_void(t1));
-	((T22*)(C))->a1 = T30c7();
-	T22f43(C);
-	l1 = ((T22*)(C))->a2;
-	l2 = T27c45(*((T0**)(&l1)));
-	T27f47(GE_void((T0*)l2));
-	t2 = (T27f14(GE_void((T0*)l2)));
-	if (t2) {
-		((T22*)(C))->a3 = EIF_VOID;
-		l3 = (((((T0*)(GE_void(*((T0**)(&l1)))))->id==17)?((T17*)(*((T0**)(&l1))))->a2:((T837*)(*((T0**)(&l1))))->a1));
-		t2 = (T6f1(((T6*)&l3), (T6)(GE_int32(5))));
-		if (t2) {
-			t1 = (T22f18(C));
-			t3 = ((T6)(((T6)l3)-((T6)(GE_int32(4)))));
-			t4 = (((((T0*)(GE_void(*((T0**)(&l1)))))->id==17)?T17f24((T0*)l1, t3, (T6)l3):T837f11((T0*)l1, t3, (T6)l3)));
-			t2 = (T32f1(GE_void(t1), t4, GE_ms8(".xace", 5)));
-		}
-		if (t2) {
-			T22f44(C, *((T0**)(&l2)));
-		} else {
-			t2 = (T6f1(((T6*)&l3), (T6)(GE_int32(4))));
-			if (t2) {
-				t1 = (T22f18(C));
-				t3 = ((T6)(((T6)l3)-((T6)(GE_int32(3)))));
-				t4 = (((((T0*)(GE_void(*((T0**)(&l1)))))->id==17)?T17f24((T0*)l1, t3, (T6)l3):T837f11((T0*)l1, t3, (T6)l3)));
-				t2 = (T32f1(GE_void(t1), t4, GE_ms8(".ecf", 4)));
-			}
-			if (t2) {
-				T22f45(C, *((T0**)(&l2)));
-			} else {
-				T22f46(C, *((T0**)(&l2)));
-			}
-		}
-		T27f48(GE_void((T0*)l2));
-		t2 = ((((T22*)(C))->a3)!=(EIF_VOID));
-		if (t2) {
-			T22f47(C, ((T22*)(C))->a3);
-			t1 = (T31x3052(GE_void(((T22*)(C))->a3)));
-			t2 = (((((T0*)(GE_void(t1)))->id==75)?((T75*)(t1))->a4:((T34*)(t1))->a1));
-			if (t2) {
-				t1 = (T22f19(C));
-				T35f2(GE_void(t1), (T6)(GE_int32(2)));
-			}
-		} else {
-			t1 = (T22f19(C));
-			T35f2(GE_void(t1), (T6)(GE_int32(3)));
-		}
-	} else {
-		T22f48(C, *((T0**)(&l1)));
-		t1 = (T22f19(C));
-		T35f2(GE_void(t1), (T6)(GE_int32(1)));
-	}
-	GE_last_rescue = r.previous;
-	return C;
-}
-
-/* GEC.report_cannot_read_error */
-void T22f48(T0* C, T0* a1)
-{
-	T0* l1 = 0;
-	l1 = T84c8(a1);
-	T30f9(GE_void(((T22*)(C))->a1), l1);
-}
-
-/* UT_ERROR_HANDLER.report_error */
-void T30f9(T0* C, T0* a1)
-{
-	T0* t1;
-	t1 = (T30f5(C, a1));
-	T30f11(C, t1);
-}
-
-/* UT_ERROR_HANDLER.report_error_message */
-void T30f11(T0* C, T0* a1)
-{
-	if (((T0*)(GE_void(((T30*)(C))->a2)))->id==124) {
-		T124f15(((T30*)(C))->a2, a1);
-	} else {
-		T257f5(((T30*)(C))->a2, a1);
-	}
-}
-
-/* KL_STDERR_FILE.put_line */
-void T124f15(T0* C, T0* a1)
-{
-	T124f16(C, a1);
-	T124f19(C);
-}
-
-/* KL_STDERR_FILE.put_new_line */
-void T124f19(T0* C)
-{
-	T124f16(C, ge260ov12227);
-}
-
-/* KL_STDERR_FILE.put_string */
-void T124f16(T0* C, T0* a1)
-{
-	T0* t1;
-	T0* l1 = 0;
-	t1 = (T124f11(C));
-	l1 = (T32f6(GE_void(t1), a1));
-	T124f20(C, l1);
-}
-
-/* KL_STDERR_FILE.old_put_string */
-void T124f20(T0* C, T0* a1)
-{
-	T6 t1;
-	T1 t2;
-	T533 t3;
-	T14 t4;
-	T0* l1 = 0;
-	t1 = (((((T0*)(GE_void(a1)))->id==17)?((T17*)(a1))->a2:((T837*)(a1))->a1));
-	t2 = (((((t1) != ((T6)(GE_int32(0)))))));
-	if (t2) {
-		l1 = (((((T0*)(GE_void(a1)))->id==17)?((T17*)(a1))->a1:((T837*)(a1))->a2));
-		(t3).id = 533;
-		(t3).a1 = ((l1?(T14)(GE_types[((T0*)(l1))->id].is_special?(T14)((T15*)(l1))->z2:(T14)l1):(T14)0));
-		t4 = ((t3).a1);
-		t1 = (((((T0*)(GE_void(a1)))->id==17)?((T17*)(a1))->a2:((T837*)(a1))->a1));
-		T124f24(C, ((T124*)(C))->a1, t4, t1);
-	}
-}
-
-/* KL_STDERR_FILE.console_ps */
-void T124f24(T0* C, T14 a1, T14 a2, T6 a3)
-{
-	console_ps((FILE *)a1,( char *)a2,( EIF_INTEGER)a3);
-}
-
-/* KL_STRING_ROUTINES.as_string */
-T0* T32f6(T0* C, T0* a1)
-{
-	T0* t1;
-	T1 t2;
-	T0* R = 0;
-	T0* l1 = 0;
-	t1 = (T32f2(C));
-	t2 = (T127f1(GE_void(t1), a1, ge224ov3558));
-	if (t2) {
-		R = a1;
-	} else {
-		if ((a1)==EIF_VOID) {
-			l1 = EIF_VOID;
-		} else {
-			switch (((T0*)(a1))->id) {
-			case 837:
-				l1 = a1;
-				break;
-			default:
-				l1 = EIF_VOID;
-			}
-		}
-		t2 = ((l1)!=(EIF_VOID));
-		if (t2) {
-			R = (T837f7(GE_void(l1)));
-		} else {
-			R = (((((T0*)(GE_void(a1)))->id==17)?T17f22(a1):T837f8(a1)));
-		}
-	}
-	return R;
-}
-
-/* UC_UTF8_STRING.string */
-T0* T837f8(T0* C)
-{
-	T1 t1;
-	T2 t2;
-	T0* t3;
-	T6 t4;
-	T0* R = 0;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	l2 = ((T837*)(C))->a1;
-	R = T17c44(l2);
-	t1 = (((((l2) == (((T837*)(C))->a3)))));
-	if (t1) {
-		l1 = (T6)(GE_int32(1));
-		while (1) {
-			t1 = (T6f1((&l1), l2));
-			if (t1) {
-				break;
-			}
-			t2 = (T837f33(C, l1));
-			T17f46(GE_void(R), t2);
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-	} else {
-		l2 = ((T837*)(C))->a3;
-		l1 = (T6)(GE_int32(1));
-		while (1) {
-			t1 = (T6f1((&l1), l2));
-			if (t1) {
-				break;
-			}
-			l3 = (T837f34(C, l1));
-			t3 = (T837f35(C));
-			t4 = (T224f1(GE_void(t3)));
-			t1 = (T6f13((&l3), t4));
-			if (t1) {
-				t3 = (T837f36(C));
-				t2 = (T225f1(GE_void(t3), l3));
-				T17f46(GE_void(R), t2);
-			} else {
-				T17f46(GE_void(R), (T2)('\000'));
-			}
-			l1 = (T837f37(C, l1));
-		}
-	}
-	return R;
-}
-
-/* UC_UTF8_STRING.next_byte_index */
-T6 T837f37(T0* C, T6 a1)
-{
-	T0* t1;
-	T2 t2;
-	T6 t3;
-	T6 R = 0;
-	t1 = (T837f41(C));
-	t2 = (T837f33(C, a1));
-	t3 = (T836f3(GE_void(t1), t2));
-	R = ((T6)((a1)+(t3)));
-	return R;
-}
-
-/* UC_UTF8_ROUTINES.encoded_byte_count */
-T6 T836f3(T0* C, T2 a1)
-{
-	T1 t1;
-	T6 R = 0;
-	t1 = (T2f7(&a1, (T2)('\177')));
-	if (t1) {
-		R = (T6)(GE_int32(1));
-	} else {
-		t1 = (T2f7(&a1, (T2)('\337')));
-		if (t1) {
-			R = (T6)(GE_int32(2));
-		} else {
-			t1 = (T2f7(&a1, (T2)('\357')));
-			if (t1) {
-				R = (T6)(GE_int32(3));
-			} else {
-				R = (T6)(GE_int32(4));
-			}
-		}
-	}
-	return R;
-}
-
-/* CHARACTER_8.is_less_equal */
-T1 T2f7(T2* C, T2 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = (T2f6(&a1, *C));
-	R = ((T1)(!(t1)));
-	return R;
-}
-
-/* CHARACTER_8.is_less */
-T1 T2f6(T2* C, T2 a1)
-{
-	T10 t1;
-	T10 t2;
-	T1 R = 0;
-	t1 = (T2f11(C));
-	t2 = (T2f11(&a1));
-	R = ((T1)((t1)<(t2)));
-	return R;
-}
-
-/* CHARACTER_8.natural_32_code */
-T10 T2f11(T2* C)
-{
-	T2 t1;
-	T6 t2;
-	T10 R = 0;
-	t1 = (*C);
-	t2 = ((T6)(t1));
-	R = (T6f19(&t2));
-	return R;
-}
-
-/* INTEGER_32.to_natural_32 */
-T10 T6f19(T6* C)
-{
-	T10 R = 0;
-	R = ((T10)(*C));
-	return R;
-}
-
-/* UC_UTF8_STRING.utf8 */
-unsigned char ge311os13896 = '\0';
-T0* ge311ov13896;
-T0* T837f41(T0* C)
-{
-	T0* R = 0;
-	if (ge311os13896) {
-		return ge311ov13896;
-	} else {
-		ge311os13896 = '\1';
-		ge311ov13896 = R;
-	}
-	R = T836c36();
-	ge311ov13896 = R;
-	return R;
-}
-
-/* UC_UTF8_ROUTINES.default_create */
-T0* T836c36(void)
-{
-	T0* C;
-	C = GE_new836(EIF_TRUE);
-	return C;
-}
-
-/* KL_INTEGER_ROUTINES.to_character */
-T2 T225f1(T0* C, T6 a1)
-{
-	T2 R = 0;
-	R = ((T2)(a1));
-	return R;
-}
-
-/* UC_UTF8_STRING.integer_ */
-unsigned char ge217os3563 = '\0';
-T0* ge217ov3563;
-T0* T837f36(T0* C)
-{
-	T0* R = 0;
-	if (ge217os3563) {
-		return ge217ov3563;
-	} else {
-		ge217os3563 = '\1';
-		ge217ov3563 = R;
-	}
-	R = T225c5();
-	ge217ov3563 = R;
-	return R;
-}
-
-/* KL_INTEGER_ROUTINES.default_create */
-T0* T225c5(void)
-{
-	T0* C;
-	C = GE_new225(EIF_TRUE);
-	return C;
-}
-
-/* INTEGER_32.is_less_equal */
-T1 T6f13(T6* C, T6 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = ((T1)((a1)<(*C)));
-	R = ((T1)(!(t1)));
-	return R;
-}
-
-/* KL_PLATFORM.maximum_character_code */
-unsigned char ge292os16018 = '\0';
-T6 ge292ov16018;
-T6 T224f1(T0* C)
-{
-	T6 R = 0;
-	if (ge292os16018) {
-		return ge292ov16018;
-	} else {
-		ge292os16018 = '\1';
-		ge292ov16018 = R;
-	}
-	R = ((T6)(GE_int32(255)));
-	ge292ov16018 = R;
-	return R;
-}
-
-/* UC_UTF8_STRING.platform */
-unsigned char ge299os2139 = '\0';
-T0* ge299ov2139;
-T0* T837f35(T0* C)
-{
-	T0* R = 0;
-	if (ge299os2139) {
-		return ge299ov2139;
-	} else {
-		ge299os2139 = '\1';
-		ge299ov2139 = R;
-	}
-	R = T224c3();
-	ge299ov2139 = R;
-	return R;
-}
-
-/* KL_PLATFORM.default_create */
-T0* T224c3(void)
-{
-	T0* C;
-	C = GE_new224(EIF_TRUE);
-	return C;
-}
-
-/* UC_UTF8_STRING.item_code_at_byte_index */
-T6 T837f34(T0* C, T6 a1)
-{
-	T0* t1;
-	T6 t2;
-	T1 t3;
-	T6 t4;
-	T6 R = 0;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T2 l3 = 0;
-	l1 = a1;
-	l3 = (T837f33(C, l1));
-	t1 = (T837f41(C));
-	R = (T836f4(GE_void(t1), l3));
-	t1 = (T837f41(C));
-	t2 = (T836f3(GE_void(t1), l3));
-	t2 = ((T6)((l1)+(t2)));
-	l2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-	l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	while (1) {
-		t3 = (T6f1((&l1), l2));
-		if (t3) {
-			break;
-		}
-		l3 = (T837f33(C, l1));
-		t2 = ((T6)((R)*((T6)(GE_int32(64)))));
-		t1 = (T837f41(C));
-		t4 = (T836f6(GE_void(t1), l3));
-		R = ((T6)((t2)+(t4)));
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	return R;
-}
-
-/* UC_UTF8_ROUTINES.encoded_next_value */
-T6 T836f6(T0* C, T2 a1)
-{
-	T6 t1;
-	T6 R = 0;
-	t1 = ((T6)(a1));
-	R = ((T6)((t1)%((T6)(GE_int32(64)))));
-	return R;
-}
-
-/* UC_UTF8_ROUTINES.encoded_first_value */
-T6 T836f4(T0* C, T2 a1)
-{
-	T1 t1;
-	T6 R = 0;
-	R = ((T6)(a1));
-	t1 = (T2f7(&a1, (T2)('\177')));
-	if (t1) {
-	} else {
-		t1 = (T2f7(&a1, (T2)('\337')));
-		if (t1) {
-			R = ((T6)((R)%((T6)(GE_int32(32)))));
-		} else {
-			t1 = (T2f7(&a1, (T2)('\357')));
-			if (t1) {
-				R = ((T6)((R)%((T6)(GE_int32(16)))));
-			} else {
-				t1 = (T2f7(&a1, (T2)('\364')));
-				if (t1) {
-					R = ((T6)((R)%((T6)(GE_int32(8)))));
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* STRING_8.append_character */
-void T17f46(T0* C, T2 a1)
-{
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	l1 = ((T17*)(C))->a2;
-	t1 = (T17f4(C));
-	t2 = (((((l1) == (t1)))));
-	if (t2) {
-		t1 = (T17f5(C));
-		t1 = ((T6)((l1)+(t1)));
-		T17f47(C, t1);
-	}
-	((T15*)(GE_void(((T17*)(C))->a1)))->z2[l1] = (a1);
-	((T17*)(C))->a2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-}
-
-/* STRING_8.resize */
-void T17f47(T0* C, T6 a1)
-{
-	T6 t1;
-	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a1 = (T15f4(GE_void(((T17*)(C))->a1), (T2)('\000'), t1));
-}
-
-/* SPECIAL [CHARACTER_8].aliased_resized_area_with_default */
-T0* T15f4(T0* C, T2 a1, T6 a2)
-{
-	T6 t1;
-	T6 t2;
-	T0* R = 0;
-	R = (T15f5(C, a2));
-	t1 = (((T15*)(GE_void(R)))->a1);
-	t2 = ((T6)((a2)-((T6)(GE_int32(1)))));
-	T15f14(GE_void(R), a1, t1, t2);
-	return R;
-}
-
-/* SPECIAL [CHARACTER_8].fill_with */
-void T15f14(T0* C, T2 a1, T6 a2, T6 a3)
-{
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	l1 = a2;
-	t1 = ((T6)((a3)+((T6)(GE_int32(1)))));
-	l3 = (T6f15(&(((T15*)(C))->a1), t1));
-	l2 = l3;
-	while (1) {
-		t2 = (((((l1) == (l2)))));
-		if (t2) {
-			break;
-		}
-		((T15*)(C))->z2[l1] = (a1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	l1 = l3;
-	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = (((((l1) == (l2)))));
-		if (t2) {
-			break;
-		}
-		T15f16(C, a1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-}
-
-/* SPECIAL [CHARACTER_8].extend */
-void T15f16(T0* C, T2 a1)
-{
-	T6 t1;
-	t1 = ((T15*)(C))->a1;
-	((T15*)(C))->a1 = t1 + 1 ;
-	((T15*)(C))->z2[t1] = a1;
-}
-
-/* INTEGER_32.min */
-T6 T6f15(T6* C, T6 a1)
-{
-	T1 t1;
-	T6 R = 0;
-	t1 = (T6f13(C, a1));
-	if (t1) {
-		R = *C;
-	} else {
-		R = a1;
-	}
-	return R;
-}
-
-/* SPECIAL [CHARACTER_8].aliased_resized_area */
-T0* T15f5(T0* C, T6 a1)
-{
-	T0* R = 0;
-	T6 t1;
-	t1 = ((T15*)(C))->a2;
-	if (a1 > t1) {
-		R = GE_new15(a1, EIF_FALSE);
-		*(T15*)(R) = *(T15*)(C);
-		memcpy(((T15*)(R))->z2,((T15*)(C))->z2,t1*sizeof(T2));
-#ifndef GE_alloc_atomic_cleared
-		memset(((T15*)(R))->z2+t1,0,(a1-t1)*sizeof(T2));
-#endif
-	} else {
-		R = C;
-		t1 = ((T15*)(R))->a1;
-		if (t1 > a1) {
-			((T15*)(R))->a1 = a1;
-#ifndef GE_alloc_atomic_cleared
-			memset(((T15*)(R))->z2+a1,0,(t1-a1)*sizeof(T2));
-#endif
-		}
-	}
-	((T15*)(R))->a2 = a1;
-	return R;
-}
-
-/* STRING_8.additional_space */
-T6 T17f5(T0* C)
-{
-	T6 t1;
-	T6 R = 0;
-	t1 = (T17f4(C));
-	t1 = ((T6)((t1)/((T6)(GE_int32(2)))));
-	R = (T6f16(&t1, (T6)(GE_int32(5))));
-	return R;
-}
-
-/* INTEGER_32.max */
-T6 T6f16(T6* C, T6 a1)
-{
-	T1 t1;
-	T6 R = 0;
-	t1 = (T6f12(C, a1));
-	if (t1) {
-		R = *C;
-	} else {
-		R = a1;
-	}
-	return R;
-}
-
-/* INTEGER_32.is_greater_equal */
-T1 T6f12(T6* C, T6 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = ((T1)((*C)<(a1)));
-	R = ((T1)(!(t1)));
-	return R;
-}
-
-/* STRING_8.capacity */
-T6 T17f4(T0* C)
-{
-	T6 t1;
-	T6 R = 0;
-	t1 = (((T15*)(GE_void(((T17*)(C))->a1)))->a1);
-	R = ((T6)((t1)-((T6)(GE_int32(1)))));
-	return R;
-}
-
-/* UC_UTF8_STRING.byte_item */
-T2 T837f33(T0* C, T6 a1)
-{
-	T2 R = 0;
-	T6 l1 = 0;
-	l1 = ((T837*)(C))->a1;
-	T837f81(C, ((T837*)(C))->a3);
-	R = (T837f49(C, a1));
-	T837f81(C, l1);
-	return R;
-}
-
-/* UC_UTF8_STRING.old_item */
-T2 T837f49(T0* C, T6 a1)
-{
-	T6 t1;
-	T2 R = 0;
-	t1 = ((T6)((a1)-((T6)(GE_int32(1)))));
-	R = (((T15*)(GE_void(((T837*)(C))->a2)))->z2[t1]);
-	return R;
-}
-
-/* UC_UTF8_STRING.set_count */
-void T837f81(T0* C, T6 a1)
-{
-	T1 t1;
-	t1 = (T6f1(&(((T837*)(C))->a5), a1));
-	if (t1) {
-		T837f97(C);
-	}
-	((T837*)(C))->a1 = a1;
-}
-
-/* UC_UTF8_STRING.reset_byte_index_cache */
-void T837f97(T0* C)
-{
-	((T837*)(C))->a5 = (T6)(GE_int32(1));
-	((T837*)(C))->a6 = (T6)(GE_int32(1));
-}
-
-/* STRING_8.make */
-void T17f44(T0* C, T6 a1)
-{
-	T6 t1;
-	((T17*)(C))->a2 = (T6)(GE_int32(0));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a1 = T15c12((T2)('\000'), t1);
-}
-
-/* STRING_8.make */
-T0* T17c44(T6 a1)
-{
-	T0* C;
-	T6 t1;
-	C = GE_new17(EIF_TRUE);
-	((T17*)(C))->a2 = (T6)(GE_int32(0));
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-	t1 = ((T6)((a1)+((T6)(GE_int32(1)))));
-	((T17*)(C))->a1 = T15c12((T2)('\000'), t1);
-	return C;
-}
-
-/* SPECIAL [CHARACTER_8].make_filled */
-T0* T15c12(T2 a1, T6 a2)
-{
-	T0* C;
-	T6 t1;
-	C = GE_new15(a2, EIF_TRUE);
-	T15f15(C, a2);
-	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
-	T15f14(C, a1, (T6)(GE_int32(0)), t1);
-	return C;
-}
-
-/* SPECIAL [CHARACTER_8].make_empty */
-void T15f15(T0* C, T6 a1)
-{
-}
-
-/* SPECIAL [CHARACTER_8].make_empty */
-T0* T15c15(T6 a1)
-{
-	T0* C;
-	C = GE_new15(a1, EIF_TRUE);
-	return C;
-}
-
-/* STRING_8.string */
-T0* T17f22(T0* C)
-{
-	T0* R = 0;
-	R = T17c64(C);
-	return R;
-}
-
-/* STRING_8.make_from_string */
-T0* T17c64(T0* a1)
-{
-	T0* C;
-	T1 t1;
-	T6 t2;
-	T0* t3;
-	T6 t4;
-	C = GE_new17(EIF_TRUE);
-	((T17*)(C))->a1 = (((T17*)(a1))->a1);
-	((T17*)(C))->a2 = (((T17*)(a1))->a2);
-	((T17*)(C))->a3 = (T6)(GE_int32(0));
-	t1 = ((C)!=(a1));
-	if (t1) {
-		t2 = ((T6)((((T17*)(C))->a2)+((T6)(GE_int32(1)))));
-		((T17*)(C))->a1 = T15c15(t2);
-		t3 = (((T17*)(a1))->a1);
-		t2 = (T17f16(a1));
-		t4 = ((T6)((((T17*)(C))->a2)+((T6)(GE_int32(1)))));
-		T15f18(GE_void(((T17*)(C))->a1), t3, t2, (T6)(GE_int32(0)), t4);
-	}
-	return C;
-}
-
-/* SPECIAL [CHARACTER_8].copy_data */
-void T15f18(T0* C, T0* a1, T6 a2, T6 a3, T6 a4)
-{
-	T1 t1;
-	T2 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	t1 = ((a1)==(C));
-	if (t1) {
-		T15f20(C, a2, a3, a4);
-	} else {
-		l1 = a2;
-		l2 = a3;
-		l3 = ((T6)((a2)+(a4)));
-		while (1) {
-			t1 = (((((l1) == (l3)))));
-			if (t1) {
-				break;
-			}
-			t2 = (((T15*)(GE_void(a1)))->z2[l1]);
-			T15f19(C, t2, l2);
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-		}
-	}
-}
-
-/* SPECIAL [CHARACTER_8].force */
-void T15f19(T0* C, T2 a1, T6 a2)
-{
-	T1 t1;
-	t1 = ((T1)((a2)<(((T15*)(C))->a1)));
-	if (t1) {
-		((T15*)(C))->z2[a2] = (a1);
-	} else {
-		T15f16(C, a1);
-	}
-}
-
-/* SPECIAL [CHARACTER_8].move_data */
-void T15f20(T0* C, T6 a1, T6 a2, T6 a3)
-{
-	T1 t1;
-	T6 t2;
-	t1 = (((((a1) == (a2)))));
-	if (t1) {
-	} else {
-		t1 = (T6f1(&a1, a2));
-		if (t1) {
-			t2 = ((T6)((a2)+(a3)));
-			t1 = ((T1)((t2)<(a1)));
-			if (t1) {
-				T15f21(C, a1, a2, a3);
-			} else {
-				T15f17(C, a1, a2, a3);
-			}
-		} else {
-			t2 = ((T6)((a1)+(a3)));
-			t1 = ((T1)((t2)<(a2)));
-			if (t1) {
-				T15f21(C, a1, a2, a3);
-			} else {
-				T15f17(C, a1, a2, a3);
-			}
-		}
-	}
-}
-
-/* SPECIAL [CHARACTER_8].overlapping_move */
-void T15f17(T0* C, T6 a1, T6 a2, T6 a3)
-{
-	T1 t1;
-	T6 t2;
-	T2 t3;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	t1 = ((T1)((a1)<(a2)));
-	if (t1) {
-		t2 = ((T6)((a1)+(a3)));
-		l1 = ((T6)((t2)-((T6)(GE_int32(1)))));
-		l2 = ((T6)((a1)-((T6)(GE_int32(1)))));
-		l3 = ((T6)((a2)-(a1)));
-		t2 = ((T6)((a2)+(a3)));
-		t1 = (T6f12(&t2, ((T15*)(C))->a1));
-		if (t1) {
-			t3 = (((T15*)(C))->z2[a1]);
-			t2 = ((T6)((a2)+(a3)));
-			t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
-			T15f14(C, t3, ((T15*)(C))->a1, t2);
-		}
-		while (1) {
-			t1 = (((((l1) == (l2)))));
-			if (t1) {
-				break;
-			}
-			t3 = (((T15*)(C))->z2[l1]);
-			t2 = ((T6)((l1)+(l3)));
-			((T15*)(C))->z2[t2] = (t3);
-			l1 = ((T6)((l1)-((T6)(GE_int32(1)))));
-		}
-	} else {
-		l1 = a1;
-		l2 = ((T6)((a1)+(a3)));
-		l3 = ((T6)((a1)-(a2)));
-		while (1) {
-			t1 = (((((l1) == (l2)))));
-			if (t1) {
-				break;
-			}
-			t3 = (((T15*)(C))->z2[l1]);
-			t2 = ((T6)((l1)-(l3)));
-			T15f19(C, t3, t2);
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-	}
-}
-
-/* SPECIAL [CHARACTER_8].non_overlapping_move */
-void T15f21(T0* C, T6 a1, T6 a2, T6 a3)
-{
-	T1 t1;
-	T2 t2;
-	T6 t3;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	l1 = a1;
-	l2 = ((T6)((a1)+(a3)));
-	l3 = ((T6)((a2)-(a1)));
-	while (1) {
-		t1 = (((((l1) == (l2)))));
-		if (t1) {
-			break;
-		}
-		t2 = (((T15*)(C))->z2[l1]);
-		t3 = ((T6)((l1)+(l3)));
-		T15f19(C, t2, t3);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-}
-
-/* STRING_8.area_lower */
-T6 T17f16(T0* C)
-{
-	T6 R = 0;
-	return R;
-}
-
-/* UC_UTF8_STRING.as_string */
-T0* T837f7(T0* C)
-{
-	T0* R = 0;
-	R = (T837f31(C));
-	return R;
-}
-
-/* UC_UTF8_STRING.to_utf8 */
-T0* T837f31(T0* C)
-{
-	T1 t1;
-	T2 t2;
-	T0* R = 0;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	l2 = ((T837*)(C))->a3;
-	R = T17c44(l2);
-	l1 = (T6)(GE_int32(1));
-	while (1) {
-		t1 = (T6f1((&l1), l2));
-		if (t1) {
-			break;
-		}
-		t2 = (T837f33(C, l1));
-		T17f46(GE_void(R), t2);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	return R;
-}
-
-/* KL_ANY_ROUTINES.same_types */
-T1 T127f1(T0* C, T0* a1, T0* a2)
-{
-	T1 R = 0;
-	R = (T20x27T0(GE_void(a1), a2));
-	return R;
-}
-
-/* KL_STRING_ROUTINES.any_ */
-unsigned char ge212os2138 = '\0';
-T0* ge212ov2138;
-T0* T32f2(T0* C)
-{
-	T0* R = 0;
-	if (ge212os2138) {
-		return ge212ov2138;
-	} else {
-		ge212os2138 = '\1';
-		ge212ov2138 = R;
-	}
-	R = T127c3();
-	ge212ov2138 = R;
-	return R;
-}
-
-/* KL_ANY_ROUTINES.default_create */
-T0* T127c3(void)
-{
-	T0* C;
-	C = GE_new127(EIF_TRUE);
-	return C;
-}
-
-/* KL_STDERR_FILE.string_ */
-unsigned char ge219os1985 = '\0';
-T0* ge219ov1985;
-T0* T124f11(T0* C)
-{
-	T0* R = 0;
-	if (ge219os1985) {
-		return ge219ov1985;
-	} else {
-		ge219os1985 = '\1';
-		ge219ov1985 = R;
-	}
-	R = T32c19();
-	ge219ov1985 = R;
-	return R;
-}
-
-/* KL_STRING_ROUTINES.default_create */
-T0* T32c19(void)
-{
-	T0* C;
-	C = GE_new32(EIF_TRUE);
-	return C;
-}
-
-/* UT_ERROR_HANDLER.message */
-T0* T30f5(T0* C, T0* a1)
-{
-	T0* R = 0;
-	R = (T49x4640(GE_void(a1)));
-	return R;
-}
-
-/* UT_CANNOT_READ_FILE_ERROR.make */
-T0* T84c8(T0* a1)
-{
-	T0* C;
-	C = GE_new84(EIF_TRUE);
-	((T84*)(C))->a1 = T135c11(ge164ov4643, (T6)(GE_int32(1)), (T6)(GE_int32(1)));
-	T135f12(GE_void(((T84*)(C))->a1), a1, (T6)(GE_int32(1)));
-	return C;
-}
-
-/* ARRAY [STRING_8].put */
-void T135f12(T0* C, T0* a1, T6 a2)
-{
-	T6 t1;
-	t1 = ((T6)((a2)-(((T135*)(C))->a2)));
-	((T134*)(GE_void(((T135*)(C))->a1)))->z2[t1] = (a1);
-}
-
-/* ARRAY [STRING_8].make_filled */
-T0* T135c11(T0* a1, T6 a2, T6 a3)
-{
-	T0* C;
-	T1 t1;
-	T6 t2;
-	T6 l1 = 0;
-	C = GE_new135(EIF_TRUE);
-	((T135*)(C))->a2 = a2;
-	((T135*)(C))->a3 = a3;
-	t1 = (T6f13(&a2, a3));
-	if (t1) {
-		t2 = ((T6)((a3)-(a2)));
-		l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
-	}
-	T135f13(C, a1, l1);
-	return C;
-}
-
-/* ARRAY [STRING_8].make_filled_area */
-void T135f13(T0* C, T0* a1, T6 a2)
-{
-	((T135*)(C))->a1 = T134c7(a1, a2);
-}
-
-/* SPECIAL [STRING_8].make_filled */
-T0* T134c7(T0* a1, T6 a2)
-{
-	T0* C;
-	T6 t1;
-	C = GE_new134(a2, EIF_TRUE);
-	T134f8(C, a2);
-	t1 = ((T6)((a2)-((T6)(GE_int32(1)))));
-	T134f10(C, a1, (T6)(GE_int32(0)), t1);
-	return C;
-}
-
-/* SPECIAL [STRING_8].fill_with */
-void T134f10(T0* C, T0* a1, T6 a2, T6 a3)
-{
-	T6 t1;
-	T1 t2;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	l1 = a2;
-	t1 = ((T6)((a3)+((T6)(GE_int32(1)))));
-	l3 = (T6f15(&(((T134*)(C))->a1), t1));
-	l2 = l3;
-	while (1) {
-		t2 = (((((l1) == (l2)))));
-		if (t2) {
-			break;
-		}
-		((T134*)(C))->z2[l1] = (a1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-	l1 = l3;
-	l2 = ((T6)((a3)+((T6)(GE_int32(1)))));
-	while (1) {
-		t2 = (((((l1) == (l2)))));
-		if (t2) {
-			break;
-		}
-		T134f13(C, a1);
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-	}
-}
-
-/* SPECIAL [STRING_8].extend */
-void T134f13(T0* C, T0* a1)
-{
-	T6 t1;
-	t1 = ((T134*)(C))->a1;
-	((T134*)(C))->a1 = t1 + 1 ;
-	((T134*)(C))->z2[t1] = a1;
-}
-
-/* SPECIAL [STRING_8].make_empty */
-void T134f8(T0* C, T6 a1)
-{
-}
-
-/* SPECIAL [STRING_8].make_empty */
-T0* T134c8(T6 a1)
-{
-	T0* C;
-	C = GE_new134(a1, EIF_TRUE);
-	return C;
-}
-
-/* GEC.process_system */
-void T22f47(T0* C, T0* a1)
-{
-	T1 t1;
-	T0* t2;
-	T1 t3;
-	T0* t4;
-	T0* t5;
-	T6 t6;
-	T0* l1 = 0;
-	T0* l2 = 0;
-	T0* l3 = 0;
-	T0* l4 = 0;
-	T0* l5 = 0;
-	T0* l6 = 0;
-	T0* l7 = 0;
-	T0* l8 = 0;
-	T0* l9 = 0;
-	T0* l10 = 0;
-	t1 = (T22f25(C));
-	if (t1) {
-		t2 = (T22f26(C));
-		T31x3083T0(GE_void(a1), t2);
-	}
-	t2 = (T31x3052(GE_void(a1)));
-	if (((T0*)(GE_void(t2)))->id==75) {
-		T75f175(t2);
-	} else {
-		T34f174(t2);
-	}
-	t2 = (T22f27(C));
-	T31x3167T0(GE_void(a1), t2);
-	t1 = (T22f28(C));
-	T31x3130T1(GE_void(a1), t1);
-	t1 = (T22f29(C));
-	if (t1) {
-	}
-	l1 = T69c61(a1);
-	t1 = (T22f30(C));
-	if (t1) {
-		T31x3142T1(GE_void(a1), EIF_TRUE);
-		T31x3143T1(GE_void(a1), EIF_TRUE);
-		T69f62(GE_void(l1), EIF_TRUE);
-	}
-	t1 = (T22f31(C));
-	T69f63(GE_void(l1), t1);
-	t1 = (T22f32(C));
-	T69f64(GE_void(l1), t1);
-	t1 = (T44f11(GE_void(((T22*)(C))->a11)));
-	if (t1) {
-		l6 = (T44f13(GE_void(((T22*)(C))->a11)));
-		l8 = T27c45(l6);
-		T27f47(GE_void(l8));
-		t1 = (T27f14(GE_void(l8)));
-		if (t1) {
-			l9 = T74c37((T6)(GE_int32(100)));
-			T27f49(GE_void(l8));
-			while (1) {
-				t1 = (((T27*)(GE_void(l8)))->a1);
-				if (t1) {
-					break;
-				}
-				t2 = (((T27*)(GE_void(l8)))->a2);
-				l10 = (T17f6(GE_void(t2)));
-				T17f51(GE_void(l10));
-				T17f52(GE_void(l10));
-				t1 = (T17f12(GE_void(l10)));
-				t1 = ((T1)(!(t1)));
-				if (t1) {
-					t3 = (T17f13(GE_void(l10), GE_ms8("--", 2)));
-					t1 = ((T1)(!(t3)));
-				}
-				if (t1) {
-					T74f38(GE_void(l9), l10);
-				}
-				T27f49(GE_void(l8));
-			}
-			T27f48(GE_void(l8));
-			T69f65(GE_void(l1), l9);
-		} else {
-			T22f48(C, l6);
-			t2 = (T22f19(C));
-			T35f2(GE_void(t2), (T6)(GE_int32(1)));
-		}
-	}
-	l2 = T77c119(l1);
-	T69f66(GE_void(l1), l2);
-	T69f67(GE_void(l1));
-	l3 = (T31x3050(GE_void(a1)));
-	t1 = ((l3)==(EIF_VOID));
-	if (t1) {
-	} else {
-		t2 = (T31x3317(GE_void(a1)));
-		t4 = (T22f33(C));
-		t4 = (T79f1(GE_void(t4)));
-		t5 = (T22f33(C));
-		t5 = (T79f1(GE_void(t5)));
-		t1 = (T78f19(GE_void(l3), t2, t4, t5));
-		if (t1) {
-		} else {
-			t1 = (((T69*)(GE_void(l1)))->a1);
-			if (t1) {
-				t2 = (T22f19(C));
-				T35f2(GE_void(t2), (T6)(GE_int32(1)));
-			} else {
-				l7 = (T31x3091(GE_void(a1)));
-				t1 = ((l7)==(EIF_VOID));
-				if (t1) {
-					t2 = (T78f18(GE_void(l3)));
-					l7 = (T80f58(GE_void(t2)));
-				}
-				l4 = T72c546(l1);
-				t1 = (T41f17(GE_void(((T22*)(C))->a12)));
-				if (t1) {
-					t1 = (T22f34(C));
-					T72f547(GE_void(l4), t1);
-				}
-				t1 = (T22f23(C));
-				T72f548(GE_void(l4), t1);
-				t1 = (T22f35(C));
-				t1 = ((T1)(!(t1)));
-				T72f549(GE_void(l4), t1);
-				t1 = (T6f1(&(((T22*)(C))->a16), (T6)(GE_int32(0))));
-				if (t1) {
-					T72f550(GE_void(l4), ((T22*)(C))->a16);
-				}
-				T72f551(GE_void(l4), l7);
-				t1 = (T22f29(C));
-				if (t1) {
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f15(t2, GE_ms8("Never void targets: ", 20));
-					} else {
-						T257f9(t2, GE_ms8("Never void targets: ", 20));
-					}
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					t6 = (((T72*)(GE_void(l4)))->a1);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f16(t2, t6);
-					} else {
-						T257f8(t2, t6);
-					}
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f17(t2);
-					} else {
-						T257f4(t2);
-					}
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f15(t2, GE_ms8("Can be void targets: ", 21));
-					} else {
-						T257f9(t2, GE_ms8("Can be void targets: ", 21));
-					}
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					t6 = (((T72*)(GE_void(l4)))->a2);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f16(t2, t6);
-					} else {
-						T257f8(t2, t6);
-					}
-					t2 = (((T30*)(GE_void(((T22*)(C))->a1)))->a1);
-					if (((T0*)(GE_void(t2)))->id==125) {
-						T125f17(t2);
-					} else {
-						T257f4(t2);
-					}
-				}
-				t1 = (((T72*)(GE_void(l4)))->a3);
-				if (t1) {
-					t2 = (T22f19(C));
-					T35f2(GE_void(t2), (T6)(GE_int32(1)));
-				} else {
-					t1 = (T22f36(C));
-					t1 = ((T1)(!(t1)));
-					if (t1) {
-						t2 = (T22f37(C));
-						t1 = (T82f1(GE_void(t2)));
-						if (t1) {
-							l6 = (((((T0*)(GE_void(l7)))->id==17)?T17f9(l7, GE_ms8(".bat", 4)):T837f15(l7, GE_ms8(".bat", 4))));
-						} else {
-							l6 = (((((T0*)(GE_void(l7)))->id==17)?T17f9(l7, GE_ms8(".sh", 3)):T837f15(l7, GE_ms8(".sh", 3))));
-						}
-						t2 = (T22f38(C));
-						t2 = (((((T0*)(GE_void(t2)))->id==116)?T116f26(t2, l6):T117f1(t2, l6)));
-						l5 = T73c12(t2);
-						T73f13(GE_void(l5));
-						t6 = (((T73*)(GE_void(l5)))->a1);
-						t1 = (((((t6) != ((T6)(GE_int32(0)))))));
-						if (t1) {
-							t2 = (T22f19(C));
-							T35f2(GE_void(t2), (T6)(GE_int32(1)));
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-/* KL_SHELL_COMMAND.execute */
-void T73f13(T0* C)
-{
-	GE_rescue r;
-	T1 t1;
-	T0* t2;
-	T6 t3;
-	T1 l1 = 0;
-	if (GE_setjmp(r.jb) != 0) {
-		t1 = ((T1)(!((T1)l1)));
-		if (t1) {
-			l1 = EIF_TRUE;
-			goto GE_retry;
-		}
-		GE_raise(GE_EX_FAIL);
-	}
-GE_retry:
-	r.previous = GE_last_rescue;
-	GE_last_rescue = &r;
-	t1 = ((T1)(!((T1)l1)));
-	if (t1) {
-		T73f14(C, ((T73*)(C))->a2);
-		((T73*)(C))->a1 = ((T73*)(C))->a4;
-		t2 = (T73f6(C));
-		t1 = (T82f1(GE_void(t2)));
-		if (t1) {
-			((T73*)(C))->a5 = EIF_FALSE;
-		} else {
-			t3 = ((T6)((((T73*)(C))->a1)%((T6)(GE_int32(256)))));
-			t1 = (((((t3) == ((T6)(GE_int32(0)))))));
-			if (t1) {
-				((T73*)(C))->a1 = ((T6)((((T73*)(C))->a1)/((T6)(GE_int32(256)))));
-				((T73*)(C))->a5 = EIF_FALSE;
-			} else {
-				((T73*)(C))->a1 = ((T6)((((T73*)(C))->a1)%((T6)(GE_int32(256)))));
-				((T73*)(C))->a5 = EIF_TRUE;
-			}
-		}
-	} else {
-		((T73*)(C))->a1 = (T6)(GE_int32(-1));
-		((T73*)(C))->a5 = EIF_TRUE;
-	}
-	GE_last_rescue = r.previous;
-}
-
-/* KL_SHELL_COMMAND.operating_system */
-unsigned char ge298os1980 = '\0';
-T0* ge298ov1980;
-T0* T73f6(T0* C)
-{
-	T0* R = 0;
-	if (ge298os1980) {
-		return ge298ov1980;
-	} else {
-		ge298os1980 = '\1';
-		ge298ov1980 = R;
-	}
-	R = T82c6();
-	ge298ov1980 = R;
-	return R;
-}
-
-/* KL_OPERATING_SYSTEM.default_create */
-T0* T82c6(void)
-{
-	T0* C;
-	C = GE_new82(EIF_TRUE);
-	return C;
-}
-
-/* KL_SHELL_COMMAND.system */
-void T73f14(T0* C, T0* a1)
-{
-	T1 t1;
-	T0* t2;
-	T14 t3;
-	T0* l1 = 0;
-	t1 = (((((T0*)(GE_void(a1)))->id==17)?T17f12(a1):T837f50(a1)));
-	if (t1) {
-		t2 = (T73f8(C));
-		l1 = T359c9(t2);
-	} else {
-		l1 = T359c9(a1);
-	}
-	t3 = (T359f3(GE_void(l1)));
-	((T73*)(C))->a4 = (T73f9(C, t3));
-}
-
-/* KL_SHELL_COMMAND.system_call */
-T6 T73f9(T0* C, T14 a1)
-{
-	T6 R = 0;
-	R = (T6)eif_system((EIF_NATIVE_CHAR*)a1);
-	return R;
-}
-
-/* NATIVE_STRING.item */
-T14 T359f3(T0* C)
-{
-	T14 R = 0;
-	R = (((T121*)(GE_void(((T359*)(C))->a1)))->a1);
-	return R;
-}
-
-/* NATIVE_STRING.make */
-T0* T359c9(T0* a1)
-{
-	T0* C;
-	T6 t1;
-	C = GE_new359(EIF_TRUE);
-	t1 = (T97x442(GE_void(a1)));
-	T359f11(C, t1);
-	T359f12(C, a1);
-	return C;
-}
-
-/* NATIVE_STRING.set_string */
-void T359f12(T0* C, T0* a1)
-{
-	T6 t1;
-	t1 = (T97x442(GE_void(a1)));
-	T359f13(C, a1, (T6)(GE_int32(1)), t1);
-}
-
-/* NATIVE_STRING.set_substring */
-void T359f13(T0* C, T0* a1, T6 a2, T6 a3)
-{
-	T1 t1;
-	T0* t2;
-	T6 t3;
-	T6 t4;
-	T524 l1 = GE_default524;
-	t1 = (T529s1());
-	if (t1) {
-		t2 = (T359f7(C));
-		T524f10((&l1), a1, a2, a3, ((T359*)(C))->a1, (T6)(GE_int32(0)), t2);
-	} else {
-		t2 = (T359f7(C));
-		T524f11((&l1), a1, a2, a3, ((T359*)(C))->a1, (T6)(GE_int32(0)), t2);
-	}
-	t2 = (T359f7(C));
-	t3 = (((T525*)(GE_void(t2)))->a1);
-	t4 = (T359f5(C));
-	((T359*)(C))->a2 = ((T6)((t3)/(t4)));
-}
-
-/* NATIVE_STRING.unit_size */
-T6 T359f5(T0* C)
-{
-	T1 t1;
-	T6 R = 0;
-	t1 = (T529s1());
-	if (t1) {
-		R = (T6)(GE_int32(2));
-	} else {
-		R = (T6)(GE_int32(1));
-	}
-	return R;
-}
-
-/* UTF_CONVERTER.escaped_utf_32_substring_into_utf_8_0_pointer */
-void T524f11(T524* C, T0* a1, T6 a2, T6 a3, T0* a4, T6 a5, T0* a6)
-{
-	T6 t1;
-	T6 t2;
-	T1 t3;
-	T3 t4;
-	T10 t5;
-	T8 t6;
-	T6 l1 = 0;
-	T6 l2 = 0;
-	T6 l3 = 0;
-	T6 l4 = 0;
-	T10 l5 = 0;
-	T0* l6 = 0;
-	T1 l7 = 0;
-	T1 l8 = 0;
-	t1 = ((T6)((a3)-(a2)));
-	l2 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	l4 = (((T121*)(GE_void(a4)))->a2);
-	t1 = ((T6)((l4)-(a5)));
-	t2 = ((T6)((l2)+((T6)(GE_int32(1)))));
-	t3 = ((T1)((t1)<(t2)));
-	if (t3) {
-		t1 = (T524f3(C, a1, a2, a3));
-		t1 = ((T6)((a5)+(t1)));
-		l4 = ((T6)((t1)+((T6)(GE_int32(1)))));
-		T121f11(GE_void(a4), l4);
-		l8 = EIF_TRUE;
-	}
-	l3 = a5;
-	l1 = ((T6)((a2)-((T6)(GE_int32(1)))));
-	while (1) {
-		t3 = (T6f12((&l1), a3));
-		if (t3) {
-			break;
-		}
-		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		l5 = (T97x404T6(GE_void(a1), l1));
-		t4 = (T3)(GE_nat32(65533));
-		t5 = ((T10)(t4));
-		t3 = (((((l5) == (t5)))));
-		if (t3) {
-			t3 = ((T1)((l1)<(l2)));
-			if (t3) {
-				t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-				t4 = (T97x405T6(GE_void(a1), t1));
-				t3 = (((((t4) == ((T3)(GE_nat32(65533)))))));
-			}
-			if (t3) {
-				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			} else {
-				t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-				t3 = ((T1)((t1)<(l2)));
-				if (t3) {
-					t1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-					t2 = ((T6)((l1)+((T6)(GE_int32(2)))));
-					l6 = (T97x483T6T6(GE_void(a1), t1, t2));
-					t3 = (T524f6(C, l6));
-					if (t3) {
-						l5 = (T524f7(C, l6));
-						t3 = (T10f3((&l5), (T10)(GE_nat32(127))));
-						if (t3) {
-							t4 = (T3)(GE_nat32(65533));
-							l5 = ((T10)(t4));
-						} else {
-							l7 = EIF_TRUE;
-							l1 = ((T6)((l1)+((T6)(GE_int32(2)))));
-						}
-					}
-				}
-			}
-		}
-		t3 = ((T1)(!(l7)));
-		if (t3) {
-			t3 = (T10f3((&l5), (T10)(GE_nat32(127))));
-			if (t3) {
-				t6 = (T10f5((&l5)));
-				T121f15(GE_void(a4), t6, l3);
-				l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
-			} else {
-				t3 = ((T1)(!(l8)));
-				if (t3) {
-					t1 = ((T6)((l3)+((T6)(GE_int32(5)))));
-					t2 = ((T6)((a3)-(l1)));
-					t1 = ((T6)((t1)+(t2)));
-					t3 = (T6f1(&t1, l4));
-				}
-				if (t3) {
-					t1 = (T524f3(C, a1, l1, a3));
-					t1 = ((T6)((l3)+(t1)));
-					l4 = ((T6)((t1)+((T6)(GE_int32(1)))));
-					T121f11(GE_void(a4), l4);
-					l8 = EIF_TRUE;
-				}
-				t3 = (T10f3((&l5), (T10)(GE_nat32(2047))));
-				if (t3) {
-					t5 = ((T10)((l5)>>((T6)(GE_int32(6)))));
-					t5 = ((T10)((t5)|((T10)(GE_nat32(192)))));
-					t6 = (T10f5(&t5));
-					T121f15(GE_void(a4), t6, l3);
-					t5 = ((T10)((l5)&((T10)(GE_nat32(63)))));
-					t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-					t6 = (T10f5(&t5));
-					t1 = ((T6)((l3)+((T6)(GE_int32(1)))));
-					T121f15(GE_void(a4), t6, t1);
-					l3 = ((T6)((l3)+((T6)(GE_int32(2)))));
-				} else {
-					t3 = (T10f3((&l5), (T10)(GE_nat32(65535))));
-					if (t3) {
-						t5 = ((T10)((l5)>>((T6)(GE_int32(12)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(224)))));
-						t6 = (T10f5(&t5));
-						T121f15(GE_void(a4), t6, l3);
-						t5 = ((T10)((l5)>>((T6)(GE_int32(6)))));
-						t5 = ((T10)((t5)&((T10)(GE_nat32(63)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-						t6 = (T10f5(&t5));
-						t1 = ((T6)((l3)+((T6)(GE_int32(1)))));
-						T121f15(GE_void(a4), t6, t1);
-						t5 = ((T10)((l5)&((T10)(GE_nat32(63)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-						t6 = (T10f5(&t5));
-						t1 = ((T6)((l3)+((T6)(GE_int32(2)))));
-						T121f15(GE_void(a4), t6, t1);
-						l3 = ((T6)((l3)+((T6)(GE_int32(3)))));
-					} else {
-						t5 = ((T10)((l5)>>((T6)(GE_int32(18)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(240)))));
-						t6 = (T10f5(&t5));
-						T121f15(GE_void(a4), t6, l3);
-						t5 = ((T10)((l5)>>((T6)(GE_int32(12)))));
-						t5 = ((T10)((t5)&((T10)(GE_nat32(63)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-						t6 = (T10f5(&t5));
-						t1 = ((T6)((l3)+((T6)(GE_int32(1)))));
-						T121f15(GE_void(a4), t6, t1);
-						t5 = ((T10)((l5)>>((T6)(GE_int32(6)))));
-						t5 = ((T10)((t5)&((T10)(GE_nat32(63)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-						t6 = (T10f5(&t5));
-						t1 = ((T6)((l3)+((T6)(GE_int32(2)))));
-						T121f15(GE_void(a4), t6, t1);
-						t5 = ((T10)((l5)&((T10)(GE_nat32(63)))));
-						t5 = ((T10)((t5)|((T10)(GE_nat32(128)))));
-						t6 = (T10f5(&t5));
-						t1 = ((T6)((l3)+((T6)(GE_int32(3)))));
-						T121f15(GE_void(a4), t6, t1);
-						l3 = ((T6)((l3)+((T6)(GE_int32(4)))));
-					}
-				}
-			}
-		} else {
-			l7 = EIF_FALSE;
-			t6 = (T10f5((&l5)));
-			T121f15(GE_void(a4), t6, l3);
-			l3 = ((T6)((l3)+((T6)(GE_int32(1)))));
-		}
-	}
-	if (l8) {
-		t1 = ((T6)((l3)+((T6)(GE_int32(1)))));
-		T121f11(GE_void(a4), t1);
-	}
-	T121f15(GE_void(a4), (T8)(GE_nat8(0)), l3);
-	t3 = ((a6)!=(EIF_VOID));
-	if (t3) {
-		T525f2(GE_void(a6), l3);
-	}
-}
-
-/* CELL [INTEGER_32].put */
-void T525f2(T0* C, T6 a1)
-{
-	((T525*)(C))->a1 = a1;
-}
-
-/* CELL [INTEGER_32].put */
-T0* T525c2(T6 a1)
-{
-	T0* C;
-	C = GE_new525(EIF_TRUE);
-	((T525*)(C))->a1 = a1;
-	return C;
-}
-
-/* MANAGED_POINTER.put_natural_8 */
-void T121f15(T0* C, T8 a1, T6 a2)
-{
-	T14 t1;
-	T1401 t2;
-	T14 t3;
-	t1 = ((T14)(((char*)(((T121*)(C))->a1))+(a2)));
-	(t2).id = 1401;
-	(t2).a1 = ((T14)&a1);
-	t3 = ((t2).a1);
-	T14f13(&t1, t3, (T6)(GE_int32(1)));
-}
-
-/* POINTER.memory_copy */
-void T14f13(T14* C, T14 a1, T6 a2)
-{
-	T14 t1;
-	t1 = (*C);
-	T14f17(C, t1, a1, a2);
-}
-
-/* POINTER.c_memcpy */
-void T14f17(T14* C, T14 a1, T14 a2, T6 a3)
-{
-	memcpy((void *)a1,( const void *)a2,( size_t)a3);
-}
-
-/* NATURAL_32.to_natural_8 */
-T8 T10f5(T10* C)
-{
-	T8 R = 0;
-	R = ((T8)(*C));
-	return R;
-}
-
-/* NATURAL_32.is_less_equal */
-T1 T10f3(T10* C, T10 a1)
-{
-	T1 t1;
-	T1 R = 0;
-	t1 = ((T1)((a1)<(*C)));
-	R = ((T1)(!(t1)));
-	return R;
-}
-
-/* UTF_CONVERTER.to_natural_32 */
-T10 T524f7(T524* C, T0* a1)
-{
-	T6 t1;
-	T10 R = 0;
-	T0* l1 = 0;
-	l1 = (T524f8(C));
-	t1 = ((T6)(GE_int32(0)));
-	T1430f19(GE_void(l1), a1, t1);
-	R = (T1430f12(GE_void(l1)));
-	return R;
-}
-
-/* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.parsed_natural_32 */
-T10 T1430f12(T0* C)
-{
-	T11 t1;
-	T10 R = 0;
-	t1 = ((T11)((((T1430*)(C))->a3)*((T11)(GE_nat64(16)))));
-	t1 = ((T11)((t1)+(((T1430*)(C))->a4)));
-	R = ((T10)(t1));
-	return R;
-}
-
-/* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.parse_string_with_type */
-void T1430f19(T0* C, T0* a1, T6 a2)
-{
-	T1 t1;
-	T0* m1 = 0;
-	T6 t2;
-	T2 t3;
-	T0* m2 = 0;
-	T3 t4;
-	T10 t5;
-	T6 l1 = 0;
-	T0* l2 = 0;
-	T0* l3 = 0;
-	T6 l4 = 0;
-	T10 l5 = 0;
-	T3 l6 = 0;
-	T1430f18(C, a2);
-	l1 = (T6)(GE_int32(0));
-	l4 = (T97x442(GE_void(a1)));
-	t1 = T1430f19ot1(a1, &m1);
-	if (t1) {
-		l2 = (((((T0*)(m1))->id==17)?((T17*)(m1))->a1:((T837*)(m1))->a2));
-		while (1) {
-			t1 = (((((l1) == (l4)))));
-			if (!(t1)) {
-				t1 = (T6f12(&(((T1430*)(C))->a1), (T6)(GE_int32(4))));
-			}
-			if (t1) {
-				break;
-			}
-			t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			t1 = ((T1)((t2)<(l4)));
-			if (t1) {
-				t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-				((T1430*)(C))->a9 = (((T15*)(GE_void(l2)))->z2[t2]);
-			} else {
-				((T1430*)(C))->a9 = (T2)(' ');
-			}
-			t3 = (((T15*)(GE_void(l2)))->z2[l1]);
-			T1430f22(C, t3);
-			l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-		}
-	} else {
-		t1 = T1430f19ot2(a1, &m2);
-		if (t1) {
-			l3 = (((T18*)(m2))->a1);
-			while (1) {
-				t1 = (((((l1) == (l4)))));
-				if (!(t1)) {
-					t1 = (T6f12(&(((T1430*)(C))->a1), (T6)(GE_int32(4))));
-				}
-				if (t1) {
-					break;
-				}
-				t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-				t1 = ((T1)((t2)<(l4)));
-				if (t1) {
-					t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-					t4 = (((T16*)(GE_void(l3)))->z2[t2]);
-					((T1430*)(C))->a9 = ((T2)(t4));
-				} else {
-					((T1430*)(C))->a9 = (T2)(' ');
-				}
-				l6 = (((T16*)(GE_void(l3)))->z2[l1]);
-				t1 = (T3f3((&l6)));
-				if (t1) {
-					t3 = ((T2)(l6));
-					T1430f22(C, t3);
-				} else {
-					((T1430*)(C))->a1 = (T6)(GE_int32(4));
-				}
-				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			}
-		} else {
-			l1 = (T6)(GE_int32(1));
-			l4 = (T97x442(GE_void(a1)));
-			while (1) {
-				t1 = (T6f1((&l1), l4));
-				if (!(t1)) {
-					t1 = (T6f12(&(((T1430*)(C))->a1), (T6)(GE_int32(4))));
-				}
-				if (t1) {
-					break;
-				}
-				t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-				t1 = ((T1)((t2)<(l4)));
-				if (t1) {
-					t2 = ((T6)((l1)+((T6)(GE_int32(1)))));
-					t5 = (T97x404T6(GE_void(a1), t2));
-					((T1430*)(C))->a9 = ((T2)(t5));
-				} else {
-					((T1430*)(C))->a9 = (T2)(' ');
-				}
-				l5 = (T97x404T6(GE_void(a1), l1));
-				t1 = (T10f17((&l5)));
-				if (t1) {
-					t3 = ((T2)(l5));
-					T1430f22(C, t3);
-				} else {
-					((T1430*)(C))->a1 = (T6)(GE_int32(4));
-				}
-				l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
-			}
-		}
-	}
-}
-
-T1 T1430f19ot1(T0* a1, T0** a2)
-{
-	if ((a1)==EIF_VOID) {
-		return EIF_FALSE;
-	} else {
-		switch (((T0*)(a1))->id) {
-		case 18:
-			return EIF_FALSE;
-		default:
-			*a2 = a1;
-			return EIF_TRUE;
-		}
-	}
-}
-
-T1 T1430f19ot2(T0* a1, T0** a2)
-{
-	if ((a1)==EIF_VOID) {
-		return EIF_FALSE;
-	} else {
-		switch (((T0*)(a1))->id) {
-		case 18:
-			*a2 = a1;
-			return EIF_TRUE;
-		default:
-			return EIF_FALSE;
-		}
-	}
-}
-
-/* NATURAL_32.is_valid_character_8_code */
-T1 T10f17(T10* C)
-{
-	T10 t1;
-	T6 t2;
-	T10 t3;
-	T1 R = 0;
-	t1 = (*C);
-	t2 = ((T6)(GE_int32(255)));
-	t3 = (T6f19(&t2));
-	R = (T10f3(&t1, t3));
-	return R;
-}
-
-/* CHARACTER_32.is_character_8 */
-T1 T3f3(T3* C)
-{
-	T10 t1;
-	T6 t2;
-	T10 t3;
-	T1 R = 0;
-	t1 = ((T10)(*C));
-	t2 = ((T6)(GE_int32(255)));
-	t3 = (T6f19(&t2));
-	R = (T10f3(&t1, t3));
-	return R;
-}
-
-/* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.parse_character */
-void T1430f22(T0* C, T2 a1)
-{
-	T1 t1;
-	T1 t2;
-	T6 t3;
-	T0* t4;
-	T11 t5;
-	T11 l1 = 0;
-	T11 l2 = 0;
-	T6 l3 = 0;
-	l3 = ((T1430*)(C))->a1;
-	t1 = (T6f13((&l3), (T6)(GE_int32(5))));
-	if (t1) {
-		switch (l3) {
-		case (T6)(T6)(GE_int32(0)):
-			t1 = (((((a1) == ((T2)('0'))))));
-			if (t1) {
-				t2 = (((((((T1430*)(C))->a9) == ((T2)('x'))))));
-				if (!(t2)) {
-					t1 = (((((((T1430*)(C))->a9) == ((T2)('X'))))));
-				} else {
-					t1 = EIF_TRUE;
-				}
-			}
-			if (!(t1)) {
-				t1 = (((((a1) == ((T2)('&'))))));
-			}
-			if (t1) {
-				l3 = (T6)(GE_int32(1));
-			} else {
-				t1 = (((((a1) == ((T2)('-'))))));
-				if (!(t1)) {
-					t1 = (((((a1) == ((T2)('+'))))));
-				}
-				if (t1) {
-					l3 = (T6)(GE_int32(1));
-					t1 = (((((a1) == ((T2)('-'))))));
-					if (t1) {
-						((T1430*)(C))->a7 = (T6)(GE_int32(1));
-					} else {
-						((T1430*)(C))->a7 = (T6)(GE_int32(0));
-					}
-				} else {
-					t1 = (T2f26(&a1));
-					if (t1) {
-						l3 = (T6)(GE_int32(3));
-						((T1430*)(C))->a3 = (T11)(GE_nat64(0));
-						t1 = (T2f5(&a1, (T2)('0')));
-						if (t1) {
-							t1 = (T2f7(&a1, (T2)('9')));
-						}
-						if (t1) {
-							t3 = ((T6)(a1));
-							t3 = ((T6)((t3)-((T6)(GE_int32(48)))));
-							((T1430*)(C))->a4 = (T6f25(&t3));
-						} else {
-							t1 = (T2f5(&a1, (T2)('a')));
-							if (t1) {
-								t1 = (T2f7(&a1, (T2)('f')));
-							}
-							if (t1) {
-								t3 = ((T6)(a1));
-								t3 = ((T6)((t3)-((T6)(GE_int32(87)))));
-								((T1430*)(C))->a4 = (T6f25(&t3));
-							} else {
-								t1 = (T2f5(&a1, (T2)('A')));
-								if (t1) {
-									t1 = (T2f7(&a1, (T2)('F')));
-								}
-								if (t1) {
-									t3 = ((T6)(a1));
-									t3 = ((T6)((t3)-((T6)(GE_int32(55)))));
-									((T1430*)(C))->a4 = (T6f25(&t3));
-								}
-							}
-						}
-					} else {
-						if (((T1430*)(C))->a10) {
-							t1 = (T17f40(GE_void(((T1430*)(C))->a5), a1));
-						} else {
-							t1 = EIF_FALSE;
-						}
-						if (t1) {
-						} else {
-							l3 = (T6)(GE_int32(4));
-						}
-					}
-				}
-			}
-			break;
-		case (T6)(T6)(GE_int32(1)):
-			t1 = (T2f26(&a1));
-			if (t1) {
-				((T1430*)(C))->a3 = (T11)(GE_nat64(0));
-				t1 = (T2f5(&a1, (T2)('0')));
-				if (t1) {
-					t1 = (T2f7(&a1, (T2)('9')));
-				}
-				if (t1) {
-					t3 = ((T6)(a1));
-					t3 = ((T6)((t3)-((T6)(GE_int32(48)))));
-					((T1430*)(C))->a4 = (T6f25(&t3));
-				} else {
-					t1 = (T2f5(&a1, (T2)('a')));
-					if (t1) {
-						t1 = (T2f7(&a1, (T2)('f')));
-					}
-					if (t1) {
-						t3 = ((T6)(a1));
-						t3 = ((T6)((t3)-((T6)(GE_int32(87)))));
-						((T1430*)(C))->a4 = (T6f25(&t3));
-					} else {
-						t1 = (T2f5(&a1, (T2)('A')));
-						if (t1) {
-							t1 = (T2f7(&a1, (T2)('F')));
-						}
-						if (t1) {
-							t3 = ((T6)(a1));
-							t3 = ((T6)((t3)-((T6)(GE_int32(55)))));
-							((T1430*)(C))->a4 = (T6f25(&t3));
-						}
-					}
-				}
-				t1 = (((((((T1430*)(C))->a8) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					t4 = (T1430f15(C));
-					t1 = (T1433f7(GE_void(t4), ((T1430*)(C))->a3, ((T1430*)(C))->a4, ((T1430*)(C))->a8, ((T1430*)(C))->a7));
-					if (t1) {
-						((T1430*)(C))->a2 = EIF_TRUE;
-						((T1430*)(C))->a3 = l1;
-						((T1430*)(C))->a4 = l2;
-						l3 = (T6)(GE_int32(6));
-					}
-				}
-				l3 = (T6)(GE_int32(3));
-			} else {
-				t1 = (((((a1) == ((T2)('#'))))));
-				if (t1) {
-					l3 = (T6)(GE_int32(1));
-				} else {
-					t1 = (((((a1) == ((T2)('x'))))));
-					if (!(t1)) {
-						t1 = (((((a1) == ((T2)('X'))))));
-					}
-					if (t1) {
-						l3 = (T6)(GE_int32(2));
-					}
-				}
-			}
-			break;
-		case (T6)(T6)(GE_int32(2)):
-			t1 = (T2f26(&a1));
-			if (t1) {
-				((T1430*)(C))->a3 = (T11)(GE_nat64(0));
-				t1 = (T2f5(&a1, (T2)('0')));
-				if (t1) {
-					t1 = (T2f7(&a1, (T2)('9')));
-				}
-				if (t1) {
-					t3 = ((T6)(a1));
-					t3 = ((T6)((t3)-((T6)(GE_int32(48)))));
-					((T1430*)(C))->a4 = (T6f25(&t3));
-				} else {
-					t1 = (T2f5(&a1, (T2)('a')));
-					if (t1) {
-						t1 = (T2f7(&a1, (T2)('f')));
-					}
-					if (t1) {
-						t3 = ((T6)(a1));
-						t3 = ((T6)((t3)-((T6)(GE_int32(87)))));
-						((T1430*)(C))->a4 = (T6f25(&t3));
-					} else {
-						t1 = (T2f5(&a1, (T2)('A')));
-						if (t1) {
-							t1 = (T2f7(&a1, (T2)('F')));
-						}
-						if (t1) {
-							t3 = ((T6)(a1));
-							t3 = ((T6)((t3)-((T6)(GE_int32(55)))));
-							((T1430*)(C))->a4 = (T6f25(&t3));
-						}
-					}
-				}
-				t1 = (((((((T1430*)(C))->a8) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					t4 = (T1430f15(C));
-					t1 = (T1433f7(GE_void(t4), ((T1430*)(C))->a3, ((T1430*)(C))->a4, ((T1430*)(C))->a8, ((T1430*)(C))->a7));
-					if (t1) {
-						((T1430*)(C))->a2 = EIF_TRUE;
-						((T1430*)(C))->a3 = l1;
-						((T1430*)(C))->a4 = l2;
-						l3 = (T6)(GE_int32(6));
-					}
-				}
-				l3 = (T6)(GE_int32(3));
-			}
-			break;
-		case (T6)(T6)(GE_int32(3)):
-			t1 = (T2f26(&a1));
-			if (t1) {
-				l1 = ((T1430*)(C))->a3;
-				l2 = ((T1430*)(C))->a4;
-				t5 = ((T11)((((T1430*)(C))->a3)*((T11)(GE_nat64(16)))));
-				((T1430*)(C))->a3 = ((T11)((t5)+(((T1430*)(C))->a4)));
-				t1 = (T2f5(&a1, (T2)('0')));
-				if (t1) {
-					t1 = (T2f7(&a1, (T2)('9')));
-				}
-				if (t1) {
-					t3 = ((T6)(a1));
-					t3 = ((T6)((t3)-((T6)(GE_int32(48)))));
-					((T1430*)(C))->a4 = (T6f25(&t3));
-				} else {
-					t1 = (T2f5(&a1, (T2)('a')));
-					if (t1) {
-						t1 = (T2f7(&a1, (T2)('f')));
-					}
-					if (t1) {
-						t3 = ((T6)(a1));
-						t3 = ((T6)((t3)-((T6)(GE_int32(87)))));
-						((T1430*)(C))->a4 = (T6f25(&t3));
-					} else {
-						t1 = (T2f5(&a1, (T2)('A')));
-						if (t1) {
-							t1 = (T2f7(&a1, (T2)('F')));
-						}
-						if (t1) {
-							t3 = ((T6)(a1));
-							t3 = ((T6)((t3)-((T6)(GE_int32(55)))));
-							((T1430*)(C))->a4 = (T6f25(&t3));
-						}
-					}
-				}
-				t1 = (((((((T1430*)(C))->a8) != ((T6)(GE_int32(0)))))));
-				if (t1) {
-					t4 = (T1430f15(C));
-					((T1430*)(C))->a2 = (T1433f7(GE_void(t4), ((T1430*)(C))->a3, ((T1430*)(C))->a4, ((T1430*)(C))->a8, ((T1430*)(C))->a7));
-					t1 = (T1430f16(C));
-					if (t1) {
-						((T1430*)(C))->a3 = l1;
-						((T1430*)(C))->a4 = l2;
-						l3 = (T6)(GE_int32(6));
-					}
-				}
-			} else {
-				if (((T1430*)(C))->a11) {
-					t1 = (T17f40(GE_void(((T1430*)(C))->a6), a1));
-				} else {
-					t1 = EIF_FALSE;
-				}
-				if (t1) {
-					l3 = (T6)(GE_int32(4));
-				} else {
-					l3 = (T6)(GE_int32(5));
-				}
-			}
-			break;
-		case (T6)(T6)(GE_int32(4)):
-			if (((T1430*)(C))->a11) {
-				t1 = (T17f40(GE_void(((T1430*)(C))->a6), a1));
-			} else {
-				t1 = EIF_FALSE;
-			}
-			if (t1) {
-			} else {
-				l3 = (T6)(GE_int32(5));
-			}
-			break;
-		default:
-			GE_raise(GE_EX_WHEN);
-break;
-		}
-	}
-	((T1430*)(C))->a1 = l3;
-}
-
-/* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.overflowed */
-T1 T1430f16(T0* C)
-{
-	T1 R = 0;
-	if (((T1430*)(C))->a2) {
-		R = (((((((T1430*)(C))->a7) == ((T6)(GE_int32(0)))))));
-	} else {
-		R = EIF_FALSE;
-	}
-	return R;
-}
-
-/* INTEGER_OVERFLOW_CHECKER.will_overflow */
-T1 T1433f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4)
-{
-	T1 t1;
-	T6 t2;
-	T11 t3;
-	T1 R = 0;
-	T6 l1 = 0;
-	R = (((((a3) != ((T6)(GE_int32(0)))))));
-	if (R) {
-		t1 = (((((a3) == ((T6)(GE_int32(1)))))));
-		if (!(t1)) {
-			t1 = (((((a3) == ((T6)(GE_int32(2)))))));
-		}
-		if (!(t1)) {
-			t1 = (((((a3) == ((T6)(GE_int32(3)))))));
-		}
-		if (!(t1)) {
-			t1 = (((((a3) == ((T6)(GE_int32(4)))))));
-		}
-		if (t1) {
-			t2 = ((T6)((a4)*((T6)(GE_int32(4)))));
-			l1 = ((T6)((t2)+(a3)));
-			t3 = (((T1604*)(GE_void(((T1433*)(C))->a1)))->z2[l1]);
-			t1 = (T11f11(&a1, t3));
-			if (!(t1)) {
-				t3 = (((T1604*)(GE_void(((T1433*)(C))->a1)))->z2[l1]);
-				t1 = (((((a1) == (t3)))));
-				if (t1) {
-					t3 = (((T1604*)(GE_void(((T1433*)(C))->a2)))->z2[l1]);
-					R = (T11f11(&a2, t3));
-				} else {
-					R = EIF_FALSE;
-				}
-			} else {
-				R = EIF_TRUE;
-			}
-		} else {
-			l1 = ((T6)((a3)-((T6)(GE_int32(10)))));
-			t1 = (((((a4) == ((T6)(GE_int32(1)))))));
-			if (t1) {
-				t1 = (T11f11(&a1, (T11)(GE_nat64(0))));
-				if (!(t1)) {
-					R = (T11f11(&a2, (T11)(GE_nat64(0))));
-				} else {
-					R = EIF_TRUE;
-				}
-			} else {
-				t3 = (((T1604*)(GE_void(((T1433*)(C))->a3)))->z2[l1]);
-				t1 = (T11f11(&a1, t3));
-				if (!(t1)) {
-					t3 = (((T1604*)(GE_void(((T1433*)(C))->a3)))->z2[l1]);
-					t1 = (((((a1) == (t3)))));
-					if (t1) {
-						t3 = (((T1604*)(GE_void(((T1433*)(C))->a4)))->z2[l1]);
-						R = (T11f11(&a2, t3));
-					} else {
-						R = EIF_FALSE;
-					}
-				} else {
-					R = EIF_TRUE;
-				}
-			}
-		}
-	}
-	return R;
-}
-
-/* NATURAL_64.is_greater */
-T1 T11f11(T11* C, T11 a1)
-{
-	T1 R = 0;
-	R = ((T1)((a1)<(*C)));
-	return R;
-}
-
-/* HEXADECIMAL_STRING_TO_INTEGER_CONVERTER.overflow_checker */
-unsigned char ge1521os36631 = '\0';
-T0* ge1521ov36631;
-T0* T1430f15(T0* C)
-{
-	T0* R = 0;
-	if (ge1521os36631) {
-		return ge1521ov36631;
-	} else {
-		ge1521os36631 = '\1';
-		ge1521ov36631 = R;
-	}
-	R = T1433c13();
-	ge1521ov36631 = R;
-	return R;
-}
-
-/* INTEGER_OVERFLOW_CHECKER.make */
-T0* T1433c13(void)
-{
-	T0* C;
-	T6 t1;
-	T4 t2;
-	T11 t3;
-	T5 t4;
-	T7 t5;
-	T8 t6;
-	T9 t7;
-	T10 t8;
-	C = GE_new1433(EIF_TRUE);
-	t1 = (T6)(GE_int32(4));
-	t1 = ((T6)((t1)*((T6)(GE_int32(2)))));
-	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T1433*)(C))->a1 = T1604c4(t1);
-	T1604f5(GE_void(((T1433*)(C))->a1), (T11)(GE_nat64(0)));
-	t1 = (T6)(GE_int32(4));
-	t1 = ((T6)((t1)*((T6)(GE_int32(2)))));
-	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T1433*)(C))->a2 = T1604c4(t1);
-	T1604f5(GE_void(((T1433*)(C))->a2), (T11)(GE_nat64(0)));
-	t2 = ((T4)(GE_int8(127)));
-	t2 = ((T4)((t2)/((T4)(GE_int8(10)))));
-	t3 = (T4f3(&t2));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t2 = ((T4)(GE_int8(127)));
-	t2 = ((T4)((t2)%((T4)(GE_int8(10)))));
-	t3 = (T4f3(&t2));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t4 = ((T5)(GE_int16(32767)));
-	t4 = ((T5)((t4)/((T5)(GE_int16(10)))));
-	t3 = (T5f3(&t4));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t4 = ((T5)(GE_int16(32767)));
-	t4 = ((T5)((t4)%((T5)(GE_int16(10)))));
-	t3 = (T5f3(&t4));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t1 = ((T6)(GE_int32(2147483647)));
-	t1 = ((T6)((t1)/((T6)(GE_int32(10)))));
-	t3 = (T6f25(&t1));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t1 = ((T6)(GE_int32(2147483647)));
-	t1 = ((T6)((t1)%((T6)(GE_int32(10)))));
-	t3 = (T6f25(&t1));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t5 = ((T7)(GE_int64(9223372036854775807)));
-	t5 = ((T7)((t5)/((T7)(GE_int64(10)))));
-	t3 = (T7f9(&t5));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t5 = ((T7)(GE_int64(9223372036854775807)));
-	t5 = ((T7)((t5)%((T7)(GE_int64(10)))));
-	t3 = (T7f9(&t5));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t2 = ((T4)(GE_int8(-128)));
-	t2 = ((T4)((t2)/((T4)(GE_int8(10)))));
-	t2 = ((T4)(-(t2)));
-	t3 = (T4f3(&t2));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t2 = ((T4)(GE_int8(-128)));
-	t2 = ((T4)((t2)%((T4)(GE_int8(10)))));
-	t2 = ((T4)(-(t2)));
-	t3 = (T4f3(&t2));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t4 = ((T5)(GE_int16(-32768)));
-	t4 = ((T5)((t4)/((T5)(GE_int16(10)))));
-	t4 = ((T5)(-(t4)));
-	t3 = (T5f3(&t4));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t4 = ((T5)(GE_int16(-32768)));
-	t4 = ((T5)((t4)%((T5)(GE_int16(10)))));
-	t4 = ((T5)(-(t4)));
-	t3 = (T5f3(&t4));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t1 = ((T6)(GE_int32(-2147483647)-1));
-	t1 = ((T6)((t1)/((T6)(GE_int32(10)))));
-	t1 = ((T6)(-(t1)));
-	t3 = (T6f25(&t1));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t1 = ((T6)(GE_int32(-2147483647)-1));
-	t1 = ((T6)((t1)%((T6)(GE_int32(10)))));
-	t1 = ((T6)(-(t1)));
-	t3 = (T6f25(&t1));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t5 = ((T7)(GE_int64(-9223372036854775807)-1));
-	t5 = ((T7)((t5)/((T7)(GE_int64(10)))));
-	t5 = ((T7)(-(t5)));
-	t3 = (T7f9(&t5));
-	T1604f5(GE_void(((T1433*)(C))->a1), t3);
-	t5 = ((T7)(GE_int64(-9223372036854775807)-1));
-	t5 = ((T7)((t5)%((T7)(GE_int64(10)))));
-	t5 = ((T7)(-(t5)));
-	t3 = (T7f9(&t5));
-	T1604f5(GE_void(((T1433*)(C))->a2), t3);
-	t1 = (T6)(GE_int32(4));
-	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T1433*)(C))->a3 = T1604c4(t1);
-	T1604f5(GE_void(((T1433*)(C))->a3), (T11)(GE_nat64(0)));
-	t1 = (T6)(GE_int32(4));
-	t1 = ((T6)((t1)+((T6)(GE_int32(1)))));
-	((T1433*)(C))->a4 = T1604c4(t1);
-	T1604f5(GE_void(((T1433*)(C))->a4), (T11)(GE_nat64(0)));
-	t6 = ((T8)(GE_nat8(255)));
-	t6 = ((T8)((t6)/((T8)(GE_nat8(10)))));
-	t3 = (T8f17(&t6));
-	T1604f5(GE_void(((T1433*)(C))->a3), t3);
-	t6 = ((T8)(GE_nat8(255)));
-	t6 = ((T8)((t6)%((T8)(GE_nat8(10)))));
-	t3 = (T8f17(&t6));
-	T1604f5(GE_void(((T1433*)(C))->a4), t3);
-	t7 = ((T9)(GE_nat16(65535)));
-	t7 = ((T9)((t7)/((T9)(GE_nat16(10)))));
-	t3 = (T9f12(&t7));
-	T1604f5(GE_void(((T1433*)(C))->a3), t3);
-	t7 = ((T9)(GE_nat16(65535)));
-	t7 = ((T9)((t7)%((T9)(GE_nat16(10)))));
-	t3 = (T9f12(&t7));
-	T1604f5(GE_void(((T1433*)(C))->a4), t3);
-	t8 = ((T10)(GE_nat32(4294967295)));
-	t8 = ((T10)((t8)/((T10)(GE_nat32(10)))));
-	t3 = (T10f22(&t8));
-	T1604f5(GE_void(((T1433*)(C))->a3), t3);
-	t8 = ((T10)(GE_nat32(4294967295)));
-	t8 = ((T10)((t8)%((T10)(GE_nat32(10)))));
-	t3 = (T10f22(&t8));
-	T1604f5(GE_void(((T1433*)(C))->a4), t3);
-	t3 = ((T11)(GE_nat64(18446744073709551615)));
-	t3 = ((T11)((t3)/((T11)(GE_nat64(10)))));
-	t3 = (T11f12(&t3));
-	T1604f5(GE_void(((T1433*)(C))->a3), t3);
-	t3 = ((T11)(GE_nat64(18446744073709551615)));
-	t3 = ((T11)((t3)%((T11)(GE_nat64(10)))));
-	t3 = (T11f12(&t3));
-	T1604f5(GE_void(((T1433*)(C))->a4), t3);
-	return C;
 }
 
 

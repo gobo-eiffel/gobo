@@ -21,7 +21,7 @@ extern "C" {
 	Pre-defined exception tags. No restriction on size.
 	This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.
 */
-static char *ex_tag[] = {
+static char* ex_tag[] = {
 	(char *) 0,							/* Nothing */
 	"Feature call on void target.",		/* EN_VOID */
 	"No more memory.",					/* EN_MEM */
@@ -60,7 +60,7 @@ static char *ex_tag[] = {
 /*
 	Raise an Eiffel exception.
 */
-void eraise(const char *name, long code)
+void eraise(const char* name, long code)
 {
 	GE_raise_with_message(code, name);
 }
@@ -90,7 +90,7 @@ void esys(void)
 /*
 	As a special case, an I/O error is raised when a system call which is I/O bound fails.
 */
-void eise_io(const char *tag)
+void eise_io(const char* tag)
 {
 	GE_raise_with_message(GE_EX_ISE_IO, tag);
 }
@@ -105,7 +105,7 @@ void eise_io(const char *tag)
 /*
 	Raise EiffelCOM exception.
 */
-void com_eraise(const char *tag, long num)
+void com_eraise(const char* tag, long num)
 {
 	GE_raise_with_message(num, tag);
 }
@@ -136,7 +136,7 @@ EIF_REFERENCE eename(long code)
 }
 
 /*
-	Is exception `ex' defined?
+	Is exception 'ex' defined?
 	Used in EiffelCOM.
 */
 char eedefined(long ex)
@@ -145,15 +145,20 @@ char eedefined(long ex)
 }
 
 /*
-	Enable/diable printing of the history table.
+	Enable/diable printing of the exception trace.
 	Per thead information.
 */
 void eetrace(char b) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
+	GE_context* context;
+#ifdef EIF_THREADS
+	GE_thread_context* volatile ge_thread_context;
+	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
+	context = ge_thread_context->context;
+#else
+	context = GE_main_context;
 #endif
-	fprintf(stderr, "'eetrace' in 'eif_except.h' not implemented\n");
+
+	context->exception_trace = EIF_TEST(b);
 }
 
 /*
@@ -161,8 +166,16 @@ void eetrace(char b) {
 */
 EIF_BOOLEAN eif_is_in_rescue(void)
 {
-/* TODO */
-	return EIF_FALSE;
+	GE_context* context;
+#ifdef EIF_THREADS
+	GE_thread_context* volatile ge_thread_context;
+	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
+	context = ge_thread_context->context;
+#else
+	context = GE_main_context;
+#endif
+
+	return (EIF_TEST(context->in_rescue > 0));
 }
 
 #ifdef EIF_WINDOWS

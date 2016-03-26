@@ -65,7 +65,7 @@ typedef struct {
 } EIF_THR_ATTR_TYPE;
 
 #ifdef EIF_POSIX_THREADS
-#	define EIF_TSD_VAL_TYPE        void *
+#	define EIF_TSD_VAL_TYPE        void*
 #	define EIF_TSD_TYPE            pthread_key_t
 #	define EIF_TSD_CREATE(key,msg) \
 		if (pthread_key_create(&(key),NULL)) \
@@ -75,7 +75,7 @@ typedef struct {
 			GE_raise_with_message(GE_EX_EXT, msg)
 #	define EIF_TSD_GET0(val_type,key,val) (val = pthread_getspecific(key))
 #	define EIF_TSD_GET(val_type,key,val,msg) \
-		if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) GE_raise_with_message(GE_EX_EXT, msg)
+		if (EIF_TSD_GET0(val_type,key,val) == (void*) 0) GE_raise_with_message(GE_EX_EXT, msg)
 #	define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key)) GE_raise_with_message(GE_EX_EXT, msg)
 #elif defined EIF_WINDOWS
 #	define EIF_TSD_VAL_TYPE        LPVOID
@@ -98,8 +98,9 @@ typedef struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
-	void (* routine) (EIF_REFERENCE); /* Eiffel routine. */
+	void (*routine) (GE_context*, EIF_REFERENCE); /* Eiffel routine. */
 	unsigned int initial_priority; /* Initial priority. */
+	GE_context* context; /* Eiffel execution context. */
 };
 
 /* Key to access Thread Specific Data. */
@@ -114,10 +115,10 @@ extern EIF_TSD_TYPE GE_thread_context_key;
 
 /* Initialize data to handle threads. */
 /* To be called at the beginning of the main function. */
-extern void GE_init_thread(void);
+extern void GE_init_thread(GE_context* context);
 
 /* Create a new thread with attributes 'attr' and execute Eiffel routine 'routine' on object 'current'. */
-extern void GE_thread_create_with_attr (EIF_REFERENCE current, void (* routine) (EIF_REFERENCE), EIF_THR_ATTR_TYPE *attr);
+extern void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine) (GE_context*, EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr);
 
 /* Thead ID of current thread. */
 extern EIF_POINTER GE_thread_id(void);

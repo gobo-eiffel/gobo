@@ -35,11 +35,16 @@ void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize) {
  * Call dispose routine `disp' on object `C'.
  */
 void GE_boehm_dispose(void* C, void* disp) {
-	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(
-#ifdef EIF_EXCEPTION_TRACE
-		0,
+	GE_context* context;
+#ifdef EIF_THREADS
+	GE_thread_context* volatile ge_thread_context;
+	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
+	context = ge_thread_context->context;
+#else
+	context = GE_main_context;
 #endif
-		(EIF_REFERENCE)C);
+
+	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(context, (EIF_REFERENCE) C);
 }
 #endif
 
