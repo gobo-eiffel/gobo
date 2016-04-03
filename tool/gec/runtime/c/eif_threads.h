@@ -87,9 +87,9 @@ extern "C" {
 #define eif_thr_join_all() GE_thread_join_all()
 
 /* THREAD */
-#define eif_thr_create_with_attr(current_obj, init_func, attr) GE_thread_create_with_attr(current_obj, init_func, attr)
+#define eif_thr_create_with_attr(current_obj,init_func,attr) GE_thread_create_with_attr((current_obj),(init_func),(EIF_THR_ATTR_TYPE*)(attr))
 #define eif_thr_wait(term) GE_thread_wait(term)
-#define eif_thr_wait_with_timeout(term,tms) GE_thread_wait_with_timeout(term,tms)
+#define eif_thr_wait_with_timeout(term,tms) GE_thread_wait_with_timeout((term),(tms))
 #define eif_thr_last_thread() GE_last_thread_created()
 #define eif_thr_exit() GE_thread_exit()
 

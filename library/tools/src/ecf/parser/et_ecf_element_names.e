@@ -137,6 +137,9 @@ feature -- Constants
 	xml_target: STRING = "target"
 			-- "target" element name
 
+	xml_trace: STRING = "trace"
+			-- "trace" attribute name
+
 	xml_type: STRING = "type"
 			-- "type" attribute name
 

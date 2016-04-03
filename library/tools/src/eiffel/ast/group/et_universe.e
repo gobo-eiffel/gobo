@@ -1536,7 +1536,7 @@ feature -- Kernel types
 			create detachable_type_detachable_any_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [EXCEPTION]"
 			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (detachable_exception_type)
+			l_parameters.put_first (exception_type)
 			create detachable_type_exception_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
 				-- "TYPE [detachable EXCEPTION]"
 			create l_parameters.make_with_capacity (1)

@@ -319,7 +319,7 @@ feature -- Basic operations
 		do
 				-- console_application.
 			l_value := settings.value (console_application_setting_name)
-			if l_value /= Void and then l_value.is_boolean  then
+			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_console_application_mode (l_value.to_boolean)
 			end
 				-- concurrency.
@@ -332,6 +332,11 @@ feature -- Basic operations
 				else
 					a_system.set_multithreaded_mode (False)
 				end
+			end
+				-- exception_trace.
+			l_value := settings.value (exception_trace_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_exception_trace_mode (l_value.to_boolean)
 			end
 				-- Unknown built-in features reported.
 			l_value := variables.value ("unknown_builtin_reported")
@@ -371,6 +376,11 @@ feature -- Basic operations
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_attached_type_mark)
 			else
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
+			end
+				-- trace.
+			l_value := options.value (xml_trace)
+			if l_value /= Void and then l_value.is_boolean then
+				a_universe.current_system.set_trace_mode (l_value.to_boolean)
 			end
 		end
 

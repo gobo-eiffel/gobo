@@ -1404,6 +1404,14 @@ feature -- Feature names
 			infix_xor_feature_name_not_void: Result /= Void
 		end
 
+	init_exception_manager_feature_name: ET_FEATURE_NAME
+			-- 'init_exception_manager' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (init_exception_manager_name)
+		ensure
+			init_exception_manager_feature_name_not_void: Result /= Void
+		end
+
 	integer_8_item_feature_name: ET_FEATURE_NAME
 			-- 'integer_8_item' feature name
 		once
@@ -3836,6 +3844,9 @@ feature -- Keyword and symbol names
 
 	implication_name: STRING = "implication"
 			-- Name of Eiffel feature 'implication'
+
+	init_exception_manager_name: STRING = "init_exception_manager"
+			-- Name of Eiffel feature 'init_exception_manager'
 
 	integer_8_item_name: STRING = "integer_8_item"
 			-- Name of Eiffel feature 'integer_8_item'

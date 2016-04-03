@@ -1379,7 +1379,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
-				l_dynamic_query.set_regular (True)
+				l_dynamic_query.set_address (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
 -- may be altered when its address is passed to an external routine.
 			end
@@ -1844,7 +1844,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_regular (True)
+				l_dynamic_procedure.set_address (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_procedure'
 -- may be altered when its address is passed to an external routine.
 			end

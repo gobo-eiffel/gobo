@@ -17,6 +17,16 @@
 extern "C" {
 #endif
 
+/*
+ * System name.
+ */
+char* GE_system_name = NULL;
+
+/*
+ * Root class name.
+ */
+char* GE_root_class_name = NULL;
+
 #ifdef EIF_WINDOWS
 
 /*

@@ -16,12 +16,12 @@
 #include <setjmp.h>
 
 /*
-	On Linux glibc systems, we need to use sig* versions of jmp_buf,
-	setjmp and longjmp to preserve the signal handling context.
-	One way to detect this is if _SIGSET_H_types has
-	been defined in /usr/include/setjmp.h.
-	NOTE: ANSI only recognizes the non-sig versions.
-*/
+ * On Linux glibc systems, we need to use sig* versions of jmp_buf,
+ * setjmp and longjmp to preserve the signal handling context.
+ * One way to detect this is if _SIGSET_H_types has
+ * been defined in /usr/include/setjmp.h.
+ * NOTE: ANSI only recognizes the non-sig versions.
+ */
 #if (defined(_SIGSET_H_types) && !defined(__STRICT_ANSI__))
 #define GE_jmp_buf sigjmp_buf
 #define GE_setjmp(x) sigsetjmp((x),1)
@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 /*
-	Predefined exception codes.
+ * Predefined exception codes.
  */
 #define GE_EX_VOID		1			/* Feature applied to void reference */
 #define GE_EX_MEM		2			/* No more memory */
@@ -74,18 +74,31 @@ extern "C" {
 #define GE_EX_NEX		32			/* Number of internal exceptions */
 
 /*
-	Information about the feature being executed.
-*/
+ * String buffer used to build the exception trace.
+ */
+typedef struct GE_exception_trace_buffer_struct GE_exception_trace_buffer;
+struct GE_exception_trace_buffer_struct {
+	char* area;
+	uint32_t count;
+	uint32_t capacity;
+};
+
+/*
+ * Information about the feature being executed.
+ */
 typedef struct GE_call_struct GE_call;
 struct GE_call_struct {
-	char* feature_name;
-	char* type_name;
+#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
+	void* object; /* Current object */
+#endif
+	const char* class_name;
+	const char* feature_name;
 	GE_call* caller; /* previous feature in the call chain */
 };
 
 /*
-	Context of features containing a rescue clause.
-*/
+ * Context of features containing a rescue clause.
+ */
 typedef struct GE_rescue_struct GE_rescue;
 struct GE_rescue_struct {
 	GE_jmp_buf jb;
@@ -93,88 +106,110 @@ struct GE_rescue_struct {
 };
 
 /*
-	Information about the execution context.
-	One such struct per thread.
-*/
+ * Information about the execution context.
+ * One such struct per thread.
+ */
+typedef struct GE_thread_context_struct GE_thread_context;
 typedef struct GE_context_struct GE_context;
 struct GE_context_struct {
-	GE_call* call; /* Call stack. */
-	EIF_REFERENCE exception_manager; /* Exception manager. */
-	EIF_BOOLEAN exception_trace; /* Should exception trace be displayed? */
-	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause. */
-	uint32_t in_rescue; /* Number of rescue clauses currently being executed. */
+	GE_call* call; /* Call stack */
+	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
+	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
+	EIF_REFERENCE exception_manager; /* Exception manager */
+	char raising_exception; /* Is an exception currently being raised? */
+	char exception_trace_enabled; /* Should exception trace be displayed? */
+	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
+	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
+#ifdef EIF_THREADS
+	GE_thread_context* thread; /* Thread context */
+#endif
 };
 
 /*
-	Default initialization for 'GE_context'.
-*/
+ * Default initialization for 'GE_context'.
+ */
 extern GE_context GE_default_context;
 
 /*
-	Execution context of main thread.
-*/
+ * Execution context of main thread.
+ */
 extern GE_context* GE_main_context;
 
 /*
-	Initialization of exception handling.
-*/
+ * Execution context of current thread.
+ */
+extern GE_context* GE_current_context();
+
+/*
+ * Initialization of exception handling.
+ */
 extern void GE_init_exception(GE_context* context);
 
 /*
-	Pointer to function to create a new exception manager object.
-*/
+ * Pointer to function to create a new exception manager object.
+ */
 extern EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
 
 /*
-	Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data
-*/
+ * Pointer to Eiffel routine EXCEPTION_MANAGER.init_exception_manager.
+ */
+extern void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data.
+ */
 extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
-	Raise an exception with code 'code'.
-*/
+ * Exception tag associated with `code'.
+ */
+extern char* GE_exception_tag(long code);
+
+/*
+ * Raise an exception with code 'code'.
+ */
 extern void GE_raise(long code);
 
 /*
-	Raise an exception with code 'code' and message 'msg'.
-*/
+ * Raise an exception with code 'code' and message 'msg'.
+ */
 extern void GE_raise_with_message(long code, const char* msg);
 
 /*
-	Raise an exception from EXCEPTION_MANAGER.
-*/
+ * Raise an exception from EXCEPTION_MANAGER.
+ */
 extern void GE_developer_raise(long code, char* meaning, char* message);
 
 /*
-	Check whether the type id of 'obj' is not in 'type_ids'.
-	If it is, then raise a CAT-call exception. Don't do anything if 'obj' is Void.
-	'nb' is the number of ids in 'type_ids' and is expected to be >0.
-	'type_ids' is sorted in increasing order.
-	Return 'obj'.
-*/
+ * Check whether the type id of 'obj' is not in 'type_ids'.
+ * If it is, then raise a CAT-call exception. Don't do anything if 'obj' is Void.
+ * 'nb' is the number of ids in 'type_ids' and is expected to be >0.
+ * 'type_ids' is sorted in increasing order.
+ * Return 'obj'.
+ */
 #define GE_catcall(obj,type_ids,nb) GE_check_catcall((obj),(type_ids),(nb))
 EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 
 /*
-	Check whether 'obj' is Void.
-	If it is, then raise a call-on-void-target exception.
-	Return 'obj'
-*/
+ * Check whether 'obj' is Void.
+ * If it is, then raise a call-on-void-target exception.
+ * Return 'obj'.
+ */
 #define GE_void(obj) (!(obj)?GE_check_void(obj):(obj))
 extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 
 /*
-	Check whether 'ptr' is a null pointer.
-	If it is, then raise a no-more-memory exception.
-	Return 'ptr'
-*/
+ * Check whether 'ptr' is a null pointer.
+ * If it is, then raise a no-more-memory exception.
+ * Return 'ptr'.
+ */
 #define GE_null(ptr) GE_check_null(ptr)
 extern void* GE_check_null(void* ptr);
 
 #ifdef EIF_WINDOWS
 /*
-	Set default exception handler.
-*/
+ * Set default exception handler.
+ */
 extern void GE_set_windows_exception_filter();
 #endif
 

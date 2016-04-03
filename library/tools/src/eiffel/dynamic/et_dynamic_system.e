@@ -1581,6 +1581,7 @@ feature {NONE} -- Compilation
 					end
 				end
 					-- Type "ISE_EXCEPTION_MANAGER".
+				ise_exception_manager_init_exception_manager_feature := Void
 				ise_exception_manager_set_exception_data_feature := Void
 				l_class_type := current_system.ise_exception_manager_type
 				l_class := l_class_type.base_class
@@ -1596,6 +1597,23 @@ feature {NONE} -- Compilation
 							-- processing on `l_class'.
 						set_fatal_error
 					else
+							-- Check feature 'init_exception_manager' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_procedure (tokens.init_exception_manager_feature_name) as l_procedure then
+							if attached l_class.named_query (tokens.init_exception_manager_feature_name) as l_query then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_query)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.set_exception_data_feature_name)
+							end
+						elseif attached l_procedure.arguments as l_formal_arguments and then l_formal_arguments.count /= 0 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, Void, Void)
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_init_exception_manager_feature := l_dynamic_feature
+						end
 							-- Check feature 'set_exception_data' of class "ISE_EXCEPTION_MANAGER".
 						if not attached l_class.named_procedure (tokens.set_exception_data_feature_name) as l_procedure then
 							if attached l_class.named_query (tokens.set_exception_data_feature_name) as l_query then
@@ -1605,11 +1623,49 @@ feature {NONE} -- Compilation
 								set_fatal_error
 								error_handler.report_gvkfe1a_error (l_class, tokens.set_exception_data_feature_name)
 							end
+						elseif not attached l_procedure.arguments as l_formal_arguments or else l_formal_arguments.count /= 12 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (1).type.same_named_type (current_system.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (2).type.same_named_type (current_system.universe.boolean_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (3).type.same_named_type (current_system.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (4).type.same_named_type (current_system.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (5).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (6).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (7).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (8).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (9).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (10).type.same_named_type (current_system.universe.string_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (11).type.same_named_type (current_system.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (12).type.same_named_type (current_system.universe.boolean_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.integer_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type, current_system.universe.integer_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.string_type.type, current_system.universe.integer_type.type, current_system.universe.boolean_type.type>>, Void)
 						else
 							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
 							l_dynamic_feature.set_regular (True)
 							ise_exception_manager_set_exception_data_feature := l_dynamic_feature
--- TODO: check the signature of this feature.
 						end
 					end
 				end
@@ -1732,6 +1788,9 @@ feature -- Processors
 		end
 
 feature -- Features
+
+	ise_exception_manager_init_exception_manager_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'init_exception_manager' in class "ISE_EXCEPTION_MANAGER"
 
 	ise_exception_manager_set_exception_data_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'set_exception_data' in class "ISE_EXCEPTION_MANAGER"

@@ -18,46 +18,6 @@ extern "C" {
 #endif
 
 /*
-	Pre-defined exception tags. No restriction on size.
-	This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.
-*/
-static char* ex_tag[] = {
-	(char *) 0,							/* Nothing */
-	"Feature call on void target.",		/* EN_VOID */
-	"No more memory.",					/* EN_MEM */
-	"Precondition violated.",			/* EN_PRE */
-	"Postcondition violated.",			/* EN_POST */
-	"Floating point exception.",		/* EN_FLOAT */
-	"Class invariant violated.",		/* EN_CINV */
-	"Assertion violated.",				/* EN_CHECK */
-	"Routine failure.",					/* EN_FAIL */
-	"Unmatched inspect value.",			/* EN_WHEN */
-	"Non-decreasing loop variant or negative value reached.",		/* EN_VAR */
-	"Loop invariant violated.",			/* EN_LINV */
-	"Operating system signal.",			/* EN_SIG */
-	"Eiffel run-time panic.",			/* EN_BYE */
-	"Exception in rescue clause.",		/* EN_RESC */
-	"Out of memory.",					/* EN_OMEM */
-	"Resumption attempt failed.",		/* EN_RES */
-	"Create on deferred.",				/* EN_CDEF */
-	"External event.",					/* EN_EXT */
-	"Void assigned to expanded.",		/* EN_VEXP */
-	"Exception in signal handler.",		/* EN_HDLR */
-	"I/O error.",						/* EN_IO */
-	"Operating system error.",			/* EN_SYS */
-	"Retrieval error.",					/* EN_RETR */
-	"Developer exception.",				/* EN_PROG */
-	"Eiffel run-time fatal error.",		/* EN_FATAL */
-	"CECIL cannot call melted code",	/* EN_DOL */
-	"Runtime I/O error.",				/* EN_ISE_IO */
-	"COM error.",						/* EN_COM */
-	"Runtime check violated.",			/* EN_RT_CHECK */
-	"Old expression evaluation failed.",/* EN_OLD */
-	"Serialization failed."				/* EN_SEL */
-	"SCOOP processor dirty."			/* EN_DIRTY */
-};
-
-/*
 	Raise an Eiffel exception.
 */
 void eraise(const char* name, long code)
@@ -126,13 +86,7 @@ void esdie(int code)
 */
 EIF_REFERENCE eename(long code)
 {
-	if (code < 0) {
-		return GE_str8("User-defined exception.");
-	} else if (code < 1 || code > EN_NEX) {
-		return GE_str8("Unknown exception.");
-	} else {
-		return GE_str8(ex_tag[code]);
-	}
+	return GE_str8(GE_exception_tag(code));
 }
 
 /*
@@ -150,15 +104,9 @@ char eedefined(long ex)
 */
 void eetrace(char b) {
 	GE_context* context;
-#ifdef EIF_THREADS
-	GE_thread_context* volatile ge_thread_context;
-	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
-	context = ge_thread_context->context;
-#else
-	context = GE_main_context;
-#endif
 
-	context->exception_trace = EIF_TEST(b);
+	context = GE_current_context();
+	context->exception_trace_enabled = b;
 }
 
 /*
@@ -167,14 +115,8 @@ void eetrace(char b) {
 EIF_BOOLEAN eif_is_in_rescue(void)
 {
 	GE_context* context;
-#ifdef EIF_THREADS
-	GE_thread_context* volatile ge_thread_context;
-	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
-	context = ge_thread_context->context;
-#else
-	context = GE_main_context;
-#endif
 
+	context = GE_current_context();
 	return (EIF_TEST(context->in_rescue > 0));
 }
 

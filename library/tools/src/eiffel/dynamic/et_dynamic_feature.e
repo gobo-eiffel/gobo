@@ -288,6 +288,9 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Is current feature used as a static feature?
 
+	is_address: BOOLEAN
+			-- Is address of current feature used?
+
 	is_function: BOOLEAN
 			-- Is feature a function?
 		do
@@ -381,9 +384,6 @@ feature -- Status report
 				end
 			end
 		end
-
-	is_inlined: BOOLEAN
-			-- Is current feature inlined?
 
 	is_builtin: BOOLEAN
 			-- Is current feature built-in?
@@ -505,12 +505,16 @@ feature -- Status setting
 			static_set: is_static = b
 		end
 
-	set_inlined (b: BOOLEAN)
-			-- Set `is_inlined' to `b'.
+	set_address (b: BOOLEAN)
+			-- Set `is_address' to `b'.
 		do
-			is_inlined := b
+			is_address := b
+			if b then
+				set_regular (True)
+			end
 		ensure
-			inlined_set: is_inlined = b
+			address_set: is_address = b
+			regular_set: b implies is_regular
 		end
 
 	set_current_type_needed (b: BOOLEAN)

@@ -20,6 +20,9 @@ feature -- Access
 	concurrency_setting_name: STRING = "concurrency"
 			-- Name of setting "concurrency"
 
+	exception_trace_setting_name: STRING = "exception_trace"
+			-- Name of setting "exception_trace"
+
 	metadata_cache_path_setting_name: STRING = "metadata_cache_path"
 			-- Name of setting "metadata_cache_path"
 

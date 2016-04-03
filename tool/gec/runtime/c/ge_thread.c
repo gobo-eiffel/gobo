@@ -75,19 +75,20 @@ static void GE_thread_set_priority(EIF_THR_TYPE thread_id, unsigned int priority
 
 /* Routine to be called from the new thread when created. */
 #ifdef EIF_WINDOWS
-static unsigned __stdcall GE_thread_routine (void* arg)
+static unsigned __stdcall GE_thread_routine(void* arg)
 #else
-static void* GE_thread_routine (void* arg)
+static void* GE_thread_routine(void* arg)
 #endif
 {
 	GE_thread_context* ge_thread_context = (GE_thread_context*) arg;
 	GE_context ge_context = GE_default_context;
 
+	ge_thread_context->context = &ge_context;
+	ge_context.thread = ge_thread_context;
 	GE_init_exception(&ge_context);
 	GE_init_thread_context(ge_thread_context);
 	GE_thread_set_priority(ge_thread_context->thread_id, ge_thread_context->initial_priority);
-	ge_thread_context->context = &ge_context
-	ge_thread_context->routine (&ge_context, ge_thread_context->current);
+	ge_thread_context->routine(ge_thread_context->current);
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
 	return 0;
@@ -107,13 +108,14 @@ void GE_init_thread(GE_context* context)
 	if (ge_thread_context) {
 		GE_init_thread_context(ge_thread_context);
 		ge_thread_context->context = context;
+		context->thread = ge_thread_context;
 	} else {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	}
 }
 
 /* Create a new thread with attributes 'attr' and execute Eiffel routine 'routine' on object 'current'. */
-void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine) (GE_context*, EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr)
+void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr)
 {
 	EIF_THR_TYPE thread_id;
 	GE_thread_context* ge_thread_context;
@@ -200,13 +202,13 @@ EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_NATURAL_64 timeou
 }
 
 /* Yields execution to other threads. */
-void eif_thr_yield(void)
+void GE_thread_yield(void)
 {
 /* TODO */
 }
 
 /* The calling thread waits for all other children threads to terminate. */
-void eif_thr_join_all(void)
+void GE_thread_join_all(void)
 {
 /* TODO */
 }

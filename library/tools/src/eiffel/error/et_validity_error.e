@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -298,6 +298,7 @@ create
 	make_gvkfe3a,
 	make_gvkfe4a,
 	make_gvkfe5a,
+	make_gvkfe6a,
 	make_gvscn1a,
 	make_gvscn1b,
 	make_gvtcg5a,
@@ -12880,6 +12881,74 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_gvkfe6a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_expected_arguments: detachable ARRAY [ET_TYPE]; a_expected_type: detachable ET_TYPE)
+			-- Create a new GVKFE-6 error: wrong signature for routine `a_feature'
+			-- in kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			no_void_argument: a_expected_arguments /= Void implies not ANY_ARRAY_.has (a_expected_arguments, Void)
+		local
+			l_signature: STRING
+			i, nb: INTEGER
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (gvkfe6a_template_code)
+			etl_code := gvkfe6_etl_code
+			default_template := default_message_template (gvkfe6a_default_template)
+			create l_signature.make (512)
+			l_signature.append_string (a_feature.lower_name)
+			if a_expected_arguments /= Void then
+				i := a_expected_arguments.lower
+				nb := a_expected_arguments.upper
+				if i <= nb then
+					l_signature.append_string (" (")
+					from until i > nb loop
+						l_signature.append_string (a_expected_arguments.item (i).to_text)
+						if i /= nb then
+							l_signature.append_string (", ")
+						end
+						i := i + 1
+					end
+					l_signature.append_character (')')
+				end
+			end
+			if a_expected_type /= Void then
+				l_signature.append_string (": ")
+				l_signature.append_string (a_expected_type.to_text)
+			end
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (l_signature, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = expected signature
+		end
+
 	make_gvscn1a (a_class: ET_CLASS; a_name: ET_CLASS_NAME; a_filename: STRING)
 			-- Create a new GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
@@ -14325,6 +14394,7 @@ feature {NONE} -- Implementation
 	gvkfe3a_default_template: STRING = "attribute `$7' in kernel class $5 has not the expected type '$8'."
 	gvkfe4a_default_template: STRING = "feature `$7' in kernel class $5 is not a procedure."
 	gvkfe5a_default_template: STRING = "feature `$7' in kernel class $5 is not a query."
+	gvkfe6a_default_template: STRING = "routine `$7' in kernel class $5 has not the expected signature '$8'."
 	gvscn1a_default_template: STRING = "file '$8' contains class $9 instead of the expected class $5."
 	gvscn1b_default_template: STRING = "file '$8' does not contain the expected class $5."
 	gvtcg5a_default_template: STRING = "actual generic parameter '$7' in type '$8' is not a reference type but the corresponding formal parameter is marked as reference."
@@ -14492,6 +14562,7 @@ feature {NONE} -- Implementation
 	gvkfe3_etl_code: STRING = "GVKFE-3"
 	gvkfe4_etl_code: STRING = "GVKFE-4"
 	gvkfe5_etl_code: STRING = "GVKFE-5"
+	gvkfe6_etl_code: STRING = "GVKFE-6"
 	gvscn1_etl_code: STRING = "GVSCN-1"
 	gvtcg5_etl_code: STRING = "GVTCG-5"
 	gvuaa_etl_code: STRING = "GVUAA"
@@ -14796,6 +14867,7 @@ feature {NONE} -- Implementation
 	gvkfe3a_template_code: STRING = "gvkfe3a"
 	gvkfe4a_template_code: STRING = "gvkfe4a"
 	gvkfe5a_template_code: STRING = "gvkfe5a"
+	gvkfe6a_template_code: STRING = "gvkfe6a"
 	gvscn1a_template_code: STRING = "gvscn1a"
 	gvscn1b_template_code: STRING = "gvscn1b"
 	gvtcg5a_template_code: STRING = "gvtcg5a"

@@ -98,7 +98,7 @@ typedef struct GE_thread_context_struct GE_thread_context;
 struct GE_thread_context_struct {
 	EIF_THR_TYPE thread_id; /* Thread identifier for associated thread. */
 	EIF_REFERENCE current; /* Eiffel root object. */
-	void (*routine) (GE_context*, EIF_REFERENCE); /* Eiffel routine. */
+	void (*routine)(EIF_REFERENCE); /* Eiffel routine. */
 	unsigned int initial_priority; /* Initial priority. */
 	GE_context* context; /* Eiffel execution context. */
 };
@@ -118,7 +118,7 @@ extern EIF_TSD_TYPE GE_thread_context_key;
 extern void GE_init_thread(GE_context* context);
 
 /* Create a new thread with attributes 'attr' and execute Eiffel routine 'routine' on object 'current'. */
-extern void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine) (GE_context*, EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr);
+extern void GE_thread_create_with_attr (EIF_REFERENCE current, void (*routine)(EIF_REFERENCE), EIF_THR_ATTR_TYPE* attr);
 
 /* Thead ID of current thread. */
 extern EIF_POINTER GE_thread_id(void);
@@ -138,10 +138,10 @@ extern void GE_thread_wait(EIF_REFERENCE obj);
 extern EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_NATURAL_64 timeout);
 
 /* Yields execution to other threads. */
-extern void eif_thr_yield(void);
+extern void GE_thread_yield(void);
 
 /* The calling thread waits for all other children threads to terminate. */
-extern void eif_thr_join_all(void);
+extern void GE_thread_join_all(void);
 
 /* Function called to terminate a thread launched by Eiffel with GE_thread_create_with_attr(). */
 /* This function must be called from the thread itself (not the parent). */

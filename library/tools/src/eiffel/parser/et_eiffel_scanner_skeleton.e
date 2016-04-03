@@ -910,6 +910,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.identity_name)
 			Result.force_new (-1, tokens.ignore_name)
 			Result.force_new (-1, tokens.implication_name)
+			Result.force_new (-1, tokens.init_exception_manager_name)
 			Result.force_new (-1, tokens.integer_8_item_name)
 			Result.force_new (-1, tokens.integer_8_field_name)
 			Result.force_new (-1, tokens.integer_16_item_name)

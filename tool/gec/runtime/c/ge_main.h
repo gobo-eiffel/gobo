@@ -19,6 +19,16 @@ extern "C" {
 
 extern int GE_main(int argc, EIF_NATIVE_CHAR** argv);
 
+/*
+ * System name.
+ */
+extern char* GE_system_name;
+
+/*
+ * Root class name.
+ */
+extern char* GE_root_class_name;
+
 #ifdef EIF_WINDOWS
 
 #include <windows.h>

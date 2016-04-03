@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -6686,6 +6686,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkfe6a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_expected_arguments: detachable ARRAY [ET_TYPE]; a_expected_type: detachable ET_TYPE)
+			-- Report GVKFE-6 error: wrong signature for routine `a_feature'
+			-- in kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			no_void_argument: a_expected_arguments /= Void implies not ANY_ARRAY_.has (a_expected_arguments, Void)
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe6_error (a_class) then
+				create an_error.make_gvkfe6a (a_class, a_feature, a_expected_arguments, a_expected_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME; a_filename: STRING)
 			-- Report GVSCN-1 error: the class text in `a_filename' is
 			-- supposed to contain a class of name `a_class.name', but it
@@ -8574,6 +8594,16 @@ feature -- Validity error status
 
 	reportable_gvkfe5_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVKFE-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe6_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a GVKFE-6 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
