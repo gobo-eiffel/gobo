@@ -99,7 +99,7 @@ static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, c
 
 	if (a_trace->area) {
 		if ((a_trace->capacity - a_trace->count) <= l_length) {
-			l_new_capacity = a_trace->capacity + 512;
+			l_new_capacity = a_trace->capacity + l_length + 512;
 			l_new_area = (char*) GE_raw_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
 			if (l_new_area) {
 				a_trace->area = l_new_area;
@@ -545,7 +545,7 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
 		l_trace = context->last_exception_trace.area;
 		if (l_trace) {
-			fprintf(stderr, "Following is the set of recorded exceptions.");
+			fprintf(stderr, "Following is the set of recorded exceptions\n");
 			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
 			fprintf(stderr, l_trace);
 		} else {

@@ -4901,35 +4901,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				-- Print body to `current_file'.
 				--
 			current_file := current_function_body_buffer
-				-- Call stack.
-			if exception_trace_mode and then not l_is_empty then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_call)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_tc_address)
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-			print_feature_trace_message_call (True)
-			if a_creation then
-				print_malloc_current (a_feature)
-				if exception_trace_mode and then current_in_exception_trace then
-					print_indentation
-					current_file.put_string (c_tc)
-					current_file.put_character ('.')
-					current_file.put_string (c_object)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_current_name (current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-			end
 			if l_once_feature /= Void then
 				print_indentation
 				current_file.put_string (c_if)
@@ -4988,6 +4959,35 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
+			end
+				-- Call stack.
+			if exception_trace_mode and then not l_is_empty then
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_call)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_tc_address)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			print_feature_trace_message_call (True)
+			if a_creation then
+				print_malloc_current (a_feature)
+				if exception_trace_mode and then current_in_exception_trace then
+					print_indentation
+					current_file.put_string (c_tc)
+					current_file.put_character ('.')
+					current_file.put_string (c_object)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_current_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 			end
 			print_internal_routine_body_declaration (a_feature, l_result_type)
 			print_feature_trace_message_call (False)
@@ -8780,6 +8780,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 				current_equalities.force_last (an_expression)
 				print_equality_function_name (current_equalities.count, current_feature, current_type, current_file)
 				current_file.put_character ('(')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
 				print_expression (l_left_operand)
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -11906,6 +11909,18 @@ feature {NONE} -- Equality generation
 			print_equality_function_name (i, current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
+			header_file.put_string (c_ge_context)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			header_file.put_string (c_ac)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			current_file.put_string (c_ge_context)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_string (c_ac)
+			current_file.put_character (',')
+			current_file.put_character (' ')
 			l_left_operand := formal_argument (1)
 			l_left_operand.set_index (an_expression.left.index)
 			print_type_declaration (l_left_static_type, header_file)

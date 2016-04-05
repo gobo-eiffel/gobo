@@ -14,6 +14,7 @@
 #define EIF_EXCEPT_H
 
 #include <errno.h>
+#include <ge_exception.h>
 
 #ifdef __cplusplus
 extern "C" {
