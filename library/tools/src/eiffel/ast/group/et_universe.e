@@ -883,11 +883,17 @@ feature -- Kernel types
 	type_any_type: ET_CLASS_TYPE
 			-- Class type "TYPE [ANY]"
 
+	type_type_any_type: ET_CLASS_TYPE
+			-- Class type "TYPE [TYPE [ANY]]"
+
 	type_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "TYPE [detachable ANY]"
 
 	detachable_type_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "detachable TYPE [detachable ANY]"
+
+	type_detachable_like_current_type: ET_CLASS_TYPE
+			-- Class type "TYPE [detachable like Current]"
 
 	detachable_type_exception_type: ET_CLASS_TYPE
 			-- Class type "detachable TYPE [EXCEPTION]"
@@ -1534,12 +1540,20 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
 			create type_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
+				-- "TYPE [TYPE [ANY]]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (type_any_type)
+			create type_type_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "TYPE [detachable ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
 			create type_detachable_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [detachable ANY]"
 			create detachable_type_detachable_any_type.make_generic (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+				-- "TYPE [detachable like Current]"
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (tokens.detachable_like_current)
+			create type_detachable_like_current_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [EXCEPTION]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (exception_type)
@@ -1659,7 +1673,9 @@ feature -- Kernel types
 			system_object_parents := tokens.unknown_parents
 			system_string_type := tokens.unknown_class_type
 			type_any_type := tokens.unknown_generic_class_type
+			type_type_any_type := tokens.unknown_generic_class_type
 			type_detachable_any_type := tokens.unknown_generic_class_type
+			type_detachable_like_current_type := tokens.unknown_generic_class_type
 			detachable_type_exception_type := tokens.unknown_generic_class_type
 			type_detachable_exception_type := tokens.unknown_generic_class_type
 			detachable_type_detachable_any_type := tokens.unknown_generic_class_type
@@ -2595,7 +2611,9 @@ invariant
 	tuple_like_current_type_not_void: tuple_like_current_type /= Void
 	tuple_actual_parameters_not_void: unfolded_empty_tuple_actual_parameters /= Void
 	type_any_type_not_void: type_any_type /= Void
+	type_type_any_type_not_void: type_type_any_type /= Void
 	type_detachable_any_type_not_void: type_detachable_any_type /= Void
+	type_detachable_like_current_type_not_void: type_detachable_like_current_type /= Void
 	detachable_type_exception_type_not_void: detachable_type_exception_type /= Void
 	type_detachable_exception_type_not_void: type_detachable_exception_type /= Void
 	detachable_type_detachable_any_type_not_void: detachable_type_detachable_any_type /= Void

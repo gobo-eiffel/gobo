@@ -204,8 +204,6 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_type_detachable_like_current: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.twin_feature_name) then
@@ -298,18 +296,15 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
-				create l_parameters.make_with_capacity (1)
-				l_parameters.put_first (tokens.detachable_like_current)
-				create l_type_detachable_like_current.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
 						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_detachable_like_current)
-				elseif not a_feature.type.same_syntactical_type (l_type_detachable_like_current, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_detachable_like_current_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.type_detachable_like_current_type, current_class, current_class) then
 						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_detachable_like_current)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_detachable_like_current_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
@@ -390,8 +385,6 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_type_type_any: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List function names first, then procedure names.
@@ -566,18 +559,15 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
-				create l_parameters.make_with_capacity (1)
-				l_parameters.put_first (current_universe.type_any_type)
-				create l_type_type_any.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
 						-- The signature should be 'generating_type: TYPE [TYPE [ANY]]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_type_any)
-				elseif not a_feature.type.same_syntactical_type (l_type_type_any, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_type_any_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.type_type_any_type, current_class, current_class) then
 						-- The signature should be 'generating_type: TYPE [TYPE [ANY]]'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_type_any)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_type_any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
@@ -3727,8 +3717,6 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_type_type_any: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
@@ -4101,11 +4089,8 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
 					-- 'TYPE.generating_type' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
-				create l_parameters.make_with_capacity (1)
-				l_parameters.put_first (current_universe.type_any_type)
-				create l_type_type_any.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_type_any)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_type_any_type)
 			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then
 					-- 'TYPE.generic_parameter_count' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count))
