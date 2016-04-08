@@ -2190,20 +2190,13 @@ feature {NONE} -- Type checking
 -- TODO: when processing a precursor, its signature should be resolved to the
 -- context of `current_class', but it is currently seen in the context of its parent class.
 			else
+				l_context := new_context (current_type)
 				if attached current_inline_agent as l_current_inline_agent then
-						-- We check the validity of the signature types of inline agents
-						-- in their implementation class because, as opposed to the
-						-- signature types of features, they have not been resolved (i.e.
-						-- if they contain formal generic parameter, these parameters may
-						-- need to be resolved in the `current_class').
-					l_context := new_context (current_class_impl)
 					type_checker.check_type_validity (a_type, l_current_inline_agent, current_class_impl, l_context)
-					free_context (l_context)
 				else
-					l_context := new_context (current_type)
 					type_checker.check_type_validity (a_type, current_feature_impl, current_class_impl, l_context)
-					free_context (l_context)
 				end
+				free_context (l_context)
 				if type_checker.has_fatal_error then
 					set_fatal_error
 				else
@@ -2231,12 +2224,7 @@ feature {NONE} -- Type checking
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-				-- We check the validity of the types of the local variables
-				-- in their implementation class because, as opposed to the
-				-- signature types of features, they have not been resolved
-				-- (i.e. if they contain formal generic parameter, these
-				-- parameters may need to be resolved in the `current_class').
-			l_context := new_context (current_class_impl)
+			l_context := new_context (current_type)
 			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
 			free_context (l_context)
 			if type_checker.has_fatal_error then
@@ -2265,7 +2253,7 @@ feature {NONE} -- Type checking
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
-			l_context := new_context (current_class_impl)
+			l_context := new_context (current_type)
 			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
 			free_context (l_context)
 			if type_checker.has_fatal_error then
