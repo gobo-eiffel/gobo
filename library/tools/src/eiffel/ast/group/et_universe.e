@@ -744,13 +744,13 @@ feature -- Kernel types
 	any_clients: ET_CLIENT_LIST
 			-- Default client clause
 
-	array_any_type: ET_GENERIC_CLASS_TYPE
+	array_any_type: ET_CLASS_TYPE
 			-- Class type "ARRAY [ANY]", with implicit 'attached' type mark
 
-	array_detachable_any_type: ET_GENERIC_CLASS_TYPE
+	array_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "ARRAY [detachable ANY]", with implicit 'attached' type mark
 
-	array_like_current_type: ET_GENERIC_CLASS_TYPE
+	array_like_current_type: ET_CLASS_TYPE
 			-- Class type "ARRAY [like Current]", with implicit 'attached' type mark
 
 	boolean_type: ET_CLASS_TYPE
@@ -777,7 +777,7 @@ feature -- Kernel types
 	exception_manager_type: ET_CLASS_TYPE
 			-- Class type "EXCEPTION_MANAGER", with implicit 'attached' type mark
 
-	function_type: ET_GENERIC_CLASS_TYPE
+	function_type: ET_CLASS_TYPE
 			-- Class type "FUNCTION [ANY, TUPLE, ANY]", with implicit 'attached' type mark
 
 	integer_type: ET_CLASS_TYPE
@@ -798,7 +798,7 @@ feature -- Kernel types
 	ise_exception_manager_type: ET_CLASS_TYPE
 			-- Class type "ISE_EXCEPTION_MANAGER", with implicit 'attached' type mark
 
-	iterable_detachable_any_type: ET_GENERIC_CLASS_TYPE
+	iterable_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "ITERABLE [detachable ANY]", with implicit 'attached' type mark
 
 	natural_type: ET_CLASS_TYPE
@@ -825,10 +825,10 @@ feature -- Kernel types
 	pointer_type: ET_CLASS_TYPE
 			-- Class type "POINTER"
 
-	predicate_like_current_type: ET_GENERIC_CLASS_TYPE
+	predicate_like_current_type: ET_CLASS_TYPE
 			-- Class type "PREDICATE [NONE, like Current]", with implicit 'attached' type mark
 
-	procedure_like_current_type: ET_GENERIC_CLASS_TYPE
+	procedure_like_current_type: ET_CLASS_TYPE
 			-- Class type "PROCEDURE [NONE, like Current]", with implicit 'attached' type mark
 
 	real_type: ET_CLASS_TYPE
@@ -840,13 +840,13 @@ feature -- Kernel types
 	real_64_type: ET_CLASS_TYPE
 			-- Class type "REAL_64"
 
-	routine_type: ET_GENERIC_CLASS_TYPE
+	routine_type: ET_CLASS_TYPE
 			-- Class type "ROUTINE [ANY, TUPLE]", with implicit 'attached' type mark
 
-	special_any_type: ET_GENERIC_CLASS_TYPE
+	special_any_type: ET_CLASS_TYPE
 			-- Class type "SPECIAL [ANY]", with implicit 'attached' type mark
 
-	special_detachable_any_type: ET_GENERIC_CLASS_TYPE
+	special_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "SPECIAL [detachable ANY]", with implicit 'attached' type mark
 
 	string_type: ET_CLASS_TYPE
@@ -876,28 +876,32 @@ feature -- Kernel types
 	tuple_like_current_type: ET_TUPLE_TYPE
 			-- Type "TUPLE [like Current]", with implicit 'attached' type mark
 
-	type_any_type: ET_GENERIC_CLASS_TYPE
+	unfolded_empty_tuple_actual_parameters: ET_ACTUAL_PARAMETERS
+			-- Actual generic parameters "[TUPLE]", with implicit 'attached' type mark,
+			-- used for Tuple-type-unfolding
+
+	type_any_type: ET_CLASS_TYPE
 			-- Class type "TYPE [ANY]"
 
-	type_detachable_any_type: ET_GENERIC_CLASS_TYPE
+	type_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "TYPE [detachable ANY]"
 
-	detachable_type_detachable_any_type: ET_GENERIC_CLASS_TYPE
+	detachable_type_detachable_any_type: ET_CLASS_TYPE
 			-- Class type "detachable TYPE [detachable ANY]"
 
-	detachable_type_exception_type: ET_GENERIC_CLASS_TYPE
+	detachable_type_exception_type: ET_CLASS_TYPE
 			-- Class type "detachable TYPE [EXCEPTION]"
 
-	type_detachable_exception_type: ET_GENERIC_CLASS_TYPE
+	type_detachable_exception_type: ET_CLASS_TYPE
 			-- Class type "TYPE [detachable EXCEPTION]", with implicit 'attached' type mark"
 
-	type_like_current_type: ET_GENERIC_CLASS_TYPE
+	type_like_current_type: ET_CLASS_TYPE
 			-- Class type "TYPE [like Current]", with implicit 'attached' type mark"
 
-	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE
+	typed_pointer_any_type: ET_CLASS_TYPE
 			-- Class type "TYPED_POINTER [ANY]"
 
-	typed_pointer_like_current_type: ET_GENERIC_CLASS_TYPE
+	typed_pointer_like_current_type: ET_CLASS_TYPE
 			-- Class type "TYPED_POINTER [like Current]"
 
 	wide_character_type: ET_CLASS_TYPE
@@ -992,15 +996,15 @@ feature -- Kernel types
 				-- Type "ARRAY [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create array_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create array_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- Type "ARRAY [detachable ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
-			create array_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create array_detachable_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- Type "ARRAY [like Current]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
-			create array_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create array_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_boolean_type
@@ -1108,7 +1112,7 @@ feature -- Kernel types
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create function_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create function_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_integer_type
@@ -1208,7 +1212,7 @@ feature -- Kernel types
 				-- Type "ITERABLE [detachable ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
-			create iterable_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create iterable_detachable_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_natural_type
@@ -1325,7 +1329,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tokens.like_current)
 			l_parameters.put_first (none_type)
-			create predicate_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create predicate_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_procedure_type
@@ -1342,7 +1346,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tokens.like_current)
 			l_parameters.put_first (none_type)
-			create procedure_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create procedure_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_real_type
@@ -1400,7 +1404,7 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create routine_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create routine_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_special_type
@@ -1416,11 +1420,11 @@ feature -- Kernel types
 				-- Type "SPECIAL [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create special_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create special_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- Type "SPECIAL [detachable ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
-			create special_detachable_any_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create special_detachable_any_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_string_type
@@ -1512,6 +1516,8 @@ feature -- Kernel types
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
 			create tuple_like_current_type.make (tokens.implicit_attached_type_mark, l_parameters, l_master_class)
+				-- "[TUPLE]"
+			create {ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS} unfolded_empty_tuple_actual_parameters.make (tuple_type)
 		end
 
 	set_type_type
@@ -1527,25 +1533,25 @@ feature -- Kernel types
 				-- "TYPE [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create type_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create type_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "TYPE [detachable ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_any_type)
-			create type_detachable_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create type_detachable_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [detachable ANY]"
-			create detachable_type_detachable_any_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+			create detachable_type_detachable_any_type.make_generic (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
 				-- "detachable TYPE [EXCEPTION]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (exception_type)
-			create detachable_type_exception_type.make (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
+			create detachable_type_exception_type.make_generic (tokens.detachable_keyword, l_name, l_parameters, l_master_class)
 				-- "TYPE [detachable EXCEPTION]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (detachable_exception_type)
-			create type_detachable_exception_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create type_detachable_exception_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 				-- "TYPE [like Current]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
-			create type_like_current_type.make (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+			create type_like_current_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
 		end
 
 	set_typed_pointer_type
@@ -1561,11 +1567,11 @@ feature -- Kernel types
 				-- "TYPED_POINTER [ANY]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create typed_pointer_any_type.make (Void, l_name, l_parameters, l_master_class)
+			create typed_pointer_any_type.make_generic (Void, l_name, l_parameters, l_master_class)
 				-- "TYPED_POINTER [like Current]"
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (tokens.like_current)
-			create typed_pointer_like_current_type.make (Void, l_name, l_parameters, l_master_class)
+			create typed_pointer_like_current_type.make_generic (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_wide_character_type
@@ -1596,6 +1602,7 @@ feature -- Kernel types
 			tuple_type := tokens.unknown_tuple_type
 			detachable_tuple_type := tokens.unknown_tuple_type
 			tuple_like_current_type := tokens.unknown_tuple_type
+			unfolded_empty_tuple_actual_parameters := tokens.empty_actual_parameters
 			array_any_type := tokens.unknown_generic_class_type
 			array_detachable_any_type := tokens.unknown_generic_class_type
 			array_like_current_type := tokens.unknown_generic_class_type
@@ -1830,6 +1837,11 @@ feature -- Compilation options
 			-- Should the attachment status of the target of qualified calls
 			-- be checked at compile time?
 
+	obsolete_routine_type_mode: BOOLEAN
+			-- Should the first generic parameter of routine types (ROUTINE, PROCEDURE, FUNCTION, PREDICATE)
+			-- be ignored?
+			-- Note: the first generic parameter of routine types has been dropped in ISE 15.12.
+
 feature -- Compilation options setting
 
 	set_attachment_type_conformance_mode (b: BOOLEAN)
@@ -1854,6 +1866,14 @@ feature -- Compilation options setting
 			target_type_attachment_mode := b
 		ensure
 			target_type_attachment_mode_set: target_type_attachment_mode = b
+		end
+
+	set_obsolete_routine_type_mode (b: BOOLEAN)
+			-- Set `obsolete_routine_type_mode' to `b'.
+		do
+			obsolete_routine_type_mode := b
+		ensure
+			obsolete_routine_type_mode_set: obsolete_routine_type_mode = b
 		end
 
 feature -- Built-in convert features
@@ -2573,6 +2593,7 @@ invariant
 	tuple_type_not_void: tuple_type /= Void
 	detachable_tuple_type_not_void: detachable_tuple_type /= Void
 	tuple_like_current_type_not_void: tuple_like_current_type /= Void
+	tuple_actual_parameters_not_void: unfolded_empty_tuple_actual_parameters /= Void
 	type_any_type_not_void: type_any_type /= Void
 	type_detachable_any_type_not_void: type_detachable_any_type /= Void
 	detachable_type_exception_type_not_void: detachable_type_exception_type /= Void

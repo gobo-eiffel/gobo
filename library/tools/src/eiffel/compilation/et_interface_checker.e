@@ -5,7 +5,7 @@ note
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,12 +47,13 @@ feature {NONE} -- Initialization
 			create feature_adaptation_resolver.make
 			create dotnet_feature_adaptation_resolver.make
 			create signature_checker.make
+			create unfolded_tuple_actual_parameters_resolver.make
 		end
 
 feature -- Processing
 
 	process_class (a_class: ET_CLASS)
-			-- Flatten fetaures of `a_class' is not already done.
+			-- Flatten features of `a_class' if not already done.
 			-- Then check validity of qualified anchored types appearing
 			-- in signatures, and check signature conformance in case of
 			-- redeclaration if this could not be done already.
@@ -100,7 +101,7 @@ feature -- Error handling
 feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS)
-			-- Flatten features of `a_class' is not already done.
+			-- Flatten features of `a_class' if not already done.
 			-- Then check validity of qualified anchored types appearing
 			-- in signatures, and check signature conformance in case of
 			-- redeclaration if this could not be done already.
@@ -147,6 +148,7 @@ feature {NONE} -- Processing
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
 						check_qualified_anchored_signatures_validity
+						resolve_signatures_unfolded_tuple_actual_parameters
 						if not current_class.redeclared_signatures_checked then
 								-- An error occurred when checking the conformance of
 								-- redeclared signatures in the feature flattener. This
@@ -178,6 +180,62 @@ feature {NONE} -- Processing
 		ensure
 			interface_checked: a_class.interface_checked
 		end
+
+feature {NONE} -- Signature resolving
+
+	resolve_signatures_unfolded_tuple_actual_parameters
+			-- Resolve Tuple-type-unfolding types in signature of features declared
+			-- in `current_class'.
+		local
+			l_queries: ET_QUERY_LIST
+			l_procedures: ET_PROCEDURE_LIST
+			i, nb: INTEGER
+		do
+			l_queries := current_class.queries
+			nb := l_queries.declared_count
+			from i := 1 until i > nb loop
+				resolve_signature_unfolded_tuple_actual_parameters (l_queries.item (i))
+				i := i + 1
+			end
+			l_procedures := current_class.procedures
+			nb := l_procedures.declared_count
+			from i := 1 until i > nb loop
+				resolve_signature_unfolded_tuple_actual_parameters (l_procedures.item (i))
+				i := i + 1
+			end
+		end
+
+	resolve_signature_unfolded_tuple_actual_parameters (a_feature: ET_FEATURE)
+			-- Resolve Tuple-type-unfolding types in signature of `a_feature'
+			-- in `current_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_type, previous_type: detachable ET_TYPE
+			an_arg: ET_FORMAL_ARGUMENT
+			i, nb: INTEGER
+		do
+			a_type := a_feature.type
+			if a_type /= Void then
+				unfolded_tuple_actual_parameters_resolver.resolve_type (a_type, current_class)
+			end
+			if attached a_feature.arguments as args then
+				nb := args.count
+				from i := 1 until i > nb loop
+					an_arg := args.formal_argument (i)
+					a_type := an_arg.type
+					if a_type /= previous_type then
+							-- Not resolved yet.
+						unfolded_tuple_actual_parameters_resolver.resolve_type (a_type, current_class)
+						previous_type := a_type
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	unfolded_tuple_actual_parameters_resolver: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER2
+			-- Tuple-type-unfolding type resolver
 
 feature {NONE} -- Signature validity
 
@@ -416,6 +474,7 @@ invariant
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	signature_checker_not_void: signature_checker /= Void
+	unfolded_tuple_actual_parameters_resolver_not_void: unfolded_tuple_actual_parameters_resolver /= Void
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
 	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 

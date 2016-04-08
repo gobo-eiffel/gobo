@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,6 +100,12 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.right_bracket.process (Current)
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
+			-- Process `a_list'.
+		do
+			a_list.actual_parameters.process (Current)
 		end
 
 	process_agent_argument_operand_comma (an_argument: ET_AGENT_ARGUMENT_OPERAND_COMMA)
@@ -506,6 +512,9 @@ feature {ET_AST_NODE} -- Processing
 				l_type_mark.process (Current)
 			end
 			a_type.name.process (Current)
+			if attached a_type.actual_parameters as l_actual_parameters then
+				l_actual_parameters.process (Current)
+			end
 		end
 
 	process_client (a_client: ET_CLIENT)
@@ -1557,13 +1566,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_operator'.
 		do
 			process_token (an_operator)
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
-			a_type.actual_parameters.process (Current)
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
@@ -2638,6 +2640,17 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_constant.sign as l_sign then
 				l_sign.process (Current)
 			end
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			a_list.actual_parameters.process (Current)
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)

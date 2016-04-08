@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			is_relative := (a_pathname = Void)
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
-			if attached universe.ecf_version as l_ecf_version  and then l_ecf_version <= ecf_1_4_0 then
+			if attached universe.ecf_version as l_ecf_version and then l_ecf_version <= ecf_1_4_0 then
 				set_use_obsolete_syntax (True)
 			end
 		ensure

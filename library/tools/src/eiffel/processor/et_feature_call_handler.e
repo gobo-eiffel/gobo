@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -26,6 +26,7 @@ inherit
 			process_across_expression,
 			process_across_instruction,
 			process_actual_parameter_list,
+			process_actual_parameter_sublist,
 			process_agent_argument_operand_list,
 			process_agent_typed_open_argument,
 			process_agent_open_target,
@@ -44,6 +45,7 @@ inherit
 			process_check_instruction,
 			process_choice_list,
 			process_choice_range,
+			process_class_type,
 			process_compound,
 			process_constant_attribute,
 			process_convert_builtin_expression,
@@ -74,7 +76,6 @@ inherit
 			process_feature_address,
 			process_formal_argument,
 			process_formal_argument_list,
-			process_generic_class_type,
 			process_hexadecimal_integer_constant,
 			process_identifier,
 			process_if_instruction,
@@ -122,6 +123,8 @@ inherit
 			process_tuple_type,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
+			process_unfolded_empty_tuple_actual_parameters,
+			process_unfolded_tuple_actual_parameters,
 			process_unique_attribute,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction,
@@ -724,6 +727,22 @@ feature {ET_AST_NODE} -- Processing
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Process `a_list'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
+			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_actual_parameters (a_list: ET_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_list_not_void: a_list /= Void
 		local
 			i, nb: INTEGER
 			had_error: BOOLEAN
@@ -998,6 +1017,18 @@ feature {ET_AST_NODE} -- Processing
 			had_error := has_fatal_error
 			process_expression (a_choice.upper)
 			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_class_type (a_type: ET_CLASS_TYPE)
+			-- Process `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			reset_fatal_error (False)
+			if anchored_types_enabled then
+				if attached a_type.actual_parameters as l_actual_parameters then
+					process_actual_parameters (l_actual_parameters)
+				end
+			end
 		end
 
 	process_compound (a_list: ET_COMPOUND)
@@ -1595,16 +1626,6 @@ feature {ET_AST_NODE} -- Processing
 					i := i + 1
 				end
 				reset_fatal_error (had_error)
-			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		do
-			reset_fatal_error (False)
-			if anchored_types_enabled then
-				process_actual_parameter_list (a_type.actual_parameters)
 			end
 		end
 
@@ -2547,7 +2568,7 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (False)
 			if anchored_types_enabled then
 				if attached a_type.actual_parameters as l_parameters then
-					process_actual_parameter_list (l_parameters)
+					process_actual_parameters (l_parameters)
 				end
 			end
 		end
@@ -2641,6 +2662,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_real_constant (a_constant)
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_actual_parameters (a_list)
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)

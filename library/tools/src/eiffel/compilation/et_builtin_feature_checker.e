@@ -204,7 +204,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_type_detachable_like_current: ET_GENERIC_CLASS_TYPE
+			l_type_detachable_like_current: ET_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 				-- List function names first, then procedure names.
@@ -300,7 +300,7 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
 				create l_parameters.make_with_capacity (1)
 				l_parameters.put_first (tokens.detachable_like_current)
-				create l_type_detachable_like_current.make (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
+				create l_type_detachable_like_current.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
 						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
@@ -390,7 +390,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_type_type_any: ET_GENERIC_CLASS_TYPE
+			l_type_type_any: ET_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
@@ -568,7 +568,7 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
 				create l_parameters.make_with_capacity (1)
 				l_parameters.put_first (current_universe.type_any_type)
-				create l_type_type_any.make (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
+				create l_type_type_any.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
 						-- The signature should be 'generating_type: TYPE [TYPE [ANY]]'.
@@ -3727,7 +3727,7 @@ feature {NONE} -- Built-in validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_type_type_any: ET_GENERIC_CLASS_TYPE
+			l_type_type_any: ET_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
@@ -4103,7 +4103,7 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_generating_type))
 				create l_parameters.make_with_capacity (1)
 				l_parameters.put_first (current_universe.type_any_type)
-				create l_type_type_any.make (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
+				create l_type_type_any.make_generic (Void, tokens.type_class_name, l_parameters, current_universe.type_any_type.named_base_class)
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, l_type_type_any)
 			elseif a_feature.name.same_feature_name (tokens.generic_parameter_count_feature_name) then

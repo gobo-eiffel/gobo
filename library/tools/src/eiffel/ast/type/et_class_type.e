@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2015, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_BASE_TYPE
 		redefine
+			actual_parameters,
 			same_syntactical_class_type_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_base_class_type_with_type_marks,
@@ -25,14 +26,16 @@ inherit
 			append_unaliased_to_string,
 			type_with_type_mark,
 			type_mark,
-			overridden_type_mark
+			overridden_type_mark,
+			reset
 		end
 
 	ET_SHARED_FEATURE_NAME_TESTER
 
 create
 
-	make
+	make,
+	make_generic
 
 feature {NONE} -- Initialization
 
@@ -51,7 +54,51 @@ feature {NONE} -- Initialization
 			named_base_class_set: named_base_class = a_named_base_class
 		end
 
+	make_generic (a_type_mark: like type_mark; a_name: like name;
+		a_parameters: attached like actual_parameters; a_named_base_class: like named_base_class)
+			-- Create a new generic class type.
+		require
+			a_name_not_void: a_name /= Void
+			a_parameters_not_void: a_parameters /= Void
+			a_named_base_class_not_void: a_named_base_class /= Void
+		do
+			type_mark := a_type_mark
+			name := a_name
+			actual_parameters := a_parameters
+			named_base_class := a_named_base_class
+		ensure
+			type_mark_set: type_mark = a_type_mark
+			name_set: name = a_name
+			raw_actual_parameters_set: actual_parameters = a_parameters
+			named_base_class_set: named_base_class = a_named_base_class
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset type as it was just after it was last parsed.
+		do
+			if tuple_actual_parameters_unfolded_1 or tuple_actual_parameters_unfolded_2 then
+				tuple_actual_parameters_unfolded_1 := False
+				tuple_actual_parameters_unfolded_2 := False
+				if attached {ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS} actual_parameters as l_actual_parameters then
+					actual_parameters := Void
+				elseif attached {ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS} actual_parameters as l_actual_parameters then
+					actual_parameters := l_actual_parameters.actual_parameters
+				end
+				if attached {ET_ACTUAL_PARAMETER_SUBLIST} actual_parameters as l_actual_parameters then
+					actual_parameters := l_actual_parameters.actual_parameters
+				end
+			end
+			if attached actual_parameters as l_parameters then
+				l_parameters.reset
+			end
+		end
+
 feature -- Access
+
+	actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			-- Actual generic parameters
 
 	type_mark: detachable ET_TYPE_MARK
 			-- 'attached', 'detachable', 'expanded', 'reference' or 'separate' keyword,
@@ -163,7 +210,7 @@ feature -- Access
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_actual_parameters: like actual_parameters
-			l_named_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_named_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_actual_parameters := actual_parameters
@@ -177,7 +224,7 @@ feature -- Access
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark /= type_mark or l_named_parameters /= l_actual_parameters then
 				if l_named_parameters /= Void then
-					create {ET_GENERIC_CLASS_TYPE} Result.make (l_type_mark, name, l_named_parameters, named_base_class)
+					create {ET_CLASS_TYPE} Result.make_generic (l_type_mark, name, l_named_parameters, named_base_class)
 				else
 					create {ET_CLASS_TYPE} Result.make (l_type_mark, name, named_base_class)
 				end
@@ -195,7 +242,7 @@ feature -- Access
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark /= type_mark then
 				if attached actual_parameters as l_actual_parameters then
-					create {ET_GENERIC_CLASS_TYPE} Result.make (l_type_mark, name, l_actual_parameters, named_base_class)
+					create {ET_CLASS_TYPE} Result.make_generic (l_type_mark, name, l_actual_parameters, named_base_class)
 				else
 					create {ET_CLASS_TYPE} Result.make (l_type_mark, name, named_base_class)
 				end
@@ -331,6 +378,12 @@ feature -- Status report
 				Result := l_actual_parameters.named_types_have_class (a_class, a_context)
 			end
 		end
+
+	tuple_actual_parameters_unfolded_1: BOOLEAN
+			-- Has the first phase of Tuple-type-unfolding been performed?
+
+	tuple_actual_parameters_unfolded_2: BOOLEAN
+			-- Has the second phase of Tuple-type-unfolding been performed?
 
 feature -- Comparison
 
@@ -553,7 +606,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 --					then
 --						-- Use SmartEiffel agent type conformance semantics, where the conformance
 --						-- of the second actual generic parameter is checked in the reverse order.
---						Result := l_other_actual_parameters.agent_conforms_to_types (l_actual_parameters, a_context, other_context)
+--						Result := l_other_actual_parameters.agent_conforms_to_types (2, l_actual_parameters, a_context, other_context)
 --					else
 						Result := l_other_actual_parameters.conforms_to_types (l_actual_parameters, a_context, other_context)
 --					end
@@ -607,12 +660,131 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE
+	resolve_unfolded_tuple_actual_parameters_1 (a_universe: ET_UNIVERSE)
+			-- First phase of Tuple-type-unfolding in actual parameters of current class type.
+			-- Perform syntactical transformations only:
+			-- * Resolve cases where the number of actual and formal generic parameters
+			--   are different.
+			-- * Also resolve the use of obsolete routine types (with an extra
+			--   first generic parameter).
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			l_base_class: ET_CLASS
+			l_tuple_type: ET_TUPLE_TYPE
+			l_actual_sublist: ET_ACTUAL_PARAMETER_SUBLIST
+			l_unfolded_tuple_actuals: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS
+			l_tuple_constraint_position: INTEGER
+		do
+			if not tuple_actual_parameters_unfolded_1 then
+				tuple_actual_parameters_unfolded_1 := True
+					-- Not unfolded yet.
+				l_base_class := base_class
+					-- Obsolete routine types.
+				if not attached actual_parameters as l_actual_parameters or else l_actual_parameters.count < 2 then
+					-- Do nothing.
+				elseif not attached l_base_class.formal_parameters as l_formal_parameters then
+					-- Do nothing.
+				elseif a_universe.obsolete_routine_type_mode then
+					if
+						(l_base_class.is_routine_class and then l_formal_parameters.count = 1) or
+						(l_base_class.is_procedure_class and then l_formal_parameters.count = 1) or
+						(l_base_class.is_predicate_class and then l_formal_parameters.count = 1) or
+						(l_base_class.is_function_class and then l_formal_parameters.count = 2)
+					then
+						create l_actual_sublist.make (l_actual_parameters, 2, l_actual_parameters.count)
+						actual_parameters := l_actual_sublist
+					end
+				end
+					-- Tuple-type-unfolding.
+				l_tuple_constraint_position := l_base_class.tuple_constraint_position
+				if l_tuple_constraint_position = 0 then
+						-- Do nothing: not a single-tuple class.
+						-- No need to perform the second phase.
+					tuple_actual_parameters_unfolded_2 := True
+				elseif not attached l_base_class.formal_parameters as l_formal_parameters then
+						-- Should never happen.
+						-- No need to perform the second phase.
+					tuple_actual_parameters_unfolded_2 := True
+				elseif attached actual_parameters as l_actual_parameters then
+					if l_actual_parameters.count = l_formal_parameters.count - 1 then
+						l_tuple_type := a_universe.tuple_type
+						create l_unfolded_tuple_actuals.make (l_actual_parameters, l_tuple_type, l_tuple_constraint_position)
+						actual_parameters := l_unfolded_tuple_actuals
+							-- No need to perform the second phase.
+						tuple_actual_parameters_unfolded_2 := True
+					elseif l_actual_parameters.count > l_formal_parameters.count then
+						create l_actual_sublist.make (l_actual_parameters, l_tuple_constraint_position, l_tuple_constraint_position + l_actual_parameters.count - l_formal_parameters.count)
+						create l_tuple_type.make (tokens.attached_keyword, l_actual_sublist, a_universe.tuple_type.named_base_class)
+						create l_unfolded_tuple_actuals.make (l_actual_parameters, l_tuple_type, l_tuple_constraint_position)
+						actual_parameters := l_unfolded_tuple_actuals
+							-- No need to perform the second phase.
+						tuple_actual_parameters_unfolded_2 := True
+					elseif l_actual_parameters.count /= l_formal_parameters.count then
+							-- No need to perform the second phase.
+						tuple_actual_parameters_unfolded_2 := True
+					end
+				elseif l_formal_parameters.count = 1 then
+					actual_parameters := a_universe.unfolded_empty_tuple_actual_parameters
+						-- No need to perform the second phase.
+					tuple_actual_parameters_unfolded_2 := True
+				else
+						-- No need to perform the second phase.
+					tuple_actual_parameters_unfolded_2 := True
+				end
+			end
+		end
+
+	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT)
+			-- Second phase of Tuple-type-unfolding in actual parameters of current class type.
+			-- Perform transformations which require conformance checking:
+			-- * Resolve the case: "FOO [A, B, C]" -> "FOO [A, TUPLE [B], C]".
+			-- `a_context' and `a_constraint_context' are the contexts from which
+			-- the current actual parameter at the tuple constraint position
+			-- and its associated constraint are viewed respectively when
+			-- performing conformance checking.
+		require
+			a_context_not_void: a_context /= Void
+			a_contrainst_context_not_void: a_constraint_context /= Void
+			single_tuple_class: base_class.tuple_constraint_position /= 0
+			same_parameter_count: base_class.formal_parameter_count = actual_parameter_count
+		local
+			l_base_class: ET_CLASS
+			l_unfolded_tuple_actuals: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS
+			l_tuple_constraint_position: INTEGER
+			l_tuple_type: ET_TUPLE_TYPE
+			l_actual_sublist: ET_ACTUAL_PARAMETER_SUBLIST
+			l_actual: ET_TYPE
+		do
+			if not tuple_actual_parameters_unfolded_2 then
+				tuple_actual_parameters_unfolded_2 := True
+					-- Not unfolded yet.
+				l_base_class := base_class
+				l_tuple_constraint_position := l_base_class.tuple_constraint_position
+				if not attached l_base_class.formal_parameters as l_formal_parameters then
+					-- Should never happen.
+				elseif attached actual_parameters as l_actual_parameters then
+					if attached l_formal_parameters.formal_parameter (l_tuple_constraint_position).constraint as l_tuple_constraint then
+						l_actual := l_actual_parameters.type (l_tuple_constraint_position)
+						if not l_actual.conforms_to_type (l_tuple_constraint, a_constraint_context, a_context) then
+							create l_actual_sublist.make (l_actual_parameters, l_tuple_constraint_position, l_tuple_constraint_position)
+							create l_tuple_type.make (tokens.attached_keyword, l_actual_sublist, a_context.root_context.base_class.universe.tuple_type.named_base_class)
+							create l_unfolded_tuple_actuals.make (l_actual_parameters, l_tuple_type, l_tuple_constraint_position)
+							actual_parameters := l_unfolded_tuple_actuals
+						end
+					end
+				end
+			end
+		ensure
+			same_parameter_count: actual_parameter_count = old actual_parameter_count
+		end
+
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETERS): ET_CLASS_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_actual_parameters: like actual_parameters
-			l_resolved_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_resolved_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_actual_parameters := actual_parameters
@@ -622,7 +794,7 @@ feature -- Type processing
 			l_type_mark := overridden_type_mark (a_type_mark)
 			if l_type_mark /= type_mark or l_resolved_parameters /= l_actual_parameters then
 				if l_resolved_parameters /= Void then
-					create {ET_GENERIC_CLASS_TYPE} Result.make (l_type_mark, name, l_resolved_parameters, named_base_class)
+					create {ET_CLASS_TYPE} Result.make_generic (l_type_mark, name, l_resolved_parameters, named_base_class)
 				else
 					create {ET_CLASS_TYPE} Result.make (l_type_mark, name, named_base_class)
 				end

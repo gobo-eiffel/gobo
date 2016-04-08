@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			create feature_adaptation_resolver.make
 			create dotnet_feature_adaptation_resolver.make
 			create identifier_type_resolver.make
+			create unfolded_tuple_actual_parameters_resolver.make
 			create anchored_type_checker.make
 			create signature_checker.make
 			create parent_checker.make
@@ -308,6 +309,7 @@ feature {NONE} -- Feature flattening
 						-- when processing the parents of `current_class'.
 					resolve_identifier_signature (l_query)
 					check_signature_vtct_validity (l_query)
+					resolve_signature_unfolded_tuple_actual_parameters (l_query)
 					if l_query.is_deferred and then l_query.is_frozen then
 							-- A feature cannot be both deferred and frozen.
 						set_fatal_error (current_class)
@@ -403,6 +405,7 @@ feature {NONE} -- Feature flattening
 						-- when processing the parents of `current_class'.
 					resolve_identifier_signature (l_procedure)
 					check_signature_vtct_validity (l_procedure)
+					resolve_signature_unfolded_tuple_actual_parameters (l_procedure)
 					if l_procedure.is_deferred and then l_procedure.is_frozen then
 							-- A feature cannot be both deferred and frozen.
 						set_fatal_error (current_class)
@@ -1522,6 +1525,38 @@ feature {NONE} -- Signature resolving
 	identifier_type_resolver: ET_IDENTIFIER_TYPE_RESOLVER
 			-- Identifier type resolver
 
+	resolve_signature_unfolded_tuple_actual_parameters (a_feature: ET_FEATURE)
+			-- Resolve Tuple-type-unfolding types in signature of `a_feature'
+			-- in `current_class'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_type, previous_type: detachable ET_TYPE
+			an_arg: ET_FORMAL_ARGUMENT
+			i, nb: INTEGER
+		do
+			a_type := a_feature.type
+			if a_type /= Void then
+				unfolded_tuple_actual_parameters_resolver.resolve_type (a_type, current_class)
+			end
+			if attached a_feature.arguments as args then
+				nb := args.count
+				from i := 1 until i > nb loop
+					an_arg := args.formal_argument (i)
+					a_type := an_arg.type
+					if a_type /= previous_type then
+							-- Not resolved yet.
+						unfolded_tuple_actual_parameters_resolver.resolve_type (a_type, current_class)
+						previous_type := a_type
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	unfolded_tuple_actual_parameters_resolver: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER1
+			-- Tuple-type-unfolding type resolver
+
 feature {NONE} -- Signature validity
 
 	check_anchored_signatures
@@ -1562,7 +1597,7 @@ feature {NONE} -- Signature validity
 			if not has_signature_error then
 					-- Errors will not be reported at this stage.
 					-- This is postponed to the next compilation pass if the signature
-					-- of some features contains qualified types (e.g. of the for 'like a.b')
+					-- of some features contains qualified types (e.g. of the form 'like a.b')
 					-- requiring features from other classes to be flattened (e.g. to determine
 					-- the type of feature 'b' in the base class of 'like a').
 					-- For simplicity, all validity errors related to signature conformance
@@ -2103,6 +2138,7 @@ invariant
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	identifier_type_resolver_not_void: identifier_type_resolver /= Void
+	unfolded_tuple_actual_parameters_resolver_not_void: unfolded_tuple_actual_parameters_resolver /= Void
 	anchored_type_checker_not_void: anchored_type_checker /= Void
 	signature_checker_not_void: signature_checker /= Void
 	parent_checker_not_void: parent_checker /= Void

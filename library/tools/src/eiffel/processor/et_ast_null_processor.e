@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,11 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
+			-- Process `a_list'.
+		do
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
 			-- Process `a_list'.
 		do
 		end
@@ -557,11 +562,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-		end
-
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -1028,6 +1028,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT)
 			-- Process `a_constant'.
+		do
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
 		do
 		end
 

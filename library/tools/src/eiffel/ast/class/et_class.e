@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -35,6 +35,9 @@ inherit
 			name,
 			class_mark, process,
 			formal_parameters,
+			resolve_unfolded_tuple_actual_parameters_1,
+			resolve_unfolded_tuple_actual_parameters_2,
+			reset_type,
 			is_expanded, is_separate,
 			is_attached,
 			first_leaf, last_leaf,
@@ -78,6 +81,8 @@ feature {NONE} -- Initialization
 			named_base_class := Current
 			time_stamp := no_time_stamp
 			class_code := class_codes.class_code (a_name)
+			tuple_actual_parameters_unfolded_1 := True
+			tuple_actual_parameters_unfolded_2 := True
 		ensure
 			name_set: name = a_name
 		end
@@ -291,6 +296,14 @@ feature -- Initialization
 				reset_after_preparsed
 			else
 				reset_after_parsed
+			end
+		end
+
+	reset_type
+			-- Reset type as it was just after it was last parsed.
+		do
+			if attached formal_parameters as l_parameters then
+				l_parameters.reset
 			end
 		end
 
@@ -958,6 +971,7 @@ feature -- Parsing status
 			first_indexing := Void
 			second_indexing := Void
 			formal_parameters := Void
+			tuple_constraint_position := 0
 			invariants := Void
 			obsolete_message := Void
 			parent_clause := Void
@@ -1156,8 +1170,27 @@ feature -- Genericity
 
 	set_formal_parameters (a_parameters: like formal_parameters)
 			-- Set `formal_parameters' to `a_parameters'.
+		local
+			i, nb: INTEGER
 		do
 			formal_parameters := a_parameters
+			tuple_constraint_position := 0
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					if attached {ET_TUPLE_TYPE} a_parameters.formal_parameter (i).constraint then
+						if tuple_constraint_position /= 0 then
+								-- This is not a single-tuple class: there are more than one
+								-- Tuple type as formal parameter constraint.
+							tuple_constraint_position := 0
+							i := nb -- Jump out of the loop.
+						else
+							tuple_constraint_position := i
+						end
+					end
+					i := i + 1
+				end
+			end
 		ensure
 			formal_parameters_set: formal_parameters = a_parameters
 		end
@@ -1225,6 +1258,39 @@ feature -- Genericity
 			end
 		ensure
 			formal_parameter_type_not_void: Result /= Void
+		end
+
+	tuple_constraint_position: INTEGER
+			-- Position of the formal parameter with a Tuple type constraint
+			-- where there is exactly one (i.e. when the current class is a
+			-- single-tuple class).
+			-- Otherwise, 0.
+
+	resolve_unfolded_tuple_actual_parameters_1 (a_universe: ET_UNIVERSE)
+			-- First phase of Tuple-type-unfolding in actual parameters of current class type.
+			-- Perform syntactical transformations only:
+			-- * Resolve cases where the number of actual and formal generic parameters
+			--   are different.
+			-- * Also resolve the use of obsolete routine types (with an extra
+			--   first generic parameter).
+		do
+				-- Do no unfold formal parameters of classes, only actual parameters of class types.
+			tuple_actual_parameters_unfolded_1 := True
+			tuple_actual_parameters_unfolded_2 := True
+		end
+
+	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT)
+			-- Second phase of Tuple-type-unfolding in actual parameters of current class type.
+			-- Perform transformations which require conformance checking:
+			-- * Resolve the case: "FOO [A, B, C]" -> "FOO [A, TUPLE [B], C]".
+			-- `a_context' and `a_constraint_context' are the contexts from which
+			-- the current actual parameter at the tuple constraint position
+			-- and its associated constraint are viewed respectively when
+			-- performing conformance checking.
+		do
+				-- Do no unfold formal parameters of classes, only actual parameters of class types.
+			tuple_actual_parameters_unfolded_1 := True
+			tuple_actual_parameters_unfolded_2 := True
 		end
 
 feature {NONE} -- Genericity
@@ -2273,5 +2339,6 @@ invariant
 	valid_context: is_valid_context
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
+	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
 
 end

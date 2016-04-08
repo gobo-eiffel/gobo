@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,7 @@ inherit
 			process_across_expression,
 			process_across_instruction,
 			process_actual_argument_list,
+			process_actual_parameter_sublist,
 			process_actual_parameter_comma,
 			process_actual_parameter_list,
 			process_agent_argument_operand_comma,
@@ -116,7 +117,6 @@ inherit
 			process_formal_parameter_comma,
 			process_formal_parameter_list,
 			process_formal_parameter_type,
-			process_generic_class_type,
 			process_hexadecimal_integer_constant,
 			process_identifier_colon,
 			process_identifier_comma,
@@ -197,6 +197,8 @@ inherit
 			process_type_comma,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
+			process_unfolded_empty_tuple_actual_parameters,
+			process_unfolded_tuple_actual_parameters,
 			process_unique_attribute,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction,
@@ -302,6 +304,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then
@@ -1068,14 +1078,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			if not excluded_nodes.has (a_type) then
-				precursor (a_type)
-			end
-		end
-
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -1727,6 +1729,22 @@ feature {ET_AST_NODE} -- Processing
 			if not excluded_nodes.has (a_constant) then
 				precursor (a_constant)
 				process_break (a_constant.break)
+			end
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -571,7 +571,6 @@ feature {NONE} -- Basic operations
 			if a_parameters /= Void then
 				a_class := last_class
 				if a_class /= Void then
-					a_class.set_formal_parameters (a_parameters)
 					nb := a_parameters.count
 					from i := nb until i < 1 loop
 						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_parameters.formal_parameter (i) as a_constrained_formal then
@@ -589,6 +588,7 @@ feature {NONE} -- Basic operations
 						end
 						i := i - 1
 					end
+					a_class.set_formal_parameters (a_parameters)
 				end
 			end
 			constraints.wipe_out

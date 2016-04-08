@@ -358,7 +358,7 @@ feature -- Types
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_base_type: ET_GENERIC_CLASS_TYPE
+			l_base_type: ET_CLASS_TYPE
 			l_base_class: ET_NAMED_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
@@ -368,7 +368,7 @@ feature -- Types
 				l_base_class := current_system.type_any_type.named_base_class
 				create l_parameters.make_with_capacity (1)
 				l_parameters.put_first (a_type.base_type)
-				create l_base_type.make (Void, l_base_class.name, l_parameters, l_base_class)
+				create l_base_type.make_generic (Void, l_base_class.name, l_parameters, l_base_class)
 				Result := dynamic_type (l_base_type, current_system.any_type)
 				a_type.set_meta_type (Result)
 			end
@@ -428,7 +428,7 @@ feature {NONE} -- Types
 			is_special: a_base_type.base_class.is_special_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_any: ET_CLASS_TYPE
@@ -465,7 +465,7 @@ feature {NONE} -- Types
 			is_tuple: a_base_type.base_class.is_tuple_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -552,7 +552,7 @@ feature {NONE} -- Types
 			is_type: a_base_type.base_class.is_type_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_any: ET_CLASS_TYPE
 			l_type: ET_DYNAMIC_TYPE
 		do
@@ -589,7 +589,7 @@ feature {NONE} -- Types
 			is_procedure: a_base_type.base_class.is_procedure_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -648,7 +648,7 @@ feature {NONE} -- Types
 			is_function: a_base_type.base_class.is_function_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -714,7 +714,7 @@ feature {NONE} -- Types
 			is_predicate: a_base_type.base_class.is_predicate_class
 		local
 			l_base_class: ET_CLASS
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -1119,7 +1119,7 @@ feature {NONE} -- Compilation
 		local
 			l_any: ET_CLASS_TYPE
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_generic_class_type: ET_GENERIC_CLASS_TYPE
+			l_generic_class_type: ET_CLASS_TYPE
 			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
@@ -1289,13 +1289,13 @@ feature {NONE} -- Compilation
 				l_class := current_system.special_any_type.base_class
 				create l_actual_parameters.make_with_capacity (1)
 				l_actual_parameters.put_first (current_system.character_8_type)
-				create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
+				create l_generic_class_type.make_generic (Void, l_class.name, l_actual_parameters, l_class)
 				special_character_8_type := dynamic_type (l_generic_class_type, l_any)
 					-- Type "SPECIAL [CHARACTER_32]"
 				l_class := current_system.special_any_type.base_class
 				create l_actual_parameters.make_with_capacity (1)
 				l_actual_parameters.put_first (current_system.character_32_type)
-				create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
+				create l_generic_class_type.make_generic (Void, l_class.name, l_actual_parameters, l_class)
 				special_character_32_type := dynamic_type (l_generic_class_type, l_any)
 					-- Type "STRING_8".
 				l_class_type := current_system.string_8_type

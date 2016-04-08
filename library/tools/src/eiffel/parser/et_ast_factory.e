@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2464,11 +2464,11 @@ feature -- AST nodes
 		end
 
 	new_generic_class_type (a_type_mark: detachable ET_TYPE_MARK; a_name: detachable ET_IDENTIFIER;
-		a_generics: like new_actual_parameters; a_base_class: detachable ET_NAMED_CLASS): detachable ET_GENERIC_CLASS_TYPE
+		a_generics: like new_actual_parameters; a_base_class: detachable ET_NAMED_CLASS): detachable ET_CLASS_TYPE
 			-- New Eiffel generic class type
 		do
 			if a_name /= Void and a_generics /= Void and a_base_class /= Void then
-				create Result.make (a_type_mark, a_name, a_generics, a_base_class)
+				create Result.make_generic (a_type_mark, a_name, a_generics, a_base_class)
 			end
 		end
 

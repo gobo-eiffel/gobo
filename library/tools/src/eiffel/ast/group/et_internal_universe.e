@@ -6,7 +6,7 @@ note
 		in clusters, or imported from libraries or .NET assemblies.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
 	revision: "$Revision: 6570 $"
@@ -740,10 +740,36 @@ feature {ET_UNIVERSE} -- Parsing
 
 	import_classes
 			-- Import classes made available (i.e. exported) by other universes.
+		local
+			l_old_obsolete_routine_type_mode: BOOLEAN
 		do
 			master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_imported_classes)
 			libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
 			dotnet_assemblies.do_adapted (agent {ET_ADAPTED_DOTNET_ASSEMBLY}.export_classes (Current))
+			if function_type.base_class.formal_parameter_count = 2 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				function_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if predicate_like_current_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				predicate_like_current_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if procedure_like_current_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				procedure_like_current_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if routine_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				routine_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
 		end
 
 invariant

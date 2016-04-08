@@ -25,6 +25,9 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
+	UT_SHARED_ECF_VERSIONS
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
@@ -377,10 +380,21 @@ feature -- Basic operations
 			else
 				a_universe.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark)
 			end
+				-- is_obsolete_routine_type.
+			if not attached a_universe.ecf_version as l_ecf_version or else l_ecf_version < ecf_1_15_0 then
+				a_universe.set_obsolete_routine_type_mode (True)
+			else
+				l_value := options.value (xml_is_obsolete_routine_type)
+				if l_value /= Void and then l_value.is_boolean then
+					a_universe.set_obsolete_routine_type_mode (l_value.to_boolean)
+				end
+			end
 				-- trace.
 			l_value := options.value (xml_trace)
 			if l_value /= Void and then l_value.is_boolean then
-				a_universe.current_system.set_trace_mode (l_value.to_boolean)
+				if attached {ET_ECF_SYSTEM} a_universe as l_system then
+					l_system.set_trace_mode (l_value.to_boolean)
+				end
 			end
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,13 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -778,13 +785,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
 			-- Process `a_constant'.
 		require
@@ -1442,6 +1442,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
+		deferred
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
 		deferred
 		end
 

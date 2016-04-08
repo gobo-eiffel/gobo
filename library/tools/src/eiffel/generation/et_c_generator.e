@@ -3594,7 +3594,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			i, nb_args: INTEGER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_type: ET_DYNAMIC_TYPE
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			header_file.put_string (c_extern)
@@ -3676,7 +3676,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			print_indentation
@@ -3833,7 +3833,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_name: ET_IDENTIFIER
 			nb_args: INTEGER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			if a_result_type_set /= Void then
@@ -3971,7 +3971,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_c_code: STRING
 			l_argument_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 			l_name: STRING
 			i, j, nb: INTEGER
@@ -4173,7 +4173,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			print_indentation
@@ -4373,7 +4373,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_cursor: DS_LIST_CURSOR [STRING]
 			l_name: ET_IDENTIFIER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_actual_parameter: ET_DYNAMIC_TYPE
 			l_function_name: STRING
 		do
@@ -23627,7 +23627,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_string: STRING
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
@@ -23668,7 +23668,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -23778,7 +23778,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type: ET_DYNAMIC_TYPE
 		do
 			l_parameters := a_target_type.base_type.actual_parameters
@@ -23801,7 +23801,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			valid_feature: current_feature.static_feature = a_feature
 		local
 			l_attribute_type_set: ET_DYNAMIC_TYPE_SET
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -23874,7 +23874,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
@@ -23906,7 +23906,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			valid_feature: current_feature.static_feature = a_feature
 		local
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -24002,7 +24002,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -24089,7 +24089,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -24210,7 +24210,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_feature_not_void: a_feature /= Void
 			valid_feature: current_feature.static_feature = a_feature
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_base_type: ET_BASE_TYPE
 			l_type: ET_TYPE
@@ -24349,7 +24349,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_base_type: ET_BASE_TYPE
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 		do
 			l_base_type := a_target_type.base_type
 			l_parameters := l_base_type.actual_parameters
@@ -24381,7 +24381,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 		do
 			l_parameters := a_target_type.base_type.actual_parameters
 			if l_parameters = Void or else l_parameters.count < 1 then
@@ -24451,7 +24451,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 		do
 			l_parameters := a_target_type.base_type.actual_parameters
 			if l_parameters = Void or else l_parameters.count < 1 then
@@ -24479,7 +24479,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_string: STRING
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
@@ -24561,7 +24561,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type: ET_DYNAMIC_TYPE
 			l_meta_type: detachable ET_DYNAMIC_TYPE
 		do
@@ -24670,7 +24670,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_result_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
@@ -24789,7 +24789,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_string: STRING
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
@@ -24829,7 +24829,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			valid_feature: current_feature.static_feature = a_feature
 		local
 			l_argument_type: ET_DYNAMIC_TYPE
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -25042,7 +25042,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			l_attribute_type_set: ET_DYNAMIC_TYPE_SET
 			l_attribute_type: ET_DYNAMIC_TYPE
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST

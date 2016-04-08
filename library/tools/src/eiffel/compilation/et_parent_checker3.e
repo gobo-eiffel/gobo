@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,8 +24,7 @@ inherit
 			make
 		redefine
 			process_class,
-			process_class_type,
-			process_generic_class_type
+			process_class_type
 		end
 
 create
@@ -80,7 +79,7 @@ feature {NONE} -- Parent validity
 			a_type_not_void: a_type /= Void
 		local
 			i, nb: INTEGER
-			an_actuals: detachable ET_ACTUAL_PARAMETER_LIST
+			an_actuals: detachable ET_ACTUAL_PARAMETERS
 			an_actual: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER
 			a_creator: detachable ET_CONSTRAINT_CREATOR
@@ -242,12 +241,6 @@ feature {ET_AST_NODE} -- Type dispatcher
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 feature {NONE} -- Access

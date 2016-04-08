@@ -5,7 +5,7 @@ note
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -350,7 +350,7 @@ feature {NONE} -- Ancestors
 			a_parent_not_void: a_parent /= Void
 		local
 			a_class: ET_CLASS
-			a_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			a_parameters: detachable ET_ACTUAL_PARAMETERS
 			a_parent_type: ET_BASE_TYPE
 			a_type, l_ancestor_type: ET_BASE_TYPE
 			i, nb: INTEGER

@@ -5,7 +5,7 @@ note
 		"Eiffel console-mode signature viewers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 								an_actuals.put_first (tmp_actuals.item (i))
 								i := i + 1
 							end
-							create {ET_GENERIC_CLASS_TYPE} last_base_type.make (Void, a_class.name, an_actuals, a_class)
+							create {ET_CLASS_TYPE} last_base_type.make_generic (Void, a_class.name, an_actuals, a_class)
 						end
 					end
 				else

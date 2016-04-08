@@ -3280,7 +3280,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type: ET_DYNAMIC_TYPE
 		do
@@ -3307,7 +3307,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -3346,7 +3346,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
@@ -3391,7 +3391,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		local
 			l_base_type: ET_BASE_TYPE
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type: ET_DYNAMIC_TYPE
@@ -3455,7 +3455,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -3486,7 +3486,7 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST

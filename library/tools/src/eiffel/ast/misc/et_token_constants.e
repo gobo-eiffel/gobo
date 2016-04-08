@@ -2836,6 +2836,7 @@ feature -- Types
 feature -- Leaf nodes
 
 	null_leaf: ET_AST_NULL_LEAF
+			-- Leaf with no characters
 		once
 			create Result.make
 		ensure
@@ -4588,13 +4589,13 @@ feature -- System
 			unknown_class_type_not_void: Result /= Void
 		end
 
-	unknown_generic_class_type: ET_GENERIC_CLASS_TYPE
+	unknown_generic_class_type: ET_CLASS_TYPE
 			-- Shared generic class type whose base class is unknown
 		local
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		once
 			create l_parameters.make
-			create Result.make (implicit_attached_type_mark, unknown_class.name, l_parameters, unknown_class)
+			create Result.make_generic (implicit_attached_type_mark, unknown_class.name, l_parameters, unknown_class)
 		ensure
 			unknown_generic_class_type_not_void: Result /= Void
 		end
@@ -4654,6 +4655,15 @@ feature -- System
 			create Result.make
 		ensure
 			default_ast_factory_not_void: Result /= Void
+		end
+
+	empty_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			-- Empty actual generic parameter list "[]"
+		once
+			create Result.make_with_capacity (0)
+		ensure
+			empty_actual_parameters_not_void: Result /= Void
+			actual_parameters_is_empty: Result.is_empty
 		end
 
 feature -- Empty lists

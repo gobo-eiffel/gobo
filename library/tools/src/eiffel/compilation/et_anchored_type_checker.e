@@ -5,7 +5,7 @@ note
 		"Eiffel anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,6 @@ inherit
 		redefine
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_like_feature,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
@@ -162,7 +161,7 @@ feature {NONE} -- Type checking
 			a_type.target_type.process (Current)
 		end
 
-	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST)
+	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETERS)
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
 		require
@@ -198,12 +197,6 @@ feature {ET_AST_NODE} -- Type processing
 			if attached a_type.actual_parameters as l_parameters then
 				add_actual_parameters_to_sorter (l_parameters)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)

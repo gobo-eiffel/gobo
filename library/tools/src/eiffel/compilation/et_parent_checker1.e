@@ -5,7 +5,7 @@ note
 		"Eiffel parent validity first pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #11 $"
@@ -24,7 +24,6 @@ inherit
 			process_bit_n,
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_like_current,
 			process_like_feature,
 			process_qualified_like_braced_type,
@@ -144,32 +143,35 @@ feature {NONE} -- Parent validity
 					set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
-			elseif not attached a_type.actual_parameters as l_actuals or else l_actuals.is_empty then
-				check type_not_generic: not a_type.is_generic end
-				set_fatal_error
-				error_handler.report_vtug2a_error (current_class, a_type)
 			else
-				if l_actuals.count /= l_formals.count then
+				a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
+				if not attached a_type.actual_parameters as l_actuals or else l_actuals.is_empty then
+					check type_not_generic: not a_type.is_generic end
 					set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						an_actual := l_actuals.type (i)
-						an_actual.process (Current)
-						a_formal := l_formals.formal_parameter (i)
-						if a_formal.is_expanded then
-							if not an_actual.is_type_expanded (current_class) then
-								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, an_actual, a_formal)
-								set_fatal_error
+					if l_actuals.count /= l_formals.count then
+						set_fatal_error
+						error_handler.report_vtug2a_error (current_class, a_type)
+					else
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							an_actual := l_actuals.type (i)
+							an_actual.process (Current)
+							a_formal := l_formals.formal_parameter (i)
+							if a_formal.is_expanded then
+								if not an_actual.is_type_expanded (current_class) then
+									set_fatal_error
+									error_handler.report_gvtcg5b_error (current_class, current_class, a_type, an_actual, a_formal)
+								end
+							elseif a_formal.is_reference then
+								if not an_actual.is_type_reference (current_class) then
+									set_fatal_error
+									error_handler.report_gvtcg5a_error (current_class, current_class, a_type, an_actual, a_formal)
+								end
 							end
-						elseif a_formal.is_reference then
-							if not an_actual.is_type_reference (current_class) then
-								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, an_actual, a_formal)
-								set_fatal_error
-							end
+							i := i + 1
 						end
-						i := i + 1
 					end
 				end
 			end
@@ -248,12 +250,6 @@ feature {ET_AST_NODE} -- Type dispatcher
 			if attached current_parent as l_current_parent then
 				check_class_type_validity (a_type, l_current_parent)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_like_current (a_type: ET_LIKE_CURRENT)

@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -108,7 +108,7 @@ feature -- Setting
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETERS): ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local

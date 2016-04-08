@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -5928,7 +5928,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_typed_pointer_class: ET_NAMED_CLASS
-			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_typed_pointer_type: ET_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
@@ -6040,7 +6040,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_typed_pointer_class: ET_NAMED_CLASS
-			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_typed_pointer_type: ET_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
@@ -6115,7 +6115,7 @@ feature {NONE} -- Expression validity
 			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
 			l_typed_pointer_class: ET_NAMED_CLASS
-			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_typed_pointer_type: ET_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
 			l_object_tests: detachable ET_OBJECT_TEST_LIST
 			l_object_test: detachable ET_NAMED_OBJECT_TEST
@@ -7523,7 +7523,7 @@ feature {NONE} -- Expression validity
 			l_is_item_type_attached: BOOLEAN
 			array_class: ET_NAMED_CLASS
 			l_array_type: detachable ET_CLASS_TYPE
-			l_array_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_array_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_array_parameter: detachable ET_TYPE
 			l_detachable_any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
@@ -7799,7 +7799,7 @@ feature {NONE} -- Expression validity
 			i, nb, nb2: INTEGER
 			had_error: BOOLEAN
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
-			l_tuple_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_tuple_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
 			l_detachable_any_type: ET_CLASS_TYPE
@@ -7911,7 +7911,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_type_type: ET_GENERIC_CLASS_TYPE
+			l_type_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
@@ -9115,7 +9115,7 @@ feature {NONE} -- Expression validity
 		local
 			l_type: detachable ET_TYPE
 			l_typed_pointer_class: ET_NAMED_CLASS
-			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_typed_pointer_type: ET_CLASS_TYPE
 			l_pointer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
@@ -10874,7 +10874,7 @@ feature {NONE} -- Agent validity
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
@@ -10899,11 +10899,17 @@ feature {NONE} -- Agent validity
 					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
-					create a_parameters.make_with_capacity (3)
-					a_parameters.put_first (a_type)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (current_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					if current_universe_impl.function_type.actual_parameter_count = 3 then
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (current_type)
+					else
+						create a_parameters.make_with_capacity (2)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+					end
+					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_unqualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
@@ -10925,7 +10931,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -11177,7 +11183,7 @@ feature {NONE} -- Agent validity
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
@@ -11215,11 +11221,17 @@ feature {NONE} -- Agent validity
 					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
-					create a_parameters.make_with_capacity (3)
-					a_parameters.put_first (a_type)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					if current_universe_impl.function_type.actual_parameter_count = 3 then
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (a_target_type)
+					else
+						create a_parameters.make_with_capacity (2)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+					end
+					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
@@ -11245,7 +11257,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -11300,7 +11312,7 @@ feature {NONE} -- Agent validity
 			l_index: INTEGER
 			l_type: ET_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_agent_type: ET_GENERIC_CLASS_TYPE
+			l_agent_type: ET_CLASS_TYPE
 			l_agent_class: ET_NAMED_CLASS
 			l_target_type: ET_TYPE
 		do
@@ -11339,11 +11351,17 @@ feature {NONE} -- Agent validity
 					l_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					l_agent_class := current_universe_impl.function_type.named_base_class
-					create l_parameters.make_with_capacity (3)
-					l_parameters.put_first (l_type)
-					l_parameters.put_first (current_universe_impl.detachable_tuple_type)
-					l_parameters.put_first (l_target_type)
-					create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+					if current_universe_impl.function_type.actual_parameter_count = 3 then
+						create l_parameters.make_with_capacity (3)
+						l_parameters.put_first (l_type)
+						l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+						l_parameters.put_first (l_target_type)
+					else
+						create l_parameters.make_with_capacity (2)
+						l_parameters.put_first (l_type)
+						l_parameters.put_first (current_universe_impl.detachable_tuple_type)
+					end
+					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
@@ -11541,7 +11559,7 @@ feature {NONE} -- Agent validity
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
@@ -11576,11 +11594,17 @@ feature {NONE} -- Agent validity
 					an_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					an_agent_class := current_universe_impl.function_type.named_base_class
-					create a_parameters.make_with_capacity (3)
-					a_parameters.put_first (a_result_type)
-					a_parameters.put_first (a_tuple_type)
-					a_parameters.put_first (a_target_type)
-					create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+					if current_universe_impl.function_type.actual_parameter_count = 3 then
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_result_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (a_target_type)
+					else
+						create a_parameters.make_with_capacity (2)
+						a_parameters.put_first (a_result_type)
+						a_parameters.put_first (a_tuple_type)
+					end
+					create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 				end
 				report_qualified_query_call_agent (an_expression, a_query, an_agent_type, a_context)
 				a_context.force_last (an_agent_type)
@@ -11606,7 +11630,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -11660,7 +11684,7 @@ feature {NONE} -- Agent validity
 			l_index: INTEGER
 			l_type: ET_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_agent_type: ET_GENERIC_CLASS_TYPE
+			l_agent_type: ET_CLASS_TYPE
 			l_agent_class: ET_NAMED_CLASS
 			l_target_type: ET_TYPE
 			l_open_operands: ET_ACTUAL_PARAMETER_LIST
@@ -11697,11 +11721,17 @@ feature {NONE} -- Agent validity
 					l_agent_type := current_universe_impl.predicate_like_current_type
 				else
 					l_agent_class := current_universe_impl.function_type.named_base_class
-					create l_parameters.make_with_capacity (3)
-					l_parameters.put_first (l_type)
-					l_parameters.put_first (l_tuple_type)
-					l_parameters.put_first (l_target_type)
-					create l_agent_type.make (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
+					if current_universe_impl.function_type.actual_parameter_count = 3 then
+						create l_parameters.make_with_capacity (3)
+						l_parameters.put_first (l_type)
+						l_parameters.put_first (l_tuple_type)
+						l_parameters.put_first (l_target_type)
+					else
+						create l_parameters.make_with_capacity (2)
+						l_parameters.put_first (l_type)
+						l_parameters.put_first (l_tuple_type)
+					end
+					create l_agent_type.make_generic (tokens.implicit_attached_type_mark, l_agent_class.name, l_parameters, l_agent_class)
 				end
 				report_tuple_label_call_agent (an_expression, l_agent_type, a_context)
 				a_context.force_last (l_agent_type)
@@ -12420,7 +12450,7 @@ feature {NONE} -- Agent validity
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 			an_agent_class: ET_NAMED_CLASS
 		do
 			has_fatal_error := False
@@ -12441,11 +12471,17 @@ feature {NONE} -- Agent validity
 						an_agent_type := current_universe_impl.predicate_like_current_type
 					else
 						an_agent_class := current_universe_impl.function_type.named_base_class
-						create a_parameters.make_with_capacity (3)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (current_type)
-						create an_agent_type.make (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
+						if current_universe_impl.function_type.actual_parameter_count = 3 then
+							create a_parameters.make_with_capacity (3)
+							a_parameters.put_first (a_type)
+							a_parameters.put_first (a_tuple_type)
+							a_parameters.put_first (current_type)
+						else
+							create a_parameters.make_with_capacity (2)
+							a_parameters.put_first (a_type)
+							a_parameters.put_first (a_tuple_type)
+						end
+						create an_agent_type.make_generic (tokens.implicit_attached_type_mark, an_agent_class.name, a_parameters, an_agent_class)
 					end
 					report_query_inline_agent (an_expression, an_agent_type, a_context)
 					a_context.force_last (an_agent_type)
@@ -12463,7 +12499,7 @@ feature {NONE} -- Agent validity
 			an_open_operands: detachable ET_ACTUAL_PARAMETER_LIST
 			a_formal_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			a_tuple_type: ET_TUPLE_TYPE
-			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
 			a_formal_arguments := an_expression.formal_arguments

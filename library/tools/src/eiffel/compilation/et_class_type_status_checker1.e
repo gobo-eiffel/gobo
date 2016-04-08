@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,6 @@ inherit
 			process_bit_n,
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_qualified_like_type,
 			process_qualified_like_braced_type,
 			process_tuple_type
@@ -158,12 +157,6 @@ feature {ET_AST_NODE} -- Type dispatcher
 			-- Process `a_type'.
 		do
 			check_class_type_validity (a_type)
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)

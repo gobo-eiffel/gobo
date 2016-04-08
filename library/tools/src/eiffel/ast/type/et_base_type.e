@@ -5,7 +5,7 @@ note
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,7 +124,7 @@ feature -- Access
 			Result := named_base_class
 		end
 
-	actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+	actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			-- Actual generic parameters
 		do
 			-- Result := Void
@@ -450,7 +450,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_BASE_TYPE
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETERS): ET_BASE_TYPE
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
@@ -458,7 +458,7 @@ feature -- Type processing
 			Result := resolved_formal_parameters_with_type_mark (Void, a_parameters)
 		end
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_BASE_TYPE
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETERS): ET_BASE_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		do

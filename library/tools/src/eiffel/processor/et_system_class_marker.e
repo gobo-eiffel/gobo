@@ -5,7 +5,7 @@ note
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -21,6 +21,7 @@ inherit
 			process_across_expression,
 			process_across_instruction,
 			process_actual_parameter_list,
+			process_actual_parameter_sublist,
 			process_agent_argument_operand_list,
 			process_agent_typed_open_argument,
 			process_agent_open_target,
@@ -75,7 +76,6 @@ inherit
 			process_formal_argument,
 			process_formal_argument_list,
 			process_formal_parameter_list,
-			process_generic_class_type,
 			process_hexadecimal_integer_constant,
 			process_if_instruction,
 			process_infix_cast_expression,
@@ -122,6 +122,8 @@ inherit
 			process_tuple_type,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
+			process_unfolded_empty_tuple_actual_parameters,
+			process_unfolded_tuple_actual_parameters,
 			process_unique_attribute,
 			process_unqualified_call_expression,
 			process_unqualified_call_instruction,
@@ -261,6 +263,20 @@ feature {ET_AST_NODE} -- Processing
 
 	process_actual_parameter_list (a_list: ET_ACTUAL_PARAMETER_LIST)
 			-- Process `a_list'.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_actual_parameter_sublist (a_list: ET_ACTUAL_PARAMETER_SUBLIST)
+			-- Process `a_list'.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_actual_parameters (a_list: ET_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -486,6 +502,9 @@ feature {ET_AST_NODE} -- Processing
 				if is_recursive then
 					process_class (a_class)
 				end
+			end
+			if attached a_type.actual_parameters as l_actual_parameters then
+				process_actual_parameters (l_actual_parameters)
 			end
 		end
 
@@ -892,13 +911,6 @@ feature {ET_AST_NODE} -- Processing
 				a_list.formal_parameter (i).process (Current)
 				i := i + 1
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
-			process_actual_parameter_list (a_type.actual_parameters)
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)
@@ -1318,7 +1330,7 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			if attached a_type.actual_parameters as l_actual_parameters then
-				process_actual_parameter_list (l_actual_parameters)
+				process_actual_parameters (l_actual_parameters)
 			end
 		end
 
@@ -1340,6 +1352,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			process_real_constant (a_constant)
+		end
+
+	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			process_actual_parameters (a_list)
+		end
+
+	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			process_actual_parameters (a_list)
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)

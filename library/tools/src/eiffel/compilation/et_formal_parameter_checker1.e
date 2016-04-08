@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,6 @@ inherit
 			process_class,
 			process_class_type,
 			process_formal_parameter_type,
-			process_generic_class_type,
 			process_like_current,
 			process_like_feature,
 			process_qualified_like_braced_type,
@@ -200,38 +199,41 @@ feature {NONE} -- Constraint validity
 					set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
-			elseif not a_type.is_generic then
-				set_fatal_error
-				error_handler.report_vtug2a_error (current_class, a_type)
-			elseif not attached a_class.formal_parameters as a_formals then
-					-- Internal error: `a_class' is generic.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif not attached a_type.actual_parameters as an_actuals then
-					-- Internal error: `a_types' is generic.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif an_actuals.count /= a_formals.count then
-				set_fatal_error
-				error_handler.report_vtug2a_error (current_class, a_type)
 			else
-				nb := an_actuals.count
-				from i := 1 until i > nb loop
-					l_actual := an_actuals.type (i)
-					l_actual.process (Current)
-					l_formal := a_formals.formal_parameter (i)
-					if l_formal.is_expanded then
-						if not l_actual.is_type_expanded (current_class) then
-							error_handler.report_gvtcg5b_error (current_class, current_class, a_type, l_actual, l_formal)
-							set_fatal_error
+				a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
+				if not a_type.is_generic then
+					set_fatal_error
+					error_handler.report_vtug2a_error (current_class, a_type)
+				elseif not attached a_class.formal_parameters as a_formals then
+						-- Internal error: `a_class' is generic.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif not attached a_type.actual_parameters as an_actuals then
+						-- Internal error: `a_types' is generic.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif an_actuals.count /= a_formals.count then
+					set_fatal_error
+					error_handler.report_vtug2a_error (current_class, a_type)
+				else
+					nb := an_actuals.count
+					from i := 1 until i > nb loop
+						l_actual := an_actuals.type (i)
+						l_actual.process (Current)
+						l_formal := a_formals.formal_parameter (i)
+						if l_formal.is_expanded then
+							if not l_actual.is_type_expanded (current_class) then
+								set_fatal_error
+								error_handler.report_gvtcg5b_error (current_class, current_class, a_type, l_actual, l_formal)
+							end
+						elseif l_formal.is_reference then
+							if not l_actual.is_type_reference (current_class) then
+								set_fatal_error
+								error_handler.report_gvtcg5a_error (current_class, current_class, a_type, l_actual, l_formal)
+							end
 						end
-					elseif l_formal.is_reference then
-						if not l_actual.is_type_reference (current_class) then
-							error_handler.report_gvtcg5a_error (current_class, current_class, a_type, l_actual, l_formal)
-							set_fatal_error
-						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 			if a_formal.constraint = a_type then
@@ -541,12 +543,6 @@ feature {ET_AST_NODE} -- Type dispatcher
 			if attached current_formal as l_current_formal then
 				check_formal_parameter_type_constraint (a_type, l_current_formal)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_like_current (a_type: ET_LIKE_CURRENT)

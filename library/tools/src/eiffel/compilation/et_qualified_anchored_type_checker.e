@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,6 @@ inherit
 		redefine
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_like_feature,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
@@ -279,7 +278,7 @@ feature {NONE} -- Type validity
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
-	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST)
+	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETERS)
 			-- Check validity of qualified anchored types involved in `a_parameters'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -313,12 +312,6 @@ feature {ET_AST_NODE} -- Type processing
 			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)

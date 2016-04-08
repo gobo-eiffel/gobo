@@ -34,21 +34,8 @@ inherit
 			set_marked
 		end
 
-	ET_CLASS_TYPE
-		rename
-			make as make_type,
-			actual_parameters as formal_parameters
-		undefine
-			upper_name, lower_name
-		redefine
-			name, process,
-			formal_parameters,
-			append_to_string,
-			debug_output,
-			append_unaliased_to_string,
-			is_named_type,
-			is_valid_context
-		end
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
@@ -77,7 +64,6 @@ feature {NONE} -- Initialization
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
-			named_base_class := Current
 		ensure
 			name_set: name = a_name
 			universe_set: universe = a_universe
@@ -333,12 +319,6 @@ feature -- Access
 
 	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
-
-	formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
-			-- Formal generic parameters
-		do
-			Result := actual_class.formal_parameters
-		end
 
 	first_non_override_overridden_class: detachable ET_CLASS
 			-- First class other than `actual_class' that is not in an override group;
@@ -630,9 +610,6 @@ feature -- Status report
 				end
 			end
 		end
-
-	is_named_type: BOOLEAN = True
-			-- Is current type only made up of named types?
 
 feature -- Status setting
 
@@ -1983,47 +1960,6 @@ feature -- System
 					l_class.set_marked (True)
 				end
 			end
-		end
-
-feature -- Type context
-
-	is_valid_context: BOOLEAN = True
-			-- A context is valid if the base class of its `root_context'
-			-- is preparsed and if its `root_context' is only made up
-			-- of class names and formal generic parameter names, and if
-			-- the actual parameters of these formal parameters are
-			-- themselves
-
-feature -- Output
-
-	append_to_string (a_string: STRING)
-			-- Append textual representation of
-			-- current type to `a_string'.
-		do
-			a_string.append_string (upper_name)
-			if attached formal_parameters as l_parameters and then not l_parameters.is_empty then
-				a_string.append_character (' ')
-				l_parameters.append_to_string (a_string)
-			end
-		end
-
-	append_unaliased_to_string (a_string: STRING)
-			-- Append textual representation of unaliased
-			-- version of current type to `a_string'.
-			-- An unaliased version if when aliased types such as INTEGER
-			-- are replaced by the associated types such as INTEGER_32.
-		do
-			a_string.append_string (upper_name)
-			if attached formal_parameters as l_parameters and then not l_parameters.is_empty then
-				a_string.append_character (' ')
-				l_parameters.append_unaliased_to_string (a_string)
-			end
-		end
-
-	debug_output: STRING
-			-- String that should be displayed in debugger to represent `Current'
-		do
-			Result := upper_name
 		end
 
 feature -- Processing

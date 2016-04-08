@@ -5,7 +5,7 @@ note
 		"Eiffel lists of formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Type processing
 
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_FORMAL_PARAMETER_LIST
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETERS): ET_FORMAL_PARAMETER_LIST
 			-- Version of current types where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'

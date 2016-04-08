@@ -5,7 +5,7 @@ note
 		"Eiffel feature signature checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,6 @@ inherit
 			process_bit_n,
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_qualified_like_type,
 			process_qualified_like_braced_type,
 			process_tuple_type
@@ -40,7 +39,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create a new signature checker for features of  given classes.
+			-- Create a new signature checker for features of given classes.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
 			create parent_context.make_with_capacity (current_class, 1)
@@ -99,10 +98,13 @@ feature -- Signature validity
 			an_adapted_feature: ET_ADAPTED_FEATURE
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_PARENT_FEATURE]
 			old_class: ET_CLASS
+			old_processing_mode: INTEGER
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
+			old_processing_mode := processing_mode
+			processing_mode := check_vtct_validity_mode
 			if a_feature.is_redeclared then
 					-- Redeclaration.
 				if not has_fatal_error then
@@ -159,6 +161,7 @@ feature -- Signature validity
 					end
 				end
 			end
+			processing_mode := old_processing_mode
 			current_class := old_class
 		end
 
@@ -185,6 +188,7 @@ feature {NONE} -- Signature validity
 			an_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
+			l_conforms: BOOLEAN
 		do
 			a_flattened_feature := a_feature.flattened_feature
 			a_type := a_flattened_feature.type
@@ -213,8 +217,7 @@ feature {NONE} -- Signature validity
 						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 					end
 				end
-			elseif
-				not a_type.conforms_to_type (other_type, parent_context, current_class) and then
+			else
 					-- The test below is useful in expanded types which contains for
 					-- example 'like Current' in the signature. In that case 'like Current'
 					-- in the context of the current expanded class does not conform to
@@ -230,51 +233,59 @@ feature {NONE} -- Signature validity
 					-- of type 'attached like Current' to be redefined as 'detachable like Current'.
 					-- That's why we use `same_syntactical_type_with_type_marks' and not just
 					-- `same_syntactical_type' below.
-				not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
-			then
-				set_fatal_error
-				if a_report then
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
+				l_conforms := attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class)
+				if not l_conforms then
+					if not a_report then
+						check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
+						check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
 					end
+					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
 				end
-			elseif a_feature.is_redeclared and other_precursor.is_attribute then
-				if not a_flattened_feature.is_attribute then
-					-- We already checked in `check_redeclaration_validity' whether
-					-- `a_flattened_feature' was an attribute and reported
-					-- an error otherwise.
-				elseif a_type.is_type_expanded (current_class) then
-					if not other_type.is_type_expanded (parent_context) then
-							-- VDRD-6 says that the types of the two attributes should
-							-- be both expanded or both non-expanded.
-						set_fatal_error
-						if a_report then
-							error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+				if not l_conforms then
+					set_fatal_error
+					if a_report then
+						if a_feature.is_inherited then
+							a_parent_feature := a_feature.inherited_feature.flattened_parent
+							error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
+						else
+							error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 						end
 					end
-				elseif a_type.is_type_reference (current_class) then
-					if not other_type.is_type_reference (parent_context) then
-							-- VDRD-6 says that the types of the two attributes should
-							-- be both expanded or both non-expanded.
-						set_fatal_error
-						if a_report then
-							error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+				elseif a_feature.is_redeclared and other_precursor.is_attribute then
+					if not a_flattened_feature.is_attribute then
+						-- We already checked in `check_redeclaration_validity' whether
+						-- `a_flattened_feature' was an attribute and reported
+						-- an error otherwise.
+					elseif a_type.is_type_expanded (current_class) then
+						if not other_type.is_type_expanded (parent_context) then
+								-- VDRD-6 says that the types of the two attributes should
+								-- be both expanded or both non-expanded.
+							set_fatal_error
+							if a_report then
+								error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+							end
 						end
-					end
-				else
-						-- Here we don't know about the expandedness of the type:
-						-- it has to be a formal generic parameter for which we don't
-						-- know yet whether the actual generic parameter will be
-						-- expanded or not.
-					if not a_type.same_named_type (other_type, parent_context, current_class) then
-							-- VDRD-6 says that the types of the two attributes should
-							-- be both expanded or both non-expanded.
-						set_fatal_error
-						if a_report then
-							error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+					elseif a_type.is_type_reference (current_class) then
+						if not other_type.is_type_reference (parent_context) then
+								-- VDRD-6 says that the types of the two attributes should
+								-- be both expanded or both non-expanded.
+							set_fatal_error
+							if a_report then
+								error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+							end
+						end
+					else
+							-- Here we don't know about the expandedness of the type:
+							-- it has to be a formal generic parameter for which we don't
+							-- know yet whether the actual generic parameter will be
+							-- expanded or not.
+						if not a_type.same_named_type (other_type, parent_context, current_class) then
+								-- VDRD-6 says that the types of the two attributes should
+								-- be both expanded or both non-expanded.
+							set_fatal_error
+							if a_report then
+								error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
+							end
 						end
 					end
 				end
@@ -303,25 +314,30 @@ feature {NONE} -- Signature validity
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
-					if
-						not a_type.conforms_to_type (other_type, parent_context, current_class) and then
-							-- The test below is useful in expanded types which contains for
-							-- example 'like Current' in the signature. In that case 'like Current'
-							-- in the context of the current expanded class does not conform to
-							-- 'like Current' in the context of the parent, but the types are
-							-- identical so we want to accept this particular case anyway.
-							--
-							-- Note that we won't need that trick anymore with ECMA Eiffel where
-							-- expanded types conforms to reference parents.
-							-- But the reverse is still true: when 'like Current' appears in
-							-- an expanded parent, and the current class is not expanded.
-							--
-							-- There is also a bug in EiffelStudio 6.8 where it allows a feature
-							-- of type 'attached like Current' to be redefined as 'detachable like Current'.
-							-- That's why we use `same_syntactical_type_with_type_marks' and not just
-							-- `same_syntactical_type' below.
-						not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
-					then
+						-- The test below is useful in expanded types which contains for
+						-- example 'like Current' in the signature. In that case 'like Current'
+						-- in the context of the current expanded class does not conform to
+						-- 'like Current' in the context of the parent, but the types are
+						-- identical so we want to accept this particular case anyway.
+						--
+						-- Note that we won't need that trick anymore with ECMA Eiffel where
+						-- expanded types conforms to reference parents.
+						-- But the reverse is still true: when 'like Current' appears in
+						-- an expanded parent, and the current class is not expanded.
+						--
+						-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+						-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+						-- That's why we use `same_syntactical_type_with_type_marks' and not just
+						-- `same_syntactical_type' below.
+					l_conforms := attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class)
+					if not l_conforms then
+						if not a_report then
+							check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
+							check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
+						end
+						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+					end
+					if not l_conforms then
 						set_fatal_error
 						if a_report then
 							if a_feature.is_inherited then
@@ -357,6 +373,7 @@ feature {NONE} -- Signature validity
 			an_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			other_arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
+			l_conforms: BOOLEAN
 		do
 			a_flattened_feature := a_feature.flattened_feature
 			a_type := a_flattened_feature.type
@@ -385,8 +402,7 @@ feature {NONE} -- Signature validity
 						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 					end
 				end
-			elseif
-				not a_type.conforms_to_type (other_type, parent_context, current_class) and then
+			else
 					-- The test below is useful in expanded types which contains for
 					-- example 'like Current' in the signature. In that case 'like Current'
 					-- in the context of the current expanded class does not conform to
@@ -402,15 +418,23 @@ feature {NONE} -- Signature validity
 					-- of type 'attached like Current' to be redefined as 'detachable like Current'.
 					-- That's why we use `same_syntactical_type_with_type_marks' and not just
 					-- `same_syntactical_type' below.
-				not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
-			then
-				set_fatal_error
-				if a_report then
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
+				l_conforms := attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class)
+				if not l_conforms then
+					if not a_report then
+						check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
+						check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
+					end
+					l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+				end
+				if not l_conforms then
+					set_fatal_error
+					if a_report then
+						if a_feature.is_inherited then
+							a_parent_feature := a_feature.inherited_feature.flattened_parent
+							error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
+						else
+							error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
+						end
 					end
 				end
 			end
@@ -443,25 +467,30 @@ feature {NONE} -- Signature validity
 				from i := 1 until i > nb loop
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
-					if
-						not a_type.conforms_to_type (other_type, parent_context, current_class) and then
-							-- The test below is useful in expanded types which contains for
-							-- example 'like Current' in the signature. In that case 'like Current'
-							-- in the context of the current expanded class does not conform to
-							-- 'like Current' in the context of the parent, but the types are
-							-- identical so we want to accept this particular case anyway.
-							--
-							-- Note that we won't need that trick anymore with ECMA Eiffel where
-							-- expanded types conforms to reference parents.
-							-- But the reverse is still true: when 'like Current' appears in
-							-- an expanded parent, and the current class is not expanded.
-							--
-							-- There is also a bug in EiffelStudio 6.8 where it allows a feature
-							-- of type 'attached like Current' to be redefined as 'detachable like Current'.
-							-- That's why we use `same_syntactical_type_with_type_marks' and not just
-							-- `same_syntactical_type' below.
-						not (attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class))
-					then
+						-- The test below is useful in expanded types which contains for
+						-- example 'like Current' in the signature. In that case 'like Current'
+						-- in the context of the current expanded class does not conform to
+						-- 'like Current' in the context of the parent, but the types are
+						-- identical so we want to accept this particular case anyway.
+						--
+						-- Note that we won't need that trick anymore with ECMA Eiffel where
+						-- expanded types conforms to reference parents.
+						-- But the reverse is still true: when 'like Current' appears in
+						-- an expanded parent, and the current class is not expanded.
+						--
+						-- There is also a bug in EiffelStudio 6.8 where it allows a feature
+						-- of type 'attached like Current' to be redefined as 'detachable like Current'.
+						-- That's why we use `same_syntactical_type_with_type_marks' and not just
+						-- `same_syntactical_type' below.
+					l_conforms := attached {ET_LIKE_CURRENT} a_type and then a_type.same_syntactical_type_with_type_marks (other_type, tokens.attached_keyword, parent_context, tokens.attached_keyword, current_class)
+					if not l_conforms then
+						if not a_report then
+							check_tuple_actual_parameters_unfolded (a_type, a_flattened_feature.implementation_class)
+							check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
+						end
+						l_conforms := a_type.conforms_to_type (other_type, parent_context, current_class)
+					end
+					if not l_conforms then
 						set_fatal_error
 						if a_report then
 							if a_feature.is_inherited then
@@ -513,10 +542,16 @@ feature {NONE} -- Signature validity
 				if a_report then
 					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 				end
-			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class) then
-				set_fatal_error
-				if a_report then
-					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
+			else
+				if not a_report then
+					check_tuple_actual_parameters_unfolded (a_type, a_joined_feature.implementation_class)
+					check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
+				end
+				if not a_type.same_syntactical_type (other_type, parent_context, current_class) then
+					set_fatal_error
+					if a_report then
+						error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
+					end
 				end
 			end
 			an_arguments := a_joined_feature.arguments
@@ -536,7 +571,13 @@ feature {NONE} -- Signature validity
 			else
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
-					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class) then
+					a_type := an_arguments.formal_argument (i).type
+					other_type := other_arguments.formal_argument (i).type
+					if not a_report then
+						check_tuple_actual_parameters_unfolded (a_type, a_joined_feature.implementation_class)
+						check_tuple_actual_parameters_unfolded (other_type, other_precursor.implementation_class)
+					end
+					if not a_type.same_syntactical_type (other_type, parent_context, current_class) then
 						set_fatal_error
 						if a_report then
 							error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
@@ -616,55 +657,155 @@ feature {NONE} -- VTCT Validity checking
 			end
 		end
 
+feature {NONE} -- Tuple-type-unfolding
+
+	check_tuple_actual_parameters_unfolded (a_type: ET_TYPE; a_class: ET_CLASS)
+			-- Check whether both phases of Tuple-type-unfolding have been performed
+			-- on actual parameters of class types in `a_type' written in `a_class'.
+			-- Set `has_fatal_error' if this is not the case.
+		require
+			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_old_current_class: ET_CLASS
+			l_old_processing_mode: INTEGER
+		do
+			l_old_current_class := current_class
+			current_class := a_class
+			l_old_processing_mode := processing_mode
+			processing_mode := check_tuple_actual_parameters_unfolded_mode
+			a_type.process (Current)
+			processing_mode := l_old_processing_mode
+			current_class := l_old_current_class
+		end
+
+	check_class_type_tuple_actual_parameters_unfolded (a_type: ET_CLASS_TYPE)
+			-- Check whether both phases of Tuple-type-unfolding have been performed
+			-- on actual parameters of class types in `a_type'.
+			-- Set `has_fatal_error' if this is not the case.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+			an_actual: ET_TYPE
+		do
+			if attached a_type.actual_parameters as an_actuals then
+				nb := an_actuals.count
+				from i := 1 until i > nb loop
+					an_actual := an_actuals.type (i)
+					an_actual.process (Current)
+					i := i + 1
+				end
+				if not a_type.tuple_actual_parameters_unfolded_2 then
+					set_fatal_error
+				end
+			end
+		end
+
+	check_qualified_like_identifier_tuple_actual_parameters_unfolded (a_type: ET_QUALIFIED_LIKE_IDENTIFIER)
+			-- Check whether both phases of Tuple-type-unfolding have been performed
+			-- on actual parameters of class types in `a_type'.
+			-- Set `has_fatal_error' if this is not the case.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			a_type.target_type.process (Current)
+		end
+
+	check_tuple_type_tuple_actual_parameters_unfolded (a_type: ET_TUPLE_TYPE)
+			-- Check whether both phases of Tuple-type-unfolding have been performed
+			-- on actual parameters of class types in `a_type'.
+			-- Set `has_fatal_error' if this is not the case.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+			an_actual: ET_TYPE
+		do
+			if attached a_type.actual_parameters as an_actuals then
+				nb := an_actuals.count
+				from i := 1 until i > nb loop
+					an_actual := an_actuals.type (i)
+					an_actual.process (Current)
+					i := i + 1
+				end
+			end
+		end
+
 feature {ET_AST_NODE} -- Type processing
 
 	process_bit_feature (a_type: ET_BIT_FEATURE)
 			-- Process `a_type'.
 		do
-			check_bit_feature_vtct_validity (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_bit_feature_vtct_validity (a_type)
+			end
 		end
 
 	process_bit_n (a_type: ET_BIT_N)
 			-- Process `a_type'.
 		do
-			check_bit_n_vtct_validity (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_bit_n_vtct_validity (a_type)
+			end
 		end
 
 	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.
 		do
-			process_class_type (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				process_class_type (a_type)
+			end
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
-			check_class_type_vtct_validity (a_type)
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_class_type_vtct_validity (a_type)
+			elseif processing_mode = check_tuple_actual_parameters_unfolded_mode then
+				check_class_type_tuple_actual_parameters_unfolded (a_type)
+			end
 		end
 
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)
 			-- Process `a_type'.
 		do
-			check_qualified_like_identifier_vtct_validity (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_qualified_like_identifier_vtct_validity (a_type)
+			elseif processing_mode = check_tuple_actual_parameters_unfolded_mode then
+				check_qualified_like_identifier_tuple_actual_parameters_unfolded (a_type)
+			end
 		end
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
-			check_qualified_like_identifier_vtct_validity (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_qualified_like_identifier_vtct_validity (a_type)
+			elseif processing_mode = check_tuple_actual_parameters_unfolded_mode then
+				check_qualified_like_identifier_tuple_actual_parameters_unfolded (a_type)
+			end
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE)
 			-- Process `a_type'.
 		do
-			check_tuple_type_vtct_validity (a_type)
+			if processing_mode = check_vtct_validity_mode then
+				check_tuple_type_vtct_validity (a_type)
+			elseif processing_mode = check_tuple_actual_parameters_unfolded_mode then
+				check_tuple_type_tuple_actual_parameters_unfolded (a_type)
+			end
 		end
+
+	processing_mode: INTEGER
+			-- Mode in which `process_*' routines are called
+
+	check_vtct_validity_mode: INTEGER = 1
+			-- VTCT validity checking mode
+
+	check_tuple_actual_parameters_unfolded_mode: INTEGER = 2
+			-- Tuple-type-unfolded checking mode
 
 feature {NONE} -- Implementation
 

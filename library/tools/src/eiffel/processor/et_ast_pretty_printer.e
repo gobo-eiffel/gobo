@@ -5,7 +5,7 @@ note
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,7 +93,6 @@ inherit
 			process_formal_parameter,
 			process_formal_parameter_list,
 			process_formal_parameter_type,
-			process_generic_class_type,
 			process_hexadecimal_integer_constant,
 			process_if_instruction,
 			process_indexing_list,
@@ -1087,6 +1086,15 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			a_type.name.process (Current)
+			if not attached a_type.actual_parameters as l_actual_parameters then
+				-- Do nothing.
+			elseif l_actual_parameters.is_empty then
+					-- Do not print empty brackets, but keep the comments if any.
+				comment_finder.find_comments (l_actual_parameters, comment_list)
+			else
+				print_space
+				l_actual_parameters.process (Current)
+			end
 		end
 
 	process_clients (a_list: ET_CLIENTS)
@@ -3057,22 +3065,6 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			a_type.name.process (Current)
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		local
-			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			process_class_type (a_type)
-			l_actual_parameters := a_type.actual_parameters
-			if l_actual_parameters.is_empty then
-					-- Do not print empty brackets, but keep the comments if any.
-				comment_finder.find_comments (l_actual_parameters, comment_list)
-			else
-				print_space
-				l_actual_parameters.process (Current)
-			end
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT)

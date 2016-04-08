@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,6 @@ inherit
 		redefine
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_tuple_type
@@ -129,7 +128,7 @@ feature {NONE} -- Type validity
 			end
 		end
 
-	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST)
+	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETERS)
 			-- Check whether the base classes of the anchors of qualified anchored types
 			-- appearing in `a_parameters' have their features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
@@ -163,12 +162,6 @@ feature {ET_AST_NODE} -- Type processing
 			if attached a_type.actual_parameters as a_parameters then
 				check_actual_parameters_validity (a_parameters)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE)

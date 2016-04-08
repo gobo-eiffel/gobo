@@ -5,7 +5,7 @@ note
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -124,7 +124,7 @@ feature -- Access
 	tuple_keyword: ET_IDENTIFIER
 			-- 'TUPLE' keyword
 
-	actual_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+	actual_parameters: detachable ET_ACTUAL_PARAMETERS
 			-- Actual generic parameters
 
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
@@ -132,7 +132,7 @@ feature -- Access
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_actual_parameters: like actual_parameters
-			l_named_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_named_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type_mark: detachable ET_TYPE_MARK
 			l_tuple_type: ET_TUPLE_TYPE
 		do
@@ -450,12 +450,12 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 feature -- Type processing
 
-	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE
+	resolved_formal_parameters_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_parameters: ET_ACTUAL_PARAMETERS): ET_TUPLE_TYPE
 			-- Same as `resolved_formal_parameters' except that the type mark status is
 			-- overridden by `a_type_mark', if not Void
 		local
 			l_actual_parameters: like actual_parameters
-			l_resolved_parameters: detachable ET_ACTUAL_PARAMETER_LIST
+			l_resolved_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			l_actual_parameters := actual_parameters

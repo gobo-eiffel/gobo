@@ -5,7 +5,7 @@ note
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,9 @@ feature -- Constants
 
 	xml_is_attached_by_default: STRING = "is_attached_by_default"
 			-- "is_attached_by_default" attribute name
+
+	xml_is_obsolete_routine_type: STRING = "is_obsolete_routine_type"
+			-- "is_obsolete_routine_type" attribute name
 
 	xml_library: STRING = "library"
 			-- "library" attribute name
@@ -174,5 +177,8 @@ feature -- Namespaces
 
 	namespace_1_5_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-5-0"
 			-- ECF namespace corresponding to ISE 6.4
+
+	namespace_1_15_0: STRING = "http://www.eiffel.com/developers/xml/configuration-1-15-0"
+			-- ECF namespace corresponding to ISE 15.12
 
 end

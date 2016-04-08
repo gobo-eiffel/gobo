@@ -5,7 +5,7 @@ note
 		"Eiffel identifier type resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,6 @@ inherit
 			process_bit_feature,
 			process_class,
 			process_class_type,
-			process_generic_class_type,
 			process_like_feature,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
@@ -155,7 +154,7 @@ feature {NONE} -- Type resolving
 			resolve_type (a_type.target_type, current_feature, current_class)
 		end
 
-	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST)
+	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETERS)
 			-- Resolve the actual parameter types.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -216,12 +215,6 @@ feature {ET_AST_NODE} -- Type processing
 			if attached a_type.actual_parameters as l_parameters then
 				resolve_actual_parameters (l_parameters)
 			end
-		end
-
-	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE)
-			-- Process `a_type'.
-		do
-			process_class_type (a_type)
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE)
