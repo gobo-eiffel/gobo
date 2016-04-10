@@ -1068,17 +1068,17 @@ feature -- Measurement
 --			positive_result: Result > 0
 --		end
 
---	physical_size (object: ANY): INTEGER
+	physical_size (object: ANY): INTEGER
 --			-- Space occupied by `object' in bytes
 --		require
 --			object_not_void: object /= Void
 --		local
 --			l_size: NATURAL_64
---		do
+		do
 --			l_size := c_size (object)
 --				-- Prevent overflow by giving the maximum INTEGER_32 value when it is very large.
 --			Result := l_size.min ({INTEGER_32}.max_value.as_natural_64).as_integer_32
---		end
+		end
 
 --	deep_physical_size (object: ANY): INTEGER
 --			-- Space occupied by `object' and its children in bytes
