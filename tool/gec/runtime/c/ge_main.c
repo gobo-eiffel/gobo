@@ -4,7 +4,7 @@
 		"C functions used to implement the program initialization"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,11 +30,19 @@ char* GE_root_class_name = NULL;
 #ifdef EIF_WINDOWS
 
 /*
-	Main entry point when compiling a Windows application.
-	See:
-		http://en.wikipedia.org/wiki/WinMain
-		http://msdn2.microsoft.com/en-us/library/ms633559.aspx
-*/
+ * Used in WEL.
+ */
+HINSTANCE eif_hInstance;
+HINSTANCE eif_hPrevInstance;
+LPWSTR eif_lpCmdLine;
+int eif_nCmdShow;
+
+/*
+ * Main entry point when compiling a Windows application.
+ * See:
+ *    http://en.wikipedia.org/wiki/WinMain
+ *    http://msdn2.microsoft.com/en-us/library/ms633559.aspx
+ */
 extern int main(void);
 extern void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -50,6 +58,11 @@ int main(void)
 	EIF_NATIVE_CHAR* cmd;
 #ifdef EIF_WINDOWS
 	GE_set_windows_exception_filter();
+		/* Variables used in WEL. */
+	eif_hInstance = GetModuleHandle(NULL);
+	eif_hPrevInstance = NULL;
+	eif_lpCmdLine = GetCommandLineW();
+	eif_nCmdShow = SW_SHOW;
 #endif
 	cmd = GE_nstrdup(GetCommandLineW());
 	GE_get_argcargv(cmd, &argc, &argv);
@@ -60,11 +73,11 @@ int main(void)
 }
 
 /*
-	Break the shell command held in 'cmd', putting each shell word
-	in a separate array entry, hence building an argument
-	suitable for the 'main'. Note that 'cmd' will be altered
-	and 'argvp' will point to some chunks of it.
-*/
+ * Break the shell command held in 'cmd', putting each shell word
+ * in a separate array entry, hence building an argument
+ * suitable for the 'main'. Note that 'cmd' will be altered
+ * and 'argvp' will point to some chunks of it.
+ */
 void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 {
 	int quoted = 0; /* parsing inside a quoted string? */

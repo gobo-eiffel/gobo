@@ -25268,14 +25268,7 @@ feature {NONE} -- C function generation
 				current_file.put_line ("GE_init_identified();")
 				print_indentation
 				current_file.put_line ("GE_init_const();")
-					-- Initialize variable used in WEL.
-				include_runtime_header_file ("eif_main.h", False, header_file)
-				current_file.put_string (c_ifdef)
-				current_file.put_character (' ')
-				current_file.put_line (c_eif_windows)
-				print_indentation
-				current_file.put_line ("eif_hInstance = GetModuleHandle(NULL);")
-				current_file.put_line (c_endif)
+
 				if trace_mode then
 						-- We need to make sure that a DOS console is available (for
 						-- Windows application) when in trace mode, because information
