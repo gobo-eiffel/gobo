@@ -1402,6 +1402,28 @@ feature {NONE} -- Element change
 				end
 				a_options.set_primary_value (l_name, l_attribute.value)
 			end
+			l_name := xml_is_obsolete_routine_type
+			l_attribute := an_element.attribute_by_name (l_name)
+			if l_attribute = Void then
+				-- Option not specified.
+			else
+				l_other_value := a_options.primary_value (l_name)
+				if l_other_value /= Void then
+-- TODO: warning: several options with the same name! (not reported by ISE: use the last one.)
+				end
+				a_options.set_primary_value (l_name, l_attribute.value)
+			end
+			l_name := xml_trace
+			l_attribute := an_element.attribute_by_name (l_name)
+			if l_attribute = Void then
+				-- Option not specified.
+			else
+				l_other_value := a_options.primary_value (l_name)
+				if l_other_value /= Void then
+-- TODO: warning: several options with the same name! (not reported by ISE: use the last one.)
+				end
+				a_options.set_primary_value (l_name, l_attribute.value)
+			end
 		end
 
 	parse_libraries (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
