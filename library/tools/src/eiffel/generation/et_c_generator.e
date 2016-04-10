@@ -5010,6 +5010,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
+				if a_feature.rescue_clause /= Void then
+						-- When there is a rescue clause, the result entity might have been declared
+						-- with a 'volatile' qualifier. In that case we need a type cast here to
+						-- avoid C compiler warning (at least with MSVC 12).
+					current_file.put_character ('(')
+					print_type_declaration (l_result_type, current_file)
+					current_file.put_character (')')
+				end
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -14058,7 +14066,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			l_argument: ET_AGENT_ARGUMENT_OPERAND
 			j, nb: INTEGER
 			l_agent_type: ET_DYNAMIC_TYPE
-			l_result_type: ET_DYNAMIC_TYPE
+			l_result_type: detachable ET_DYNAMIC_TYPE
 			l_type: ET_DYNAMIC_TYPE
 			old_closed_operands_type: ET_DYNAMIC_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -14289,10 +14297,17 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
-			if l_result /= Void then
+			if l_result_type /= Void then
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
+					-- In case of an inline agent, when there is a rescue clause,
+					-- the result entity might have been declared with a 'volatile'
+					-- qualifier. In that case we need a type cast here to
+					-- avoid C compiler warning (at least with MSVC 12).
+				current_file.put_character ('(')
+				print_type_declaration (l_result_type, current_file)
+				current_file.put_character (')')
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -18692,6 +18707,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -19579,6 +19595,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 							-- CAT-call: we don't have enough operands to pass to the routine.
 						current_file.put_character ('(')
 						print_attachment_expression (l_manifest_tuple, l_tuple_source_type_set, l_tuple_target_type)
+						if attached a_feature.result_type_set as l_result_type_set then
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_typed_default_entity_value (l_result_type_set.static_type, current_file)
+						end
 						current_file.put_character (')')
 					else
 							-- We have enough operands to pass to the routine.

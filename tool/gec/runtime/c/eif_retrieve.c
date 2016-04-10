@@ -23,7 +23,7 @@ char* eretrieve(EIF_INTEGER file_desc) {
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eretrieve' in 'eif_retrieve.h' not implemented\n");
-	return EIF_VOID;
+	return (char*)0;
 }
 
 void eif_set_discard_pointer_values(EIF_BOOLEAN state) {
