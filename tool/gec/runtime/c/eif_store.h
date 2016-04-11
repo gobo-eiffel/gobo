@@ -4,7 +4,7 @@
 		"C functions used to implement class STORABLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,9 +17,9 @@
 extern "C" {
 #endif
 
-extern void estore(EIF_INTEGER file_desc, char* object);
-extern void eestore(EIF_INTEGER file_desc, char* object);
-extern void sstore (EIF_INTEGER file_desc, char* object);
+extern void estore(EIF_INTEGER file_desc, EIF_REFERENCE object);
+extern void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object);
+extern void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object);
 extern void eif_set_new_independent_format(EIF_BOOLEAN v);
 extern EIF_BOOLEAN eif_is_new_recoverable_format_active(void);
 extern void eif_set_new_recoverable_format(EIF_BOOLEAN v);

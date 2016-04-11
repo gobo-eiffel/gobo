@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-void estore(EIF_INTEGER file_desc, char* object) {
+void estore(EIF_INTEGER file_desc, EIF_REFERENCE object) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
@@ -25,7 +25,7 @@ void estore(EIF_INTEGER file_desc, char* object) {
 	fprintf(stderr, "'estore' in 'eif_store.h' not implemented\n");
 }
 
-void eestore(EIF_INTEGER file_desc, char* object) {
+void eestore(EIF_INTEGER file_desc, EIF_REFERENCE object) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
@@ -33,7 +33,7 @@ void eestore(EIF_INTEGER file_desc, char* object) {
 	fprintf(stderr, "'eestore' in 'eif_store.h' not implemented\n");
 }
 
-void sstore (EIF_INTEGER file_desc, char* object) {
+void sstore (EIF_INTEGER file_desc, EIF_REFERENCE object) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
