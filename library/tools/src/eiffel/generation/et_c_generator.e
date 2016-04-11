@@ -3980,6 +3980,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_max: INTEGER
 			l_max_index: INTEGER
 			l_semicolon_needed: BOOLEAN
+			l_has_result_type_cast: BOOLEAN
 			c, c3: CHARACTER
 		do
 			if attached a_feature.alias_clause as l_alias then
@@ -4021,6 +4022,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						-- With ECMA we need to write the 'return' keyword in the alias clause.
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
+					if attached current_feature.result_type_set as l_result_type_set then
+						print_declaration_type_cast (l_result_type_set.static_type, current_file)
+						current_file.put_character ('(')
+						l_has_result_type_cast := True
+					end
 					l_semicolon_needed := True
 				end
 				if attached a_feature.arguments as l_formal_arguments then
@@ -4118,6 +4124,9 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					end
 				else
 					current_file.put_string (l_c_code)
+				end
+				if l_has_result_type_cast then
+					current_file.put_character (')')
 				end
 				if l_semicolon_needed then
 					current_file.put_character (';')
@@ -5014,9 +5023,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 						-- When there is a rescue clause, the result entity might have been declared
 						-- with a 'volatile' qualifier. In that case we need a type cast here to
 						-- avoid C compiler warning (at least with MSVC 12).
-					current_file.put_character ('(')
-					print_type_declaration (l_result_type, current_file)
-					current_file.put_character (')')
+					print_declaration_type_cast (l_result_type, current_file)
 				end
 				print_result_name (current_file)
 				current_file.put_character (';')
@@ -14305,9 +14312,7 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 					-- the result entity might have been declared with a 'volatile'
 					-- qualifier. In that case we need a type cast here to
 					-- avoid C compiler warning (at least with MSVC 12).
-				current_file.put_character ('(')
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (')')
+				print_declaration_type_cast (l_result_type, current_file)
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -18737,12 +18742,15 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_character ('(')
 				current_file.put_character ('&')
 				current_file.put_character ('(')
 				current_file.put_string (c_ge_types)
 				current_file.put_character ('[')
 				print_argument_name (l_arguments.formal_argument (1).name, current_file)
 				current_file.put_character (']')
+				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
@@ -18865,7 +18873,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				error_handler.report_giaaa_error
 			else
 				include_runtime_header_file ("eif_traverse.h", False, header_file)
-				print_type_cast (l_result_type_set.static_type, current_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
 				current_file.put_string (c_find_referers)
 				current_file.put_character ('(')
 				l_argument := call_operands.item (2)
@@ -19537,8 +19545,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			l_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_has_non_conforming_types: BOOLEAN
 			i, nb: INTEGER
+			j, nb2: INTEGER
 			old_tuple_index: INTEGER
 			l_tuple_item_expression: ET_QUALIFIED_CALL_EXPRESSION
+			l_tuple_item_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			old_target: ET_EXPRESSION
 			l_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_query_target_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
@@ -19740,7 +19750,19 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 							current_file.put_character (',')
 							current_file.put_character (' ')
 								-- Prepare the expression to extract the tuple item.
-							extra_dynamic_type_sets.force_last (l_open_operand_type_sets.item (i))
+							create l_tuple_item_type_set.make_empty (l_tuple_target_type.item_type_sets.item (i).static_type)
+							nb2 := l_tuple_conforming_type_set.count
+							from j := 1 until j > nb2 loop
+								if attached {ET_DYNAMIC_TUPLE_TYPE} l_tuple_conforming_type_set.dynamic_type (j) as l_tuple_conforming_type then
+									l_tuple_item_type_set.put_types (l_tuple_conforming_type.item_type_sets.item (i))
+								else
+										-- Internal error: The types conforming a tuple type should be tuple types.
+									set_fatal_error
+									error_handler.report_giaaa_error
+								end
+								j := j + 1
+							end
+							extra_dynamic_type_sets.force_last (l_tuple_item_type_set)
 							l_tuple_item_expression := new_agent_tuple_item_expression (i)
 							old_target := l_tuple_item_expression.target
 							l_tuple_item_expression.set_target (l_tuple)
@@ -19755,11 +19777,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 									l_query_target_type_set.set_never_void
 								end
 								l_query_target_type_set.put_types (l_tuple_conforming_type_set)
-								create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_open_operand_type_sets.item (i), current_feature, current_type)
+								create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_item_type_set, current_feature, current_type)
 								l_tuple_conforming_type_set.static_type.put_query_call (l_query_call)
 							end
 								-- Print the actual call to extract the tuple item.
-							print_attachment_expression (l_tuple_item_expression, l_open_operand_type_sets.item (i), l_open_operand_type_sets.item (i).static_type)
+							print_attachment_expression (l_tuple_item_expression, l_tuple_item_type_set, l_open_operand_type_sets.item (i).static_type)
 								-- Clean up.
 							l_tuple_item_expression.set_target (old_target)
 							extra_dynamic_type_sets.remove_last
@@ -28509,6 +28531,18 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			a_file.put_character (')')
 		end
 
+	print_declaration_type_cast (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print type cast of type declaration of `a_type' to `a_file'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_character ('(')
+			print_type_declaration (a_type, a_file)
+			a_file.put_character (')')
+		end
+
 feature {NONE} -- Default initialization values generation
 
 	print_default_declarations
@@ -30777,7 +30811,7 @@ feature {NONE} -- Dynamic type sets
 	conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			-- Set of types conforming to the target of the current assignment attempt or
 			-- types to which the target of the current call to 'ANY.conforms_to' conform;
-			-- Also used for object-tests.
+			-- Also used for object-tests and agent tuple type conformance.
 
 	conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			-- Types conforming to the target of the current assignment attempt or
