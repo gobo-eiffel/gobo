@@ -370,7 +370,224 @@ feature -- Test
 			assert ("l_tree_1_count3", l_tree_1.count = 3)
 			assert ("is_equal2", l_tree_1.is_equal (l_tree_2))
 		end
+	
+	test_copy_key_range
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "four", "three")
+			-- due to the normal string collation, we expect the keys to be copied are four, one, three
+			assert ("l_tree_2_count", l_tree_2.count = 3)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 4, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 1, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_3", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_3", 3, l_tree_2.item_for_iteration)
+		end
+			
+	
+	test_copy_key_range_2
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "four", "two")
+			-- due to the normal string collation, we expect the keys to be copied are four, one, three, two.
+			assert ("l_tree_2_count", l_tree_2.count = 4)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 4, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 1, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_3", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_3", 3, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_4", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_4", 2, l_tree_2.item_for_iteration)
+		end
+			
+	
+	test_copy_key_range_3
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "eight", "two")
+			-- due to the normal string collation, we expect the keys to be copied are five, four, one, three, two.
+			assert ("l_tree_2_count", l_tree_2.count = 5)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 5, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 4, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_3", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_3", 1, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_4", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_4", 3, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_5", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_4", 2, l_tree_2.item_for_iteration)
+		end
+			
+	
+	test_copy_key_range_4
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "six", "two")
+			-- due to the normal string collation, we expect the keys to be copied are three, two.
+			assert ("l_tree_2_count", l_tree_2.count = 2)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 3, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 2, l_tree_2.item_for_iteration)
+		end
+			
+	
+	test_copy_key_range_5
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "zero", "two")
+			assert ("l_tree_2_count", l_tree_2.count = 0)
+		end
+	
+	test_copy_key_range_6
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "eight", "zero")
+			-- due to the normal string collation, we expect the keys to be copied are five, four, one, three, two.
+			assert ("l_tree_2_count", l_tree_2.count = 5)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 5, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 4, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_3", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_3", 1, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_4", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_4", 3, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_5", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_4", 2, l_tree_2.item_for_iteration)
+		end
+				
+	test_copy_key_range_7
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "eight", "four")
+			-- due to the normal string collation, we expect the keys to be copied are five, four.
+			assert ("l_tree_2_count", l_tree_2.count = 2)
+			l_tree_2.start
+			assert ("l_tree_2_not_after_1", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_1", 5, l_tree_2.item_for_iteration)
+			l_tree_2.forth
+			assert ("l_tree_2_not_after_2", not l_tree_2.after)
+			assert_integers_equal ("l_tree_2_item_2", 4, l_tree_2.item_for_iteration)
+		end
 
+	test_copy_key_range_8
+			-- Test feature `copy_key_range'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_1.put_new (4, "four")
+			l_tree_1.put_new (5, "five")			
+			create l_tree_2.make (l_comparator)
+			l_tree_1.copy_key_range (l_tree_2, "eight", "alpha")
+			assert ("l_tree_2_count", l_tree_2.count = 0)
+		end
+							
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN

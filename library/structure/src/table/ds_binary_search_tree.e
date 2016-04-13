@@ -50,6 +50,22 @@ feature -- Access
 
 	key_comparator: KL_COMPARATOR [K]
 			-- Comparison criterion for keys
+	
+	node_key (a_node: attached like root_node): K
+			-- `a_node's key
+		require
+			a_node_not_void: a_node /= Void
+		do
+			Result := a_node.key
+		end
+
+	node_item (a_node: attached like root_node): G
+			-- `a_node's item
+		require
+			a_node_not_void: a_node /= Void
+		do
+			Result := a_node.item
+		end
 
 feature {NONE} -- Access
 
@@ -161,6 +177,34 @@ feature {NONE} -- Removal
 		do
 		end
 
+feature -- Search
+
+	search_not_less (a_key: K; a_predicate: detachable PREDICATE [ANY, TUPLE [G]]): like root_node
+			-- Search for node whose key is the maximum key which satisfies `a_predicate' 
+			-- where `a_key' is not less than this key.
+			-- The search ends if a Void node is encountered.
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := root_node
+			until
+				l_node = Void
+			loop
+				if
+					(a_key = Void and l_node.key /= Void) or
+					(a_key /= Void and attached l_node.key as l_node_key) and then key_comparator.less_than (a_key, l_node_key)
+				then
+					l_node := l_node.left_child
+				else
+					if a_predicate = Void or else a_predicate.item ([l_node.item]) then
+						Result := l_node
+					end
+					l_node := l_node.right_child
+				end
+			end
+		end
+	
 feature -- Duplication
 
 	copy (other: like Current)
@@ -186,6 +230,35 @@ feature -- Duplication
 				end
 			end
 		end
+
+	copy_key_range (a_target: like Current; a_start, a_end: K)
+			-- Copy all nodes whose keys are >= `a_start' and <= `a_end' to `a_target'.
+		require
+			a_target_attached: a_target /= Void
+			a_end_not_less_than_a_start: (a_start /= Void and a_end /= Void) implies not key_comparator.less_than (a_end, a_start)
+		local
+			l_finished: BOOLEAN
+			l_cursor: DS_BINARY_SEARCH_TREE_CURSOR [G, K]
+		do
+			from
+				l_cursor := new_cursor
+					--| this provides in-order traversal
+				l_cursor.go_at_or_after_key (a_start)
+			until
+				l_finished or l_cursor.after
+			loop
+				if
+					(a_end = Void and l_cursor.key /= Void) or
+					(a_end /= Void and attached l_cursor.key as l_cursor_key) and then key_comparator.less_than (a_end, l_cursor_key)
+				 then
+					l_finished := True
+				else
+					a_target.force (l_cursor.item, l_cursor.key)
+					l_cursor.forth
+				end
+			end
+		end
+	
 
 feature {NONE} -- Implementation
 
