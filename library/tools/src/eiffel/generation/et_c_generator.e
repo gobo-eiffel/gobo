@@ -3686,19 +3686,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (')')
+				print_declaration_type_cast (l_result_type, current_file)
 				if current_universe_impl.boolean_type.same_named_type (l_result_type.base_type, current_type.base_type, current_type.base_type) then
 						-- Convert C boolean value to Eiffel boolean value.
 					l_boolean_result := True
 					current_file.put_string (c_eif_test)
 					current_file.put_character ('(')
-				end
-				if a_signature_result /= Void then
-					current_file.put_character ('(')
-					current_file.put_string (a_signature_result)
-					current_file.put_character (')')
 				end
 			end
 			if a_alias /= Void then
@@ -4192,19 +4185,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (')')
+				print_declaration_type_cast (l_result_type, current_file)
 				if l_result_type = current_dynamic_system.boolean_type then
 						-- Convert C boolean value to Eiffel boolean value.
 					l_boolean_result := True
 					current_file.put_string (c_eif_test)
 					current_file.put_character ('(')
-				end
-				if a_signature_result /= Void then
-					current_file.put_character ('(')
-					current_file.put_string (a_signature_result)
-					current_file.put_character (')')
 				end
 			end
 			if a_arguments = Void or else a_arguments.is_empty then
@@ -4474,19 +4460,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (')')
+				print_declaration_type_cast (l_result_type, current_file)
 				if l_result_type = current_dynamic_system.boolean_type then
 						-- Convert C boolean value to Eiffel boolean value.
 					l_boolean_result := True
 					current_file.put_string (c_eif_test)
 					current_file.put_character ('(')
-				end
-				if a_signature_result /= Void then
-					current_file.put_character ('(')
-					current_file.put_string (a_signature_result)
-					current_file.put_character (')')
 				end
 			end
 			current_file.put_character ('(')
