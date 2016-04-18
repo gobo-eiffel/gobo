@@ -1685,6 +1685,39 @@ feature -- Kernel types
 			wide_character_type := tokens.unknown_class_type
 		end
 
+	resolve_unfolded_tuple_actual_parameters
+			-- Resolve unfolded Tuple actual patameters of `function_type',
+			-- `predicate_like_current_type', `procedure_like_current_type' and
+			-- `routine_type' if not already done.
+		local
+			l_old_obsolete_routine_type_mode: BOOLEAN
+		do
+			if function_type.base_class.formal_parameter_count = 2 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				function_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if predicate_like_current_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				predicate_like_current_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if procedure_like_current_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				procedure_like_current_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+			if routine_type.base_class.formal_parameter_count = 1 then
+				l_old_obsolete_routine_type_mode := obsolete_routine_type_mode
+				obsolete_routine_type_mode := True
+				routine_type.resolve_unfolded_tuple_actual_parameters_1 (Current)
+				obsolete_routine_type_mode := l_old_obsolete_routine_type_mode
+			end
+		end
+
 feature -- Class mapping
 
 	set_default_class_mapping

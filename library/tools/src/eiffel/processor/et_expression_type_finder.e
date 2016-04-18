@@ -147,6 +147,7 @@ feature -- Basic operations
 			current_context := a_context
 			old_target_type := current_target_type
 			current_target_type := a_target_type
+			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			current_target_type := old_target_type
 			current_context := old_context
@@ -202,6 +203,7 @@ feature -- Basic operations
 			current_context := a_context
 			old_target_type := current_target_type
 			current_target_type := a_target_type
+			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			current_target_type := old_target_type
 			current_context := old_context
@@ -268,6 +270,7 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_precondition := in_precondition
 			in_precondition := True
+			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_precondition := old_in_precondition
@@ -333,6 +336,7 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_postcondition := in_postcondition
 			in_postcondition := True
+			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_postcondition := old_in_postcondition
@@ -393,6 +397,7 @@ feature -- Basic operations
 			in_assertion := True
 			old_in_invariant := in_invariant
 			in_invariant := True
+			current_universe_impl.resolve_unfolded_tuple_actual_parameters
 			a_expression.process (Current)
 			in_assertion := old_in_assertion
 			in_invariant := old_in_invariant

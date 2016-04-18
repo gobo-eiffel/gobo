@@ -271,6 +271,7 @@ feature -- Validity checking
 				current_type := a_current_type
 				old_class_impl := current_class_impl
 				current_class_impl := l_class_impl
+				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -398,6 +399,7 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_precondition := in_precondition
 				in_precondition := True
+				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -527,6 +529,7 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_postcondition := in_postcondition
 				in_postcondition := True
+				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
@@ -661,6 +664,7 @@ feature -- Validity checking
 				current_class_impl := l_class_impl
 				old_in_invariant := in_invariant
 				in_invariant := True
+				current_universe_impl.resolve_unfolded_tuple_actual_parameters
 					-- First, make sure that the interface of `current_type' is valid.
 				current_class.process (current_system.interface_checker)
 				if not current_class.interface_checked or else current_class.has_interface_error then
