@@ -146,10 +146,12 @@ feature -- Execution
 							-- file or directory is deleted and the time it is shown as deleted.
 						from
 							i := 1
+							Execution_environment.sleep (500_000_000)
 							file_system.recursive_delete_directory (a_name)
 						until
-							i > 1000 or else not file_system.directory_exists (a_name)
+							i > 20 or else not file_system.directory_exists (a_name)
 						loop
+							Execution_environment.sleep (500_000_000)
 							file_system.recursive_delete_directory (a_name)
 							i := i + 1
 						end
@@ -169,10 +171,12 @@ feature -- Execution
 							-- file or directory is deleted and the time it is shown as deleted.
 						from
 							i := 1
+							Execution_environment.sleep (500_000_000)
 							file_system.delete_file (a_name)
 						until
-							i > 1000 or else not file_system.file_exists (a_name)
+							i > 20 or else not file_system.file_exists (a_name)
 						loop
+							Execution_environment.sleep (500_000_000)
 							file_system.delete_file (a_name)
 							i := i + 1
 						end
@@ -214,10 +218,12 @@ feature -- Execution
 										-- file or directory is deleted and the time it is shown as deleted.
 									from
 										i := 1
+										Execution_environment.sleep (500_000_000)
 										file_system.delete_file (a_name)
 									until
-										i > 1000 or else not file_system.file_exists (a_name)
+										i > 20 or else not file_system.file_exists (a_name)
 									loop
+										Execution_environment.sleep (500_000_000)
 										file_system.delete_file (a_name)
 										i := i + 1
 									end
@@ -253,10 +259,12 @@ feature -- Execution
 										-- file or directory is deleted and the time it is shown as deleted.
 									from
 										i := 1
+										Execution_environment.sleep (500_000_000)
 										file_system.recursive_delete_directory (a_name)
 									until
-										i > 1000 or else not file_system.directory_exists (a_name)
+										i > 20 or else not file_system.directory_exists (a_name)
 									loop
+										Execution_environment.sleep (500_000_000)
 										file_system.recursive_delete_directory (a_name)
 										i := i + 1
 									end
