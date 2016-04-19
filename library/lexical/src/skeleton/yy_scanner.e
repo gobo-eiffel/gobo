@@ -5,7 +5,7 @@ note
 		"General lexical analyzers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,14 @@ feature -- Initialization
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
 		deferred
+		end
+
+ 	reset_start_condition
+			-- Clear pushed start conditions and set `start_condition'
+			-- to the "INITIAL" start condition.
+		deferred
+		ensure
+			pushed_start_conditions_cleared: pushed_start_condition_count = 0
 		end
 
 feature -- Access
@@ -141,6 +149,13 @@ feature -- Measurement
 			position_positive: Result >= 1
 		end
 
+	pushed_start_condition_count: INTEGER
+			-- Number of start conditions already pushed (and not popped yet)
+		deferred
+		ensure
+			pushed_start_condition_count_not_negative: Result >= 0
+		end
+
 feature -- Status report
 
 	end_of_file: BOOLEAN
@@ -183,6 +198,25 @@ feature -- Setting
 		deferred
 		ensure
 			start_condition_set: start_condition = a_start_condition
+		end
+
+	push_start_condition (a_start_condition: INTEGER)
+			-- Set start condition and add previous to stack.
+		require
+			valid_start_condition: valid_start_condition (a_start_condition)
+		deferred
+		ensure
+			start_condition_set: start_condition = a_start_condition
+			one_more: pushed_start_condition_count = old pushed_start_condition_count + 1
+		end
+
+	pop_start_condition
+			-- Restore previous start condition.
+		require
+			has_pushed_start_conditions: pushed_start_condition_count > 0
+		deferred
+		ensure
+			one_less: pushed_start_condition_count = old pushed_start_condition_count - 1
 		end
 
 feature -- Scanning

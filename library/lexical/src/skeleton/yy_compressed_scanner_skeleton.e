@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,14 +27,7 @@ feature {NONE} -- Initialization
 	yy_initialize
 			-- Initialize lexical analyzer.
 		do
-			yy_build_tables
-			yy_start_state := 1
-			yy_line := 1
-			yy_column := 1
-			yy_position := 1
-			line := 1
-			column := 1
-			position := 1
+			Precursor
 			if yyReject_or_variable_trail_context then
 				yy_state_stack := SPECIAL_INTEGER_.make (input_buffer.content.count + 1)
 			else
@@ -49,18 +42,7 @@ feature -- Initialization
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
 		do
-			yy_start_state := 1
-			yy_line := 1
-			yy_column := 1
-			yy_position := 1
-			line := 1
-			column := 1
-			position := 1
-			yy_more_flag := False
-			yy_more_len := 0
-				-- Backing-up information.
-			yy_last_accepting_state := 0
-			yy_last_accepting_cpos := 0
+			Precursor
 				-- Reject information.
 			yy_rejected := False
 			yy_state_count := 0

@@ -135,7 +135,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{ 
 		"-->" {
 			set_last_token (COMMENT_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		
 		"--" { 
@@ -189,7 +193,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		"?>" {
 			set_last_token (XMLDECLARATION_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 
 			-- Version declaration.
@@ -249,7 +257,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		"?>" {
 			set_last_token (PI_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		{NAMECHAR_FIRST}{NAMECHAR}* {
 			set_last_token (PI_TARGET)
@@ -291,7 +303,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		"]]>" { 
 			set_last_token (CDATA_END) 
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		("\r\n"|"\r"|"\n") {
 				-- End of line handling XML1.0:2.11.
@@ -390,7 +406,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 
 		"]" {
 			set_last_token (DOCTYPE_DECLARATION_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 
 		"<!ELEMENT" {
@@ -438,7 +458,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 
 		"]]>" {
 			set_last_token (DOCTYPE_CONDITIONAL_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 
 		({NOSPASCIICHAR}|{UTF8CHAR}) {
@@ -477,7 +501,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		">" { 
 			set_last_token (DOCTYPE_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 
 		{NAMECHAR_FIRST}{NAMECHAR}* { 
@@ -527,13 +555,21 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		{SPACECHAR}+(([']{NOAPOSSYSLITCHAR}*['])|(["]{NOQUOTSYSLITCHAR}*["])) {
 				set_last_token (DOCTYPE_SYSTEM)
 				last_value := system_literal_text
-				pop_start_condition
+				if pushed_start_condition_count > 0 then
+					pop_start_condition
+				else
+					-- Error, to be reported later in parser hopefully.
+				end
 			}
 		
 		{SPACECHAR}+(([']({NOAPOSSYSLITCHAR}|{UTF8CHAR})*['])|(["]({NOQUOTSYSLITCHAR}|{UTF8CHAR})*["])) {
 				set_last_token (DOCTYPE_SYSTEM_UTF8)
 				last_value := system_literal_text
-				pop_start_condition
+				if pushed_start_condition_count > 0 then
+					pop_start_condition
+				else
+					-- Error, to be reported later in parser hopefully.
+				end
 			}
 
 		-- this covers the case of dtd_notation, which allows a PUBLIC id with or without 
@@ -542,15 +578,27 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 		-- DTD notation.
 		{SPACECHAR}*">" {
 				set_last_token (DOCTYPE_END)
-				pop_start_condition
-				pop_start_condition -- go out of dtd_notation
+				if pushed_start_condition_count > 0 then
+					pop_start_condition
+				else
+					-- Error, to be reported later in parser hopefully.
+				end
+				if pushed_start_condition_count > 0 then
+					pop_start_condition -- go out of dtd_notation
+				else
+					-- Error, to be reported later in parser hopefully.
+				end
 			}
 		
 		"\n" {
 				-- the global INPUT_INVALID does not catch \n, which is caught
 				-- explicitly under other start conditions.
 			set_last_token (INPUT_INVALID)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 	}
 	
@@ -640,12 +688,20 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		{SPACECHAR}*"/>" {
 			set_last_token (TAG_END_EMPTY)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 
 		{SPACECHAR}*">" { 
 			set_last_token (TAG_END) 
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		-- Name decomposed for easier parsing of namespaces into:
 		-- (Name - ':') ':' (NmToken - ':') ...
@@ -846,7 +902,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		{APOS} { 
 			set_last_token (VALUE_END) 
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		{QUOT} {
 			set_last_token (CHARDATA) 
@@ -858,7 +918,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 	{
 		{QUOT} {
 			set_last_token (VALUE_END)
-			pop_start_condition
+			if pushed_start_condition_count > 0 then
+				pop_start_condition
+			else
+				-- Error, to be reported later in parser hopefully.
+			end
 		}
 		{APOS} {
 			set_last_token (CHARDATA) 

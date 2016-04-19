@@ -6,7 +6,7 @@ note
 		%analyzer generators such as 'gelex'"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,8 @@ inherit
 	YY_COMPRESSED_SCANNER_SKELETON
 		rename
 			make as make_compressed_scanner_skeleton,
-			reset as reset_compressed_scanner_skeleton
+			reset as reset_compressed_scanner_skeleton,
+			push_start_condition as lex_push_start_condition
 		end
 
 	UT_CHARACTER_CODES

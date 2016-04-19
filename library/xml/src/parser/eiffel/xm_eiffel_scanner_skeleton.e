@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for an XML parser"
 
 	library: "Gobo Eiffel XML library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,6 @@ feature -- Reset
 			last_value := ""
 			last_string_value := ""
 			last_error := Void
-			create start_conditions.make
 		end
 
 	push_start_condition_dtd_ignore
@@ -199,31 +198,6 @@ feature {NONE} -- Character entity
 	character_entity: XM_EIFFEL_CHARACTER_ENTITY
 			-- Character entity manager (class once)
 
-feature {NONE} -- Start condition stack
-
-	push_start_condition (a_condition: INTEGER)
-			-- Set start condition and add previous to stack.
-		do
-			start_conditions.force (start_condition)
-			set_start_condition (a_condition)
-		end
-
-	pop_start_condition
-			-- Restore previous start condition.
-		do
-			if not start_conditions.is_empty then
-					-- This would be a precondition save for
-					-- invalid input document.
-				set_start_condition (start_conditions.item)
-				start_conditions.remove
-			else
-				-- Error, to be reported later in parser hopefully.
-			end
-		end
-
-	start_conditions: DS_LINKED_STACK [INTEGER]
-			-- Start conditions
-
 feature {NONE} -- System literal
 
 	system_literal_text: STRING
@@ -280,7 +254,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	start_conditions_not_void: start_conditions /= Void
 	character_entity_not_void: character_entity /= Void
 	input_name_not_void: input_name /= Void
 

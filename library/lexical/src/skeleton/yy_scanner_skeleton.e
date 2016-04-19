@@ -5,7 +5,7 @@ note
 		"Skeletons of scanners implemented with tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			-- Create a new scanner with
 			-- `a_buffer' as input buffer.
 		do
+			yy_pushed_start_conditions := SPECIAL_INTEGER_.make (yyInitial_pushed_start_conditions_capacity)
 			input_buffer := a_buffer
 			yy_initialize
 			yy_load_input_buffer
@@ -60,6 +61,7 @@ feature -- Initialization
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
 		do
+			yy_pushed_start_conditions.wipe_out
 			yy_start_state := 1
 			yy_line := 1
 			yy_column := 1
@@ -72,6 +74,14 @@ feature -- Initialization
 				-- Backing-up information.
 			yy_last_accepting_state := 0
 			yy_last_accepting_cpos := 0
+		end
+
+ 	reset_start_condition
+			-- Clear pushed start conditions and set `start_condition'
+			-- to the "INITIAL" start condition.
+		do
+			pushed_start_condition_count := 0
+			yy_start_state := 1
 		end
 
 feature -- Access
@@ -118,6 +128,8 @@ feature -- Access
 			-- Start condition
 		do
 			Result := (yy_start_state - 1) // 2
+		ensure then
+			definition: Result = (yy_start_state - 1) // 2
 		end
 
 feature -- Measurement
@@ -141,12 +153,33 @@ feature -- Measurement
 			-- characters from the start of the input source)
 			-- when '%option position' has been specified
 
+	pushed_start_condition_count: INTEGER
+			-- Number of start conditions already pushed (and not popped yet)
+
 feature -- Setting
 
 	set_start_condition (a_start_condition: INTEGER)
 			-- Set `start_condition' to `a_start_condition'.
 		do
 			yy_start_state := 2 * a_start_condition + 1
+		end
+
+	push_start_condition (a_start_condition: INTEGER)
+			-- Set start condition and add previous to stack.
+		do
+			if pushed_start_condition_count >= yy_pushed_start_conditions.capacity then
+				yy_pushed_start_conditions := SPECIAL_INTEGER_.aliased_resized_area (yy_pushed_start_conditions, pushed_start_condition_count + yyInitial_pushed_start_conditions_capacity)
+			end
+			SPECIAL_INTEGER_.force (yy_pushed_start_conditions, start_condition, pushed_start_condition_count)
+			pushed_start_condition_count := pushed_start_condition_count + 1
+			set_start_condition (a_start_condition)
+		end
+
+	pop_start_condition
+			-- Restore previous start condition.
+		do
+			pushed_start_condition_count := pushed_start_condition_count - 1
+			set_start_condition (yy_pushed_start_conditions.item (pushed_start_condition_count))
 		end
 
 feature -- Element change
@@ -642,7 +675,13 @@ feature {NONE} -- Implementation
 	yy_last_accepting_cpos: INTEGER
 			-- Definition for backing up
 
+	yy_pushed_start_conditions: SPECIAL [INTEGER]
+			-- Start condition stack when using `push_start_condition' and `pop_start_condition'
+
 feature {NONE} -- Constants
+
+	yyInitial_pushed_start_conditions_capacity: INTEGER = 10
+			-- Initial capavity for `yy_pushed_start_conditions'
 
 	yyBuffer_capacity: INTEGER = 16384
 			-- Capacity of default input buffer
@@ -692,5 +731,6 @@ invariant
 	yy_line_positive: yy_line >= 1
 	yy_column_positive: yy_column >= 1
 	yy_position_positive: yy_position >= 1
+	yy_pushed_start_conditions_not_void: yy_pushed_start_conditions /= Void
 
 end
