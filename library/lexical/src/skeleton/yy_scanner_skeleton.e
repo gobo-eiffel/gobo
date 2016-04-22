@@ -61,7 +61,7 @@ feature -- Initialization
 			-- (This routine can be called in `wrap' before scanning
 			-- another input buffer.)
 		do
-			yy_pushed_start_conditions.wipe_out
+			pushed_start_condition_count := 0
 			yy_start_state := 1
 			yy_line := 1
 			yy_column := 1
