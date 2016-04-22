@@ -5,7 +5,7 @@ note
 		"Lexical analyzer input file buffers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,12 @@ inherit
 		redefine
 			name,
 			fill,
-			wipe_out
+			wipe_out,
+			set_string
 		end
+
+	KL_SHARED_STREAMS
+		export {NONE} all end
 
 create
 
@@ -43,21 +47,21 @@ feature {NONE} -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 
-	make_with_size (a_file: like file; size: INTEGER)
-			-- Create a new buffer of capacity `size' for `a_file'.
+	make_with_size (a_file: like file; a_size: INTEGER)
+			-- Create a new buffer of capacity `a_size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
-			size_positive: size >= 0
+			a_size_not_negative: a_size >= 0
 		do
-			capacity := size
+			capacity := a_size
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			content := new_default_buffer (size + 2)
+			content := new_default_buffer (a_size + 2)
 			set_file (a_file)
 		ensure
-			capacity_set: capacity = size
+			capacity_set: capacity = a_size
 			count_set: count = 0
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
@@ -87,13 +91,48 @@ feature -- Setting
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			end_of_file := a_file.end_of_input
-			flush
-			file := a_file
+			set_file_with_size (a_file, capacity)
 		ensure
+			same_capacity: capacity = old capacity
 			count_set: count = 0
 			file_set: file = a_file
 			beginning_of_line: beginning_of_line
+		end
+
+	set_file_with_size (a_file: like file; a_size: INTEGER)
+			-- Set `file' to `a_file'.
+			-- Resize buffer capacity to `a_size' if needed.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+			a_size_not_negative: a_size >= 0
+		do
+			end_of_file := a_file.end_of_input
+			flush
+			if a_size > capacity then
+				capacity := a_size
+					-- `content' has to be 2 characters longer
+					-- than the size given because we need to
+					-- put in 2 end-of-buffer characters.
+				content.resize (a_size + 2)
+			end
+			file := a_file
+		ensure
+			capacity_set: capacity = capacity.max (a_size)
+			count_set: count = 0
+			file_set: file = a_file
+			beginning_of_line: beginning_of_line
+		end
+
+	set_string (a_string: STRING)
+			-- Reset buffer with characters from `a_string'.
+			-- Resize buffer capacity if needed.
+			-- Do not alter `a_string' during the scanning process.
+		do
+			end_of_file := True
+			file := null_input_stream
+			Precursor (a_string)
+			filled := False
 		end
 
 feature -- Status setting

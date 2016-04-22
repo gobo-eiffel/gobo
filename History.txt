@@ -41,6 +41,7 @@ Version 3.10 - ?
 
 	* Made the generated scanners compilable in void-safe mode with ISE 7.3.
 	* Added support for pushing and popping start conditions.
+	* Added `reset_with_string' and `reset_with_file' in YY_SCANNER.
 
 	gelint:
 

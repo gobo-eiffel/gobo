@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 			yy_line := 1
 			yy_column := 1
 			yy_position := 1
+			yy_start := 1
+			yy_end := 1
 			line := 1
 			column := 1
 			position := 1
@@ -66,6 +68,8 @@ feature -- Initialization
 			yy_line := 1
 			yy_column := 1
 			yy_position := 1
+			yy_start := 1
+			yy_end := 1
 			line := 1
 			column := 1
 			position := 1

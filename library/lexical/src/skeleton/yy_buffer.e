@@ -5,7 +5,7 @@ note
 		"Lexical analyzer input buffers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,6 +106,30 @@ feature -- Access
 
 feature -- Setting
 
+	set_string (a_string: STRING)
+			-- Reset buffer with characters from `a_string'.
+			-- Resize buffer capacity if needed.
+			-- Do not alter `a_string' during the scanning process.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			nb: INTEGER
+		do
+			nb := a_string.count
+			if nb > capacity then
+				content.resize (nb + 2)
+			end
+			content.fill_from_string (a_string, 1)
+			content.put (End_of_buffer_character, nb + 1)
+			content.put (End_of_buffer_character, nb + 2)
+			make_from_buffer (content)
+			count := nb
+		ensure
+			capacity_set: capacity = capacity.max (a_string.count)
+			count_set: count = a_string.count
+			beginning_of_line: beginning_of_line
+		end
+
 	set_position (p, l, c: INTEGER)
 			-- Set `position' to `p', `line' to `l'
 			-- and `column' to `c'.
@@ -189,6 +213,7 @@ feature -- Element change
 		ensure
 			flushed: count = 0
 			beginning_of_line: beginning_of_line
+			filled: filled
 		end
 
 	wipe_out

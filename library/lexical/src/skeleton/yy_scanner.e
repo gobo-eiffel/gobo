@@ -58,6 +58,49 @@ feature -- Initialization
 		deferred
 		end
 
+	reset_with_file (a_file: KI_CHARACTER_INPUT_STREAM)
+			-- Reset scanner before scanning next input source.
+			-- Then reuse `input_buffer' and set it to `a_file'
+			-- if it was a file buffer, create a new file input buffer
+			-- with `a_file' otherwise.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_input_buffer: like input_buffer
+		do
+			reset
+			l_input_buffer := input_buffer
+			if attached {YY_FILE_BUFFER} l_input_buffer as l_file_buffer then
+				l_file_buffer.set_file (a_file)
+				input_buffer := Empty_buffer
+			else
+				l_input_buffer := new_file_buffer (a_file)
+			end
+			set_input_buffer (l_input_buffer)
+ 		end
+
+	reset_with_string (a_string: STRING)
+			-- Reset scanner before scanning next input source.
+			-- Then reuse `input_buffer' and set it to `a_string'
+			-- if it was not `Empty_buffer', create a new input buffer
+			-- with `a_string' otherwise.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			l_input_buffer: like input_buffer
+		do
+			reset
+			l_input_buffer := input_buffer
+			if l_input_buffer /= Empty_buffer then
+				l_input_buffer.set_string (a_string)
+				input_buffer := Empty_buffer
+			else
+				l_input_buffer := new_string_buffer (a_string)
+			end
+			set_input_buffer (l_input_buffer)
+		end
+
  	reset_start_condition
 			-- Clear pushed start conditions and set `start_condition'
 			-- to the "INITIAL" start condition.
