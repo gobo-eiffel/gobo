@@ -16,6 +16,8 @@
 		<echo message="   geant install_src"/>
 		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_unit_debug_ge"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant test_unit_debug_ise"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -43,6 +45,14 @@
 
 		<geant target="do_all" arguments="test_debug_ge,*/test"/>
 	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Run all tests.
+		</description>
+
+		<geant target="do_all" arguments="test_debug_ise,*/test"/>
+	</target>
 	
 	<target name="test_unit_debug_ge" depend="init">
 		<description>
@@ -50,6 +60,14 @@
 		</description>
 
 		<geant target="do_all_2" arguments="test_debug_ge,clean,*/test/unit"/>
+	</target>
+
+	<target name="test_unit_debug_ise" depend="init">
+		<description>
+			Run all unit tests.
+		</description>
+
+		<geant target="do_all_2" arguments="test_debug_ise,clean,*/test/unit"/>
 	</target>
 	
 	<target name="clean" depend="init">
