@@ -5,7 +5,7 @@ note
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,15 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	lower_name: STRING
+			-- Lower-name of closure
+		deferred
+		ensure
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
+			lower_case: across Result as l_result all l_result.item.is_lower end
+		end
 
 	first_precursor: detachable ET_STANDALONE_CLOSURE
 			-- First precursor;

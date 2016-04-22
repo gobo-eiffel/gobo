@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #22 $"
@@ -104,9 +104,7 @@ feature -- Access
 			-- otherwise return a new object at each call.)
 		do
 			Result := name.lower_name
-		ensure
-			upper_name_not_void: Result /= Void
-			upper_name_not_empty: Result.count > 0
+		ensure then
 			definition: Result.is_equal (name.name.as_lower)
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel class invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,6 +79,12 @@ feature -- Status report
 			-- Is `Current' class invariants?
 
 feature -- Access
+
+	lower_name: STRING
+			-- Lower-name of closure
+		once
+			Result := tokens.invariant_keyword_name
+		end
 
 	invariant_keyword: ET_KEYWORD
 			-- 'invariant' keyword

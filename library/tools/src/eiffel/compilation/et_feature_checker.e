@@ -15061,12 +15061,30 @@ feature {NONE} -- Type contexts
 		require
 			a_context_not_void: a_context /= Void
 		do
+			debug ("nested_type_context")
+				if a_context.count > max_context_count then
+					max_context_count := a_context.count
+					max_context_capacity := max_context_capacity.max (a_context.capacity)
+					error_handler.info_file.put_line (max_context_count.out + "/" + max_context_capacity.out + " " + current_class.upper_name + "." + current_feature.lower_name)
+				elseif a_context.capacity > max_context_capacity then
+					max_context_capacity := a_context.capacity
+					error_handler.info_file.put_line (max_context_count.out + "/" + max_context_capacity.out + " " + current_class.upper_name + "." + current_feature.lower_name)
+				end
+			end
 			unused_contexts.force_last (a_context)
 			a_context.reset (tokens.unknown_class)
 		end
 
 	unused_contexts: DS_ARRAYED_LIST [ET_NESTED_TYPE_CONTEXT]
 			-- Contexts that are not currently used
+
+	max_context_count: INTEGER
+			-- Maximum count found in nested context so far when calling `free_context'.
+			-- Used in 'debug ("nested_type_context")' only.
+
+	max_context_capacity: INTEGER
+			-- Maximum capacity found in nested context so far when calling `free_context'.
+			-- Used in 'debug ("nested_type_context")' only.
 
 feature {NONE} -- Feature checker
 
