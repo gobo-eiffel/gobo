@@ -5,7 +5,7 @@ note
 		"Delete tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +48,9 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					command.set_file (a_value)
 				end
+			end
+			if has_attribute (Fail_on_error_attribute_name) then
+				command.set_fail_on_error (boolean_value (Fail_on_error_attribute_name))
 			end
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
@@ -108,6 +111,15 @@ feature {NONE} -- Constants
 		ensure
 			element_name_not_void: Result /= Void
 			element_name_not_empty: Result.count > 0
+		end
+
+	Fail_on_error_attribute_name: STRING
+			-- Name of xml attribute file.
+		once
+			Result := "fail_on_error"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
 		end
 
 end

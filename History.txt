@@ -16,6 +16,8 @@ Version 3.10 - ?
 	* Relative pathnames in the <inherit> clause are now relative to 
 	  the directory containing the current eant file (and not relative
 	  to the working directory where geant is currently running).
+	* Added optional attribute 'fail_on_error' to task <delete> (true
+	  by default).
 
 	gec:
 

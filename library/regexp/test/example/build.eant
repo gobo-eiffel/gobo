@@ -25,7 +25,7 @@
 			Remove other intermediary generated files.
 		</description>
 
-		<delete directory="Tpcre"/>
+		<delete directory="Tpcre" fail_on_error="false"/>
 	</target>
 
 	<target name="init_system">

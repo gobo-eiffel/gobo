@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Kernel Library Tester"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -132,7 +132,7 @@
 		</delete>
 		<delete file="${system}.pdb"/>
 		<delete file="${system}.ilk"/>
-		<delete file="${system}${exe}"/>
+		<delete file="${system}${exe}" fail_on_error="false"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
 		<delete>

@@ -25,8 +25,8 @@
 			Remove other intermediary generated files.
 		</description>
 
-		<delete directory="Tconcat1"/>
-		<delete directory="Tconcat2"/>
+		<delete directory="Tconcat1" fail_on_error="false"/>
+		<delete directory="Tconcat2" fail_on_error="false"/>
 	</target>
 
 	<target name="init_system">
