@@ -507,7 +507,7 @@ feature -- Test
 			l_tree_1.put_new (4, "four")
 			l_tree_1.put_new (5, "five")			
 			create l_tree_2.make (l_comparator)
-			l_tree_1.copy_key_range (l_tree_2, "zero", "two")
+			l_tree_1.copy_key_range (l_tree_2, "zero", "zero")
 			assert ("l_tree_2_count", l_tree_2.count = 0)
 		end
 	
@@ -584,7 +584,7 @@ feature -- Test
 			l_tree_1.put_new (4, "four")
 			l_tree_1.put_new (5, "five")			
 			create l_tree_2.make (l_comparator)
-			l_tree_1.copy_key_range (l_tree_2, "eight", "alpha")
+			l_tree_1.copy_key_range (l_tree_2, "alpha", "eight")
 			assert ("l_tree_2_count", l_tree_2.count = 0)
 		end
 							
