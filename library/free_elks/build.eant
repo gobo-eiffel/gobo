@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="lexical" default="help">
+<project name="free_elks" default="help">
 
 	<description>
 		description: "FreeELKS Library"

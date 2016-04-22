@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="lexical" default="help">
+<project name="tools" default="help">
 
 	<description>
 		description: "Gobo Eiffel Tools Library"
