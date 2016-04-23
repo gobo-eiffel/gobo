@@ -5,7 +5,7 @@ note
 		"Gelex commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,9 +32,10 @@ feature {NONE} -- Initialization
 			output_filename := ""
 			input_filename := ""
 				-- Set defaults:
-			size := ""
+			array_size := ""
 			ecs := True
 			meta_ecs := True
+			inspect_actions := Void
 		end
 
 feature -- Status report
@@ -52,8 +53,8 @@ feature -- Status report
 
 feature -- Access
 
-	size: STRING
-			-- -a option, default: 1000
+	array_size: detachable STRING
+			-- -a option, default: 200
 
 	backup: BOOLEAN
 			-- -b option, default: false
@@ -80,6 +81,9 @@ feature -- Access
 	separate_actions: BOOLEAN
 			-- -x option, default: false
 
+	inspect_actions: detachable STRING
+			-- --inspect-actions option, default: true
+
 	output_filename: STRING
 			-- -o option;
 			-- if omitted output goes to stdout
@@ -89,15 +93,15 @@ feature -- Access
 
 feature -- Setting
 
-	set_size (a_size: STRING)
-			-- Set `size' to `a_size'.
+	set_array_size (a_size: STRING)
+			-- Set `array_size' to `a_size'.
 		require
 			a_size_not_void: a_size /= Void
 			a_size_is_integer: a_size.is_integer
 		do
-			size := a_size
+			array_size := a_size
 		ensure
-			size_set: size = a_size
+			array_size_set: array_size = a_size
 		end
 
 	set_backup (b: BOOLEAN)
@@ -164,6 +168,14 @@ feature -- Setting
 			separate_actions_set: separate_actions = b
 		end
 
+	set_inspect_actions (b: like inspect_actions)
+			-- Set `inspect_actions' to `b'.
+		do
+			inspect_actions := b
+		ensure
+			inspect_actions_set: inspect_actions = b
+		end
+
 	set_output_filename (a_filename: like output_filename )
 			-- Set `output_filename' to `a_filename'.
 		require
@@ -197,9 +209,9 @@ feature -- Execution
 			create cmd.make (128)
 			cmd.append_string ("gelex ")
 				-- Option -a
-			if size /= Void and then size.count > 0 then
-				cmd.append_string ("-a ")
-				cmd := STRING_.appended_string (cmd, size.out)
+			if array_size /= Void and then array_size.count > 0 then
+				cmd.append_string ("--array-size=")
+				cmd := STRING_.appended_string (cmd, array_size.out)
 			end
 				-- Option -b
 			if backup then
@@ -234,6 +246,12 @@ feature -- Execution
 				-- Option -x
 			if separate_actions then
 				cmd.append_string ("-x ")
+			end
+				-- Option --inspect_actions
+			if inspect_actions /= Void and then not inspect_actions.is_empty then
+				cmd.append_string ("--inspect-actions=")
+				cmd.append_string (inspect_actions)
+				cmd.append_character (' ')
 			end
 				-- Option -o
 			if output_filename /= Void and then output_filename.count > 0 then

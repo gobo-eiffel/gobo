@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Lex command lines"
 
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,8 +61,9 @@ feature -- Parsing
 			a_meta_ecs_flag: AP_FLAG
 			a_nodefault_flag: AP_FLAG
 			a_nowarn_flag: AP_FLAG
-			a_sep_file_flag: AP_FLAG
+			a_separate_actions_flag: AP_FLAG
 			an_inspect_flag: AP_FLAG
+			an_inspect_actions_option: AP_BOOLEAN_OPTION
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
 			an_error: AP_ERROR
 		do
@@ -75,7 +76,7 @@ feature -- Parsing
 			create a_list.make (a_version_flag)
 			a_parser.alternative_options_lists.force_last (a_list)
 
-			create a_size_option.make_with_short_form ('a')
+			create a_size_option.make ('a', "array-size")
 			a_size_option.set_description ("Split manifest arrays larger than 'size'.")
 			a_size_option.set_parameter_description ("size")
 			a_parser.options.force_last (a_size_option)
@@ -128,15 +129,18 @@ feature -- Parsing
 			a_nowarn_flag.set_description ("Suppress warnings.")
 			a_parser.options.force_last (a_nowarn_flag)
 
-			create a_sep_file_flag.make_with_short_form ('x')
-			a_sep_file_flag.set_description ("Write each semantic action into a separate routine.")
-			a_parser.options.force_last (a_sep_file_flag)
+			create a_separate_actions_flag.make_with_short_form ('x')
+			a_separate_actions_flag.set_description ("Write each semantic action into a separate routine.")
+			a_parser.options.force_last (a_separate_actions_flag)
 
 
 			create an_inspect_flag.make ('z', "inspect")
 			an_inspect_flag.set_description ("The generated code uses an inspect instruction to find out which action to execute.")
-
 			a_parser.options.force_last (an_inspect_flag)
+			create an_inspect_actions_option.make_with_long_form ("inspect_actions")
+			an_inspect_actions_option.set_description ("The generated code uses an inspect instruction to find out which action to execute.")
+			an_inspect_actions_option.set_parameter_as_optional
+			a_parser.options.force_last (an_inspect_actions_option)
 
 			a_parser.parse_arguments
 
@@ -202,12 +206,14 @@ feature -- Parsing
 				options.set_no_warning (True)
 			end
 
-			if a_sep_file_flag.was_found then
+			if a_separate_actions_flag.was_found then
 				options.set_actions_separated (True)
 			end
 
 			if an_inspect_flag.was_found then
 				options.set_inspect_used (True)
+			elseif an_inspect_actions_option.was_found then
+				options.set_inspect_used (an_inspect_actions_option.is_true)
 			end
 
 			if a_parser.parameters.count /= 1 then

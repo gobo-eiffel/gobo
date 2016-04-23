@@ -5,7 +5,7 @@ note
 		"Lexical analyzer descriptions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,8 +24,9 @@ feature {NONE} -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
-			array_size := 1000
+			array_size := default_array_size
 			line_pragma := True
+			inspect_used := True
 			create rules.make (Initial_max_rules)
 			create eof_rules.make (Initial_max_start_conditions)
 			create eiffel_header.make (1)
@@ -40,7 +41,7 @@ feature -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
-			array_size := 1000
+			array_size := default_array_size
 			rules.wipe_out
 			eof_rules.wipe_out
 			eiffel_header.wipe_out
@@ -53,7 +54,7 @@ feature -- Initialization
 			no_default_rule := False
 			no_warning := False
 			actions_separated := False
-			inspect_used := False
+			inspect_used := True
 			reject_used := False
 			line_used := False
 			position_used := False
@@ -472,6 +473,9 @@ feature -- Setting
 		end
 
 feature {NONE} -- Constants
+
+	default_array_size: INTEGER = 200
+			-- Default value for `array_size'
 
 	Initial_max_start_conditions: INTEGER = 40
 			-- Maximum number of start conditions

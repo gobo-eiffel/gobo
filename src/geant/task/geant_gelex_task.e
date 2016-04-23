@@ -5,7 +5,7 @@ note
 		"Gelex tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,14 @@ feature {NONE} -- Initialization
 			if has_attribute (Size_attribute_name) then
 				a_value := attribute_value (Size_attribute_name)
 				if a_value.is_integer then
-					command.set_size (a_value)
+					command.set_array_size (a_value)
+				end
+			end
+				-- array_size:
+			if has_attribute (Array_size_attribute_name) then
+				a_value := attribute_value (Array_size_attribute_name)
+				if a_value.is_integer then
+					command.set_array_size (a_value)
 				end
 			end
 				-- backup:
@@ -73,7 +80,14 @@ feature {NONE} -- Initialization
 			end
 				-- separate_actions:
 			if has_attribute (Separate_actions_attribute_name) then
-				command.set_separate_actions (boolean_value(Separate_actions_attribute_name))
+				command.set_separate_actions (boolean_value (Separate_actions_attribute_name))
+			end
+				-- inspect_actions:
+			if has_attribute (Inspect_actions_attribute_name) then
+				a_value := attribute_value (Inspect_actions_attribute_name)
+				if a_value.count > 0 then
+					command.set_inspect_actions (a_value)
+				end
 			end
 				-- output_filename:
 			if has_attribute (Output_filename_attribute_name) then
@@ -105,9 +119,28 @@ feature -- Access
 feature {NONE} -- Constants
 
 	Size_attribute_name: STRING
-			-- Name of xml attribute for size
+			-- Name of xml attribute for size.
+			-- Obsolete: use 'array_size' instead.
 		once
 			Result := "size"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Array_size_attribute_name: STRING
+			-- Name of xml attribute for array_size
+		once
+			Result := "array_size"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Inspect_actions_attribute_name: STRING
+			-- Name of xml attribute for inspect_actions
+		once
+			Result := "inspect_actions"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

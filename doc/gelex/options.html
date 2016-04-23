@@ -190,20 +190,26 @@ Following is <em>gelex</em> command-line usage message:</p>
 <blockquote>
     <pre><font color="#800000">gelex </font>[<font
 color="#800000">--version</font>][<font color="#800000">--help</font>][<font
-color="#800000">-bcefhimsVwxz?</font>][<font color="#800000">-a size</font>][<font
-color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
+color="#800000">-bcefhimsVwxz?</font>][<font color="#800000">-a size</font>][<font color="#800000">--array-size=size</font>][<font color="#800000">--backup</font>]
+      [<font color="#800000">--ecs</font>][<font color="#800000">--[no]full</font>][<font color="#800000">--case-insensitive</font>][<font color="#800000">--inspect-actions[=(yes|no)]</font>][<font color="#800000">--meta-ecs</font>]
+      [<font color="#800000">--outfile=filename</font>][<fontcolor="#800000">-o filename</font>][<font color="#800000">--pragma=[no]line</font>][<font color="#800000">--nodefault</font>][<font color="#800000">--nowarn</font>]<font color="#800000"> filename</font>
+</pre>
 </blockquote>
 
 <p>The command-line options have the following meanings:</p>
 
 <dl>
+	<dt><a name="-V"><font color="#800000"><tt>-V</tt></font></a></dt>
     <dt><a name="--version"><font color="#800000"><tt>--version</tt></font></a></dt>
     <dd><font size="3">Print <em>gelex</em> version number to the
         standard output and exit.</font></dd>
+    <dt><font color="#800000"><tt>-h</tt></font></dt>
+    <dt><font color="#800000"><tt>-?</tt></font></dt>
     <dt><a name="--help"><font color="#800000"><tt>--help</tt></font></a></dt>
     <dd><font size="3">Print <em>gelex</em> usage message to the
         standard output and exit.</font></dd>
     <dt><font color="#800000"><tt>-a size</tt></font></dt>
+    <dt><font color="#800000"><tt>--array-size=size</tt></font></dt>
     <dd><font size="3">Some Eiffel compilers experience
         difficulties to process big manifest arrays. This option
         directs <em>gelex</em> to split manifest arrays with more
@@ -212,40 +218,55 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
         option can be disabled by setting </font><font
         color="#800000"><tt>size</tt></font><font size="3"> to </font><font
         color="#800000"><tt>0</tt></font><font size="3">.
-        [default: </font><font color="#800000"><tt>1000</tt></font><font
+        [default: </font><font color="#800000"><tt>200</tt></font><font
         size="3">]</font></dd>
     <dt><font color="#800000"><tt>-b</tt></font></dt>
+    <dt><font color="#800000"><tt>--backup</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#backup"><font
         color="#800000"><tt>backup</tt></font></a><font size="3">.</font></dd>
     <dt><font color="#800000"><tt>-c</tt></font></dt>
+    <dt><font color="#800000"><tt>--nofull</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#full"><font
         color="#800000"><tt>nofull</tt></font></a><font size="3">.</font></dd>
     <dt><font color="#800000"><tt>-e</tt></font></dt>
+    <dt><font color="#800000"><tt>--ecs</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#ecs"><font
         color="#800000"><tt>ecs</tt></font></a><font size="3">.</font></dd>
     <dt><font color="#800000"><tt>-f</tt></font></dt>
+    <dt><font color="#800000"><tt>--full</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#full"><font
         color="#800000"><tt>full</tt></font></a><font size="3">.</font></dd>
-    <dt><font color="#800000"><tt>-h</tt></font></dt>
-    <dd><font size="3">Synonym for </font><a href="#--help"><font
-        color="#800000"><tt>--help</tt></font></a><font size="3">.</font></dd>
     <dt><font color="#800000"><tt>-i</tt></font></dt>
+    <dt><font color="#800000"><tt>--case-insensitive</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a
         href="#case-insensitive"><font color="#800000"><tt>case-insensitive</tt></font></a><font
         size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-z</tt></font></dt>
+        <dt><font color="#800000"><tt>--inspect-actions[=(yes|no)]</tt></font></dt>
+    <dd><font size="3">The generated code uses an <em>inspect</em>
+        instruction to find out which action to execute. This is the
+        default. Otherwise, a binary-search implemented with <em>if</em>
+        instructions is used.</font></dd>
     <dt><font color="#800000"><tt>-m</tt></font></dt>
+    <dt><font color="#800000"><tt>--meta-ecs</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#meta-ecs"><font
         color="#800000"><tt>meta-ecs</tt></font></a><font
         size="3">.</font></dd>
+    <dt><font color="#800000"><tt>-o filename</tt></font></dt>
+    <dt><font color="#800000"><tt>--outfile=filename</tt></font></dt>
+    <dd><font size="3">Equivalent to </font><a href="#outfile"><font
+        color="#800000"><tt>outfile=&quot;filename&quot;</tt></font></a></dd>
+    <dt><font color="#800000"><tt>--pragma=[no]line</tt></font></dt>
+    <dd>The code generated for the semantic actions contains (or
+        not) indication about the line number where it originally
+        appeared in the input description file.</dd>
     <dt><font color="#800000"><tt>-s</tt></font></dt>
+    <dt><font color="#800000"><tt>--nodefault</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#nodefault"><font
         color="#800000"><tt>nodefault</tt></font></a><font
         size="3">.</font></dd>
-    <dt><font color="#800000"><tt>-V</tt></font></dt>
-    <dd><font size="3">Synonym for </font><a href="#--version"><font
-        color="#800000"><tt>--version</tt></font></a><font
-        size="3">.</font></dd>
     <dt><font color="#800000"><tt>-w</tt></font></dt>
+    <dt><font color="#800000"><tt>--nowarn</tt></font></dt>
     <dd><font size="3">Equivalent to </font><a href="#nowarn"><font
         color="#800000"><tt>nowarn</tt></font></a><font size="3">.</font></dd>
     <dt><font color="#800000"><tt>-x</tt></font></dt>
@@ -253,21 +274,6 @@ color="#800000">-o filename</font>]<font color="#800000"> filename</font></pre>
         default is to write all actions into the same routine,
         which can become too large for C back-end compilers to
         handle.</dd>
-    <dt><font color="#800000"><tt>-z</tt></font></dt>
-    <dd><font size="3">The generated code uses an <em>inspect</em>
-        instruction to find out which action to execute. The
-        default is to use binary-search implemented with <em>if</em>
-        instructions.</font></dd>
-    <dt><font color="#800000"><tt>-?</tt></font></dt>
-    <dd><font size="3">Synonym for </font><a href="#--help"><font
-        color="#800000"><tt>--help</tt></font></a><font size="3">.</font></dd>
-    <dt><font color="#800000"><tt>-o filename</tt></font></dt>
-    <dd><font size="3">Equivalent to </font><a href="#outfile"><font
-        color="#800000"><tt>outfile=&quot;filename&quot;</tt></font></a></dd>
-    <dt><font color="#800000"><tt>--pragma=[no]line</tt></font></dt>
-    <dd>The code generated for the semantic actions contains (or
-        not) indication about the line number where it originally
-        appeared in the input description file.</dd>
     <dt><font color="#800000"><tt>--</tt></font></dt>
     <dd>Mark the end of the options. Useful when the scanner
         description filename begins with character '<tt>-</tt>'.</dd>
@@ -291,7 +297,7 @@ the <font size="3">input file.</font></p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000-2004</b></font><font
+            <font size="2"><b>Copyright © 2000-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -301,12 +307,12 @@ the <font size="3">input file.</font></p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 13 July 2004</font><br>
+            <strong>Last Updated:</strong> 22 April 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

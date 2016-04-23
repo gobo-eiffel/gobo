@@ -18,6 +18,7 @@ Version 3.10 - ?
 	  to the working directory where geant is currently running).
 	* Added optional attribute 'fail_on_error' to task <delete> (true
 	  by default).
+	* Added attributes 'array_size' and 'inspect_actions' to task <gelex>.
 
 	gec:
 
@@ -42,6 +43,10 @@ Version 3.10 - ?
 	* Made the generated scanners compilable in void-safe mode with ISE 7.3.
 	* Added support for pushing and popping start conditions.
 	* Added `reset_with_string' and `reset_with_file' in YY_SCANNER.
+	* Changed the default maximum size for manifest arrays to be 200.
+	* Changed the default for semantic actions to use 'inspect' instructions
+	  instead of binary search with 'if' instructions.
+	* Updated the documentation for the command-line options.
 
 	gelint:
 

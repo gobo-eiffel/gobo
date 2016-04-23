@@ -6,7 +6,7 @@
 		"Gelex Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelex_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2016</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date> 22 April 2016</date>
 </chapterinfo>
 
 	<title>gelex</title>
@@ -65,15 +65,15 @@
 			</varlistentry>
 
 			<varlistentry>
-				<term>size</term>
+				<term>array_size</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>size</para>
+					<para><emphasis>Description: </emphasis>array_size</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Integer</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>1000</para>
+					<para><emphasis>Default: </emphasis>200</para>
 				</listitem>
 			</varlistentry>
 
@@ -177,7 +177,20 @@
 					<para><emphasis>Domain: </emphasis>-</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>-</para>
+					<para><emphasis>Default: </emphasis>False</para>
+				</listitem>
+			</varlistentry>
+			
+			<varlistentry>
+				<term>inspect_actions</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>inspect_actions</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>-</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>True</para>
 				</listitem>
 			</varlistentry>
 
@@ -199,7 +212,7 @@
         <attribute name="backup"/>
       </optional>
       <optional>
-        <attribute name="size"/>
+        <attribute name="array_size"/>
       </optional>
       <optional>
         <attribute name="ecs"/>
@@ -223,6 +236,9 @@
       </optional>
       <optional>
         <attribute name="separate_actions"/>
+      </optional>
+      <optional>
+        <attribute name="inspect_actions"/>
       </optional>
     </element>
   </define>
