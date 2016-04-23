@@ -96,6 +96,7 @@ Version 3.10 - ?
 	Gobo Eiffel Argument Library:
 
 	* Made it compilable in void-safe mode with ISE 13.11.
+	* Made the parameter of boolean options possibly optional.
 
 	Gobo Eiffel Kernel Library:
 

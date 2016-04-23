@@ -5,7 +5,7 @@ note
 		"Options that need a yes or no parameter"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Perform the common initialization steps.
 		do
+			needs_parameter := True
 			Precursor
 			set_parameter_description ("yes|no")
 		end
@@ -90,8 +91,20 @@ feature -- Status report
 
 	needs_parameter: BOOLEAN
 			-- Does this option need a parameter?
+
+feature -- Status setting
+
+	set_parameter_as_optional
+			-- Set the parameter as optional. If no parameter is given,
+			-- the corresponding parameter value is set to `True'. This
+			-- only works for long forms and makes it impossible to
+			-- specify the parameter as `--option parameter'.
+		require
+			not_short_form: not has_short_form
 		do
-			Result := True
+			needs_parameter := False
+		ensure
+			not_needed: not needs_parameter
 		end
 
 feature {AP_PARSER} -- Parser Interface
@@ -109,18 +122,15 @@ feature {AP_PARSER} -- Parser Interface
 			l_last_option_parameter: detachable STRING
 		do
 			l_last_option_parameter := a_parser.last_option_parameter
-			check
-					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
-				parameter_needed: l_last_option_parameter /= Void
-			then
-				if true_strings.has (l_last_option_parameter) then
-					parameters.force_last (True)
-				elseif false_strings.has (l_last_option_parameter) then
-					parameters.force_last (False)
-				else
-					create error.make_invalid_parameter_error (Current, l_last_option_parameter)
-					a_parser.error_handler.report_error (error)
-				end
+			if l_last_option_parameter = Void then
+				parameters.force_last (True)
+			elseif true_strings.has (l_last_option_parameter) then
+				parameters.force_last (True)
+			elseif false_strings.has (l_last_option_parameter) then
+				parameters.force_last (False)
+			else
+				create error.make_invalid_parameter_error (Current, l_last_option_parameter)
+				a_parser.error_handler.report_error (error)
 			end
 		end
 
