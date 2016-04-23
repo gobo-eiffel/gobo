@@ -48,6 +48,8 @@ Version 3.10 - ?
 	* Changed the default for semantic actions to use 'inspect' instructions
 	  instead of binary search with 'if' instructions.
 	* Updated the documentation for the command-line options.
+	* Fixed generation of manifest arrays when the size of the generated table
+	  is a multiple of the maximum array size.
 
 	gelint:
 
@@ -100,6 +102,8 @@ Version 3.10 - ?
 	  to catch abort exceptions. Useful when compiling in void-safe mode.
 	* Added option '--array-size' and changed the default maximum size for 
 	  manifest arrays to be 200.
+	* Fixed generation of manifest arrays when the size of the generated table
+	  is a multiple of the maximum array size.
 	
 	Gobo Eiffel Argument Library:
 

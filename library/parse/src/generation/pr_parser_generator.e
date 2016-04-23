@@ -653,9 +653,14 @@ feature {NONE} -- Generation
 			if array_size = 0 then
 				nb := 1
 			else
-				nb := a_table.count // array_size + 1
+				nb := a_table.count // array_size
+				if a_table.count \\ array_size /= 0 then
+					nb := nb + 1
+				end
 			end
-			if nb = 1 then
+			if nb = 0 then
+				a_file.put_string ("%T%Tonce%N%T%T%TResult := yyfixed_array (<<yyDummy>>)%N%T%Tend%N")
+			elseif nb = 1 then
 				a_file.put_string ("%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
 				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
 				a_file.put_string (", yyDummy>>)%N%T%Tend%N")
