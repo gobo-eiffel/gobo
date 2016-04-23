@@ -19,6 +19,7 @@ Version 3.10 - ?
 	* Added optional attribute 'fail_on_error' to task <delete> (true
 	  by default).
 	* Added attributes 'array_size' and 'inspect_actions' to task <gelex>.
+	* Added attribute 'array_size' to task <geyacc>.
 
 	gec:
 
@@ -97,7 +98,9 @@ Version 3.10 - ?
 	* Made the generated parsers compilable in void-safe mode with ISE 7.3.
 	* Added option --rescue-on-abort to generate a rescue clause in action routines
 	  to catch abort exceptions. Useful when compiling in void-safe mode.
-
+	* Added option '--array-size' and changed the default maximum size for 
+	  manifest arrays to be 200.
+	
 	Gobo Eiffel Argument Library:
 
 	* Made it compilable in void-safe mode with ISE 13.11.

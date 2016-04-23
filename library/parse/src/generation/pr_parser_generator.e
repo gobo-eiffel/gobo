@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			build_yytypes1
 			build_yytypes2
 			build_action_tables
-			array_size := 1000
+			array_size := default_array_size
 			line_pragma := True
 			input_filename := Default_input_filename
 		ensure
@@ -62,6 +62,9 @@ feature -- Access
 	input_filename: STRING
 			-- Input filename
 
+	array_size: INTEGER
+			-- Maximum size supported for manifest arrays
+
 feature -- Setting
 
 	set_input_filename (a_filename: like input_filename)
@@ -72,6 +75,16 @@ feature -- Setting
 			input_filename := a_filename
 		ensure
 			input_filename_set: input_filename = a_filename
+		end
+
+	set_array_size (i: INTEGER)
+			-- Set `array_size' to `i'.
+		require
+			i_not_negative: i >= 0
+		do
+			array_size := i
+		ensure
+			array_size_set: array_size = i
 		end
 
 feature -- Status setting
@@ -1907,12 +1920,10 @@ feature {NONE} -- Building
 			yydefgoto.put (default_state, a_variable.id)
 		end
 
-feature {NONE} -- Access
-
-	array_size: INTEGER
-			-- Maximum size supported for manifest arrays
-
 feature {NONE} -- Constants
+
+	default_array_size: INTEGER = 200
+			-- Default value for `array_size'
 
 	Initial_max_table_size: INTEGER = 500
 			-- Initial capacity for `yytable' and `yycheck'
@@ -1940,5 +1951,6 @@ invariant
 
 	machine_not_void: machine /= Void
 	input_filename_not_void: input_filename /= Void
+	array_size_not_negative: array_size >= 0
 
 end

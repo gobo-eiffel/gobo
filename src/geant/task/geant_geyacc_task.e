@@ -5,7 +5,7 @@ note
 		"Geyacc tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2013, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GEANT_TASK} (a_project, an_xml_element)
 
+				-- array_size:
+			if has_attribute (Array_size_attribute_name) then
+				a_value := attribute_value (Array_size_attribute_name)
+				if a_value.is_integer then
+					command.set_array_size (a_value)
+				end
+			end
 				-- rescue_on_abort:
 			if has_attribute (Rescue_on_abort_attribute_name) then
 				command.set_rescue_on_abort (boolean_value (Rescue_on_abort_attribute_name))
@@ -96,6 +103,15 @@ feature -- Access
 
 feature {NONE} -- Constants
 
+	Array_size_attribute_name: STRING
+			-- Name of xml attribute for array_size
+		once
+			Result := "array_size"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
 	Rescue_on_abort_attribute_name: STRING
 			-- Name of xml attribute for rescue_on_abort
 		once
@@ -104,7 +120,7 @@ feature {NONE} -- Constants
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
-		
+
 	Separate_actions_attribute_name: STRING
 			-- Name of xml attribute for separate_actions
 		once

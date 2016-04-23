@@ -125,6 +125,17 @@ color="#800000"><tt>=</tt></font>. </p>
         default is to write all semantic actions into the same
         routine, which can become too large for C back-end
         compilers to handle.</dd>
+    <dt><font color="#800000"><tt>--array-size=size</tt></font></dt>
+    <dd><font size="3">Some Eiffel compilers experience
+        difficulties to process big manifest arrays. This option
+        directs <em>geyacc</em> to split manifest arrays with more
+        than </font><font color="#800000"><tt>size</tt></font><font
+        size="3"> elements into several smaller arrays. This
+        option can be disabled by setting </font><font
+        color="#800000"><tt>size</tt></font><font size="3"> to </font><font
+        color="#800000"><tt>0</tt></font><font size="3">.
+        [default: </font><font color="#800000"><tt>200</tt></font><font
+        size="3">]</font></dd>
     <dt><font color="#800000"><tt>--rescue-on-abort</tt></font></dt>
     <dd>Write a rescue clause in the action routines to catch abort exceptions. Useful when compiling in void-safe mode.</dd>
 </dl>
@@ -134,7 +145,7 @@ color="#800000"><tt>=</tt></font>. </p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001-2013</b></font><font
+            <font size="2"><b>Copyright © 2001-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -144,7 +155,7 @@ color="#800000"><tt>=</tt></font>. </p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 23 November 2013</font><br>
+            <strong>Last Updated:</strong> 22 April 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

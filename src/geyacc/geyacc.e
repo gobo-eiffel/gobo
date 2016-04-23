@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Yacc: syntactical analyzer generator"
 
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,6 +45,7 @@ feature -- Processing
 			Arguments.set_program_name ("geyacc")
 			create error_handler.make_standard
 			line_pragma := True
+			array_size := -1
 			read_command_line
 			parse_input_file
 			if grammar /= Void then
@@ -87,6 +88,9 @@ feature -- Processing
 					end
 					create parser_generator.make (fsm)
 					parser_generator.set_line_pragma (line_pragma)
+					if array_size >= 0 then
+						parser_generator.set_array_size (array_size)
+					end
 					if input_filename /= Void then
 						parser_generator.set_input_filename (input_filename)
 					end
@@ -158,6 +162,7 @@ feature -- Processing
 			i, nb: INTEGER
 			arg: STRING
 			a_pragma: STRING
+			l_string: STRING
 		do
 			nb := Arguments.argument_count
 			from i := 1 until i > nb loop
@@ -198,6 +203,13 @@ feature -- Processing
 					end
 				elseif arg.count > 14 and then arg.substring (1, 14).is_equal ("--tokens-file=") then
 					token_filename := arg.substring (15, arg.count)
+				elseif arg.count > 13 and then arg.substring (1, 13).is_equal ("--array-size=") then
+					l_string := arg.substring (14, arg.count)
+					if l_string.is_integer and then l_string.to_integer >= 0 then
+						array_size := l_string.to_integer
+					else
+						report_usage_error
+					end
 				elseif arg.is_equal ("-o") then
 					i := i + 1
 					if i > nb then
@@ -257,16 +269,19 @@ feature -- Access
 	token_filename: STRING
 	verbose_filename: STRING
 	actions_separated: BOOLEAN
-	
+
 	rescue_on_abort: BOOLEAN
 			-- Should a rescue clause be generated in the action routines
 			-- to catch abort exceptions? Useful when compiling in void-safe mode.
-	
+
 	doc_format: STRING
 			-- Command line arguments
 
 	line_pragma: BOOLEAN
 			-- Should line pragma be generated?
+
+	array_size: INTEGER
+			-- Maximum size supported for manifest arrays
 
 	grammar: PR_GRAMMAR
 			-- Grammar description
@@ -310,7 +325,7 @@ feature {NONE} -- Error handling
 		once
 			create Result.make ("[--version][--help][-hxV?]%N%
 				%%T[--pragma=[no]line][--doc=(html|xml)][--rescue-on-abort][-t classname]%N%
-				%%T[-k filename][-v filename][-o filename] filename")
+				%%T[--array-size=size][-k filename][-v filename][-o filename] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

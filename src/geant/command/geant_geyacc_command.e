@@ -5,7 +5,7 @@ note
 		"Geyacc commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2013, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			precursor (a_project)
 			output_filename := ""
 			input_filename := ""
+			array_size := ""
 		end
 
 feature -- Status report
@@ -46,12 +47,15 @@ feature -- Status report
 
 feature -- Access
 
+	array_size: detachable STRING
+			-- --array-size option, default: 200
+
 	verbose_filename: STRING
 			-- -v option
 
 	rescue_on_abort: BOOLEAN
 			-- --rescue-on-abort option, default: false
-			
+
 	separate_actions: BOOLEAN
 			-- -x option, default: false
 
@@ -68,6 +72,17 @@ feature -- Access
 			-- Input filename
 
 feature -- Setting
+
+	set_array_size (a_size: STRING)
+			-- Set `array_size' to `a_size'.
+		require
+			a_size_not_void: a_size /= Void
+			a_size_is_integer: a_size.is_integer
+		do
+			array_size := a_size
+		ensure
+			array_size_set: array_size = a_size
+		end
 
 	set_verbose_filename (a_filename: like verbose_filename)
 			-- Set `verbose_filename' to `a_filename'.
@@ -87,7 +102,7 @@ feature -- Setting
 		ensure
 			rescue_on_abort_set: rescue_on_abort = b
 		end
-		
+
 	set_separate_actions (b: BOOLEAN)
 			-- Set  `separate_actions' to `b'.
 		do
@@ -150,6 +165,11 @@ feature -- Execution
 		do
 			create cmd.make (128)
 			cmd.append_string ("geyacc ")
+				-- Option --array-size
+			if array_size /= Void and then array_size.count > 0 then
+				cmd.append_string ("--array-size=")
+				cmd := STRING_.appended_string (cmd, array_size.out)
+			end
 				-- Option -v
 			if verbose_filename /= Void and then verbose_filename.count > 0 then
 				a_filename := file_system.pathname_from_file_system (verbose_filename, unix_file_system)
