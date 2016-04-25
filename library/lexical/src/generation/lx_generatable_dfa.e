@@ -747,8 +747,19 @@ feature {NONE} -- Generation
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
 					a_file.put_integer (j)
-					a_file.put_string (" (an_array: ARRAY [INTEGER])%N%
-						%%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+					a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
+					a_file.put_string ("%T%T%T-- Fill chunk #")
+					a_file.put_integer (j)
+					a_file.put_string (" of ")
+					if a_name.ends_with ("_template") then
+						a_file.put_string ("template for `")
+						a_file.put_string (a_name.substring (1, a_name.count - 9))
+					else
+						a_file.put_character ('`')
+						a_file.put_string (a_name)
+					end
+					a_file.put_string ("%'.%N")
+					a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
 					a_file.put_string (", yy_Dummy>>,%N%T%T%T")
