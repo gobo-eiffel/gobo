@@ -12,6 +12,9 @@
 
 #ifndef GE_EIFFEL_H
 #define GE_EIFFEL_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)
 #include <unistd.h>

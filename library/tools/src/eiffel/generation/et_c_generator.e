@@ -1957,6 +1957,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_arguments_32_function_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_function_body (a_feature)
+			when builtin_com_failure_class then
+				print_external_builtin_com_failure_function_body (a_feature)
 			when builtin_exception_manager_class then
 				print_external_builtin_exception_manager_function_body (a_feature)
 			when builtin_exception_manager_factory_class then
@@ -2150,6 +2152,61 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_com_failure_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "COM_FAILURE".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_com_failure: (a_feature.builtin_code // builtin_capacity) = builtin_com_failure_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_com_failure_c_strlen then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_c_strlen_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_com_failure_ccom_hresult then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_ccom_hresult_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_com_failure_ccom_hresult_code then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_ccom_hresult_code_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_com_failure_ccom_hresult_facility then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_ccom_hresult_facility_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_com_failure_character_size then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_character_size_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_com_failure_cwin_error_text then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_com_failure_cwin_error_text_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_exception_manager_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
 			-- `a_feature' is a built-in function introduced in class "EXCEPTION_MANAGER".
@@ -2289,7 +2346,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_memory_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "MEMORY" and relates classes.
+			-- `a_feature' is a built-in function introduced in class "MEMORY".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -3138,6 +3195,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_any_procedure_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_procedure_body (a_feature)
+			when builtin_com_failure_class then
+				print_external_builtin_com_failure_procedure_body (a_feature)
 			when builtin_exception_manager_class then
 				print_external_builtin_exception_manager_procedure_body (a_feature)
 			when builtin_identified_class then
@@ -3238,9 +3297,32 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
+	print_external_builtin_com_failure_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "COM_FAILURE".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_com_failure: (a_feature.builtin_code // builtin_capacity) = builtin_com_failure_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_com_failure_cwin_local_free then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_com_failure_cwin_local_free_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
 	print_external_builtin_exception_manager_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "EXCEPTION_MANAGER" and related classes.
+			-- `a_feature' is a built-in procedure introduced in class "EXCEPTION_MANAGER".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -3290,7 +3372,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_ise_exception_manager_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "ISE_EXCEPTION_MANAGER" and related classes.
+			-- `a_feature' is a built-in procedure introduced in class "ISE_EXCEPTION_MANAGER".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -3313,7 +3395,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_memory_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "MEMORY" and related classes.
+			-- `a_feature' is a built-in procedure introduced in class "MEMORY".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
@@ -7171,6 +7253,8 @@ feature {NONE} -- Procedure call generation
 				print_builtin_sized_character_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_32_class then
 				print_builtin_sized_character_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_class then
+				print_builtin_com_failure_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_identified_class then
 				print_builtin_identified_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_integer_8_class then
@@ -7254,6 +7338,27 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
+	print_builtin_com_failure_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "COM_FAILURE".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_com_failure: (a_feature.builtin_code // builtin_capacity) = builtin_com_failure_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_com_failure_cwin_local_free then
+				print_builtin_com_failure_cwin_local_free_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
 	print_builtin_identified_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
 			-- `a_feature' is a built-in feature introduced in class "IDENTIFIED" and related classes.
@@ -7277,7 +7382,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_ise_exception_manager_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "ISE_EXCEPTION_MANAGER" and related classes.
+			-- `a_feature' is a built-in feature introduced in class "ISE_EXCEPTION_MANAGER".
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -7298,7 +7403,7 @@ feature {NONE} -- Procedure call generation
 
 	print_builtin_memory_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "MEMORY" and related classes.
+			-- `a_feature' is a built-in feature introduced in class "MEMORY".
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -13063,6 +13168,8 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_character_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_32_class then
 				print_builtin_sized_character_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_class then
+				print_builtin_com_failure_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_function_class then
 				print_builtin_function_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_identified_class then
@@ -13200,6 +13307,41 @@ feature {NONE} -- Query call generation
 				print_builtin_boolean_or_else_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_xor then
 				print_builtin_boolean_xor_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_com_failure_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "COM_FAILURE".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_com_failure: (a_feature.builtin_code // builtin_capacity) = builtin_com_failure_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_com_failure_c_strlen then
+				print_builtin_com_failure_c_strlen_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_ccom_hresult then
+				print_builtin_com_failure_ccom_hresult_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_ccom_hresult_code then
+				print_builtin_com_failure_ccom_hresult_code_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_ccom_hresult_facility then
+				print_builtin_com_failure_ccom_hresult_facility_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_character_size then
+				print_builtin_com_failure_character_size_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_com_failure_cwin_error_text then
+				print_builtin_com_failure_cwin_error_text_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -18002,6 +18144,248 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_c_strlen_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.c_strlen.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_strlen)
+				current_file.put_character ('(')
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_ccom_hresult_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.ccom_hresult.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_hresult)
+				current_file.put_character ('(')
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_ccom_hresult_code_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.ccom_hresult_code.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_hresult_code)
+				current_file.put_character ('(')
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_ccom_hresult_facility_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.ccom_hresult_facility.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_hresult_facility)
+				current_file.put_character ('(')
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_character_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.character_size.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			if call_operands.count /= 1 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_character_size)
+				current_file.put_character ('(')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_cwin_error_text_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.cwin_error_text.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_argument := call_operands.item (2)
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_ge_ccom_error_text)
+				current_file.put_character ('(')
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_com_failure_cwin_local_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'COM_FAILURE.cwin_local_free'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				include_runtime_header_file ("ge_com_failure.h", False, header_file)
+				print_indentation
+				current_file.put_string (c_ge_ccom_local_free)
+				current_file.put_character ('(')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
@@ -29724,6 +30108,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_main.c")
 				elseif a_filename.same_string ("ge_real.h") then
 					included_runtime_c_files.force ("ge_real.c")
+				elseif a_filename.same_string ("ge_com_failure.h") then
+					included_runtime_c_files.force ("ge_com_failure.c")
 				elseif a_filename.same_string ("eif_cecil.h") then
 					included_runtime_c_files.force ("eif_cecil.c")
 				elseif a_filename.same_string ("eif_console.h") then
@@ -31595,6 +31981,13 @@ feature {NONE} -- Constants
 	c_ge_boxed: STRING = "GE_boxed"
 	c_ge_call: STRING = "GE_call"
 	c_ge_catcall: STRING = "GE_catcall"
+	c_ge_ccom_character_size: STRING = "GE_ccom_character_size"
+	c_ge_ccom_error_text: STRING = "GE_ccom_error_text"
+	c_ge_ccom_hresult: STRING = "GE_ccom_hresult"
+	c_ge_ccom_hresult_code: STRING = "GE_ccom_hresult_code"
+	c_ge_ccom_hresult_facility: STRING = "GE_ccom_hresult_facility"
+	c_ge_ccom_local_free: STRING = "GE_ccom_local_free"
+	c_ge_ccom_strlen: STRING = "GE_ccom_strlen"
 	c_ge_ceiling: STRING = "GE_ceiling"
 	c_ge_context: STRING = "GE_context"
 	c_ge_current_context: STRING = "GE_current_context"

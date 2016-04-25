@@ -122,58 +122,44 @@ feature {NONE} -- Implementation
 		end
 
 	frozen ccom_hresult (an_exception_code: POINTER): INTEGER
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.ccom_hresult not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen ccom_hresult_code (an_hresult: INTEGER): INTEGER
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.ccom_hresult_code not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen ccom_hresult_facility (an_hresult: INTEGER): INTEGER
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.ccom_hresult_facility not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen cwin_error_text (a_code: INTEGER): POINTER
 			-- Get text from error `a_code'. It is up to the caller to free
 			-- the returned buffer using `cwin_local_free'.
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.cwin_error_text not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen c_strlen (ptr: POINTER): INTEGER_32
 			-- Number of characters in `ptr'.
 			-- (export status {NONE})
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.c_strlen not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen character_size: INTEGER_32
 			-- Number of bytes occupied by a TCHAR.
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.character_size not implemented.%N")
+		external
+			"built_in"
 		end
 
 	frozen cwin_local_free (a_ptr: POINTER)
 			-- Free `a_ptr' using LocalFree.
---<		external
---<			"built_in"
-		do
-			print ("Gobo Error: COM_FAILURE.cwin_local_free not implemented.%N")
+		external
+			"built_in"
 		end
 
 feature {NONE} -- Accesss

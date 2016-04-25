@@ -127,6 +127,8 @@ feature {NONE} -- Built-in validity
 				check_builtin_pointer_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.arguments_32_class_name) then
 				check_builtin_arguments_32_function_validity (a_feature)
+			elseif l_name.same_class_name (tokens.com_failure_class_name) then
+				check_builtin_com_failure_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
 				check_builtin_memory_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.exception_manager_class_name) then
@@ -1581,6 +1583,122 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
 				end
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_com_failure_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Check validity of built-in `a_feature' from class "COM_FAILURE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List function names first, then procedure names.
+			if a_feature.name.same_feature_name (tokens.ccom_hresult_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'ccom_hresult (an_exception_code: POINTER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult (an_exception_code: POINTER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult (an_exception_code: POINTER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.ccom_hresult_code_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult_code))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'ccom_hresult_code (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult_code (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult_code (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.ccom_hresult_facility_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult_facility))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'ccom_hresult_facility (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult_facility (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'ccom_hresult_facility (an_hresult: INTEGER): INTEGER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.cwin_error_text_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_cwin_error_text))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'cwin_error_text (a_code: INTEGER): POINTER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
+						-- The signature should be 'cwin_error_text (a_code: INTEGER): POINTER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'cwin_error_text (a_code: INTEGER): POINTER'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.c_strlen_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_c_strlen))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'c_strlen (ptr: POINTER): INTEGER_32'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_32_type)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'c_strlen (ptr: POINTER): INTEGER_32'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_32_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
+						-- The signature should be 'c_strlen (ptr: POINTER): INTEGER_32'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_32_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.character_size_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_character_size))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'character_size: INTEGER_32'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
+						-- The signature should be 'character_size: INTEGER_32'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.cwin_local_free_feature_name) then
+					-- 'COM_FAILURE.cwin_local_free' should be a procedure.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_cwin_local_free))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -3543,6 +3661,8 @@ feature {NONE} -- Built-in validity
 				check_builtin_pointer_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.arguments_32_class_name) then
 				check_builtin_arguments_32_procedure_validity (a_feature)
+			elseif l_name.same_class_name (tokens.com_failure_class_name) then
+				check_builtin_com_failure_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
 				check_builtin_memory_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.exception_manager_class_name) then
@@ -4577,6 +4697,67 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_builtin_com_failure_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
+			-- Check validity of built-in `a_feature' from class "COM_FAILURE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+		do
+				-- List procedure names first, then function names.
+			if a_feature.name.same_feature_name (tokens.cwin_Local_free_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_cwin_local_free))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'cwin_local_free (a_ptr: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
+						-- The signature should be 'cwin_local_free (a_ptr: POINTER)'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, Void)
+				end
+			elseif a_feature.name.same_feature_name (tokens.ccom_hresult_feature_name) then
+					-- 'COM_FAILURE.ccom_hresult' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.ccom_hresult_code_feature_name) then
+					-- 'COM_FAILURE.ccom_hresult_code' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult_code))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.ccom_hresult_facility_feature_name) then
+					-- 'COM_FAILURE.ccom_hresult_facility' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_ccom_hresult_facility))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.cwin_error_text_feature_name) then
+					-- 'COM_FAILURE.cwin_error_text' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_cwin_error_text))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
+			elseif a_feature.name.same_feature_name (tokens.c_strlen_feature_name) then
+					-- 'COM_FAILURE.c_strlen' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_c_strlen))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.pointer_type.type>>, current_universe.integer_32_type)
+			elseif a_feature.name.same_feature_name (tokens.character_size_feature_name) then
+					-- 'COM_FAILURE.character_size' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_com_failure_feature (tokens.builtin_com_failure_character_size))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_32_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

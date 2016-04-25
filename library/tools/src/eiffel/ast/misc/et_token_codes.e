@@ -535,5 +535,21 @@ feature -- Built-in codes
 	builtin_ise_exception_manager_class: INTEGER = 28
 	builtin_ise_exception_manager_developer_raise: INTEGER = 1
 			-- Codes for built-in features from class "ISE_EXCEPTION_MANAGER"
-			
+
+	builtin_com_failure_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "COM_FAILURE"
+		do
+			Result := builtin_com_failure_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_com_failure_class: INTEGER = 29
+	builtin_com_failure_ccom_hresult: INTEGER = 1
+	builtin_com_failure_ccom_hresult_code: INTEGER = 2
+	builtin_com_failure_ccom_hresult_facility: INTEGER = 3
+	builtin_com_failure_cwin_error_text: INTEGER = 4
+	builtin_com_failure_c_strlen: INTEGER = 5
+	builtin_com_failure_character_size: INTEGER = 6
+	builtin_com_failure_cwin_local_free: INTEGER = 7
+			-- Codes for built-in features from class "COM_FAILURE"
+
 end

@@ -82,6 +82,14 @@ feature -- Class names
 			character_32_class_name_not_void: Result /= Void
 		end
 
+	com_failure_class_name: ET_CLASS_NAME
+			-- "COM_FAILURE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_com_failure_name)
+		ensure
+			com_failure_class_name_not_void: Result /= Void
+		end
+
 	disposable_class_name: ET_CLASS_NAME
 			-- "DISPOSABLE" class name
 		once
@@ -774,6 +782,14 @@ feature -- Feature names
 			boolean_field_feature_name_not_void: Result /= Void
 		end
 
+	c_strlen_feature_name: ET_FEATURE_NAME
+			-- 'c_strlen' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (c_strlen_name)
+		ensure
+			c_strlen_feature_name_not_void: Result /= Void
+		end
+
 	call_feature_name: ET_FEATURE_NAME
 			-- 'call' feature name
 		once
@@ -796,6 +812,30 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (catch_name)
 		ensure
 			catch_feature_name_not_void: Result /= Void
+		end
+
+	ccom_hresult_feature_name: ET_FEATURE_NAME
+			-- 'ccom_hresult' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ccom_hresult_name)
+		ensure
+			ccom_hresult_feature_name_not_void: Result /= Void
+		end
+
+	ccom_hresult_code_feature_name: ET_FEATURE_NAME
+			-- 'ccom_hresult_code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ccom_hresult_code_name)
+		ensure
+			ccom_hresult_code_feature_name_not_void: Result /= Void
+		end
+
+	ccom_hresult_facility_feature_name: ET_FEATURE_NAME
+			-- 'ccom_hresult_facility' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (ccom_hresult_facility_name)
+		ensure
+			ccom_hresult_facility_feature_name_not_void: Result /= Void
 		end
 
 	ceiling_real_32_feature_name: ET_FEATURE_NAME
@@ -854,6 +894,14 @@ feature -- Feature names
 			character_bytes_feature_name_not_void: Result /= Void
 		end
 
+	character_size_feature_name: ET_FEATURE_NAME
+			-- 'character_size' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (character_size_name)
+		ensure
+			character_size_feature_name_not_void: Result /= Void
+		end
+
 	closed_operands_feature_name: ET_FEATURE_NAME
 			-- 'closed_operands' feature name
 		once
@@ -908,6 +956,22 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (count_name)
 		ensure
 			count_feature_name_not_void: Result /= Void
+		end
+
+	cwin_error_text_feature_name: ET_FEATURE_NAME
+			-- 'cwin_error_text' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (cwin_error_text_name)
+		ensure
+			cwin_error_text_feature_name_not_void: Result /= Void
+		end
+
+	cwin_local_free_feature_name: ET_FEATURE_NAME
+			-- 'cwin_local_free' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (cwin_local_free_name)
+		ensure
+			cwin_local_free_feature_name_not_void: Result /= Void
 		end
 
 	deep_twin_feature_name: ET_FEATURE_NAME
@@ -3570,6 +3634,7 @@ feature -- Keyword and symbol names
 	capitalized_character_name: STRING = "CHARACTER"
 	capitalized_character_8_name: STRING = "CHARACTER_8"
 	capitalized_character_32_name: STRING = "CHARACTER_32"
+	capitalized_com_failure_name: STRING = "COM_FAILURE"
 	capitalized_disposable_name: STRING = "DISPOSABLE"
 	capitalized_double_name: STRING = "DOUBLE"
 	capitalized_exception_name: STRING = "EXCEPTION"
@@ -3684,6 +3749,9 @@ feature -- Keyword and symbol names
 	boolean_item_name: STRING = "boolean_item"
 			-- Name of Eiffel feature 'boolean_item'
 
+	c_strlen_name: STRING = "c_strlen"
+			-- Name of Eiffel feature 'c_strlen'
+
 	call_name: STRING = "call"
 			-- Name of Eiffel feature 'call'
 
@@ -3692,6 +3760,15 @@ feature -- Keyword and symbol names
 
 	catch_name: STRING = "catch"
 			-- Name of Eiffel feature 'catch'
+
+	ccom_hresult_name: STRING = "ccom_hresult"
+			-- Name of Eiffel feature 'ccom_hresult'
+
+	ccom_hresult_code_name: STRING = "ccom_hresult_code"
+			-- Name of Eiffel feature 'ccom_hresult_code'
+
+	ccom_hresult_facility_name: STRING = "ccom_hresult_facility"
+			-- Name of Eiffel feature 'ccom_hresult_facility'
 
 	ceiling_real_32_name: STRING = "ceiling_real_32"
 			-- Name of Eiffel feature 'ceiling_real_32'
@@ -3714,6 +3791,9 @@ feature -- Keyword and symbol names
 	character_bytes_name: STRING = "character_bytes"
 			-- Name of Eiffel feature 'character_bytes'
 
+	character_size_name: STRING = "character_size"
+			-- Name of Eiffel feature 'character_size'
+
 	closed_operands_name: STRING = "closed_operands"
 			-- Name of Eiffel feature 'closed_operands'
 
@@ -3734,6 +3814,12 @@ feature -- Keyword and symbol names
 
 	count_name: STRING = "count"
 			-- Name of Eiffel feature 'count'
+
+	cwin_error_text_name: STRING = "cwin_error_text"
+			-- Name of Eiffel feature 'cwin_error_text'
+
+	cwin_local_free_name: STRING = "cwin_local_free"
+			-- Name of Eiffel feature 'cwin_local_free'
 
 	deep_twin_name: STRING = "deep_twin"
 			-- Name of Eiffel feature 'deep_twin'
