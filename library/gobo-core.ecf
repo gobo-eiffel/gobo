@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="gobo-core" uuid="C8E29BA5-FA2D-4088-A05B-82AFF31B8E3B" library_target="gobo-core">
+	<target name="gobo-core">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+			</condition>
+		</library>
+		<library name="free_elks" location="$GOBO/library/free_elks/library.ecf" readonly="true">
+			<condition>
+				<custom name="GOBO_EIFFEL" value="ge"/>
+			</condition>
+		</library>
+		<library name="gobo-kernel" location="$GOBO\library\kernel\library.ecf"/>
+		<library name="gobo-pattern" location="$GOBO\library\pattern\gobo-pattern.ecf"/>
+		<library name="gobo-structure" location="$GOBO\library\structure\gobo-structure.ecf"/>
+		<library name="gobo-time" location="$GOBO\library\time\gobo-time.ecf"/>
+		<library name="gobo-math" location="$GOBO\library\math\gobo-math.ecf"/>
+		<cluster name="gobo-core" location=".\" recursive="false">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+			<cluster name="gobo-parse" location="$GOBO\library\parse\" recursive="true"/>
+			<cluster name="gobo-string" location="$GOBO\library\string\" recursive="true"/>
+			<cluster name="gobo-utility" location="$GOBO\library\utility\" recursive="true"/>
+			<cluster name="gobo-lexical" location="$GOBO\library\lexical\" recursive="true"/>
+			<cluster name="gobo-regexp" location="$GOBO\library\regexp\" recursive="true"/>
+			<cluster name="gobo-argument" location="$GOBO\library\argument\" recursive="true"/>
+		</cluster>
+	</target>
+</system>
