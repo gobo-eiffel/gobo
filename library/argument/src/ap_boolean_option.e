@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 	initialize
 			-- Perform the common initialization steps.
 		do
-			needs_parameter := True
 			Precursor
 			set_parameter_description ("yes|no")
 		end
@@ -87,11 +86,6 @@ feature -- Access
 	parameters: DS_LIST [BOOLEAN]
 			-- All parameters given to the option
 
-feature -- Status report
-
-	needs_parameter: BOOLEAN
-			-- Does this option need a parameter?
-
 feature -- Status setting
 
 	set_parameter_as_optional
@@ -102,9 +96,10 @@ feature -- Status setting
 		require
 			not_short_form: not has_short_form
 		do
-			needs_parameter := False
+			set_default_parameter (True)
 		ensure
 			not_needed: not needs_parameter
+			default_parameter_set: default_parameter = True
 		end
 
 feature {AP_PARSER} -- Parser Interface
@@ -119,11 +114,10 @@ feature {AP_PARSER} -- Parser Interface
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR
-			l_last_option_parameter: detachable STRING
 		do
-			l_last_option_parameter := a_parser.last_option_parameter
-			if l_last_option_parameter = Void then
-				parameters.force_last (True)
+			if not attached a_parser.last_option_parameter as l_last_option_parameter then
+				check precondition_parameter_if_needed: not needs_parameter end
+				parameters.force_last (default_parameter)
 			elseif true_strings.has (l_last_option_parameter) then
 				parameters.force_last (True)
 			elseif false_strings.has (l_last_option_parameter) then
