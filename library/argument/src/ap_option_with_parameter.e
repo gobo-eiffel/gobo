@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	default_value: like parameter
+
 	example: STRING
 			-- Example for the usage of the option
 		local
@@ -93,9 +95,13 @@ feature -- Access
 	parameter: detachable G
 			-- Last value give to the option
 		require
-			was_found: was_found
+			was_found: was_found or has_default_value
 		do
-			Result := parameters.last
+			if parameters.is_empty then
+				Result := default_value
+			else
+				Result := parameters.last
+			end
 		end
 
 	parameters: DS_LIST [detachable G]
@@ -117,6 +123,10 @@ feature -- Status report
 			Result := True
 		end
 
+	has_default_value: BOOLEAN
+			-- Has a default value been given to this parameter?
+
+
 feature -- Status setting
 
 	set_parameter_description (a_string: STRING)
@@ -128,6 +138,19 @@ feature -- Status setting
 		ensure
 			parameter_description_set: parameter_description = a_string
 		end
+
+
+feature -- Commands
+
+	set_default_value (a_value: like default_value)
+			-- Set `default_value' to `a_value'.
+		do
+			default_value := a_value
+			has_default_value := True
+		ensure
+			definition: default_value = a_value
+		end
+
 
 invariant
 
