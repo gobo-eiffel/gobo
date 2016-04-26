@@ -5,7 +5,7 @@ note
 		"Options that need a value from a enumerated set"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -96,13 +96,18 @@ feature {AP_PARSER} -- Parser Interface
 			error: AP_ERROR
 			l_last_option_parameter: detachable STRING
 		do
-			Precursor (a_parser)
 			l_last_option_parameter := a_parser.last_option_parameter
-			if l_last_option_parameter /= Void then
-				if not possible_values.has (l_last_option_parameter) then
-					create error.make_invalid_parameter_error (Current, l_last_option_parameter)
-					a_parser.error_handler.report_error (error)
-				end
+			if l_last_option_parameter = Void then
+				check precondition_parameter_if_needed: not needs_parameter end
+				l_last_option_parameter := default_parameter
+			end
+			parameters.force_last (l_last_option_parameter)
+			if l_last_option_parameter = Void then
+				create error.make_missing_parameter_error (Current)
+				a_parser.error_handler.report_error (error)
+			elseif not possible_values.has (l_last_option_parameter) then
+				create error.make_invalid_parameter_error (Current, l_last_option_parameter)
+				a_parser.error_handler.report_error (error)
 			end
 		end
 

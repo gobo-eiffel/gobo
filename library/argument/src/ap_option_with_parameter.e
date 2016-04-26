@@ -5,7 +5,7 @@ note
 		"Options that are not flags and need a parameter"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2016, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,11 +28,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			parameter_description := "arg"
+			needs_parameter := True
 		end
 
 feature -- Access
 
-	default_value: like parameter
+	default_parameter: like parameter
+			-- Default value for `parameter' when no parameter is provided
 
 	example: STRING
 			-- Example for the usage of the option
@@ -93,14 +95,19 @@ feature -- Access
 			-- Name of the parameter
 
 	parameter: detachable G
-			-- Last value give to the option
+			-- Last value given to the option, or default value
+			-- if no parameter was provided to the option
 		require
-			was_found: was_found or has_default_value
+			was_found_or_no_parameter_needed: was_found or not needs_parameter
+		local
+			l_parameters: like parameters
 		do
-			if parameters.is_empty then
-				Result := default_value
+			l_parameters := parameters
+			if not l_parameters.is_empty then
+				Result := l_parameters.last
 			else
-				Result := parameters.last
+				check precondition_was_found_or_no_parameter_needed: not needs_parameter end
+				Result := default_parameter
 			end
 		end
 
@@ -118,14 +125,13 @@ feature -- Access
 feature -- Status report
 
 	allows_parameter: BOOLEAN
-			-- Does this option allow a parameter ?
+			-- Does this option allow a parameter?
 		do
 			Result := True
 		end
 
-	has_default_value: BOOLEAN
-			-- Has a default value been given to this parameter?
-
+	needs_parameter: BOOLEAN
+			-- Does this option need a parameter?
 
 feature -- Status setting
 
@@ -139,18 +145,20 @@ feature -- Status setting
 			parameter_description_set: parameter_description = a_string
 		end
 
-
-feature -- Commands
-
-	set_default_value (a_value: like default_value)
-			-- Set `default_value' to `a_value'.
+	set_default_parameter (a_parameter: like default_parameter)
+			-- Set the parameter as optional. If no parameter is given,
+			-- the corresponding parameter value is set to `default_parameter'.
+			-- This only works for long forms and makes it impossible to
+			-- specify the parameter as `--option parameter'.
+		require
+			not_short_form: not has_short_form
 		do
-			default_value := a_value
-			has_default_value := True
+			needs_parameter := False
+			default_parameter := a_parameter
 		ensure
-			definition: default_value = a_value
+			not_needed: not needs_parameter
+			default_parameter_set: default_parameter = a_parameter
 		end
-
 
 invariant
 
