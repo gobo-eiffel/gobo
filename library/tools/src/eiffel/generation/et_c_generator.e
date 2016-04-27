@@ -6950,6 +6950,49 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			current_file.put_character (';')
 			current_file.put_new_line
 			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_tr)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_exception_code)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_exception_tag)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
 			current_file.put_string (c_goto)
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_retry)
@@ -31965,7 +32008,9 @@ feature {NONE} -- Constants
 	c_else: STRING = "else"
 	c_endif: STRING = "#endif"
 	c_equal: STRING = "=="
+	c_exception_code: STRING = "exception_code"
 	c_exception_manager: STRING = "exception_manager"
+	c_exception_tag: STRING = "exception_tag"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
 	c_float: STRING = "float"

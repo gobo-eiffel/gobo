@@ -12,13 +12,19 @@
 
 #ifndef GE_EXCEPTION_C
 #define GE_EXCEPTION_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
+#ifdef EIF_WINDOWS
+#include <winbase.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef EIF_WINDOWS
-#include <winbase.h>
 #endif
 
 /*
@@ -89,7 +95,7 @@ static GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 
 /*
  * Append `a_string' to `a_trace'.
- * Resize aea if needed.
+ * Resize area if needed.
  */
 static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
 {
@@ -372,7 +378,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 /*
  * Default initialization for `GE_context'.
  */
-GE_context GE_default_context = {0, 0, 0, 0, 0, '\1', {0, 0, 0}, {0, 0, 0}
+GE_context GE_default_context = {0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}
 #ifdef EIF_THREADS
 	, 0
 #endif
@@ -554,6 +560,8 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		exit(1);
 	} else {
 		context->raising_exception = '\1';
+		context->exception_code = code;
+		context->exception_tag = tag;
 		if (code != GE_EX_FAIL) {
 			GE_wipe_out_exception_trace_buffer(&context->last_exception_trace);
 		}
@@ -570,6 +578,8 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		GE_call_set_exception_data(context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
 		GE_jump_to_last_rescue(context);
 		context->raising_exception = '\0';
+		context->exception_code = 0;
+		context->exception_tag = (char*)0;
 	}
 }
 

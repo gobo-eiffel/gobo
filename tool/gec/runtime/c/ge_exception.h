@@ -12,7 +12,13 @@
 
 #ifndef GE_EXCEPTION_H
 #define GE_EXCEPTION_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
 #include <setjmp.h>
 
 /*
@@ -118,6 +124,8 @@ struct GE_context_struct {
 	EIF_REFERENCE exception_manager; /* Exception manager */
 	char raising_exception; /* Is an exception currently being raised? */
 	char exception_trace_enabled; /* Should exception trace be displayed? */
+	long exception_code; /* Code of the exception currently being raised, 0 otherwise */
+	const char* exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
 	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 #ifdef EIF_THREADS
@@ -126,7 +134,7 @@ struct GE_context_struct {
 };
 
 /*
- * Default initialization for 'GE_context'.
+ * Default initialization for `GE_context'.
  */
 extern GE_context GE_default_context;
 
@@ -166,12 +174,12 @@ extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32,
 extern char* GE_exception_tag(long code);
 
 /*
- * Raise an exception with code 'code'.
+ * Raise an exception with code `code'.
  */
 extern void GE_raise(long code);
 
 /*
- * Raise an exception with code 'code' and message 'msg'.
+ * Raise an exception with code `code' and message `msg'.
  */
 extern void GE_raise_with_message(long code, const char* msg);
 
@@ -181,27 +189,27 @@ extern void GE_raise_with_message(long code, const char* msg);
 extern void GE_developer_raise(long code, char* meaning, char* message);
 
 /*
- * Check whether the type id of 'obj' is not in 'type_ids'.
- * If it is, then raise a CAT-call exception. Don't do anything if 'obj' is Void.
- * 'nb' is the number of ids in 'type_ids' and is expected to be >0.
- * 'type_ids' is sorted in increasing order.
- * Return 'obj'.
+ * Check whether the type id of `obj' is not in `type_ids'.
+ * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
+ * `nb' is the number of ids in `type_ids' and is expected to be >0.
+ * `type_ids' is sorted in increasing order.
+ * Return `obj'.
  */
 #define GE_catcall(obj,type_ids,nb) GE_check_catcall((obj),(type_ids),(nb))
 EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 
 /*
- * Check whether 'obj' is Void.
+ * Check whether `obj' is Void.
  * If it is, then raise a call-on-void-target exception.
- * Return 'obj'.
+ * Return `obj'.
  */
 #define GE_void(obj) (!(obj)?GE_check_void(obj):(obj))
 extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 
 /*
- * Check whether 'ptr' is a null pointer.
+ * Check whether `ptr' is a null pointer.
  * If it is, then raise a no-more-memory exception.
- * Return 'ptr'.
+ * Return `ptr'.
  */
 #define GE_null(ptr) GE_check_null(ptr)
 extern void* GE_check_null(void* ptr);

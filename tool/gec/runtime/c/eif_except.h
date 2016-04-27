@@ -12,18 +12,21 @@
 
 #ifndef EIF_EXCEPT_H
 #define EIF_EXCEPT_H
-
-#include <errno.h>
-#ifndef GE_EXCEPTION_H
-#include <ge_exception.h>
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
 #endif
+
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /*
-	Predefined exception codes.
+ * Predefined exception codes.
  */
 #define EN_VOID		GE_EX_VOID			/* Feature applied to void reference */
 #define EN_MEM		GE_EX_MEM			/* No more memory */
@@ -60,76 +63,76 @@ extern "C" {
 #define EN_NEX		GE_EX_NEX			/* Number of internal exceptions */
 
 /*
-	Raise an Eiffel exception.
-*/
+ * Raise an Eiffel exception.
+ */
 extern void eraise(const char* name, long code);
 
 /*
-	Raise an Eiffel exception of the given code with no associated tag.
-*/
+ * Raise an Eiffel exception of the given code with no associated tag.
+ */
 extern void xraise(int code);
 
 /*
-	Raise an "Operating system error" exception.
-*/
+ * Raise an "Operating system error" exception.
+ */
 extern void esys(void);
 
 /*
-	As a special case, an I/O error is raised when a system call which is I/O bound fails.
-*/
+ * As a special case, an I/O error is raised when a system call which is I/O bound fails.
+ */
 extern void eise_io(const char* tag);
 
 /*
-	Raise a "No more memory" exception.
-*/
+ * Raise a "No more memory" exception.
+ */
 extern void enomem(void);
 
 /*
-	Raise EiffelCOM exception.
-*/
+ * Raise EiffelCOM exception.
+ */
 extern void com_eraise(const char* tag, long num);
 
 /*
-	Terminate execution with exit status 'code',
-	without triggering an exception.
-*/
+ * Terminate execution with exit status `code',
+ * without triggering an exception.
+ */
 extern void esdie(int code);
 
 /*
-	Exception tag associated with 'code'.
-	This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.
-*/
+ * Exception tag associated with `code'.
+ * This is a duplication from Eiffel classes, but still used for trace printing and in EiffelCom.
+ */
 extern EIF_REFERENCE eename(long except);
 
 /*
-	Is exception 'ex' defined?
-	Used in EiffelCOM.
-*/
+ * Is exception `ex' defined?
+ * Used in EiffelCOM.
+ */
 extern char eedefined(long ex);
 
 /*
-	Enable/diable printing of the exception trace.
-	Per thead information.
-*/
+ * Enable/diable printing of the exception trace.
+ * Per thead information.
+ */
 extern void eetrace(char b);
 
 /*
-	Is current execution during rescue?
-*/
+ * Is current execution during rescue?
+ */
 extern EIF_BOOLEAN eif_is_in_rescue(void);
 
 #ifdef EIF_WINDOWS
 /*
-	Set default exception handler.
-*/
+ * Set default exception handler.
+ */
 extern void set_windows_exception_filter();
 #endif
 
 /*
-	Used in EiffelCOM.
-*/
-#define echval 0
-#define echtg (char*)0
+ * Used in EiffelCOM.
+ */
+#define echval GE_current_context()->exception_code
+#define echtg GE_current_context()->exception_tag
 
 #ifdef __cplusplus
 }
