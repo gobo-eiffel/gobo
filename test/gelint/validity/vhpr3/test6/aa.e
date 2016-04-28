@@ -11,8 +11,9 @@ feature
 			b: BB
 		do
 			create b
-			b.f
-			print (b.item.item.generating_type)
+			if b.item /= Void then
+				print (b.item.item)
+			end
 		end
 
 end -- class AA

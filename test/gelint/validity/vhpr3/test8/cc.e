@@ -1,6 +1,8 @@
 class CC [G]
 
-feature -- Access
+feature
+
+	name: CC [G]
 
 	item: G
 

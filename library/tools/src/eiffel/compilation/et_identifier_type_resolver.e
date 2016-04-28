@@ -20,7 +20,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
 			process_class,
 			process_class_type,
 			process_like_feature,
@@ -42,9 +41,8 @@ feature -- Access
 feature -- Type resolving
 
 	resolve_type (a_type: ET_TYPE; a_feature: detachable ET_FEATURE; a_class: ET_CLASS)
-			-- Resolve identifiers (such as 'like identifier' and
-			-- 'BIT identifier') in type `a_type' when it appears
-			-- in `a_feature' in `a_class'. Do not try to resolve
+			-- Resolve identifiers (such as 'like identifier') in type `a_type' 
+			-- when it appears in `a_feature' in `a_class'. Do not try to resolve
 			-- qualified anchored types. This is done after the
 			-- features of the corresponding classes have been
 			-- flattened.
@@ -69,38 +67,6 @@ feature -- Type resolving
 		end
 
 feature {NONE} -- Type resolving
-
-	resolve_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Resolve 'BIT identifier' type.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			has_fatal_error := False
-			if attached current_class.named_query (a_type.name) as l_query then
-				if attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute and then attached {ET_INTEGER_CONSTANT} l_constant_attribute.constant as l_constant then
-					a_type.resolve_identifier_type (l_query.first_seed, l_constant)
-					check_bit_type (a_type)
-				else
-						-- VTBT error (ETL2 page 210): The identifier
-						-- in Bit_type must be the final name of a
-						-- constant attribute of type INTEGER.
-					set_fatal_error
-					error_handler.report_vtbt0a_error (current_class, a_type)
-				end
-			elseif attached current_class.named_procedure (a_type.name) as l_procedure then
-					-- VTBT error (ETL2 page 210): The identifier
-					-- in Bit_type must be the final name of a
-					-- constant attribute of type INTEGER.
-				set_fatal_error
-				error_handler.report_vtbt0a_error (current_class, a_type)
-			else
-					-- VTBT error (ETL2 page 210): The identifier
-					-- in Bit_type must be the final name of a feature.
-				set_fatal_error
-				error_handler.report_vtbt0b_error (current_class, a_type)
-			end
-		end
 
 	resolve_like_feature (a_type: ET_LIKE_FEATURE)
 			-- Resolve 'like identifier' type.
@@ -175,33 +141,7 @@ feature {NONE} -- Type resolving
 			reset_fatal_error (had_error)
 		end
 
-feature {NONE} -- Validity
-
-	check_bit_type (a_type: ET_BIT_TYPE)
-			-- Check validity of the integer constant.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			constant_not_void: a_type.constant /= Void
-		do
-			has_fatal_error := False
-			a_type.compute_size
-			if a_type.has_size_error then
-				set_fatal_error
-				error_handler.report_vtbt0c_error (current_class, a_type)
-			elseif a_type.size = 0 and attached a_type.constant as l_constant and then l_constant.is_negative then
-					-- Not considered as a fatal error by gelint.
-				error_handler.report_vtbt0d_error (current_class, a_type)
-			end
-		end
-
 feature {ET_AST_NODE} -- Type processing
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			resolve_bit_feature (a_type)
-		end
 
 	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.

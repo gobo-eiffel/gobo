@@ -23,17 +23,15 @@ TEST DESCRIPTION:
 ----------------------------------------------------------------------
 Class BB inherits from CC [like name], but 'like name' is not
 only made up of class names nor names of formal generic parameters.
-Validity VHPR-3 is violated. Furthermore `name' is not the final
-name of a feature in class BB
+Validity VHPR-3 is violated.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
 ISE Eiffel 5.0.016:    OK
-SmallEiffel -0.76:     PASSED    Does not report VHPR-3 but reports the
-                                 fact that `name' is not the final name
-                                 of a feature in class BB.
+SmallEiffel -0.76:     PASSED    Does not report VHPR-3 and interprets
+                                 'like name' as 'BB'.
 Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
@@ -54,7 +52,8 @@ feature
 			b: BB
 		do
 			!! b
-			print (b.item)
+			b.f
+			print (b.item.generating_type)
 		end
 
 end -- class AA
@@ -65,11 +64,24 @@ inherit
 
 	CC [like name]
 
+feature -- Access
+
+	f
+		local
+			b: BB
+			c: CC [BB]
+		do
+			c := b
+			item := Current
+		end
+
 end -- class BB
 ----------------------------------------------------------------------
 class CC [G]
 
 feature
+
+	name: like Current
 
 	item: G
 

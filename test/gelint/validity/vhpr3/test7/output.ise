@@ -2,19 +2,11 @@ Eiffel compilation manager
 Processing options
 -------------------------------------------------------------------------------
 
-Error code: VJAR
-Type error: source of assignment does not conform to target. 
-What to do: make sure that type of source (right-hand side)
-  conforms (in the sense of inheritance rule) to type of target. 
+Error code: VHPR(3)
+Error: Parent clause involves invalid type.
+What to do: make sure that all types appearing in the clause are
+  either class names or names of formal generic parameters of the class.
 
 Class: BB
-Feature: f
-Target name: item
-Target type: DD [BIT -1]
-Source_type: DD [BIT name]
-Line: 16
-        !! d
-->      item := d
-      end
 
 -------------------------------------------------------------------------------

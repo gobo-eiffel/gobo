@@ -784,7 +784,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_any_name)
 			Result.force_new (-1, tokens.capitalized_arguments_32_name)
 			Result.force_new (-1, tokens.capitalized_array_name)
-			Result.force_new (-1, tokens.capitalized_bit_name)
 			Result.force_new (-1, tokens.capitalized_boolean_name)
 			Result.force_new (-1, tokens.capitalized_character_name)
 			Result.force_new (-1, tokens.capitalized_character_8_name)
@@ -1294,28 +1293,24 @@ feature {NONE} -- Breaks
 			-- Internal code corresponding to a break that
 			-- follows a real with underscores
 
-	bit_break: INTEGER = 11
-			-- Internal code corresponding to a break that
-			-- follows a bit
-
-	string_break: INTEGER = 12
+	string_break: INTEGER = 11
 			-- Internal code corresponding to a break that
 			-- follows a manifest string
 
-	str_freeop_break: INTEGER = 13
+	str_freeop_break: INTEGER = 12
 			-- Internal code corresponding to a break that
 			-- follows a manifest string containing the
 			-- name of a freeop
 
-	str_special_break: INTEGER = 14
+	str_special_break: INTEGER = 13
 			-- Internal code corresponding to a break that
 			-- follows a manifest string with special characters
 
-	str_verbatim_break: INTEGER = 15
+	str_verbatim_break: INTEGER = 14
 			-- Internal code corresponding to a break that
 			-- follows a verbatim manifest string
 
-	str_left_aligned_verbatim_break: INTEGER = 16
+	str_left_aligned_verbatim_break: INTEGER = 15
 			-- Internal code corresponding to a break that
 			-- follows a left-aligned verbatim manifest string
 
@@ -1390,19 +1385,6 @@ feature {NONE} -- Processing
 						when 'l', 'L' then
 							last_token := E_ALL
 							last_detachable_et_keyword_value := ast_factory.new_all_keyword (Current)
-						else
-							-- Do nothing.
-						end
-					else
-						-- Do nothing.
-					end
-				when 'b', 'B' then
-					inspect text_item (2)
-					when 'i', 'I' then
-						inspect text_item (3)
-						when 't', 'T' then
-							last_token := E_BITTYPE
-							last_detachable_et_identifier_value := ast_factory.new_identifier (Current)
 						else
 							-- Do nothing.
 						end
@@ -3786,9 +3768,6 @@ feature {NONE} -- Processing
 			when ureal_break then
 				last_token := E_REAL
 				last_detachable_et_real_constant_value := ast_factory.new_underscored_real_constant (Current)
-			when bit_break then
-				last_token := E_BIT
-				last_detachable_et_bit_constant_value := ast_factory.new_bit_constant (Current)
 			when string_break then
 				process_regular_manifest_string (last_text_count)
 			when str_freeop_break then

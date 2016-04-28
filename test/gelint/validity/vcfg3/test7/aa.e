@@ -12,7 +12,8 @@ feature
 		do
 			create b
 			b.g
-			print (b.item2)
+			print (b.item1.generator)
+			print (b.item2.generator)
 			b.f
 		end
 

@@ -21,7 +21,7 @@ ISE Eiffel:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-Class BB inherits from CC [DD [like name]], but 'like name' is not
+Class BB inherits from CC [like name], but 'like name' is not
 only made up of class names nor names of formal generic parameters.
 Validity VHPR-3 is violated.
 ----------------------------------------------------------------------
@@ -31,8 +31,8 @@ TEST RESULTS:
 ----------------------------------------------------------------------
 ISE Eiffel 5.0.016:    OK
 SmallEiffel -0.76:     PASSED    Does not report VHPR-3 and interprets
-                                 'like name' as STRING since 'name' is
-                                 declared of type STRING in class BB.
+                                 'like name' as 'STRING' even though
+                                 `name' has been renamed from `gobo'.
 Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
@@ -54,7 +54,7 @@ feature
 		do
 			!! b
 			b.f
-			print (b.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA
@@ -63,18 +63,16 @@ class BB
 
 inherit
 
-	CC [DD [like name]]
+	CC [like name]
+		rename
+			gobo as name
+		end
 
-feature
-
-	name: STRING
+feature -- Access
 
 	f
-		local
-			d: DD [like name]
 		do
-			!! d
-			item := d
+			item := "gobo"
 		end
 
 end -- class BB
@@ -83,15 +81,9 @@ class CC [G]
 
 feature
 
+	gobo: STRING
+
 	item: G
 
 end -- class CC
-----------------------------------------------------------------------
-class DD [G]
-
-feature 
-
-	item: G
-
-end -- class DD
 ----------------------------------------------------------------------

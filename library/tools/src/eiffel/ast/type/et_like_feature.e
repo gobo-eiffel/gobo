@@ -5,7 +5,7 @@ note
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,15 +22,12 @@ inherit
 			named_type_has_class,
 			named_type_is_formal_type,
 			same_syntactical_like_feature_with_type_marks,
-			same_named_bit_type_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks,
-			same_base_bit_type_with_type_marks,
 			same_base_class_type_with_type_marks,
 			same_base_formal_parameter_type_with_type_marks,
 			same_base_tuple_type_with_type_marks,
-			conforms_from_bit_type_with_type_marks,
 			conforms_from_class_type_with_type_marks,
 			conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks,
@@ -909,42 +906,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same named type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		local
-			a_class: ET_CLASS
-			l_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class
-				l_index := index
-				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class
-				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.same_named_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
 	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
@@ -1044,42 +1005,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				a_class := a_context.base_class
 				if attached a_class.seeded_query (seed) as l_query then
 					Result := l_query.type.same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same base type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		local
-			a_class: ET_CLASS
-			l_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class
-				l_index := index
-				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class
-				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.same_base_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we resolved
@@ -1236,44 +1161,6 @@ feature -- Conformance
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
-
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does `other' type appearing in `other_context' conform
-			-- to current type appearing in `a_context'?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			a_class: ET_CLASS
-			l_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class
-				l_index := index
-				if attached a_class.seeded_feature (seed) as l_feature and then attached l_feature.arguments as l_args and then l_index <= l_args.count then
-					Result := l_args.item (l_index).type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class
-				if attached a_class.seeded_query (seed) as l_query then
-					Result := l_query.type.conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, overridden_type_mark (a_type_mark), a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we resolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
 
 	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform

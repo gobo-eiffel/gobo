@@ -1,4 +1,4 @@
--- system:     "VCFG-3 test #9"
+-- system:     "VCFG-3 test #11"
 -- library:    "Gobo Eiffel Tools Library"
 -- compiler:   "Halstenbach ISS-BASE 3.0"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -23,7 +23,7 @@ default
 
 cluster
 
-	test9:	"$GOBO/test/gelint/validity/vcfg3/test9"
+	test11:	"$GOBO/test/gelint/validity/vcfg3/test11"
 
 component
 

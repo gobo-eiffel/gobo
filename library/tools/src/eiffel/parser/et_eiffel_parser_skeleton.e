@@ -1254,42 +1254,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_bit_feature (a_bit: detachable ET_IDENTIFIER; an_id: detachable ET_IDENTIFIER): detachable ET_BIT_FEATURE
-			-- New 'BIT Identifier' type
-		local
-			a_class: ET_CLASS
-		do
-			a_class := tokens.unknown_class
-			Result := ast_factory.new_bit_feature (a_bit, an_id, a_class)
-		end
-
-	new_bit_n (a_bit: detachable ET_IDENTIFIER; an_int: detachable ET_INTEGER_CONSTANT): detachable ET_BIT_N
-			-- New 'BIT N' type
-		local
-			a_class: ET_CLASS
-		do
-			a_class := tokens.unknown_class
-			Result := ast_factory.new_bit_n (a_bit, an_int, a_class)
-			if Result /= Void then
-				Result.compute_size
-				if Result.has_size_error then
-					if attached last_class as l_last_class then
-						set_fatal_error (l_last_class)
-						error_handler.report_vtbt0c_error (l_last_class, Result)
-					else
-						error_handler.report_syntax_error (filename, Result.constant.position)
-					end
-				elseif Result.size = 0 and Result.constant.is_negative then
-						-- Not considered as a fatal error by gelint.
-					if attached last_class as l_last_class then
-						error_handler.report_vtbt0d_error (l_last_class, Result)
-					else
-						error_handler.report_syntax_error (filename, Result.constant.position)
-					end
-				end
-			end
-		end
-
 	new_check_instruction (a_check: detachable ET_KEYWORD; a_then_compound: detachable ET_COMPOUND;
 		an_end: detachable ET_KEYWORD): detachable ET_CHECK_INSTRUCTION
 			-- New check instruction

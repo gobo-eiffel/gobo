@@ -1,1 +1,3 @@
 [ISE][VTCT] Class CC (1,16): type based on unknown class H.
+[?ISE][VCFG-3] Class CC (1,24): constraint of formal generic parameter 'H' is another formal generic parameter 'G'.
+[?SE][VCFG-3] Class CC (1,19): formal generic constraint cycle H -> G -> H.

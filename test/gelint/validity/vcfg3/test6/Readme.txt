@@ -27,8 +27,8 @@ three conditions:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-The constraint of the first formal generic parameter G of class
-CC is '-> G'. Validity VCFG-3 is violated. Note that the compiler
+The constraint of the second formal generic parameter H of class
+CC is '-> G'. Validity VCFG-3 is not violated. Note that the compiler
 should actually report a syntax error since 'G' is not a Class_type
 but a Formal_generic_name.
 ----------------------------------------------------------------------
@@ -36,14 +36,10 @@ but a Formal_generic_name.
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED    Does not report VCFG-3 and enters
-                                 into an infinite loop when processing
-                                 class CC in Degree 3.
-SmallEiffel -0.76:     FAILED    Does not report VCFG-3 but complains
-                                 that class G is not in the universe.
-Halstenbach 3.2:       FAILED    Does not report VCFG-3 but reports
-                                 a violation of VTCT (i.e. class G
-                                 not in universe).
+ISE Eiffel 5.0.016:    FAILED    Compiler crash on class CC in Degree 3.
+SmallEiffel -0.76:     PASSED    Executes as expected but does not
+                                 report that G is not a Class_type.
+Halstenbach 3.2:       FAILED    Compiler crash on class CC in Degree 2.
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -64,8 +60,8 @@ feature
 		do
 			!! b
 			b.g
-			print (b.item1)
-			print (b.item2)
+			print (b.item1.generator)
+			print (b.item2.generator)
 			b.f
 		end
 
@@ -75,19 +71,24 @@ class BB
 
 inherit
 
-	CC [ANY, ANY]
+	CC [DD, EE]
 
 feature
 
 	g
+		local
+			d: DD
+			e: EE
 		do
-			item1 := "gobo1"
-			item2 := "gobo2"
+			!! d
+			item1 := d
+			!! e
+			item2 := e
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G -> G, H]
+class CC [G, H -> G]
 
 feature
 
@@ -96,10 +97,22 @@ feature
 
 	f
 		do
-			if item1 /= Void then
-				print (item1.generating_type)
+			if item2 /= Void then
+				print (item2.generating_type)
 			end
 		end
 
 end -- class CC
+----------------------------------------------------------------------
+class DD
+
+end -- class DD
+----------------------------------------------------------------------
+class EE
+
+inherit
+
+	DD
+
+end -- class EE
 ----------------------------------------------------------------------

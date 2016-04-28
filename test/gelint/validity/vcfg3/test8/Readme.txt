@@ -27,19 +27,20 @@ three conditions:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-The constraint of the second formal generic parameter H of class
-CC is '-> G'. Validity VCFG-3 is not violated. Note that the compiler
-should actually report a syntax error since 'G' is not a Class_type
+The constraint of the first formal generic parameter G of class
+CC is '-> H'. Validity VCFG-3 is not violated. Note that the compiler
+should actually report a syntax error since 'H' is not a Class_type
 but a Formal_generic_name.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED    Compiler crash on class CC in Degree 3.
-SmallEiffel -0.76:     PASSED    Executes as expected but does not
-                                 report that G is not a Class_type.
-Halstenbach 3.2:       FAILED    Compiler crash on class CC in Degree 2.
+ISE Eiffel 5.0.016:    FAILED    Reports a violation of VTCT (i.e.
+                                 class H not in universe).
+SmallEiffel -0.76:     OK
+Halstenbach 3.2:       FAILED    Reports a violation of VTCT (i.e.
+                                 class H not in universe).
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ class BB
 
 inherit
 
-	CC [DD, EE]
+	CC [EE, DD]
 
 feature
 
@@ -80,15 +81,15 @@ feature
 			d: DD
 			e: EE
 		do
-			!! d
-			item1 := d
 			!! e
-			item2 := e
+			item1 := e
+			!! d
+			item2 := d
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G, H -> G]
+class CC [G -> H, H]
 
 feature
 
@@ -97,8 +98,8 @@ feature
 
 	f
 		do
-			if item2 /= Void then
-				print (item2.generating_type)
+			if item1 /= Void then
+				print (item1.generator)
 			end
 		end
 

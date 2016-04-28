@@ -23,8 +23,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_like_current,
@@ -58,9 +56,8 @@ feature -- Validity checking
 	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT)
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_context'. Resolve
-			-- identifiers (such as 'like identifier', 'BIT identifier',
-			-- 'like {A}.identifier or 'like a.identifier') in type `a_type'
-			-- if not already done.
+			-- identifiers (such as 'like identifier', 'like {A}.identifier
+			-- or 'like a.identifier') in type `a_type' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
@@ -349,110 +346,6 @@ feature -- Type conversion
 		end
 
 feature {NONE} -- Validity checking
-
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE)
-			-- Check validity of `a_type'.
-			-- Resolve identifier in 'BIT identifier' if not already done.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
--- TODO: should we check whether class BIT is in the universe or not?
-			if a_type.constant = Void then
-					-- Not resolved yet.
-				current_class_impl.process (current_system.interface_checker)
-				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
-					set_fatal_error
-				elseif attached current_class_impl.named_query (a_type.name) as a_query then
-					if attached {ET_CONSTANT_ATTRIBUTE} a_query as a_constant_attribute and then attached {ET_INTEGER_CONSTANT} a_constant_attribute.constant as a_constant then
-						a_type.resolve_identifier_type (a_query.first_seed, a_constant)
-						check_bit_type_validity (a_type)
-					else
-							-- VTBT error (ETL2 page 210): The identifier
-							-- in Bit_type must be the final name of a
-							-- constant attribute of type INTEGER.
-						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vtbt0a_error (current_class, a_type)
-						else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-							error_handler.report_vtbt0a_error (current_class_impl, a_type)
-						end
-					end
-				elseif attached current_class_impl.named_procedure (a_type.name) as a_procedure then
-						-- VTBT error (ETL2 page 210): The identifier
-						-- in Bit_type must be the final name of a
-						-- constant attribute of type INTEGER.
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0a_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0a_error (current_class_impl, a_type)
-					end
-				else
-						-- VTBT error (ETL2 page 210): The identifier
-						-- in Bit_type must be the final name of a feature.
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0b_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0b_error (current_class_impl, a_type)
-					end
-				end
-			end
-		end
-
-	check_bit_n_validity (a_type: ET_BIT_N)
-			-- Check validity of `a_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
--- TODO: should we check whether class BIT is in the universe or not?
-			-- The validity of the integer constant has
-			-- already been checked during the parsing.
-		end
-
-	check_bit_type_validity (a_type: ET_BIT_TYPE)
-			-- Check validity of the integer constant.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			constant_not_void: a_type.constant /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
-			if not attached a_type.constant as l_type_constant then
-					-- The precondition says it's attached.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				a_type.compute_size
-				if a_type.has_size_error then
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0c_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0c_error (current_class_impl, a_type)
-					end
-				elseif a_type.size = 0 and l_type_constant.is_negative then
-						-- Not considered as a fatal error by gelint.
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0d_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0d_error (current_class_impl, a_type)
-					end
-				end
-			end
-		end
 
 	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type'.
@@ -936,18 +829,6 @@ feature {NONE} -- Client/Supplier relationship
 		end
 
 feature {ET_AST_NODE} -- Type processing
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			check_bit_feature_validity (a_type)
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			check_bit_n_validity (a_type)
-		end
 
 	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.

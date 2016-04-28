@@ -1,6 +1,6 @@
 class CC [G]
 
-feature -- Access
+feature
 
 	item: G
 

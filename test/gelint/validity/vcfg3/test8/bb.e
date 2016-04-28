@@ -2,7 +2,7 @@ class BB
 
 inherit
 
-	CC [DD, EE]
+	CC [EE, DD]
 
 feature
 
@@ -11,10 +11,10 @@ feature
 			d: DD
 			e: EE
 		do
-			create d
-			item1 := d
 			create e
-			item2 := e
+			item1 := e
+			create d
+			item2 := d
 		end
 
 end -- class BB

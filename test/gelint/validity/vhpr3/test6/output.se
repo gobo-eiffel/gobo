@@ -1,15 +1,11 @@
 ****** Error : Current type is BB. There is no feature name in
 class BB.
-Line 5 column 14 in BB (b.e) :
-	CC [DD [BIT name]]
-	            ^
+Line 5 column 15 in BB (b.e) :
+	CC [DD [like name]]
+	             ^
 ------
-****** Fatal Error : Feature name not found when starting look
-up from Type BB.
-Line 5 column 14 in BB (b.e) :
-	CC [DD [BIT name]]
-	            ^
-Line 11 column 7 in AA (a.e) :
-			b: BB
-			   ^
+****** Fatal Error :  Anchor not found.
+Line 5 column 15 in BB (b.e) :
+	CC [DD [like name]]
+	             ^
 ------

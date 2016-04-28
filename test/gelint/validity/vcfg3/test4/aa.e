@@ -11,9 +11,10 @@ feature
 			b: BB
 		do
 			create b
-			if b.item /= Void then
-				print (b.item.item.generating_type)
-			end
+			b.g
+			print (b.item1)
+			print (b.item2)
+			b.f
 		end
 
 end -- class AA

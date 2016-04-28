@@ -1,1 +1,8 @@
-DD[BB]
+****** Fatal Error : SmallEiffel is not yet able to handle this
+parent type mark (probably because of constrained genericity).
+You should try to inherit something else, more accurate for the
+compiler. Sorry.
+Line 5 column 2 in BB (b.e) :
+	CC [like name]
+	^
+------

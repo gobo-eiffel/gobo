@@ -1,4 +1,4 @@
-class CC [G -> DD [G], H]
+class CC [G, H -> DD [G]]
 
 feature
 
@@ -7,9 +7,9 @@ feature
 
 	f
 		do
-			if item1 /= Void then
-				item1.put (item1)
-				print (item1.item.generating_type)
+			if item2 /= Void and item1 /= Void then
+				item2.put (item1)
+				print (item2.item.generator)
 			end
 		end
 

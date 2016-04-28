@@ -5,7 +5,7 @@ note
 		"Eiffel constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,12 +47,6 @@ feature -- Status report
 
 	is_string_constant: BOOLEAN
 			-- Is current constant a STRING constant?
-		do
-			-- Result := False
-		end
-
-	is_bit_constant: BOOLEAN
-			-- Is current constant a BIT constant?
 		do
 			-- Result := False
 		end

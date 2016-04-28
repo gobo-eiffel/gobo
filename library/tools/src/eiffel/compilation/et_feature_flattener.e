@@ -1460,10 +1460,9 @@ feature {NONE} -- Precursor validity
 feature {NONE} -- Signature resolving
 
 	resolve_identifier_signature (a_feature: ET_FEATURE)
-			-- Resolve identifier types (e.g. "like identifier"
-			-- or "BIT identifier") in signature of `a_feature'
-			-- in `current_class'. Do not try to resolve qualified
-			-- anchored types. This is done after the features
+			-- Resolve identifier types (e.g. "like identifier") in signature 
+			-- of `a_feature' in `current_class'. Do not try to resolve
+			-- qualified anchored types. This is done after the features
 			-- of the corresponding classes have been flattened.
 			-- Also check whether an argument name does not appear
 			-- twice and whether none of the argument names are

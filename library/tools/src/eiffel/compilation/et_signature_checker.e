@@ -23,8 +23,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_qualified_like_type,
@@ -590,24 +588,6 @@ feature {NONE} -- Signature validity
 
 feature {NONE} -- VTCT Validity checking
 
-	check_bit_feature_vtct_validity (a_type: ET_BIT_FEATURE)
-			-- Check whether `a_type' is based on known classes.
-		require
-			a_type_not_void: a_type /= Void
-		do
--- TODO: should we check whether class BIT is in the universe or not?
-			-- No validity rule to be checked.
-		end
-
-	check_bit_n_vtct_validity (a_type: ET_BIT_N)
-			-- Check whether `a_type' is based on known classes.
-		require
-			a_type_not_void: a_type /= Void
-		do
--- TODO: should we check whether class BIT is in the universe or not?
-			-- No validity rule to be checked.
-		end
-
 	check_class_type_vtct_validity (a_type: ET_CLASS_TYPE)
 			-- Check whether `a_type' is based on known classes.
 		require
@@ -733,22 +713,6 @@ feature {NONE} -- Tuple-type-unfolding
 		end
 
 feature {ET_AST_NODE} -- Type processing
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			if processing_mode = check_vtct_validity_mode then
-				check_bit_feature_vtct_validity (a_type)
-			end
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			if processing_mode = check_vtct_validity_mode then
-				check_bit_n_vtct_validity (a_type)
-			end
-		end
 
 	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.

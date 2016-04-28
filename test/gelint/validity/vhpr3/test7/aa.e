@@ -8,11 +8,11 @@ feature
 
 	make
 		local
-			b: BB
+			b: BB [STRING]
 		do
 			create b
 			b.f
-			print (b.item.item.generating_type)
+			print (b.item.generating_type)
 		end
 
 end -- class AA

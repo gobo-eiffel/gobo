@@ -1,4 +1,4 @@
--- system:     "VHPR-3 test #5"
+-- system:     "VHPR-3 test #11"
 -- library:    "Gobo Eiffel Tools Library"
 -- compiler:   "gelint"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -17,7 +17,7 @@ root
 
 cluster
 
-	test5:	"$GOBO/test/gelint/validity/vhpr3/test5"
+	test11:	"$GOBO/test/gelint/validity/vhpr3/test11"
 	kernel:	"$GOBO/test/gelint/kernel"
 
 end

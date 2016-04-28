@@ -1,4 +1,4 @@
--- system:     "VHPR-3 test #5"
+-- system:     "VHPR-3 test #11"
 -- library:    "Gobo Eiffel Tools Library"
 -- compiler:   "ISE Eiffel 4.4"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -24,7 +24,7 @@ default
 
 cluster
 
-	test5:	"$GOBO/test/gelint/validity/vhpr3/test5"
+	test11:	"$GOBO/test/gelint/validity/vhpr3/test11"
 
 		-- EiffelBase
 	all base:	"$EIFFEL4/library/base"

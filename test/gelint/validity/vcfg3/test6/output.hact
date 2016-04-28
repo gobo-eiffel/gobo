@@ -1,9 +1,2 @@
 Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VTCT
-Error: type is based on unknown class.
-What to do: use an identifier that is the name of a class in the universe.
-
-Class: CC
-Unknown class name: G
+Exception tag: Segmentation fault

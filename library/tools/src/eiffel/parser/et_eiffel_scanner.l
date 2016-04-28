@@ -6,7 +6,7 @@ note
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -766,26 +766,6 @@ UTF8_BOM (\xEF\xBB\xBF)
 				set_start_condition (INITIAL)
 			}
 }
-
-
-----------/** Eiffel bits **/---------------------------------------------------
-
-[0-1]+[bB]	{
-				last_token := E_BIT
-				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_detachable_et_bit_constant_value := ast_factory.new_bit_constant (Current)
-			}
-[0-1]+[bB]/([ \t\r\n]|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := bit_break
-				more
-				set_start_condition (BREAK)
-			}
 
 
 ----------/** Eiffel integers **/-----------------------------------------------

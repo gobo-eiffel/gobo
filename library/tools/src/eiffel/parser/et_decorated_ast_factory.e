@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -120,7 +120,6 @@ inherit
 			new_tilde_symbol,
 			new_times_symbol,
 			new_binary_integer_constant,
-			new_bit_constant,
 			new_break,
 			new_c1_character_constant,
 			new_c2_character_constant,
@@ -179,8 +178,6 @@ inherit
 			new_attribute,
 			new_attribute_compound,
 			new_bang_instruction,
-			new_bit_feature,
-			new_bit_n,
 			new_bracket_arguments,
 			new_check_instruction,
 			new_choice_comma,
@@ -1261,14 +1258,6 @@ feature -- AST leaves
 			Result.set_break (last_break (True, a_scanner))
 		end
 
-	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BIT_CONSTANT
-			-- New bit constant
-		do
-			create Result.make (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (False, a_scanner))
-		end
-
 	new_break (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BREAK
 			-- New break
 		do
@@ -1942,28 +1931,6 @@ feature -- AST nodes
 				end
 				if r /= Void then
 					Result.set_right_bang (r)
-				end
-			end
-		end
-
-	new_bit_feature (a_bit: detachable ET_IDENTIFIER; an_id: detachable ET_IDENTIFIER; a_base_class: detachable ET_CLASS): detachable ET_BIT_FEATURE
-			-- New 'BIT Identifier' type
-		do
-			if an_id /= Void and a_base_class /= Void then
-				create Result.make (an_id, a_base_class)
-				if a_bit /= Void then
-					Result.set_bit_keyword (a_bit)
-				end
-			end
-		end
-
-	new_bit_n (a_bit: detachable ET_IDENTIFIER; an_int: detachable ET_INTEGER_CONSTANT; a_base_class: detachable ET_CLASS): detachable ET_BIT_N
-			-- New 'BIT N' type
-		do
-			if an_int /= Void and a_base_class /= Void then
-				create Result.make (an_int, a_base_class)
-				if a_bit /= Void then
-					Result.set_bit_keyword (a_bit)
 				end
 			end
 		end

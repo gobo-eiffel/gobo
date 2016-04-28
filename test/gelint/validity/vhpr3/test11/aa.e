@@ -12,7 +12,7 @@ feature
 		do
 			create b
 			b.f
-			print (b.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA

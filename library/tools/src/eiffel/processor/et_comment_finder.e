@@ -41,9 +41,6 @@ inherit
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
-			process_bit_constant,
-			process_bit_feature,
-			process_bit_n,
 			process_braced_class_name,
 			process_braced_type,
 			process_braced_type_list,
@@ -461,31 +458,6 @@ feature {ET_AST_NODE} -- Processing
 			if not excluded_nodes.has (a_constant) then
 				precursor (a_constant)
 				process_break (a_constant.break)
-			end
-		end
-
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-			if not excluded_nodes.has (a_constant) then
-				precursor (a_constant)
-				process_break (a_constant.break)
-			end
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			if not excluded_nodes.has (a_type) then
-				precursor (a_type)
-			end
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			if not excluded_nodes.has (a_type) then
-				precursor (a_type)
 			end
 		end
 

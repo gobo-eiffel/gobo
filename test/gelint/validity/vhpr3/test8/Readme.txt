@@ -21,8 +21,7 @@ ISE Eiffel:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-Class BB inherits from CC [DD [BIT name]], where `name' is a constant
-attribute declared of value 32 in class BB. But 'BIT name' is not
+Class BB inherits from CC [like name], but 'like name' is not
 only made up of class names nor names of formal generic parameters.
 Validity VHPR-3 is violated.
 ----------------------------------------------------------------------
@@ -30,14 +29,10 @@ Validity VHPR-3 is violated.
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED     Does not report VHPR-3, but compiled
-                                  program crashes at execution.
-SmallEiffel -0.76:     FAILED     Does not report VHPR-3, but reports
-                                  a "Creation call on formal generic
-                                  type" error for intruction '!! item'
-                                  in feature `f' of class BB even though
-                                  BB is not a generic class.
-Halstenbach 3.2:       FAILED     Compiler crash in Degree 3.
+ISE Eiffel 5.0.016:    OK
+SmallEiffel -0.76:     FAILED    Does not report VHPR-3, but has detected
+                                 a "Cyclic anchored definition".
+Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -58,7 +53,7 @@ feature
 		do
 			!! b
 			b.f
-			print (b.item.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA
@@ -67,32 +62,29 @@ class BB
 
 inherit
 
-	CC [DD [BIT name]]
+	CC [like name]
+		redefine
+			name
+		end
 
-feature
+feature -- Access
 
-	name: INTEGER = 32
+	name: BB
 
 	f
 		do
-			!! item
+			item := Current
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
 class CC [G]
 
-feature -- Access
+feature
+
+	name: CC [G]
 
 	item: G
 
 end -- class CC
-----------------------------------------------------------------------
-class DD [G]
-
-feature 
-
-	item: G
-
-end -- class DD
 ----------------------------------------------------------------------

@@ -21,23 +21,20 @@ ISE Eiffel:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-Class BB inherits from CC [DD [BIT name]], where `name' is a constant
-attribute declared of value 32 in class BB. But 'BIT name' is not
+Class BB inherits from CC [like Current], but 'like Current' is not
 only made up of class names nor names of formal generic parameters.
 Validity VHPR-3 is violated.
+
+SmallEiffel does not report VHPR-3 and interprets 'like Current'
+as BB.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED     Does not report VHPR-3, but erroneously
-                                  interprets 'BIT name' as 'BIT -1' and
-                                  hence reports a VJAR in feature `f' of
-                                  class BB where 'BIT name' has correctly
-                                  been intrepreted as 'BIT 32'.
-SmallEiffel -0.76:     PASSED     Does not report VHPR-3 and interprets
-                                  'BIT name' as 'BIT 32'.
-Halstenbach 3.2:       FAILED     Compiler crash in Degree 3.
+ISE Eiffel 5.0.016:    OK
+SmallEiffel -0.76:     PASSED
+Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -58,7 +55,7 @@ feature
 		do
 			!! b
 			b.f
-			print (b.item.item.generating_type)
+			print (b.item.generating_type)
 		end
 
 end -- class AA
@@ -67,35 +64,22 @@ class BB
 
 inherit
 
-	CC [DD [BIT name]]
+	CC [like Current]
 
 feature
 
-	name: INTEGER = 32
-
 	f
-		local
-			d: DD [BIT name]
 		do
-			!! d
-			item := d
+			item := Current
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
 class CC [G]
 
-feature -- Access
+feature
 
 	item: G
 
 end -- class CC
-----------------------------------------------------------------------
-class DD [G]
-
-feature 
-
-	item: G
-
-end -- class DD
 ----------------------------------------------------------------------

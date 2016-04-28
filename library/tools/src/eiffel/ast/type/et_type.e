@@ -603,27 +603,6 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Are current type appearing in `a_context' and `other'
-			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the base types here!
-			-- Therefore anchored types are considered the same
-			-- only if they have the same anchor. An anchor type
-			-- is not considered the same as any other type even
-			-- if they have the same base type.)
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
 	same_syntactical_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
@@ -750,22 +729,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Result := False
 		end
 
-	same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same named type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
 	same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
@@ -801,22 +764,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_named_tuple_type_with_type_marks (other: ET_TUPLE_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Do current type appearing in `a_context' and `other' type
-			-- appearing in `other_context' have the same base type?
 			-- Note that the type mark status of `Current' and `other' is
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		require
@@ -910,24 +857,6 @@ feature -- Conformance
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
-
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does `other' type appearing in `other_context' conform
-			-- to current type appearing in `a_context'?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
 
 	conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform

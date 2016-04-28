@@ -1,15 +1,6 @@
-****** Error : Current type is CC[DD[BIT 32]]. There is no feature
-name in class CC.
-Line 1 column 24 in CC (c.e) :
-class CC [G -> DD [BIT name]]
-                       ^
-------
-****** Fatal Error : Feature name not found when starting look
-up from Type CC[DD[BIT 32]].
-Line 1 column 24 in CC (c.e) :
-class CC [G -> DD [BIT name]]
-                       ^
-Line 5 column 2 in BB (b.e) :
-	CC [DD [BIT 32]]
-	^
+Unable to find file for class "G". 
+****** Fatal Error : Unable to load class.
+Line 1 column 16 in CC (c.e) :
+class CC [G -> G, H]
+               ^
 ------

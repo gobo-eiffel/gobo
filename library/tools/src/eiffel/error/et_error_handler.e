@@ -1112,7 +1112,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
+	report_vcfg3a_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Report VCFG-3 error: invalid type `a_type' in
 			-- constraint of formal generic parameter of `a_class'.
 			--
@@ -1126,50 +1126,11 @@ feature -- Validity errors
 		do
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3a (a_class, a_type)
-				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vcfg3b_error (a_class: ET_CLASS; a_type: ET_BIT_N)
-			-- Report VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if is_pedantic then
-				if reportable_vcfg3_error (a_class) then
-					create an_error.make_vcfg3b (a_class, a_type)
-					report_validity_error (an_error)
-				end
-			end
-		end
-
-	report_vcfg3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Report VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3c (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vcfg3d_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
+	report_vcfg3b_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is the formal generic parameter itself.
 			--
@@ -1190,12 +1151,12 @@ feature -- Validity errors
 				report_validity_error (an_error)
 			end
 			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3d (a_class, a_formal, a_constraint)
+				create an_error.make_vcfg3b (a_class, a_formal, a_constraint)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vcfg3e_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
+	report_vcfg3c_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is another formal generic parameter
 			-- appearing before `a_formal' in the list of formal
@@ -1212,14 +1173,14 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3e (a_class, a_formal, a_constraint)
+				create an_error.make_vcfg3c (a_class, a_formal, a_constraint)
 				an_error.set_ge_reported (False)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vcfg3f_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
+	report_vcfg3d_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is another formal generic parameter
 			-- appearing after `a_formal' in the list of formal
@@ -1242,7 +1203,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3g_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
+	report_vcfg3e_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Report VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are
 			-- involved in a cycle.
@@ -1258,13 +1219,13 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3g (a_class, a_cycle)
+				create an_error.make_vcfg3e (a_class, a_cycle)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vcfg3h_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
+	report_vcfg3f_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' contains the formal generic parameter
 			-- itself.
@@ -1286,7 +1247,7 @@ feature -- Validity errors
 			end
 			if reportable_vcfg3_error (a_class) then
 				if is_pedantic then
-					create an_error.make_vcfg3h (a_class, a_formal, a_type)
+					create an_error.make_vcfg3f (a_class, a_formal, a_type)
 					an_error.set_ise_reported (False)
 					an_error.set_ge_reported (False)
 					report_validity_error (an_error)
@@ -1294,7 +1255,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3i_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
+	report_vcfg3g_error (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Report VCFG-3 error: the constraint of `a_formal' in
 			-- `a_class' contains another formal generic parameter
 			-- appearing after `a_formal' in the list of formal
@@ -1316,7 +1277,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3j_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
+	report_vcfg3h_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Report VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are
 			-- involved in a cycle.
@@ -1332,7 +1293,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vcfg3_error (a_class) then
-				create an_error.make_vcfg3j (a_class, a_cycle)
+				create an_error.make_vcfg3h (a_class, a_cycle)
 				an_error.set_ise_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
@@ -3636,7 +3597,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr3a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
+	report_vhpr3a_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
 			--
@@ -3650,44 +3611,6 @@ feature -- Validity errors
 		do
 			if reportable_vhpr3_error (a_class) then
 				create an_error.make_vhpr3a (a_class, a_type)
-				an_error.set_ise_reported (False)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhpr3b_error (a_class: ET_CLASS; a_type: ET_BIT_N)
-			-- Report VHPR-3 error: invalid type `a_type'
-			-- in parent clause of `a_class'.
-			--
-			-- ETR: ?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhpr3_error (a_class) then
-				create an_error.make_vhpr3b (a_class, a_type)
-				an_error.set_ise_reported (False)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vhpr3c_error (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Report VHPR-3 error: invalid type `a_type'
-			-- in parent clause of `a_class'.
-			--
-			-- ETR: ?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vhpr3_error (a_class) then
-				create an_error.make_vhpr3c (a_class, a_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -5047,27 +4970,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vqmc6a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
-			-- Report VQMC-6 error: `an_attribute', declared in `a_class_impl, introduces
-			-- a bit constant but its type is not a Bit_type when viewed from one of its
-			-- descendants `a_class' (possibly itself).
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			bit_constant: an_attribute.constant.is_bit_constant
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vqmc6_error (a_class) then
-				create an_error.make_vqmc6a (a_class, a_class_impl, an_attribute)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vqui0a_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE)
 			-- Report VQUI error: the type of `a_unique', declared in `a_class_impl', is
 			-- not "INTEGER" when viewed from one of its descendants `a_class' (possibly itself).
@@ -5473,87 +5375,6 @@ feature -- Validity errors
 			if reportable_vtat2_error (a_class) then
 				create an_error.make_vtat2b (a_class, a_class_impl, a_type)
 				report_validity_error (an_error)
-			end
-		end
-
-	report_vtbt0a_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
-			-- Report VTBT error: the identifier in Bit_type
-			-- must be the final name of a constant attribute of
-			-- type INTEGER.
-			--
-			-- ETL2: p.210
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtbt_error (a_class) then
-				create an_error.make_vtbt0a (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtbt0b_error (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
-			-- Report VTBT error: the identifier in
-			-- Bit_type must be the final name of a feature.
-			--
-			-- ETL2: p.210
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtbt_error (a_class) then
-				create an_error.make_vtbt0b (a_class, a_type)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtbt0c_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
-			-- Report VTBT error: size for Bit_type must
-			-- be a positive integer constant.
-			--
-			-- ETL2: p.210
-			-- ETR: p.47
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vtbt_error (a_class) then
-				create an_error.make_vtbt0c (a_class, a_type)
-				an_error.set_ise_reported (False)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vtbt0d_error (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
-			-- Report VTBT error: size for Bit_type must
-			-- be a positive integer constant but it is actually
-			-- equal to -0.
-			--
-			-- ETL2: p.210
-			-- ETR: p.47
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if is_pedantic then
-				if reportable_vtbt_error (a_class) then
-					create an_error.make_vtbt0d (a_class, a_type)
-					an_error.set_ise_reported (False)
-					an_error.set_ge_reported (False)
-					report_validity_error (an_error)
-				end
 			end
 		end
 
@@ -6468,24 +6289,6 @@ feature -- Validity errors
 		do
 			if reportable_gvagp_error (a_class) then
 				create an_error.make_gvagp0a (a_class, anc1, anc2)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_gvhpr4a_error (a_class: ET_CLASS; a_parent: ET_BIT_N)
-			-- Report GVHPR-4 error: cannot inherit from Bit_type.
-			--
-			-- Not in ETL as validity error but as syntax error
-			-- GVHPR-4: See ETL2 VHPR
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_gvhpr4_error (a_class) then
-				create an_error.make_gvhpr4a (a_class, a_parent)
 				report_validity_error (an_error)
 			end
 		end
@@ -8132,16 +7935,6 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VQMC-6 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
 	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VQUI error be reported when it
 			-- appears in `a_class'?
@@ -8234,16 +8027,6 @@ feature -- Validity error status
 
 	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTAT-2 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vtbt_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VTBT error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8484,16 +8267,6 @@ feature -- Validity error status
 
 	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a GVAGP error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_gvhpr4_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a GVHPR-4 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

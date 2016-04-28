@@ -36,7 +36,6 @@ inherit
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
-			process_bit_feature,
 			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
@@ -327,16 +326,6 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			an_attribute_not_void: an_attribute /= Void
 			is_attribute: an_attribute.is_attribute
-		do
-		end
-
-	report_bit_feature_type (a_type: ET_BIT_FEATURE; a_query: ET_QUERY)
-			-- Report that the bit type `a_type' (of the form "BIT feature_name")
-			-- has not been processed with `a_query' as its feature.
-		require
-			no_error: not has_fatal_error
-			a_type_not_void: a_type /= Void
-			a_query_not_void: a_query /= Void
 		do
 		end
 
@@ -884,25 +873,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		do
-			reset_fatal_error (False)
-			if anchored_types_enabled then
-				if attached current_class_impl.named_query (a_type.name) as l_query then
-					report_bit_feature_type (a_type, l_query)
-				else
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				end
-			end
 		end
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)

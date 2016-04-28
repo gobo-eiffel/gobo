@@ -24,7 +24,6 @@ inherit
 			make
 		redefine
 			process_across_expression,
-			process_bit_constant,
 			process_binary_integer_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
@@ -487,23 +486,6 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		do
 			find_integer_constant_type (a_constant, a_context)
-		end
-
-	find_bit_constant_type (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- `a_context' represents the type in which `a_constant' appears.
-			-- It will be altered on exit to represent the type of `a_constant'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_constant_not_void: a_constant /= Void
-			a_context_not_void: a_context /= Void
-		local
-			l_integer_constant: ET_REGULAR_INTEGER_CONSTANT
-			l_type: ET_BIT_N
-		do
-			reset_fatal_error (False)
-			create l_integer_constant.make ((a_constant.literal.count - 1).out)
-			create l_type.make (l_integer_constant, tokens.unknown_class)
-			a_context.force_last (l_type)
 		end
 
 	find_bracket_expression_type (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -3021,12 +3003,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			find_binary_integer_constant_type (a_constant, current_context)
-		end
-
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-			find_bit_constant_type (a_constant, current_context)
 		end
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)

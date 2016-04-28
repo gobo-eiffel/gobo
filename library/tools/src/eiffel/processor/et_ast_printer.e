@@ -5,7 +5,7 @@ note
 		"Eiffel AST printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,6 @@ inherit
 			make_null,
 			process_break,
 			process_binary_integer_constant,
-			process_bit_constant,
 			process_c1_character_constant,
 			process_c2_character_constant,
 			process_c3_character_constant,
@@ -97,13 +96,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)
-			file.put_string (a_constant.literal)
-			process_break (a_constant.break)
-		end
-
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
 			file.put_string (a_constant.literal)
 			process_break (a_constant.break)
 		end

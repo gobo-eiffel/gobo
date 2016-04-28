@@ -36,8 +36,6 @@ inherit
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
-			process_bit_feature,
-			process_bit_n,
 			process_braced_type_list,
 			process_bracket_argument_list,
 			process_bracket_expression,
@@ -728,22 +726,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_string (a_constant.literal)
 			process_break (a_constant.break)
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			a_type.bit_keyword.process (Current)
-			print_space
-			a_type.name.process (Current)
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			a_type.bit_keyword.process (Current)
-			print_space
-			a_type.constant.process (Current)
 		end
 
 	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST)

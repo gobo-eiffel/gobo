@@ -27,16 +27,18 @@ three conditions:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-The constraint of the second formal generic parameter H of class
-CC is '-> DD [G]'. Validity VCFG-3 is not violated.
+The constraint of the first formal generic parameter G of class
+CC is '-> DD [H]'. Validity VCFG-3 is not violated.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    OK
+ISE Eiffel 5.0.016:    FAILED    Reports a violation of VTCT (i.e.
+                                 class H not in universe).
 SmallEiffel -0.76:     OK
-Halstenbach 3.2:       OK
+Halstenbach 3.2:       FAILED    Reports a violation of VTCT (i.e.
+                                 class H not in universe).
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -68,7 +70,7 @@ class BB
 
 inherit
 
-	CC [EE, DD [EE]]
+	CC [DD [EE], EE]
 
 feature
 
@@ -77,15 +79,15 @@ feature
 			e: EE
 			d: DD [EE]
 		do
-			!! e
-			item1 := e
 			!! d
-			item2 := d
+			item1 := d
+			!! e
+			item2 := e
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G, H -> DD [G]]
+class CC [G -> DD [H], H]
 
 feature
 
@@ -95,8 +97,8 @@ feature
 	f
 		do
 			if item2 /= Void and item1 /= Void then
-				item2.put (item1)
-				print (item2.item.generator)
+				item1.put (item2)
+				print (item1.item.generator)
 			end
 		end
 

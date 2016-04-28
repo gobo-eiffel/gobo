@@ -2,16 +2,14 @@ class BB
 
 inherit
 
-	CC [DD [BIT 32]]
+	CC [EE, ANY]
 
 feature
 
-	f
-		local
-			d: DD [BIT name]
+	g
 		do
-			create d
-			item := d
+			create item1
+			item2 := "gobo2"
 		end
 
 end -- class BB

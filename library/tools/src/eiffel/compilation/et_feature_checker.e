@@ -31,7 +31,6 @@ inherit
 			process_attribute,
 			process_bang_instruction,
 			process_binary_integer_constant,
-			process_bit_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
@@ -898,13 +897,6 @@ feature {NONE} -- Feature validity
 					else
 						set_fatal_error
 						error_handler.report_vqmc5a_error (current_class, current_class_impl, a_feature)
-					end
-				elseif l_constant.is_bit_constant then
-					if attached {ET_BIT_TYPE} l_type.named_type (current_type) as l_bit_type then
--- TODO: check bit size.
-					else
-						set_fatal_error
-						error_handler.report_vqmc6a_error (current_class, current_class_impl, a_feature)
 					end
 				else
 						-- Internal error: no other kind of constant.
@@ -5458,25 +5450,6 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			check_integer_constant_validity (a_constant, a_context)
-		end
-
-	check_bit_constant_validity (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT)
-			-- Check validity of `a_constant'.
-			-- `a_context' represents the type in which `a_constant' appears.
-			-- It will be altered on exit to represent the type of `a_constant'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_constant_not_void: a_constant /= Void
-			a_context_not_void: a_context /= Void
-		local
-			l_integer_constant: ET_REGULAR_INTEGER_CONSTANT
-			l_type: ET_BIT_N
-		do
-			has_fatal_error := False
-			create l_integer_constant.make ((a_constant.literal.count - 1).out)
-			create l_type.make (l_integer_constant, tokens.unknown_class)
-			a_context.force_last (l_type)
-			report_bit_constant (a_constant)
 		end
 
 	check_bracket_expression_validity (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT)
@@ -12809,14 +12782,6 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Report that a bit constant has been processed.
-		require
-			no_error: not has_fatal_error
-			a_constant_not_void: a_constant /= Void
-		do
-		end
-
 	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE)
 			-- Report that a boolean of type `a_type' in the context
 			-- of `current_type' has been processed.
@@ -13793,12 +13758,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			check_binary_integer_constant_validity (a_constant, current_context)
-		end
-
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-			check_bit_constant_validity (a_constant, current_context)
 		end
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)

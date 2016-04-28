@@ -2,19 +2,14 @@ class BB
 
 inherit
 
-	CC [EE, DD]
+	CC [ANY, ANY]
 
 feature
 
 	g
-		local
-			d: DD
-			e: EE
 		do
-			create e
-			item1 := e
-			create d
-			item2 := d
+			item1 := "gobo1"
+			item2 := "gobo2"
 		end
 
 end -- class BB

@@ -2,18 +2,16 @@ class BB
 
 inherit
 
-	CC [DD [like name]]
+	CC [like name]
+		rename
+			gobo as name
+		end
 
-feature
-
-	name: STRING
+feature -- Access
 
 	f
-		local
-			d: DD [like name]
 		do
-			create d
-			item := d
+			item := "gobo"
 		end
 
 end -- class BB

@@ -1,9 +1,16 @@
-class CC [G -> DD [BIT name]]
+class CC [G -> DD [G], H]
 
-feature -- Access
+feature
 
-	name: INTEGER = 32
+	item1: G
+	item2: H
 
-	item: G
+	f
+		do
+			if item1 /= Void then
+				item1.put (item1)
+				print (item1.item.generating_type)
+			end
+		end
 
 end -- class CC

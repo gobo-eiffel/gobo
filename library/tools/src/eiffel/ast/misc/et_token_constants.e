@@ -42,14 +42,6 @@ feature -- Class names
 			array_class_name_not_void: Result /= Void
 		end
 
-	bit_class_name: ET_CLASS_NAME
-			-- "BIT" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_bit_name)
-		ensure
-			bit_class_name_not_void: Result /= Void
-		end
-
 	boolean_class_name: ET_CLASS_NAME
 			-- "BOOLEAN" class name
 		once
@@ -3160,14 +3152,6 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	bit_keyword: ET_IDENTIFIER
-			-- 'BIT' keyword
-		once
-			create Result.make (capitalized_bit_name)
-		ensure
-			keyword_not_void: Result /= Void
-		end
-
 	check_keyword: ET_KEYWORD
 			-- 'check' keyword
 		once
@@ -3629,7 +3613,6 @@ feature -- Keyword and symbol names
 	capitalized_any_name: STRING = "ANY"
 	capitalized_arguments_32_name: STRING = "ARGUMENTS_32"
 	capitalized_array_name: STRING = "ARRAY"
-	capitalized_bit_name: STRING = "BIT"
 	capitalized_boolean_name: STRING = "BOOLEAN"
 	capitalized_character_name: STRING = "CHARACTER"
 	capitalized_character_8_name: STRING = "CHARACTER_8"

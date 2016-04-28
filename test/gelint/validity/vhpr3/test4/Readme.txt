@@ -21,21 +21,20 @@ ISE Eiffel:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-Class BB inherits from CC [BIT name], where `name' is a constant
-attribute declared of value 32 in class BB. But 'BIT name' is not
+Class BB inherits from CC [like name], but 'like name' is not
 only made up of class names nor names of formal generic parameters.
-Validity VHPR-3 is violated.
+Validity VHPR-3 is violated. Furthermore `name' is not the final
+name of a feature in class BB
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED     Does not report VHPR-3, but the
-                                  compiled program crashes during
-                                  execution.
-SmallEiffel -0.76:     PASSED     Does not report VHPR-3 and interprets
-                                  'BIT name' as 'BIT 32'.
-Halstenbach 3.2:       FAILED     Compiler crash in Degree 3.
+ISE Eiffel 5.0.016:    OK
+SmallEiffel -0.76:     PASSED    Does not report VHPR-3 but reports the
+                                 fact that `name' is not the final name
+                                 of a feature in class BB.
+Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -55,7 +54,7 @@ feature
 			b: BB
 		do
 			!! b
-			print (b.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA
@@ -64,17 +63,13 @@ class BB
 
 inherit
 
-	CC [BIT name]
-
-feature -- Access
-
-	name: INTEGER = 32
+	CC [like name]
 
 end -- class BB
 ----------------------------------------------------------------------
 class CC [G]
 
-feature -- Access
+feature
 
 	item: G
 

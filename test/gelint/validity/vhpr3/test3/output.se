@@ -1,15 +1,1 @@
-****** Error : Current type is BB. There is no feature name in
-class BB.
-Line 5 column 10 in BB (b.e) :
-	CC [BIT name]
-	        ^
-------
-****** Fatal Error : Feature name not found when starting look
-up from Type BB.
-Line 5 column 10 in BB (b.e) :
-	CC [BIT name]
-	        ^
-Line 11 column 7 in AA (a.e) :
-			b: BB
-			   ^
-------
+DD[BB]

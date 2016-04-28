@@ -40,11 +40,9 @@ create
 	make_vcfg3a,
 	make_vcfg3b,
 	make_vcfg3c,
-	make_vcfg3d,
 	make_vcfg3e,
-	make_vcfg3g,
+	make_vcfg3f,
 	make_vcfg3h,
-	make_vcfg3j,
 	make_vdjr0a,
 	make_vdjr0b,
 	make_vdjr0c,
@@ -153,8 +151,6 @@ create
 	make_vhpr1a,
 	make_vhpr1b,
 	make_vhpr3a,
-	make_vhpr3b,
-	make_vhpr3c,
 	make_vhrc1a,
 	make_vhrc2a,
 	make_vhrc4a,
@@ -218,7 +214,6 @@ create
 	make_vqmc3b,
 	make_vqmc4a,
 	make_vqmc5a,
-	make_vqmc6a,
 	make_vqui0a,
 	make_vred0a,
 	make_vred0b,
@@ -239,10 +234,6 @@ create
 	make_vtat1c,
 	make_vtat2a,
 	make_vtat2b,
-	make_vtbt0a,
-	make_vtbt0b,
-	make_vtbt0c,
-	make_vtbt0d,
 	make_vtcg3a,
 	make_vtcg4a,
 	make_vtcg4b,
@@ -287,7 +278,6 @@ create
 	make_vwst2a,
 	make_vxrt0a,
 	make_gvagp0a,
-	make_gvhpr4a,
 	make_gvhpr5a,
 	make_gvhso1a,
 	make_gvhso2a,
@@ -866,7 +856,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = second formal index
 		end
 
-	make_vcfg3a (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
+	make_vcfg3a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Create a new VCFG-3 error: invalid type `a_type' in
 			-- constraint of formal generic parameter of `a_class'.
 			--
@@ -906,87 +896,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = invalid type
 		end
 
-	make_vcfg3b (a_class: ET_CLASS; a_type: ET_BIT_N)
-			-- Create a new VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vcfg3b_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3b_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vcfg3c (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Create a new VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vcfg3c_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3c_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vcfg3d (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
+	make_vcfg3b (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Create a new VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is the formal generic parameter itself.
 			--
@@ -1001,9 +911,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_constraint.position
-			code := template_code (vcfg3d_template_code)
+			code := template_code (vcfg3b_template_code)
 			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3d_default_template)
+			default_template := default_message_template (vcfg3b_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -1030,7 +940,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = constraint
 		end
 
-	make_vcfg3e (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
+	make_vcfg3c (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
 			-- Create a new VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' is another formal generic parameter
 			-- appearing before `a_formal' in the list of formal
@@ -1047,9 +957,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_constraint.position
-			code := template_code (vcfg3e_template_code)
+			code := template_code (vcfg3c_template_code)
 			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3e_default_template)
+			default_template := default_message_template (vcfg3c_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -1076,7 +986,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = constraint
 		end
 
-	make_vcfg3g (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
+	make_vcfg3e (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Create a new VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are involved
 			-- in a cycle.
@@ -1095,9 +1005,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_cycle.first.name.position
-			code := template_code (vcfg3g_template_code)
+			code := template_code (vcfg3e_template_code)
 			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3g_default_template)
+			default_template := default_message_template (vcfg3e_default_template)
 			from
 				create a_string.make (20)
 				a_cursor := a_cycle.new_cursor
@@ -1135,7 +1045,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = cycle
 		end
 
-	make_vcfg3h (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
+	make_vcfg3f (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
 			-- Create a new VCFG-3 error: the constraint of `a_formal'
 			-- in `a_class' contains the formal generic parameter
 			-- itself.
@@ -1150,9 +1060,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_type.position
-			code := template_code (vcfg3h_template_code)
+			code := template_code (vcfg3f_template_code)
 			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3h_default_template)
+			default_template := default_message_template (vcfg3f_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -1179,7 +1089,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = formal type in constraint
 		end
 
-	make_vcfg3j (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
+	make_vcfg3h (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
 			-- Create a new VCFG-3 error: the constraints of the formal
 			-- generic parameters `a_cycle' of `a_class' are involved
 			-- in a cycle.
@@ -1198,9 +1108,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_cycle.first.name.position
-			code := template_code (vcfg3j_template_code)
+			code := template_code (vcfg3h_template_code)
 			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3j_default_template)
+			default_template := default_message_template (vcfg3h_default_template)
 			from
 				create a_string.make (20)
 				a_cursor := a_cycle.new_cursor
@@ -6196,7 +6106,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = class NONE
 		end
 
-	make_vhpr3a (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
+	make_vhpr3a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Create a new VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
 			--
@@ -6212,86 +6122,6 @@ feature {NONE} -- Initialization
 			code := template_code (vhpr3a_template_code)
 			etl_code := vhpr3_etl_code
 			default_template := default_message_template (vhpr3a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vhpr3b (a_class: ET_CLASS; a_type: ET_BIT_N)
-			-- Create a new VHPR-3 error: invalid type `a_type'
-			-- in parent clause of `a_class'.
-			--
-			-- ETR: ?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vhpr3b_template_code)
-			etl_code := vhpr3_etl_code
-			default_template := default_message_template (vhpr3b_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vhpr3c (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Create a new VHPR-3 error: invalid type `a_type'
-			-- in parent clause of `a_class'.
-			--
-			-- ETR: ?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vhpr3c_template_code)
-			etl_code := vhpr3_etl_code
-			default_template := default_message_template (vhpr3c_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -9260,51 +9090,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type
 		end
 
-	make_vqmc6a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
-			-- Create a new VQMC-6 error: `an_attribute', declared in `a_class_impl, introduces
-			-- a bit constant but its type is not a Bit_type when viewed from one of its
-			-- descendants `a_class' (possibly itself).
-			--
-			-- ETL2: p.264
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			an_attribute_not_void: an_attribute /= Void
-			bit_constant: an_attribute.constant.is_bit_constant
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := an_attribute.type.position
-			code := template_code (vqmc6a_template_code)
-			etl_code := vqmc6_etl_code
-			default_template := default_message_template (vqmc6a_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (an_attribute.lower_name, 7)
-			parameters.put (an_attribute.type.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-			-- dollar8: $8 = type
-		end
-
 	make_vqui0a (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE)
 			-- Create a new VQUI error: the type of `a_unique', declared in `a_class_impl', is
 			-- not "INTEGER" when viewed from one of its descendants `a_class' (possibly itself).
@@ -10269,174 +10054,6 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = invalid type
 			-- dollar8: $8 = anchor name
-		end
-
-	make_vtbt0a (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
-			-- Create a new VTBT error: the identifier in Bit_type
-			-- must be the final name of a constant attribute of
-			-- type INTEGER.
-			--
-			-- ETL2: p.210
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vtbt0a_template_code)
-			etl_code := vtbt_etl_code
-			default_template := default_message_template (vtbt0a_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			parameters.put (a_type.name.lower_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-			-- dollar8: $8 = constant feature name
-		end
-
-	make_vtbt0b (a_class: ET_CLASS; a_type: ET_BIT_FEATURE)
-			-- Create a new VTBT error: the identifier in
-			-- Bit_type must be the final name of a feature.
-			--
-			-- ETL2: p.210
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vtbt0b_template_code)
-			etl_code := vtbt_etl_code
-			default_template := default_message_template (vtbt0b_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			parameters.put (a_type.name.lower_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-			-- dollar8: $8 = constant feature name
-		end
-
-	make_vtbt0c (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
-			-- Create a new VTBT error: size for Bit_type must
-			-- be a positive integer constant.
-			--
-			-- ETL2: p.210
-			-- ETR: p.47
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vtbt0c_template_code)
-			etl_code := vtbt_etl_code
-			default_template := default_message_template (vtbt0c_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vtbt0d (a_class: ET_CLASS; a_type: ET_BIT_TYPE)
-			-- Create a new VTBT error: size for Bit_type must
-			-- be a positive integer constant but it is actually
-			-- equal to -0.
-			--
-			-- ETL2: p.210
-			-- ETR: p.47
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vtbt0d_template_code)
-			etl_code := vtbt_etl_code
-			default_template := default_message_template (vtbt0d_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
 		end
 
 	make_vtcg3a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE)
@@ -12385,46 +12002,6 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = ancestor2
 		end
 
-	make_gvhpr4a (a_class: ET_CLASS; a_parent: ET_BIT_N)
-			-- Create a new GVHPR-4 error: cannot inherit from Bit_type.
-			--
-			-- Not in ETL as validity error but as syntax error
-			-- GVHPR-4: See ETL2 VHPR
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_parent.position
-			code := template_code (gvhpr4a_template_code)
-			etl_code := gvhpr4_etl_code
-			default_template := default_message_template (gvhpr4a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_parent.position.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = parent
-		end
-
 	make_gvhpr5a (a_class: ET_CLASS; a_parent: ET_TUPLE_TYPE)
 			-- Create a new GVHPR-5 error: cannot inherit from Tuple_type.
 			--
@@ -14134,13 +13711,11 @@ feature {NONE} -- Implementation
 	vcfg1a_default_template: STRING = "formal generic parameter '$7' has the same name as a class in the surrounding universe."
 	vcfg2a_default_template: STRING = "'$7' is the name of formal generic parameters #$7 and #$8."
 	vcfg3a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
-	vcfg3c_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
-	vcfg3d_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
-	vcfg3e_default_template: STRING = "constraint of formal generic parameter '$7' is another formal generic parameter '$8'."
-	vcfg3g_default_template: STRING = "formal generic constraint cycle $7."
-	vcfg3h_default_template: STRING = "constraint of formal generic parameter '$7' contains '$8' itself."
-	vcfg3j_default_template: STRING = "formal generic constraint cycle $7."
+	vcfg3b_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
+	vcfg3c_default_template: STRING = "constraint of formal generic parameter '$7' is another formal generic parameter '$8'."
+	vcfg3e_default_template: STRING = "formal generic constraint cycle $7."
+	vcfg3f_default_template: STRING = "constraint of formal generic parameter '$7' contains '$8' itself."
+	vcfg3h_default_template: STRING = "formal generic constraint cycle $7."
 	vdjr0a_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Different number of arguments."
 	vdjr0b_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of argument number $10 differs."
 	vdjr0c_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of result differs."
@@ -14249,8 +13824,6 @@ feature {NONE} -- Implementation
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
-	vhpr3b_default_template: STRING = "invalid type '$7' in parent clause."
-	vhpr3c_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
 	vhrc2a_default_template: STRING = "feature name `$7' appears as first element of two Rename_pairs."
 	vhrc4a_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not an attribute nor a function with no argument."
@@ -14314,7 +13887,6 @@ feature {NONE} -- Implementation
 	vqmc3b_default_template: STRING = "integer value '$9' in constant attribute `$7' is not representable as an instance of '$8'."
 	vqmc4a_default_template: STRING = "real constant attribute `$7' is not declared of type REAL or DOUBLE."
 	vqmc5a_default_template: STRING = "string constant attribute `$7' is not declared of type STRING."
-	vqmc6a_default_template: STRING = "bit constant attribute `$7' is not declared of Bit_type."
 	vqui0a_default_template: STRING = "unique attribute `$7' is not declared of type INTEGER."
 	vred0a_default_template: STRING = "argument name '$7' appear twice in feature `$8'."
 	vred0b_default_template: STRING = "local variable name '$7' appear twice in feature `$8'."
@@ -14335,10 +13907,6 @@ feature {NONE} -- Implementation
 	vtat1c_default_template: STRING = "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
 	vtat2a_default_template: STRING = "anchor cycle $7."
 	vtat2b_default_template: STRING = "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not depend (possibly recursively) on a qualified anchored type."
-	vtbt0a_default_template: STRING = "invalid type '$7': `$8' is not the final name of a constant attribute of type INTEGER."
-	vtbt0b_default_template: STRING = "invalid type '$7': `$8' is not the final name of a feature."
-	vtbt0c_default_template: STRING = "invalid type '$7': bit size must be a positive integer constant."
-	vtbt0d_default_template: STRING = "invalid type '$7': bit size must be a positive integer constant."
 	vtcg3a_default_template: STRING = "actual generic parameter '$7' in type '$9' does not conform to constraint '$8'."
 	vtcg4a_default_template: STRING = "base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8' available as creation procedure to class $10."
 	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its generic constraint."
@@ -14383,7 +13951,6 @@ feature {NONE} -- Implementation
 	vwst2a_default_template: STRING = "feature name `$7' appears twice in strip expression."
 	vxrt0a_default_template: STRING = "Retry instruction does not appear in a Rescue clause."
 	gvagp0a_default_template: STRING = "ancestors with generic parameter mismatch: '$7' and '$8'."
-	gvhpr4a_default_template: STRING = "cannot inherit from Bit_type '$7'."
 	gvhpr5a_default_template: STRING = "cannot inherit from Tuple_type '$7'."
 	gvhso1a_default_template: STRING = "implicitly inherits from unknown class SYSTEM_OBJECT."
 	gvhso2a_default_template: STRING = "implicitly inherits from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class."
@@ -14526,7 +14093,6 @@ feature {NONE} -- Implementation
 	vrlv2_etl_code: STRING = "VRLV-2"
 	vtat1_etl_code: STRING = "VTAT-1"
 	vtat2_etl_code: STRING = "VTAT-2"
-	vtbt_etl_code: STRING = "VTBT"
 	vtcg3_etl_code: STRING = "VTCG-3"
 	vtcg4_etl_code: STRING = "VTCG-4"
 	vtct_etl_code: STRING = "VTCT"
@@ -14609,11 +14175,9 @@ feature {NONE} -- Implementation
 	vcfg3a_template_code: STRING = "vcfg3a"
 	vcfg3b_template_code: STRING = "vcfg3b"
 	vcfg3c_template_code: STRING = "vcfg3c"
-	vcfg3d_template_code: STRING = "vcfg3d"
 	vcfg3e_template_code: STRING = "vcfg3e"
-	vcfg3g_template_code: STRING = "vcfg3g"
+	vcfg3f_template_code: STRING = "vcfg3f"
 	vcfg3h_template_code: STRING = "vcfg3h"
-	vcfg3j_template_code: STRING = "vcfg3j"
 	vdjr0a_template_code: STRING = "vdjr0a"
 	vdjr0b_template_code: STRING = "vdjr0b"
 	vdjr0c_template_code: STRING = "vdjr0c"
@@ -14722,8 +14286,6 @@ feature {NONE} -- Implementation
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"
 	vhpr3a_template_code: STRING = "vhpr3a"
-	vhpr3b_template_code: STRING = "vhpr3b"
-	vhpr3c_template_code: STRING = "vhpr3c"
 	vhrc1a_template_code: STRING = "vhrc1a"
 	vhrc2a_template_code: STRING = "vhrc2a"
 	vhrc4a_template_code: STRING = "vhrc4a"
@@ -14787,7 +14349,6 @@ feature {NONE} -- Implementation
 	vqmc3b_template_code: STRING = "vqmc3b"
 	vqmc4a_template_code: STRING = "vqmc4a"
 	vqmc5a_template_code: STRING = "vqmc5a"
-	vqmc6a_template_code: STRING = "vqmc6a"
 	vqui0a_template_code: STRING = "vqui0a"
 	vred0a_template_code: STRING = "vred0a"
 	vred0b_template_code: STRING = "vred0b"
@@ -14808,10 +14369,6 @@ feature {NONE} -- Implementation
 	vtat1c_template_code: STRING = "vtat1c"
 	vtat2a_template_code: STRING = "vtat2a"
 	vtat2b_template_code: STRING = "vtat2b"
-	vtbt0a_template_code: STRING = "vtbt0a"
-	vtbt0b_template_code: STRING = "vtbt0b"
-	vtbt0c_template_code: STRING = "vtbt0c"
-	vtbt0d_template_code: STRING = "vtbt0d"
 	vtcg3a_template_code: STRING = "vtcg3a"
 	vtcg4a_template_code: STRING = "vtcg4a"
 	vtcg4b_template_code: STRING = "vtcg4b"
@@ -14856,7 +14413,6 @@ feature {NONE} -- Implementation
 	vwst2a_template_code: STRING = "vwst2a"
 	vxrt0a_template_code: STRING = "vxrt0a"
 	gvagp0a_template_code: STRING = "gvagp0a"
-	gvhpr4a_template_code: STRING = "gvhpr4a"
 	gvhpr5a_template_code: STRING = "gvhpr5a"
 	gvhso1a_template_code: STRING = "gvhso1a"
 	gvhso2a_template_code: STRING = "gvhso2a"

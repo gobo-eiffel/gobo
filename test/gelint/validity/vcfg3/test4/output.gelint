@@ -1,1 +1,2 @@
-[?ISE,!SE][VCFG-3] Class CC (1,20): invalid type 'BIT name' in constraint of formal generic parameter.
+[SE][VTCT] Class CC (1,16): type based on unknown class G.
+[?ISE][VCFG-3] Class CC (1,16): constraint of formal generic parameter 'G' is 'G' itself.

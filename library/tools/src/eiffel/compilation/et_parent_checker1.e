@@ -20,8 +20,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_like_current,
@@ -69,43 +67,6 @@ feature -- Validity checking
 		end
 
 feature {NONE} -- Parent validity
-
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE; a_parent: ET_PARENT)
-			-- Check validity of `a_type' when it appears in the parent
-			-- clause `a_parent' in `current_class'. Do not check whether
-			-- the actual generic parameters of `a_type' conform to their
-			-- corresponding formal parameters' constraints (this is done
-			-- after the ancestors for the involved classes have been built).
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_parent_not_void: a_parent /= Void
-		do
-				-- It is not valid to have "BIT name" in parent clauses.
-			set_fatal_error
-			error_handler.report_vhpr3a_error (current_class, a_type)
-		end
-
-	check_bit_n_validity (a_type: ET_BIT_N; a_parent: ET_PARENT)
-			-- Check validity of `a_type' when it appears in the parent
-			-- clause `a_parent' in `current_class'. Do not check whether
-			-- the actual generic parameters of `a_type' conform to their
-			-- corresponding formal parameters' constraints (this is done
-			-- after the ancestors for the involved classes have been built).
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_parent_not_void: a_parent /= Void
-		do
-			if a_type = a_parent.type then
-					-- Cannot inherit from 'BIT N'.
-				set_fatal_error
-				error_handler.report_gvhpr4a_error (current_class, a_type)
-			else
-					-- Not considered as a fatal error by gelint.
-				error_handler.report_vhpr3b_error (current_class, a_type)
-			end
-		end
 
 	check_class_type_validity (a_type: ET_CLASS_TYPE; a_parent: ET_PARENT)
 			-- Check validity of `a_type' when it appears in the parent
@@ -190,7 +151,7 @@ feature {NONE} -- Parent validity
 		do
 				-- It is not valid to have anchored types in parent clauses.
 			set_fatal_error
-			error_handler.report_vhpr3c_error (current_class, a_type)
+			error_handler.report_vhpr3a_error (current_class, a_type)
 		end
 
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE; a_parent: ET_PARENT)
@@ -221,22 +182,6 @@ feature {NONE} -- Parent validity
 		end
 
 feature {ET_AST_NODE} -- Type dispatcher
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			if attached current_parent as l_current_parent then
-				check_bit_feature_validity (a_type, l_current_parent)
-			end
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			if attached current_parent as l_current_parent then
-				check_bit_n_validity (a_type, l_current_parent)
-			end
-		end
 
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.

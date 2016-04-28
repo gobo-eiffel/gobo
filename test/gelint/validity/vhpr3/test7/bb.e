@@ -1,19 +1,14 @@
-class BB
+class BB [G]
 
 inherit
 
-	CC [DD [BIT name]]
+	CC [like Current]
 
 feature
 
-	name: INTEGER = 32
-
 	f
-		local
-			d: DD [BIT name]
 		do
-			create d
-			item := d
+			item := Current
 		end
 
 end -- class BB

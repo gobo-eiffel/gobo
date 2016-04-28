@@ -11,7 +11,7 @@ feature
 			b: BB
 		do
 			create b
-			print (b.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA

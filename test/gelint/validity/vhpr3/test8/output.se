@@ -1,9 +1,5 @@
-****** Fatal Error : Creation call on formal generic type (Type
-DD[BIT 32]).
-Line 13 column 4 in BB (b.e) :
-			!! item
-			^
-Line 5 column 8 in CC (c.e) :
-	item: G
-	      ^
+****** Fatal Error : Cyclic anchored definition.
+Line 5 column 6 in BB (b.e) :
+	CC [like name]
+	    ^
 ------

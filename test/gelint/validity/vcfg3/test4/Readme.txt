@@ -27,24 +27,23 @@ three conditions:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-The constraint of the formal generic parameter of class CC is
-DD [BIT name], but 'BIT name' is not only made up of class
-names nor names of formal generic parameters. Validity VCFG-3
-is violated. Furthermore `name' is not the final name of a
-feature in class CC.
+The constraint of the first formal generic parameter G of class
+CC is '-> G'. Validity VCFG-3 is violated. Note that the compiler
+should actually report a syntax error since 'G' is not a Class_type
+but a Formal_generic_name.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED    Does not report VCFG-3 nor the fact
-                                 that `name' is not the final name of
-                                 a feature in class CC, but interprets
-                                 'BIT name' as 'BIT -1'.
-SmallEiffel -0.76:     PASSED    Does not report VCFG-3 but reports the
-                                 fact that `name' is not the final name
-                                 of a feature in class CC.
-Halstenbach 3.2:       FAILED    Compiler crash in Degree 3.
+ISE Eiffel 5.0.016:    FAILED    Does not report VCFG-3 and enters
+                                 into an infinite loop when processing
+                                 class CC in Degree 3.
+SmallEiffel -0.76:     FAILED    Does not report VCFG-3 but complains
+                                 that class G is not in the universe.
+Halstenbach 3.2:       FAILED    Does not report VCFG-3 but reports
+                                 a violation of VTCT (i.e. class G
+                                 not in universe).
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -64,9 +63,10 @@ feature
 			b: BB
 		do
 			!! b
-			if b.item /= Void then
-				print (b.item.item.generating_type)
-			end
+			b.g
+			print (b.item1)
+			print (b.item2)
+			b.f
 		end
 
 end -- class AA
@@ -75,23 +75,31 @@ class BB
 
 inherit
 
-	CC [DD [BIT 32]]
+	CC [ANY, ANY]
+
+feature
+
+	g
+		do
+			item1 := "gobo1"
+			item2 := "gobo2"
+		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G -> DD [BIT name]]
+class CC [G -> G, H]
 
-feature -- Access
+feature
 
-	item: G
+	item1: G
+	item2: H
+
+	f
+		do
+			if item1 /= Void then
+				print (item1.generating_type)
+			end
+		end
 
 end -- class CC
-----------------------------------------------------------------------
-class DD [G]
-
-feature 
-
-	item: G
-
-end -- class DD
 ----------------------------------------------------------------------

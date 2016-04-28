@@ -1,4 +1,4 @@
-class CC [G -> H, H]
+class CC [G -> H, H -> G]
 
 feature
 
@@ -9,6 +9,9 @@ feature
 		do
 			if item1 /= Void then
 				print (item1.generator)
+			end
+			if item2 /= Void then
+				print (item2.generator)
 			end
 		end
 

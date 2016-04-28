@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,13 +55,12 @@ create
 %token <detachable ET_SYMBOL> E_ASSIGN_SYMBOL E_REVERSE
 %token <detachable ET_POSITION> E_UNKNOWN
 
-%token <detachable ET_BIT_CONSTANT> E_BIT
 %token <detachable ET_BOOLEAN_CONSTANT> E_FALSE E_TRUE
 %token <detachable ET_BREAK> E_BREAK
 %token <detachable ET_CHARACTER_CONSTANT> E_CHARACTER
 %token <detachable ET_CURRENT> E_CURRENT
 %token <detachable ET_FREE_OPERATOR> E_FREEOP
-%token <detachable ET_IDENTIFIER> E_IDENTIFIER E_BITTYPE E_TUPLE
+%token <detachable ET_IDENTIFIER> E_IDENTIFIER E_TUPLE
 %token <detachable ET_INTEGER_CONSTANT> E_INTEGER
 %token <detachable ET_KEYWORD_OPERATOR> E_AND E_OR E_XOR E_NOT E_IMPLIES
 %token <detachable ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
@@ -513,8 +512,6 @@ Index_value: Identifier
 		{ $$ := $1 }
 	| Manifest_string
 		{ $$ := $1 }
-	| E_BIT
-		{ $$ := $1 }
 	| Create_expression E_END
 		{ $$ := ast_factory.new_custom_attribute ($1, Void, $2) }
 	| Create_expression Manifest_tuple E_END
@@ -786,10 +783,6 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Untyped_integer_constant
-		{ $$ := new_bit_n ($1, $2) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	| E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
@@ -838,10 +831,6 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Untyped_integer_constant
-		{ $$ := new_bit_n ($1, $2) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	| E_SEPARATE E_TUPLE Constraint_tuple_actual_parameters_opt
@@ -968,17 +957,6 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 			end
 		}
 	| E_TUPLE ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
-		{
-			$$ := $4
-			if $$ /= Void then
-				if not $$.is_empty then
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
-				else
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
-				end
-			end
-		}
-	| E_BITTYPE ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
 		{
 			$$ := $4
 			if $$ /= Void then
@@ -2596,10 +2574,6 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Untyped_integer_constant
-		{ $$ := new_bit_n ($1, $2) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
 	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
@@ -2648,10 +2622,6 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Untyped_integer_constant
-		{ $$ := new_bit_n ($1, $2) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
 		{ $$ := new_tuple_type (Void, $1, $2) }
 	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
@@ -2702,10 +2672,6 @@ Type_no_bang_identifier: Class_name
 		{ $$ := new_named_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| Anchored_type
 		{ $$ := $1 }
-	| E_BITTYPE Untyped_integer_constant
-		{ $$ := new_bit_n ($1, $2) }
-	| E_BITTYPE Identifier
-		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
 	| E_SEPARATE E_TUPLE Tuple_actual_parameters_opt
@@ -2849,17 +2815,6 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			end
 		}
 	| E_TUPLE ',' Increment_counter Tuple_labeled_actual_parameter_list
-		{
-			$$ := $4
-			if $$ /= Void then
-				if not $$.is_empty then
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
-				else
-					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
-				end
-			end
-		}
-	| E_BITTYPE ',' Increment_counter Tuple_labeled_actual_parameter_list
 		{
 			$$ := $4
 			if $$ /= Void then
@@ -3852,8 +3807,6 @@ Untyped_bracket_target: Untyped_call_expression
 --      end
 --
 		{ $$ := new_once_manifest_string ($1, $2) }
-	| E_BIT
-		{ $$ := $1 }
 	| Manifest_array
 		{ $$ := $1 }
 	| Strip_expression
@@ -4078,8 +4031,6 @@ Manifest_constant: Boolean_constant
 	| Real_constant
 		{ $$ := $1 }
 	| Manifest_string
-		{ $$ := $1 }
-	| E_BIT
 		{ $$ := $1 }
 	;
 
@@ -4444,11 +4395,6 @@ Identifier: E_IDENTIFIER
 		{ $$ := $1 }
 	| E_TUPLE
 		{ $$ := $1 }
-	| E_BITTYPE
-		{
-				-- TO DO: reserved word `BIT'
-			$$ := $1
-		}
 	;
 
 ------------------------------------------------------------------------------------

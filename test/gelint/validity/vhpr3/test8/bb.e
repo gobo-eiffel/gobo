@@ -2,15 +2,18 @@ class BB
 
 inherit
 
-	CC [DD [BIT name]]
+	CC [like name]
+		redefine
+			name
+		end
 
-feature
+feature -- Access
 
-	name: INTEGER = 32
+	name: BB
 
 	f
 		do
-			create item
+			item := Current
 		end
 
 end -- class BB

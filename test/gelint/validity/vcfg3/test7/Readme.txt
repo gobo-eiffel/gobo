@@ -27,20 +27,16 @@ three conditions:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-The constraint of the first formal generic parameter G of class
-CC is '-> DD [G]'. Validity VCFG-3 is violated.
+The constraint of the second formal generic parameter H of class
+CC is '-> DD [G]'. Validity VCFG-3 is not violated.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    PASSED    Does not report VCFG-3 and correctly
-                                 considers G as conforming to DD [G].
-SmallEiffel -0.76:     FAILED    Does not report VCFG-3 but complains
-                                 that class G is not in the universe.
-Halstenbach 3.2:       FAILED    Does not report VCFG-3 but reports
-                                 a violation of VTCT (i.e. class G
-                                 not in universe).
+ISE Eiffel 5.0.016:    OK
+SmallEiffel -0.76:     OK
+Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -61,7 +57,8 @@ feature
 		do
 			!! b
 			b.g
-			print (b.item2)
+			print (b.item1.generator)
+			print (b.item2.generator)
 			b.f
 		end
 
@@ -71,19 +68,24 @@ class BB
 
 inherit
 
-	CC [EE, ANY]
+	CC [EE, DD [EE]]
 
 feature
 
 	g
+		local
+			e: EE
+			d: DD [EE]
 		do
-			!! item1
-			item2 := "gobo2"
+			!! e
+			item1 := e
+			!! d
+			item2 := d
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G -> DD [G], H]
+class CC [G, H -> DD [G]]
 
 feature
 
@@ -92,9 +94,9 @@ feature
 
 	f
 		do
-			if item1 /= Void then
-				item1.put (item1)
-				print (item1.item.generating_type)
+			if item2 /= Void and item1 /= Void then
+				item2.put (item1)
+				print (item2.item.generator)
 			end
 		end
 
@@ -114,10 +116,6 @@ feature
 end -- class DD
 ----------------------------------------------------------------------
 class EE
-
-inherit
-
-	DD [EE]
 
 end -- class EE
 ----------------------------------------------------------------------

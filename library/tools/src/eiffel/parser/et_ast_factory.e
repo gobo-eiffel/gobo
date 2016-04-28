@@ -985,16 +985,6 @@ feature -- AST leaves
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
-	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BIT_CONSTANT
-			-- New bit constant
-		require
-			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-1]+[bB]).recognizes (a_scanner.last_literal)
-		do
-			create Result.make (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-		end
-
 	new_break (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_BREAK
 			-- New break
 		require
@@ -1606,28 +1596,6 @@ feature -- AST nodes
 				create Result.make (a_type, a_target, a_call)
 				if l /= Void and then not l.position.is_null then
 					Result.set_left_bang (l)
-				end
-			end
-		end
-
-	new_bit_feature (a_bit: detachable ET_IDENTIFIER; an_id: detachable ET_IDENTIFIER; a_base_class: detachable ET_CLASS): detachable ET_BIT_FEATURE
-			-- New 'BIT Identifier' type
-		do
-			if an_id /= Void and a_base_class /= Void then
-				create Result.make (an_id, a_base_class)
-				if a_bit /= Void and then not a_bit.position.is_null then
-					Result.set_bit_keyword (a_bit)
-				end
-			end
-		end
-
-	new_bit_n (a_bit: detachable ET_IDENTIFIER; an_int: detachable ET_INTEGER_CONSTANT; a_base_class: detachable ET_CLASS): detachable ET_BIT_N
-			-- New 'BIT N' type
-		do
-			if an_int /= Void and a_base_class /= Void then
-				create Result.make (an_int, a_base_class)
-				if a_bit /= Void and then not a_bit.position.is_null then
-					Result.set_bit_keyword (a_bit)
 				end
 			end
 		end

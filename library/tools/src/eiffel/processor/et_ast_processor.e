@@ -221,27 +221,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		require
-			a_constant_not_void: a_constant /= Void
-		deferred
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
 	process_braced_class_name (a_name: ET_BRACED_CLASS_NAME)
 			-- Process `a_name'.
 		require

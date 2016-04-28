@@ -1,1 +1,1 @@
-[?ISE][VCFG-3] Class CC (1,19): constraint of formal generic parameter 'H' is another formal generic parameter 'G'.
+[ISE][VTCT] Class CC (1,16): type based on unknown class H.

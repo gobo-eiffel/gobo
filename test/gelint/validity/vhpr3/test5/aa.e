@@ -11,6 +11,7 @@ feature
 			b: BB
 		do
 			create b
+			b.f
 			print (b.item.generating_type)
 		end
 

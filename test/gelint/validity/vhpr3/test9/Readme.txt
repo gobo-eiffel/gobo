@@ -21,8 +21,8 @@ ISE Eiffel:
 
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
-Class BB inherits from CC [DD [like Current]], but 'like Current' is
-not only made up of class names nor names of formal generic parameters.
+Class BB inherits from CC [like name], but 'like name' is not
+only made up of class names nor names of formal generic parameters.
 Validity VHPR-3 is violated.
 ----------------------------------------------------------------------
 
@@ -30,8 +30,7 @@ Validity VHPR-3 is violated.
 TEST RESULTS:
 ----------------------------------------------------------------------
 ISE Eiffel 5.0.016:    OK
-SmallEiffel -0.76:     PASSED    Does not report VHPR-3 and interprets
-                                 'like Current' as BB.
+SmallEiffel -0.76:     OK
 Halstenbach 3.2:       OK
 gelint:                OK
 ----------------------------------------------------------------------
@@ -53,7 +52,7 @@ feature
 		do
 			!! b
 			b.f
-			print (b.item.generating_type)
+			print (b.item)
 		end
 
 end -- class AA
@@ -62,16 +61,18 @@ class BB
 
 inherit
 
-	CC [DD [like Current]]
+	CC [like name]
+		redefine
+			name
+		end
 
-feature
+feature -- Access
+
+	name: BB
 
 	f
-		local
-			d: DD [like Current]
 		do
-			!! d
-			item := d
+			item := Current
 		end
 
 end -- class BB
@@ -80,15 +81,9 @@ class CC [G]
 
 feature
 
+	name: CC [BB]
+
 	item: G
 
 end -- class CC
-----------------------------------------------------------------------
-class DD [G]
-
-feature 
-
-	item: G
-
-end -- class DD
 ----------------------------------------------------------------------

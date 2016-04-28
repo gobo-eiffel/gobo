@@ -2,10 +2,6 @@ class BB
 
 inherit
 
-	CC [BIT name]
-
-feature -- Access
-
-	name: INTEGER = 32
+	CC [like name]
 
 end -- class BB

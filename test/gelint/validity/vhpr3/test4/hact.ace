@@ -1,4 +1,4 @@
--- system:     "VHPR-3 test #4"
+-- system:     "VHPR-3 test #10"
 -- library:    "Gobo Eiffel Tools Library"
 -- compiler:   "Halstenbach ISS-BASE 3.0"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -23,7 +23,7 @@ default
 
 cluster
 
-	test4:	"$GOBO/test/gelint/validity/vhpr3/test4"
+	test10:	"$GOBO/test/gelint/validity/vhpr3/test10"
 
 component
 

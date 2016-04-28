@@ -2,16 +2,18 @@ class BB
 
 inherit
 
-	CC [DD [like Current]]
+	CC [like name]
+		redefine
+			name
+		end
 
-feature
+feature -- Access
+
+	name: BB
 
 	f
-		local
-			d: DD [like Current]
 		do
-			create d
-			item := d
+			item := Current
 		end
 
 end -- class BB

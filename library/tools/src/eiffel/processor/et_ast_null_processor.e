@@ -162,21 +162,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-		end
-
 	process_braced_class_name (a_name: ET_BRACED_CLASS_NAME)
 			-- Process `a_name'.
 		do

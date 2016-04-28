@@ -2,17 +2,18 @@ class BB
 
 inherit
 
-	CC [BIT name]
+	CC [DD [like name]]
 
-feature -- Access
+feature
 
-	name: INTEGER = 32
+	name: STRING
 
 	f
 		local
-			b32: BIT name
+			d: DD [like name]
 		do
-			item := b32
+			create d
+			item := d
 		end
 
 end -- class BB

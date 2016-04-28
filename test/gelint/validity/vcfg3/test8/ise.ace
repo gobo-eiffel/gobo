@@ -1,4 +1,4 @@
--- system:     "VCFG-3 test #8"
+-- system:     "VCFG-3 test #10"
 -- library:    "Gobo Eiffel Tools Library"
 -- compiler:   "ISE Eiffel 4.4"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -24,7 +24,7 @@ default
 
 cluster
 
-	test8:	"$GOBO/test/gelint/validity/vcfg3/test8"
+	test10:	"$GOBO/test/gelint/validity/vcfg3/test10"
 
 		-- EiffelBase
 	all base:	"$EIFFEL4/library/base"

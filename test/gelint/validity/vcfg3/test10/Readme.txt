@@ -28,19 +28,24 @@ three conditions:
 TEST DESCRIPTION:
 ----------------------------------------------------------------------
 The constraint of the first formal generic parameter G of class
-CC is '-> H'. Validity VCFG-3 is not violated. Note that the compiler
-should actually report a syntax error since 'H' is not a Class_type
-but a Formal_generic_name.
+CC is '-> H' and the second formal generic parameter H is '-> G'.
+Validity VCFG-3 is not violated but there is a cycle in the
+constraint declaration. Note that the compiler should actually
+report a syntax error since 'G' is not a Class_type but a
+Formal_generic_name.
 ----------------------------------------------------------------------
 
 
 TEST RESULTS:
 ----------------------------------------------------------------------
-ISE Eiffel 5.0.016:    FAILED    Reports a violation of VTCT (i.e.
-                                 class H not in universe).
-SmallEiffel -0.76:     OK
-Halstenbach 3.2:       FAILED    Reports a violation of VTCT (i.e.
-                                 class H not in universe).
+ISE Eiffel 5.0.016:    FAILED    Does not report VCFG-3 but reports
+                                 a violation of VTCT (i.e. class H
+                                 not in universe).
+SmallEiffel -0.76:     FAILED    Does not report VCFG-3 and enters
+                                 into an infinite loop.
+Halstenbach 3.2:       FAILED    Does not report VCFG-3 but reports
+                                 a violation of VTCT (i.e. class H
+                                 not in universe).
 gelint:                OK
 ----------------------------------------------------------------------
 
@@ -61,8 +66,8 @@ feature
 		do
 			!! b
 			b.g
-			print (b.item1.generator)
-			print (b.item2.generator)
+			print (b.item1)
+			print (b.item2)
 			b.f
 		end
 
@@ -72,24 +77,19 @@ class BB
 
 inherit
 
-	CC [EE, DD]
+	CC [ANY, ANY]
 
 feature
 
 	g
-		local
-			d: DD
-			e: EE
 		do
-			!! e
-			item1 := e
-			!! d
-			item2 := d
+			item1 := "gobo1"
+			item2 := "gobo2"
 		end
 
 end -- class BB
 ----------------------------------------------------------------------
-class CC [G -> H, H]
+class CC [G -> H, H -> G]
 
 feature
 
@@ -101,19 +101,10 @@ feature
 			if item1 /= Void then
 				print (item1.generator)
 			end
+			if item2 /= Void then
+				print (item2.generator)
+			end
 		end
 
 end -- class CC
-----------------------------------------------------------------------
-class DD
-
-end -- class DD
-----------------------------------------------------------------------
-class EE
-
-inherit
-
-	DD
-
-end -- class EE
 ----------------------------------------------------------------------

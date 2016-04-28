@@ -1,9 +1,0 @@
-Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VHPR(3)
-Error: Parent clause involves invalid type.
-What to do: make sure that all types appearing in the clause are
-  either class names or names of formal generic parameters of the class.
-
-Class: BB

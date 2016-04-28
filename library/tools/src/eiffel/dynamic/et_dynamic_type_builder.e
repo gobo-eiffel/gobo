@@ -42,7 +42,6 @@ inherit
 			report_assignment_attempt,
 			report_attribute_address,
 			report_attribute_assignment_target,
-			report_bit_constant,
 			report_boolean_constant,
 			report_character_8_constant,
 			report_character_32_constant,
@@ -1165,18 +1164,6 @@ feature {NONE} -- Event handling
 				else
 					set_dynamic_type_set (l_dynamic_type_set, a_writable)
 				end
-			end
-		end
-
-	report_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Report that a bit constant has been processed.
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
--- TODO: not supported.
-			if current_type = current_dynamic_type.base_type then
-				l_type := current_dynamic_system.none_type
-				set_dynamic_type_set (l_type, a_constant)
 			end
 		end
 

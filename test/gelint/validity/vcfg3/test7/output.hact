@@ -1,9 +1,5 @@
 Analyzing clusters
-
--------------------------------------------------------------------------------
-Error code: VTCT
-Error: type is based on unknown class.
-What to do: use an identifier that is the name of a class in the universe.
-
-Class: CC
-Unknown class name: G
+Freezing system
+System recompiled.
+You must now run "fish" in:
+EEDDEE

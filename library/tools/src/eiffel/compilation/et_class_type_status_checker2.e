@@ -20,8 +20,6 @@ inherit
 
 	ET_AST_NULL_PROCESSOR
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_qualified_like_braced_type,
@@ -52,21 +50,6 @@ feature -- Validity checking
 		end
 
 feature {NONE} -- Type validity
-
-	check_bit_type_validity (a_type: ET_BIT_TYPE)
-			-- Check whether all classes that appear in `a_type'
-			-- have their ancestors already successfully built.
-			-- Set `has_fatal_error' to True otherwise.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_class: ET_NAMED_CLASS
-		do
-			l_class := a_type.named_base_class
-			if not l_class.ancestors_built or else l_class.has_ancestors_error then
-				set_fatal_error
-			end
-		end
 
 	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check whether all classes that appear in `a_type'
@@ -129,18 +112,6 @@ feature {NONE} -- Type validity
 		end
 
 feature {ET_AST_NODE} -- Type dispatcher
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			check_bit_type_validity (a_type)
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			check_bit_type_validity (a_type)
-		end
 
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.

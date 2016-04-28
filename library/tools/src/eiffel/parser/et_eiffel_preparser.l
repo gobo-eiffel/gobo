@@ -6,7 +6,7 @@ note
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -620,12 +620,6 @@ UTF8_BOM (\xEF\xBB\xBF)
 				set_start_condition (INITIAL)
 			}
 }
-
-
-----------/** Eiffel bits **/---------------------------------------------------
-
-[0-1]+[bB]	{
-			}
 
 
 ----------/** Eiffel integers **/-----------------------------------------------

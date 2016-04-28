@@ -2,6 +2,14 @@ class BB
 
 inherit
 
-	CC [DD [BIT 32]]
+	CC [ANY, ANY]
+
+feature
+
+	g
+		do
+			item1 := "gobo1"
+			item2 := "gobo2"
+		end
 
 end -- class BB

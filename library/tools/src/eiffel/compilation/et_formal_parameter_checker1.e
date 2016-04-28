@@ -23,8 +23,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_formal_parameter_type,
@@ -123,47 +121,6 @@ feature {NONE} -- Constraint validity
 				current_formal := a_formal
 				a_constraint.process (Current)
 				current_formal := Void
-			end
-		end
-
-	check_bit_feature_constraint (a_type: ET_BIT_FEATURE; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
-			-- any dependences between formal parameters to check for
-			-- cycles later on. Do not check whether the actual generic
-			-- parameters of `a_type' conform to their corresponding
-			-- formal parameters' constraints (this is done after the
-			-- ancestors for the involved classes have been built).
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_formal_not_void: a_formal /= Void
-		do
-				-- It is not valid to have "BIT name" in constraints.
-			set_fatal_error
-			error_handler.report_vcfg3a_error (current_class, a_type)
-		end
-
-	check_bit_n_constraint (a_type: ET_BIT_N; a_formal: ET_FORMAL_PARAMETER)
-			-- Check whether `a_type' is valid when appearing in a
-			-- constraint of `a_formal' in `current_class'. Record
-			-- any dependences between formal parameters to check for
-			-- cycles later on. Do not check whether the actual generic
-			-- parameters of `a_type' conform to their corresponding
-			-- formal parameters' constraints (this is done after the
-			-- ancestors for the involved classes have been built).
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_formal_not_void: a_formal /= Void
-		do
-				-- Not considered as a fatal error by gelint.
-			error_handler.report_vcfg3b_error (current_class, a_type)
-			if a_formal.constraint = a_type then
-					-- `a_type' is the constraint of `a_formal'.
-					-- Set its base type if valid.
-				check bit_types_are_named: a_type.is_named_type end
-				a_formal.set_constraint_base_type (a_type)
 			end
 		end
 
@@ -284,7 +241,7 @@ feature {NONE} -- Constraint validity
 						-- base class of this formal parameter will be
 						-- considered to be "detachable ANY".
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
+						error_handler.report_vcfg3b_error (current_class, a_formal, a_type)
 					end
 				elseif index1 < index2 then
 						-- This formal is constrained by another formal
@@ -297,7 +254,7 @@ feature {NONE} -- Constraint validity
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3e_error (current_class, a_formal, a_type)
+						error_handler.report_vcfg3c_error (current_class, a_formal, a_type)
 					end
 				else
 					check last_case: index1 > index2 end
@@ -311,7 +268,7 @@ feature {NONE} -- Constraint validity
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3f_error (current_class, a_formal, a_type)
+						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
 					end
 				end
 			else
@@ -326,7 +283,7 @@ feature {NONE} -- Constraint validity
 						-- formal parameter will be the base class of its
 						-- constraint ("ARRAY" in the example above).
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3h_error (current_class, a_formal, a_type)
+						error_handler.report_vcfg3f_error (current_class, a_formal, a_type)
 					end
 				elseif index1 > index2 then
 						-- `a_formal' is constrained by another formal parameter
@@ -335,7 +292,7 @@ feature {NONE} -- Constraint validity
 						-- formal parameter will be the base class of its constraint
 						-- ("ARRAY" in the example above).
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3i_error (current_class, a_formal, a_type)
+						error_handler.report_vcfg3g_error (current_class, a_formal, a_type)
 					end
 						-- Check for cycles (e.g. "A [G -> ARRAY [H], H -> LIST [G]").
 					other_formal := a_parameters.formal_parameter (index1)
@@ -366,7 +323,7 @@ feature {NONE} -- Constraint validity
 		do
 				-- It is not valid to have anchored types in constraints.
 			set_fatal_error
-			error_handler.report_vcfg3c_error (current_class, a_type)
+			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
 	check_tuple_type_constraint (a_type: ET_TUPLE_TYPE; a_formal: ET_FORMAL_PARAMETER)
@@ -432,7 +389,7 @@ feature {NONE} -- Constraint cycles
 						-- this cycle will be considered to be "detachable ANY".
 					has_cycle := True
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3g_error (current_class, l_cycle)
+						error_handler.report_vcfg3e_error (current_class, l_cycle)
 					end
 				end
 				a_parameters := current_class.formal_parameters
@@ -490,7 +447,7 @@ feature {NONE} -- Constraint cycles
 						-- parameters) the base class of its constraint if the
 						-- constraint is itself a formal parameter.
 					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
-						error_handler.report_vcfg3j_error (current_class, l_cycle)
+						error_handler.report_vcfg3h_error (current_class, l_cycle)
 					end
 				end
 				formal_parameter_sorter.wipe_out
@@ -506,22 +463,6 @@ feature {NONE} -- Constraint cycles
 			-- of the form "A [G -> H, H -> G]"
 
 feature {ET_AST_NODE} -- Type dispatcher
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			if attached current_formal as l_current_formal then
-				check_bit_feature_constraint (a_type, l_current_formal)
-			end
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			if attached current_formal as l_current_formal then
-				check_bit_n_constraint (a_type, l_current_formal)
-			end
-		end
 
 	process_class (a_class: ET_CLASS)
 			-- Process `a_class'.

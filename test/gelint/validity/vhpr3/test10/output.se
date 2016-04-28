@@ -1,11 +1,1 @@
-****** Error : Current type is BB. There is no feature name in
-class BB.
-Line 5 column 11 in BB (b.e) :
-	CC [like name]
-	         ^
-------
-****** Fatal Error :  Anchor not found.
-Line 5 column 11 in BB (b.e) :
-	CC [like name]
-	         ^
-------
+BB

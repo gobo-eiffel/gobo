@@ -299,25 +299,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-		end
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			a_type.bit_keyword.process (Current)
-			a_type.name.process (Current)
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			a_type.bit_keyword.process (Current)
-			a_type.constant.process (Current)
-		end
-
 	process_braced_class_name (a_name: ET_BRACED_CLASS_NAME)
 			-- Process `a_name'.
 		do

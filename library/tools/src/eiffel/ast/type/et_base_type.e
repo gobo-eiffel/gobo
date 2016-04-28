@@ -27,7 +27,6 @@ inherit
 			has_identifier_anchored_type,
 			depends_on_qualified_anchored_type,
 			has_formal_types,
-			conforms_from_bit_type_with_type_marks,
 			conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks,
 			resolved_formal_parameters,
@@ -58,17 +57,14 @@ inherit
 			same_named_type_with_type_marks as context_same_named_type_with_type_marks,
 			same_base_type as context_same_base_type,
 			same_base_type_with_type_marks as context_same_base_type_with_type_marks,
-			same_named_bit_type_with_type_marks as context_same_named_bit_type_with_type_marks,
 			same_named_class_type_with_type_marks as context_same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks as context_same_named_formal_parameter_type_with_type_marks,
 			same_named_tuple_type_with_type_marks as context_same_named_tuple_type_with_type_marks,
-			same_base_bit_type_with_type_marks as context_same_base_bit_type_with_type_marks,
 			same_base_class_type_with_type_marks as context_same_base_class_type_with_type_marks,
 			same_base_formal_parameter_type_with_type_marks as context_same_base_formal_parameter_type_with_type_marks,
 			same_base_tuple_type_with_type_marks as context_same_base_tuple_type_with_type_marks,
 			conforms_to_type as context_conforms_to_type,
 			conforms_to_type_with_type_marks as context_conforms_to_type_with_type_marks,
-			conforms_from_bit_type_with_type_marks as context_conforms_from_bit_type_with_type_marks,
 			conforms_from_class_type_with_type_marks as context_conforms_from_class_type_with_type_marks,
 			conforms_from_formal_parameter_type_with_type_marks as context_conforms_from_formal_parameter_type_with_type_marks,
 			conforms_from_tuple_type_with_type_marks as context_conforms_from_tuple_type_with_type_marks,
@@ -324,43 +320,6 @@ feature -- Comparison
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
-
-	conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Does `other' type appearing in `other_context' conform
-			-- to current type appearing in `a_context'?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_other_base_class: ET_CLASS
-			l_any_type: ET_CLASS_TYPE
-		do
-			l_other_base_class := other.base_class
-			if l_other_base_class.is_preparsed then
-					-- Use 'implicit_attached_type_mark' because BIT types
-					-- are expanded, and hence attached. So we should ignore any
-					-- 'detachable' type mark modifier.
-				Result := conforms_from_class_type_with_type_marks (l_other_base_class, tokens.implicit_attached_type_mark, other_context, a_type_mark, a_context)
-			end
-			if not Result then
-					-- See VNCB-1 (ETL2 p.229).
-					-- "BIT N" conforms to "ANY", so "BIT N" conforms to
-					-- current class if "ANY" conforms to it.
-				if not base_class.is_preparsed then
-						-- Internal error: the base class is not even preparsed (i.e. we
-						-- know nothing, not even its filename). Therefore it is impossible
-						-- to determine whether "ANY" conforms to it.
-					Result := False
-				else
-						-- Use 'implicit_attached_type_mark' because BIT types
-						-- are expanded, and hence attached. So we should ignore any
-						-- 'detachable' type mark modifier.
-					l_any_type := base_class.current_system.any_type
-					Result := conforms_from_class_type_with_type_marks (l_any_type, tokens.implicit_attached_type_mark, other_context, a_type_mark, a_context)
-				end
-			end
-		end
 
 	conforms_from_formal_parameter_type_with_type_marks (other: ET_FORMAL_PARAMETER_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does `other' type appearing in `other_context' conform
@@ -628,15 +587,6 @@ feature -- Type context
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 
-	context_same_named_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
-			-- Do current context and `other' type appearing in
-			-- `other_context' have the same named type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		do
-			Result := same_named_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-		end
-
 	context_same_named_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
@@ -664,15 +614,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 			Result := same_named_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 		end
 
-	context_same_base_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
-			-- Do current context and `other' type appearing in
-			-- `other_context' have the same base type?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-		do
-			Result := same_base_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-		end
-
 	context_same_base_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
@@ -698,16 +639,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 			-- overridden by `a_type_mark' and `other_type_mark', if not Void
 		do
 			Result := same_base_tuple_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-		end
-
-	context_conforms_from_bit_type_with_type_marks (other: ET_BIT_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
-			-- Does `other' type appearing in `other_context' conform to current context?
-			-- Note that the type mark status of `Current' and `other' is
-			-- overridden by `a_type_mark' and `other_type_mark', if not Void
-			-- (Note: 'current_system.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		do
-			Result := conforms_from_bit_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 		end
 
 	context_conforms_from_class_type_with_type_marks (other: ET_CLASS_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN

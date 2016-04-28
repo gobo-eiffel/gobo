@@ -2,19 +2,11 @@ Eiffel compilation manager
 Processing options
 -------------------------------------------------------------------------------
 
-Error code: VNCB
-Type error: non-conforming use of Bit_type.
-What to do: use only the following conformance combinations for a type
-  BIT `N': conformance to ANY and to BIT `P' for `N' <= `P'.
+Error code: VHPR(3)
+Error: Parent clause involves invalid type.
+What to do: make sure that all types appearing in the clause are
+  either class names or names of formal generic parameters of the class.
 
 Class: BB
-Feature: f
-Target name: item
-Target type: BIT -1
-Source_type: BIT name
-Line: 15
-      do
-->      item := b32
-      end
 
 -------------------------------------------------------------------------------

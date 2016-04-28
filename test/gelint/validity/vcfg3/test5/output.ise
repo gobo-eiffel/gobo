@@ -1,18 +1,6 @@
 Eiffel compilation manager
 Processing options
--------------------------------------------------------------------------------
-
-Error code: VTCG
-Error: actual generic parameter does not conform to constraint.
-What to do: make sure that actual parameter is a type conforming to the
-  constraint (the type appearing after `->' for the corresponding formal).
-
-Class: BB
-In parent clause: CC [DD [BIT 32]]
-
-For type: CC [DD [BIT 32]]
-Argument number: 1:
-Actual generic parameter: DD [BIT 32]
-Type to which it should conform: DD [BIT -1]
-
--------------------------------------------------------------------------------
+Freezing system
+System recompiled.
+You must now run "finish_freezing" in:
+gobo2EE
