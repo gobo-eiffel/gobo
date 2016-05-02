@@ -470,7 +470,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_type_expanded_with_type_mark (a_type_mark, a_context) /= other.is_type_expanded_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end
@@ -500,7 +500,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_type_expanded_with_type_mark (a_type_mark, a_context) /= other.is_type_expanded_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end
@@ -530,7 +530,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_type_expanded_with_type_mark (a_type_mark, a_context) /= other.is_type_expanded_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end
@@ -583,6 +583,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif base_class = other_base_class then
 				if is_type_expanded_with_type_mark (a_type_mark, a_context) and not other.is_type_expanded_with_type_mark (other_type_mark, other_context) then
+					Result := False
+				elseif other_context.scoop_mode and then not (other.is_type_separate_with_type_mark (other_type_mark, other_context) implies is_type_separate_with_type_mark (a_type_mark, a_context)) then
 					Result := False
 				elseif not attached other.actual_parameters as l_other_actual_parameters then
 					check other_not_generic: not other.is_generic end

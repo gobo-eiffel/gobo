@@ -362,6 +362,9 @@ feature -- Compilation options
 	multithreaded_mode: BOOLEAN
 			-- Should the generated application be thread-capable?
 
+	scoop_mode: BOOLEAN
+			-- Should the generated application be SCOOP-capable?
+
 	exception_trace_mode: BOOLEAN
 			-- Should the generated application be able to provide an exception trace?
 			-- An exception trace is the execution path from the root creation procedure

@@ -267,7 +267,7 @@ feature -- Types
 					from until
 						l_result /= Void
 					loop
-						if l_type.base_type.same_base_type (a_type, a_context, l_any) then
+						if l_type.base_type.same_base_type_with_type_marks (a_type, tokens.implicit_attached_separate_type_mark, a_context, tokens.implicit_attached_separate_type_mark, l_any) then
 							l_result := l_type
 						elseif not attached l_type.next_type as l_next_type then
 							l_result := new_dynamic_type (a_type, a_context)

@@ -290,6 +290,12 @@ feature -- Status report
 			Result := root_context.base_class.universe.attachment_type_conformance_mode
 		end
 
+	scoop_mode: BOOLEAN
+			-- Should the generated application be SCOOP-capable?
+		do
+			Result := root_context.base_class.current_system.scoop_mode
+		end
+
 feature -- Comparison
 
 	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN
