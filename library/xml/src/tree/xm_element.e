@@ -191,7 +191,7 @@ feature -- Access (from XM_COMPOSITE)
 
 	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
-			-- element with this qualified name ?
+			-- element with this qualified name?
 		local
 			a_cursor: DS_LINEAR_CURSOR [XM_NODE]
 		do

@@ -26,6 +26,38 @@ feature -- Status report
 			Result := children.is_empty
 		end
 
+	before: BOOLEAN
+			-- Is there no valid position to left of internal cursor in list of children?
+		do
+			Result := children.before
+		ensure
+			before_constraint: Result implies off
+		end
+
+	after: BOOLEAN
+			-- Is there no valid position to right of internal cursor in list of children?
+		do
+			Result := children.after
+		ensure
+			after_constraint: Result implies off
+		end
+
+	off: BOOLEAN
+			-- Is there no item at internal cursor position in list of children?
+		do
+			Result := children.off
+		ensure
+			empty_constraint: is_empty implies Result
+		end
+
+	valid_index (i: INTEGER): BOOLEAN
+			-- Is `i' a valid index value in list of children?
+		do
+			Result := children.valid_index (i)
+		ensure
+			definition: Result = (0 <= i and i <= (count + 1))
+		end
+
 feature -- Access
 
 	count: INTEGER
@@ -50,6 +82,14 @@ feature -- Access
 			not_empty: not is_empty
 		do
 			Result := children.last
+		end
+
+	item_for_iteration: like last
+			-- Item at internal cursor position in list of children
+		require
+			not_off: not off
+		do
+			Result := children.item_for_iteration
 		end
 
 	element_by_name (a_name: STRING): detachable XM_ELEMENT
@@ -86,7 +126,7 @@ feature -- Access
 
 	has_element_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN
 			-- Has current node at least one direct child
-			-- element with given qualified name ?
+			-- element with given qualified name?
 		require
 			a_uri_not_void: a_uri /= Void
 			a_name_not_void: a_name /= Void
@@ -111,8 +151,16 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
+	index: INTEGER
+			-- Index of current internal cursor position in list of children
+		do
+			Result := children.index
+		ensure
+			valid_index: valid_index (Result)
+		end
+
 	new_cursor: DS_LINKED_LIST_CURSOR [like last]
-			-- New external cursor for traversal
+			-- New external cursor for traversal in list of children
 		do
 			Result := children.new_cursor
 		ensure
@@ -146,6 +194,34 @@ feature -- Text
 		deferred
 		end
 
+feature -- Cursor movement
+
+	start
+			-- Move internal cursor to first child.
+		do
+			children.start
+		ensure
+			empty_behavior: is_empty implies after
+		end
+
+	forth
+			-- Move internal cursor to next child.
+		require
+			not_after: not after
+		do
+			children.forth
+		end
+
+	go_i_th (i: INTEGER)
+			-- Move internal cursor to `i'-th position in list of children.
+		require
+			valid_index: valid_index (i)
+		do
+			children.go_i_th (i)
+		ensure
+			moved: index = i
+		end
+
 feature -- Element change
 
 	put_first, force_first (a_node: like last)
@@ -158,12 +234,12 @@ feature -- Element change
 				children.force_first (a_node)
 			end
 		ensure
-			one_more: children.count = old children.count + 1
+			not_empty: not is_empty
 			inserted: first = a_node
 		end
 
 	put_last, force_last (a_node: like last)
-			-- Add `a_node' to then end of list of children.
+			-- Add `a_node' to the end of list of children.
 		require
 			a_node_not_void: a_node /= Void
 		do
@@ -172,14 +248,44 @@ feature -- Element change
 				children.force_last (a_node)
 			end
 		ensure
-			one_more: children.count = old children.count + 1
+			not_empty: not is_empty
 			inserted: last = a_node
+		end
+
+feature -- Removal
+
+	remove_at
+			-- Remove node at internal cursor position in list of children.
+			-- Move any cursors at this position `forth'.
+		require
+			not_off: not off
+		do
+			children.remove_at
+		ensure
+			one_less: count = old count - 1
+		end
+
+	delete (a_node: like last)
+			-- Remove all occurrences of `a_node' from list of children.
+			-- (Use `=' criterion otherwise.)
+			-- Move all cursors `off'.
+		do
+			children.delete (a_node)
+		end
+
+	wipe_out
+			-- Remove all nodes from list of children.
+			-- Move all cursors `off'.
+		do
+			children.wipe_out
+		ensure
+			wiped_out: is_empty
 		end
 
 feature {NONE} -- Preprocessing
 
 	before_addition (a_node: like last)
-			-- Remove node from original parent if not us.
+			-- Remove node from original parent if not used.
 		require
 			a_node_not_void: a_node /= Void
 		do

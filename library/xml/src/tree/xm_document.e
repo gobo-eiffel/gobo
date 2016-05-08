@@ -86,7 +86,7 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	remove_previous_root_element
-			-- Remove previous root element from composite:
+			-- Remove previous root element from composite.
 		local
 			a_cursor: like new_cursor
 		do
