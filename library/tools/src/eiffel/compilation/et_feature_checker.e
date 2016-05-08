@@ -113,9 +113,6 @@ inherit
 			process_void
 		end
 
-	ET_SHARED_ERROR_HANDLERS
-		export {NONE} all end
-
 	ET_SHARED_STANDARD_ONCE_KEYS
 		export {NONE} all end
 
@@ -2262,16 +2259,14 @@ feature {NONE} -- Type checking
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_error_handler: ET_ERROR_HANDLER
 			l_context: ET_NESTED_TYPE_CONTEXT
 		do
-			l_error_handler := current_system.error_handler
-			current_system.set_error_handler (null_error_handler)
 			l_context := new_context (current_type)
+			type_checker.set_class_interface_error_only (True)
 			type_checker.check_type_validity (a_type, current_closure_impl, current_class_impl, l_context)
+			type_checker.set_class_interface_error_only (False)
 			free_context (l_context)
 			Result := not type_checker.has_fatal_error
-			current_system.set_error_handler (l_error_handler)
 		end
 
 	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_position: ET_POSITION)
