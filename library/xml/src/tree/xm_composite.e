@@ -5,7 +5,7 @@ note
 		"XML nodes that can contain other xml nodes"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2013, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2016, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,11 @@ deferred class XM_COMPOSITE
 inherit
 
 	XM_NODE
+
+	ITERABLE [XM_COMPOSITE_NODE]
+		rename
+			new_cursor as new_iterator
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -167,6 +172,12 @@ feature -- Access
 			new_cursor_not_void: Result /= Void
 		end
 
+	new_iterator: like new_cursor
+			-- New external cursor to be used in the 'across' construct
+		do
+			Result := children.new_iterator
+		end
+		
 feature -- Text
 
 	text: detachable STRING

@@ -5,7 +5,7 @@ note
 		"Cursors for data structures that can be traversed forward"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,12 +26,27 @@ inherit
 		redefine
 			after
 		end
-		
+
+	ITERABLE [G]
+		rename
+			new_cursor as new_iterator
+		undefine
+			copy,
+			is_equal
+		end
+
 feature -- Access
 
 	container: DS_LINEAR [G]
 			-- Data structure traversed
 		deferred
+		end
+
+	new_iterator: like Current
+			-- New external cursor to be used in the 'across' construct
+			-- to traverse `container'
+		do
+			Result := container.new_iterator
 		end
 
 feature -- Status report
