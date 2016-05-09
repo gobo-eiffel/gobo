@@ -63,6 +63,14 @@ feature -- Status report
 			definition: Result = (0 <= i and i <= (count + 1))
 		end
 
+	valid_cursor (a_cursor: like new_cursor): BOOLEAN
+			-- Is `a_cursor' a valid cursor?
+		require
+			a_cursor_not_void: a_cursor /= Void
+		do
+			Result := children.valid_cursor (a_cursor)
+		end
+
 feature -- Access
 
 	count: INTEGER
@@ -177,7 +185,7 @@ feature -- Access
 		do
 			Result := children.new_iterator
 		end
-		
+
 feature -- Text
 
 	text: detachable STRING
@@ -223,6 +231,15 @@ feature -- Cursor movement
 			children.forth
 		end
 
+	finish
+			-- Move internal cursor to last child.
+		do
+			children.finish
+		ensure
+			empty_behavior: is_empty implies before
+			not_empty_behavior: not is_empty implies is_last
+		end
+
 	go_i_th (i: INTEGER)
 			-- Move internal cursor to `i'-th position in list of children.
 		require
@@ -231,6 +248,17 @@ feature -- Cursor movement
 			children.go_i_th (i)
 		ensure
 			moved: index = i
+		end
+
+	go_to (a_cursor: like new_cursor)
+			-- Move internal cursor to `a_cursor''s position.
+		require
+			cursor_not_void: a_cursor /= Void
+			valid_cursor: valid_cursor (a_cursor)
+		do
+			children.go_to (a_cursor)
+		ensure
+			same_position: children.same_position (a_cursor)
 		end
 
 feature -- Element change
@@ -263,7 +291,43 @@ feature -- Element change
 			inserted: last = a_node
 		end
 
+	put_right (a_node: like last)
+			-- Add `a_node' to right of internal cursor position in the list of children.
+			-- Do not move cursors.
+		require
+			not_after: not after
+		do
+			before_addition (a_node)
+			children.put_right (a_node)
+		ensure
+			one_more: count = old count + 1
+		end
+
+	replace (a_node: like last; i: INTEGER)
+			-- Replace child at index `i' by `a_node'.
+			-- Do not move cursors.
+		require
+			valid_index: 1 <= i and i <= count
+		do
+			before_addition (a_node)
+			children.replace (a_node, i)
+		ensure
+			same_count: count = old count
+		end
+
 feature -- Removal
+
+	remove (i: INTEGER)
+			-- Remove node at `i'-th position.
+			-- Move any cursors at this position forth.
+		require
+			not_empty: not is_empty
+			valid_index: 1 <= i and i <= count
+		do
+			children.remove (i)
+		ensure
+			one_less: count = old count - 1
+		end
 
 	remove_at
 			-- Remove node at internal cursor position in list of children.
@@ -272,6 +336,17 @@ feature -- Removal
 			not_off: not off
 		do
 			children.remove_at
+		ensure
+			one_less: count = old count - 1
+		end
+
+	remove_last
+			-- Remove node at end of list of children.
+			-- Move any cursors at this position `forth'.
+		require
+			not_empty: not is_empty
+		do
+			children.remove_last
 		ensure
 			one_less: count = old count - 1
 		end
