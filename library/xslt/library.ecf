@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd"
 	name="xpath"
 	uuid="E1FFE100-60B0-0019-0001-000020160221"
-	library_target="xpath">
+	library_target="xslt">
 
 	<description>
 		description: "ECF file for the Gobo Eiffel XML XSLT Library"
@@ -14,7 +14,7 @@
 		license: "MIT License"
 	</description>
 
-	<target name="xpath">
+	<target name="xslt">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
