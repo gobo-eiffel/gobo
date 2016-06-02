@@ -213,6 +213,21 @@ feature -- Access
 	file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
+feature -- Status report
+
+	use_is_keyword: BOOLEAN
+			-- Should the obsolete 'is' keyword be used?
+
+feature -- Status setting
+
+	set_use_is_keyword (b: BOOLEAN)
+			-- Set `use_is_keyword' to `b'.
+		do
+			use_is_keyword := b
+		ensure
+			use_is_keyword_set: use_is_keyword = b
+		end
+
 feature -- Indentation
 
 	indentation: INTEGER
@@ -1201,7 +1216,11 @@ feature {ET_AST_NODE} -- Processing
 				l_assigner.process (Current)
 				print_space
 			end
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				tokens.is_keyword.process (Current)
+			else
+				tokens.equal_symbol.process (Current)
+			end
 			process_break (a_feature.is_keyword.break)
 			print_space
 			a_feature.constant.process (Current)
@@ -1517,8 +1536,10 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -1609,8 +1630,10 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -1717,8 +1740,10 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -1887,8 +1912,10 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -2059,8 +2086,10 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -2123,8 +2152,10 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -2421,8 +2452,10 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -2619,8 +2652,10 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -3852,8 +3887,10 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_assigner.process (Current)
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -4062,8 +4099,10 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
-			print_space
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				print_space
+				tokens.is_keyword.process (Current)
+			end
 			if attached a_feature.is_keyword as l_is_keyword then
 				process_break (l_is_keyword.break)
 			end
@@ -5018,7 +5057,11 @@ feature {ET_AST_NODE} -- Processing
 				l_assigner.process (Current)
 				print_space
 			end
-			tokens.is_keyword.process (Current)
+			if use_is_keyword then
+				tokens.is_keyword.process (Current)
+			else
+				tokens.equal_symbol.process (Current)
+			end
 			process_break (a_feature.is_keyword.break)
 			print_space
 			tokens.unique_keyword.process (Current)

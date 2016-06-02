@@ -2982,6 +2982,14 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	equal_symbol: ET_SYMBOL
+			-- '=' symbol
+		once
+			create Result.make_equal
+		ensure
+			symbol_not_void: Result /= Void
+		end
+
 	left_array_symbol: ET_SYMBOL
 			-- '<<' symbol
 		once
