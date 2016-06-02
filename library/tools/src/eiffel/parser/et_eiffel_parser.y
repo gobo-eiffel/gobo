@@ -3247,20 +3247,24 @@ Creation_instruction: '!' Type_no_bang_identifier '!' Writable
 		{ $$ := ast_factory.new_bang_instruction ($1, Void, $2, $3, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($4, $5), $6)) }
 	;
 
-Create_instruction: E_CREATE '{' Type '}' Writable
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($2, $3, $4), $5, Void) }
-	| E_CREATE '{' Type '}' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($2, $3, $4), $5, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($6, $7), $8)) }
-	| E_CREATE Writable
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $2, Void) }
-	| E_CREATE Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $2, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($3, $4), $5)) }
+Create_instruction: E_CREATE Creation_region '{' Type '}' Writable
+		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
+	| E_CREATE Creation_region '{' Type '}' Writable '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($7, $8), $9)) }
+	| E_CREATE Creation_region Writable
+		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, Void) }
+	| E_CREATE Creation_region Writable '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($4, $5), $6)) }
 	;
 
-Create_expression: E_CREATE '{' Type '}' 
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($2, $3, $4), Void) }
-	| E_CREATE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($5, $6), $7)) }
+Create_expression: E_CREATE Creation_region '{' Type '}' 
+		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), Void) }
+	| E_CREATE Creation_region '{' Type '}' '.' Identifier Actuals_opt
+		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($6, $7), $8)) }
+	;
+
+Creation_region: -- Empty
+	| '<' Class_name '>'
 	;
 
 ------------------------------------------------------------------------------------
