@@ -21,7 +21,7 @@ inherit
 
 feature {HASHABLE, COMPARABLE} -- Access
 
-	frozen bar, baz (a_string, a_other_string: STRING; i: INTEGER): ANY is
+	frozen bar, baz (a_string, a_other_string: STRING; i: INTEGER): ANY
 			-- Do it, but do it well.
 		require
 			a_string /= Void
@@ -47,7 +47,7 @@ feature {HASHABLE, COMPARABLE} -- Access
 			end
 		end
 
-	f is
+	f
 		require
 				-- My comment.
 		do
