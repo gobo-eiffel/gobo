@@ -376,7 +376,9 @@ feature {NONE} -- Preprocessing
 			a_node_not_void: a_node /= Void
 		do
 				-- Remove from previous parent.
-			a_node.parent.equality_delete (a_node)
+			if a_node.parent /= Current then
+				a_node.parent.equality_delete (a_node)
+			end
 			a_node.node_set_parent (Current)
 		ensure then
 			parent_accepted: a_node.parent = Current
