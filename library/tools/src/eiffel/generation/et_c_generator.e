@@ -32116,7 +32116,7 @@ feature {NONE} -- Constants
 	c_while: STRING = "while"
 			-- String constants
 
-	default_split_threshold: INTEGER = 1000000
+	default_split_threshold: INTEGER = 2500000
 			-- Default value for `split_threshold'
 
 	bat_file_extension: STRING = ".bat"

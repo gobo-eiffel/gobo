@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2015, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -74,8 +74,10 @@
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
+		<set name="split_size_option" value="2500000" unless="${split_size}"/>
+		<set name="split_size_option" value="${split_size}" if="${split_size}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
-		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
+		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}" split_size="${split_size_option}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
