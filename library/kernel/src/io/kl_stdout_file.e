@@ -19,42 +19,6 @@ inherit
 
 	KI_TEXT_OUTPUT_STREAM
 
-	KL_OPERATING_SYSTEM
-		export {NONE} all end
-
-	CONSOLE
-		rename
-			make as old_make,
-			put_boolean as old_put_boolean,
-			put_character as old_put_character,
-			put_string as old_put_string,
-			put_integer as old_put_integer,
-			put_integer_8 as old_put_integer_8,
-			put_integer_16 as old_put_integer_16,
-			put_integer_32 as old_put_integer_32,
-			put_integer_64 as old_put_integer_64,
-			put_natural_8 as old_put_natural_8,
-			put_natural_16 as old_put_natural_16,
-			put_natural_32 as old_put_natural_32,
-			put_natural_64 as old_put_natural_64,
-			put_new_line as old_put_new_line,
-			is_open_write as old_is_open_write,
-			flush as old_flush,
-			append as old_append,
-			close as old_close
-		export
-			{CONSOLE}
-				open_read,
-				extendible,
-				file_pointer,
-				count,
-				old_close,
-				is_closed,
-				old_put_string,
-				old_is_open_write
-			{CONSOLE} all
-		end
-
 create
 
 	make
@@ -64,7 +28,6 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new standard output file.
 		do
-			make_open_stdout ("stdout")
 		ensure
 			name_set: name.is_equal ("stdout")
 			is_open_write: is_open_write
@@ -72,23 +35,23 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	name: STRING = "stdout"
+			-- Name of output stream
+
 	eol: STRING = "%N"
 			-- Line separator
 
 feature -- Status report
 
-	is_open_write: BOOLEAN
+	is_open_write: BOOLEAN = True
 			-- Is standard output file opened in write mode?
-		do
-			Result := old_is_open_write
-		end
 
 feature -- Output
 
 	put_character (c: CHARACTER)
 			-- Write `c' to standard output file.
 		do
-			old_put_character (c)
+			console.put_character (c)
 		end
 
 	put_string (a_string: STRING)
@@ -99,7 +62,7 @@ feature -- Output
 			a_string_string: STRING
 		do
 			a_string_string := STRING_.as_string (a_string)
-			old_put_string (a_string_string)
+			console.put_string (a_string_string)
 		end
 
 feature -- Basic operations
@@ -107,7 +70,17 @@ feature -- Basic operations
 	flush
 			-- Flush buffered data to disk.
 		do
-			old_flush
+			console.flush
+		end
+
+feature {NONE} -- Implementation
+
+	console: PLAIN_TEXT_FILE
+			-- Console object
+		once
+			Result := io.output
+		ensure
+			console_not_void: Result /= Void
 		end
 
 end
