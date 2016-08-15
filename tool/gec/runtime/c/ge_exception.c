@@ -83,7 +83,7 @@ char* GE_exception_tag(long code)
 /*
  * Initialize `a_trace'.
  */
-static GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
@@ -97,7 +97,7 @@ static GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
  * Append `a_string' to `a_trace'.
  * Resize area if needed.
  */
-static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
+static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
 {
 	int l_length = strlen(a_string);
 	uint32_t l_new_capacity;
@@ -124,7 +124,7 @@ static GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, c
 /*
  * Wipe out `a_trace'.
  */
-static GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	char* l_area = a_trace->area;
 
@@ -459,7 +459,7 @@ static void GE_jump_to_last_rescue(GE_context* context)
 		l_exception_trace = context->last_exception_trace.area;
 		if (l_exception_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions:\n\n");
-			fprintf(stderr, l_exception_trace);
+			fprintf(stderr, "%s", l_exception_trace);
 		} else {
 			fprintf(stderr, "No exception trace found.\n");
 		}
@@ -553,7 +553,7 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		if (l_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions\n");
 			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
-			fprintf(stderr, l_trace);
+			fprintf(stderr, "%s", l_trace);
 		} else {
 			fprintf(stderr, "No exception trace found.\n");
 		}

@@ -196,7 +196,7 @@ extern void GE_developer_raise(long code, char* meaning, char* message);
  * Return `obj'.
  */
 #define GE_catcall(obj,type_ids,nb) GE_check_catcall((obj),(type_ids),(nb))
-EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
+extern EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 
 /*
  * Check whether `obj' is Void.
