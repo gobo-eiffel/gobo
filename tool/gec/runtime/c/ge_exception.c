@@ -257,7 +257,7 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (uint64_t) a_object_addr);
+	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (unsigned long)(uint64_t)a_object_addr);
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 
 	if (l_location_count > 22) {
