@@ -15,6 +15,9 @@ class ET_BUILTIN_FEATURE_CHECKER
 inherit
 
 	ET_CLASS_SUBPROCESSOR
+		redefine
+			make
+		end
 
 	ET_AST_NULL_PROCESSOR
 		undefine
@@ -23,6 +26,11 @@ inherit
 			process_external_function,
 			process_external_procedure
 		end
+
+	KL_IMPORTED_ARRAY_ROUTINES
+
+	ET_SHARED_FEATURE_NAME_TESTER
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -33,6 +41,15 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Create new built-in feature checker.
+		do
+			create builtin_features.make_map (100)
+			Precursor {ET_CLASS_SUBPROCESSOR}
+		end
 
 feature -- Validity checking
 
@@ -104,7 +121,7 @@ feature {NONE} -- Built-in validity
 		do
 			l_name := current_class.name
 			if l_name.same_class_name (tokens.any_class_name) then
-				check_builtin_any_function_validity (a_feature)
+				check_builtin_any_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.type_class_name) then
 				check_builtin_type_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.special_class_name) then
@@ -141,6 +158,8 @@ feature {NONE} -- Built-in validity
 				check_builtin_identified_routines_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.internal_class_name) then
 				check_builtin_internal_function_validity (a_feature)
+			elseif l_name.same_class_name (tokens.ise_runtime_class_name) then
+				check_builtin_ise_runtime_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.platform_class_name) then
 				check_builtin_platform_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.procedure_class_name) then
@@ -199,185 +218,38 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_any_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+	check_builtin_any_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Check validity of built-in `a_feature' from class "ANY".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
 		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.twin_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_twin))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				elseif not a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				end
-			elseif a_feature.name.same_feature_name (tokens.is_equal_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_equal))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'standard_is_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_same_type))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
-						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'same_type (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_conforms_to))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
-						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'conforms_to (other: ANY): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generator))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'generator: STRING'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.string_type, current_class, current_class) then
-						-- The signature should be 'generator: STRING'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_detachable_like_current_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.type_detachable_like_current_type, current_class, current_class) then
-						-- The signature should be 'generating_type: TYPE [detachable like Current]'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.type_detachable_like_current_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'tagged_out: STRING'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.string_type, current_class, current_class) then
-						-- The signature should be 'tagged_out: STRING'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_twin))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'standard_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				elseif not a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'standard_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				end
-			elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'is_deep_equal (other: like Current): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_deep_twin))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'deep_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				elseif not a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'deep_twin: like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-				end
-			elseif a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
-					-- 'ANY.standard_copy' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_copy))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
-			elseif a_feature.name.same_feature_name (tokens.copy_feature_name) then
-					-- 'ANY.copy' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_copy))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
+			builtin_features.search (tokens.builtin_any_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
 			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
+				create l_builtin_features.make_map (13)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_any_class)
+					-- Functions.
+				l_builtin_features.put_last ([<<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_conforms_to)], tokens.conforms_to_feature_name)
+				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_deep_twin)], tokens.deep_twin_feature_name)
+				l_builtin_features.put_last ([Void, current_universe.type_detachable_like_current_type, tokens.builtin_any_feature (tokens.builtin_any_generating_type)], tokens.generating_type_feature_name)
+				l_builtin_features.put_last ([Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_generator)], tokens.generator_feature_name)
+				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal)], tokens.is_deep_equal_feature_name)
+				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_equal)], tokens.is_equal_feature_name)
+				l_builtin_features.put_last ([<<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_same_type)], tokens.same_type_feature_name)
+				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal)], tokens.standard_is_equal_feature_name)
+				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_standard_twin)], tokens.standard_twin_feature_name)
+				l_builtin_features.put_last ([Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_tagged_out)], tokens.tagged_out_feature_name)
+				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_twin)], tokens.twin_feature_name)
+					-- Procedures.
+				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_copy)], tokens.copy_feature_name)
+				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_standard_copy)], tokens.standard_copy_feature_name)
 			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
 	check_builtin_type_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
@@ -2056,6 +1928,136 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
+	check_builtin_ise_runtime_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "ISE_RUNTIME".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
+		do
+			builtin_features.search (tokens.builtin_ise_runtime_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (500)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_ise_runtime_class)
+					-- Functions.
+				register_builtin_feature (tokens.attached_type_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_attached_type), l_builtin_features)
+				register_builtin_feature (tokens.boolean_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_boolean_field), l_builtin_features)
+				register_builtin_feature (tokens.boolean_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_boolean_field_at), l_builtin_features)
+				register_builtin_feature (tokens.character_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.character_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_character_8_field), l_builtin_features)
+				register_builtin_feature (tokens.character_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.character_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_character_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.character_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.character_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_character_32_field), l_builtin_features)
+				register_builtin_feature (tokens.character_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.character_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_character_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.check_assert_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_check_assert), l_builtin_features)
+				register_builtin_feature (tokens.compiler_version_feature_name, Void, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_compiler_version), l_builtin_features)
+				register_builtin_feature (tokens.detachable_type_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_detachable_type), l_builtin_features)
+				register_builtin_feature (tokens.dynamic_type_feature_name, <<current_universe.any_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_dynamic_type), l_builtin_features)
+				register_builtin_feature (tokens.dynamic_type_at_offset_feature_name, <<current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_dynamic_type_at_offset), l_builtin_features)
+				register_builtin_feature (tokens.eif_gen_param_id_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_eif_gen_param_id), l_builtin_features)
+				register_builtin_feature (tokens.field_count_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_field_count_of_type), l_builtin_features)
+				register_builtin_feature (tokens.field_name_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_field_name_of_type), l_builtin_features)
+				register_builtin_feature (tokens.field_offset_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_field_offset_of_type), l_builtin_features)
+				register_builtin_feature (tokens.field_static_type_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_field_static_type_of_type), l_builtin_features)
+				register_builtin_feature (tokens.field_type_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_field_type_of_type), l_builtin_features)
+				register_builtin_feature (tokens.generating_type_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_generating_type_of_type), l_builtin_features)
+				register_builtin_feature (tokens.generator_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.string_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_generator_of_type), l_builtin_features)
+				register_builtin_feature (tokens.generic_parameter_count_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_generic_parameter_count), l_builtin_features)
+				register_builtin_feature (tokens.in_assertion_feature_name, Void, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_in_assertion), l_builtin_features)
+				register_builtin_feature (tokens.integer_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_8_field), l_builtin_features)
+				register_builtin_feature (tokens.integer_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.integer_16_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_16_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_16_field), l_builtin_features)
+				register_builtin_feature (tokens.integer_16_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_16_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_16_field_at), l_builtin_features)
+				register_builtin_feature (tokens.integer_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_32_field), l_builtin_features)
+				register_builtin_feature (tokens.integer_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.integer_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_64_field), l_builtin_features)
+				register_builtin_feature (tokens.integer_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.integer_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_integer_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.is_attached_type_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_attached_type), l_builtin_features)
+				register_builtin_feature (tokens.is_copy_semantics_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_copy_semantics_field), l_builtin_features)
+				register_builtin_feature (tokens.is_expanded_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_expanded), l_builtin_features)
+				register_builtin_feature (tokens.is_field_expanded_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_field_expanded_of_type), l_builtin_features)
+				register_builtin_feature (tokens.is_field_transient_of_type_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_field_transient_of_type), l_builtin_features)
+				register_builtin_feature (tokens.is_object_marked_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_object_marked), l_builtin_features)
+				register_builtin_feature (tokens.is_special_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special), l_builtin_features)
+				register_builtin_feature (tokens.is_special_copy_semantics_item_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special_copy_semantics_item), l_builtin_features)
+				register_builtin_feature (tokens.is_special_of_expanded_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special_of_expanded), l_builtin_features)
+				register_builtin_feature (tokens.is_special_of_reference_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special_of_reference), l_builtin_features)
+				register_builtin_feature (tokens.is_special_of_reference_or_basic_type_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special_of_reference_or_basic_type), l_builtin_features)
+				register_builtin_feature (tokens.is_special_of_reference_type_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_special_of_reference_type), l_builtin_features)
+				register_builtin_feature (tokens.is_tuple_feature_name, <<current_universe.pointer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_tuple), l_builtin_features)
+				register_builtin_feature (tokens.is_tuple_type_feature_name, <<current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_is_tuple_type), l_builtin_features)
+				register_builtin_feature (tokens.natural_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_8_field), l_builtin_features)
+				register_builtin_feature (tokens.natural_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_8_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.natural_16_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_16_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_16_field), l_builtin_features)
+				register_builtin_feature (tokens.natural_16_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_16_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_16_field_at), l_builtin_features)
+				register_builtin_feature (tokens.natural_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_32_field), l_builtin_features)
+				register_builtin_feature (tokens.natural_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.natural_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_64_field), l_builtin_features)
+				register_builtin_feature (tokens.natural_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.natural_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_natural_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.new_instance_of_feature_name, <<current_universe.integer_type.type>>, current_universe.any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_new_instance_of), l_builtin_features)
+				register_builtin_feature (tokens.new_special_of_reference_instance_of_feature_name, <<current_universe.integer_type.type>>, current_universe.special_detachable_any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_new_special_of_reference_instance_of), l_builtin_features)
+				register_builtin_feature (tokens.new_tuple_instance_of_feature_name, <<current_universe.integer_type.type>>, current_universe.tuple_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_new_tuple_instance_of), l_builtin_features)
+				register_builtin_feature (tokens.new_type_instance_of_feature_name, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_new_type_instance_of), l_builtin_features)
+				register_builtin_feature (tokens.object_size_feature_name, <<current_universe.pointer_type.type>>, current_universe.natural_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_object_size), l_builtin_features)
+				register_builtin_feature (tokens.once_objects_feature_name, <<current_universe.integer_type.type>>, current_universe.special_any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_once_objects), l_builtin_features)
+				register_builtin_feature (tokens.persistent_field_count_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_persistent_field_count_of_type), l_builtin_features)
+				register_builtin_feature (tokens.pointer_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_pointer_field), l_builtin_features)
+				register_builtin_feature (tokens.pointer_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_pointer_field_at), l_builtin_features)
+				register_builtin_feature (tokens.pre_ecma_mapping_status_feature_name, Void, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_pre_ecma_mapping_status), l_builtin_features)
+				register_builtin_feature (tokens.raw_reference_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_raw_reference_field_at), l_builtin_features)
+				register_builtin_feature (tokens.raw_reference_field_at_offset_feature_name, <<current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.pointer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_raw_reference_field_at_offset), l_builtin_features)
+				register_builtin_feature (tokens.real_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.real_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_real_32_field), l_builtin_features)
+				register_builtin_feature (tokens.real_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.real_32_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_real_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.real_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.real_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_real_64_field), l_builtin_features)
+				register_builtin_feature (tokens.real_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.real_64_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_real_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.reference_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_reference_field), l_builtin_features)
+				register_builtin_feature (tokens.reference_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.detachable_any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_reference_field_at), l_builtin_features)
+				register_builtin_feature (tokens.reference_field_at_offset_feature_name, <<current_universe.pointer_type.type, current_universe.integer_type.type>>, current_universe.any_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_reference_field_at_offset), l_builtin_features)
+				register_builtin_feature (tokens.storable_version_of_type_feature_name, <<current_universe.integer_type.type>>, current_universe.detachable_string_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_storable_version_of_type), l_builtin_features)
+				register_builtin_feature (tokens.type_conforms_to_feature_name, <<current_universe.integer_type.type, current_universe.integer_type.type>>, current_universe.boolean_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_type_conforms_to), l_builtin_features)
+				register_builtin_feature (tokens.type_id_from_name_feature_name, <<current_universe.pointer_type.type>>, current_universe.integer_type, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_type_id_from_name), l_builtin_features)
+					-- Procedures.
+				register_builtin_feature (tokens.lock_marking_feature_name, Void, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_lock_marking), l_builtin_features)
+				register_builtin_feature (tokens.mark_object_feature_name, <<current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_mark_object), l_builtin_features)
+				register_builtin_feature (tokens.set_boolean_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.boolean_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_boolean_field), l_builtin_features)
+				register_builtin_feature (tokens.set_boolean_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.boolean_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_boolean_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_character_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.character_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_character_8_field), l_builtin_features)
+				register_builtin_feature (tokens.set_character_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.character_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_character_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_character_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.character_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_character_32_field), l_builtin_features)
+				register_builtin_feature (tokens.set_character_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.character_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_character_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_8_field), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_16_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_16_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_16_field), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_16_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_16_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_16_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_32_field), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_64_field), l_builtin_features)
+				register_builtin_feature (tokens.set_integer_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.integer_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_integer_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_8_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_8_field), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_8_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_8_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_8_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_16_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_16_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_16_field), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_16_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_16_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_16_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_32_field), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_64_field), l_builtin_features)
+				register_builtin_feature (tokens.set_natural_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.natural_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_natural_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_pointer_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_pointer_field), l_builtin_features)
+				register_builtin_feature (tokens.set_pointer_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_pointer_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_pre_ecma_mapping_feature_name, <<current_universe.boolean_type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_pre_ecma_mapping), l_builtin_features)
+				register_builtin_feature (tokens.set_real_32_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_real_32_field), l_builtin_features)
+				register_builtin_feature (tokens.set_real_32_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_32_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_real_32_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_real_64_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_real_64_field), l_builtin_features)
+				register_builtin_feature (tokens.set_real_64_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.real_64_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_real_64_field_at), l_builtin_features)
+				register_builtin_feature (tokens.set_reference_field_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.detachable_any_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_reference_field), l_builtin_features)
+				register_builtin_feature (tokens.set_reference_field_at_feature_name, <<current_universe.integer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.detachable_any_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_set_reference_field_at), l_builtin_features)
+				register_builtin_feature (tokens.unlock_marking_feature_name, Void, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_unlock_marking), l_builtin_features)
+				register_builtin_feature (tokens.unmark_object_feature_name, <<current_universe.pointer_type.type>>, Void, tokens.builtin_ise_runtime_feature (tokens.builtin_ise_runtime_unmark_object), l_builtin_features)
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
+		end
+
 	check_builtin_platform_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
 			-- Check validity of built-in `a_feature' from class "PLATFORM".
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -3638,7 +3640,7 @@ feature {NONE} -- Built-in validity
 		do
 			l_name := current_class.name
 			if l_name.same_class_name (tokens.any_class_name) then
-				check_builtin_any_procedure_validity (a_feature)
+				check_builtin_any_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.type_class_name) then
 				check_builtin_type_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.special_class_name) then
@@ -3675,6 +3677,8 @@ feature {NONE} -- Built-in validity
 				check_builtin_identified_routines_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.internal_class_name) then
 				check_builtin_internal_procedure_validity (a_feature)
+			elseif l_name.same_class_name (tokens.ise_runtime_class_name) then
+				check_builtin_ise_runtime_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.platform_class_name) then
 				check_builtin_platform_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.procedure_class_name) then
@@ -3723,104 +3727,6 @@ feature {NONE} -- Built-in validity
 				check_builtin_sized_real_ref_procedure_validity (a_feature, current_universe.real_64_type, tokens.builtin_real_64_class)
 			elseif l_name.same_class_name (tokens.real_64_class_name) then
 				check_builtin_sized_real_procedure_validity (a_feature, tokens.builtin_real_64_class)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_any_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "ANY".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.standard_copy_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_copy))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'standard_copy (other: like Current)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'standard_copy (other: like Current)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.copy_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_copy))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'copy (other: like Current)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'copy (other: like Current)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.twin_feature_name) then
-					-- 'ANY.twin' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_twin))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-			elseif a_feature.name.same_feature_name (tokens.is_equal_feature_name) then
-					-- 'ANY.is_equal' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_equal))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
-					-- 'ANY.standard_is_equal' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.same_type_feature_name) then
-					-- 'ANY.same_type' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_same_type))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.conforms_to_feature_name) then
-					-- 'ANY.conforms_to' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_conforms_to))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.generator_feature_name) then
-					-- 'ANY.generator' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generator))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-			elseif a_feature.name.same_feature_name (tokens.generating_type_feature_name) then
-					-- 'ANY.generating_type' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_generating_type))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-			elseif a_feature.name.same_feature_name (tokens.tagged_out_feature_name) then
-					-- 'ANY.tagged_out' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_tagged_out))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.string_type)
-			elseif a_feature.name.same_feature_name (tokens.standard_twin_feature_name) then
-					-- 'ANY.standard_twin' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_twin))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-			elseif a_feature.name.same_feature_name (tokens.is_deep_equal_feature_name) then
-					-- 'ANY.is_deep_equal' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.deep_twin_feature_name) then
-					-- 'ANY.deep_twin' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_deep_twin))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -4789,7 +4695,7 @@ feature {NONE} -- Built-in validity
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.any_type.type>>, Void)
 				end
-			elseif a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
+			elseif a_feature.name.same_feature_name (tokens.find_referers_feature_name) then
 					-- 'MEMORY.find_referers' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_memory_feature (tokens.builtin_memory_find_referers))
 				set_fatal_error
@@ -5936,6 +5842,72 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
+	check_expected_builtin_feature_validity (a_feature: ET_EXTERNAL_ROUTINE; a_expected_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME])
+			-- Check validity of built-in `a_feature' from class "ISE_RUNTIME".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_expected_features_not_void: a_expected_features /= Void
+		local
+			l_expected_feature: TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; builtin_code: INTEGER]
+		do
+			a_expected_features.search (a_feature.name)
+			if a_expected_features.found then
+				l_expected_feature := a_expected_features.found_item
+				a_feature.set_builtin_code (l_expected_feature.builtin_code)
+				check_signature_validity (a_feature, l_expected_feature.arguments, l_expected_feature.type)
+			else
+					-- Unknown built-in routine.
+				a_feature.set_builtin_code (tokens.builtin_unknown)
+				if unknown_builtin_reported then
+					set_fatal_error
+					error_handler.report_gvkbu1a_error (current_class, a_feature)
+				end
+			end
+		end
+
+	check_signature_validity (a_feature: ET_EXTERNAL_ROUTINE; a_expected_arguments: detachable ARRAY [ET_TYPE]; a_expected_type: detachable ET_TYPE)
+			-- Check validity of arguments of built-in `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			no_void_argument: a_expected_arguments /= Void implies not ANY_ARRAY_.has (a_expected_arguments, Void)
+		local
+			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+			l_type: detachable ET_TYPE
+			i, nb: INTEGER
+			l_has_error: BOOLEAN
+		do
+			l_formals := a_feature.arguments
+			if a_expected_arguments = Void or else a_expected_arguments.count = 0 then
+				l_has_error := l_formals /= Void and then l_formals.count /= 0
+			else
+				nb := a_expected_arguments.count
+				if l_formals = Void or else l_formals.count /= nb then
+					l_has_error := True
+				else
+					from i := 1 until i > nb loop
+						if not l_formals.formal_argument (i).type.same_syntactical_type (a_expected_arguments.item (i), current_class, current_class) then
+							l_has_error := True
+								-- Jump out of the loop.
+							i := nb + 1
+						end
+						i := i + 1
+					end
+				end
+			end
+			l_type := a_feature.type
+			if a_expected_type = Void then
+				l_has_error := l_type /= Void
+			else
+				l_has_error := l_type = Void or else not l_type.same_syntactical_type (a_expected_type, current_class, current_class)
+			end
+			if l_has_error then
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, a_expected_arguments, a_expected_type)
+			end
+		end
+
 feature {ET_AST_NODE} -- Type dispatcher
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION)
@@ -5951,6 +5923,18 @@ feature {ET_AST_NODE} -- Type dispatcher
 		end
 
 feature {NONE} -- Implementation
+
+	builtin_features: DS_HASH_TABLE [DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; builtin_code: INTEGER], ET_FEATURE_NAME], INTEGER]
+			-- List of known built-in features, indexed by built-in class codes, and by feature names
+
+	register_builtin_feature (a_feature_name: ET_FEATURE_NAME; a_arguments: detachable ARRAY [ET_TYPE]; a_type: detachable ET_TYPE; a_builtin_code: INTEGER; a_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME])
+			-- Register built-in feature `a_feature_name' to `a_builtin_features'.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			a_builtin_features_not_void: a_builtin_features /= Void
+		do
+			a_builtin_features.force_last ([a_arguments, a_type, a_builtin_code], a_feature_name)
+		end
 
 	attached_formal_parameter_type (a_formal_parameter: ET_FORMAL_PARAMETER_TYPE): ET_FORMAL_PARAMETER_TYPE
 			-- Attached version of formal generic paramater `a_formal_parameter'
@@ -5979,5 +5963,10 @@ feature {NONE} -- Implementation
 			same_index: Result.index = a_formal_parameter.index
 			same_implementation_class: Result.implementation_class = a_formal_parameter.implementation_class
 		end
+
+invariant
+
+	builtin_features_not_void: builtin_features /= Void
+	no_void_expected_builtin_features: not builtin_features.has_void_item
 
 end

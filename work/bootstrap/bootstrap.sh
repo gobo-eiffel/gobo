@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -58,16 +58,6 @@ BOOTSTRAP_DIR=$GOBO/work/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec18.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec17.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec16.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec15.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec14.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec13.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec12.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec11.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec10.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
@@ -86,9 +76,6 @@ c_compilation() {
 	$LD $LFLAGS ${LFLAG_OUT}gexace$EXE gexace*$OBJ $LLIBS
 	$RM gexace*$OBJ
 
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant5.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant4.c
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant3.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/geant1.c
 	$LD $LFLAGS ${LFLAG_OUT}geant$EXE geant*$OBJ $LLIBS

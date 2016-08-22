@@ -144,7 +144,7 @@ feature -- Built-in codes
 
 	builtin_not_builtin: INTEGER = 0
 	builtin_unknown: INTEGER = 1
-	builtin_capacity: INTEGER = 100
+	builtin_capacity: INTEGER = 1000
 
 	builtin_feature (a_class_code, a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature
@@ -551,5 +551,127 @@ feature -- Built-in codes
 	builtin_com_failure_character_size: INTEGER = 6
 	builtin_com_failure_cwin_local_free: INTEGER = 7
 			-- Codes for built-in features from class "COM_FAILURE"
+
+	builtin_ise_runtime_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "ISE_RUNTIME"
+		do
+			Result := builtin_ise_runtime_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_ise_runtime_class: INTEGER = 30
+			-- Code for built-in features from class "ISE_RUNTIME"
+
+	builtin_ise_runtime_attached_type: INTEGER = 1
+	builtin_ise_runtime_boolean_field: INTEGER = 2
+	builtin_ise_runtime_boolean_field_at: INTEGER = 3
+	builtin_ise_runtime_character_8_field: INTEGER = 4
+	builtin_ise_runtime_character_8_field_at: INTEGER = 5
+	builtin_ise_runtime_character_32_field: INTEGER = 6
+	builtin_ise_runtime_character_32_field_at: INTEGER = 7
+	builtin_ise_runtime_check_assert: INTEGER = 8
+	builtin_ise_runtime_compiler_version: INTEGER = 9
+	builtin_ise_runtime_detachable_type: INTEGER = 10
+	builtin_ise_runtime_dynamic_type: INTEGER = 11
+	builtin_ise_runtime_dynamic_type_at_offset: INTEGER = 12
+	builtin_ise_runtime_eif_gen_param_id: INTEGER = 13
+	builtin_ise_runtime_field_count_of_type: INTEGER = 14
+	builtin_ise_runtime_field_name_of_type: INTEGER = 15
+	builtin_ise_runtime_field_offset_of_type: INTEGER = 16
+	builtin_ise_runtime_field_static_type_of_type: INTEGER = 17
+	builtin_ise_runtime_field_type_of_type: INTEGER = 18
+	builtin_ise_runtime_generating_type_of_type: INTEGER = 19
+	builtin_ise_runtime_generator_of_type: INTEGER = 20
+	builtin_ise_runtime_generic_parameter_count: INTEGER = 21
+	builtin_ise_runtime_in_assertion: INTEGER = 22
+	builtin_ise_runtime_integer_8_field: INTEGER = 23
+	builtin_ise_runtime_integer_8_field_at: INTEGER = 24
+	builtin_ise_runtime_integer_16_field: INTEGER = 25
+	builtin_ise_runtime_integer_16_field_at: INTEGER = 26
+	builtin_ise_runtime_integer_32_field: INTEGER = 27
+	builtin_ise_runtime_integer_32_field_at: INTEGER = 28
+	builtin_ise_runtime_integer_64_field: INTEGER = 29
+	builtin_ise_runtime_integer_64_field_at: INTEGER = 30
+	builtin_ise_runtime_is_attached_type: INTEGER = 31
+	builtin_ise_runtime_is_copy_semantics_field: INTEGER = 32
+	builtin_ise_runtime_is_expanded: INTEGER = 33
+	builtin_ise_runtime_is_field_expanded_of_type: INTEGER = 34
+	builtin_ise_runtime_is_field_transient_of_type: INTEGER = 35
+	builtin_ise_runtime_is_object_marked: INTEGER = 36
+	builtin_ise_runtime_is_special: INTEGER = 37
+	builtin_ise_runtime_is_special_copy_semantics_item: INTEGER = 38
+	builtin_ise_runtime_is_special_of_expanded: INTEGER = 39
+	builtin_ise_runtime_is_special_of_reference: INTEGER = 40
+	builtin_ise_runtime_is_special_of_reference_or_basic_type: INTEGER = 41
+	builtin_ise_runtime_is_special_of_reference_type: INTEGER = 42
+	builtin_ise_runtime_is_tuple: INTEGER = 43
+	builtin_ise_runtime_is_tuple_type: INTEGER = 44
+	builtin_ise_runtime_natural_8_field: INTEGER = 45
+	builtin_ise_runtime_natural_8_field_at: INTEGER = 46
+	builtin_ise_runtime_natural_16_field: INTEGER = 47
+	builtin_ise_runtime_natural_16_field_at: INTEGER = 48
+	builtin_ise_runtime_natural_32_field: INTEGER = 49
+	builtin_ise_runtime_natural_32_field_at: INTEGER = 50
+	builtin_ise_runtime_natural_64_field: INTEGER = 51
+	builtin_ise_runtime_natural_64_field_at: INTEGER = 52
+	builtin_ise_runtime_new_instance_of: INTEGER = 53
+	builtin_ise_runtime_new_special_of_reference_instance_of: INTEGER = 54
+	builtin_ise_runtime_new_tuple_instance_of: INTEGER = 55
+	builtin_ise_runtime_new_type_instance_of: INTEGER = 56
+	builtin_ise_runtime_object_size: INTEGER = 57
+	builtin_ise_runtime_once_objects: INTEGER = 58
+	builtin_ise_runtime_persistent_field_count_of_type: INTEGER = 59
+	builtin_ise_runtime_pointer_field: INTEGER = 60
+	builtin_ise_runtime_pointer_field_at: INTEGER = 61
+	builtin_ise_runtime_pre_ecma_mapping_status: INTEGER = 62
+	builtin_ise_runtime_raw_reference_field_at: INTEGER = 63
+	builtin_ise_runtime_raw_reference_field_at_offset: INTEGER = 64
+	builtin_ise_runtime_real_32_field: INTEGER = 65
+	builtin_ise_runtime_real_32_field_at: INTEGER = 66
+	builtin_ise_runtime_real_64_field: INTEGER = 67
+	builtin_ise_runtime_real_64_field_at: INTEGER = 68
+	builtin_ise_runtime_reference_field: INTEGER = 69
+	builtin_ise_runtime_reference_field_at: INTEGER = 70
+	builtin_ise_runtime_reference_field_at_offset: INTEGER = 71
+	builtin_ise_runtime_storable_version_of_type: INTEGER = 72
+	builtin_ise_runtime_type_conforms_to: INTEGER = 73
+	builtin_ise_runtime_type_id_from_name: INTEGER = 74
+			-- Codes for built-in functions from class "ISE_RUNTIME"
+
+	builtin_ise_runtime_lock_marking: INTEGER = 75
+	builtin_ise_runtime_mark_object: INTEGER = 76
+	builtin_ise_runtime_set_boolean_field: INTEGER = 77
+	builtin_ise_runtime_set_boolean_field_at: INTEGER = 78
+	builtin_ise_runtime_set_character_8_field: INTEGER = 79
+	builtin_ise_runtime_set_character_8_field_at: INTEGER = 80
+	builtin_ise_runtime_set_character_32_field: INTEGER = 81
+	builtin_ise_runtime_set_character_32_field_at: INTEGER = 82
+	builtin_ise_runtime_set_integer_8_field: INTEGER = 83
+	builtin_ise_runtime_set_integer_8_field_at: INTEGER = 84
+	builtin_ise_runtime_set_integer_16_field: INTEGER = 85
+	builtin_ise_runtime_set_integer_16_field_at: INTEGER = 86
+	builtin_ise_runtime_set_integer_32_field: INTEGER = 87
+	builtin_ise_runtime_set_integer_32_field_at: INTEGER = 88
+	builtin_ise_runtime_set_integer_64_field: INTEGER = 89
+	builtin_ise_runtime_set_integer_64_field_at: INTEGER = 90
+	builtin_ise_runtime_set_natural_8_field: INTEGER = 91
+	builtin_ise_runtime_set_natural_8_field_at: INTEGER = 92
+	builtin_ise_runtime_set_natural_16_field: INTEGER = 93
+	builtin_ise_runtime_set_natural_16_field_at: INTEGER = 94
+	builtin_ise_runtime_set_natural_32_field: INTEGER = 95
+	builtin_ise_runtime_set_natural_32_field_at: INTEGER = 96
+	builtin_ise_runtime_set_natural_64_field: INTEGER = 97
+	builtin_ise_runtime_set_natural_64_field_at: INTEGER = 98
+	builtin_ise_runtime_set_pointer_field: INTEGER = 99
+	builtin_ise_runtime_set_pointer_field_at: INTEGER = 100
+	builtin_ise_runtime_set_pre_ecma_mapping: INTEGER = 101
+	builtin_ise_runtime_set_real_32_field: INTEGER = 102
+	builtin_ise_runtime_set_real_32_field_at: INTEGER = 103
+	builtin_ise_runtime_set_real_64_field: INTEGER = 104
+	builtin_ise_runtime_set_real_64_field_at: INTEGER = 105
+	builtin_ise_runtime_set_reference_field: INTEGER = 106
+	builtin_ise_runtime_set_reference_field_at: INTEGER = 107
+	builtin_ise_runtime_unlock_marking: INTEGER = 108
+	builtin_ise_runtime_unmark_object: INTEGER = 109
+			-- Codes for built-in procedures from class "ISE_RUNTIME"
 
 end

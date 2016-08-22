@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 			not_expanded_object: True
 		do
 			enclosing_object := a_object
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type (a_object)
-			dynamic_type := a_object.generating_type.type_id
+			dynamic_type := {ISE_RUNTIME}.dynamic_type (a_object)
 			physical_offset := 0
 		ensure
 			enclosing_object_set: enclosing_object = a_object
@@ -48,9 +47,7 @@ feature {NONE} -- Initialization
 			enclosing_object := a_enclosing_object.enclosing_object
 				-- To compute the type ID of the object at the `i'-th field.
 			physical_offset := a_enclosing_object.physical_offset + a_enclosing_object.field_offset (i)
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset ($enclosing_object, physical_offset)
--- TODO:
-			dynamic_type := invalid_type
+			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset ($enclosing_object, physical_offset)
 		ensure
 			enclosing_object_set: enclosing_object = a_enclosing_object.enclosing_object
 		end
@@ -62,9 +59,7 @@ feature {NONE} -- Initialization
 		do
 			enclosing_object := a_enclosing_object
 			physical_offset := a_physical_offset
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset ($a_enclosing_object, a_physical_offset)
--- TODO:
-			dynamic_type := invalid_type
+			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset ($a_enclosing_object, a_physical_offset)
 		ensure
 			enclosing_object_set: enclosing_object = a_enclosing_object
 		end
@@ -74,9 +69,7 @@ feature -- Access
 	object: ANY
 			-- <Precursor>
 		do
---<			Result := {ISE_RUNTIME}.reference_field_at_offset ($enclosing_object, physical_offset)
--- TODO:
-			Result := enclosing_object
+			Result := {ISE_RUNTIME}.reference_field_at_offset ($enclosing_object, physical_offset)
 		end
 
 	object_address: POINTER
@@ -84,8 +77,7 @@ feature -- Access
 		note
 			compiler: no_gc
 		do
---<			Result := {ISE_RUNTIME}.raw_reference_field_at_offset ($enclosing_object, physical_offset)
-			Result := $object
+			Result := {ISE_RUNTIME}.raw_reference_field_at_offset ($enclosing_object, physical_offset)
 		end
 
 	enclosing_object: separate ANY
@@ -99,7 +91,9 @@ feature -- Access
 	copy_semantics_field (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
 			-- <Precursor>
 		do
-			create Result.make (Current, i)
+				-- We create a copy of `Current' otherwise if we update it with a new object
+				-- the newly created instance would become invalid.
+			create Result.make (twin, i)
 		end
 
 	expanded_field (i: INTEGER): REFLECTED_REFERENCE_OBJECT
@@ -117,8 +111,7 @@ feature -- Settings
 		do
 			enclosing_object := a_obj
 			physical_offset := 0
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type (a_obj)
-			dynamic_type := a_obj.generating_type.type_id
+			dynamic_type := {ISE_RUNTIME}.dynamic_type (a_obj)
 		ensure
 			enclosing_object_set: enclosing_object = a_obj
 			no_physical_offset: physical_offset = 0

@@ -126,6 +126,10 @@ feature -- Status report
 			-- Should the whole content of classes to be checked (even
 			-- features not reachable from the root creation procedure)?
 
+	all_attributes_used: BOOLEAN
+			-- Should all attributes of all types are marked as used
+			-- and hence included in the generated run-time instances?
+
 feature -- Status setting
 
 	set_catcall_error_mode (b: BOOLEAN)
@@ -150,6 +154,23 @@ feature -- Status setting
 			full_class_checking := b
 		ensure
 			full_class_checking_set: full_class_checking = b
+		end
+
+	use_all_attributes
+			-- Set `all_attributes_used' to True.
+		local
+			i, nb: INTEGER
+			l_dynamic_types: like dynamic_types
+		do
+			all_attributes_used := True
+			l_dynamic_types := dynamic_types
+			nb := dynamic_types.count
+			from i := 1 until i > nb loop
+				l_dynamic_types.item (i).use_all_attributes (Current)
+				i := i + 1
+			end
+		ensure
+			all_attributes_used: all_attributes_used
 		end
 
 feature -- Types
@@ -254,6 +275,8 @@ feature -- Types
 						l_result.set_next_type (l_type.next_type)
 						l_type.set_next_type (l_result)
 						propagate_type_of_type_result_type (l_result)
+						propagate_attribute_type_sets (l_result)
+						propagate_alive_conforming_descendants (l_result)
 					else
 						check
 							same_expandedness: a_type.is_type_expanded (a_context) = l_next_type.is_expanded
@@ -289,6 +312,8 @@ feature -- Types
 								l_type.set_next_type (l_result)
 							end
 							propagate_type_of_type_result_type (l_result)
+							propagate_attribute_type_sets (l_result)
+							propagate_alive_conforming_descendants (l_result)
 						else
 							l_type := l_next_type
 						end
@@ -344,6 +369,8 @@ feature -- Types
 					end
 				end
 				propagate_type_of_type_result_type (Result)
+				propagate_attribute_type_sets (Result)
+				propagate_alive_conforming_descendants (Result)
 			end
 		ensure
 			dynamic_type_not_void: Result /= Void
@@ -768,20 +795,52 @@ feature {NONE} -- Types
 
 	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
-			-- built-in feature corresponding to "INTERNAL.type_of_type".
+			-- built-in feature corresponding to "ISE_RUNTIME.new_type_instance_of".
+		require
+			a_type_not_void: a_type /= Void
 		do
-			if attached type_of_type_feature as l_type_of_type_feature then
+			if attached ise_runtime_new_type_instance_of_feature as l_ise_runtime_new_type_instance_of_feature then
 				if not in_create_meta_type then
 					create_meta_type (a_type)
 					if attached a_type.meta_type as l_meta_type then
 						dynamic_type_set_builder.mark_type_alive (l_meta_type)
-						dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, l_type_of_type_feature)
+						dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, l_ise_runtime_new_type_instance_of_feature)
 					else
 							-- The postcondition of `create_meta_type' says that
 							-- 'a_type.meta_type' is not void.
 						check False end
 					end
 				end
+			end
+		end
+
+	propagate_attribute_type_sets (a_type: ET_DYNAMIC_TYPE)
+			-- If `all_attributes_used' is set, then make sure that all
+			-- attributes of `a_type' are marked as used and their type sets
+			-- propagated to `ise_runtime_reference_field' and
+			-- `ise_runtime_set_reference_field'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_old_in_create_meta_type: BOOLEAN
+		do
+			if all_attributes_used then
+				l_old_in_create_meta_type := in_create_meta_type
+				in_create_meta_type := False
+				a_type.use_all_attributes (Current)
+				in_create_meta_type := l_old_in_create_meta_type
+			end
+		end
+
+	propagate_alive_conforming_descendants (a_type: ET_DYNAMIC_TYPE)
+			-- If `a_type' is alive, then propagage `a_type' to all
+			-- `dynamic_type_set_builder.alive_conforming_descendants' to
+			-- which it conforms.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if a_type.is_alive then
+				dynamic_type_set_builder.propagate_alive_conforming_descendants (a_type)
 			end
 		end
 
@@ -806,41 +865,6 @@ feature {NONE} -- Types
 
 	in_create_meta_type: BOOLEAN
 			-- Flag to avoid recursive call on `create_meta_type'
-
-feature {ET_DYNAMIC_FEATURE} -- Types
-
-	type_of_type_feature: detachable ET_DYNAMIC_FEATURE
-			-- Feature corresponding to "INTERNAL.type_of_type"
-
-	set_type_of_type_feature (a_feature: like type_of_type_feature)
-			-- Set `type_of_type_feature' to `a_feature'.
-		local
-			i: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-		do
-			type_of_type_feature := a_feature
-			if a_feature /= Void then
-				from
-					i := dynamic_types.count
-				until
-					i < 1
-				loop
-					l_type := dynamic_types.item (i)
-					create_meta_type (l_type)
-					if attached l_type.meta_type as l_meta_type then
-						dynamic_type_set_builder.mark_type_alive (l_meta_type)
-						dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, a_feature)
-					else
-							-- The postcondition of `create_meta_type' says that
-							-- 'a_type.meta_type' is not void.
-						check False end
-					end
-					i := i - 1
-				end
-			end
-		ensure
-			type_of_type_feature_set: type_of_type_feature = a_feature
-		end
 
 feature -- New instance types
 
@@ -1795,7 +1819,145 @@ feature -- Features
 	ise_exception_manager_set_exception_data_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'set_exception_data' in class "ISE_EXCEPTION_MANAGER"
 
-feature {NONE} -- Features
+	ise_runtime_new_type_instance_of_feature: detachable ET_DYNAMIC_FEATURE
+			-- Feature "ISE_RUNTIME.new_type_instance_of" (or one similar feature).
+			-- Void if this feature is not called.
+
+	ise_runtime_reference_field_feature: detachable ET_DYNAMIC_FEATURE
+			-- Feature "ISE_RUNTIME.reference_field" (or one similar feature).
+			-- Void if this feature is not called.
+
+	ise_runtime_set_reference_field_feature: detachable ET_DYNAMIC_FEATURE
+			-- Feature "ISE_RUNTIME.set_reference_field" (or one similar feature).
+			-- Void if this feature is not called.
+
+	ise_runtime_type_conforms_to_feature: detachable ET_DYNAMIC_FEATURE
+			-- Feature "ISE_RUNTIME.type_conforms_to" (or one similar feature).
+			-- Void if this feature is not called.
+
+feature -- Feature setting
+
+	set_ise_runtime_new_type_instance_of_feature (a_feature: ET_DYNAMIC_FEATURE)
+			-- Set `ise_runtime_new_type_instance_of_feature' to `a_feature'.
+		require
+			ise_runtime_new_type_instance_of_feature_void: ise_runtime_new_type_instance_of_feature = Void
+			a_feature_not_void: a_feature /= Void
+		local
+			i: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+		do
+			ise_runtime_new_type_instance_of_feature := a_feature
+			from
+				i := dynamic_types.count
+			until
+				i < 1
+			loop
+				l_type := dynamic_types.item (i)
+				create_meta_type (l_type)
+				if attached l_type.meta_type as l_meta_type then
+					dynamic_type_set_builder.mark_type_alive (l_meta_type)
+					dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, a_feature)
+				else
+						-- The postcondition of `create_meta_type' says that
+						-- 'a_type.meta_type' is not void.
+					check False end
+				end
+				i := i - 1
+			end
+		ensure
+			ise_runtime_new_type_instance_of_feature_set: ise_runtime_new_type_instance_of_feature = a_feature
+		end
+
+	set_ise_runtime_reference_field_feature (a_feature: ET_DYNAMIC_FEATURE)
+			-- Set `ise_runtime_reference_field_feature' to `a_feature'.
+			-- Make sure that all attributes get generated and
+			-- propagate their dynamic type sets accordingly.
+		require
+			ise_runtime_reference_field_feature_void: ise_runtime_reference_field_feature = Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+			l_attribute: ET_DYNAMIC_FEATURE
+			j, l_attribute_count: INTEGER
+			l_dynamic_type_set_builder: like dynamic_type_set_builder
+		do
+			ise_runtime_reference_field_feature := a_feature
+			l_dynamic_type_set_builder := dynamic_type_set_builder
+			l_dynamic_types := dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+					-- Propagate the dynamic type set of all attributes
+					-- which have already been used.
+				l_dynamic_type := l_dynamic_types.item (i)
+				l_attribute_count := l_dynamic_type.attribute_count
+				from j := 1 until j > l_attribute_count loop
+					l_attribute := l_dynamic_type.queries.item (j)
+					l_dynamic_type_set_builder.propagate_reference_field_dynamic_types (l_attribute)
+					j := j + 1
+				end
+				i := i + 1
+			end
+				-- Make sure that all other attributes are marked as used.
+				-- Their dynamic type set will be propagated while marking
+				-- them as used.
+			use_all_attributes
+		ensure
+			ise_runtime_reference_field_feature_set: ise_runtime_reference_field_feature = a_feature
+		end
+
+	set_ise_runtime_set_reference_field_feature (a_feature: ET_DYNAMIC_FEATURE)
+			-- Set `ise_runtime_set_reference_field_feature' to `a_feature'.
+			-- Make sure that all attributes get generated and
+			-- propagate their dynamic type sets accordingly.
+		require
+			ise_runtime_set_reference_field_feature_void: ise_runtime_set_reference_field_feature = Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+			l_attribute: ET_DYNAMIC_FEATURE
+			j, l_attribute_count: INTEGER
+			l_dynamic_type_set_builder: like dynamic_type_set_builder
+		do
+			ise_runtime_set_reference_field_feature := a_feature
+			l_dynamic_type_set_builder := dynamic_type_set_builder
+			l_dynamic_types := dynamic_types
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+					-- Propagate the dynamic type set of all attributes
+					-- which have already been used.
+				l_dynamic_type := l_dynamic_types.item (i)
+				l_attribute_count := l_dynamic_type.attribute_count
+				from j := 1 until j > l_attribute_count loop
+					l_attribute := l_dynamic_type.queries.item (j)
+					l_dynamic_type_set_builder.propagate_set_reference_field_dynamic_types (l_attribute)
+					j := j + 1
+				end
+				i := i + 1
+			end
+				-- Make sure that all other attributes are marked as used.
+				-- Their dynamic type set will be propagated while marking
+				-- them as used.
+			use_all_attributes
+		ensure
+			ise_runtime_set_reference_field_feature_set: ise_runtime_set_reference_field_feature = a_feature
+		end
+
+	set_ise_runtime_type_conforms_to_feature (a_feature: ET_DYNAMIC_FEATURE)
+			-- Set `ise_runtime_type_conforms_to_feature' to `a_feature'.
+		require
+			ise_runtime_type_conforms_to_feature_void: ise_runtime_type_conforms_to_feature = Void
+			a_feature_not_void: a_feature /= Void
+		do
+			ise_runtime_type_conforms_to_feature := a_feature
+		ensure
+			ise_runtime_type_conforms_to_feature_set: ise_runtime_type_conforms_to_feature = a_feature
+		end
+
+feature {NONE} -- Static features
 
 	array_area_feature: detachable ET_QUERY
 			-- Expected attribute 'area' in class "ARRAY"

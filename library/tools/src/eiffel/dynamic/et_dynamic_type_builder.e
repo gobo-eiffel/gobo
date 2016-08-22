@@ -148,7 +148,7 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET
 			-- New dynamic type set
 		do
-			Result := a_type.conforming_dynamic_types
+			Result := a_type.alive_conforming_descendants
 		end
 
 feature -- Status report
@@ -363,7 +363,7 @@ feature -- Generation
 					loop
 						l_other_type := l_dynamic_types.item (j)
 						if l_type.conforms_to_type (l_other_type) then
-							l_other_type.conforming_dynamic_types.put_type (l_type)
+							l_other_type.alive_conforming_descendants.put_type (l_type)
 						end
 						j := j + 1
 					end
@@ -373,6 +373,7 @@ feature -- Generation
 			end
 			check_catcall_validity
 			object_id_dynamic_type_set := old_object_id_dynamic_type_set
+			alive_conforming_descendants_per_type := Void
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
@@ -503,6 +504,60 @@ feature {ET_DYNAMIC_SYSTEM} -- Generation
 			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
 		do
 			propagate_builtin_result_dynamic_types (a_type, a_feature)
+		end
+
+feature {ET_DYNAMIC_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- `a_attribute' to the result type set of feature
+			-- "ISE_RUNTIME.reference_field" (and similar features)
+			-- if the static type of `a_attribute' is a reference type.
+		local
+			l_old_dynamic_type: like current_dynamic_type
+			l_old_dynamic_feature: like current_dynamic_feature
+		do
+			if attached current_dynamic_system.ise_runtime_reference_field_feature as l_ise_runtime_reference_field_feature then
+				if attached a_attribute.result_type_set as l_result_type_set then
+					l_old_dynamic_feature := current_dynamic_feature
+					current_dynamic_feature := l_ise_runtime_reference_field_feature
+					l_old_dynamic_type := current_dynamic_type
+					current_dynamic_type := l_ise_runtime_reference_field_feature.target_type
+					propagate_builtin_result_dynamic_types (l_result_type_set, l_ise_runtime_reference_field_feature)
+					current_dynamic_type := l_old_dynamic_type
+					current_dynamic_feature := l_old_dynamic_feature
+				else
+						-- Internal error: attributes have a result type set.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+			end
+		end
+
+	propagate_set_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- the formal argument of feature "ISE_RUNTIME.set_reference_field"
+			-- (and similar features) to the result type_set of `a_attribute'
+			-- if the static type of `a_attribute' is a reference type.
+		local
+			l_old_dynamic_type: like current_dynamic_type
+			l_old_dynamic_feature: like current_dynamic_feature
+		do
+			if attached current_dynamic_system.ise_runtime_set_reference_field_feature as l_ise_runtime_set_reference_field_feature then
+				if attached a_attribute.result_type_set as l_result_type_set then
+					l_old_dynamic_feature := current_dynamic_feature
+					current_dynamic_feature := l_ise_runtime_set_reference_field_feature
+					l_old_dynamic_type := current_dynamic_type
+					current_dynamic_type := l_ise_runtime_set_reference_field_feature.target_type
+					propagate_builtin_formal_argument_dynamic_types (4, l_result_type_set)
+					current_dynamic_type := l_old_dynamic_type
+					current_dynamic_feature := l_old_dynamic_feature
+				else
+						-- Internal error: attributes have a result type set.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+			end
 		end
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
@@ -925,6 +980,29 @@ feature {NONE} -- Feature validity
 				inspect a_feature.builtin_code \\ builtin_capacity
 				when builtin_internal_type_of_type then
 					report_builtin_internal_type_of_type (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when builtin_ise_runtime_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_ise_runtime_new_instance_of then
+					report_builtin_ise_runtime_new_instance_of (a_feature)
+				when builtin_ise_runtime_new_special_of_reference_instance_of then
+					report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature)
+				when builtin_ise_runtime_new_tuple_instance_of then
+					report_builtin_ise_runtime_new_tuple_instance_of (a_feature)
+				when builtin_ise_runtime_new_type_instance_of then
+					report_builtin_ise_runtime_new_type_instance_of (a_feature)
+				when builtin_ise_runtime_reference_field then
+					report_builtin_ise_runtime_reference_field (a_feature)
+				when builtin_ise_runtime_reference_field_at then
+					report_builtin_ise_runtime_reference_field_at (a_feature)
+				when builtin_ise_runtime_reference_field_at_offset then
+					report_builtin_ise_runtime_reference_field_at_offset (a_feature)
+				when builtin_ise_runtime_storable_version_of_type then
+					report_builtin_ise_runtime_storable_version_of_type (a_feature)
+				when builtin_ise_runtime_type_conforms_to then
+					report_builtin_ise_runtime_type_conforms_to (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
@@ -3157,6 +3235,99 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_new_instance_of (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.new_instance_of' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.new_special_of_reference_instance_of' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_new_tuple_instance_of (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.new_tuple_instance_of' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_new_type_instance_of (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.new_type_instance_of' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_reference_field (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.reference_field' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_reference_field_at (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.reference_field_at' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_reference_field_at_offset (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.reference_field_at_offset' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_ise_runtime_storable_version_of_type (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.storable_version_of_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type_set := result_type_set
+				l_dynamic_type := l_result_type_set.static_type
+				mark_string_type_alive (l_dynamic_type)
+				propagate_builtin_result_dynamic_types (l_dynamic_type, current_dynamic_feature)
+				l_result_type_set.propagate_can_be_void (current_dynamic_system.none_type)
+			end
+		end
+
+	report_builtin_ise_runtime_type_conforms_to (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'ISE_RUNTIME.type_conforms_to' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_dynamic_system.ise_runtime_type_conforms_to_feature = Void then
+				current_dynamic_system.set_ise_runtime_type_conforms_to_feature (current_dynamic_feature)
+			end
+			report_builtin_function (a_feature)
 		end
 
 	report_builtin_special_item (a_feature: ET_EXTERNAL_FUNCTION)

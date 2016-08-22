@@ -119,6 +119,7 @@ typedef struct GE_thread_context_struct GE_thread_context;
 typedef struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* call; /* Call stack */
+	uint32_t in_assertion; /* Is an assertion evaluated? */
 	GE_rescue* last_rescue; /* Context of last feature entered containing a rescue clause */
 	uint32_t in_rescue; /* Number of rescue clauses currently being executed */
 	EIF_REFERENCE exception_manager; /* Exception manager */
@@ -128,6 +129,7 @@ struct GE_context_struct {
 	const char* exception_tag; /* Tag of the exception currently being raised, NULL otherwise */
 	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
+	int pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef EIF_THREADS
 	GE_thread_context* thread; /* Thread context */
 #endif
@@ -189,6 +191,12 @@ extern void GE_raise_with_message(long code, const char* msg);
 extern void GE_developer_raise(long code, char* meaning, char* message);
 
 /*
+ * Set `in_assertion' to 'not b'.
+ * Return the opposite of previous value.
+ */
+extern EIF_BOOLEAN GE_check_assert(EIF_BOOLEAN b);
+
+/*
  * Check whether the type id of `obj' is not in `type_ids'.
  * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
  * `nb' is the number of ids in `type_ids' and is expected to be >0.
@@ -196,7 +204,7 @@ extern void GE_developer_raise(long code, char* meaning, char* message);
  * Return `obj'.
  */
 #define GE_catcall(obj,type_ids,nb) GE_check_catcall((obj),(type_ids),(nb))
-EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
+extern EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int nb);
 
 /*
  * Check whether `obj' is Void.

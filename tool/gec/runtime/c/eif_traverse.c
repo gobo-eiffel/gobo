@@ -47,6 +47,16 @@ EIF_REFERENCE find_all_instances(EIF_INTEGER result_type)
 	return EIF_VOID;
 }
 
+EIF_REFERENCE once_objects(EIF_INTEGER result_type)
+{
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'once_objects' in 'eif_traverse.h' not implemented\n");
+	return EIF_VOID;
+}
+
 #ifdef __cplusplus
 }
 #endif

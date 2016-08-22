@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,13 +48,14 @@ feature {NONE} -- Initialization
 			hash_code := a_class.hash_code
 			queries := empty_features
 			procedures := empty_features
-			create conforming_dynamic_types.make_empty (Current)
-			create all_conforming_dynamic_types.make_empty (Current)
-			all_conforming_dynamic_types.put_type (Current)
+			create conforming_ancestors.make (a_class.ancestors.count)
+			create conforming_descendants.make_empty (Current)
+			create alive_conforming_descendants.make_empty (Current)
+			conforming_descendants.put_type (Current)
 			if is_expanded then
 				set_alive
-				conforming_dynamic_types.set_never_void
-				all_conforming_dynamic_types.set_never_void
+				alive_conforming_descendants.set_never_void
+				conforming_descendants.set_never_void
 			end
 		ensure
 			base_type_set: base_type = a_type
@@ -105,6 +106,12 @@ feature -- Status report
 
 	is_special: BOOLEAN
 			-- Is current type a SPECIAL type?
+		do
+			-- Result := False
+		end
+
+	is_tuple: BOOLEAN
+			-- Is current type a TUPLE type?
 		do
 			-- Result := False
 		end
@@ -172,11 +179,11 @@ feature -- Status setting
 			-- Set `is_alive' to True.
 			-- (Note that in order to make sure that the 'dispose' feature, if it exists, is
 			-- compiled into the system, the feature ET_DYNAMIC_TYPE_SET_BUILDER.mark_type_alive
-			-- needs to be called.)
+			-- needs to be called. Likewise to compute ET_DYNAMIC_TYPE_SET_BUILDER.alive_conforming_descendants.)
 		do
 			if not is_alive then
 				is_alive := True
-				conforming_dynamic_types.put_type (Current)
+				alive_conforming_descendants.put_type (Current)
 			end
 		ensure
 			alive_set: is_alive
@@ -233,14 +240,17 @@ feature -- Access
 			end
 		end
 
-	conforming_dynamic_types: ET_DYNAMIC_STANDALONE_TYPE_SET
-			-- Types that conform to current type and that are considered alive
-			-- (e.g. instances of this type may be created)
+	conforming_ancestors: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- All types (both alive and dead) to which the current type conforms
 
-	all_conforming_dynamic_types: ET_DYNAMIC_STANDALONE_TYPE_SET
+	conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
 			-- All types (both alive and dead) that conform to current type
 			-- (Might be useful when retrieving Storable files or getting from
 			-- an external routine any other objects created outside of Eiffel.)
+
+	alive_conforming_descendants: ET_DYNAMIC_STANDALONE_TYPE_SET
+			-- Types that conform to current type and that are considered alive
+			-- (e.g. instances of this type may be created)
 
 	hash_code: INTEGER
 			-- Hash code
@@ -304,6 +314,8 @@ feature -- Features
 		do
 			if has_reference_attributes then
 				Result := True
+			elseif is_basic then
+				Result := False
 			else
 					-- Look at the attributes of the types of expanded attributes, if any.
 					--
@@ -373,7 +385,7 @@ feature -- Features
 				create queries.make_with_capacity (base_class.queries.count)
 				Result := new_dynamic_query (a_query, a_system)
 				if Result.is_attribute then
-					put_attribute (Result)
+					put_attribute (Result, a_system)
 				else
 					queries.put_last (Result)
 				end
@@ -393,7 +405,7 @@ feature -- Features
 				else
 					Result := new_dynamic_query (a_query, a_system)
 					if Result.is_attribute then
-						put_attribute (Result)
+						put_attribute (Result, a_system)
 					else
 						queries.force_last (Result)
 					end
@@ -456,7 +468,7 @@ feature -- Features
 					create queries.make_with_capacity (base_class.queries.count)
 					Result := new_dynamic_query (l_query, a_system)
 					if Result.is_attribute then
-						put_attribute (Result)
+						put_attribute (Result, a_system)
 					else
 						queries.put_last (Result)
 					end
@@ -476,7 +488,7 @@ feature -- Features
 					if attached base_class.seeded_query (a_seed) as l_query then
 						Result := new_dynamic_query (l_query, a_system)
 						if Result.is_attribute then
-							put_attribute (Result)
+							put_attribute (Result, a_system)
 						else
 							queries.force_last (Result)
 						end
@@ -560,59 +572,59 @@ feature -- Features
 			inspect a_builtin_code // builtin_capacity
 			when builtin_boolean_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_boolean_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_character_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_character_32_class then
 				 if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_pointer_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_pointer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_integer_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_integer_16_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_integer_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_integer_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_natural_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_natural_16_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_natural_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_natural_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_real_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_real_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
-					Result := not is_basic
+					Result := True
 				end
 			when builtin_tuple_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_tuple_object_comparison then
@@ -631,16 +643,18 @@ feature -- Features
 			is_query: Result implies a_feature.is_query
 		end
 
-feature {NONE} -- Fetaures
+feature {NONE} -- Features
 
-	put_attribute (an_attribute: ET_DYNAMIC_FEATURE)
+	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM)
 			-- Add `an_attribute' to `queries'.
 		require
 			an_attribute_not_void: an_attribute /= Void
 			is_attribute: an_attribute.is_attribute
 			is_query: an_attribute.is_query
+			a_system_not_void: a_system /= Void
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
 			attribute_count := attribute_count + 1
 			if queries.count < attribute_count then
@@ -661,6 +675,9 @@ feature {NONE} -- Fetaures
 					has_generic_expanded_attributes := True
 				end
 			end
+			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
+			l_dynamic_type_set_builder.propagate_reference_field_dynamic_types (an_attribute)
+			l_dynamic_type_set_builder.propagate_set_reference_field_dynamic_types (an_attribute)
 		ensure
 			one_more: attribute_count = old attribute_count + 1
 			reference_attribute: (attached an_attribute.result_type_set as l_result_type_set and then not l_result_type_set.is_expanded) implies has_reference_attributes
@@ -819,8 +836,9 @@ invariant
 	base_type_not_void: base_type /= Void
 	base_type_base_type: base_type.is_base_type
 	base_class_not_void: base_class /= Void
-	conforming_dynamic_types_not_void: conforming_dynamic_types /= Void
-	all_conforming_dynamic_types_not_void: all_conforming_dynamic_types /= Void
+	conforming_ancestors_not_void: conforming_ancestors /= Void
+	conforming_descendants_not_void: conforming_descendants /= Void
+	alive_conforming_descendants_not_void: alive_conforming_descendants /= Void
 	queries_not_void: queries /= Void
 	procedures_not_void: procedures /= Void
 	attribute_count_not_negative: attribute_count >= 0

@@ -735,6 +735,9 @@ feature -- Kernel types
 	detachable_any_type: ET_CLASS_TYPE
 			-- Class type "detachable ANY"
 
+	separate_any_type: ET_CLASS_TYPE
+			-- Class type "separate ANY"
+
 	any_parent: ET_PARENT
 			-- Default parent
 
@@ -851,6 +854,9 @@ feature -- Kernel types
 
 	string_type: ET_CLASS_TYPE
 			-- Class type "STRING", with implicit 'attached' type mark
+
+	detachable_string_type: ET_CLASS_TYPE
+			-- Class type "detachable STRING"
 
 	string_8_type: ET_CLASS_TYPE
 			-- Class type "STRING_8", with implicit 'attached' type mark
@@ -979,6 +985,7 @@ feature -- Kernel types
 			l_master_class.set_in_system (True)
 			create any_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_any_type.make (tokens.detachable_keyword, l_name, l_master_class)
+			create separate_any_type.make (tokens.separate_keyword, l_name, l_master_class)
 				-- Implicit parent "ANY".
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
@@ -1443,6 +1450,7 @@ feature -- Kernel types
 			l_master_class := master_class (l_name)
 			l_master_class.set_in_system (True)
 			create string_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
+			create detachable_string_type.make (tokens.detachable_keyword, l_name, l_master_class)
 		end
 
 	set_string_8_type
@@ -1610,6 +1618,7 @@ feature -- Kernel types
 		do
 			any_type := tokens.unknown_class_type
 			detachable_any_type := tokens.unknown_class_type
+			separate_any_type := tokens.unknown_class_type
 			any_parent := tokens.unknown_parent
 			any_parents := tokens.unknown_parents
 			any_clients := tokens.empty_clients
@@ -1665,6 +1674,7 @@ feature -- Kernel types
 			special_any_type := tokens.unknown_generic_class_type
 			special_detachable_any_type := tokens.unknown_generic_class_type
 			string_type := tokens.unknown_class_type
+			detachable_string_type := tokens.unknown_class_type
 			string_8_type := tokens.unknown_class_type
 			string_8_convert_feature := tokens.unknown_convert_feature
 			string_32_type := tokens.unknown_class_type
@@ -2602,6 +2612,7 @@ invariant
 		-- Kernel types.
 	any_type_not_void: any_type /= Void
 	detachable_any_type_not_void: detachable_any_type /= Void
+	separate_any_type_not_void: separate_any_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void
 	any_clients_not_void: any_clients /= Void
@@ -2661,6 +2672,7 @@ invariant
 	natural_type_not_void: natural_type /= Void
 	real_type_not_void: real_type /= Void
 	string_type_not_void: string_type /= Void
+	detachable_string_type_not_void: detachable_string_type /= Void
 	wide_character_type_not_void: wide_character_type /= Void
 		-- Built-in convert features.
 	character_8_convert_feature_not_void: character_8_convert_feature /= Void

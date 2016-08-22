@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders where types are pulled from subsets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -256,6 +256,7 @@ feature -- Generation
 			end
 			check_catcall_validity
 			object_id_dynamic_type_set := old_object_id_dynamic_type_set
+			alive_conforming_descendants_per_type := Void
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation

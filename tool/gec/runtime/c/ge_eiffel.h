@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stddef.h>
 
 /* Platform definition */
 /* Unix definition */
@@ -111,9 +112,30 @@ typedef int intptr_t;
 #endif
 #endif
 
+/* C type for underlying integer type identifying object's dynamic type. */
+typedef uint16_t	EIF_TYPE_INDEX;
+
+/*
+ * Abstraction representing an Eiffel type.
+ * It is made of a compiler type-id,
+ * and of some annotations (attached/detachable/separate/variant/frozen).
+ */
+typedef struct eif_type {
+	EIF_TYPE_INDEX id;
+	EIF_TYPE_INDEX annotations;
+} EIF_TYPE;
+
+/*
+ * Since EIF_TYPE and EIF_ENCODED_TYPE have the same size, the encoded version
+ * is basically a memcpy version of the EIF_TYPE representation.
+ * It is used to provide backward compatibility to most Eiffel and
+ * C APIs manipulating types as an INTEGER.
+ */
+typedef int32_t	EIF_ENCODED_TYPE;
+typedef EIF_ENCODED_TYPE	EIF_TYPE_ID;
+#define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
+
 /* Basic Eiffel types */
-typedef struct {int id;} EIF_ANY;
-typedef EIF_ANY* EIF_REFERENCE;
 typedef char EIF_BOOLEAN;
 typedef unsigned char EIF_CHARACTER_8;
 typedef uint32_t EIF_CHARACTER_32;
@@ -128,6 +150,9 @@ typedef uint64_t EIF_NATURAL_64;
 typedef void* EIF_POINTER;
 typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
+typedef EIF_ANY* EIF_REFERENCE;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_INTEGER_32 count; EIF_INTEGER_32 capacity;} EIF_SPECIAL;
 
 #ifdef EIF_WINDOWS
 typedef wchar_t EIF_NATIVE_CHAR;
@@ -173,6 +198,12 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #endif
 
 /*
+ * Gobo compiler version.
+ * Starts with 6080 (looks like GOBO) followed by 5 digits.
+ */
+#define GE_compiler_version() 608000001
+
+/*
 	Interoperability with ISE.
 */
 #define RTI64C(x) GE_int64(x)
@@ -192,9 +223,6 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */
-typedef int32_t EIF_TYPE_ID;
-#define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
-typedef uint16_t EIF_TYPE_INDEX;
 #define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 

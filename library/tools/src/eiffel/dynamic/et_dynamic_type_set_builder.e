@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,6 +128,7 @@ feature -- Generation
 						end
 					end
 				end
+				propagate_alive_conforming_descendants (a_type)
 			end
 		ensure
 			a_type_alive: a_type.is_alive
@@ -228,6 +229,48 @@ feature {ET_DYNAMIC_SYSTEM} -- Generation
 		deferred
 		end
 
+	propagate_alive_conforming_descendants (a_type: ET_DYNAMIC_TYPE)
+			-- Propagage `a_type' to all `alive_conforming_descendants' to which it conforms.
+		require
+			a_type_not_void: a_type /= Void
+			a_type_is_alive: a_type.is_alive
+		do
+			if attached alive_conforming_descendants_per_type as l_alive_conforming_descendants then
+				from
+					l_alive_conforming_descendants.start
+				until
+					l_alive_conforming_descendants.after
+				loop
+					if a_type.conforms_to_type (l_alive_conforming_descendants.key_for_iteration) then
+						l_alive_conforming_descendants.item_for_iteration.put_type_from_type_set (a_type, a_type, current_dynamic_system)
+					end
+					l_alive_conforming_descendants.forth
+				end
+			end
+		end
+
+feature {ET_DYNAMIC_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- `a_attribute' to the result type set of feature
+			-- "ISE_RUNTIME.reference_field" (and similar features)
+			-- if the static type of `a_attribute' is a reference type.
+		require
+			a_attribute_not_void: a_attribute /= Void
+		deferred
+		end
+
+	propagate_set_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- the formal argument of feature "ISE_RUNTIME.set_reference_field"
+			-- (and similar features) to the result type_set of `a_attribute'
+			-- if the static type of `a_attribute' is a reference type.
+		require
+			a_attribute_not_void: a_attribute /= Void
+		deferred
+		end
+
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE)
@@ -264,6 +307,45 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 		deferred
 		ensure
 			object_id_dynamic_type_set_not_void: Result /= Void
+		end
+
+	alive_conforming_descendants_per_type: detachable DS_HASH_TABLE [like new_dynamic_type_set, ET_DYNAMIC_TYPE]
+			-- Dynamic type set sof all alive types which conform to a given type, indexed by this type.
+			-- All the given types for which `alive_conforming_descendants' has been called are kept and
+			-- updated in this table.
+
+	alive_conforming_descendants (a_type: ET_DYNAMIC_TYPE): like new_dynamic_type_set
+			-- Dynamic type set of all alive types which conform to `a_type'
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_alive_conforming_descendants_per_type: like alive_conforming_descendants_per_type
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_other_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			l_alive_conforming_descendants_per_type := alive_conforming_descendants_per_type
+			if l_alive_conforming_descendants_per_type = Void then
+				create l_alive_conforming_descendants_per_type.make_map_default
+				alive_conforming_descendants_per_type := l_alive_conforming_descendants_per_type
+			end
+			l_alive_conforming_descendants_per_type.search (a_type)
+			if l_alive_conforming_descendants_per_type.found then
+				Result := l_alive_conforming_descendants_per_type.found_item
+			else
+				Result := new_dynamic_type_set (a_type)
+				l_dynamic_types := current_dynamic_system.dynamic_types
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_other_type := l_dynamic_types.item (i)
+					if l_other_type.conforms_to_type (a_type) then
+						Result.put_type_from_type_set (l_other_type, l_other_type, current_dynamic_system)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			alive_conforming_descendants_not_void: Result /= Void
 		end
 
 invariant

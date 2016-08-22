@@ -53,6 +53,7 @@
 			Run Gobo tests with ISE Eiffel.
 		</description>
 
+		<geant target="do_all" arguments="test_ise,true"/>
 	</target>
 
 	<target name="test_debug" depend="init">
@@ -77,6 +78,7 @@
 			Run Gobo tests with ISE Eiffel in debug mode.
 		</description>
 
+		<geant target="do_all" arguments="test_debug_ise,true"/>
 	</target>
 
 	<target name="clean" depend="init">

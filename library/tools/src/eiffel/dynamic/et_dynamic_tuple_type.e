@@ -18,6 +18,7 @@ inherit
 		rename
 			make as make_type
 		redefine
+			is_tuple,
 			has_nested_reference_attributes,
 			new_dynamic_query, new_dynamic_procedure
 		end
@@ -72,6 +73,11 @@ feature -- Access
 
 	item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Type sets of items
+
+feature -- Status report
+
+	is_tuple: BOOLEAN = True
+			-- Is current type a TUPLE type?
 
 feature -- Features
 

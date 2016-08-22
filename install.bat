@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel package"
-rem copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -160,16 +160,6 @@ goto exit
 	goto c_compilation
 
 :c_compilation
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec18.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec17.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec16.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec15.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec14.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec13.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec12.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec11.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec10.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c

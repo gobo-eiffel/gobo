@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type set builders that do nothing"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,6 +47,7 @@ feature -- Generation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			has_fatal_error := False
+			alive_conforming_descendants_per_type := Void
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
@@ -79,9 +80,29 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 		do
 		end
 
+feature {ET_DYNAMIC_SYSTEM} -- Generation
+
 	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
 			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
+		do
+		end
+
+feature {ET_DYNAMIC_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- `a_attribute' to the result type set of feature
+			-- "ISE_RUNTIME.reference_field" (and similar features)
+			-- if the static type of `a_attribute' is a reference type.
+		do
+		end
+
+	propagate_set_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
+			-- Propagate the dynamic types of the dynamic type set of
+			-- the formal argument of feature "ISE_RUNTIME.set_reference_field"
+			-- (and similar features) to the result type_set of `a_attribute'
+			-- if the static type of `a_attribute' is a reference type.
 		do
 		end
 

@@ -257,7 +257,7 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 
 		/* Print object address with 16 digits to be ready when pointers
 		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (uint64_t) a_object_addr);
+	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (unsigned long)(intptr_t)a_object_addr);
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 
 	if (l_location_count > 22) {
@@ -378,7 +378,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 /*
  * Default initialization for `GE_context'.
  */
-GE_context GE_default_context = {0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}
+GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
 #ifdef EIF_THREADS
 	, 0
 #endif
@@ -608,13 +608,28 @@ void GE_developer_raise(long code, char* meaning, char* message)
 }
 
 /*
+ * Set `in_assertion' to 'not b'.
+ * Return the opposite of previous value.
+ */
+EIF_BOOLEAN GE_check_assert(EIF_BOOLEAN b)
+{
+	EIF_BOOLEAN l_old_value;
+	GE_context* l_context;
+
+	l_context = GE_current_context();
+	l_old_value = EIF_TEST(!(l_context->in_assertion));
+	l_context->in_assertion = (b?0:1);
+	return l_old_value;
+}
+
+/*
  * Check whether the type id of `obj' is not in `type_ids'.
  * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
  * `nb' is the number of ids in `type_ids' and is expected to be >0.
  * `type_ids' is sorted in increasing order.
  * Return `obj'.
  */
-EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb)
+EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int nb)
 {
 	if (obj) {
 		int type_id = obj->id;

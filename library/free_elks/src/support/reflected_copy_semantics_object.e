@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 			referring_object := a_enclosing_object
 			referring_physical_offset := a_enclosing_object.field_offset (i)
 			physical_offset := 0
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
-			dynamic_type := invalid_type
+			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
 		ensure
 			enclosing_object_set: referring_object = a_enclosing_object
 		end
@@ -42,6 +41,7 @@ feature {NONE} -- Initialization
 	make_special (a_enclosing_object: REFLECTED_OBJECT; i: INTEGER)
 			-- Setup a proxy to copy semantics item located at the `i'-th position of special represented by `a_enclosing_object'.
 		require
+			a_enclosing_object_is_special: a_enclosing_object.is_special
 			a_enclosing_object_is_special_reference: a_enclosing_object.is_special_of_reference
 			valid_index: attached {ABSTRACT_SPECIAL} a_enclosing_object.object as l_spec and then l_spec.valid_index (i)
 			i_th_field_is_expanded: a_enclosing_object.is_special_copy_semantics_item (i)
@@ -49,8 +49,7 @@ feature {NONE} -- Initialization
 			referring_object := a_enclosing_object
 			referring_physical_offset := i * {PLATFORM}.pointer_bytes
 			physical_offset := 0
---<			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
-			dynamic_type := invalid_type
+			dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
 		ensure
 			enclosing_object_set: referring_object = a_enclosing_object
 		end
@@ -65,14 +64,12 @@ feature {NONE} -- Initialization
 				referring_object := a_enclosing_object.referring_object
 				referring_physical_offset := a_enclosing_object.referring_physical_offset
 				physical_offset := a_enclosing_object.physical_offset + a_enclosing_object.field_offset (i)
---<				dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
-				dynamic_type := invalid_type
+				dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
 			else
 				referring_object := a_enclosing_object
 				referring_physical_offset := a_enclosing_object.field_offset (i)
 				physical_offset := 0
---<				dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
-				dynamic_type := invalid_type
+				dynamic_type := {ISE_RUNTIME}.dynamic_type_at_offset (object_address, 0)
 			end
 		end
 
@@ -81,9 +78,7 @@ feature -- Access
 	object: ANY
 			-- <Precursor>
 		do
---<			Result := object_from_address (object_address)
--- TODO:
-			Result := referring_object.object
+			Result := object_from_address (object_address)
 		end
 
 	physical_offset: INTEGER
@@ -108,8 +103,7 @@ feature {REFLECTED_OBJECT} -- Access
 		note
 			compiler: no_gc
 		do
---<			Result := dereference (referring_object.object_address, referring_physical_offset) + physical_offset
--- TODO:
+			Result := dereference (referring_object.object_address, referring_physical_offset) + physical_offset
 		end
 
 feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
@@ -122,19 +116,15 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 
 feature {NONE} -- Implementation
 
---<	dereference (ptr: POINTER; offset: INTEGER): POINTER
---<		external
---<			"C inline use %"eif_built_in.h%""
---<		alias
---<			"return *(EIF_REFERENCE *) eif_obj_at($ptr, $offset);"
---<		end
+	dereference (ptr: POINTER; offset: INTEGER): POINTER
+		do
+			Result := {ISE_RUNTIME}.raw_reference_field_at (offset, ptr, 0)
+		end
 
---<	object_from_address (ptr: POINTER): ANY
---<		external
---<			"C inline use %"eif_built_in.h%""
---<		alias
---<			"return (EIF_REFERENCE) $ptr;"
---<		end
+	object_from_address (ptr: POINTER): ANY
+		do
+			Result := {ISE_RUNTIME}.reference_field_at_offset (ptr, 0)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

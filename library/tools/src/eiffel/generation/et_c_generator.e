@@ -119,6 +119,9 @@ inherit
 	ET_SHARED_IDENTIFIER_TESTER
 		export {NONE} all end
 
+	ET_SHARED_DYNAMIC_TYPE_COMPARATOR_BY_ID
+		export {NONE} all end
+
 	KL_SHARED_STREAMS
 		export {NONE} all end
 
@@ -155,6 +158,7 @@ feature {NONE} -- Initialization
 			l_buffer: STRING
 		do
 			current_dynamic_system := a_system
+			dynamic_types := a_system.dynamic_types
 			short_names := True
 			split_mode := True
 			split_threshold := default_split_threshold
@@ -209,7 +213,7 @@ feature {NONE} -- Initialization
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create inline_constants.make_map (10000)
-			create dispose_procedures.make_map (current_dynamic_system.dynamic_types.count)
+			create dispose_procedures.make_map (dynamic_types.count)
 			create dynamic_type_id_set_names.make_map (10000)
 			dynamic_type_id_set_names.set_key_equality_tester (string_equality_tester)
 			create called_features.make (1000)
@@ -833,6 +837,8 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
+				include_runtime_header_file ("ge_types.h", True, header_file)
+				header_file.put_new_line
 				include_runtime_header_file ("ge_console.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_main.h", True, header_file)
@@ -969,8 +975,85 @@ feature {NONE} -- C code Generation
 				constant_features.wipe_out
 				inline_constants.wipe_out
 				dispose_procedures.wipe_out
+				dynamic_types := current_dynamic_system.dynamic_types
 				dynamic_type_id_set_names.wipe_out
 				l_header_file.close
+				if
+					type_info_ancestors_used or
+					type_info_attributes_used or
+					type_info_attribute_name_used or
+					type_info_attribute_type_id_used or
+					type_info_attribute_offset_used or
+					type_info_generator_used or
+					type_info_name_used or
+					type_info_generic_parameters_used or
+					type_info_object_size_used
+				then
+					file_system.rename_file (l_header_filename, l_header_filename + "ge")
+					l_header_file.open_write
+					if not l_header_file.is_open_write then
+						set_fatal_error
+						report_cannot_write_error (l_header_filename)
+					else
+						if type_info_ancestors_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_ancestors)
+						end
+						if type_info_attributes_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attributes)
+						end
+						if type_info_attribute_name_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_name)
+						end
+						if type_info_attribute_type_id_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_type_id)
+						end
+						if type_info_attribute_offset_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_attribute_offset)
+						end
+						if type_info_generator_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_type_generator)
+						end
+						if type_info_name_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_type_name)
+						end
+						if type_info_generic_parameters_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_type_generic_parameters)
+						end
+						if type_info_object_size_used then
+							header_file.put_string (c_define)
+							header_file.put_character (' ')
+							header_file.put_line (c_ge_use_type_object_size)
+						end
+						include_file (l_header_filename + "ge", header_file)
+						l_header_file.close
+						file_system.delete_file (l_header_filename + "ge")
+					end
+					type_info_ancestors_used := False
+					type_info_attributes_used := False
+					type_info_attribute_name_used := False
+					type_info_attribute_type_id_used := False
+					type_info_attribute_offset_used := False
+					type_info_generator_used := False
+					type_info_name_used := False
+					type_info_generic_parameters_used := False
+					type_info_object_size_used := False
+				end
 				close_c_file
 				close_cpp_file
 				header_file := old_header_file
@@ -995,7 +1078,10 @@ feature {NONE} -- C code Generation
 			l_count: INTEGER
 			l_id: INTEGER
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			if current_dynamic_system.ise_runtime_type_conforms_to_feature /= Void then
+				sort_types
+			end
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -1968,6 +2054,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_identified_function_body (a_feature)
 			when builtin_internal_class then
 				print_external_builtin_internal_function_body (a_feature)
+			when builtin_ise_runtime_class then
+				print_external_builtin_ise_runtime_function_body (a_feature)
 			when builtin_memory_class then
 				print_external_builtin_memory_function_body (a_feature)
 			when builtin_platform_class then
@@ -2333,6 +2421,461 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_internal_max_type_id_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_ise_runtime_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "ISE_RUNTIME".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_runtime: (a_feature.builtin_code // builtin_capacity) = builtin_ise_runtime_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_runtime_attached_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_attached_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_boolean_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_boolean_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_boolean_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_boolean_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_character_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_character_8_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_character_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_character_8_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_character_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_character_32_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_character_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_character_32_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_check_assert then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_check_assert_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_compiler_version then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_compiler_version_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_detachable_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_detachable_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_dynamic_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_dynamic_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_dynamic_type_at_offset then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_dynamic_type_at_offset_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_eif_gen_param_id then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_eif_gen_param_id_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_field_count_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_field_count_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_field_name_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_field_name_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_field_offset_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_field_offset_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_field_static_type_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_field_static_type_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_field_type_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_field_type_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_generating_type_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_generating_type_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_generator_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_generator_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_generic_parameter_count then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_generic_parameter_count_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_in_assertion then
+				print_builtin_ise_runtime_in_assertion_body (a_feature)
+			when builtin_ise_runtime_integer_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_8_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_8_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_16_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_16_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_16_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_16_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_32_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_32_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_64_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_integer_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_integer_64_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_attached_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_attached_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_copy_semantics_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_copy_semantics_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_expanded then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_expanded_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_field_expanded_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_field_expanded_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_field_transient_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_field_transient_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_object_marked then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_object_marked_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special_copy_semantics_item then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_copy_semantics_item_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special_of_expanded then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_of_expanded_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special_of_reference then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_of_reference_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special_of_reference_or_basic_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_special_of_reference_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_special_of_reference_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_tuple then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_tuple_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_is_tuple_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_is_tuple_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_8_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_8_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_16_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_16_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_16_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_16_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_32_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_32_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_64_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_natural_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_natural_64_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_new_instance_of then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_new_instance_of_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_new_special_of_reference_instance_of then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_new_special_of_reference_instance_of_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_new_tuple_instance_of then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_new_tuple_instance_of_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_new_type_instance_of then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_new_type_instance_of_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_object_size then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_object_size_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_once_objects then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_once_objects_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_persistent_field_count_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_persistent_field_count_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_pointer_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_pointer_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_pointer_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_pointer_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_pre_ecma_mapping_status then
+				print_builtin_ise_runtime_pre_ecma_mapping_status_body (a_feature)
+			when builtin_ise_runtime_raw_reference_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_raw_reference_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_raw_reference_field_at_offset then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_raw_reference_field_at_offset_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_real_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_real_32_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_real_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_real_32_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_real_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_real_64_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_real_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_real_64_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_reference_field then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_reference_field_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_reference_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_reference_field_at_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_reference_field_at_offset then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_reference_field_at_offset_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_storable_version_of_type then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_storable_version_of_type_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_type_id_from_name then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_type_id_from_name_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_ise_runtime_type_conforms_to then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_ise_runtime_type_conforms_to_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			else
@@ -3202,6 +3745,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_identified_procedure_body (a_feature)
 			when builtin_ise_exception_manager_class then
 				print_external_builtin_ise_exception_manager_procedure_body (a_feature)
+			when builtin_ise_runtime_class then
+				print_external_builtin_ise_runtime_procedure_body (a_feature)
 			when builtin_memory_class then
 				print_external_builtin_memory_procedure_body (a_feature)
 			when builtin_pointer_class then
@@ -3383,6 +3928,163 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			when builtin_ise_exception_manager_developer_raise then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_ise_exception_manager_developer_raise_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_ise_runtime_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "ISE_RUNTIME".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_procedure: a_feature.is_procedure
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_runtime: (a_feature.builtin_code // builtin_capacity) = builtin_ise_runtime_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_runtime_lock_marking then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_lock_marking_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_mark_object then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_mark_object_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_boolean_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_boolean_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_boolean_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_boolean_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_character_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_character_8_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_character_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_character_8_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_character_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_character_32_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_character_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_character_32_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_8_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_8_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_16_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_16_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_16_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_16_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_32_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_32_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_64_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_integer_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_integer_64_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_8_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_8_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_8_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_8_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_16_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_16_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_16_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_16_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_32_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_32_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_64_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_natural_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_natural_64_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_pointer_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_pointer_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_pointer_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_pointer_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_pre_ecma_mapping then
+				print_builtin_ise_runtime_set_pre_ecma_mapping_body (a_feature)
+			when builtin_ise_runtime_set_real_32_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_real_32_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_real_32_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_real_32_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_real_64_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_real_64_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_real_64_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_real_64_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_reference_field then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_reference_field_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_set_reference_field_at then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_set_reference_field_at_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_unlock_marking then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_unlock_marking_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_ise_runtime_unmark_object then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_ise_runtime_unmark_object_call (current_feature, current_type, False)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -7309,6 +8011,8 @@ feature {NONE} -- Procedure call generation
 				print_builtin_sized_integer_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_ise_exception_manager_class then
 				print_builtin_ise_exception_manager_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_class then
+				print_builtin_ise_runtime_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_memory_class then
 				print_builtin_memory_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_8_class then
@@ -7438,6 +8142,93 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_ise_exception_manager_developer_raise then
 				print_builtin_ise_exception_manager_developer_raise_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_ise_runtime_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to procedure `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "ISE_RUNTIME".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_runtime: (a_feature.builtin_code // builtin_capacity) = builtin_ise_runtime_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_runtime_lock_marking then
+				print_builtin_ise_runtime_lock_marking_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_mark_object then
+				print_builtin_ise_runtime_mark_object_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_boolean_field then
+				print_builtin_ise_runtime_set_boolean_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_boolean_field_at then
+				print_builtin_ise_runtime_set_boolean_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_character_8_field then
+				print_builtin_ise_runtime_set_character_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_character_8_field_at then
+				print_builtin_ise_runtime_set_character_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_character_32_field then
+				print_builtin_ise_runtime_set_character_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_character_32_field_at then
+				print_builtin_ise_runtime_set_character_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_8_field then
+				print_builtin_ise_runtime_set_integer_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_8_field_at then
+				print_builtin_ise_runtime_set_integer_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_16_field then
+				print_builtin_ise_runtime_set_integer_16_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_16_field_at then
+				print_builtin_ise_runtime_set_integer_16_field_at_call (a_feature, a_target_type, a_check_void_target)
+				when builtin_ise_runtime_set_integer_32_field then
+				print_builtin_ise_runtime_set_integer_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_32_field_at then
+				print_builtin_ise_runtime_set_integer_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_64_field then
+				print_builtin_ise_runtime_set_integer_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_integer_64_field_at then
+				print_builtin_ise_runtime_set_integer_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_8_field then
+				print_builtin_ise_runtime_set_natural_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_8_field_at then
+				print_builtin_ise_runtime_set_natural_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_16_field then
+				print_builtin_ise_runtime_set_natural_16_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_16_field_at then
+				print_builtin_ise_runtime_set_natural_16_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_32_field then
+				print_builtin_ise_runtime_set_natural_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_32_field_at then
+				print_builtin_ise_runtime_set_natural_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_64_field then
+				print_builtin_ise_runtime_set_natural_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_natural_64_field_at then
+				print_builtin_ise_runtime_set_natural_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_pointer_field then
+				print_builtin_ise_runtime_set_pointer_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_pointer_field_at then
+				print_builtin_ise_runtime_set_pointer_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_real_32_field then
+				print_builtin_ise_runtime_set_real_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_real_32_field_at then
+				print_builtin_ise_runtime_set_real_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_real_64_field then
+				print_builtin_ise_runtime_set_real_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_real_64_field_at then
+				print_builtin_ise_runtime_set_real_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_reference_field then
+				print_builtin_ise_runtime_set_reference_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_set_reference_field_at then
+				print_builtin_ise_runtime_set_reference_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_unlock_marking then
+				print_builtin_ise_runtime_unlock_marking_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_unmark_object then
+				print_builtin_ise_runtime_unmark_object_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -13217,6 +14008,8 @@ feature {NONE} -- Query call generation
 				print_builtin_sized_integer_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_internal_class then
 				print_builtin_internal_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_class then
+				print_builtin_ise_runtime_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_memory_class then
 				print_builtin_memory_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_natural_8_class then
@@ -13452,6 +14245,173 @@ feature {NONE} -- Query call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_internal_max_type_id then
 				print_builtin_internal_max_type_id_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_ise_runtime_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "ISE_RUNTIME".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_ise_runtime: (a_feature.builtin_code // builtin_capacity) = builtin_ise_runtime_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_ise_runtime_attached_type then
+				print_builtin_ise_runtime_attached_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_boolean_field then
+				print_builtin_ise_runtime_boolean_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_boolean_field_at then
+				print_builtin_ise_runtime_boolean_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_character_8_field then
+				print_builtin_ise_runtime_character_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_character_8_field_at then
+				print_builtin_ise_runtime_character_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_character_32_field then
+				print_builtin_ise_runtime_character_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_character_32_field_at then
+				print_builtin_ise_runtime_character_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_check_assert then
+				print_builtin_ise_runtime_check_assert_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_compiler_version then
+				print_builtin_ise_runtime_compiler_version_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_detachable_type then
+				print_builtin_ise_runtime_detachable_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_dynamic_type then
+				print_builtin_ise_runtime_dynamic_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_dynamic_type_at_offset then
+				print_builtin_ise_runtime_dynamic_type_at_offset_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_eif_gen_param_id then
+				print_builtin_ise_runtime_eif_gen_param_id_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_field_count_of_type then
+				print_builtin_ise_runtime_field_count_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_field_name_of_type then
+				print_builtin_ise_runtime_field_name_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_field_offset_of_type then
+				print_builtin_ise_runtime_field_offset_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_field_static_type_of_type then
+				print_builtin_ise_runtime_field_static_type_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_field_type_of_type then
+				print_builtin_ise_runtime_field_type_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_generating_type_of_type then
+				print_builtin_ise_runtime_generating_type_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_generator_of_type then
+				print_builtin_ise_runtime_generator_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_generic_parameter_count then
+				print_builtin_ise_runtime_generic_parameter_count_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_8_field then
+				print_builtin_ise_runtime_integer_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_8_field_at then
+				print_builtin_ise_runtime_integer_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_16_field then
+				print_builtin_ise_runtime_integer_16_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_16_field_at then
+				print_builtin_ise_runtime_integer_16_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_32_field then
+				print_builtin_ise_runtime_integer_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_32_field_at then
+				print_builtin_ise_runtime_integer_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_64_field then
+				print_builtin_ise_runtime_integer_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_integer_64_field_at then
+				print_builtin_ise_runtime_integer_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_attached_type then
+				print_builtin_ise_runtime_is_attached_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_copy_semantics_field then
+				print_builtin_ise_runtime_is_copy_semantics_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_expanded then
+				print_builtin_ise_runtime_is_expanded_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_field_expanded_of_type then
+				print_builtin_ise_runtime_is_field_expanded_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_field_transient_of_type then
+				print_builtin_ise_runtime_is_field_transient_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_object_marked then
+				print_builtin_ise_runtime_is_object_marked_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special then
+				print_builtin_ise_runtime_is_special_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special_copy_semantics_item then
+				print_builtin_ise_runtime_is_special_copy_semantics_item_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special_of_expanded then
+				print_builtin_ise_runtime_is_special_of_expanded_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special_of_reference then
+				print_builtin_ise_runtime_is_special_of_reference_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special_of_reference_or_basic_type then
+				print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_special_of_reference_type then
+				print_builtin_ise_runtime_is_special_of_reference_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_tuple then
+				print_builtin_ise_runtime_is_tuple_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_is_tuple_type then
+				print_builtin_ise_runtime_is_tuple_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_8_field then
+				print_builtin_ise_runtime_natural_8_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_8_field_at then
+				print_builtin_ise_runtime_natural_8_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_16_field then
+				print_builtin_ise_runtime_natural_16_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_16_field_at then
+				print_builtin_ise_runtime_natural_16_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_32_field then
+				print_builtin_ise_runtime_natural_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_32_field_at then
+				print_builtin_ise_runtime_natural_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_64_field then
+				print_builtin_ise_runtime_natural_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_natural_64_field_at then
+				print_builtin_ise_runtime_natural_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_new_instance_of then
+				print_builtin_ise_runtime_new_instance_of_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_new_special_of_reference_instance_of then
+				print_builtin_ise_runtime_new_special_of_reference_instance_of_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_new_tuple_instance_of then
+				print_builtin_ise_runtime_new_tuple_instance_of_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_new_type_instance_of then
+				print_builtin_ise_runtime_new_type_instance_of_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_object_size then
+				print_builtin_ise_runtime_object_size_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_once_objects then
+				print_builtin_ise_runtime_once_objects_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_persistent_field_count_of_type then
+				print_builtin_ise_runtime_persistent_field_count_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_pointer_field then
+				print_builtin_ise_runtime_pointer_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_pointer_field_at then
+				print_builtin_ise_runtime_pointer_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_raw_reference_field_at then
+				print_builtin_ise_runtime_raw_reference_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_raw_reference_field_at_offset then
+				print_builtin_ise_runtime_raw_reference_field_at_offset_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_real_32_field then
+				print_builtin_ise_runtime_real_32_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_real_32_field_at then
+				print_builtin_ise_runtime_real_32_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_real_64_field then
+				print_builtin_ise_runtime_real_64_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_real_64_field_at then
+				print_builtin_ise_runtime_real_64_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_reference_field then
+				print_builtin_ise_runtime_reference_field_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_reference_field_at then
+				print_builtin_ise_runtime_reference_field_at_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_reference_field_at_offset then
+				print_builtin_ise_runtime_reference_field_at_offset_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_storable_version_of_type then
+				print_builtin_ise_runtime_storable_version_of_type_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_type_conforms_to then
+				print_builtin_ise_runtime_type_conforms_to_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_ise_runtime_type_id_from_name then
+				print_builtin_ise_runtime_type_id_from_name_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -14854,7 +15814,7 @@ feature {NONE} -- Polymorphic call functions generation
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_call: ET_CALL_COMPONENT
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -14918,7 +15878,7 @@ feature {NONE} -- Polymorphic call functions generation
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_call: ET_CALL_COMPONENT
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				if attached {ET_DYNAMIC_TUPLE_TYPE} l_dynamic_types.item (i) as l_tuple_type then
@@ -14985,7 +15945,7 @@ feature {NONE} -- Polymorphic call functions generation
 			l_static_call: ET_CALL_COMPONENT
 			l_is_tuple_label: BOOLEAN
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -15323,7 +16283,7 @@ feature {NONE} -- Polymorphic call functions generation
 				current_file.put_new_line
 			else
 				print_indentation
-				current_file.put_string (c_int)
+				current_file.put_string (c_eif_type_index)
 				current_file.put_character (' ')
 				l_temp := temp_variable
 				print_temp_name (l_temp, current_file)
@@ -16315,7 +17275,7 @@ feature {NONE} -- Deep features generation
 				current_file.put_new_line
 			else
 				print_indentation
-				current_file.put_string (c_int)
+				current_file.put_string (c_eif_type_index)
 				current_file.put_character (' ')
 				l_temp := temp_variable
 				print_temp_name (l_temp, current_file)
@@ -16659,6 +17619,130 @@ feature {NONE} -- Deep features generation
 			-- indexed by target static type
 
 feature {NONE} -- Built-in feature generation
+
+	print_builtin_procedure_c_call (a_feature: ET_DYNAMIC_FEATURE; a_c_function_name: STRING; a_static: BOOLEAN; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding a built-in feature which is a call to a C function
+			-- named `a_c_function_name'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_static' means that 'Current' is not passed to the C function.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_c_function_name_not_void: a_c_function_name /= Void
+			a_c_function_name_not_empty: not a_c_function_name.is_empty
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			nb := a_feature.static_feature.arguments_count
+			if call_operands.count /= nb + 1 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (a_c_function_name)
+				current_file.put_character ('(')
+				from
+					if a_static then
+						i := 1
+					end
+				until
+					i > nb
+				loop
+					current_file.put_character ('(')
+					if i = 0 then
+						l_argument := call_operands.first
+						l_actual_type_set := dynamic_type_set (l_argument)
+						l_formal_type := a_target_type
+					else
+						l_argument := call_operands.item (i + 1)
+						l_actual_type_set := dynamic_type_set (l_argument)
+						l_formal_type := argument_type_set_in_feature (i, a_feature).static_type
+					end
+					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+					current_file.put_character (')')
+					if i /= nb then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_query_c_call (a_feature: ET_DYNAMIC_FEATURE; a_c_function_name: STRING; a_static: BOOLEAN; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding a built-in feature which is a call to a C function
+			-- named `a_c_function_name'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_static' means that 'Current' is not passed to the C function.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_c_function_name_not_void: a_c_function_name /= Void
+			a_c_function_name_not_empty: not a_c_function_name.is_empty
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+		do
+			nb := a_feature.static_feature.arguments_count
+			if call_operands.count /= nb + 1 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_declaration_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (a_c_function_name)
+				current_file.put_character ('(')
+				from
+					if a_static then
+						i := 1
+					end
+				until
+					i > nb
+				loop
+					current_file.put_character ('(')
+					if i = 0 then
+						l_argument := call_operands.first
+						l_actual_type_set := dynamic_type_set (l_argument)
+						l_formal_type := a_target_type
+					else
+						l_argument := call_operands.item (i + 1)
+						l_actual_type_set := dynamic_type_set (l_argument)
+						l_formal_type := argument_type_set_in_feature (i, a_feature).static_type
+					end
+					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+					current_file.put_character (')')
+					if i /= nb then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+					i := i + 1
+				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
 
 	print_builtin_any_conforms_to_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
@@ -19066,52 +20150,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			end
 		end
 
-	print_builtin_ise_exception_manager_developer_raise_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'ISE_EXCEPTION_MANAGER.developer_raise'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- Operands can be found in `call_operands'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_argument: ET_EXPRESSION
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type: ET_DYNAMIC_TYPE
-		do
-			if call_operands.count /= 4 then
-					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				include_runtime_header_file ("ge_exception.h", False, header_file)
-				print_indentation
-				current_file.put_string (c_ge_developer_raise)
-				current_file.put_character ('(')
-				l_argument := call_operands.item (2)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				l_argument := call_operands.item (3)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (2, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				l_argument := call_operands.item (4)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (3, a_feature).static_type
-				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-		end
-
 	print_builtin_internal_type_of_type_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of `a_feature' corresponding
 			-- to built-in feature 'INTERNAL.type_of_type'.
@@ -19203,14 +20241,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			else
 				print_type_cast (l_result_type_set.static_type, current_file)
 				current_file.put_character ('(')
-				current_file.put_integer (current_dynamic_system.dynamic_types.count)
+				current_file.put_integer (dynamic_types.count)
 				current_file.put_character (')')
 			end
 		end
 
-	print_builtin_memory_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+	print_builtin_ise_exception_manager_developer_raise_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'MEMORY.free'.
+			-- corresponding to built-in feature 'ISE_EXCEPTION_MANAGER.developer_raise'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -19223,23 +20261,1692 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type: ET_DYNAMIC_TYPE
 		do
-			if call_operands.count /= 2 then
+			if call_operands.count /= 4 then
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				include_runtime_header_file ("eif_memory.h", False, header_file)
+				include_runtime_header_file ("ge_exception.h", False, header_file)
 				print_indentation
-				current_file.put_string (c_eif_mem_free)
+				current_file.put_string (c_ge_developer_raise)
 				current_file.put_character ('(')
 				l_argument := call_operands.item (2)
 				l_actual_type_set := dynamic_type_set (l_argument)
 				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_argument := call_operands.item (3)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (2, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_argument := call_operands.item (4)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (3, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+		end
+
+	print_builtin_ise_runtime_attached_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.attached_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_attached_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_boolean_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.boolean_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_boolean_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_boolean_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.boolean_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_boolean_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_character_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.character_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_character_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_character_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.character_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_character_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_character_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.character_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_character_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_character_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.character_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_character_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_check_assert_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.check_assert'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_check_assert, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_compiler_version_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.compiler_version'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_compiler_version, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_detachable_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.detachable_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_non_attached_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_dynamic_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.dynamic_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_dynamic_type_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.dynamic_type_at_offset'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_object_encoded_type_at_offset, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_eif_gen_param_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.eif_gen_param_id'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_field_count_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.field_count_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			print_builtin_query_c_call (a_feature, c_ge_field_count_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_field_name_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.field_name_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_name_used := True
+			print_builtin_query_c_call (a_feature, c_ge_field_name_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_field_offset_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.field_offset_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_field_offset_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_field_static_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.field_static_type_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_type_id_used := True
+			print_builtin_query_c_call (a_feature, c_ge_field_static_type_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_field_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.field_type_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_type_id_used := True
+			print_builtin_query_c_call (a_feature, c_ge_field_type_kind_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_generating_type_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.generating_type_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_name_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generating_type_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_generator_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.generator_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generator_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generator_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_generic_parameter_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.generic_parameter_count'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_generic_parameter_count_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_in_assertion_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'ISE_RUNTIME.in_assertion'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_eif_test)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_in_assertion)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_builtin_ise_runtime_integer_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_integer_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_integer_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_16_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_integer_16_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_16_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_integer_16_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_integer_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_integer_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_integer_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_integer_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.integer_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_integer_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_attached_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_attached_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_attached_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_copy_semantics_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_copy_semantics_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_copy_semantics_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_expanded'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_expanded_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_field_expanded_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_field_expanded_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_type_id_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_field_expanded_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_field_transient_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_field_transient_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_field_transient_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_object_marked_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_object_marked'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_object_marked, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_special_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_copy_semantics_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special_copy_semantics_item'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_special_copy_semantics_item, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_of_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special_of_expanded'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_expanded_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_of_reference_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special_of_reference'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_of_reference_or_basic_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special_of_reference_or_basic_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_or_basic_expanded_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_special_of_reference_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_special_of_reference_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_is_special_of_reference_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_tuple_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_tuple'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_tuple_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_is_tuple_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.is_tuple_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_is_tuple_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_lock_marking_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.lock_marking'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_lock_marking, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_mark_object_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.mark_object'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_mark_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_natural_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_natural_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_16_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_natural_16_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_16_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_natural_16_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_natural_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_natural_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_natural_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_natural_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.natural_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_natural_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_new_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.new_instance_of'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_new_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_new_special_of_reference_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.new_special_of_reference_instance_of'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_new_special_of_reference_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_new_tuple_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.new_tuple_instance_of'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_new_tuple_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_new_type_instance_of_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.new_type_instance_of'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_new_type_instance_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_object_size_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.object_size'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_object_size_used := True
+			type_info_generic_parameters_used := True
+			print_builtin_query_c_call (a_feature, c_ge_object_size, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_once_objects_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.once_objects'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			include_runtime_header_file ("eif_traverse.h", False, header_file)
+			print_builtin_query_c_call (a_feature, c_once_objects, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_persistent_field_count_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.persistent_field_count_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			print_builtin_query_c_call (a_feature, c_ge_persistent_field_count_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_pointer_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.pointer_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_pointer_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_pointer_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.pointer_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_pointer_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_pre_ecma_mapping_status_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'ISE_RUNTIME.pre_ecma_mapping_status'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			print_indentation
+			print_result_name (current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_string (c_eif_test)
+			current_file.put_character ('(')
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_pre_ecma_mapping_status)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
+	print_builtin_ise_runtime_raw_reference_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.raw_reference_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_raw_reference_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_raw_reference_field_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.raw_reference_field_at_offset'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_raw_object_at_offset, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_real_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.real_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_real_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_real_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.real_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_real_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_real_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.real_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_real_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_real_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.real_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_real_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_reference_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.reference_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_query_c_call (a_feature, c_ge_reference_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_reference_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.reference_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_reference_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_reference_field_at_offset_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.reference_field_at_offset'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_object_at_offset, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_boolean_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_boolean_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_boolean_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_boolean_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_boolean_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_boolean_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_character_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_character_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_character_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_character_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_character_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_character_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_character_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_character_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_character_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_character_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_character_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_character_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_16_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_16_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_16_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_16_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_integer_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_integer_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_integer_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_8_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_8_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_8_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_8_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_8_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_8_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_16_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_16_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_16_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_16_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_16_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_16_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_natural_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_natural_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_natural_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_pointer_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_pointer_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_pointer_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_pointer_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_pointer_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_pointer_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_pre_ecma_mapping_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of `a_feature' corresponding
+			-- to built-in feature 'ISE_RUNTIME.set_pre_ecma_mapping'.
+		require
+			a_feature_not_void: a_feature /= Void
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			if not attached a_feature.arguments as l_arguments or else l_arguments.count /= 1 then
+					-- Internal error: this error should have been reported by the parser.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				current_file.put_string (c_ac)
+				current_file.put_string (c_arrow)
+				current_file.put_string (c_pre_ecma_mapping_status)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_argument_name (l_arguments.formal_argument (1).name, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_ise_runtime_set_real_32_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_real_32_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_real_32_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_real_32_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_real_32_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_real_32_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_real_64_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_real_64_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_real_64_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_real_64_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_real_64_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_real_64_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_reference_field_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_reference_field'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_attributes_used := True
+			type_info_attribute_offset_used := True
+			print_builtin_procedure_c_call (a_feature, c_ge_set_reference_field, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_set_reference_field_at_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.set_reference_field_at'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_set_reference_field_at, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_storable_version_of_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.storable_version_of_type'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_query_c_call (a_feature, c_ge_storable_version_of_encoded_type, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_type_conforms_to_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.type_conforms_to'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_ancestors_used := True
+			print_builtin_query_c_call (a_feature, c_ge_encoded_type_conforms_to, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_type_id_from_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.type_id_from_name'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			type_info_name_used := True
+			print_builtin_query_c_call (a_feature, c_ge_encoded_type_from_name, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_unlock_marking_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.unlock_marking'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_unlock_marking, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_ise_runtime_unmark_object_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ISE_RUNTIME.unmark_object'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_procedure_c_call (a_feature, c_ge_unmark_object, True, a_target_type, a_check_void_target)
+		end
+
+	print_builtin_memory_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'MEMORY.free'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			include_runtime_header_file ("eif_memory.h", False, header_file)
+			print_builtin_procedure_c_call (a_feature, c_eif_mem_free, True, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_memory_find_referers_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -19604,6 +22311,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				print_type_cast (l_integer_type, current_file)
 				current_file.put_character ('(')
 				print_type_cast (l_integer_type, current_file)
+				current_file.put_string ("(intptr_t)")
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
@@ -19722,7 +22430,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_new_line
 				print_indentation
 				if current_type.is_basic then
-					current_file.put_string ("int l = snprintf(s,20,%"0x%%lX%",(unsigned long)*C);")
+					current_file.put_string ("int l = snprintf(s,20,%"0x%%lX%",(unsigned long)(intptr_t)*C);")
 				else
 -- TODO: use feature `item'.
 					set_fatal_error
@@ -19893,6 +22601,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			else
 				l_target := call_operands.first
 				print_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string ("(intptr_t)")
 				current_file.put_character ('(')
 				if a_target_type.is_basic then
 					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
@@ -24352,6 +27061,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			l_string: STRING
 			i, nb: INTEGER
 		do
+			type_info_attributes_used := True
+			type_info_attribute_name_used := True
 			l_result_type_set := current_feature.result_type_set
 			l_arguments := a_feature.arguments
 			l_parameters := current_type.base_type.actual_parameters
@@ -25621,6 +28332,11 @@ feature {NONE} -- C function generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				current_file.put_string (c_tc_address)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_string ("GE_type_info_count = ");
+				current_file.put_integer (dynamic_types.count)
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
@@ -27043,7 +29759,7 @@ feature {NONE} -- C function generation
 					l_size := l_dts_ids.occurrences (',') + 1
 					header_file.put_string (c_extern)
 					header_file.put_character (' ')
-					header_file.put_string (c_int)
+					header_file.put_string (c_eif_type_index)
 					header_file.put_character (' ')
 					header_file.put_string (l_dts_name)
 					header_file.put_character ('[')
@@ -27051,7 +29767,7 @@ feature {NONE} -- C function generation
 					header_file.put_character (']')
 					header_file.put_character (';')
 					header_file.put_new_line
-					current_file.put_string (c_int)
+					current_file.put_string (c_eif_type_index)
 					current_file.put_character (' ')
 					current_file.put_string (l_dts_name)
 					current_file.put_character ('[')
@@ -27167,7 +29883,7 @@ feature {NONE} -- Memory allocation
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -27614,6 +30330,51 @@ feature {NONE} -- Trace generation
 
 feature {NONE} -- Type generation
 
+	sort_types
+			-- Sort types in `dynamic_types' so that all types to which a given type
+			-- conforms are before this type is the list.
+		local
+			l_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_DYNAMIC_TYPE]
+			i, j, nb: INTEGER
+			l_type, l_other_type: ET_DYNAMIC_TYPE
+		do
+			nb := dynamic_types.count
+			create l_sorter.make (nb)
+			from i := 1 until i > nb loop
+				l_sorter.force (dynamic_types.item (i))
+				i := i + 1
+			end
+			from i := 1 until i > nb loop
+				l_type := dynamic_types.item (i)
+				from j := 1 until j > nb loop
+					if i /= j then
+						l_other_type := dynamic_types.item (j)
+						if l_type.conforms_to_type (l_other_type) then
+							if l_type /= current_dynamic_system.none_type then
+								l_type.conforming_ancestors.force (l_other_type)
+							end
+							l_sorter.put_relation (l_other_type, l_type)
+						end
+					elseif l_type /= current_dynamic_system.none_type then
+						l_type.conforming_ancestors.force (l_type)
+					end
+					j := j + 1
+				end
+				i := i + 1
+			end
+			l_sorter.sort
+			if l_sorter.has_cycle then
+					-- Internal error: this should already have been taken care of
+					-- by ET_ANCESTOR_BUILDER (see validity rule VHPR-1).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif attached l_sorter.sorted_items as l_sorted_types then
+				dynamic_types := l_sorted_types
+			else
+				check is_sorted: False end
+			end
+		end
+
 	print_types (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print declarations of types of `current_dynamic_system' to `a_file'.
 		require
@@ -27645,7 +30406,7 @@ feature {NONE} -- Type generation
 			print_aliased_double_type_definition (current_system, a_file)
 				-- Alive types.
 			create l_expanded_sorter.make_default
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -27764,8 +30525,6 @@ feature {NONE} -- Type generation
 				end
 				i := i + 1
 			end
-				-- Type EIF_TYPE representing Eiffel types.
-			print_eif_type_struct (a_file)
 		end
 
 	print_aliased_character_type_definition (a_universe: ET_UNIVERSE; a_file: KI_TEXT_OUTPUT_STREAM)
@@ -28367,7 +31126,6 @@ feature {NONE} -- Type generation
 			l_query: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 			l_empty_struct: BOOLEAN
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if
 				not a_type.base_class.is_type_class and
@@ -28391,9 +31149,15 @@ feature {NONE} -- Type generation
 				a_file.put_new_line
 				if not a_type.is_expanded or else a_type.is_generic then
 					a_file.put_character ('%T')
-					a_file.put_string (c_int)
+					a_file.put_string (c_eif_type_index)
 					a_file.put_character (' ')
 					print_attribute_type_id_name (a_type, a_file)
+					a_file.put_character (';')
+					a_file.put_new_line
+					a_file.put_character ('%T')
+					a_file.put_string (c_uint16_t)
+					a_file.put_character (' ')
+					print_attribute_flags_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
 					l_empty_struct := False
@@ -28440,37 +31204,28 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 						-- like having an array of size 0 here. Note that
 						-- the "struct hack" is superseded by the concept
 						-- of "flexible array member" in ISO C 99.
-					if l_special_type.attribute_count < 1 then
-							-- Internal error: class "SPECIAL" should have at least the
-							-- feature 'count' as first feature.
-							-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_dynamic_type_set := result_type_set_in_feature (l_special_type.queries.first)
-						a_file.put_character ('%T')
-						l_item_type_set := l_special_type.item_type_set
-						print_type_declaration (l_item_type_set.static_type, a_file)
-						a_file.put_character (' ')
-						print_attribute_special_item_name (l_special_type, a_file)
-						a_file.put_character ('[')
-						a_file.put_character ('1')
-						a_file.put_character (']')
-						a_file.put_character (';')
-						a_file.put_character (' ')
-						a_file.put_character ('/')
-						a_file.put_character ('*')
-						a_file.put_character (' ')
-						a_file.put_character ('i')
-						a_file.put_character ('t')
-						a_file.put_character ('e')
-						a_file.put_character ('m')
-						a_file.put_character (' ')
-						a_file.put_character ('*')
-						a_file.put_character ('/')
-						a_file.put_new_line
-						l_empty_struct := False
-					end
+					a_file.put_character ('%T')
+					l_item_type_set := l_special_type.item_type_set
+					print_type_declaration (l_item_type_set.static_type, a_file)
+					a_file.put_character (' ')
+					print_attribute_special_item_name (l_special_type, a_file)
+					a_file.put_character ('[')
+					a_file.put_character ('1')
+					a_file.put_character (']')
+					a_file.put_character (';')
+					a_file.put_character (' ')
+					a_file.put_character ('/')
+					a_file.put_character ('*')
+					a_file.put_character (' ')
+					a_file.put_character ('i')
+					a_file.put_character ('t')
+					a_file.put_character ('e')
+					a_file.put_character ('m')
+					a_file.put_character (' ')
+					a_file.put_character ('*')
+					a_file.put_character ('/')
+					a_file.put_new_line
+					l_empty_struct := False
 				elseif attached {ET_DYNAMIC_TUPLE_TYPE} a_type as l_tuple_type then
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := l_item_type_sets.count
@@ -28582,9 +31337,15 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 				a_file.put_character ('{')
 				a_file.put_new_line
 				a_file.put_character ('%T')
-				a_file.put_string (c_int)
+				a_file.put_string (c_eif_type_index)
 				a_file.put_character (' ')
 				print_attribute_type_id_name (a_type, a_file)
+				a_file.put_character (';')
+				a_file.put_new_line
+				a_file.put_character ('%T')
+				a_file.put_string (c_uint16_t)
+				a_file.put_character (' ')
+				print_attribute_flags_name (a_type, a_file)
 				a_file.put_character (';')
 				a_file.put_new_line
 				a_file.put_character ('%T')
@@ -28611,82 +31372,26 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			end
 		end
 
-	print_eif_type_struct (a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print to `a_file' declaration of C struct corresponding to 'EIF_TYPE', if_any.
-			-- Type EIF_TYPE represents Eiffel types.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		do
-			a_file.put_string (c_typedef)
-			a_file.put_character (' ')
-			a_file.put_string (c_struct)
-			a_file.put_character (' ')
-			a_file.put_character ('{')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_int)
-			a_file.put_character (' ')
-			print_attribute_type_id_name (current_dynamic_system.any_type, a_file)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_eif_integer)
-			a_file.put_character (' ')
-			a_file.put_string (c_type_id)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string (c_eif_boolean)
-			a_file.put_character (' ')
-			a_file.put_string (c_is_special)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('%T')
-			a_file.put_string ("void (*dispose) (")
-			a_file.put_string (c_ge_context)
-			a_file.put_character ('*')
-			a_file.put_character (',')
-			a_file.put_character (' ')
-			a_file.put_string ("EIF_REFERENCE)")
-			a_file.put_character (';')
-			a_file.put_new_line
-				-- Attribute `runtime_name'.
-			a_file.put_character ('%T')
-			a_file.put_string ("T0*")
-			a_file.put_character (' ')
-			a_file.put_string ("a1")
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_character ('}')
-			a_file.put_character (' ')
-			a_file.put_string (c_eif_type)
-			a_file.put_character (';')
-			a_file.put_new_line
-			a_file.put_new_line
-		end
-
 	print_types_array
 			-- Print 'GE_types' array to `current_file' and its declaration to `header_file'.
 		local
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_type: ET_DYNAMIC_TYPE
+			l_type, l_other_type: ET_DYNAMIC_TYPE
 			l_meta_type: detachable ET_DYNAMIC_TYPE
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			l_dispose_procedure: detachable ET_DYNAMIC_FEATURE
+			l_ancestors: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_ancestor_count: INTEGER
+			l_sorter: DS_QUICK_SORTER [ET_DYNAMIC_TYPE]
+			l_attribute: ET_DYNAMIC_FEATURE
+			l_attribute_count: INTEGER
+			l_comma_needed: BOOLEAN
+			l_generic_parameter_count: INTEGER
+			l_parameter_type: ET_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
-				-- Print declaration of 'GE_types' in `header_file'.
-			header_file.put_string (c_extern)
-			header_file.put_character (' ')
-			header_file.put_string (c_eif_type)
-			header_file.put_character (' ')
-			header_file.put_string (c_ge_types)
-			header_file.put_character ('[')
-			header_file.put_character (']')
-			header_file.put_character (';')
-			header_file.put_new_line
 			current_file.put_string (c_eif_type)
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_types)
@@ -28707,6 +31412,9 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_string (c_eif_false)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_integer (0)
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_integer (0)
@@ -28754,6 +31462,481 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_integer (0)
+				current_file.put_character ('}')
+				if i /= nb then
+					current_file.put_character (',')
+				end
+				current_file.put_new_line
+				i := i + 1
+			end
+			current_file.put_character ('}')
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file.put_new_line
+
+			create l_ancestors.make (100)
+			create l_sorter.make (dynamic_type_comparator)
+			nb := l_dynamic_types.count
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+					-- Ancestors.
+				if type_info_ancestors_used then
+					if l_type /= current_dynamic_system.none_type then
+						l_ancestors.append_last (l_type.conforming_ancestors)
+						l_ancestor_count := l_ancestors.count
+						if l_ancestor_count > 0 then
+							l_ancestors.sort (l_sorter)
+							from j := 1 until j > l_ancestor_count loop
+								l_other_type := l_ancestors.item (j)
+								current_file.put_string ("GE_ancestor T")
+								current_file.put_integer (l_type.id)
+								current_file.put_string ("xx")
+								current_file.put_integer (l_other_type.id)
+								current_file.put_string (" = {")
+								current_file.put_integer (l_other_type.id)
+								current_file.put_line (", EIF_TRUE, 0};")
+								j := j + 1
+							end
+							current_file.put_string ("GE_ancestor* T")
+							current_file.put_integer (l_type.id)
+							current_file.put_string ("xx[")
+							current_file.put_integer (l_ancestor_count)
+							current_file.put_string ("] = {")
+							from j := 1 until j > l_ancestor_count loop
+								l_other_type := l_ancestors.item (j)
+								current_file.put_string ("&T")
+								current_file.put_integer (l_type.id)
+								current_file.put_string ("xx")
+								current_file.put_integer (l_other_type.id)
+								if j /= l_ancestor_count then
+									current_file.put_string (", ")
+								end
+								j := j + 1
+							end
+							current_file.put_line ("};")
+						end
+						l_ancestors.wipe_out
+					end
+				end
+					-- Attributes.
+				if type_info_attributes_used and l_type.is_alive then
+					l_attribute_count := l_type.attribute_count
+					if l_attribute_count > 0 then
+						from j := 1 until j > l_attribute_count loop
+							l_comma_needed := False
+							l_attribute := l_type.queries.item (j)
+							current_file.put_string ("GE_attribute T")
+							current_file.put_integer (l_type.id)
+							current_file.put_string ("aa")
+							current_file.put_integer (j)
+							current_file.put_string (" = {")
+								-- name.
+							if type_info_attribute_name_used then
+								print_escaped_string (l_attribute.static_feature.lower_name)
+								l_comma_needed := True
+							end
+								-- type_id.
+							if type_info_attribute_type_id_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+								if attached l_attribute.result_type_set as l_result_type_set then
+									current_file.put_integer (l_result_type_set.static_type.id)
+								else
+										-- Internal error: attributes have a result type.
+									set_fatal_error
+									error_handler.report_giaaa_error
+									current_file.put_character ('0')
+								end
+								l_comma_needed := True
+							end
+								-- offset.
+							if type_info_attribute_offset_used then
+								if l_comma_needed then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								end
+									-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
+									-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
+								current_file.put_string (c_offsetof)
+								current_file.put_character ('(')
+								if l_type.is_basic then
+									print_boxed_type_name (l_type, current_file)
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_boxed_attribute_item_name (l_type, current_file)
+								else
+									print_type_name (l_type, current_file)
+									current_file.put_character (',')
+									current_file.put_character (' ')
+									print_attribute_name (l_attribute, l_type, current_file)
+								end
+								current_file.put_character (')')
+							end
+							current_file.put_character ('}')
+							current_file.put_character (';')
+							current_file.put_new_line
+							j := j + 1
+						end
+					end
+					if attached {ET_DYNAMIC_SPECIAL_TYPE} l_type as l_special_type then
+								-- One more attribute: 'item'.
+						l_attribute_count := l_attribute_count + 1
+						l_comma_needed := False
+						current_file.put_string ("GE_attribute T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("aa")
+						current_file.put_integer (l_attribute_count)
+						current_file.put_string (" = {")
+							-- name.
+						if type_info_attribute_name_used then
+							print_escaped_string (tokens.item_feature_name.lower_name)
+							l_comma_needed := True
+						end
+							-- type_id.
+						if type_info_attribute_type_id_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							current_file.put_integer (l_special_type.item_type_set.static_type.id)
+							l_comma_needed := True
+						end
+							-- offset.
+						if type_info_attribute_offset_used then
+							if l_comma_needed then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+								-- Note: if `offsetof' is not supported, then we can use: ((int)&(((T317*) 0)->a2))
+								-- See: http://stackoverflow.com/questions/142016/c-c-structure-offset
+							current_file.put_string (c_offsetof)
+							current_file.put_character ('(')
+							print_type_name (l_type, current_file)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_attribute_special_item_name (l_type, current_file)
+							current_file.put_character (')')
+						end
+						current_file.put_character ('}')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+					if l_attribute_count > 0 then
+						current_file.put_string ("GE_attribute* T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("aa[")
+						current_file.put_integer (l_attribute_count)
+						current_file.put_string ("] = {")
+						from j := 1 until j > l_attribute_count loop
+							current_file.put_string ("&T")
+							current_file.put_integer (l_type.id)
+							current_file.put_string ("aa")
+							current_file.put_integer (j)
+							if j /= l_attribute_count then
+								current_file.put_string (", ")
+							end
+							j := j + 1
+						end
+						current_file.put_line ("};")
+					end
+				end
+					-- Generic parameters.
+				if type_info_generic_parameters_used then
+					if attached l_type.base_type.actual_parameters as l_parameters then
+						l_generic_parameter_count := l_parameters.count
+						if l_generic_parameter_count > 0 then
+							current_file.put_string ("EIF_ENCODED_TYPE T")
+							current_file.put_integer (l_type.id)
+							current_file.put_string ("gen[")
+							current_file.put_integer (l_generic_parameter_count)
+							current_file.put_string ("] = {")
+							from j := 1 until j > l_generic_parameter_count loop
+								l_parameter_type := l_parameters.type (j)
+								l_dynamic_type := current_dynamic_system.dynamic_type (l_parameter_type, l_type.base_type)
+								current_file.put_integer (l_dynamic_type.id)
+								if j /= l_generic_parameter_count then
+									current_file.put_string (", ")
+								end
+								j := j + 1
+							end
+							current_file.put_line ("};")
+						end
+					end
+				end
+				i := i + 1
+			end
+			current_file.put_new_line
+			current_file.put_string ("GE_type_info")
+			current_file.put_character (' ')
+			current_file.put_string (c_ge_type_infos)
+			current_file.put_character ('[')
+			current_file.put_integer (nb + 1)
+			current_file.put_character (']')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+				-- Dummy type at index 0.
+			current_file.put_character ('{')
+				-- type_id.
+			current_file.put_character ('0')
+			current_file.put_character (',')
+			current_file.put_character (' ')
+				-- flags.
+			current_file.put_character ('0')
+			if type_info_generator_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- generator.
+				current_file.put_character ('0')
+			end
+			if type_info_name_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- name.
+				current_file.put_character ('0')
+			end
+			if type_info_generic_parameters_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- generic_parameters.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- generic_parameter_count.
+				current_file.put_character ('0')
+			end
+			if type_info_ancestors_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- ancestors.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- ancestor_count.
+				current_file.put_character ('0')
+			end
+			if type_info_attributes_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- attributes.
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- attribute_count.
+				current_file.put_character ('0')
+			end
+			if type_info_object_size_used then
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- object_size.
+				current_file.put_character ('0')
+			end
+			current_file.put_character (',')
+			current_file.put_character (' ')
+				-- new_instance.
+			current_file.put_character ('0')
+			current_file.put_character (',')
+			current_file.put_character (' ')
+				-- dispose.
+			current_file.put_character ('0')
+			current_file.put_character ('}')
+			current_file.put_character (',')
+			current_file.put_new_line
+			from i := 1 until i > nb loop
+				l_type := l_dynamic_types.item (i)
+				current_file.put_character ('{')
+					-- type_id.
+				current_file.put_integer (l_type.id)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- flags.
+				if l_type.is_special then
+					current_file.put_string (c_ge_type_flag_special)
+				elseif l_type.is_tuple then
+					current_file.put_string (c_ge_type_flag_tuple)
+				elseif l_type = current_dynamic_system.none_type then
+					current_file.put_string (c_ge_type_flag_none)
+				elseif l_type.is_expanded then
+					if l_type = current_dynamic_system.boolean_type then
+						current_file.put_string (c_ge_type_flag_boolean)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.character_8_type then
+						current_file.put_string (c_ge_type_flag_character_8)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.character_32_type then
+						current_file.put_string (c_ge_type_flag_character_32)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.integer_8_type then
+						current_file.put_string (c_ge_type_flag_integer_8)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.integer_16_type then
+						current_file.put_string (c_ge_type_flag_integer_16)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.integer_32_type then
+						current_file.put_string (c_ge_type_flag_integer_32)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.integer_64_type then
+						current_file.put_string (c_ge_type_flag_integer_64)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.natural_8_type then
+						current_file.put_string (c_ge_type_flag_natural_8)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.natural_16_type then
+						current_file.put_string (c_ge_type_flag_natural_16)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.natural_32_type then
+						current_file.put_string (c_ge_type_flag_natural_32)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.natural_64_type then
+						current_file.put_string (c_ge_type_flag_natural_64)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.pointer_type then
+						current_file.put_string (c_ge_type_flag_pointer)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.real_32_type then
+						current_file.put_string (c_ge_type_flag_real_32)
+						current_file.put_character ('|')
+					elseif l_type = current_dynamic_system.real_64_type then
+						current_file.put_string (c_ge_type_flag_real_64)
+						current_file.put_character ('|')
+					end
+					current_file.put_string (c_ge_type_flag_expanded)
+				else
+					current_file.put_character ('0')
+				end
+				if type_info_generator_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- generator.
+					print_escaped_string (l_type.base_class.upper_name)
+				end
+				if type_info_name_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- name.
+					print_escaped_string (l_type.base_type.unaliased_to_text)
+				end
+				if type_info_generic_parameters_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- generic_parameters.
+					if attached l_type.base_type.actual_parameters as l_parameters then
+						l_generic_parameter_count := l_parameters.count
+					else
+						l_generic_parameter_count := 0
+					end
+					if l_generic_parameter_count > 0 then
+						current_file.put_string ("T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("gen")
+					else
+						current_file.put_character ('0')
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- generic_parameter_count.
+					current_file.put_integer (l_generic_parameter_count)
+				end
+				if type_info_ancestors_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- ancestors.
+					if i /= nb or else l_type /= current_dynamic_system.none_type then
+						l_ancestor_count := l_type.conforming_ancestors.count
+					else
+						l_ancestor_count := 0
+					end
+					if l_ancestor_count > 0 then
+						current_file.put_string ("T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("xx")
+					else
+						current_file.put_character ('0')
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- ancestor_count.
+					current_file.put_integer (l_ancestor_count)
+				end
+				if type_info_attributes_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- attributes.
+					if l_type.is_alive then
+						l_attribute_count := l_type.attribute_count
+						if l_type.is_special then
+								-- One more attribute: 'item'.
+							l_attribute_count := l_attribute_count + 1
+						end
+					else
+						l_attribute_count := 0
+					end
+					if l_attribute_count > 0 then
+						current_file.put_string ("T")
+						current_file.put_integer (l_type.id)
+						current_file.put_string ("aa")
+					else
+						current_file.put_character ('0')
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- attribute_count.
+					current_file.put_integer (l_attribute_count)
+				end
+				if type_info_object_size_used then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- object_size.
+					if l_type.is_alive then
+						current_file.put_string (c_sizeof)
+						current_file.put_character ('(')
+						if l_type.is_basic then
+							print_boxed_type_name (l_type, current_file)
+						else
+							print_type_name (l_type, current_file)
+						end
+						current_file.put_character (')')
+					else
+						current_file.put_character ('0')
+					end
+				end
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- new_instance.
+				if not l_type.is_alive then
+					current_file.put_character ('0')
+				elseif l_type.is_expanded then
+					current_file.put_character ('0')
+				elseif not current_dynamic_system.is_new_instance_type (l_type) then
+						-- Raise an exception and return Void when the result type has not been
+						-- specified as a type which can have instances created by 'new_instance'.
+					current_file.put_character ('0')
+				elseif l_type.base_class.is_type_class then
+						-- Cannot have two instances of class TYPE representing the same Eiffel type.
+					current_file.put_character ('0')
+				else
+					current_file.put_character ('&')
+					current_file.put_string (c_ge_new)
+					current_file.put_integer (l_type.id)
+				end
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- dispose.
+				l_dispose_procedure := Void
+				dispose_procedures.search (l_type)
+				if dispose_procedures.found then
+					l_dispose_procedure := dispose_procedures.found_item
+				end
+				if l_dispose_procedure /= Void then
+					current_file.put_character ('&')
+					print_routine_name (l_dispose_procedure, l_type, current_file)
+				else
+					current_file.put_character ('0')
+				end
 				current_file.put_character ('}')
 				if i /= nb then
 					current_file.put_character (',')
@@ -28949,7 +32132,7 @@ feature {NONE} -- Default initialization values generation
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
-			l_dynamic_types := current_dynamic_system.dynamic_types
+			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
 			from i := 1 until i > nb loop
 				l_type := l_dynamic_types.item (i)
@@ -29029,6 +32212,9 @@ feature {NONE} -- Default initialization values generation
 				if not a_type.is_expanded or else a_type.is_generic then
 						-- Type id.
 					a_file.put_integer (a_type.id)
+						-- Flags.
+					a_file.put_character (',')
+					a_file.put_character ('0')
 					l_empty_struct := False
 				end
 					-- Attributes.
@@ -29293,7 +32479,7 @@ feature {NONE} -- Feature name generation
 		end
 
 	print_attribute_type_id_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Print to `a_file' the name of the 'type_id' pseudo attribute for objects of type `a_type'
+			-- Print to `a_file' the name of the 'type_id' pseudo attribute for objects of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
 			a_file_not_void: a_file /= Void
@@ -29305,6 +32491,23 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_attribute_type_id_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_attribute_flags_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print to `a_file' the name of the 'flags' pseudo attribute for objects of type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_string (c_flags)
+			else
+-- TODO: long names
+				short_names := True
+				print_attribute_flags_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -30143,6 +33346,8 @@ feature {NONE} -- Include files
 					included_runtime_c_files.force ("ge_real.c")
 				elseif a_filename.same_string ("ge_com_failure.h") then
 					included_runtime_c_files.force ("ge_com_failure.c")
+				elseif a_filename.same_string ("ge_types.h") then
+					included_runtime_c_files.force ("ge_types.c")
 				elseif a_filename.same_string ("eif_cecil.h") then
 					included_runtime_c_files.force ("eif_cecil.c")
 				elseif a_filename.same_string ("eif_console.h") then
@@ -31059,6 +34264,9 @@ feature {NONE} -- Access
 	called_features: DS_ARRAYED_LIST [ET_DYNAMIC_FEATURE]
 			-- Features being called
 
+	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			-- Dynamic types in the system
+
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
 
@@ -31788,6 +34996,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	type_info_ancestors_used: BOOLEAN
+			-- Is the list of ancestors of types used in the system?
+
+	type_info_attributes_used: BOOLEAN
+			-- Is the list of attributes in each type used in the system?
+
+	type_info_attribute_name_used: BOOLEAN
+			-- Is the name of attributes used in the system?
+
+	type_info_attribute_type_id_used: BOOLEAN
+			-- Is the type id of attributes used in the system?
+
+	type_info_attribute_offset_used: BOOLEAN
+			-- Is the offset of attributes used in the system?
+
+	type_info_generator_used: BOOLEAN
+			-- Is the generator of types used in the system?
+
+	type_info_generic_parameters_used: BOOLEAN
+			-- Are the generic parameters of types used in the system?
+
+	type_info_name_used: BOOLEAN
+			-- Is the name of types used in the system?
+
+	type_info_object_size_used: BOOLEAN
+			-- Is the object size of types used in the system?
+
 	dummy_feature: ET_DYNAMIC_FEATURE
 			-- Dummy feature
 		local
@@ -31941,6 +35176,7 @@ feature {NONE} -- Constants
 	c_ac: STRING = "ac"
 	c_and_then: STRING = "&&"
 	c_arrow: STRING = "->"
+	c_attributes: STRING = "attributes"
 	c_break: STRING = "break"
 	c_call: STRING = "call"
 	c_caller: STRING = "caller"
@@ -31985,7 +35221,8 @@ feature {NONE} -- Constants
 	c_eif_threads: STRING = "EIF_THREADS"
 	c_eif_trace: STRING = "EIF_TRACE"
 	c_eif_true: STRING = "EIF_TRUE"
-	c_eif_type: STRING = "EIF_TYPE"
+	c_eif_type: STRING = "EIF_TYPE_OBJ"
+	c_eif_type_index: STRING = "EIF_TYPE_INDEX"
 	c_eif_void: STRING = "EIF_VOID"
 	c_eif_wide_char: STRING = "EIF_WIDE_CHAR"
 	c_eif_windows: STRING = "EIF_WINDOWS"
@@ -31997,6 +35234,7 @@ feature {NONE} -- Constants
 	c_exception_tag: STRING = "exception_tag"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
+	c_flags: STRING = "flags"
 	c_float: STRING = "float"
 	c_for: STRING = "for"
 	c_fprintf: STRING = "fprintf"
@@ -32006,7 +35244,10 @@ feature {NONE} -- Constants
 	c_ge_alloc_atomic_cleared: STRING = "GE_alloc_atomic_cleared"
 	c_ge_argc: STRING = "GE_argc"
 	c_ge_argv: STRING = "GE_argv"
+	c_ge_attached_encoded_type: STRING = "GE_attached_encoded_type"
 	c_ge_bma: STRING = "GE_bma"
+	c_ge_boolean_field: STRING = "GE_boolean_field"
+	c_ge_boolean_field_at: STRING = "GE_boolean_field_at"
 	c_ge_boxed: STRING = "GE_boxed"
 	c_ge_call: STRING = "GE_call"
 	c_ge_catcall: STRING = "GE_catcall"
@@ -32018,21 +35259,39 @@ feature {NONE} -- Constants
 	c_ge_ccom_local_free: STRING = "GE_ccom_local_free"
 	c_ge_ccom_strlen: STRING = "GE_ccom_strlen"
 	c_ge_ceiling: STRING = "GE_ceiling"
+	c_ge_character_8_field: STRING = "GE_character_8_field"
+	c_ge_character_8_field_at: STRING = "GE_character_8_field_at"
+	c_ge_character_32_field: STRING = "GE_character_32_field"
+	c_ge_character_32_field_at: STRING = "GE_character_32_field_at"
+	c_ge_check_assert: STRING = "GE_check_assert"
+	c_ge_compiler_version: STRING = "GE_compiler_version"
 	c_ge_context: STRING = "GE_context"
 	c_ge_current_context: STRING = "GE_current_context"
+	c_ge_decoded_type: STRING = "GE_decoded_type"
 	c_ge_deep: STRING = "GE_deep"
 	c_ge_deep_twin: STRING = "GE_deep_twin"
 	c_ge_default: STRING = "GE_default"
 	c_ge_default_context: STRING = "GE_default_context"
 	c_ge_developer_raise: STRING = "GE_developer_raise"
 	c_ge_dts: STRING = "GE_dts"
+	c_ge_encoded_type_conforms_to: STRING = "GE_encoded_type_conforms_to"
+	c_ge_encoded_type_from_name: STRING = "GE_encoded_type_from_name"
 	c_ge_ex_cdef: STRING = "GE_EX_CDEF"
 	c_ge_ex_check: STRING = "GE_EX_CHECK"
 	c_ge_ex_fail: STRING = "GE_EX_FAIL"
 	c_ge_ex_fatal: STRING = "GE_EX_FATAL"
 	c_ge_ex_prog: STRING = "GE_EX_PROG"
 	c_ge_ex_when: STRING = "GE_EX_WHEN"
+	c_ge_field_count_of_encoded_type: STRING = "GE_field_count_of_encoded_type"
+	c_ge_field_name_of_encoded_type: STRING = "GE_field_name_of_encoded_type"
+	c_ge_field_offset_of_encoded_type: STRING = "GE_field_offset_of_encoded_type"
+	c_ge_field_static_type_of_encoded_type: STRING = "GE_field_static_type_of_encoded_type"
+	c_ge_field_type_kind_of_encoded_type: STRING = "GE_field_type_kind_of_encoded_type"
 	c_ge_floor: STRING = "GE_floor"
+	c_ge_generating_type_of_encoded_type: STRING = "GE_generating_type_of_encoded_type"
+	c_ge_generator_of_encoded_type: STRING = "GE_generator_of_encoded_type"
+	c_ge_generic_parameter_of_encoded_type: STRING = "GE_generic_parameter_of_encoded_type"
+	c_ge_generic_parameter_count_of_encoded_type: STRING = "GE_generic_parameter_count_of_encoded_type"
 	c_ge_id_object: STRING = "GE_id_object"
 	c_ge_init_const: STRING = "GE_init_const"
 	c_ge_init_exception_manager: STRING = "GE_init_exception_manager"
@@ -32040,7 +35299,31 @@ feature {NONE} -- Constants
 	c_ge_int16: STRING = "GE_int16"
 	c_ge_int32: STRING = "GE_int32"
 	c_ge_int64: STRING = "GE_int64"
+	c_ge_integer_8_field: STRING = "GE_integer_8_field"
+	c_ge_integer_8_field_at: STRING = "GE_integer_8_field_at"
+	c_ge_integer_16_field: STRING = "GE_integer_16_field"
+	c_ge_integer_16_field_at: STRING = "GE_integer_16_field_at"
+	c_ge_integer_32_field: STRING = "GE_integer_32_field"
+	c_ge_integer_32_field_at: STRING = "GE_integer_32_field_at"
+	c_ge_integer_64_field: STRING = "GE_integer_8_field"
+	c_ge_integer_64_field_at: STRING = "GE_integer_64_field_at"
+	c_ge_is_attached_encoded_type: STRING = "GE_is_attached_encoded_type"
+	c_ge_is_copy_semantics_field: STRING = "GE_is_copy_semantics_field"
+	c_ge_is_expanded_object: STRING = "GE_is_expanded_object"
+	c_ge_is_field_expanded_of_encoded_type: STRING = "GE_is_field_expanded_of_encoded_type"
+	c_ge_is_field_transient_of_encoded_type: STRING = "GE_is_field_transient_of_encoded_type"
+	c_ge_is_object_marked: STRING = "GE_is_object_marked"
+	c_ge_is_special_copy_semantics_item: STRING = "GE_is_special_copy_semantics_item"
+	c_ge_is_special_object: STRING = "GE_is_special_object"
+	c_ge_is_special_of_expanded_object: STRING = "GE_is_special_of_expanded_object"
+	c_ge_is_special_of_reference_encoded_type: STRING = "GE_is_special_of_reference_encoded_type"
+	c_ge_is_special_of_reference_object: STRING = "GE_is_special_of_reference_object"
+	c_ge_is_special_of_reference_or_basic_expanded_encoded_type: STRING = "GE_is_special_of_reference_or_basic_expanded_encoded_type"
+	c_ge_is_tuple_encoded_type: STRING = "GE_is_tuple_encoded_type"
+	c_ge_is_tuple_object: STRING = "GE_is_tuple_object"
+	c_ge_lock_marking: STRING = "GE_lock_marking"
 	c_ge_ma: STRING = "GE_ma"
+	c_ge_mark_object: STRING = "GE_mark_object"
 	c_ge_ms8: STRING = "GE_ms8"
 	c_ge_ms32: STRING = "GE_ms32"
 	c_ge_mt: STRING = "GE_mt"
@@ -32048,37 +35331,127 @@ feature {NONE} -- Constants
 	c_ge_nat16: STRING = "GE_nat16"
 	c_ge_nat32: STRING = "GE_nat32"
 	c_ge_nat64: STRING = "GE_nat64"
+	c_ge_natural_8_field: STRING = "GE_natural_8_field"
+	c_ge_natural_8_field_at: STRING = "GE_natural_8_field_at"
+	c_ge_natural_16_field: STRING = "GE_natural_16_field"
+	c_ge_natural_16_field_at: STRING = "GE_natural_16_field_at"
+	c_ge_natural_32_field: STRING = "GE_natural_32_field"
+	c_ge_natural_32_field_at: STRING = "GE_natural_32_field_at"
+	c_ge_natural_64_field: STRING = "GE_natural_64_field"
+	c_ge_natural_64_field_at: STRING = "GE_natural_64_field_at"
 	c_ge_new: STRING = "GE_new"
 	c_ge_new_exception_manager: STRING = "GE_new_exception_manager"
+	c_ge_new_instance_of_encoded_type: STRING = "GE_new_instance_of_encoded_type"
+	c_ge_new_special_of_reference_instance_of_encoded_type: STRING = "GE_new_special_of_reference_instance_of_encoded_type"
+	c_ge_new_tuple_instance_of_encoded_type: STRING = "GE_new_tuple_instance_of_encoded_type"
+	c_ge_new_type_instance_of_encoded_type: STRING = "GE_new_type_instance_of_encoded_type"
+	c_ge_non_attached_encoded_type: STRING = "GE_non_attached_encoded_type"
+	c_ge_object_at_offset: STRING = "GE_object_at_offset"
+	c_ge_object_encoded_type: STRING = "GE_object_encoded_type"
+	c_ge_object_encoded_type_at_offset: STRING = "GE_object_encoded_type_at_offset"
 	c_ge_object_id: STRING = "GE_object_id"
 	c_ge_object_id_free: STRING = "GE_object_id_free"
+	c_ge_object_size: STRING = "GE_object_size"
+	c_ge_persistent_field_count_of_encoded_type: STRING = "GE_persistent_field_count_of_encoded_type"
+	c_ge_pointer_field: STRING = "GE_pointer_field"
+	c_ge_pointer_field_at: STRING = "GE_pointer_field_at"
 	c_ge_power: STRING = "GE_power"
 	c_ge_raise: STRING = "GE_raise"
+	c_ge_raw_object_at_offset: STRING = "GE_raw_object_at_offset"
+	c_ge_raw_reference_field_at: STRING = "GE_raw_reference_field_at"
 	c_ge_register_dispose: STRING = "GE_register_dispose"
+	c_ge_real_32_field: STRING = "GE_real_32_field"
+	c_ge_real_32_field_at: STRING = "GE_real_32_field_at"
 	c_ge_real_32_is_nan: STRING = "GE_real_32_is_nan"
 	c_ge_real_32_is_negative_infinity: STRING = "GE_real_32_is_negative_infinity"
 	c_ge_real_32_is_positive_infinity: STRING = "GE_real_32_is_positive_infinity"
 	c_ge_real_32_nan: STRING = "GE_real_32_nan"
 	c_ge_real_32_negative_infinity: STRING = "GE_real_32_negative_infinity"
 	c_ge_real_32_positive_infinity: STRING = "GE_real_32_positive_infinity"
+	c_ge_real_64_field: STRING = "GE_real_64_field"
+	c_ge_real_64_field_at: STRING = "GE_real_64_field_at"
 	c_ge_real_64_is_nan: STRING = "GE_real_64_is_nan"
 	c_ge_real_64_is_negative_infinity: STRING = "GE_real_64_is_negative_infinity"
 	c_ge_real_64_is_positive_infinity: STRING = "GE_real_64_is_positive_infinity"
 	c_ge_real_64_nan: STRING = "GE_real_64_nan"
 	c_ge_real_64_negative_infinity: STRING = "GE_real_64_negative_infinity"
 	c_ge_real_64_positive_infinity: STRING = "GE_real_64_positive_infinity"
+	c_ge_reference_field: STRING = "GE_reference_field"
+	c_ge_reference_field_at: STRING = "GE_reference_field_at"
 	c_ge_rescue: STRING = "GE_rescue"
 	c_ge_retry: STRING = "GE_retry"
 	c_ge_setjmp: STRING = "GE_setjmp"
+	c_ge_set_boolean_field: STRING = "GE_set_boolean_field"
+	c_ge_set_boolean_field_at: STRING = "GE_set_boolean_field_at"
+	c_ge_set_character_8_field: STRING = "GE_set_character_8_field"
+	c_ge_set_character_8_field_at: STRING = "GE_set_character_8_field_at"
+	c_ge_set_character_32_field: STRING = "GE_set_character_32_field"
+	c_ge_set_character_32_field_at: STRING = "GE_set_character_32_field_at"
 	c_ge_set_exception_data: STRING = "GE_set_exception_data"
+	c_ge_set_integer_8_field: STRING = "GE_set_integer_8_field"
+	c_ge_set_integer_8_field_at: STRING = "GE_set_integer_8_field_at"
+	c_ge_set_integer_16_field: STRING = "GE_set_integer_16_field"
+	c_ge_set_integer_16_field_at: STRING = "GE_set_integer_16_field_at"
+	c_ge_set_integer_32_field: STRING = "GE_set_integer_32_field"
+	c_ge_set_integer_32_field_at: STRING = "GE_set_integer_32_field_at"
+	c_ge_set_integer_64_field: STRING = "GE_set_integer_8_field"
+	c_ge_set_integer_64_field_at: STRING = "GE_set_integer_64_field_at"
+	c_ge_set_natural_8_field: STRING = "GE_set_natural_8_field"
+	c_ge_set_natural_8_field_at: STRING = "GE_set_natural_8_field_at"
+	c_ge_set_natural_16_field: STRING = "GE_set_natural_16_field"
+	c_ge_set_natural_16_field_at: STRING = "GE_set_natural_16_field_at"
+	c_ge_set_natural_32_field: STRING = "GE_set_natural_32_field"
+	c_ge_set_natural_32_field_at: STRING = "GE_set_natural_32_field_at"
+	c_ge_set_natural_64_field: STRING = "GE_set_natural_64_field"
+	c_ge_set_natural_64_field_at: STRING = "GE_set_natural_64_field_at"
+	c_ge_set_pointer_field: STRING = "GE_set_pointer_field"
+	c_ge_set_pointer_field_at: STRING = "GE_set_pointer_field_at"
+	c_ge_set_real_32_field: STRING = "GE_set_real_32_field"
+	c_ge_set_real_32_field_at: STRING = "GE_set_real_32_field_at"
+	c_ge_set_real_64_field: STRING = "GE_set_real_64_field"
+	c_ge_set_real_64_field_at: STRING = "GE_set_real_64_field_at"
+	c_ge_set_reference_field: STRING = "GE_set_reference_field"
+	c_ge_set_reference_field_at: STRING = "GE_set_reference_field_at"
 	c_ge_show_console: STRING = "GE_show_console"
+	c_ge_storable_version_of_encoded_type: STRING = "GE_storable_version_of_encoded_type"
+	c_ge_type_flag_boolean: STRING = "GE_TYPE_FLAG_BOOLEAN"
+	c_ge_type_flag_character_8: STRING = "GE_TYPE_FLAG_CHARACTER_8"
+	c_ge_type_flag_character_32: STRING = "GE_TYPE_FLAG_CHARACTER_32"
+	c_ge_type_flag_expanded: STRING = "GE_TYPE_FLAG_EXPANDED"
+	c_ge_type_flag_integer_8: STRING = "GE_TYPE_FLAG_INTEGER_8"
+	c_ge_type_flag_integer_16: STRING = "GE_TYPE_FLAG_INTEGER_16"
+	c_ge_type_flag_integer_32: STRING = "GE_TYPE_FLAG_INTEGER_32"
+	c_ge_type_flag_integer_64: STRING = "GE_TYPE_FLAG_INTEGER_64"
+	c_ge_type_flag_natural_8: STRING = "GE_TYPE_FLAG_NATURAL_8"
+	c_ge_type_flag_natural_16: STRING = "GE_TYPE_FLAG_NATURAL_16"
+	c_ge_type_flag_natural_32: STRING = "GE_TYPE_FLAG_NATURAL_32"
+	c_ge_type_flag_natural_64: STRING = "GE_TYPE_FLAG_NATURAL_64"
+	c_ge_type_flag_none: STRING = "GE_TYPE_FLAG_NONE"
+	c_ge_type_flag_pointer: STRING = "GE_TYPE_FLAG_POINTER"
+	c_ge_type_flag_real_32: STRING = "GE_TYPE_FLAG_REAL_32"
+	c_ge_type_flag_real_64: STRING = "GE_TYPE_FLAG_REAL_64"
+	c_ge_type_flag_special: STRING = "GE_TYPE_FLAG_SPECIAL"
+	c_ge_type_flag_tuple: STRING = "GE_TYPE_FLAG_TUPLE"
+	c_ge_type_infos: STRING = "GE_type_infos"
 	c_ge_types: STRING = "GE_types"
+	c_ge_unlock_marking: STRING = "GE_unlock_marking"
+	c_ge_unmark_object: STRING = "GE_unmark_object"
+	c_ge_use_ancestors: STRING = "GE_USE_ANCESTORS"
+	c_ge_use_attribute_name: STRING = "GE_USE_ATTRIBUTE_NAME"
+	c_ge_use_attribute_offset: STRING = "GE_USE_ATTRIBUTE_OFFSET"
+	c_ge_use_attribute_type_id: STRING = "GE_USE_ATTRIBUTE_TYPE_ID"
+	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
+	c_ge_use_type_generator: STRING = "GE_USE_TYPE_GENERATOR"
+	c_ge_use_type_generic_parameters: STRING = "GE_USE_TYPE_GENERIC_PARAMETERS"
+	c_ge_use_type_name: STRING = "GE_USE_TYPE_NAME"
+	c_ge_use_type_object_size: STRING = "GE_USE_TYPE_OBJECT_SIZE"
 	c_ge_void: STRING = "GE_void"
 	c_goto: STRING = "goto"
 	c_id: STRING = "id"
 	c_if: STRING = "if"
 	c_ifdef: STRING = "#ifdef"
 	c_ifndef: STRING = "#ifndef"
+	c_in_assertion: STRING = "in_assertion"
 	c_in_rescue: STRING = "in_rescue"
 	c_include: STRING = "#include"
 	c_initialize: STRING = "initialize"
@@ -32096,7 +35469,11 @@ feature {NONE} -- Constants
 	c_not_equal: STRING = "!="
 	c_not_not: STRING = ""
 	c_object: STRING = "object"
+	c_offset: STRING = "offset"
+	c_offsetof: STRING = "offsetof"
+	c_once_objects: STRING = "once_objects"
 	c_or_else: STRING = "||"
+	c_pre_ecma_mapping_status: STRING = "pre_ecma_mapping_status"
 	c_previous: STRING = "previous"
 	c_return: STRING = "return"
 	c_sizeof: STRING = "sizeof"
@@ -32108,6 +35485,7 @@ feature {NONE} -- Constants
 	c_tr: STRING = "tr"
 	c_type_id: STRING = "type_id"
 	c_typedef: STRING = "typedef"
+	c_uint16_t: STRING = "uint16_t"
 	c_uint32_t: STRING = "uint32_t"
 	c_undef: STRING = "#undef"
 	c_unsigned: STRING = "unsigned"
@@ -32132,6 +35510,8 @@ feature {NONE} -- Constants
 invariant
 
 	current_dynamic_system_not_void: current_dynamic_system /= Void
+	dynamic_types_not_void: dynamic_types /= Void
+	no_void_dynamic_type: not dynamic_types.has_void
 	current_file_not_void: current_file /= Void
 	current_file_open_write: current_file.is_open_write
 	header_file_not_void: header_file /= Void
