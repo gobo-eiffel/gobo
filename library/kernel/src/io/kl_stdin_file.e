@@ -27,38 +27,11 @@ inherit
 			read_to_buffer
 		end
 
-	KL_OPERATING_SYSTEM
-		export {NONE} all end
-
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-	CONSOLE
-		rename
-			make as old_make,
-			read_stream as old_read_stream,
-			read_line as old_read_line,
-			read_character as old_read_character,
-			read_to_string as old_read_to_string,
-			end_of_file as old_end_of_file,
-			is_open_read as old_is_open_read,
-			append as old_append,
-			close as old_close
-		export
-			{CONSOLE}
-				open_read,
-				extendible,
-				file_pointer,
-				count,
-				old_close,
-				is_closed,
-				put_string,
-				is_open_write
-			{CONSOLE} all
-		redefine
-			file_readable,
-			last_string
-		end
+	STRING_HANDLER
+		export {NONE} all end
 
 create
 
@@ -70,7 +43,6 @@ feature {NONE} -- Initialization
 			-- Create a new standard input file.
 		do
 			create last_string.make_empty
-			make_open_stdin ("stdin")
 			end_of_file := False
 		ensure
 			name_set: name.is_equal ("stdin")
@@ -79,6 +51,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	name: STRING = "stdin"
+			-- Name of input stream
+
+	last_character: CHARACTER
+			-- Last character read
 
 	last_string: STRING
 			-- Last string read
@@ -92,11 +70,8 @@ feature -- Access
 
 feature -- Status report
 
-	is_open_read: BOOLEAN
+	is_open_read: BOOLEAN = True
 			-- Is standard input file opened in read mode?
-		do
-			Result := old_is_open_read
-		end
 
 	end_of_file: BOOLEAN
 			-- Has the end of file been reached?
@@ -113,11 +88,12 @@ feature -- Input
 			if l_character_buffer /= Void then
 				last_character := l_character_buffer.item
 				character_buffer := l_character_buffer.right
-			elseif old_end_of_file then
+			elseif console.end_of_file then
 				end_of_file := True
 			else
-				old_read_character
-				end_of_file := old_end_of_file
+				console.read_character
+				last_character := console.last_character
+				end_of_file := console.end_of_file
 			end
 		end
 
@@ -148,16 +124,22 @@ feature -- Input
 			-- will all be read.)
 		local
 			i: INTEGER
+			s: STRING
 		do
 			if last_string.capacity < nb then
 				last_string.resize (nb)
 			end
 			if character_buffer = Void then
-				if not old_end_of_file then
+				if not console.end_of_file then
 					last_string.set_count (nb)
-					i := old_read_to_string (last_string, 1, nb)
-					last_string.set_internal_hash_code (0)
-					last_string.set_count (i)
+					console.read_stream (nb)
+					s := console.last_string
+					if not s.is_empty then
+						last_string.subcopy (s, 1, s.count, 1)
+						i := s.count
+						last_string.set_internal_hash_code (0)
+						last_string.set_count (i)
+					end
 				else
 					last_string.set_count (0)
 				end
@@ -258,7 +240,7 @@ feature -- Input
 		local
 			i, j: INTEGER
 			k, nb2: INTEGER
-			tmp_string: STRING
+			s, tmp_string: STRING
 			a_buff: like character_buffer
 		do
 			from
@@ -274,16 +256,26 @@ feature -- Input
 			end
 			character_buffer := a_buff
 			if i < nb then
-				if not old_end_of_file then
+				if not console.end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
-						Result := i + old_read_to_string (a_string, j, nb - i)
-						a_string.set_internal_hash_code (0)
+						console.read_stream (nb - i)
+						s := console.last_string
+						if not s.is_empty then
+							a_string.subcopy (s, 1, s.count, j)
+							a_string.set_internal_hash_code (0)
+						end
+						Result := i + s.count
 					else
 						nb2 := nb - i
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
-						nb2 := old_read_to_string (tmp_string, 1, nb2)
-						tmp_string.set_internal_hash_code (0)
+						console.read_stream (nb2)
+						s := console.last_string
+						if not s.is_empty then
+							tmp_string.subcopy (s, 1, s.count, 1)
+							tmp_string.set_internal_hash_code (0)
+						end
+						nb2 := s.count
 						from
 							k := 1
 						until
@@ -298,7 +290,7 @@ feature -- Input
 				else
 					Result := i
 				end
-				end_of_file := old_end_of_file
+				end_of_file := console.end_of_file
 			else
 				Result := i
 			end
@@ -311,23 +303,12 @@ feature -- Input
 			-- (Note that even if at least `nb' characters are available
 			-- in standard input file, there is no guarantee that they
 			-- will all be read.)
-		local
-			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
-			char_buffer ?= a_buffer
-			if char_buffer /= Void then
+			if attached {KL_CHARACTER_BUFFER} a_buffer as char_buffer then
 				Result := char_buffer.fill_from_stream (Current, pos, nb)
 			else
 				Result := precursor (a_buffer, pos, nb)
 			end
-		end
-
-feature {CONSOLE} -- Implementation
-
-	file_readable: BOOLEAN
-			-- Is there a current item that may be read?
-		do
-			Result := is_open_read
 		end
 
 feature {NONE} -- Implementation
@@ -337,5 +318,13 @@ feature {NONE} -- Implementation
 
 	dummy_string: STRING = ""
 			-- Dummy string
+
+	console: PLAIN_TEXT_FILE
+			-- Console object
+		once
+			Result := io.input
+		ensure
+			console_not_void: Result /= Void
+		end
 
 end

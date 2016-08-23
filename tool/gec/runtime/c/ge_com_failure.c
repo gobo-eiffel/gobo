@@ -19,8 +19,10 @@
 #ifndef GE_COM_FAILURE_H
 #include "ge_com_failure.h"
 #endif
+#ifdef EIF_WINDOWS
 #include <winerror.h>
 #include <tchar.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
