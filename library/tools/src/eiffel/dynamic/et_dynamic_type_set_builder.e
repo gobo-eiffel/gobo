@@ -338,7 +338,7 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 				nb := l_dynamic_types.count
 				from i := 1 until i > nb loop
 					l_other_type := l_dynamic_types.item (i)
-					if l_other_type.conforms_to_type (a_type) then
+					if l_other_type.is_alive and then l_other_type.conforms_to_type (a_type) then
 						Result.put_type_from_type_set (l_other_type, l_other_type, current_dynamic_system)
 					end
 					i := i + 1
