@@ -92,8 +92,7 @@ feature {NONE} -- Initialization
 						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				elseif
-					(builtin_code = builtin_internal_feature (builtin_internal_type_of_type) or
-					builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)) and then
+					(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)) and then
 					attached a_system.ise_runtime_new_type_instance_of_feature as l_ise_runtime_new_type_instance_of_feature
 				then
 					result_type_set := l_ise_runtime_new_type_instance_of_feature.result_type_set
@@ -156,7 +155,6 @@ feature {NONE} -- Initialization
 				end
 			end
 			if
-				builtin_code = builtin_internal_feature (builtin_internal_type_of_type) or
 				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)
 			then
 				if a_system.ise_runtime_new_type_instance_of_feature = Void then

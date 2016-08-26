@@ -371,53 +371,15 @@ feature -- Built-in codes
 		end
 
 	builtin_type_class: INTEGER = 21
-	builtin_type_base_class_name: INTEGER = 1
-	builtin_type_boolean_field: INTEGER = 2
-	builtin_type_character_8_field: INTEGER = 3
-	builtin_type_character_32_field: INTEGER = 4
-	builtin_type_default: INTEGER = 5
-	builtin_type_field: INTEGER = 6
-	builtin_type_field_count: INTEGER = 7
-	builtin_type_field_name: INTEGER = 8
-	builtin_type_field_static_type: INTEGER = 9
-	builtin_type_field_type: INTEGER = 10
-	builtin_type_generating_type: INTEGER = 11
-	builtin_type_generic_parameter_type: INTEGER = 12
-	builtin_type_generic_parameter_count: INTEGER = 13
-	builtin_type_has_default: INTEGER = 14
-	builtin_type_integer_8_field: INTEGER = 15
-	builtin_type_integer_16_field: INTEGER = 16
-	builtin_type_integer_32_field: INTEGER = 17
-	builtin_type_integer_64_field: INTEGER = 18
-	builtin_type_is_expanded: INTEGER = 19
-	builtin_type_name: INTEGER = 20
-	builtin_type_natural_8_field: INTEGER = 21
-	builtin_type_natural_16_field: INTEGER = 22
-	builtin_type_natural_32_field: INTEGER = 23
-	builtin_type_natural_64_field: INTEGER = 24
-	builtin_type_pointer_field: INTEGER = 25
-	builtin_type_real_32_field: INTEGER = 26
-	builtin_type_real_64_field: INTEGER = 27
-	builtin_type_runtime_name: INTEGER = 28
-	builtin_type_set_boolean_field: INTEGER = 29
-	builtin_type_set_character_8_field: INTEGER = 30
-	builtin_type_set_character_32_field: INTEGER = 31
-	builtin_type_set_integer_8_field: INTEGER = 32
-	builtin_type_set_integer_16_field: INTEGER = 33
-	builtin_type_set_integer_32_field: INTEGER = 34
-	builtin_type_set_integer_64_field: INTEGER = 35
-	builtin_type_set_natural_8_field: INTEGER = 36
-	builtin_type_set_natural_16_field: INTEGER = 37
-	builtin_type_set_natural_32_field: INTEGER = 38
-	builtin_type_set_natural_64_field: INTEGER = 39
-	builtin_type_set_pointer_field: INTEGER = 40
-	builtin_type_set_real_32_field: INTEGER = 41
-	builtin_type_set_real_64_field: INTEGER = 42
-	builtin_type_set_reference_field: INTEGER = 43
-	builtin_type_type_id: INTEGER = 44
-	builtin_type_new_instance: INTEGER = 45
-	builtin_type_new_special_any_instance: INTEGER = 46
-			-- Codes for built-in features from class "TYPE"
+	builtin_type_default: INTEGER = 1
+	builtin_type_generic_parameter_type: INTEGER = 2
+	builtin_type_generic_parameter_count: INTEGER = 3
+	builtin_type_has_default: INTEGER = 4
+	builtin_type_is_attached: INTEGER = 5
+	builtin_type_is_expanded: INTEGER = 6
+	builtin_type_runtime_name: INTEGER = 7
+	builtin_type_type_id: INTEGER = 8
+			-- Codes for built-in functions from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "IDENTIFIED" and related classes
@@ -484,17 +446,6 @@ feature -- Built-in codes
 	builtin_memory_find_referers: INTEGER = 1
 	builtin_memory_free: INTEGER = 2
 			-- Codes for built-in features from class "MEMORY"
-
-	builtin_internal_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "INTERNAL"
-		do
-			Result := builtin_internal_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_internal_class: INTEGER = 25
-	builtin_internal_type_of_type: INTEGER = 1
-	builtin_internal_max_type_id: INTEGER = 2
-			-- Codes for built-in features from class "INTERNAL"
 
 	builtin_exception_manager_factory_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "EXCEPTION_MANAGER_FACTORY"

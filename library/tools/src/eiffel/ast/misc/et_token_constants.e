@@ -1748,6 +1748,14 @@ feature -- Feature names
 			invariant_feature_name_not_void: Result /= Void
 		end
 
+	is_attached_feature_name: ET_FEATURE_NAME
+			-- 'is_attached' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_attached_name)
+		ensure
+			is_attached_feature_name_not_void: Result /= Void
+		end
+
 	is_attached_type_feature_name: ET_FEATURE_NAME
 			-- 'is_attached_type' feature name
 		once
@@ -4657,6 +4665,9 @@ feature -- Keyword and symbol names
 
 	integer_remainder_name: STRING = "integer_remainder"
 			-- Name of Eiffel feature 'integer_remainder'
+
+	is_attached_name: STRING = "is_attached"
+			-- Name of Eiffel feature 'is_attached'
 
 	is_attached_type_name: STRING = "is_attached_type"
 			-- Name of Eiffel feature 'is_attached_type'

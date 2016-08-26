@@ -952,6 +952,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.integer_bytes_name)
 			Result.force_new (-1, tokens.integer_quotient_name)
 			Result.force_new (-1, tokens.integer_remainder_name)
+			Result.force_new (-1, tokens.is_attached_name)
 			Result.force_new (-1, tokens.is_attached_type_name)
 			Result.force_new (-1, tokens.is_caught_name)
 			Result.force_new (-1, tokens.is_copy_semantics_field_name)
