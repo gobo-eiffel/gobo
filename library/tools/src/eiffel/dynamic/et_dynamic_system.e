@@ -254,7 +254,15 @@ feature -- Types
 			l_base_class: ET_CLASS
 			l_any: ET_CLASS_TYPE
 			l_result: detachable ET_DYNAMIC_TYPE
+			l_is_reentrant: BOOLEAN
+			l_old_dynamic_types_count: INTEGER
 		do
+			if in_dynamic_type then
+				l_is_reentrant := True
+			else
+				in_dynamic_type := True
+				l_old_dynamic_types_count := dynamic_types.count
+			end
 			l_base_class := a_type.base_class (a_context)
 			i := l_base_class.index
 			if i >= 1 and i <= dynamic_types.count then
@@ -266,17 +274,6 @@ feature -- Types
 						l_result := l_type
 					elseif not attached l_type.next_type as l_next_type then
 						l_result := new_dynamic_type (a_type, a_context)
-						dynamic_types.force_last (l_result)
-						l_result.set_hash_code (dynamic_types.count)
-							-- `dynamic_type' is re-entrant (`new_dynamic_type' is
-							-- calling it). So at this stage 'l_type.next_type' is
-							-- not necessarily Void anymore. We have to take that
-							-- possibility into account.
-						l_result.set_next_type (l_type.next_type)
-						l_type.set_next_type (l_result)
-						propagate_type_of_type_result_type (l_result)
-						propagate_attribute_type_sets (l_result)
-						propagate_alive_conforming_descendants (l_result)
 					else
 						check
 							same_expandedness: a_type.is_type_expanded (a_context) = l_next_type.is_expanded
@@ -294,26 +291,6 @@ feature -- Types
 							l_result := l_type
 						elseif not attached l_type.next_type as l_next_type then
 							l_result := new_dynamic_type (a_type, a_context)
-								-- Note that it may happen that 'l_result' is already in
-								-- `dynamic_types' if it appears to be the meta type of
-								-- another type. In that case `dynamic_type' is called
-								-- recursively to create that other type in `new_type_type'.
-								-- Then calling `propagate_type_of_type_result_type' on that
-								-- type may call `dynamic_type' again on its meta type (which
-								-- is nothig else but 'l_result').
-							if dynamic_types.last /= l_result then
-								dynamic_types.force_last (l_result)
-								l_result.set_hash_code (dynamic_types.count)
-									-- `dynamic_type' is re-entrant (`new_dynamic_type' is
-									-- calling it). So at this stage 'l_type.next_type' is
-									-- not necessarily Void anymore. We have to take that
-									-- possibility into account.
-								l_result.set_next_type (l_type.next_type)
-								l_type.set_next_type (l_result)
-							end
-							propagate_type_of_type_result_type (l_result)
-							propagate_attribute_type_sets (l_result)
-							propagate_alive_conforming_descendants (l_result)
 						else
 							l_type := l_next_type
 						end
@@ -338,39 +315,10 @@ feature -- Types
 					end
 				end
 				Result := new_dynamic_type (a_type, a_context)
-					-- Note that it may happen that 'Result' is already in
-					-- `dynamic_types' if it appears to be the meta type of
-					-- another type. In that case `dynamic_type' is called
-					-- recursively to create that other type in `new_type_type'.
-					-- Then calling `propagate_type_of_type_result_type' on that
-					-- type may call `dynamic_type' again on its meta type (which
-					-- is nothig else but 'Result').
-				if dynamic_types.is_empty or else dynamic_types.last /= Result then
-					dynamic_types.force_last (Result)
-					Result.set_hash_code (dynamic_types.count)
-						-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
-						-- So at this stage another type with the same base class may have
-						-- been inserted into `dynamic_types'. We have to take that possibility
-						-- into account.
-					i := l_base_class.index
-					if i >= 1 and i <= dynamic_types.count then
-						l_type := dynamic_types.item (i)
-						if l_type.base_class /= l_base_class then
-								-- Wrong index.
-							l_base_class.set_index (dynamic_types.count)
-						else
-								-- Another type has been inserted.
-							Result.set_next_type (l_type.next_type)
-							l_type.set_next_type (Result)
-						end
-					else
-							-- No other type has been inserted.
-						l_base_class.set_index (dynamic_types.count)
-					end
-				end
-				propagate_type_of_type_result_type (Result)
-				propagate_attribute_type_sets (Result)
-				propagate_alive_conforming_descendants (Result)
+			end
+			if not l_is_reentrant then
+				in_dynamic_type := False
+				initialize_dynamic_types (l_old_dynamic_types_count + 1, dynamic_types.count)
 			end
 		ensure
 			dynamic_type_not_void: Result /= Void
@@ -409,6 +357,9 @@ feature -- Types
 
 feature {NONE} -- Types
 
+	in_dynamic_type: BOOLEAN
+			-- Flag to handle properly re-entrant calls to `dynamic_type'
+
 	new_dynamic_type (a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT): ET_DYNAMIC_TYPE
 			-- New dynamic type corresponding to `a_type' in `a_context'
 		require
@@ -428,10 +379,6 @@ feature {NONE} -- Types
 				Result := new_special_type (l_base_type)
 			elseif l_base_class.is_tuple_class then
 				Result := new_tuple_type (l_base_type)
-			elseif l_base_class.is_array_class then
-				Result := new_array_type (l_base_type)
-			elseif l_base_class.is_typed_pointer_class then
-				Result := new_typed_pointer_type (l_base_type)
 			elseif l_base_class.is_type_class then
 				Result := new_type_type (l_base_type)
 			elseif l_base_class.is_procedure_class then
@@ -442,6 +389,7 @@ feature {NONE} -- Types
 				Result := new_predicate_type (l_base_type)
 			else
 				create Result.make (l_base_type, l_base_class)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_dynamic_type_not_void: Result /= Void
@@ -459,7 +407,6 @@ feature {NONE} -- Types
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_any: ET_CLASS_TYPE
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
@@ -469,16 +416,10 @@ feature {NONE} -- Types
 				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
 				l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
 				create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (a_base_type, l_base_class, l_item_type_set)
+				register_dynamic_type (Result)
 			else
 				create Result.make (a_base_type, l_base_class)
-			end
-				-- Make feature 'count' and 'capacity' alive at the first two
-				-- positions in the feature list of the "SPECIAL" type.
-			if attached special_count_feature as l_special_count_feature then
-				l_dynamic_feature := Result.dynamic_query (l_special_count_feature, Current)
-			end
-			if attached special_capacity_feature as l_special_capacity_feature then
-				l_dynamic_feature := Result.dynamic_query (l_special_capacity_feature, Current)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_special_type_not_void: Result /= Void
@@ -519,56 +460,9 @@ feature {NONE} -- Types
 				l_item_type_sets := empty_dynamic_type_sets
 			end
 			create {ET_DYNAMIC_TUPLE_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets)
+			register_dynamic_type (Result)
 		ensure
 			new_tuple_type_not_void: Result /= Void
-		end
-
-	new_array_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
-			-- New dynamic "ARRAY" type corresponding to `a_base_type'
-		require
-			a_base_type_not_void: a_base_type /= Void
-			is_base_type: a_base_type.is_base_type
-			is_array: a_base_type.base_class.is_array_class
-		local
-			l_base_class: ET_CLASS
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
-		do
-			l_base_class := a_base_type.base_class
-			create Result.make (a_base_type, l_base_class)
-				-- Make features 'area', and 'lower' and 'upper' alive at the
-				-- first three positions in the feature list of the "ARRAY" type.
-			if attached array_area_feature as l_array_area_feature then
-				l_dynamic_feature := Result.dynamic_query (l_array_area_feature, Current)
-			end
-			if attached array_lower_feature as l_array_lower_feature then
-				l_dynamic_feature := Result.dynamic_query (l_array_lower_feature, Current)
-			end
-			if attached array_upper_feature as l_array_upper_feature then
-				l_dynamic_feature := Result.dynamic_query (l_array_upper_feature, Current)
-			end
-		ensure
-			new_array_type_not_void: Result /= Void
-		end
-
-	new_typed_pointer_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
-			-- New dynamic "TYPED_POINTER" type corresponding to `a_base_type'
-		require
-			a_base_type_not_void: a_base_type /= Void
-			is_base_type: a_base_type.is_base_type
-			is_typed_pointer: a_base_type.base_class.is_typed_pointer_class
-		local
-			l_base_class: ET_CLASS
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
-		do
-			l_base_class := a_base_type.base_class
-			create Result.make (a_base_type, l_base_class)
-				-- Make feature 'to_pointer' alive at the first position
-				-- in the feature list of the "TYPED_POINTER" type.
-			if attached typed_pointer_to_pointer_feature as l_typed_pointer_to_pointer_feature then
-				l_dynamic_feature := Result.dynamic_query (l_typed_pointer_to_pointer_feature, Current)
-			end
-		ensure
-			new_typed_pointer_type_not_void: Result /= Void
 		end
 
 	new_type_type (a_base_type: ET_BASE_TYPE): ET_DYNAMIC_TYPE
@@ -599,10 +493,12 @@ feature {NONE} -- Types
 					Result := l_meta_type
 				else
 					create Result.make (a_base_type, l_base_class)
+					register_dynamic_type (Result)
 					l_type.set_meta_type (Result)
 				end
 			else
 				create Result.make (a_base_type, l_base_class)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_type_type_not_void: Result /= Void
@@ -622,7 +518,6 @@ feature {NONE} -- Types
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 			l_any: ET_CLASS_TYPE
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
@@ -650,18 +545,10 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_PROCEDURE_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets)
-					-- Make feature 'closed_operands' alive at the first position
-					-- in the feature list of the "PROCEDURE" type.
-				if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current)
-				end
-					-- Make feature 'is_target_closed' alive at the second position
-					-- in the feature list of the "PROCEDURE" type.
-				if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current)
-				end
+				register_dynamic_type (Result)
 			else
 				create Result.make (a_base_type, l_base_class)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_procedure_type_not_void: Result /= Void
@@ -683,7 +570,6 @@ feature {NONE} -- Types
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_any: ET_CLASS_TYPE
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
@@ -716,18 +602,10 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-					-- Make feature 'closed_operands' alive at the first position
-					-- in the feature list of the "FUNCTION" type.
-				if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current)
-				end
-					-- Make feature 'is_target_closed' alive at the second position
-					-- in the feature list of the "FUNCTION" type.
-				if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current)
-				end
+				register_dynamic_type (Result)
 			else
 				create Result.make (a_base_type, l_base_class)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_function_type_not_void: Result /= Void
@@ -749,7 +627,6 @@ feature {NONE} -- Types
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_any: ET_CLASS_TYPE
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
@@ -776,21 +653,190 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
-					-- Make feature 'closed_operands' alive at the first position
-					-- in the feature list of the "PREDICATE" type.
-				if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current)
-				end
-					-- Make feature 'is_target_closed' alive at the second position
-					-- in the feature list of the "PREDICATE" type.
-				if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-					l_dynamic_feature := Result.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current)
-				end
+				register_dynamic_type (Result)
 			else
 				create Result.make (a_base_type, l_base_class)
+				register_dynamic_type (Result)
 			end
 		ensure
 			new_predicate_type_not_void: Result /= Void
+		end
+
+	register_dynamic_type (a_type: ET_DYNAMIC_TYPE)
+			-- Add `a_type' to `dynamic_types'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i: INTEGER
+			l_other_type: ET_DYNAMIC_TYPE
+			l_base_class: ET_CLASS
+		do
+			dynamic_types.force_last (a_type)
+			a_type.set_hash_code (dynamic_types.count)
+			l_base_class := a_type.base_class
+			i := l_base_class.index
+			if i >= 1 and i <= dynamic_types.count then
+				l_other_type := dynamic_types.item (i)
+				if l_other_type.base_class /= l_base_class then
+						-- Wrong index.
+					l_base_class.set_index (dynamic_types.count)
+				else
+						-- Another type has been inserted.
+					a_type.set_next_type (l_other_type.next_type)
+					l_other_type.set_next_type (a_type)
+				end
+			else
+					-- No other type has been inserted.
+				l_base_class.set_index (dynamic_types.count)
+			end
+		end
+
+	initialize_dynamic_types (a_start, a_end: INTEGER)
+			-- Initilize types between `a_start' and `a_end' in `dynamic_types'.
+		require
+			a_start_large_enough: a_start >= 1
+			a_end_small_enough: a_end <= dynamic_types.count
+			valid_bounds: a_start <= a_end + 1
+		local
+			i: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+			l_base_class: ET_CLASS
+		do
+			from i := a_start until i > a_end loop
+				l_type := dynamic_types.item (i)
+				l_base_class := l_type.base_class
+				if l_base_class.is_special_class then
+					initialize_special_type (l_type)
+				elseif l_base_class.is_array_class then
+					initialize_array_type (l_type)
+				elseif l_base_class.is_typed_pointer_class then
+					initialize_typed_pointer_type (l_type)
+				elseif l_base_class.is_procedure_class then
+					initialize_procedure_type (l_type)
+				elseif l_base_class.is_function_class then
+					initialize_function_type (l_type)
+				elseif l_base_class.is_predicate_class then
+					initialize_predicate_type (l_type)
+				end
+				propagate_type_of_type_result_type (l_type)
+				propagate_attribute_type_sets (l_type)
+				propagate_alive_conforming_descendants (l_type)
+				i := i + 1
+			end
+		end
+
+	initialize_special_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "SPECIAL" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_special_type: a_type.base_class.is_special_class
+		do
+				-- Make feature 'count' and 'capacity' alive at the first two
+				-- positions in the feature list of the "SPECIAL" type.
+			if attached special_count_feature as l_special_count_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_special_count_feature, Current), 1)
+			end
+			if attached special_capacity_feature as l_special_capacity_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_special_capacity_feature, Current), 2)
+			end
+		end
+
+	initialize_array_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "ARRAY" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_array_type: a_type.base_class.is_array_class
+		do
+				-- Make features 'area', and 'lower' and 'upper' alive at the
+				-- first three positions in the feature list of the "ARRAY" type.
+			if attached array_area_feature as l_array_area_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_array_area_feature, Current), 1)
+			end
+			if attached array_lower_feature as l_array_lower_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_array_lower_feature, Current), 2)
+			end
+			if attached array_upper_feature as l_array_upper_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_array_upper_feature, Current), 3)
+			end
+		end
+
+	initialize_typed_pointer_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "TYPED_POINTER" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_typed_pointer_type: a_type.base_class.is_typed_pointer_class
+		do
+				-- Make feature 'to_pointer' alive at the first position
+				-- in the feature list of the "TYPED_POINTER" type.
+			if attached typed_pointer_to_pointer_feature as l_typed_pointer_to_pointer_feature then
+				a_type.set_attribute_position (a_type.dynamic_query (l_typed_pointer_to_pointer_feature, Current), 1)
+			end
+		end
+
+	initialize_procedure_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "PROCEDURE" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_procedure_type: a_type.base_class.is_procedure_class
+		do
+				-- Make feature 'closed_operands' alive at the first position
+				-- in the feature list of the "PROCEDURE" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_type then
+					a_type.set_attribute_position (l_dynamic_type, 1)
+				end
+			end
+				-- Make feature 'is_target_closed' alive at the second position
+				-- in the feature list of the "PROCEDURE" type.
+			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 2)
+				end
+			end
+		end
+
+	initialize_function_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "FUNCTION" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_function_type: a_type.base_class.is_function_class
+		do
+				-- Make feature 'closed_operands' alive at the first position
+				-- in the feature list of the "FUNCTION" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 1)
+				end
+			end
+				-- Make feature 'is_target_closed' alive at the second position
+				-- in the feature list of the "FUNCTION" type.
+			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_type then
+					a_type.set_attribute_position (l_dynamic_type, 2)
+				end
+			end
+		end
+
+	initialize_predicate_type (a_type: ET_DYNAMIC_TYPE)
+			-- Initialize "PREDICATE" type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			is_predicate_type: a_type.base_class.is_predicate_class
+		do
+				-- Make feature 'closed_operands' alive at the first position
+				-- in the feature list of the "PREDICATE" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 1)
+				end
+			end
+				-- Make feature 'is_target_closed' alive at the second position
+				-- in the feature list of the "PREDICATE" type.
+			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 2)
+				end
+			end
 		end
 
 	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE)

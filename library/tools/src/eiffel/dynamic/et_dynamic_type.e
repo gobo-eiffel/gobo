@@ -536,6 +536,29 @@ feature -- Features
 			is_procedure: Result /= Void implies Result.is_procedure
 		end
 
+	set_attribute_position (an_attribute: ET_DYNAMIC_FEATURE; a_position: INTEGER)
+			-- Make sure that `an_attribute' is at position `i' if
+			-- this is already a known attribute in current type.
+			-- Do nothing otherwise.
+		require
+			an_attribute_not_void: an_attribute /= Void
+			a_position_large_enough: a_position >= 1
+			a_position_small_enough: a_position <= attribute_count
+		local
+			i: INTEGER
+		do
+			i := queries.index_of (an_attribute)
+			if i >= 1 and i <= attribute_count then
+				if a_position /= i then
+					queries.put (queries.item (a_position), i)
+					queries.put (an_attribute, a_position)
+				end
+			end
+		ensure
+			position_set: (old queries.index_of (an_attribute) >= 1 and old queries.index_of (an_attribute) <= attribute_count) implies queries.item (a_position) = an_attribute
+			same_attribute_count: attribute_count = old attribute_count
+		end
+
 	use_all_attributes (a_system: ET_DYNAMIC_SYSTEM)
 			-- Make sure that all attributes of current type are marked as
 			-- used and hence included in the generated run-time instances.
