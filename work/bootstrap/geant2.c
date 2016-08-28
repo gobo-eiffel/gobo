@@ -52738,7 +52738,7 @@ T14 T537f11(GE_context* ac, T0* C, T14 a1)
 	return _wgetenv ((EIF_NATIVE_CHAR *) a1);
 #else
 	return getenv ((EIF_NATIVE_CHAR *) a1);
-#endif;
+#endif
 	}
 }
 
@@ -53449,7 +53449,7 @@ T6 T129f10(GE_context* ac, T0* C, T14 a1)
 	return _wputenv ((EIF_NATIVE_CHAR *) a1);
 #else
 	return putenv ((EIF_NATIVE_CHAR *) a1);
-#endif;
+#endif
 	}
 }
 
@@ -59132,7 +59132,7 @@ T11 T612f16(GE_context* ac, T0* C, T14 a1)
 				return (EIF_NATURAL_64) wcslen(a1) * sizeof(wchar_t);
 			#else
 				return (EIF_NATURAL_64) strlen(a1) * sizeof(char);
-			#endif;
+			#endif
 	}
 }
 
@@ -94401,7 +94401,7 @@ extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const 
 
 EIF_TYPE_ID eiftype(EIF_OBJECT object) {
 		/* Obsolete. Use "eif_type_by_reference" instead.
-		 * Return the Type id of the specified object. 
+		 * Return the Type id of the specified object.
 		 */
 	return (EIF_TYPE_ID) object->id;
 }

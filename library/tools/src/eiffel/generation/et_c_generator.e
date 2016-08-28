@@ -4645,6 +4645,15 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 						end
 						i := 0
+					when 'f' then
+						if i > 5 and then c_endif.same_characters (l_c_code, i - 5, i, 1) then
+								-- This is a terminating #endif.
+						else
+								-- There is no terminating semicolon.
+							l_semicolon_needed := True
+
+						end
+						i := 0
 					else
 							-- There is no terminating semicolon.
 						l_semicolon_needed := True

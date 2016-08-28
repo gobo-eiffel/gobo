@@ -13159,7 +13159,7 @@ T6 T118f13(GE_context* ac, T0* C, T14 a1, T14 a2, T6 a3)
 				return (EIF_INTEGER) MultiByteToWideChar(CP_ACP, 0, (LPSTR) a1, -1, (LPWSTR) a2, (int) a3) * sizeof(wchar_t);
 			#else
 				return a3;
-			#endif;
+			#endif
 	}
 }
 
@@ -14555,7 +14555,7 @@ T6 T118f16(GE_context* ac, T0* C, T14 a1, T14 a2, T6 a3)
 				return (EIF_INTEGER) WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) a1, -1, (LPSTR) a2, (int) a3, NULL, NULL);
 			#else
 				return a3;
-			#endif;
+			#endif
 	}
 }
 
@@ -15915,7 +15915,7 @@ T11 T179f8(GE_context* ac, T0* C, T14 a1)
 				return (EIF_NATURAL_64) wcslen(a1) * sizeof(wchar_t);
 			#else
 				return (EIF_NATURAL_64) strlen(a1) * sizeof(char);
-			#endif;
+			#endif
 	}
 }
 
@@ -15927,7 +15927,7 @@ T14 T129f6(GE_context* ac, T0* C, T14 a1)
 	return _wgetenv ((EIF_NATIVE_CHAR *) a1);
 #else
 	return getenv ((EIF_NATIVE_CHAR *) a1);
-#endif;
+#endif
 	}
 }
 
