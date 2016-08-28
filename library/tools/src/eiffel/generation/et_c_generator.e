@@ -30690,6 +30690,7 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 						-- Cannot have two instances of class TYPE representing the same Eiffel type.
 					current_file.put_character ('0')
 				else
+					current_file.put_string ("(EIF_REFERENCE (*)())")
 					current_file.put_character ('&')
 					current_file.put_string (c_ge_new)
 					current_file.put_integer (l_type.id)

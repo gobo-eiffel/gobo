@@ -108109,6 +108109,11 @@ void T74f827(GE_context* ac, T0* C)
 						}
 					} else {
 						if (((T0*)(GE_void(((T74*)(C))->a11)))->id==269) {
+							T269f8(ac, ((T74*)(C))->a11, GE_ms8("(EIF_REFERENCE (*)())", 21));
+						} else {
+							T267f9(ac, ((T74*)(C))->a11, GE_ms8("(EIF_REFERENCE (*)())", 21));
+						}
+						if (((T0*)(GE_void(((T74*)(C))->a11)))->id==269) {
 							T269f7(ac, ((T74*)(C))->a11, (T2)('&'));
 						} else {
 							T267f7(ac, ((T74*)(C))->a11, (T2)('&'));
