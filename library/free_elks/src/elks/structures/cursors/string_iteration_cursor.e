@@ -1,7 +1,7 @@
 note
 	description: "External iteration cursor on {READABLE_STRING_GENERAL} based on {CHARACTER_32} item."
-	date: "$Date: 2014-03-19 06:27:01 -0700 (Wed, 19 Mar 2014) $"
-	revision: "$Revision: 94630 $"
+	date: "$Date: 2016-04-16 03:44:12 -0700 (Sat, 16 Apr 2016) $"
+	revision: "$Revision: 98623 $"
 
 class
 	STRING_ITERATION_CURSOR
@@ -17,28 +17,28 @@ create
 
 feature -- Initialization
 
-	make (s: like target)
-			-- Initialize cursor using structure `s'.
+	make (t: like target)
+			-- Initialize cursor for target `t'.
 		require
-			s_attached: s /= Void
+			t_attached: t /= Void
 		do
-			make_from_substring (s, 1, s.count)
+			make_from_substring (t, 1, t.count)
 		end
 
-	make_from_substring (s: like target; start_pos, end_pos: INTEGER)
-			-- Initialize cursor using structure `s', with a substring containing all characters at indices
-			-- between `start_pos' and `end_pos'
+	make_from_substring (t: like target; start_pos, end_pos: INTEGER)
+			-- Initialize cursor for target `t', with a substring containing all characters at indices
+			-- between `start_pos' and `end_pos'.
 		require
-			s_attached: s /= Void
+			t_attached: t /= Void
 			start_position_big_enough: start_pos >= 1
 			end_position_big_enough: start_pos <= end_pos + 1
 		do
-			target := s
+			target := t
 			start_index := start_pos
 			end_index := end_pos
 			target_index := start_index
 		ensure
-			target_set: target = s
+			target_set: target = t
 			starting_index_set: start_index = start_pos
 			target_index_set: target_index = start_index
 			end_index_set: end_index = end_pos
@@ -106,7 +106,7 @@ invariant
 	target_index_small_enough: target_index <= end_index + 1
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

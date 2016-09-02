@@ -5,7 +5,7 @@ note
 		"Dispenser containers"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #8 $"
@@ -98,19 +98,19 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (an_action: PROCEDURE [G])
 			-- Apply `an_action' to every item, from first to last item accessible.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		deferred
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last item accessible.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		deferred
 		end
 
-	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_until (an_action: PROCEDURE [G]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item, from first to last item accessible.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 			--
@@ -118,7 +118,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if_until (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last item accessible.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 			--

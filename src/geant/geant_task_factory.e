@@ -5,7 +5,7 @@ note
 		"Geant tasks factory"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2008, Sven Ehrke, Jocelyn Fiat, and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke, Jocelyn Fiat, and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -309,7 +309,7 @@ feature -- Factory
 
 feature {NONE} -- Implementation
 
-	builders: DS_HASH_TABLE [FUNCTION [ANY, TUPLE [XM_ELEMENT], GEANT_TASK], STRING]
+	builders: DS_HASH_TABLE [FUNCTION [TUPLE [XM_ELEMENT], GEANT_TASK], STRING]
 			-- Table of task builders
 
 	create_builders

@@ -10,9 +10,6 @@ class
 
 feature -- Access
 
-	invalid_type: INTEGER = -1
-			-- Invalid type id
-			
 	none_type: INTEGER = -2
 			-- Type ID representation for NONE.
 

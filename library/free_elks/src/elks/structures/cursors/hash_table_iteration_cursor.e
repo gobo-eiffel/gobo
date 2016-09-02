@@ -1,24 +1,24 @@
-note
+﻿note
 	description: "Concrete of an external iteration cursor for {HASH_TABLE}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
+	revision: "$Revision: 98619 $"
 
 class
 	HASH_TABLE_ITERATION_CURSOR [G, K -> detachable HASHABLE]
 
 inherit
-	INDEXABLE_ITERATION_CURSOR [G]
+	READABLE_INDEXABLE_ITERATION_CURSOR [G]
 		rename
 			target_index as iteration_position
 		redefine
-			item,
 			after,
 			forth,
+			item,
 			target
 		end
 
@@ -90,7 +90,7 @@ feature {ITERABLE, ITERATION_CURSOR} -- Access
 			-- <Precursor>
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

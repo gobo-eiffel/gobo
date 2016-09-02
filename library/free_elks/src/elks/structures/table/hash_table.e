@@ -36,8 +36,9 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 	READABLE_INDEXABLE [G]
 		rename
 			item as iteration_item,
-			valid_index as valid_iteration_index,
-			index_set as iteration_index_set
+			lower as iteration_lower,
+			upper as iteration_upper,
+			valid_index as valid_iteration_index
 		redefine
 			copy, is_equal, new_cursor
 		end
@@ -458,10 +459,16 @@ feature -- Measurement
 			iteration_position := old_iteration_position
 		end
 
-	iteration_index_set: INTEGER_INTERVAL
+	iteration_lower: INTEGER
 			-- <Precursor>
 		do
-			create Result.make (next_iteration_position (-1), previous_iteration_position (keys.count))
+			Result := next_iteration_position (-1)
+		end
+
+	iteration_upper: INTEGER
+			-- <Precursor>
+		do
+			Result := previous_iteration_position (keys.count)
 		end
 
 feature -- Comparison
@@ -1737,9 +1744,9 @@ note
 				... No item was present for `your_key' ...
 			end
 		]"
-	date: "$Date: 2014-04-10 08:28:38 -0700 (Thu, 10 Apr 2014) $"
-	revision: "$Revision: 94809 $"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	date: "$Date: 2016-03-02 10:03:36 -0800 (Wed, 02 Mar 2016) $"
+	revision: "$Revision: 98555 $"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

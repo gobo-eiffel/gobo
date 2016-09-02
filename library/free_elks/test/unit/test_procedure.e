@@ -5,7 +5,7 @@ note
 		"Test features of class PROCEDURE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,10 +28,10 @@ feature -- Test
 			-- Test feature 'call' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [CHARACTER]
+			p2: PROCEDURE [CHARACTER, INTEGER]
+			p3: PROCEDURE
+			p4: PROCEDURE
 		do
 			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 1 closed.
@@ -72,10 +72,10 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [CHARACTER]
+			p2: PROCEDURE [CHARACTER, INTEGER]
+			p3: PROCEDURE
+			p4: PROCEDURE
 		do
 			create a.make_filled ('%U', 2)
 				-- 1 open, 1 closed.
@@ -116,10 +116,10 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [CHARACTER]
+			p2: PROCEDURE [CHARACTER, INTEGER]
+			p3: PROCEDURE
+			p4: PROCEDURE
 		do
 				-- 1 open, 1 closed.
 			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
@@ -196,10 +196,10 @@ feature -- Test
 			-- Test feature 'call' with an open target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [ARRAY [CHARACTER], CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [ARRAY [CHARACTER], CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE [ARRAY [CHARACTER]]]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [ARRAY [CHARACTER], CHARACTER]
+			p2: PROCEDURE [ARRAY [CHARACTER], CHARACTER, INTEGER]
+			p3: PROCEDURE [ARRAY [CHARACTER]]
+			p4: PROCEDURE
 		do
 			create a.make_filled ('%U', 1, 1)
 				-- 2 open, 1 closed.
@@ -236,10 +236,10 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [SPECIAL [CHARACTER], CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [SPECIAL [CHARACTER], CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE [SPECIAL [CHARACTER]]]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [SPECIAL [CHARACTER], CHARACTER]
+			p2: PROCEDURE [SPECIAL [CHARACTER], CHARACTER, INTEGER]
+			p3: PROCEDURE [SPECIAL [CHARACTER]]
+			p4: PROCEDURE
 		do
 			create a.make_filled ('%U', 2)
 				-- 2 open, 1 closed.
@@ -276,10 +276,10 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [TO_SPECIAL [CHARACTER], CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [TO_SPECIAL [CHARACTER], CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE [TO_SPECIAL [CHARACTER]]]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [TO_SPECIAL [CHARACTER], CHARACTER]
+			p2: PROCEDURE [TO_SPECIAL [CHARACTER], CHARACTER, INTEGER]
+			p3: PROCEDURE [TO_SPECIAL [CHARACTER]]
+			p4: PROCEDURE
 		do
 				-- 2 open, 1 closed.
 			create {ARRAY [CHARACTER]} a.make_filled ('%U', 1, 1)
@@ -347,10 +347,10 @@ feature -- Test
 			-- Test feature 'call' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
-			p2: PROCEDURE [ANY, TUPLE [ARRAY [CHARACTER], CHARACTER, INTEGER]]
-			p3: PROCEDURE [ANY, TUPLE]
-			p4: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [CHARACTER]
+			p2: PROCEDURE [ARRAY [CHARACTER], CHARACTER, INTEGER]
+			p3: PROCEDURE
+			p4: PROCEDURE
 		do
 			create a.make_filled ('%U', 1, 1)
 				-- 1 open, 2 closed.
@@ -389,7 +389,7 @@ feature -- Test
 	test_valid_operands
 			-- Test feature 'valid_operands'.
 		local
-			p1: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE
 			s: STRING
 			a: ARRAY [CHARACTER]
 			t1: TUPLE [ANY]
@@ -415,8 +415,8 @@ feature -- Test
 			-- Test feature 'is_target_closed'.
 		local
 			s: STRING
-			p1: PROCEDURE [ANY, TUPLE [STRING]]
-			p2: PROCEDURE [ANY, TUPLE]
+			p1: PROCEDURE [STRING]
+			p2: PROCEDURE
 		do
 			p1 := agent {STRING}.wipe_out
 			assert ("is_open", not p1.is_target_closed)
@@ -429,7 +429,7 @@ feature -- Test
 			-- Test feature 'set_target'.
 		local
 			s1, s2: STRING
-			p: PROCEDURE [ANY, TUPLE [CHARACTER]]
+			p: PROCEDURE [CHARACTER]
 		do
 			s1 := "gobo"
 			p := agent s1.append_character
@@ -445,8 +445,8 @@ feature -- Test
 			-- of 'call' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
 		local
-			p1: PROCEDURE [ANY, TUPLE [ANY, INTEGER]]
-			p2: PROCEDURE [ANY, TUPLE [ANY, ANY]]
+			p1: PROCEDURE [ANY, INTEGER]
+			p2: PROCEDURE [ANY, ANY]
 			a: ARRAY [detachable ANY]
 			t: TUPLE [ANY, INTEGER]
 			b: ANY
@@ -485,7 +485,7 @@ feature -- Test
 			-- Test feature 'twin'.
 		local
 			a: ARRAY [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
+			p1: PROCEDURE [CHARACTER]
 		do
 				-- Test that 'twin' does not twin the closed operands.
 				-- Here the array has not been twined.
@@ -502,7 +502,7 @@ feature -- Test
 			-- Test feature 'deep_twin'.
 		local
 			a: ARRAY [CHARACTER]
-			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
+			p1: PROCEDURE [CHARACTER]
 		do
 			create a.make_filled ('%U', 1, 1)
 			p1 := agent f (a, ?, 1)

@@ -522,8 +522,8 @@ feature {NONE} -- Types
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
-			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
-				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
+				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
 				l_actual_parameters := l_item_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count
@@ -574,13 +574,13 @@ feature {NONE} -- Types
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
-			if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
-				l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
+				l_return_type := dynamic_type (l_actual_parameters.type (2), l_any)
 				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
 					-- Unless proven otherwise after possible attachments,
 					-- the result is assumed to be never Void.
 				l_return_type_set.set_never_void
-				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
 				l_actual_parameters := l_item_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count
@@ -631,10 +631,10 @@ feature {NONE} -- Types
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
-			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
+			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 				l_return_type := boolean_type
 				l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
-				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
+				l_item_type := dynamic_type (l_actual_parameters.type (1), l_any)
 				l_actual_parameters := l_item_type.base_type.actual_parameters
 				if l_actual_parameters /= Void then
 					nb := l_actual_parameters.count

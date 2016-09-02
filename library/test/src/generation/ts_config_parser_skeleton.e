@@ -5,7 +5,7 @@ note
 		"Test config parser skeletons"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,25 +71,25 @@ feature -- Parsing
 
 feature -- Access
 
-	last_config: TS_CONFIG
+	last_config: detachable TS_CONFIG
 			-- Last config parsed
 
-	class_regexp: LX_REGULAR_EXPRESSION
+	class_regexp: detachable LX_REGULAR_EXPRESSION
 			-- Class regular expression
 
-	feature_regexp: LX_REGULAR_EXPRESSION
+	feature_regexp: detachable LX_REGULAR_EXPRESSION
 			-- Feature regular expression
 
-	class_prefix: STRING
+	class_prefix: detachable STRING
 			-- Prefix of generated testcase class names
 
-	compile: STRING
+	compile: detachable STRING
 			-- Compilation command-line
 
-	execute: STRING
+	execute: detachable STRING
 			-- Execution command-line
 
-	testgen: STRING
+	testgen: detachable STRING
 			-- Directory where test classes are generated;
 			-- Void means current directory
 
@@ -139,7 +139,7 @@ feature -- Status setting
 
 feature -- AST factory
 
-	new_config (a_root_class: STRING; a_testgen: STRING; a_compile: STRING; an_execute: STRING; a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG
+	new_config (a_root_class: STRING; a_testgen: detachable STRING; a_compile: STRING; an_execute: STRING; a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG
 			-- New config
 		require
 			a_root_class_not_void: a_root_class /= Void
@@ -162,12 +162,19 @@ feature -- AST factory
 			feature_regexp_not_void: feature_regexp /= Void
 			class_prefix_not_void: class_prefix /= Void
 		do
-			create Result.make (a_name, a_pathname, class_regexp, feature_regexp, class_prefix)
+			check
+					-- Precondition:
+				class_regexp_not_void: attached class_regexp as l_class_regexp
+				feature_regexp_not_void: attached feature_regexp as l_feature_regexp
+				class_prefix_not_void: attached class_prefix as l_class_prefix
+			then
+				create Result.make (a_name, a_pathname, l_class_regexp, l_feature_regexp, l_class_prefix)
+			end
 		ensure
 			cluster_not_void: Result /= Void
 		end
 
-	new_regexp (a_regexp: ET_IDENTIFIER): LX_REGULAR_EXPRESSION
+	new_regexp (a_regexp: ET_IDENTIFIER): detachable LX_REGULAR_EXPRESSION
 			-- New regular expression;
 			-- Void if there is a syntax error in `a_regexp'
 		require
@@ -265,7 +272,14 @@ feature -- Defaults
 			feature_regexp_not_void: feature_regexp /= Void
 			class_prefix_not_void: class_prefix /= Void
 		do
-			create Result.make (Default_cluster_name, Default_cluster_pathname, class_regexp, feature_regexp, class_prefix)
+			check
+					-- Precondition:
+				class_regexp_not_void: attached class_regexp as l_class_regexp
+				feature_regexp_not_void: attached feature_regexp as l_feature_regexp
+				class_prefix_not_void: attached class_prefix as l_class_prefix
+			then
+				create Result.make (Default_cluster_name, Default_cluster_pathname, l_class_regexp, l_feature_regexp, l_class_prefix)
+			end
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -281,7 +295,7 @@ feature -- Error handling
 invariant
 
 	variables_not_void: variables /= Void
-	compiled_class_regexp: class_regexp /= Void implies class_regexp.is_compiled
-	compiled_feature_regexp: feature_regexp /= Void implies feature_regexp.is_compiled
+	compiled_class_regexp: attached class_regexp as l_class_regexp implies l_class_regexp.is_compiled
+	compiled_feature_regexp: attached feature_regexp as l_feature_regexp implies l_feature_regexp.is_compiled
 
 end

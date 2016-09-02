@@ -435,7 +435,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	clusters_do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	clusters_do_explicit (an_action: PROCEDURE [ET_CLUSTER])
 			-- Apply `an_action' to every non-implicit cluster of current universe
 			-- and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
@@ -443,7 +443,7 @@ feature -- Iteration
 			clusters.do_explicit (an_action)
 		end
 
-	clusters_do_explicit_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	clusters_do_explicit_recursive (an_action: PROCEDURE [ET_CLUSTER])
 			-- Apply `an_action' to every non-implicit cluster of current universe
 			-- and recursively their subclusters, as well as on the clusters and
 			-- subclusters that are declared in the universes it depends on recursively.
@@ -452,14 +452,14 @@ feature -- Iteration
 			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit (an_action))
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
+	universes_do_all (an_action: PROCEDURE [ET_UNIVERSE])
 			-- Apply `an_action' to every universe that current universe depends on.
 		do
 			libraries.universes_do_all (an_action)
 			dotnet_assemblies.universes_do_all (an_action)
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
+	universes_do_if (an_action: PROCEDURE [ET_UNIVERSE]; a_test: FUNCTION [ET_UNIVERSE, BOOLEAN])
 			-- Apply `an_action' to every universe that current universe depends on and
 			-- which satisfies `a_test'.
 		do
@@ -467,7 +467,7 @@ feature -- Iteration
 			dotnet_assemblies.universes_do_if (an_action, a_test)
 		end
 
-	internal_universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]])
+	internal_universes_do_recursive (an_action: PROCEDURE [ET_INTERNAL_UNIVERSE])
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
 		require
@@ -480,7 +480,7 @@ feature -- Iteration
 			l_visited.do_all (an_action)
 		end
 
-	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	internal_universes_do_recursive_until (an_action: PROCEDURE [ET_INTERNAL_UNIVERSE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
 			--
@@ -508,7 +508,7 @@ feature -- Iteration
 			end
 		end
 
-	internal_universes_there_exists (a_test: FUNCTION [ANY, TUPLE [ET_INTERNAL_UNIVERSE], BOOLEAN]): BOOLEAN
+	internal_universes_there_exists (a_test: FUNCTION [ET_INTERNAL_UNIVERSE, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least current universe or recursively one
 			-- of the internal universes it depends on?
 		require
@@ -529,7 +529,7 @@ feature -- Iteration
 			end
 		end
 
-	dotnet_assemblies_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]])
+	dotnet_assemblies_do_all (a_action: PROCEDURE [ET_DOTNET_ASSEMBLY])
 			-- Apply `a_action' to every .NET assembly of `dotnet_assemblies', from first to last.
 			-- (Semantics not guaranteed if `a_action' changes the list.)
 		require
@@ -538,7 +538,7 @@ feature -- Iteration
 			dotnet_assemblies.do_all (a_action)
 		end
 
-	dotnet_assemblies_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]; a_test: FUNCTION [ANY, TUPLE [ET_DOTNET_ASSEMBLY], BOOLEAN])
+	dotnet_assemblies_do_if (an_action: PROCEDURE [ET_DOTNET_ASSEMBLY]; a_test: FUNCTION [ET_DOTNET_ASSEMBLY, BOOLEAN])
 			-- Apply `an_action' to every .NET assembly  of `dotnet_assemblies'
 			-- that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -576,7 +576,7 @@ feature -- Relations
 
 feature -- Actions
 
-	do_cluster_with_absolute_pathname (a_pathname: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	do_cluster_with_absolute_pathname (a_pathname: STRING; a_action: PROCEDURE [ET_CLUSTER])
 			-- Execute `a_action' on cluster with absolute pathname `a_pathname' in current universe.
 			-- Do nothing if not such cluster.
 		require

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-05-14 22:21:19 -0700 (Wed, 14 May 2014) $"
-	revision: "$Revision: 95060 $"
+	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
+	revision: "$Revision: 98619 $"
 
 deferred class
 	READABLE_STRING_32
@@ -26,8 +26,13 @@ inherit
 		end
 
 	READABLE_INDEXABLE [CHARACTER_32]
+		rename
+			upper as count
 		redefine
-			copy, is_equal, out
+			copy,
+			is_equal,
+			new_cursor,
+			out
 		end
 
 convert
@@ -258,6 +263,12 @@ feature -- Access
 			Result := string_searcher.fuzzy_index (Current, other, start, count, fuzz)
 		end
 
+	new_cursor: STRING_32_ITERATION_CURSOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Measurement
 
 	capacity: INTEGER
@@ -297,14 +308,8 @@ feature -- Measurement
 					Result = 1 + substring (2, count).occurrences (c)
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (1, count)
-		ensure then
-			index_set_not_void: Result /= Void
-			index_set_count: Result.count = count
-		end
+	lower: INTEGER = 1
+			-- <Precursor>
 
 feature -- Comparison
 
@@ -824,7 +829,8 @@ feature
 	STRING_8_SEARCHER, STRING_32_SEARCHER,
 	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER,
 	STRING_TO_INTEGER_CONVERTOR,
-	STRING_TO_REAL_CONVERTOR} -- Implementation
+	STRING_TO_REAL_CONVERTOR,
+	STRING_32_ITERATION_CURSOR} -- Implementation
 
 	area: SPECIAL [CHARACTER_32]
 			-- Storage for characters
@@ -850,7 +856,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

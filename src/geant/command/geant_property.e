@@ -5,7 +5,7 @@ note
 		"Properties for Geant tasks and commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2008-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	retrieved_string_value: STRING
 			-- string value retrieved through `string_value_agent' if `string_value' has been called before
 
-	string_value_agent: FUNCTION [ANY, TUPLE, STRING]
+	string_value_agent: FUNCTION [STRING]
 			-- string value agent
 
 end

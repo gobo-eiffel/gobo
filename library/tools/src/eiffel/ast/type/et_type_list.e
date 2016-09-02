@@ -5,7 +5,7 @@ note
 		"Eiffel comma-separated lists of types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all_types (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]])
+	do_all_types (an_action: PROCEDURE [ET_TYPE])
 			-- Apply `an_action' to every type, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -105,7 +105,7 @@ feature -- Iteration
 			end
 		end
 
-	do_types_if (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]; a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN])
+	do_types_if (an_action: PROCEDURE [ET_TYPE]; a_test: FUNCTION [ET_TYPE, BOOLEAN])
 			-- Apply `an_action' to every type that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -128,7 +128,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists_type (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
+	there_exists_type (a_test: FUNCTION [ET_TYPE, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one type?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		require
@@ -151,7 +151,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all_types (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN
+	for_all_types (a_test: FUNCTION [ET_TYPE, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all types?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		require

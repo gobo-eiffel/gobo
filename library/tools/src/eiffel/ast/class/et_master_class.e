@@ -1549,7 +1549,7 @@ feature {NONE} -- Element change
 
 feature -- Iteration
 
-	local_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_classes_do_all (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in groups of `universe'.
 			-- These classes can be found in `first_local_override_class',
 			-- `other_local_override_classes', `first_local_non_override_class',
@@ -1563,7 +1563,7 @@ feature -- Iteration
 			local_ignored_classes_do_all (a_action)
 		end
 
-	local_override_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_override_classes_do_all (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in override groups of `universe'.
 			-- These classes can be found in `first_local_override_class' and
 			-- `other_local_override_classes'.
@@ -1576,7 +1576,7 @@ feature -- Iteration
 			end
 		end
 
-	local_non_override_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_non_override_classes_do_all (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in non-override groups of `universe'.
 			-- These classes can be found in `first_local_non_override_class' and
 			-- `other_local_non_override_classes'.
@@ -1589,7 +1589,7 @@ feature -- Iteration
 			end
 		end
 
-	local_ignored_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_ignored_classes_do_all (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every ignored class declared in groups of `universe'.
 			-- These classes can be found in `first_local_ignored_class' and
 			-- `other_local_ignored_classes'.
@@ -1602,7 +1602,7 @@ feature -- Iteration
 			end
 		end
 
-	local_hidden_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_hidden_classes_do_all (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every hidden class declared in groups of `universe'.
 			-- These classes can be found in `first_local_hidden_class' and
 			-- `other_local_hidden_classes'.
@@ -1615,7 +1615,7 @@ feature -- Iteration
 			end
 		end
 
-	local_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	local_classes_do_if (a_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `a_action' to every class declared in groups of `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_local_override_class',
@@ -1631,7 +1631,7 @@ feature -- Iteration
 			local_ignored_classes_do_if (a_action, a_test)
 		end
 
-	local_override_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	local_override_classes_do_if (a_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `a_action' to every class declared in override groups of `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_local_override_class' and
@@ -1648,7 +1648,7 @@ feature -- Iteration
 			end
 		end
 
-	local_non_override_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	local_non_override_classes_do_if (a_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `a_action' to every class declared in non-override groups of `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_local_non_override_class' and
@@ -1665,7 +1665,7 @@ feature -- Iteration
 			end
 		end
 
-	local_ignored_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	local_ignored_classes_do_if (a_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `a_action' to every ignored class declared in groups of `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_local_ignored_class' and
@@ -1682,7 +1682,7 @@ feature -- Iteration
 			end
 		end
 
-	local_classes_do_unless_actual (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_classes_do_unless_actual (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in groups of `universe'
 			-- unless this class is the `actual_class'.
 			-- These classes can be found in `first_local_override_class',
@@ -1697,7 +1697,7 @@ feature -- Iteration
 			local_ignored_classes_do_all (a_action)
 		end
 
-	local_override_classes_do_unless_actual (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_override_classes_do_unless_actual (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in override groups of `universe'
 			-- unless this class is the `actual_class'.
 			-- These classes can be found in `first_local_override_class' and
@@ -1719,7 +1719,7 @@ feature -- Iteration
 			end
 		end
 
-	local_non_override_classes_do_unless_actual (a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	local_non_override_classes_do_unless_actual (a_action: PROCEDURE [ET_CLASS])
 			-- Apply `a_action' to every class declared in non-override groups of `universe'
 			-- unless this class is the `actual_class'.
 			-- These classes can be found in `first_local_non_override_class' and
@@ -1741,7 +1741,7 @@ feature -- Iteration
 			end
 		end
 
-	imported_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]])
+	imported_classes_do_all (a_action: PROCEDURE [ET_MASTER_CLASS])
 			-- Apply `a_action' to every class imported from a universe other than `universe'.
 			-- These classes can be found in `first_imported_class' and
 			-- `other_imported_classes'.
@@ -1754,7 +1754,7 @@ feature -- Iteration
 			end
 		end
 
-	imported_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN])
+	imported_classes_do_if (a_action: PROCEDURE [ET_MASTER_CLASS]; a_test: FUNCTION [ET_MASTER_CLASS, BOOLEAN])
 			-- Apply `a_action' to every class imported from a universe other than `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_imported_class' and
@@ -1771,7 +1771,7 @@ feature -- Iteration
 			end
 		end
 
-	overriding_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]])
+	overriding_classes_do_all (a_action: PROCEDURE [ET_MASTER_CLASS])
 			-- Apply `a_action' to every class in universes other than `universe' which
 			-- overrides current class.
 			-- These classes can be found in `first_overriding_class' and
@@ -1785,7 +1785,7 @@ feature -- Iteration
 			end
 		end
 
-	overriding_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN])
+	overriding_classes_do_if (a_action: PROCEDURE [ET_MASTER_CLASS]; a_test: FUNCTION [ET_MASTER_CLASS, BOOLEAN])
 			-- Apply `a_action' to every class in universes other than `universe' which
 			-- overrides current class and satisfies `a_test'.
 			-- These classes can be found in `first_overriding_class' and

@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/03/17 $"
 	revision: "$Revision: #17 $"
@@ -1102,7 +1102,7 @@ feature {TS_TEST_HANDLER} -- Execution
 
 feature {NONE} -- Messages
 
-	void_or_out (an_any: ANY): detachable STRING
+	void_or_out (an_any: detachable ANY): detachable STRING
 			-- Return `an_any.out' or Void if `an_any' is Void.
 		do
 			if an_any /= Void then

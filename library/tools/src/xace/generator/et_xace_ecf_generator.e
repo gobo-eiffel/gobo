@@ -4,9 +4,9 @@ note
 
 		"ECF file generators from Xace files"
 
-	remark: "Generate ECF version 1.5"
+	remark: "Generate ECF version 1.15"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -367,22 +367,20 @@ feature {NONE} -- Output
 				a_file.put_character ('%"')
 			end
 				-- void_safety
-			if an_option.is_void_safety_declared then
-				if not l_option_attribute_printed then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option")
-					l_option_attribute_printed := True
-				end
-				a_file.put_string (" void_safety=%"")
-				if an_option.void_safety.same_string (options.none_value) then
-					a_file.put_string ("none")
-				elseif an_option.void_safety.same_string (options.on_demand_value) then
-					a_file.put_string ("initialization")
-				else
-					a_file.put_string ("all")
-				end
-				a_file.put_character ('%"')
+			if not l_option_attribute_printed then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option")
+				l_option_attribute_printed := True
 			end
+			a_file.put_string (" void_safety=%"")
+			if an_option.void_safety.same_string (options.none_value) then
+				a_file.put_string ("none")
+			elseif an_option.void_safety.same_string (options.on_demand_value) then
+				a_file.put_string ("initialization")
+			else
+				a_file.put_string ("all")
+			end
+			a_file.put_character ('%"')
 				-- debug
 			if an_option.is_debug_tag_declared then
 				l_cursor := an_option.debug_tag.new_cursor
@@ -1571,10 +1569,10 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-5-0%" ")
+			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-15-0%" ")
 			a_file.put_string ("xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%" ")
-			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-5-0 ")
-			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd%"")
+			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-15-0 ")
+			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd%"")
 		end
 
 feature {NONE} -- Escaped

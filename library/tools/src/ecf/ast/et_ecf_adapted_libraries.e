@@ -5,7 +5,7 @@ note
 		"ECF adapted class library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Iteration
 
-	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]])
+	do_adapted (an_action: PROCEDURE [ET_ADAPTED_LIBRARY])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		local
@@ -48,7 +48,7 @@ feature -- Iteration
 			end
 		end
 
-	do_adapted_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_LIBRARY], BOOLEAN])
+	do_adapted_if (an_action: PROCEDURE [ET_ADAPTED_LIBRARY]; a_test: FUNCTION [ET_ADAPTED_LIBRARY, BOOLEAN])
 			-- Apply `an_action' to every library which satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		local

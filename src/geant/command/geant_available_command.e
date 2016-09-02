@@ -5,7 +5,7 @@ note
 		"Available commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,7 +76,7 @@ feature -- Access
 			-- Value to be set for variable named `variable_name'
 			-- in case `available_agent_cell' evaluates to `False'
 
-	available_agent_cell: DS_CELL [FUNCTION [ANY, TUPLE [STRING], BOOLEAN]]
+	available_agent_cell: DS_CELL [FUNCTION [TUPLE [STRING], BOOLEAN]]
 			-- Available agent cell
 
 feature -- Execution

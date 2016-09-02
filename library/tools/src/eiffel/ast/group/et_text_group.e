@@ -131,14 +131,14 @@ feature -- Setting
 
 feature -- Iteration
 
-	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	classes_do_all (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes with current group as primary group.
 			-- Do not take into account overridden classes.
 		do
 			universe.classes_do_if (an_action, agent {ET_CLASS}.is_in_group (Current))
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes with current group as primary group,
 			-- and which satisfy `a_test'.
 			-- Do not take into account overridden classes.

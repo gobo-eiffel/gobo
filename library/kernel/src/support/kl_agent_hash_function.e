@@ -5,7 +5,7 @@ note
 		"Hash-code functions implemented using an agent"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	hash_agent: FUNCTION [ANY, TUPLE [G], INTEGER]
+	hash_agent: FUNCTION [G, INTEGER]
 			-- Agent used to compute the hash-code
 
 invariant

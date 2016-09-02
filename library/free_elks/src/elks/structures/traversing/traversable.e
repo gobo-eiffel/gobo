@@ -9,8 +9,8 @@ note
 	names: traversable, traversing;
 	access: cursor;
 	contents: generic;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
+	revision: "$Revision: 98279 $"
 
 deferred class
 	TRAVERSABLE [G]
@@ -45,7 +45,7 @@ feature -- Cursor movement
 feature -- Iteration
 
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (action: PROCEDURE [G])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -55,8 +55,8 @@ feature -- Iteration
 			linear_representation.do_all (action)
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]];
-	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (action: PROCEDURE [G];
+	 test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -68,7 +68,7 @@ feature -- Iteration
 			linear_representation.do_if (action, test)
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_exists: test /= Void
@@ -77,7 +77,7 @@ feature -- Iteration
 			Result := linear_representation.there_exists (test)
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_exists: test /= Void

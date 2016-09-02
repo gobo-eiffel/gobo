@@ -5,7 +5,7 @@ note
 		"Test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/07/19 $"
 	revision: "$Revision: #20 $"
@@ -39,7 +39,7 @@ feature -- Initialization
 		do
 		end
 
-	set_test (a_name: like name; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
+	set_test (a_name: like name; a_test_feature: PROCEDURE)
 			-- Identify one of the test features of current test case
 			-- as being the one that will be executed when running
 			-- this test case.
@@ -59,37 +59,50 @@ feature -- Access
 	name: STRING
 			-- Name
 		do
-			Result := internal_name
-			if Result = Void then
+			if attached internal_name as l_internal_name then
+				Result := l_internal_name
+			else
 				Result := default_test_name
 			end
 		end
 
 	variables: TS_VARIABLES
 			-- Defined variables
+		local
+			l_internal_variables: like internal_variables
 		do
-			if internal_variables = Void then
-				create internal_variables.make
+			l_internal_variables := internal_variables
+			if l_internal_variables = Void then
+				create l_internal_variables.make
+				internal_variables := l_internal_variables
 			end
-			Result := internal_variables
+			Result := l_internal_variables
 		end
 
 	assertions: TS_ASSERTIONS
 			-- Assertions
+		local
+			l_internal_assertions: like internal_assertions
 		do
-			if internal_assertions = Void then
-				create internal_assertions.make
+			l_internal_assertions := internal_assertions
+			if l_internal_assertions = Void then
+				create l_internal_assertions.make
+				internal_assertions := l_internal_assertions
 			end
-			Result := internal_assertions
+			Result := l_internal_assertions
 		end
 
 	logger: TS_TEST_LOGGER
 			-- Logger for tests and assertion checkings
+		local
+			l_internal_logger: like internal_logger
 		do
-			if internal_logger = Void then
-				create {TS_NULL_TEST_LOGGER} internal_logger.make
+			l_internal_logger := internal_logger
+			if l_internal_logger = Void then
+				create {TS_NULL_TEST_LOGGER} l_internal_logger.make
+				internal_logger := l_internal_logger
 			end
-			Result := internal_logger
+			Result := l_internal_logger
 		end
 
 feature -- Setting
@@ -173,7 +186,7 @@ feature -- Execution
 
 feature -- Registration
 
-	register_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
+	register_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE)
 			-- Register `a_test_feature' in `a_tester' with name `a_test_name'.
 		require
 			a_tester_not_void: a_tester /= Void
@@ -185,7 +198,7 @@ feature -- Registration
 			a_tester.put_test (Current)
 		end
 
-	register_cloned_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE])
+	register_cloned_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE)
 			-- Register `a_test_feature' in `a_tester' with name `a_test_name'
 			-- using a clone of `Current' as test case object.
 		require
@@ -227,7 +240,7 @@ feature -- Registration
 			end
 		end
 
-	features_under_test: ARRAY [PROCEDURE [TS_TEST_CASE, TUPLE]]
+	features_under_test: ARRAY [PROCEDURE]
 			-- Features to be registered to the test harness
 			-- using `register_test_cases'
 		once
@@ -249,8 +262,8 @@ feature {NONE} -- Execution
 			an_error_messages: DS_ARRAYED_LIST [STRING]
 		do
 			set_up
-			if internal_test_feature /= Void then
-				internal_test_feature.call ([])
+			if attached internal_test_feature as l_internal_test_feature then
+				l_internal_test_feature.call ([])
 			else
 				default_test
 			end
@@ -336,23 +349,23 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	internal_name: STRING
+	internal_name: detachable STRING
 			-- Internal implementation of `name'
 
-	internal_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]
+	internal_test_feature: detachable PROCEDURE
 			-- Internal implementation of test feature to be executed
 			-- (Should be an agent to one of test features of the current test case.)
 
-	internal_variables: TS_VARIABLES
+	internal_variables: detachable TS_VARIABLES
 			-- Internal implementation of `variables'
 
-	internal_assertions: TS_ASSERTIONS
+	internal_assertions: detachable TS_ASSERTIONS
 			-- Internal implementation of `assertions'
 
-	internal_logger: TS_TEST_LOGGER
+	internal_logger: detachable TS_TEST_LOGGER
 			-- Internal implementation of `logger'
 
-	array_routines: KL_ARRAY_ROUTINES [PROCEDURE [TS_TEST_CASE, TUPLE]]
+	array_routines: KL_ARRAY_ROUTINES [PROCEDURE]
 			-- Routines that ought to be in class "ARRAY"
 		once
 			create Result

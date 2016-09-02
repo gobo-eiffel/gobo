@@ -5,7 +5,7 @@ note
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -153,12 +153,12 @@ feature -- Nested
 
 feature -- Iteration
 
-	group_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	group_classes_do_all (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes with current group as primary group.
 		do
 		end
 
-	group_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	group_classes_do_if (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes with current group as primary group
 			-- that satisfy `a_test'.
 		do

@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Concrete of an external iteration cursor for {TWO_WAY_LIST}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2012-09-28 19:31:43 +0200 (Fri, 28 Sep 2012) $"
-	revision: "$Revision: 576 $"
+	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $"
+	revision: "$Revision: 98557 $"
 
 class
 	TWO_WAY_LIST_ITERATION_CURSOR [G]
@@ -53,18 +53,16 @@ feature -- Cursor movement
 			-- <Precursor>
 		local
 			l_list: like target
-			l_index_set: like index_set
 		do
-			l_index_set := index_set
+			l_list := target
 			if is_reversed then
-				first_index := l_index_set.upper
-				last_index := l_index_set.lower
+				first_index := l_list.count
+				last_index := l_list.lower
 			else
-				last_index := l_index_set.upper
-				first_index := l_index_set.lower
+				last_index := l_list.count
+				first_index := l_list.lower
 			end
 			target_index := first_index
-			l_list := target
 			if is_reversed then
 				active := l_list.last_element
 			else
@@ -111,7 +109,7 @@ feature {NONE} -- Access
 			-- Currrently active linkable node for ascending traversal
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

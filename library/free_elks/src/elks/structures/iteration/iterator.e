@@ -9,8 +9,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	names: iterators, iteration;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $"
-	revision: "$Revision: 567 $"
+	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
+	revision: "$Revision: 98279 $"
 
 deferred class
 	ITERATOR [G]
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (action: PROCEDURE [G])
 			-- Apply `action' to every item of `target'.
 		require
 			action_exists: action /= Void
@@ -54,7 +54,7 @@ feature -- Iteration
 			target.do_all (action)
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item of `target' satisfying `test'.
 		require
 			action_exists: action /= Void
@@ -63,7 +63,7 @@ feature -- Iteration
 			target.do_if (action, test)
 		end
 
-	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_until (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test').
@@ -73,7 +73,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_while (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test').
@@ -83,7 +83,7 @@ feature -- Iteration
 		deferred
 		end
 
-	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	until_do (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no items satisfy `test'.)
@@ -93,7 +93,7 @@ feature -- Iteration
 		deferred
 		end
 
-	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	while_do (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one satisfying not `test'.
 			-- (Apply to full list if all items satisfy `test'.)
@@ -103,14 +103,14 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item of `target'?
 		require
 			test_exists: test /= Void
 		deferred
 		end
 		
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items of `target'?
 		require
 			test_exists: test /= Void

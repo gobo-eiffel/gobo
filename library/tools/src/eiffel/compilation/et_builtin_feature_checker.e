@@ -1610,7 +1610,7 @@ feature {NONE} -- Built-in validity
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
 					-- 'call' should be a procedure.
-				l_open_args := current_class.formal_parameter_type (2)
+				l_open_args := current_class.formal_parameter_type (1)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
@@ -1636,8 +1636,8 @@ feature {NONE} -- Built-in validity
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
-				l_open_args := current_class.formal_parameter_type (2)
-				l_result_type := current_class.formal_parameter_type (3)
+				l_open_args := current_class.formal_parameter_type (1)
+				l_result_type := current_class.formal_parameter_type (2)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
@@ -3859,7 +3859,7 @@ feature {NONE} -- Built-in validity
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
-				l_open_args := current_class.formal_parameter_type (2)
+				l_open_args := current_class.formal_parameter_type (1)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
@@ -3894,8 +3894,8 @@ feature {NONE} -- Built-in validity
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
 					-- 'item' should be a function.
-				l_open_args := current_class.formal_parameter_type (2)
-				l_result_type := current_class.formal_parameter_type (3)
+				l_open_args := current_class.formal_parameter_type (1)
+				l_result_type := current_class.formal_parameter_type (2)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)

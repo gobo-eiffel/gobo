@@ -504,16 +504,15 @@ feature -- Removal
 		end
 
 	delete_content_with_action (
-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [LIST [READABLE_STRING_GENERAL]]
+			is_cancel_requested: detachable FUNCTION [BOOLEAN]
 			file_number: INTEGER)
 			-- Delete all files located in current directory and its
 			-- subdirectories.
 			--
-			-- `action' is called each time `file_number' files has
+			-- `action' is called each time at most `file_number' files has
 			-- been deleted and before the function exits. If `a_file_number'
-			-- is non-positive, nothing is done. If `a_file_number' is greater than
-			-- 1024, we limit its value to 1024.
+			-- is non-positive, `action' is not called.
 			-- `action' may be set to Void if you don't need it.
 			--
 			-- Same for `is_cancel_requested'.
@@ -524,17 +523,16 @@ feature -- Removal
 			valid_file_number: file_number >= 0
 		local
 			l_path, l_file_name: PATH
-			file: detachable RAW_FILE
+			file: RAW_FILE
 			l_info: like file_info
-			dir: detachable DIRECTORY
-			dir_temp: detachable DIRECTORY
+			dir: DIRECTORY
+			dir_temp: DIRECTORY
 			l_last_entry_pointer: like last_entry_pointer
-			l_name: detachable STRING_8
+			l_name: READABLE_STRING_32
 			file_count: INTEGER
 			deleted_files: ARRAYED_LIST [READABLE_STRING_32]
 			requested_cancel: BOOLEAN
 		do
-			file_count := 1
 				-- We limit `file_number' to something reasonable.
 			create deleted_files.make (file_number.min (1024))
 
@@ -552,8 +550,8 @@ feature -- Removal
 				l_last_entry_pointer = default_pointer or requested_cancel
 			loop
 					-- Ignore current and parent directories.
-				l_name := l_info.pointer_to_file_name_8 (l_last_entry_pointer)
-				if not l_name.same_string (current_directory_string) and not l_name.same_string (parent_directory_string) then
+				l_name := l_info.pointer_to_file_name_32 (l_last_entry_pointer)
+				if not l_name.same_string_general (current_directory_string) and not l_name.same_string_general (parent_directory_string) then
 						-- Avoid creating too many objects.
 					l_file_name := path.extended (l_name)
 					l_info.update (l_file_name.name)
@@ -566,6 +564,7 @@ feature -- Removal
 								create dir.make_with_path (l_file_name)
 							end
 							dir.recursive_delete_with_action (action, is_cancel_requested, file_number)
+								-- No need to call action again because it was called by the previous instruction.
 						elseif l_info.is_writable then
 							if file /= Void then
 								file.reset_path (l_file_name)
@@ -573,23 +572,21 @@ feature -- Removal
 								create file.make_with_path (l_file_name)
 							end
 							file.delete
-						end
-
 							-- Add the name of the deleted file to our array
 							-- of deleted files.
 						deleted_files.extend (l_file_name.name)
 						file_count := file_count + 1
-
+						end
 							-- If `file_number' has been reached, call `action'.
-						if file_number > 0 and then file_count > file_number then
+						if file_number > 0 and file_count >= file_number then
 							if action /= Void then
 								action.call ([deleted_files])
 							end
 							if is_cancel_requested /= Void then
-								requested_cancel := is_cancel_requested.item (Void)
+								requested_cancel := is_cancel_requested (Void)
 							end
 							deleted_files.wipe_out
-							file_count := 1
+							file_count := 0
 						end
 					end
 				end
@@ -597,10 +594,8 @@ feature -- Removal
 				l_last_entry_pointer := dir_temp.last_entry_pointer
 			end
 			dir_temp.close
-
-				-- If there is more than one deleted file and no
-				-- agent has been called, call one now.
-			if file_count > 1 and action /= Void then
+				-- Process unprocessed deleted files (if any).
+			if file_number > 0 and file_count > 0 and action /= Void then
 				action.call ([deleted_files])
 			end
 		rescue
@@ -610,23 +605,24 @@ feature -- Removal
 		end
 
 	recursive_delete_with_action (
-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [LIST [READABLE_STRING_GENERAL]]
+			is_cancel_requested: detachable FUNCTION [BOOLEAN]
 			file_number: INTEGER)
 			-- Delete directory, its files and its subdirectories.
 			--
-			-- `action' is called each time `file_number' files has
-			-- been deleted and before the function exits.
+			-- `action' is called each time at most `file_number' files has
+			-- been deleted and before the function exits. If `a_file_number'
+			-- is non-positive, `action' is not called.
 		require
 			directory_exists: exists
 		local
 			deleted_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			delete_content_with_action (action, is_cancel_requested, file_number)
-			if (is_cancel_requested = Void) or else (not is_cancel_requested.item (Void)) then
+			if attached is_cancel_requested implies not is_cancel_requested (Void) then
 				delete
-					-- Call the agent with the name of the directory
-				if action /= Void then
+					-- Call the agent with the name of the directory.
+				if file_number > 0 and action /= Void then
 					create deleted_files.make (1)
 					deleted_files.extend (internal_name)
 					action.call ([deleted_files])
@@ -789,7 +785,7 @@ invariant
 	name_attached: attached internal_name
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

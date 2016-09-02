@@ -8,23 +8,34 @@ note
 			of `last_result' and `item'.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
+	revision: "$Revision: 98279 $"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
+	FUNCTION [OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
 
 inherit
-	ROUTINE [BASE_TYPE, OPEN_ARGS]
+	ROUTINE [OPEN_ARGS]
+		redefine
+			is_equal, copy
+		end
+
+create {NONE}
 
 feature -- Access
 
 	last_result: detachable RESULT_TYPE
 			-- Result of last call, if any
 
-	item (args: detachable OPEN_ARGS): RESULT_TYPE
+	call (args: detachable separate OPEN_ARGS)
+			-- <Precursor>
+		do
+			last_result := item (args)
+		end
+
+	item alias "()" (args: detachable OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -32,12 +43,33 @@ feature -- Access
 			"built_in"
 		end
 
-feature -- Calls
-
-	call (args: detachable OPEN_ARGS)
-			-- Call routine with operands `args'.
+	apply
+			-- Call function with `operands' as last set.
+		local
+			l_args: detachable OPEN_ARGS
 		do
-			last_result := item (args)
+--<			last_result := item (operands)
+			last_result := item (l_args)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is associated function the same as the one
+			-- associated with `other'?
+		do
+			Result := Precursor (other) and then (last_result ~ other.last_result)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- Use same function as `other'.
+		do
+			if other /= Current then
+				Precursor (other)
+				last_result := other.last_result
+			end
 		end
 
 feature -- Obsolete
@@ -60,6 +92,27 @@ feature -- Removal
 			l_result: detachable RESULT_TYPE
 		do
 			last_result := l_result
+		end
+
+feature -- Extended operations
+
+	flexible_item (a: detachable separate TUPLE): RESULT_TYPE
+			-- Result of calling function with `a' as arguments.
+			-- Compared to `item' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				Result := item (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					Result := item (x)
+				end
+			end
 		end
 
 end

@@ -195,8 +195,6 @@ goto exit
 	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ% %LLIBS%
 	%RM% gec*%OBJ%
 
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace4.c
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace2.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace1.c
 	%LD% %LFLAGS% %LFLAG_OUT%gexace%EXE% gexace*%OBJ% %LLIBS%

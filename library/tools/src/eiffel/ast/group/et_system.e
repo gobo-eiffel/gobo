@@ -924,7 +924,7 @@ feature -- SCM mappings
 			end
 		end
 
-	scm_read_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_READ_MAPPING]
+	scm_read_mapping_builder: detachable FUNCTION [ET_CLUSTER, detachable ET_CLUSTER_SCM_READ_MAPPING]
 			-- Function which is able to build a SCM read mapping for a given cluster
 
 	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder)
@@ -958,7 +958,7 @@ feature -- SCM mappings
 			end
 		end
 
-	scm_write_mapping_builder: detachable FUNCTION [ANY, TUPLE [ET_CLUSTER], detachable ET_CLUSTER_SCM_WRITE_MAPPING]
+	scm_write_mapping_builder: detachable FUNCTION [ET_CLUSTER, detachable ET_CLUSTER_SCM_WRITE_MAPPING]
 			-- Function which is able to build a SCM write mapping for a given cluster
 
 	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder)
@@ -1489,7 +1489,7 @@ feature -- Stop
 			end
 		end
 
-	stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+	stop_request: detachable FUNCTION [BOOLEAN]
 			-- Agent used to figure out whether there has been
 			-- a request to interrupt the current operation;
 			-- No interruption if Void

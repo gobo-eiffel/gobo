@@ -5,7 +5,7 @@ note
 		"Test features of class FUNCTION"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,9 +28,9 @@ feature -- Test
 			-- Test feature 'item' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 1 open, 0 closed.
@@ -67,9 +67,9 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make_filled ('%U', 2)
 			a.put ('g', 1)
@@ -106,13 +106,13 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 			b: TO_SPECIAL [ANY]
 			b1: ARRAY [CHARACTER]
 			b2: ARRAY [STRING]
-			p4: FUNCTION [ANY, TUPLE [ANY], ANY]
+			p4: FUNCTION [ANY, ANY]
 		do
 				-- 1 open, 0 closed.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
@@ -200,10 +200,10 @@ feature -- Test
 		local
 			t1: TUPLE [l1: INTEGER; l2: CHARACTER]
 			t2: TUPLE [INTEGER, CHARACTER, STRING]
-			p1: FUNCTION [ANY, TUPLE, INTEGER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE [TUPLE [INTEGER, CHARACTER]], CHARACTER]
-			p4: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [TUPLE [TUPLE [INTEGER, CHARACTER]], CHARACTER]
+			p4: FUNCTION [CHARACTER]
 		do
 				-- 0 open, 1 closed.
 			t1 := [5, 'g']
@@ -248,9 +248,9 @@ feature -- Test
 			-- Test feature 'item' with an open target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [ARRAY [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [ARRAY [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 2 open, 0 closed.
@@ -283,9 +283,9 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [SPECIAL [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [SPECIAL [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make_filled ('%U', 2)
 				-- 2 open, 0 closed.
@@ -318,9 +318,9 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [TO_SPECIAL [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [TO_SPECIAL [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [TO_SPECIAL [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [TO_SPECIAL [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 				-- 2 open, 0 closed.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
@@ -374,10 +374,10 @@ feature -- Test
 			-- Test feature 'item' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER], INTEGER], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
-			p4: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [ARRAY [CHARACTER], INTEGER, CHARACTER]
+			p3: FUNCTION [CHARACTER]
+			p4: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 1 open, 1 closed.
@@ -417,9 +417,9 @@ feature -- Test
 			-- Test feature 'item' with an agent on attribute.
 		local
 			s: STRING
-			p1: FUNCTION [ANY, TUPLE, INTEGER]
-			p2: FUNCTION [ANY, TUPLE [STRING], INTEGER]
-			p3: FUNCTION [ANY, TUPLE, INTEGER]
+			p1: FUNCTION [INTEGER]
+			p2: FUNCTION [STRING, INTEGER]
+			p3: FUNCTION [INTEGER]
 		do
 				-- Qualified attribute.
 			s := "gobo"
@@ -438,8 +438,8 @@ feature -- Test
 			-- Test feature 'item' with an inline agent with a do-function as associated feature.
 		local
 			s: STRING
-			p1: FUNCTION [ANY, TUPLE, INTEGER]
-			p2: FUNCTION [ANY, TUPLE [INTEGER], INTEGER]
+			p1: FUNCTION [INTEGER]
+			p2: FUNCTION [INTEGER, INTEGER]
 		do
 				-- 0 open operand, 1 closed operand.
 			s := "gobo"
@@ -454,9 +454,9 @@ feature -- Test
 			-- Test feature 'call' with a closed qualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 1 open, 0 closed.
@@ -500,9 +500,9 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make_filled ('%U', 2)
 			a.put ('g', 1)
@@ -546,9 +546,9 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 				-- 1 open, 0 closed.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
@@ -626,10 +626,10 @@ feature -- Test
 		local
 			t1: TUPLE [l1: INTEGER; l2: CHARACTER]
 			t2: TUPLE [INTEGER, CHARACTER, STRING]
-			p1: FUNCTION [ANY, TUPLE, INTEGER]
-			p2: FUNCTION [ANY, TUPLE, CHARACTER]
-			p3: FUNCTION [ANY, TUPLE [TUPLE [INTEGER, CHARACTER]], CHARACTER]
-			p4: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER]
+			p2: FUNCTION [CHARACTER]
+			p3: FUNCTION [TUPLE [TUPLE [INTEGER, CHARACTER]], CHARACTER]
+			p4: FUNCTION [CHARACTER]
 		do
 				-- 0 open, 1 closed.
 			t1 := [5, 'g']
@@ -684,9 +684,9 @@ feature -- Test
 			-- Test feature 'call' with an open target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [ARRAY [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [ARRAY [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 2 open, 0 closed.
@@ -725,9 +725,9 @@ feature -- Test
 			-- calling builtin features.
 		local
 			a: SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [SPECIAL [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [SPECIAL [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [SPECIAL [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 			create a.make_filled ('%U', 2)
 				-- 2 open, 0 closed.
@@ -766,9 +766,9 @@ feature -- Test
 			-- which can be polymorphic.
 		local
 			a: TO_SPECIAL [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [TO_SPECIAL [CHARACTER], INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [TO_SPECIAL [CHARACTER]], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [TO_SPECIAL [CHARACTER], INTEGER, CHARACTER]
+			p2: FUNCTION [TO_SPECIAL [CHARACTER], CHARACTER]
+			p3: FUNCTION [CHARACTER]
 		do
 				-- 2 open, 0 closed.
 			create {ARRAY [CHARACTER]} a.make (1, 1)
@@ -834,10 +834,10 @@ feature -- Test
 			-- Test feature 'call' with a closed unqualified target.
 		local
 			a: ARRAY [CHARACTER]
-			p1: FUNCTION [ANY, TUPLE [INTEGER], CHARACTER]
-			p2: FUNCTION [ANY, TUPLE [ARRAY [CHARACTER], INTEGER], CHARACTER]
-			p3: FUNCTION [ANY, TUPLE, CHARACTER]
-			p4: FUNCTION [ANY, TUPLE, CHARACTER]
+			p1: FUNCTION [INTEGER, CHARACTER]
+			p2: FUNCTION [ARRAY [CHARACTER], INTEGER, CHARACTER]
+			p3: FUNCTION [CHARACTER]
+			p4: FUNCTION [CHARACTER]
 		do
 			create a.make (1, 1)
 				-- 1 open, 1 closed.
@@ -885,9 +885,9 @@ feature -- Test
 			-- Test feature 'call' with an agent on attribute.
 		local
 			s: STRING
-			p1: FUNCTION [ANY, TUPLE, INTEGER]
-			p2: FUNCTION [ANY, TUPLE [STRING], INTEGER]
-			p3: FUNCTION [ANY, TUPLE, INTEGER]
+			p1: FUNCTION [INTEGER]
+			p2: FUNCTION [STRING, INTEGER]
+			p3: FUNCTION [INTEGER]
 		do
 				-- Qualified attribute.
 			s := "gobo"
@@ -909,8 +909,8 @@ feature -- Test
 			-- Test feature 'is_target_closed'.
 		local
 			s: STRING
-			p1: FUNCTION [ANY, TUPLE [STRING], INTEGER]
-			p2: FUNCTION [ANY, TUPLE, INTEGER]
+			p1: FUNCTION [STRING, INTEGER]
+			p2: FUNCTION [INTEGER]
 		do
 			p1 := agent {STRING}.count
 			assert ("is_open", not p1.is_target_closed)
@@ -923,7 +923,7 @@ feature -- Test
 			-- Test feature 'set_target'.
 		local
 			s1, s2: STRING
-			p: FUNCTION [ANY, TUPLE, INTEGER]
+			p: FUNCTION [INTEGER]
 		do
 			if not eiffel_compiler.is_ise then
 					-- Does not work with ISE 6.3.7.4337.
@@ -941,8 +941,8 @@ feature -- Test
 			-- of 'item' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
 		local
-			p1: FUNCTION [ANY, TUPLE [ANY, INTEGER], BOOLEAN]
-			p2: FUNCTION [ANY, TUPLE [ANY, ANY], BOOLEAN]
+			p1: FUNCTION [ANY, INTEGER, BOOLEAN]
+			p2: FUNCTION [ANY, ANY, BOOLEAN]
 			t: TUPLE [ANY, INTEGER]
 		do
 			if not eiffel_compiler.is_ise then
@@ -975,7 +975,7 @@ feature -- Test
 			-- of 'item' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
 		local
-			p1: FUNCTION [ANY, TUPLE [ANY, INTEGER], ANY]
+			p1: FUNCTION [ANY, INTEGER, ANY]
 			l_false: ANY
 			arr: ARRAY [ANY]
 			s: STRING

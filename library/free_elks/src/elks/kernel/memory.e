@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-05-24 06:13:10 +0200 (Thu, 24 May 2012) $"
-	revision: "$Revision: 559 $"
+	date: "$Date: 2015-12-17 05:34:17 -0800 (Thu, 17 Dec 2015) $"
+	revision: "$Revision: 98279 $"
 
 class
 	MEMORY
@@ -271,7 +271,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE])
+	execute_without_collection (a_action: PROCEDURE)
 			-- Execute `a_action' with the garbage collector disabled.
 			-- If `a_action' modifies the status of `collecting', we restore
 			-- it no matter what at the end.

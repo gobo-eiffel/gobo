@@ -5,7 +5,7 @@ note
 		"Echo commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -70,12 +70,12 @@ feature -- Access
 	append_property: GEANT_BOOLEAN_PROPERTY
 			-- append property
 
-	message_only_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE [STRING]]]
+	message_only_agent_cell: DS_CELL [PROCEDURE [TUPLE [STRING]]]
 			-- Agent cell for Message only
 			-- NOTE: using a DS_CELL here and for the other agents makes it possible to set the underlying agent from outside
 			-- without having to provide individual setters for each agent.
 
-	message_with_file_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE [STRING, KL_TEXT_OUTPUT_FILE, BOOLEAN]]]
+	message_with_file_agent_cell: DS_CELL [PROCEDURE [TUPLE [STRING, KL_TEXT_OUTPUT_FILE, BOOLEAN]]]
 			-- Agent cell for Message with file
 
 feature -- Execution

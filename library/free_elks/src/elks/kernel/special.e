@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Special objects: homogeneous sequences of values,
 		used to represent arrays and strings
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-30 19:48:40 +0100 (Wed, 30 Jan 2013) $"
-	revision: "$Revision: 732 $"
+	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
+	revision: "$Revision: 98619 $"
 
 frozen class
 	SPECIAL [T]
@@ -19,6 +19,9 @@ inherit
 		end
 
 	READABLE_INDEXABLE [T]
+		redefine
+			new_cursor
+		end
 
 create
 	make_empty,
@@ -143,10 +146,10 @@ feature -- Access
 			to_array_upper_set: Result.upper = count
 		end
 
-	index_set: INTEGER_INTERVAL
+	new_cursor: SPECIAL_ITERATION_CURSOR [T]
 			-- <Precursor>
 		do
-			create Result.make (lower, upper)
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -158,8 +161,6 @@ feature -- Measurement
 			-- Maximum index of Current
 		do
 			Result := count - 1
-		ensure
-			definition: lower <= Result + 1
 		end
 
 	count: INTEGER
@@ -711,7 +712,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; start_index, end_index: INTEGER)
+	do_all_in_bounds (action: PROCEDURE [T]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -731,7 +732,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER)
+	do_if_in_bounds (action: PROCEDURE [T]; test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -754,7 +755,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+	there_exists_in_bounds (test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -772,7 +773,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+	for_all_in_bounds (test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
@@ -791,7 +792,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; start_index, end_index: INTEGER)
+	do_all_with_index_in_bounds (action: PROCEDURE [T, INTEGER]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item, from first to last.
 			-- `action' receives item and its index.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -814,7 +815,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; test: FUNCTION [ANY, TUPLE [T, INTEGER], BOOLEAN]; start_index, end_index: INTEGER)
+	do_if_with_index_in_bounds (action: PROCEDURE [T, INTEGER]; test: FUNCTION [T, INTEGER, BOOLEAN]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- `action' and `test' receive the item and its index.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
@@ -874,9 +875,10 @@ feature {NONE} -- Implementation
 
 invariant
 	count_less_than_capacity: count <= capacity
+	consistent_index_boundaries: lower <= upper + 1
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Sets represented as arrayed lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -8,8 +8,8 @@ note
 	size: fixed;
 	access: membership;
 	contents: generic;
-	date: "$Date: 2012-07-23 23:02:19 +0200 (Mon, 23 Jul 2012) $";
-	revision: "$Revision: 567 $"
+	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $";
+	revision: "$Revision: 98557 $"
 
 class ARRAYED_SET [G] inherit
 
@@ -27,7 +27,7 @@ class ARRAYED_SET [G] inherit
 			prune as al_prune
 		export
 			{ANY} valid_cursor_index, readable, writable, to_array, new_cursor
-			{ARRAYED_SET} go_to, area, area_v2, cursor, full, i_th, lower, upper,
+			{ARRAYED_SET} go_to, area, area_v2, cursor, full, i_th, lower,
 				valid_cursor
 			{NONE} all
 		undefine
@@ -61,7 +61,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -5,7 +5,7 @@ note
 		"Comma-separated-value file handlers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +80,7 @@ feature -- Input
 			no_void_cell: not a_cells.has_void
 		end
 
-	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [ANY, TUPLE [DS_ARRAYED_LIST [STRING]]])
+	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [DS_ARRAYED_LIST [STRING]])
 			-- Read csv file `a_file' and for each row, call `a_action' where the list
 			-- passed as argument is the list of cells making up this row. The list
 			-- passed as argument is supposed to be non-void and contains no void

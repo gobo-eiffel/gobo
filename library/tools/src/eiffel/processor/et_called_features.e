@@ -5,7 +5,7 @@ note
 		"Lists of features called by another feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -66,7 +66,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all_polymorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]])
+	do_all_polymorphic (a_action: PROCEDURE [ET_FEATURE, ET_CLASS])
 			-- Apply `a_action' to every polymorphic feature and its target class
 			-- (Semantics not guaranteed if `a_action' changes the structure.)
 		require
@@ -81,7 +81,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_monomorphic (a_action: PROCEDURE [ANY, TUPLE [ET_FEATURE, ET_CLASS]])
+	do_all_monomorphic (a_action: PROCEDURE [ET_FEATURE, ET_CLASS])
 			-- Apply `a_action' to every monomorphic feature and its target class
 			-- (Semantics not guaranteed if `a_action' changes the structure.)
 		require

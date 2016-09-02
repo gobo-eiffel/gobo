@@ -1751,7 +1751,7 @@ feature -- Features
 			procedures_set: procedures = a_procedures
 		end
 
-	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_all (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature of current class.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
 		require
@@ -1761,7 +1761,7 @@ feature -- Features
 			procedures.features_do_all (an_action)
 		end
 
-	features_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature of current class.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
 			--
@@ -1775,7 +1775,7 @@ feature -- Features
 			procedures.features_do_until (an_action, a_stop_request)
 		end
 
-	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_declared (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class).
@@ -1787,7 +1787,7 @@ feature -- Features
 			procedures.features_do_declared (an_action)
 		end
 
-	features_do_declared_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class).
@@ -1803,7 +1803,7 @@ feature -- Features
 			procedures.features_do_declared_until (an_action, a_stop_request)
 		end
 
-	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]])
+	features_do_inherited (an_action: PROCEDURE [ET_FEATURE])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
@@ -1814,7 +1814,7 @@ feature -- Features
 			procedures.features_do_inherited (an_action)
 		end
 
-	features_do_inherited_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_until (an_action: PROCEDURE [ET_FEATURE]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' changes the list of features.)
@@ -1829,7 +1829,7 @@ feature -- Features
 			procedures.features_do_inherited_until (an_action, a_stop_request)
 		end
 
-	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
 		require
@@ -1840,7 +1840,7 @@ feature -- Features
 			procedures.features_do_if (an_action, a_test)
 		end
 
-	features_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
 			--
@@ -1855,7 +1855,7 @@ feature -- Features
 			procedures.features_do_if_until (an_action, a_test, a_stop_request)
 		end
 
-	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_declared_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class) that satisfies `a_test'.
@@ -1868,7 +1868,7 @@ feature -- Features
 			procedures.features_do_declared_if (an_action, a_test)
 		end
 
-	features_do_declared_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_declared_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature declared in current class
 			-- (i.e. do not traverse inherited features which have not been
 			-- redefined in current class) that satisfies `a_test'.
@@ -1885,7 +1885,7 @@ feature -- Features
 			procedures.features_do_declared_if_until (an_action, a_test, a_stop_request)
 		end
 
-	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN])
+	features_do_inherited_if (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -1897,7 +1897,7 @@ feature -- Features
 			procedures.features_do_inherited_if (an_action, a_test)
 		end
 
-	features_do_inherited_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	features_do_inherited_if_until (an_action: PROCEDURE [ET_FEATURE]; a_test: FUNCTION [ET_FEATURE, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every feature inherited without being explicitly
 			-- redeclared in current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)

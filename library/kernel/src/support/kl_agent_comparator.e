@@ -5,7 +5,7 @@ note
 		"Total order comparators implemented using an agent"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	less_than_agent: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
+	less_than_agent: FUNCTION [G, G, BOOLEAN]
 			-- Agent used to compare objects
 
 invariant

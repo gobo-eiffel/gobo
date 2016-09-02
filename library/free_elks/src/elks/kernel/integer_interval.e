@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "Contiguous integer intervals"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2016-05-05 23:44:28 -0700 (Thu, 05 May 2016) $"
+	revision: "$Revision: 98665 $"
 
 class
 	INTEGER_INTERVAL
@@ -24,7 +24,9 @@ inherit
 		undefine
 			changeable_comparison_criterion
 		redefine
-			copy, is_equal
+			copy,
+			index_set,
+			is_equal
 		select
 			bag_put
 		end
@@ -43,14 +45,12 @@ feature {NONE} -- Initialization
 			-- Set up interval to have bounds `min_index' and
 			-- `max_index' (empty if `min_index' > `max_index')
 		do
-			lower_defined := True
-			upper_defined := True
 			if min_index <= max_index then
-				lower_internal := min_index
-				upper_internal := max_index
+				lower := min_index
+				upper := max_index
 			else
-				lower_internal := 1
-				upper_internal := 0
+				lower := 1
+				upper := 0
 			end
 		ensure
 			lower_defined: lower_defined
@@ -70,10 +70,8 @@ feature -- Initialization
 		require
 			other_not_void: other /= Void
 		do
-			lower_internal := other.lower_internal
-			upper_internal := other.upper_internal
-			lower_defined := other.lower_defined
-			upper_defined := other.upper_defined
+			lower := other.lower
+			upper := other.upper
 		ensure
 			same_lower: lower = other.lower
 			same_upper: upper = other.upper
@@ -83,27 +81,17 @@ feature -- Initialization
 
 feature -- Access
 
-	lower_defined: BOOLEAN
+	lower_defined: BOOLEAN = True
 			-- Is there a lower bound?
 
 	lower: INTEGER
-			-- Smallest value in interval
-		require
-			lower_defined: lower_defined
-		do
-			Result := lower_internal
-		end
+			-- Smallest value in interval.
 
-	upper_defined: BOOLEAN
+	upper_defined: BOOLEAN = True
 			-- Is there an upper bound?
 
 	upper: INTEGER
-			-- Largest value in interval
-		require
-			upper_defined: upper_defined
-		do
-			Result := upper_internal
-		end
+			-- Largest value in interval.
 
 	item alias "[]", at alias "@" (i: INTEGER): INTEGER
 			-- Entry at index `i', if in index interval
@@ -160,7 +148,7 @@ feature -- Measurement
 		end
 
 	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
+			-- <Precursor>
 			-- (here: the interval itself)
 		do
 			Result := Current
@@ -213,9 +201,9 @@ feature -- Element change
 			-- to `v' (up or down).
 		do
 			if v < lower then
-				lower_internal := v
+				lower := v
 			elseif v > upper then
-				upper_internal := v
+				upper := v
 			end
 		ensure then
 			extended_down: lower = (old lower).min (v)
@@ -229,16 +217,16 @@ feature -- Resizing
 			-- `min_index' to at least `max_index',
 			-- encompassing previous bounds.
 		do
-			lower_internal := min_index.min (lower)
-			upper_internal := max_index.max (upper)
+			lower := min_index.min (lower)
+			upper := max_index.max (upper)
 		end
 
 	resize_exactly (min_index, max_index: INTEGER)
 			-- Rearrange interval to go from
 			-- `min_index' to `max_index'.
 		do
-			lower_internal := min_index
-			upper_internal := max_index
+			lower := min_index
+			upper := max_index
 		end
 
 	grow (i: INTEGER)
@@ -265,10 +253,8 @@ feature -- Removal
 	wipe_out
 			-- Remove all items.
 		do
-			lower_defined := True
-			upper_defined := True
-			lower_internal := 1
-			upper_internal := 0
+			lower := 1
+			upper := 0
 		end
 
 feature -- Conversion
@@ -335,7 +321,7 @@ feature -- Duplication
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [INTEGER]])
+	do_all (action: PROCEDURE [INTEGER])
 			-- Apply `action' to every item of current interval.
 		require
 			action_exists: action /= Void
@@ -355,7 +341,7 @@ feature -- Iteration
 		end
 
 	for_all (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Do all interval's values satisfy `condition'?
 		require
@@ -378,7 +364,7 @@ feature -- Iteration
 		end
 
 	exists (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Does at least one of  interval's values
 			-- satisfy `condition'?
@@ -402,7 +388,7 @@ feature -- Iteration
 		end
 
 	exists1 (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Does exactly one of  interval's values
 			-- satisfy `condition'?
@@ -417,7 +403,7 @@ feature -- Iteration
 		end
 
 	hold_count (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			INTEGER
 			-- Number of  interval's values that
 			-- satisfy `condition'
@@ -441,16 +427,6 @@ feature -- Iteration
 			non_negative: Result >= 0
 		end
 
-feature {INTEGER_INTERVAL} -- Implementation
-
-	upper_internal: INTEGER
-			-- See `upper`.
-			--| `upper' has a precondition so it can't be an attribute.
-
-	lower_internal: INTEGER
-			-- See `lower`.
-			--| `lower' has a precondition so it can't be an attribute.
-
 feature {NONE} -- Inapplicable
 
 	prune (v: INTEGER)
@@ -467,11 +443,10 @@ feature {NONE} -- Inapplicable
 
 invariant
 	count_definition: upper_defined and lower_defined implies count = upper - lower + 1
-	index_set_is_range: index_set ~ Current
 	not_infinite: upper_defined and lower_defined
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

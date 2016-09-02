@@ -224,6 +224,22 @@ feature -- Status report
 			end
 		end
 
+	is_type_separate_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): BOOLEAN
+			-- Is current type separate when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			if a_type_mark = Void then
+				Result := is_separate
+			elseif a_type_mark.is_separate_mark then
+				Result := True
+			else
+				Result := is_separate
+			end
+		end
+
 	is_expanded: BOOLEAN = False
 			-- Is current type expanded?
 
@@ -322,7 +338,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := True
 			elseif a_context.attachment_type_conformance_mode and then is_type_attached_with_type_mark (a_type_mark, a_context) /= other.is_type_attached_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_separate /= other.is_separate then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end
@@ -345,7 +361,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := True
 			elseif a_context.attachment_type_conformance_mode and then is_type_attached_with_type_mark (a_type_mark, a_context) /= other.is_type_attached_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_separate /= other.is_separate then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end
@@ -368,7 +384,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := True
 			elseif a_context.attachment_type_conformance_mode and then is_type_attached_with_type_mark (a_type_mark, a_context) /= other.is_type_attached_with_type_mark (other_type_mark, other_context) then
 				Result := False
-			elseif is_separate /= other.is_separate then
+			elseif a_context.scoop_mode and then is_type_separate_with_type_mark (a_type_mark, a_context) /= other.is_type_separate_with_type_mark (other_type_mark, other_context) then
 				Result := False
 			elseif not attached other.actual_parameters as l_other_actual_parameters then
 				check other_not_generic: not other.is_generic end

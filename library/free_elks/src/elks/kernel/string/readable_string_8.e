@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of 8-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-05-14 22:22:02 -0700 (Wed, 14 May 2014) $"
-	revision: "$Revision: 95061 $"
+	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
+	revision: "$Revision: 99053 $"
 
 deferred class
 	READABLE_STRING_8
@@ -31,8 +31,13 @@ inherit
 		end
 
 	READABLE_INDEXABLE [CHARACTER_8]
+		rename
+			upper as count
 		redefine
-			copy, is_equal, out
+			copy,
+			is_equal,
+			new_cursor,
+			out
 		end
 
 convert
@@ -48,6 +53,7 @@ feature {NONE} -- Initialization
 		do
 			count := 0
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			create area.make_filled ('%/000/', n + 1)
 		end
 
@@ -72,6 +78,7 @@ feature {NONE} -- Initialization
 			area := s.area
 			count := s.count
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			if Current /= s then
 				create area.make_empty (count + 1)
 				area.copy_data (s.area, s.area_lower, 0, count + 1)
@@ -94,6 +101,7 @@ feature {NONE} -- Initialization
 			create area.make_filled ('%/000/', l_count + 1)
 			count := l_count
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
 		end
 
@@ -271,6 +279,12 @@ feature -- Access
 			Result := string_searcher.fuzzy_index (Current, other, start, count, fuzz)
 		end
 
+	new_cursor: STRING_8_ITERATION_CURSOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Measurement
 
 	capacity: INTEGER
@@ -310,14 +324,8 @@ feature -- Measurement
 					Result = 1 + substring (2, count).occurrences (c)
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (1, count)
-		ensure then
-			index_set_not_void: Result /= Void
-			index_set_count: Result.count = count
-		end
+	lower: INTEGER = 1
+			-- <Precursor>
 
 feature -- Comparison
 
@@ -650,6 +658,7 @@ feature {READABLE_STRING_8} -- Duplication
 					area := old_area
 				end
 				internal_hash_code := 0
+				internal_case_insensitive_hash_code := 0
 			end
 		ensure then
 			new_result_count: count = other.count
@@ -668,6 +677,7 @@ feature {NONE} -- Element change
 				area.fill_with (c, 0, l_cap - 1)
 				count := l_cap
 				internal_hash_code := 0
+				internal_case_insensitive_hash_code := 0
 			end
 		ensure
 			filled: count = capacity
@@ -816,7 +826,8 @@ feature
 	STRING_8_SEARCHER, STRING_32_SEARCHER,
 	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER,
 	STRING_TO_INTEGER_CONVERTOR,
-	STRING_TO_REAL_CONVERTOR} -- Implementation
+	STRING_TO_REAL_CONVERTOR,
+	STRING_8_ITERATION_CURSOR} -- Implementation
 
 	area: SPECIAL [CHARACTER_8]
 			-- Storage for characters
@@ -842,7 +853,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

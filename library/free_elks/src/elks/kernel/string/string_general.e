@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2014-03-19 07:36:10 -0700 (Wed, 19 Mar 2014) $"
-	revision: "$Revision: 94633 $"
+	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
+	revision: "$Revision: 99053 $"
 
 deferred class
 	STRING_GENERAL
@@ -47,12 +47,21 @@ feature {STRING_HANDLER} -- Settings
 
 	set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
+		obsolete
+			"Use `reset_hash_codes` instead."
 		require
 			v_nonnegative: v >= 0
 		do
 			internal_hash_code := v
 		ensure
 			internal_hash_code_set: internal_hash_code = v
+		end
+
+	reset_hash_codes
+			-- Reset all hash codes of `Current' string.
+		do
+			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 		end
 
 feature -- Element change
@@ -101,7 +110,7 @@ feature -- Element change
 					i := i + 1
 				end
 				set_count (l_new_size)
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + old s.count
@@ -136,7 +145,7 @@ feature -- Element change
 					i := i + 1
 				end
 				set_count (l_new_size)
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + end_index - start_index + 1
@@ -178,7 +187,7 @@ feature -- Element change
 					put_code (s.code (i), i)
 					i := i + 1
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old (count + s.count)
@@ -225,7 +234,7 @@ feature -- Element change
 					i := i + 1
 					j := j + 1
 				end
-				internal_hash_code := 0
+				reset_hash_codes
 			end
 		ensure
 			new_count: count = old count + end_index - start_index + 1

@@ -9,7 +9,7 @@ note
 		are DS_AVL_TREE and DS_RED_BLACK_TREE.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2016, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Access
 
 	key_comparator: KL_COMPARATOR [K]
 			-- Comparison criterion for keys
-	
+
 	node_key (a_node: attached like root_node): K
 			-- `a_node's key
 		require
@@ -179,8 +179,8 @@ feature {NONE} -- Removal
 
 feature -- Search
 
-	search_not_less (a_key: K; a_predicate: detachable PREDICATE [ANY, TUPLE [G]]): like root_node
-			-- Search for node whose key is the maximum key which satisfies `a_predicate' 
+	search_not_less (a_key: K; a_predicate: detachable PREDICATE [G]): like root_node
+			-- Search for node whose key is the maximum key which satisfies `a_predicate'
 			-- where `a_key' is not less than this key.
 			-- The search ends if a Void node is encountered.
 		local
@@ -204,7 +204,7 @@ feature -- Search
 				end
 			end
 		end
-	
+
 feature -- Duplication
 
 	copy (other: like Current)
@@ -258,7 +258,7 @@ feature -- Duplication
 				end
 			end
 		end
-	
+
 
 feature {NONE} -- Implementation
 

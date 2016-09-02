@@ -5,7 +5,7 @@ note
 		"Eiffel lists of base-types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Iteration
 
-	base_classes_there_exists (a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]): BOOLEAN
+	base_classes_there_exists (a_test: FUNCTION [ET_CLASS, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one of the base classes?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		require

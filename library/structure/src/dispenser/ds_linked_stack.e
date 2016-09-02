@@ -5,7 +5,7 @@ note
 		"Stacks (Last-In, First-Out) implemented with linked cells"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #10 $"
@@ -312,7 +312,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (an_action: PROCEDURE [G])
 			-- Apply `an_action' to every item, from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -328,7 +328,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -348,7 +348,7 @@ feature -- Iteration
 			end
 		end
 
-	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_until (an_action: PROCEDURE [G]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item, from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 			--
@@ -373,7 +373,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if_until (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 			--
@@ -400,7 +400,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (a_test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -421,7 +421,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (a_test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local

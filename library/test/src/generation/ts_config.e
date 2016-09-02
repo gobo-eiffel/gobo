@@ -5,7 +5,7 @@ note
 		"Test configurations"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,7 @@ feature -- Access
 	execute: STRING
 			-- Execution command-line
 
-	testgen: STRING
+	testgen: detachable STRING
 			-- Directory where test classes will be generated;
 			-- Void means current directory
 

@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2012-11-06 08:57:44 +0100 (Tue, 06 Nov 2012) $"
-	revision: "$Revision: 605 $"
+	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
+	revision: "$Revision: 99053 $"
 
 class RAW_FILE
 
@@ -218,6 +218,16 @@ feature -- Input
 			bytes_read := file_fread (p.item + start_pos, 1, nb_bytes, file_pointer)
 		end
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		do
+			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.reset_hash_codes
+		end
+
 feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER
@@ -235,16 +245,6 @@ feature {NONE} -- Implementation
 
 	internal_integer_buffer: detachable MANAGED_POINTER
 			-- Internal integer buffer
-
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
-			-- Fill `a_string', starting at position `pos' with at
-			-- most `nb' characters read from current file.
-			-- Return the number of characters actually read.
-		do
-			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
-				-- `a_string' was externally modified, we need to reset its `hash_code'.
-			a_string.set_internal_hash_code (0)
-		end
 
 	file_gib (file: POINTER): INTEGER
 			-- Get an integer from `file'

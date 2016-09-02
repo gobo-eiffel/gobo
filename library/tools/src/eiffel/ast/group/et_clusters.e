@@ -5,7 +5,7 @@ note
 		"Eiffel cluster lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -325,7 +325,7 @@ feature {NONE} -- Access
 
 feature -- Iterators
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	do_all (an_action: PROCEDURE [ET_CLUSTER])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -342,7 +342,7 @@ feature -- Iterators
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_test: FUNCTION [ANY, TUPLE [ET_CLUSTER], BOOLEAN])
+	do_if (an_action: PROCEDURE [ET_CLUSTER]; a_test: FUNCTION [ET_CLUSTER, BOOLEAN])
 			-- Apply `an_action' to every cluster which satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -362,7 +362,7 @@ feature -- Iterators
 			end
 		end
 
-	do_all_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_all_until (an_action: PROCEDURE [ET_CLUSTER]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -391,7 +391,7 @@ feature -- Iterators
 			end
 		end
 
-	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	do_recursive (an_action: PROCEDURE [ET_CLUSTER])
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -411,7 +411,7 @@ feature -- Iterators
 			end
 		end
 
-	do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_recursive_until (an_action: PROCEDURE [ET_CLUSTER]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--
@@ -443,7 +443,7 @@ feature -- Iterators
 			end
 		end
 
-	do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]])
+	do_explicit (an_action: PROCEDURE [ET_CLUSTER])
 			-- Apply `an_action' to every non-implicit cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		require
@@ -465,7 +465,7 @@ feature -- Iterators
 			end
 		end
 
-	do_explicit_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_explicit_until (an_action: PROCEDURE [ET_CLUSTER]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every non-implicit cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 			--

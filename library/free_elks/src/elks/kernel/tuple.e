@@ -1,10 +1,10 @@
 note
 	description: "Implementation of TUPLE"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2016-03-02 13:15:09 -0800 (Wed, 02 Mar 2016) $"
+	revision: "$Revision: 98557 $"
 
 class
 	TUPLE
@@ -20,23 +20,20 @@ inherit
 			correct_mismatch, is_equal
 		end
 
-create
-	default_create, make
-
-feature -- Creation
-
-	make
-		obsolete
-			"Use no creation procedure to create a TUPLE instance"
-		do
+	READABLE_INDEXABLE [detachable separate ANY]
+		rename
+			upper as count
+		redefine
+			is_equal
 		end
+
+create
+	default_create
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): detachable ANY assign put
+	item alias "[]", at alias "@" (index: INTEGER): detachable separate ANY assign put
 			-- Entry of key `index'.
-		require
-			valid_index: valid_index (index)
 		do
 			inspect item_code (index)
 			when boolean_code then Result := boolean_item (index)
@@ -356,14 +353,20 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: detachable ANY; index: INTEGER): BOOLEAN
+	valid_type_for_index (v: detachable separate ANY; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
+		local
+			l_reflector: REFLECTOR
+			l_type_id: INTEGER
 		do
 			if v = Void then
-					-- A Void entry is always valid.
-				Result := True
+					-- A Void entry is valid only for references and as long as the expected type
+					-- is detachable.
+				if item_code (index) = reference_code then
+					Result := not generating_type.generic_parameter_type (index).is_attached
+				end
 			else
 				inspect item_code (index)
 				when boolean_code then
@@ -397,7 +400,13 @@ feature -- Status report
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
-					Result := v.generating_type.conforms_to (generating_type.generic_parameter_type (index))
+					create l_reflector
+						--| FIXME
+						--| Replace this line with the commented line once we solve the nature
+						--| of type instances in a SCOOP context.
+					l_type_id := {ISE_RUNTIME}.dynamic_type (v)
+--					l_type_id := v.generating_type.type_id
+					Result := l_reflector.field_conforms_to (l_type_id, generating_type.generic_parameter_type (index).type_id)
 				end
 			end
 		end
@@ -413,8 +422,11 @@ feature -- Status report
 
 	upper: INTEGER
 			-- Upper bound of TUPLE.
+			-- Use `count' instead.
 		do
 			Result := count
+		ensure
+			definition: Result = count
 		end
 
 	is_empty: BOOLEAN
@@ -423,15 +435,9 @@ feature -- Status report
 			Result := count = 0
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
-		end
-
 feature -- Element change
 
-	put (v: detachable ANY; index: INTEGER)
+	put (v: detachable separate ANY; index: INTEGER)
 			-- Insert `v' at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -1323,5 +1329,16 @@ feature {NONE} -- Implementation
 		ensure
 			object_comparison_set: object_comparison = b
 		end
+
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

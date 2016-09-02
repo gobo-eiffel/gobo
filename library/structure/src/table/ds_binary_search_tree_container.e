@@ -19,7 +19,7 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2016, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -918,7 +918,7 @@ feature {NONE} -- Cursor movement
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (an_action: PROCEDURE [G])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
@@ -934,7 +934,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
+	do_all_with_index (an_action: PROCEDURE [G, INTEGER])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -954,7 +954,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
@@ -972,7 +972,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (an_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
+	do_if_with_index (an_action: PROCEDURE [G, INTEGER]; a_test: FUNCTION [G, INTEGER, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -994,7 +994,7 @@ feature -- Iteration
 			end
 		end
 
-	do_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_until (an_action: PROCEDURE [G]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 			--
@@ -1019,7 +1019,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_until (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; a_condition: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if_until (an_action: PROCEDURE [G]; a_test: FUNCTION [G, BOOLEAN]; a_condition: FUNCTION [G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 			--
@@ -1046,7 +1046,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (a_test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -1065,7 +1065,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (a_test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
@@ -1087,7 +1087,7 @@ feature -- Iteration
 
 feature {NONE} -- Iteration
 
-	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]])
+	do_all_with_key (an_action: PROCEDURE [G, K])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its key.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -1106,7 +1106,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	do_all_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]])
+	do_all_with_key_2 (an_action: PROCEDURE [K, G])
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the key and its item.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
@@ -1125,7 +1125,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN])
+	do_if_with_key (an_action: PROCEDURE [G, K]; a_test: FUNCTION [G, K, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its key.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -1147,7 +1147,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	do_if_with_key_2 (an_action: PROCEDURE [ANY, TUPLE [K, G]]; a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN])
+	do_if_with_key_2 (an_action: PROCEDURE [K, G]; a_test: FUNCTION [K, G, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the key and its item.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
@@ -1169,7 +1169,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
+	there_exists_with_key (a_test: FUNCTION [G, K, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item and its key?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -1190,7 +1190,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	there_exists_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+	there_exists_with_key_2 (a_test: FUNCTION [K, G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one key and its item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -1211,7 +1211,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN
+	for_all_with_key (a_test: FUNCTION [G, K, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items and their keys?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require
@@ -1233,7 +1233,7 @@ feature {NONE} -- Iteration
 			end
 		end
 
-	for_all_with_key_2 (a_test: FUNCTION [ANY, TUPLE [K, G], BOOLEAN]): BOOLEAN
+	for_all_with_key_2 (a_test: FUNCTION [K, G, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all keys and their items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		require

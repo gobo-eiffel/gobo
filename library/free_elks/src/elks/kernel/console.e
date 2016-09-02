@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-26 07:13:49 +0100 (Sat, 26 Jan 2013) $"
-	revision: "$Revision: 727 $"
+	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
+	revision: "$Revision: 99053 $"
 
 class CONSOLE inherit
 
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
 				-- `a_string' was externally modified, we need to reset its `hash_code'.
-			a_string.set_internal_hash_code (0)
+			a_string.reset_hash_codes
 		end
 
 	console_def (number: INTEGER): POINTER

@@ -5,7 +5,7 @@ note
 		"ECF target lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -145,7 +145,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ECF_TARGET]])
+	do_all (an_action: PROCEDURE [ET_ECF_TARGET])
 			-- Apply `an_action' to every target, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require

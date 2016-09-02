@@ -1,0 +1,10 @@
+To keep in mind at all time:
+- Make a ELKS compliant library
+- Adopt consistence style / naming convention (TBD)
+- Not compiler specific except through use of `builtin' for
+  which consensus among developers is required.
+
+To achieve:
+- Implement ELKS specified classes
+- Unicode string and character
+- Descent I/O classes

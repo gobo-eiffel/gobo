@@ -14649,7 +14649,7 @@ feature {NONE} -- Query call generation
 			end
 		end
 
-	print_adapted_expression (a_print_expression: PROCEDURE [ANY, TUPLE]; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE)
+	print_adapted_expression (a_print_expression: PROCEDURE; a_source_type_set: ET_DYNAMIC_TYPE_SET; a_target_type: ET_DYNAMIC_TYPE)
 			-- Print to `current_file' an expression (using `a_print_expression') with
 			-- dynamic type set `a_source_type_set' when the static type expected
 			-- by the caller is `a_target_type'. This is useful for example when the
@@ -17236,7 +17236,7 @@ feature {NONE} -- Deep features generation
 			end
 		end
 
-	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access_read, a_print_attribute_access_write: PROCEDURE [ANY, TUPLE])
+	print_set_deep_twined_attribute (an_attribute_type_set: ET_DYNAMIC_TYPE_SET; a_print_attribute_access_read, a_print_attribute_access_write: PROCEDURE)
 			-- Print to `current_file' the instructions needed to deep twin an attribute
 			-- of `current_type' whose dynamic type set is `an_attribute_type_set'.
 			-- `a_print_attribute_access_read' and `a_print_attribute_access_write' are

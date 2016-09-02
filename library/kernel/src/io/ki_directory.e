@@ -5,7 +5,7 @@ note
 		"Interface for directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,7 +146,7 @@ feature -- Basic operations
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]])
+	do_all (an_action: PROCEDURE [STRING])
 			-- Apply `an_action' to every entry in the directory.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -155,7 +155,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
+	do_if (an_action: PROCEDURE [STRING]; a_test: FUNCTION [STRING, BOOLEAN])
 			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
 			-- Do nothing if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -165,7 +165,7 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
+	there_exists (a_test: FUNCTION [STRING, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one entry in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
@@ -174,7 +174,7 @@ feature -- Iteration
 		deferred
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN
+	for_all (a_test: FUNCTION [STRING, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all entries in the directory?
 			-- False if current directory could not be searched.
 			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)

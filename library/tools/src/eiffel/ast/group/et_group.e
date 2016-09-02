@@ -5,7 +5,7 @@ note
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #9 $"
@@ -558,14 +558,14 @@ feature -- Setting
 
 feature -- Iteration
 
-	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	classes_do_all (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes which are part of current group.
 		require
 			an_action_not_void: an_action /= Void
 		deferred
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes which are part of current group
 			-- that satisfy `a_test'.
 		require
@@ -574,7 +574,7 @@ feature -- Iteration
 		deferred
 		end
 
-	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	classes_do_recursive (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes which are part of current group
 			-- or recursively one of its subgroups.
 		require
@@ -583,7 +583,7 @@ feature -- Iteration
 			classes_do_all (an_action)
 		end
 
-	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if_recursive (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes which are part of current group
 			-- or recursively one of its subgroups and which satisfy `a_test'.
 		require

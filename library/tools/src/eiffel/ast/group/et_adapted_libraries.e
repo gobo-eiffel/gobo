@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -145,7 +145,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]])
+	do_all (an_action: PROCEDURE [ET_LIBRARY])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -160,7 +160,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_LIBRARY], BOOLEAN])
+	do_if (an_action: PROCEDURE [ET_LIBRARY]; a_test: FUNCTION [ET_LIBRARY, BOOLEAN])
 			-- Apply `an_action' to every library that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -180,7 +180,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
+	universes_do_all (an_action: PROCEDURE [ET_UNIVERSE])
 			-- Apply `an_action' to every library (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -195,7 +195,7 @@ feature -- Iteration
 			end
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
+	universes_do_if (an_action: PROCEDURE [ET_UNIVERSE]; a_test: FUNCTION [ET_UNIVERSE, BOOLEAN])
 			-- Apply `an_action' to every library (viewed as a universe) that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -215,7 +215,7 @@ feature -- Iteration
 			end
 		end
 
-	do_adapted (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]])
+	do_adapted (an_action: PROCEDURE [ET_ADAPTED_LIBRARY])
 			-- Apply `an_action' to every library, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -224,7 +224,7 @@ feature -- Iteration
 			libraries.do_all (an_action)
 		end
 
-	do_adapted_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_LIBRARY]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_LIBRARY], BOOLEAN])
+	do_adapted_if (an_action: PROCEDURE [ET_ADAPTED_LIBRARY]; a_test: FUNCTION [ET_ADAPTED_LIBRARY, BOOLEAN])
 			-- Apply `an_action' to every library which satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -234,7 +234,7 @@ feature -- Iteration
 			libraries.do_if (an_action, a_test)
 		end
 
-	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]])
+	do_recursive (an_action: PROCEDURE [ET_LIBRARY])
 			-- Apply `an_action' to every library,
 			-- and to all libraries reachable from them.
 		require

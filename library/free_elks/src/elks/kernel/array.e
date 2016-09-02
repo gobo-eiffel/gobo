@@ -1,14 +1,13 @@
-note
+﻿note
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
 		]"
-
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2013-01-25 23:18:20 +0100 (Fri, 25 Jan 2013) $"
-	revision: "$Revision: 716 $"
+	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
+	revision: "$Revision: 98619 $"
 
 class ARRAY [G] inherit
 
@@ -21,7 +20,9 @@ class ARRAY [G] inherit
 		rename
 			item as item alias "[]"
 		redefine
-			copy, is_equal
+			copy,
+			is_equal,
+			new_cursor
 		end
 
 	TO_SPECIAL [G]
@@ -188,6 +189,12 @@ feature -- Access
 			end
 		end
 
+	new_cursor: ARRAY_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Measurement
 
 	lower: INTEGER
@@ -232,16 +239,6 @@ feature -- Measurement
 					i := i + 1
 				end
 			end
-		end
-
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
-		ensure then
-			same_count: Result.count = count
-			same_bounds:
-				((Result.lower = lower) and (Result.upper = upper))
 		end
 
 feature -- Comparison
@@ -341,11 +338,6 @@ feature -- Status report
 			-- Can array be resized automatically?
 		do
 			Result := ({G}).has_default
-		end
-
-	valid_index_set: BOOLEAN
-		do
-			Result := index_set.count = count
 		end
 
 feature -- Element change
@@ -470,7 +462,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (action: PROCEDURE [G])
 			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -480,7 +472,7 @@ feature -- Iteration
 			area.do_all_in_bounds (action, 0, count - 1)
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -491,7 +483,7 @@ feature -- Iteration
 			area.do_if_in_bounds (action, test, 0, count - 1)
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -499,7 +491,7 @@ feature -- Iteration
 			Result := area.there_exists_in_bounds (test, 0, count - 1)
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
@@ -507,7 +499,7 @@ feature -- Iteration
 			Result := area.for_all_in_bounds (test, 0, count - 1)
 		end
 
-	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
+	do_all_with_index (action: PROCEDURE [G, INTEGER])
 			-- Apply `action' to every item, from first to last.
 			-- `action' receives item and its index.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -530,7 +522,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
+	do_if_with_index (action: PROCEDURE [G, INTEGER]; test: FUNCTION [G, INTEGER, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- `action' and `test' receive the item and its index.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
@@ -872,13 +864,12 @@ invariant
 	area_exists: area /= Void
 	consistent_size: capacity = upper - lower + 1
 	non_negative_count: count >= 0
-	index_set_has_same_count: valid_index_set
 -- Internal discussion haven't reached an agreement on this invariant
 --	index_set_has_same_bounds: ((index_set.lower = lower) and
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

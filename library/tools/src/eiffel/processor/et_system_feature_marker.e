@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/20 $"
 	revision: "$Revision: #7 $"
@@ -188,7 +188,7 @@ feature -- Processing
 			a_feature_used: a_feature.implementation_feature.is_used
 		end
 
-	mark_system_until (a_feature: ET_FEATURE; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	mark_system_until (a_feature: ET_FEATURE; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Identify the features that `a_feature' (when viewed from
 			-- the class it has been written in -- its 'implementation_class')
 			-- recursively depends on (i.e. they might be executed if

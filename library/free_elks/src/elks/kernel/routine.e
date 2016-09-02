@@ -4,16 +4,21 @@ note
 		with some operands possibly still open
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
+	date: "$Date: 2015-12-16 11:42:15 -0800 (Wed, 16 Dec 2015) $"
+	revision: "$Revision: 98274 $"
 
 deferred class
-	ROUTINE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
+	ROUTINE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	HASHABLE
+
+	REFLECTOR
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -24,8 +29,8 @@ feature -- Access
 		do
 			if is_target_closed then
 				c := closed_operands
-				if c /= Void and then c.count > 0 then
-					Result := c.item (1)
+				if c /= Void and then c.count > 0 and then attached {ANY} c.item (1) as r then
+					Result := r
 				end
 			end
 		end
@@ -53,7 +58,8 @@ feature -- Access
 		end
 
 	empty_operands: attached OPEN_ARGS
-			-- Empty tuple matching open operands
+			-- Empty tuple matching open operands.
+		obsolete "This function will be removed as non-void-safe. [22.07.2013]"
 		do
 			create Result
 		ensure
@@ -65,7 +71,7 @@ feature -- Status report
 	callable: BOOLEAN = True
 			-- Can routine be called on current object?
 
-	valid_operands (args: detachable TUPLE): BOOLEAN
+	valid_operands (args: detachable separate TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			l_expected_args: attached OPEN_ARGS
@@ -125,16 +131,79 @@ feature -- Setting
 
 feature -- Basic operations
 
-	call (args: detachable OPEN_ARGS)
+	call (args: detachable separate OPEN_ARGS)
 			-- Call routine with `args'.
 		require
 			valid_operands: valid_operands (args)
 		deferred
 		end
 
+	apply
+			-- Call routine with `operands' as last set.
+		require
+			valid_operands: valid_operands (operands)
+		deferred
+		end
+
+feature -- Extended operations
+
+	flexible_call (a: detachable separate TUPLE)
+			-- Call routine with arguments `a'.
+			-- Compared to `call' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				call (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					call (x)
+				end
+			end
+		end
+
+feature -- Obsolete
+
+	adapt_from (other: like Current)
+			-- Adapt from `other'. Useful in descendants.
+		obsolete
+			"Please use `adapt' instead (it's also a creation procedure)"
+		require
+			other_exists: other /= Void
+			conforming: conforms_to (other)
+		do
+			adapt (other)
+		end
+
 feature {ROUTINE} -- Implementation
 
 	frozen closed_operands: detachable TUPLE
 			-- All closed arguments provided at creation time
+
+	closed_count: INTEGER
+			-- The number of closed operands (including the target if it is closed)
+		local
+			c: detachable TUPLE
+		do
+			c := closed_operands
+			if c /= Void then
+				Result := c.count
+			end
+		end
+
+note
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

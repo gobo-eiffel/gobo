@@ -6,7 +6,7 @@ note
 		"Test config parsers"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,9 @@ class TS_CONFIG_PARSER
 inherit
 
 	TS_CONFIG_PARSER_SKELETON
+		undefine
+			make_config_scanner
+		end
 
 	TS_CONFIG_SCANNER
 		rename
@@ -46,7 +49,15 @@ create
 Config: T_TEST Identifier Defaults_opt
 			{ set_defaults ($2.name) }
 		Clusters_opt T_END
-			{ last_config := new_config ($2.name, testgen, compile, execute, $5) }
+			{
+				check
+						-- Defaults set (see call to `set_defaults' above).
+					compile_not_void: attached compile as l_compile
+					execute_not_void: attached execute as l_execute
+				then
+					last_config := new_config ($2.name, testgen, l_compile, l_execute, $5)
+				end
+			}
 	;
 
 Defaults_opt: -- Empty

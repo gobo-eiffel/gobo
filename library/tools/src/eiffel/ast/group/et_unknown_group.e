@@ -5,7 +5,7 @@ note
 		"Built-in groups for class *UNKNOWN*"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,13 +63,13 @@ feature -- Measurement
 
 feature -- Iteration
 
-	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	classes_do_all (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes which are part of current group.
 		do
 			-- Do not perform actions on unknown classes.
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes which are part of current group
 			-- that satisfy `a_test'.
 		do

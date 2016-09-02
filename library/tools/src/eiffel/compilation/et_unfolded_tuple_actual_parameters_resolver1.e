@@ -101,9 +101,10 @@ feature {NONE} -- Tuple-type-unfolding
 					i := i + 1
 				end
 			end
+			l_base_class := a_type.base_class
+			l_base_class.process (current_system.eiffel_parser)
 			a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
 			if not a_type.tuple_actual_parameters_unfolded_2 then
-				l_base_class := a_type.base_class
 				l_tuple_constraint_position := l_base_class.tuple_constraint_position
 				if l_tuple_constraint_position /= 0 and then attached a_type.actual_parameters as an_actuals and then l_base_class.formal_parameter_count = an_actuals.count then
 					an_actual := an_actuals.type (l_tuple_constraint_position)

@@ -5,7 +5,7 @@ note
 		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -280,14 +280,14 @@ feature -- Nested
 
 feature -- Iteration
 
-	classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]])
+	classes_do_all (an_action: PROCEDURE [ET_CLASS])
 			-- Apply `an_action' on all classes declared locally in current .NET assembly.
 			-- Do not take into account overridden classes.
 		do
 			precursor {ET_UNIVERSE} (an_action)
 		end
 
-	classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN])
+	classes_do_if (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current .NET assembly
 			-- that satisfy `a_test'.
 			-- Do not take into account overridden classes.
@@ -295,13 +295,13 @@ feature -- Iteration
 			precursor {ET_UNIVERSE} (an_action, a_test)
 		end
 
-	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]])
+	universes_do_all (an_action: PROCEDURE [ET_UNIVERSE])
 			-- Apply `an_action' to every universe that current universe depends on.
 		do
 			referenced_assemblies.universes_do_all (an_action)
 		end
 
-	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN])
+	universes_do_if (an_action: PROCEDURE [ET_UNIVERSE]; a_test: FUNCTION [ET_UNIVERSE, BOOLEAN])
 			-- Apply `an_action' to every universe that current universe depends on and
 			-- which satisfies `a_test'.
 		do

@@ -6,7 +6,7 @@ note
 		"Scanners for test config parsers"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,9 @@ class TS_CONFIG_SCANNER
 inherit
 
 	TS_CONFIG_SCANNER_SKELETON
+		redefine
+			make
+		end
 
 create
 
@@ -148,6 +151,16 @@ create
 --------------------------------------------------------------------------------
 %%
 
+feature {NONE} -- Initialization
+
+	make (a_filename: STRING; an_error_handler: like error_handler)
+			-- <Precursor>
+		do
+			str_ := ""
+			last_et_identifier_value := new_identifier ("gobo")
+			Precursor (a_filename, an_error_handler)
+		end
+		
 feature {NONE} -- Implementation
 
 	code_: INTEGER

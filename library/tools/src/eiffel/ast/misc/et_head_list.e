@@ -5,7 +5,7 @@ note
 		"Eiffel AST lists where insertions to and removals from the head are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/05/03 $"
 	revision: "$Revision: #10 $"
@@ -223,7 +223,7 @@ feature -- Resizing
 
 feature -- Iteration
 
-	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]])
+	do_all (an_action: PROCEDURE [like item])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 		require
@@ -241,7 +241,7 @@ feature -- Iteration
 			end
 		end
 
-	do_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_until (an_action: PROCEDURE [like item]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
 			--
@@ -271,7 +271,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN])
+	do_if (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 		require
@@ -294,7 +294,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_until (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]; a_stop_request: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	do_if_until (an_action: PROCEDURE [like item]; a_test: FUNCTION [like item, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
 			--
@@ -329,7 +329,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
+	there_exists (a_test: FUNCTION [like item, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
@@ -350,7 +350,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN
+	for_all (a_test: FUNCTION [like item, BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the list.)
 		local
