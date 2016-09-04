@@ -41,25 +41,26 @@ extern "C" {
 /*
  * Type flags.
  */
-#define GE_TYPE_FLAG_SPECIAL		0x10
-#define GE_TYPE_FLAG_TUPLE			0x20
-#define GE_TYPE_FLAG_EXPANDED		0x40
-#define GE_TYPE_FLAG_NONE			0x80
-#define GE_TYPE_FLAG_BASIC_MASK		0x0F /* One of "BOOLEAN", "CHARACTER_8", "CHARACTER_32", "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64", "POINTER", "REAL_32", "REAL_64" */
-#define GE_TYPE_FLAG_BOOLEAN		0x01
-#define GE_TYPE_FLAG_CHARACTER_8	0x02
-#define GE_TYPE_FLAG_CHARACTER_32	0x03
-#define GE_TYPE_FLAG_INTEGER_8		0x04
-#define GE_TYPE_FLAG_INTEGER_16		0x05
-#define GE_TYPE_FLAG_INTEGER_32		0x06
-#define GE_TYPE_FLAG_INTEGER_64		0x07
-#define GE_TYPE_FLAG_NATURAL_8		0x08
-#define GE_TYPE_FLAG_NATURAL_16		0x09
-#define GE_TYPE_FLAG_NATURAL_32		0x0A
-#define GE_TYPE_FLAG_NATURAL_64		0x0B
-#define GE_TYPE_FLAG_POINTER		0x0C
-#define GE_TYPE_FLAG_REAL_32		0x0D
-#define GE_TYPE_FLAG_REAL_64		0x0E
+#define GE_TYPE_FLAG_SPECIAL		0x0010
+#define GE_TYPE_FLAG_TUPLE			0x0020
+#define GE_TYPE_FLAG_EXPANDED		0x0040
+#define GE_TYPE_FLAG_DEFERRED		0x0080
+#define GE_TYPE_FLAG_NONE			0x0100
+#define GE_TYPE_FLAG_BASIC_MASK		0x000F /* One of "BOOLEAN", "CHARACTER_8", "CHARACTER_32", "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64", "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64", "POINTER", "REAL_32", "REAL_64" */
+#define GE_TYPE_FLAG_BOOLEAN		0x0001
+#define GE_TYPE_FLAG_CHARACTER_8	0x0002
+#define GE_TYPE_FLAG_CHARACTER_32	0x0003
+#define GE_TYPE_FLAG_INTEGER_8		0x0004
+#define GE_TYPE_FLAG_INTEGER_16		0x0005
+#define GE_TYPE_FLAG_INTEGER_32		0x0006
+#define GE_TYPE_FLAG_INTEGER_64		0x0007
+#define GE_TYPE_FLAG_NATURAL_8		0x0008
+#define GE_TYPE_FLAG_NATURAL_16		0x0009
+#define GE_TYPE_FLAG_NATURAL_32		0x000A
+#define GE_TYPE_FLAG_NATURAL_64		0x000B
+#define GE_TYPE_FLAG_POINTER		0x000C
+#define GE_TYPE_FLAG_REAL_32		0x000D
+#define GE_TYPE_FLAG_REAL_64		0x000E
 
 /*
  * Convention for attribute types.
@@ -121,7 +122,7 @@ typedef struct {
  */
 typedef struct {
 	EIF_TYPE_INDEX type_id;
-	uint8_t flags;
+	uint16_t flags;
 #ifdef GE_USE_TYPE_GENERATOR
 	const char* generator; /* Generator class name */
 #endif
@@ -255,6 +256,12 @@ extern EIF_BOOLEAN GE_is_special_of_reference_or_basic_expanded_type_index(EIF_T
 #define GE_is_expanded_type_index(a_type) EIF_TEST(GE_type_infos[a_type].flags & GE_TYPE_FLAG_EXPANDED)
 #define GE_is_expanded_encoded_type(a_type) GE_is_expanded_type_index(GE_decoded_type(a_type).id)
 #define GE_is_expanded_object(obj) GE_is_expanded_type_index(((EIF_REFERENCE)(obj))->id)
+
+/*
+ * Is `a_type' a type whose base class is deferred?
+ */
+#define GE_is_deferred_type_index(a_type) EIF_TEST(GE_type_infos[a_type].flags & GE_TYPE_FLAG_DEFERRED)
+#define GE_is_deferred_encoded_type(a_type) GE_is_deferred_type_index(GE_decoded_type(a_type).id)
 
 /*
  * Does `i'-th field of `a_object + a_physical_offset' (which is expected to be reference)

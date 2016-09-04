@@ -107,6 +107,12 @@ feature -- Status report
 			"built_in"
 		end
 
+	is_deferred: BOOLEAN
+			-- Is current type a deferred type?
+		external
+			"built_in"
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current type an expanded type?
 		external
@@ -115,6 +121,9 @@ feature -- Status report
 
 	is_attached: BOOLEAN
 			-- Is current type attached?
+			--
+			-- Note that this routine does not consider expanded types as attached,
+			-- even in void-safe mode!
 		external
 			"built_in"
 		end

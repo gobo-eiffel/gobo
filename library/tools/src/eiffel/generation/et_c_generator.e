@@ -3603,6 +3603,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_type_is_attached_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_type_is_deferred then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_is_deferred_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_type_is_expanded then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -14638,6 +14644,8 @@ feature {NONE} -- Query call generation
 				print_builtin_type_has_default_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_is_attached then
 				print_builtin_type_is_attached_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_is_deferred then
+				print_builtin_type_is_deferred_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_is_expanded then
 				print_builtin_type_is_expanded_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_type_id then
@@ -26767,6 +26775,33 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			current_file.put_character (')')
 		end
 
+	print_builtin_type_is_deferred_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.is_deferred'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_ge_is_deferred_encoded_type)
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_type)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_type_id)
+			current_file.put_character (')')
+		end
+
 	print_builtin_type_is_expanded_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'TYPE.is_expanded'.
@@ -27003,36 +27038,22 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_parameters: detachable ET_ACTUAL_PARAMETERS
-			l_string: STRING
-			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
-			l_result_type_set := a_feature.result_type_set
-			l_parameters := a_target_type.base_type.actual_parameters
-			if l_parameters = Void or else l_parameters.count < 1 then
-					-- Internal error: we should have already checked by now
-					-- that class TYPE has a generic parameter.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			elseif l_result_type_set = Void then
-					-- Internal error: `a_feature' is a query.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_string := l_parameters.type (1).unaliased_to_text
-				if l_result_type_set.static_type = current_dynamic_system.string_32_type then
-					current_file.put_string (c_ge_ms32)
-				else
-					current_file.put_string (c_ge_ms8)
-				end
-				current_file.put_character ('(')
-				print_escaped_string (l_string)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_integer (l_string.count)
-				current_file.put_character (')')
-			end
+			type_info_name_used := True
+			current_file.put_string (c_ge_generating_type_of_encoded_type)
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_type)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_type_id)
+			current_file.put_character (')')
 		end
 
 	print_builtin_type_type_id_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -30160,6 +30181,7 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			l_generic_parameter_count: INTEGER
 			l_parameter_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_name: STRING
 		do
 			l_dynamic_types := dynamic_types
 			nb := l_dynamic_types.count
@@ -30576,6 +30598,8 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 						current_file.put_character ('|')
 					end
 					current_file.put_string (c_ge_type_flag_expanded)
+				elseif l_type.base_class.is_deferred then
+					current_file.put_string (c_ge_type_flag_deferred)
 				else
 					current_file.put_character ('0')
 				end
@@ -30589,7 +30613,12 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 					current_file.put_character (',')
 					current_file.put_character (' ')
 						-- name.
-					print_escaped_string (l_type.base_type.unaliased_to_text)
+					l_name := l_type.base_type.unaliased_to_text.twin
+					l_name.replace_substring_all ("attached ", "")
+					l_name.replace_substring_all ("[attached] ", "")
+					l_name.replace_substring_all ("detachable ", "")
+					l_name.replace_substring_all ("[detachable] ", "")
+					print_escaped_string (l_name)
 				end
 				if type_info_generic_parameters_used then
 					current_file.put_character (',')
@@ -34082,6 +34111,7 @@ feature {NONE} -- Constants
 	c_ge_is_attached_encoded_type: STRING = "GE_is_attached_encoded_type"
 	c_ge_is_copy_semantics_field: STRING = "GE_is_copy_semantics_field"
 	c_ge_is_expanded_object: STRING = "GE_is_expanded_object"
+	c_ge_is_deferred_encoded_type: STRING = "GE_is_deferred_encoded_type"
 	c_ge_is_field_expanded_of_encoded_type: STRING = "GE_is_field_expanded_of_encoded_type"
 	c_ge_is_field_transient_of_encoded_type: STRING = "GE_is_field_transient_of_encoded_type"
 	c_ge_is_object_marked: STRING = "GE_is_object_marked"
@@ -34189,6 +34219,7 @@ feature {NONE} -- Constants
 	c_ge_type_flag_boolean: STRING = "GE_TYPE_FLAG_BOOLEAN"
 	c_ge_type_flag_character_8: STRING = "GE_TYPE_FLAG_CHARACTER_8"
 	c_ge_type_flag_character_32: STRING = "GE_TYPE_FLAG_CHARACTER_32"
+	c_ge_type_flag_deferred: STRING = "GE_TYPE_FLAG_DEFERRED"
 	c_ge_type_flag_expanded: STRING = "GE_TYPE_FLAG_EXPANDED"
 	c_ge_type_flag_integer_8: STRING = "GE_TYPE_FLAG_INTEGER_8"
 	c_ge_type_flag_integer_16: STRING = "GE_TYPE_FLAG_INTEGER_16"

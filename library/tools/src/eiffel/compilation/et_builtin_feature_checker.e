@@ -273,6 +273,7 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.generic_parameter_count_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count), l_builtin_features)
 				register_builtin_feature (tokens.has_default_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_has_default), l_builtin_features)
 				register_builtin_feature (tokens.is_attached_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_attached), l_builtin_features)
+				register_builtin_feature (tokens.is_deferred_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_deferred), l_builtin_features)
 				register_builtin_feature (tokens.is_expanded_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_expanded), l_builtin_features)
 				register_builtin_feature (tokens.runtime_name_feature_name, Void, current_universe.string_type, tokens.builtin_type_feature (tokens.builtin_type_runtime_name), l_builtin_features)
 				register_builtin_feature (tokens.type_id_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_type_id), l_builtin_features)

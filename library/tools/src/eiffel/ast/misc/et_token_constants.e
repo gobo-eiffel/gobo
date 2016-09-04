@@ -1796,6 +1796,14 @@ feature -- Feature names
 			is_default_pointer_feature_name_not_void: Result /= Void
 		end
 
+	is_deferred_feature_name: ET_FEATURE_NAME
+			-- 'is_deferred' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_deferred_name)
+		ensure
+			is_deferred_feature_name_not_void: Result /= Void
+		end
+
 	is_dotnet_feature_name: ET_FEATURE_NAME
 			-- 'is_dotnet' feature name
 		once
@@ -4683,6 +4691,9 @@ feature -- Keyword and symbol names
 
 	is_default_pointer_name: STRING = "is_default_pointer"
 			-- Name of Eiffel feature 'is_default_pointer'
+
+	is_deferred_name: STRING = "is_deferred"
+			-- Name of Eiffel feature 'is_deferred'
 
 	is_dotnet_name: STRING = "is_dotnet"
 			-- Name of Eiffel feature 'is_dotnet'

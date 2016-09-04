@@ -958,6 +958,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.is_copy_semantics_field_name)
 			Result.force_new (-1, tokens.is_deep_equal_name)
 			Result.force_new (-1, tokens.is_default_pointer_name)
+			Result.force_new (-1, tokens.is_deferred_name)
 			Result.force_new (-1, tokens.is_dotnet_name)
 			Result.force_new (-1, tokens.is_equal_name)
 			Result.force_new (-1, tokens.is_expanded_name)

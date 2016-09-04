@@ -376,9 +376,10 @@ feature -- Built-in codes
 	builtin_type_generic_parameter_count: INTEGER = 3
 	builtin_type_has_default: INTEGER = 4
 	builtin_type_is_attached: INTEGER = 5
-	builtin_type_is_expanded: INTEGER = 6
-	builtin_type_runtime_name: INTEGER = 7
-	builtin_type_type_id: INTEGER = 8
+	builtin_type_is_deferred: INTEGER = 6
+	builtin_type_is_expanded: INTEGER = 7
+	builtin_type_runtime_name: INTEGER = 8
+	builtin_type_type_id: INTEGER = 9
 			-- Codes for built-in functions from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER
