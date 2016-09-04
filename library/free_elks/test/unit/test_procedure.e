@@ -445,8 +445,8 @@ feature -- Test
 			-- of 'call' is correctly done, with boxing of expanded
 			-- objects to reference when necessary.
 		local
-			p1: PROCEDURE [ANY, INTEGER]
-			p2: PROCEDURE [ANY, ANY]
+			p1: PROCEDURE [detachable ANY, INTEGER]
+			p2: PROCEDURE [detachable ANY, ANY]
 			a: ARRAY [detachable ANY]
 			t: TUPLE [ANY, INTEGER]
 			b: ANY

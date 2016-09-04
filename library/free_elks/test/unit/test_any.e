@@ -5,7 +5,7 @@ note
 		"Test features of class ANY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,7 +123,11 @@ feature -- Test
 			l_type := cc.generating_type
 			assert ("not_void5", l_type /= Void )
 			assert ("type5", l_type.same_type (""))
-			assert_equal ("value5", "CC [STRING_32, CHARACTER_32]", l_type)
+			if is_void_safe_mode then
+				assert_equal ("value5", "CC [!STRING_32, CHARACTER_32]", l_type)
+			else
+				assert_equal ("value5", "CC [STRING_32, CHARACTER_32]", l_type)
+			end
 			assert ("new_object5", l_type /= cc.generating_type)
 				-- SPECIAL [BOOLEAN].
 			create sp.make_filled (True, 2)
@@ -932,5 +936,11 @@ feature {NONE} -- Implementation
 		ensure
 			normalized_addresses_not_void: Result /= Void
 		end
-
+	
+	is_void_safe_mode: BOOLEAN
+			-- Is current test compiled in void-safe mode?
+		once
+			Result := {attached STRING_8} /= {detachable STRING_8}
+		end
+		
 end

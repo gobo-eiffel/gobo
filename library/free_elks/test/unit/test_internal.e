@@ -5,7 +5,7 @@ note
 		"Test features of class INTERNAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2010-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,7 +68,7 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			assert_equal ("type_of_string_8", {STRING_8}, internal.type_of (s))
+			assert_equal ("type_of_string_8", {detachable STRING_8}, internal.type_of (s))
 			assert_equal ("type_of_integer_16", {INTEGER_16}, internal.type_of (i))
 		end
 
@@ -78,8 +78,8 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert_integers_equal ("type_of_array", ({ARRAY [ANY]}).type_id, internal.dynamic_type_from_string ("ARRAY [ANY]"))
-			assert_integers_equal ("type_of_string_8", ({STRING_8}).type_id, internal.dynamic_type_from_string ("STRING_8"))
+			assert_integers_equal ("type_of_array", ({detachable ARRAY [detachable ANY]}).type_id, internal.dynamic_type_from_string ("ARRAY [ANY]"))
+			assert_integers_equal ("type_of_string_8", ({detachable STRING_8}).type_id, internal.dynamic_type_from_string ("STRING_8"))
 			assert_integers_equal ("type_of_integer_16", ({INTEGER_16}).type_id, internal.dynamic_type_from_string ("INTEGER_16"))
 		end
 
@@ -92,8 +92,13 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			assert ("string_8_is_string_8", internal.is_instance_of (s, ({STRING_8}).type_id))
-			assert ("string_8_is_any", internal.is_instance_of (s, ({ANY}).type_id))
+			assert ("string_8_is_detachable_string_8", internal.is_instance_of (s, ({detachable STRING_8}).type_id))
+			assert ("string_8_is_detachable_any", internal.is_instance_of (s, ({detachable ANY}).type_id))
+			if is_void_safe_mode then
+					-- The types of objects are considered to be detachable!
+				assert_false ("string_8_is_not_string_8", internal.is_instance_of (s, ({STRING_8}).type_id))
+				assert_false ("string_8_is_not_any", internal.is_instance_of (s, ({ANY}).type_id))
+			end
 			assert_false ("string_8_is_not_integer_16", internal.is_instance_of (s, ({INTEGER_16}).type_id))
 			assert ("integer_16_is_integer_16", internal.is_instance_of (i, ({INTEGER_16}).type_id))
 			assert ("integer_16_is_any", internal.is_instance_of (i, ({ANY}).type_id))
@@ -121,7 +126,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert ("special_string_8", internal.is_special_any_type (({SPECIAL [STRING_8]}).type_id))
+			assert ("special_string_8", internal.is_special_any_type (({detachable SPECIAL [STRING_8]}).type_id))
 			assert_false ("special_integer_16", internal.is_special_any_type (({SPECIAL [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_special_any_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_special_any_type (({INTEGER_16}).type_id))
@@ -133,8 +138,8 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert ("special_string_8", internal.is_special_type (({SPECIAL [STRING_8]}).type_id))
-			assert ("special_integer_16", internal.is_special_type (({SPECIAL [INTEGER_16]}).type_id))
+			assert ("special_string_8", internal.is_special_type (({detachable SPECIAL [STRING_8]}).type_id))
+			assert ("special_integer_16", internal.is_special_type (({detachable SPECIAL [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_special_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_special_type (({INTEGER_16}).type_id))
 		end
@@ -186,9 +191,9 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert ("tuple", internal.is_tuple_type (({TUPLE}).type_id))
-			assert ("tuple_string_8", internal.is_tuple_type (({TUPLE [STRING_8]}).type_id))
-			assert ("tuple_integer_16", internal.is_tuple_type (({TUPLE [INTEGER_16]}).type_id))
+			assert ("tuple", internal.is_tuple_type (({detachable TUPLE}).type_id))
+			assert ("tuple_string_8", internal.is_tuple_type (({detachable TUPLE [STRING_8]}).type_id))
+			assert ("tuple_integer_16", internal.is_tuple_type (({detachable TUPLE [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_tuple_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_tuple_type (({INTEGER_16}).type_id))
 		end
@@ -233,7 +238,11 @@ feature -- Test
 			create arr.make_filled ("", 1, 5)
 			assert_strings_equal ("string_8", "STRING_8", internal.type_name (s))
 			assert_strings_equal ("integer_16", "INTEGER_16", internal.type_name (i))
-			assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name (arr))
+			if is_void_safe_mode then
+				assert_strings_equal ("array_any", "ARRAY [!ANY]", internal.type_name (arr))
+			else
+				assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name (arr))
+			end
 		end
 
 	test_type_name_of_type
@@ -242,9 +251,14 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert_strings_equal ("string_8", "STRING_8", internal.type_name_of_type (({STRING_8}).type_id))
+			if is_void_safe_mode then
+				assert_strings_equal ("string_8", "!STRING_8", internal.type_name_of_type (({STRING_8}).type_id))
+				assert_strings_equal ("array_any", "!ARRAY [!ANY]", internal.type_name_of_type (({ARRAY [ANY]}).type_id))
+			else
+				assert_strings_equal ("string_8", "STRING_8", internal.type_name_of_type (({STRING_8}).type_id))
+				assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name_of_type (({ARRAY [ANY]}).type_id))
+			end
 			assert_strings_equal ("integer_16", "INTEGER_16", internal.type_name_of_type (({INTEGER_16}).type_id))
-			assert_strings_equal ("array_any", "ARRAY [ANY]", internal.type_name_of_type (({ARRAY [ANY]}).type_id))
 		end
 
 	test_dynamic_type
@@ -258,9 +272,9 @@ feature -- Test
 			create internal
 			s := "gobo"
 			create arr.make_filled ("", 1, 5)
-			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.dynamic_type (s))
+			assert_integers_equal ("string_8", ({detachable STRING_8}).type_id, internal.dynamic_type (s))
 			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.dynamic_type (i))
-			assert_integers_equal ("array_any", ({ARRAY [ANY]}).type_id, internal.dynamic_type (arr))
+			assert_integers_equal ("array_any", ({detachable ARRAY [ANY]}).type_id, internal.dynamic_type (arr))
 		end
 
 	test_field_name
@@ -355,8 +369,8 @@ feature -- Test
 			assert_integers_equal ("pointer", ({POINTER}).type_id, internal.field_static_type_of_type (field_index ("pointer_1", Current), ({like Current}).type_id))
 			assert_integers_equal ("real_32", ({REAL_32}).type_id, internal.field_static_type_of_type (field_index ("real_32_1", Current), ({like Current}).type_id))
 			assert_integers_equal ("real_64", ({REAL_64}).type_id, internal.field_static_type_of_type (field_index ("real_64_1", Current), ({like Current}).type_id))
-			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.field_static_type_of_type (field_index ("string_8_1", Current), ({like Current}).type_id))
-			assert_integers_equal ("any", ({ANY}).type_id, internal.field_static_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("string_8", ({detachable STRING_8}).type_id, internal.field_static_type_of_type (field_index ("string_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("any", ({detachable ANY}).type_id, internal.field_static_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
 		end
 
 	test_field
@@ -807,10 +821,10 @@ feature -- Attributes
 	real_64_1: REAL_64
 			-- Attribute of type REAL_64
 
-	string_8_1: STRING_8
+	string_8_1: detachable STRING_8
 			-- Attribute of type STRING_8
 
-	any_1: ANY
+	any_1: detachable ANY
 			-- Attribute of type ANY
 
 feature {NONE} -- Implementation
@@ -843,4 +857,10 @@ feature {NONE} -- Implementation
 			field_index_small_enough: Result <= (create {INTERNAL}).field_count (a_object)
 		end
 
+	is_void_safe_mode: BOOLEAN
+			-- Is current test compiled in void-safe mode?
+		once
+			Result := {attached STRING_8} /= {detachable STRING_8}
+		end
+		
 end

@@ -2,7 +2,7 @@ class BB [G]
 
 feature
 
-	item: G
+	item: detachable G
 
 	set_item (v: G)
 		do

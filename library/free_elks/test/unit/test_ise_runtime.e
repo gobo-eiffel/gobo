@@ -29,19 +29,19 @@ feature -- Test
 		do
 			create l_r
 			assert_false ("toto_dd", l_r.is_special_any_type (({SPECIAL [DD]}).type_id))
-			assert ("toto_ref", l_r.is_special_any_type (({SPECIAL [STRING]}).type_id))
+			assert_true ("toto_ref", l_r.is_special_any_type (({detachable SPECIAL [STRING]}).type_id))
 			assert_false ("toto_int", l_r.is_special_any_type (({SPECIAL [INTEGER]}).type_id))
 			assert_false ("tata_dd", l_r.is_special_type (({SPECIAL [DD]}).type_id))
-			assert ("tata_ref", l_r.is_special_type (({SPECIAL [STRING]}).type_id))
-			assert ("tata_int", l_r.is_special_type (({SPECIAL [INTEGER]}).type_id))
+			assert_true ("tata_ref", l_r.is_special_type (({detachable SPECIAL [STRING]}).type_id))
+			assert_true ("tata_int", l_r.is_special_type (({detachable SPECIAL [INTEGER]}).type_id))
 		end
-		
+
 	test_compiler_version
 			-- Test feature 'compiler_version'.
 		do
 			assert ("compiler_version", {ISE_RUNTIME}.compiler_version >= 0)
 		end
-		
+
 	test_generator_of_type
 			-- Test feature 'generator_of_type'.
 		do
@@ -49,13 +49,18 @@ feature -- Test
 			assert_strings_equal ("integer_16", "INTEGER_16", {ISE_RUNTIME}.generator_of_type (({INTEGER_16}).type_id))
 			assert_strings_equal ("array", "ARRAY", {ISE_RUNTIME}.generator_of_type (({ARRAY [ANY]}).type_id))
 		end
-		
+
 	test_generating_type_of_type
 			-- Test feature 'generating_type_of_type'.
 		do
-			assert_strings_equal ("string_8", "STRING_8", {ISE_RUNTIME}.generating_type_of_type (({STRING_8}).type_id))
+			if is_void_safe_mode then
+				assert_strings_equal ("string_8_void_safe", "!STRING_8", {ISE_RUNTIME}.generating_type_of_type (({STRING_8}).type_id))
+				assert_strings_equal ("array_any_void_safe", "!ARRAY [!ANY]", {ISE_RUNTIME}.generating_type_of_type (({ARRAY [ANY]}).type_id))
+			else
+				assert_strings_equal ("string_8_non_void_safe", "STRING_8", {ISE_RUNTIME}.generating_type_of_type (({STRING_8}).type_id))
+				assert_strings_equal ("array_any_non_void_safe", "ARRAY [ANY]", {ISE_RUNTIME}.generating_type_of_type (({ARRAY [ANY]}).type_id))
+			end
 			assert_strings_equal ("integer_16", "INTEGER_16", {ISE_RUNTIME}.generating_type_of_type (({INTEGER_16}).type_id))
-			assert_strings_equal ("array_any", "ARRAY [ANY]", {ISE_RUNTIME}.generating_type_of_type (({ARRAY [ANY]}).type_id))
 		end
 
 	test_type_id_from_name
@@ -64,13 +69,13 @@ feature -- Test
 			l_cstr: C_STRING
 		do
 			create l_cstr.make ("ARRAY [ANY]")
-			assert_integers_equal ("type_of_array", ({ARRAY [ANY]}).type_id, {ISE_RUNTIME}.type_id_from_name (l_cstr.item))
+			assert_integers_equal ("type_of_array", ({detachable ARRAY [detachable ANY]}).type_id, {ISE_RUNTIME}.type_id_from_name (l_cstr.item))
 			create l_cstr.make ("STRING_8")
-			assert_integers_equal ("type_of_string_8", ({STRING_8}).type_id, {ISE_RUNTIME}.type_id_from_name (l_cstr.item))
+			assert_integers_equal ("type_of_string_8", ({detachable STRING_8}).type_id, {ISE_RUNTIME}.type_id_from_name (l_cstr.item))
 			create l_cstr.make ("INTEGER_16")
 			assert_integers_equal ("type_of_integer_16", ({INTEGER_16}).type_id, {ISE_RUNTIME}.type_id_from_name (l_cstr.item))
 		end
-		
+
 	test_check_assert
 			-- Test feature 'check_assert'.
 		do
@@ -97,9 +102,9 @@ feature -- Test
 		do
 			s := "gobo"
 			create arr.make_filled ("", 1, 5)
-			assert_integers_equal ("string_8", ({STRING_8}).type_id, {ISE_RUNTIME}.dynamic_type (s))
+			assert_integers_equal ("string_8", ({detachable STRING_8}).type_id, {ISE_RUNTIME}.dynamic_type (s))
 			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, {ISE_RUNTIME}.dynamic_type (i))
-			assert_integers_equal ("array_any", ({ARRAY [ANY]}).type_id, {ISE_RUNTIME}.dynamic_type (arr))
+			assert_integers_equal ("array_any", ({detachable ARRAY [ANY]}).type_id, {ISE_RUNTIME}.dynamic_type (arr))
 		end
 
 	test_type_conforms_to
@@ -115,24 +120,27 @@ feature -- Test
 			assert ("none_conforms_to_string_8", {ISE_RUNTIME}.type_conforms_to (({detachable NONE}).type_id, ({detachable STRING_8}).type_id))
 			assert_false ("none_does_not_conform_to_boolean", {ISE_RUNTIME}.type_conforms_to (({detachable NONE}).type_id, ({BOOLEAN}).type_id))
 		end
-		
+
 	test_is_attached_type
 			-- Test feature 'is_attached_type'.
 		do
-			if {attached ANY} /= {detachable ANY} then
-					-- Compiled in void-safe mode.
-				assert_true ("attached", {ISE_RUNTIME}.is_attached_type (({attached STRING_8}).type_id))
+			if is_void_safe_mode then
+				assert_true ("attached_void_safe", {ISE_RUNTIME}.is_attached_type (({attached STRING_8}).type_id))
+			else
+				assert_false ("attached_non_void_safe", {ISE_RUNTIME}.is_attached_type (({attached STRING_8}).type_id))
 			end
 			assert_false ("detachable", {ISE_RUNTIME}.is_attached_type (({detachable STRING_8}).type_id))
 		end
-		
+
 	test_attached_type
 			-- Test feature 'attached_type'.
 		do
-			if {attached ANY} /= {detachable ANY} then
-					-- Compiled in void-safe mode.
-				assert_integers_equal ("attached", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({attached STRING_8}).type_id))
-				assert_integers_equal ("detachable", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({detachable STRING_8}).type_id))
+			if is_void_safe_mode then
+				assert_integers_equal ("attached_void_safe", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({attached STRING_8}).type_id))
+				assert_integers_equal ("detachable_void_safe", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({detachable STRING_8}).type_id))
+			else
+				assert_integers_not_equal ("attached_non_void_safe", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({attached STRING_8}).type_id))
+				assert_integers_not_equal ("detachable_non_void_safe", ({attached STRING_8}).type_id, {ISE_RUNTIME}.attached_type (({detachable STRING_8}).type_id))
 			end
 		end
 
@@ -156,7 +164,7 @@ feature -- Test
 			assert_true ("user_expanded", {ISE_RUNTIME}.is_field_expanded_of_type (field_index ("expanded_1", Current), generating_type.type_id))
 			assert_false ("reference", {ISE_RUNTIME}.is_field_expanded_of_type (field_index ("string_8_1", Current), generating_type.type_id))
 		end
-		
+
 	test_is_special
 			-- Test feature 'is_special'.
 		local
@@ -209,8 +217,8 @@ feature -- Test
 			assert_false ("special_basic_expanded", {ISE_RUNTIME}.is_special_of_reference (object_address (s3)))
 			create s4.make_empty (2)
 			assert_false ("special_user_expanded", {ISE_RUNTIME}.is_special_of_reference (object_address (s4)))
-		end		
-		
+		end
+
 	test_is_expanded
 			-- Test feature 'is_expanded'.
 		local
@@ -259,7 +267,7 @@ feature -- Test
 			assert_true ("integer", {ISE_RUNTIME}.is_special_copy_semantics_item (1, object_address (l_special)))
 			assert_false ("string", {ISE_RUNTIME}.is_special_copy_semantics_item (2, object_address (l_special)))
 		end
-		
+
 	test_field_count_of_type
 			-- Test feature 'field_count_of_type'.
 		do
@@ -307,7 +315,7 @@ feature -- Test
 			assert_integers_equal ("real_64_1", {REFLECTOR_CONSTANTS}.real_64_type, {ISE_RUNTIME}.field_type_of_type (field_index ("real_64_1", Current), generating_type.type_id))
 			assert_integers_equal ("expanded_1", {REFLECTOR_CONSTANTS}.expanded_type, {ISE_RUNTIME}.field_type_of_type (field_index ("expanded_1", Current), generating_type.type_id))
 		end
-		
+
 	test_persistent_field_count_of_type_count
 			-- Test feature 'persistent_field_count_of_type'.
 		do
@@ -322,7 +330,7 @@ feature -- Test
 		do
 			assert ("no_storable_version", {ISE_RUNTIME}.storable_version_of_type (generating_type.type_id) = Void)
 		end
-		
+
 	test_generic_parameter_count
 			-- Test feature 'generic_parameter_count'.
 		do
@@ -352,7 +360,7 @@ feature -- Test
 			create s.make_empty (100)
 			assert ("special", {ISE_RUNTIME}.object_size (object_address (s)) >= 800)
 		end
-		
+
 	test_boolean_field
 			-- Test feature 'boolean_field'.
 		local
@@ -460,7 +468,7 @@ feature -- Test
 			integer_64_1 := 66
 			assert ("integer_64", {ISE_RUNTIME}.integer_64_field_at ({ISE_RUNTIME}.field_offset_of_type (field_index ("integer_64_1", Current), generating_type.type_id), $Current, 0) = 66)
 		end
-		
+
 	test_natural_8_field
 			-- Test feature 'natural_8_field'.
 		do
@@ -564,7 +572,7 @@ feature -- Test
 			real_64_1 := 66.0
 			assert ("real_64", {ISE_RUNTIME}.real_64_field_at ({ISE_RUNTIME}.field_offset_of_type (field_index ("real_64_1", Current), generating_type.type_id), $Current, 0) = 66.0)
 		end
-		
+
 	test_reference_field
 			-- Test feature 'reference_field'.
 		local
@@ -631,12 +639,12 @@ feature -- Test
 			t: TUPLE
 		do
 			s := "gobo"
-			assert_integers_equal ("dynamic_type_at_offset_zero_1", ({STRING_8}).type_id, {ISE_RUNTIME}.dynamic_type_at_offset ($s, 0))
+			assert_integers_equal ("dynamic_type_at_offset_zero_1", s.generating_type.type_id, {ISE_RUNTIME}.dynamic_type_at_offset ($s, 0))
 			assert_integers_equal ("dynamic_type_at_offset_zero_2", generating_type.type_id, {ISE_RUNTIME}.dynamic_type_at_offset ($Current, 0))
 			t := []
-			assert_integers_equal ("dynamic_type_at_offset_zero_3", ({TUPLE}).type_id, {ISE_RUNTIME}.dynamic_type_at_offset ($t, 0))
+			assert_integers_equal ("dynamic_type_at_offset_zero_3", t.generating_type.type_id, {ISE_RUNTIME}.dynamic_type_at_offset ($t, 0))
 		end
-		
+
 	test_set_boolean_field
 			-- Test feature 'set_boolean_field'.
 		local
@@ -745,7 +753,7 @@ feature -- Test
 			{ISE_RUNTIME}.set_integer_64_field_at ({ISE_RUNTIME}.field_offset_of_type (field_index ("integer_64_1", Current), generating_type.type_id), $Current, 0, 70)
 			assert ("integer_64", integer_64_1 = 70)
 		end
-		
+
 	test_set_natural_8_field
 			-- Test feature 'set_natural_8_field'.
 		do
@@ -849,7 +857,7 @@ feature -- Test
 			{ISE_RUNTIME}.set_real_64_field_at ({ISE_RUNTIME}.field_offset_of_type (field_index ("real_64_1", Current), generating_type.type_id), $Current, 0, 68.0)
 			assert ("real_64", real_64_1 = 68.0)
 		end
-		
+
 	test_set_reference_field
 			-- Test feature 'set_reference_field'.
 		local
@@ -885,7 +893,7 @@ feature -- Test
 			assert_false ("not_pre_ecma_mapping", {ISE_RUNTIME}.pre_ecma_mapping_status)
 			{ISE_RUNTIME}.set_pre_ecma_mapping (True)
 			assert_true ("pre_ecma_mapping", {ISE_RUNTIME}.pre_ecma_mapping_status)
-		end		
+		end
 
 	test_is_object_marked
 			-- Test feature 'is_object_marked'.
@@ -901,7 +909,7 @@ feature -- Test
 			assert_false ("not_marked_2", {ISE_RUNTIME}.is_object_marked ($s))
 			{ISE_RUNTIME}.unlock_marking
 		end
-		
+
 feature -- Attributes
 
 	boolean_1: BOOLEAN
@@ -954,7 +962,7 @@ feature -- Attributes
 
 	expanded_1: DD
 			-- Attribute of user-defined expanded type
-			
+
 feature {NONE} -- Implementation
 
 	field_index (a_field_name: STRING; a_object: ANY): INTEGER
@@ -994,5 +1002,11 @@ feature {NONE} -- Implementation
 		alias
 			"return (EIF_POINTER) eif_access($a_object);"
 		end
-		
+
+	is_void_safe_mode: BOOLEAN
+			-- Is current test compiled in void-safe mode?
+		once
+			Result := {attached STRING_8} /= {detachable STRING_8}
+		end
+
 end

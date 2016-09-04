@@ -802,7 +802,7 @@ feature {TS_TEST_HANDLER} -- Files
 
 feature {TS_TEST_HANDLER} -- Containers
 
-	assert_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY])
+	assert_arrays_same (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
 		require
@@ -814,7 +814,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			i1, i2: INTEGER
 			new_tag: STRING
 			a_message: detachable STRING
-			expected_item, actual_item: ANY
+			expected_item, actual_item: detachable ANY
 		do
 			assertions.add_assertion
 			if expected.count /= actual.count then
@@ -855,7 +855,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			end
 		end
 
-	check_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY])
+	check_arrays_same (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Check that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
 			-- Violation of this assertion is not fatal.
@@ -872,7 +872,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (l_fatal)
 		end
 
-	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [ANY])
+	assert_arrays_equal (a_tag: STRING; expected, actual: ARRAY [detachable ANY])
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use `equal' for item comparison).
 		require
@@ -884,7 +884,7 @@ feature {TS_TEST_HANDLER} -- Containers
 			i1, i2: INTEGER
 			new_tag: STRING
 			a_message: detachable STRING
-			expected_item, actual_item: ANY
+			expected_item, actual_item: detachable ANY
 		do
 			assertions.add_assertion
 			if expected.count /= actual.count then

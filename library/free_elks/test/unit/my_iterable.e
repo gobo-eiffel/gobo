@@ -10,7 +10,7 @@ inherit
 create
 
 	make
-	
+
 feature
 
 	make (a_old, a_new: G)
@@ -18,7 +18,7 @@ feature
 			old_identifier := a_old
 			new_identifier := a_new
 		end
-		
+
 	new_iterator: MY_ITERATOR [G]
 		do
 			create Result.make (old_identifier)
@@ -30,10 +30,10 @@ feature
 		end
 
 	old_identifier: G
-	
+
 	new_identifier: G
-	
-	foo: G
+
+	foo: detachable G
 		do
 			across Current as i loop
 				Result := i.item

@@ -187,7 +187,7 @@ feature -- Test
 				p4 := agent b.item (?)
 				assert_equal ("item9b", 'q', p4.item ([1, "gobo"]))
 			end
-			create b2.make (1, 1)
+			create b2.make_filled ("", 1, 1)
 			b2.put ("gobo", 1)
 			b := b2
 			p4 := agent b.item (?)
@@ -982,7 +982,7 @@ feature -- Test
 		do
 			l_false := False
 			s := "gobo"
-			create arr.make (1, 1)
+			create arr.make_filled ("", 1, 1)
 			arr.put (s, 1)
 			p1 := agent g
 			assert_equal ("item1", l_false, p1.item ([arr, 6]))
