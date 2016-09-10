@@ -2131,12 +2131,18 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				call_operands.wipe_out
 			when builtin_any_is_deep_equal then
 				print_builtin_any_is_deep_equal_body (a_feature)
+			when builtin_any_is_equal then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_any_is_equal_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_any_same_type then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_any_same_type_call (current_feature, current_type, False)
 				print_semicolon_newline
-			when builtin_any_standard_is_equal, builtin_any_is_equal then
+			when builtin_any_standard_is_equal then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_any_standard_is_equal_call (current_feature, current_type, False)
@@ -13934,9 +13940,11 @@ feature {NONE} -- Query call generation
 				print_builtin_any_generating_type_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_any_generator then
 				print_builtin_any_generator_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_any_is_equal then
+				print_builtin_any_is_equal_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_any_same_type then
 				print_builtin_any_same_type_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_any_standard_is_equal, builtin_any_is_equal then
+			when builtin_any_standard_is_equal then
 				print_builtin_any_standard_is_equal_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
@@ -17861,6 +17869,20 @@ feature {NONE} -- Built-in feature generation
 		do
 -- TODO
 print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
+		end
+
+	print_builtin_any_is_equal_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'ANY.is_equal'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_builtin_any_standard_is_equal_call (a_feature, a_target_type, a_check_void_target)
 		end
 
 	print_builtin_any_same_type_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -26532,23 +26554,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				l_type := current_dynamic_system.dynamic_type (l_parameters.type (1), a_target_type.base_type)
 				print_typed_default_entity_value (l_type, current_file)
 			end
-		end
-
-	print_builtin_type_generating_type_body (a_feature: ET_EXTERNAL_ROUTINE)
-			-- Print to `current_file' then body of `a_feature' corresponding
-			-- to built-in feature 'TYPE.generating_type'.
-		require
-			a_feature_not_void: a_feature /= Void
-			valid_feature: current_feature.static_feature = a_feature
-		do
--- TODO: what to do to avoid having a infinite number of types?
-			print_indentation
-			current_file.put_string (c_ge_raise)
-			current_file.put_character ('(')
-			current_file.put_string (c_ge_ex_prog)
-			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
 		end
 
 	print_builtin_type_generic_parameter_type_body (a_feature: ET_EXTERNAL_ROUTINE)

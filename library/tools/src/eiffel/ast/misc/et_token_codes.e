@@ -159,20 +159,24 @@ feature -- Built-in codes
 		end
 
 	builtin_any_class: INTEGER = 1
-	builtin_any_twin: INTEGER = 1
-	builtin_any_standard_copy: INTEGER = 2
-	builtin_any_standard_is_equal: INTEGER = 3
-	builtin_any_same_type: INTEGER = 4
-	builtin_any_generating_type: INTEGER = 5
-	builtin_any_generator: INTEGER = 6
-	builtin_any_conforms_to: INTEGER = 7
-	builtin_any_is_deep_equal: INTEGER = 8
-	builtin_any_tagged_out: INTEGER = 9
-	builtin_any_standard_twin: INTEGER = 10
-	builtin_any_deep_twin: INTEGER = 11
-	builtin_any_copy: INTEGER = 12
-	builtin_any_is_equal: INTEGER = 13
 			-- Codes for built-in features from class "ANY"
+
+	builtin_any_conforms_to: INTEGER = 1
+	builtin_any_deep_twin: INTEGER = 2
+	builtin_any_generating_type: INTEGER = 3
+	builtin_any_generator: INTEGER = 4
+	builtin_any_is_deep_equal: INTEGER = 5
+	builtin_any_is_equal: INTEGER = 6
+	builtin_any_same_type: INTEGER = 7
+	builtin_any_standard_is_equal: INTEGER = 8
+	builtin_any_standard_twin: INTEGER = 9
+	builtin_any_tagged_out: INTEGER = 10
+	builtin_any_twin: INTEGER = 11
+			-- Codes for built-in functions from class "ANY"
+
+	builtin_any_copy: INTEGER = 12
+	builtin_any_standard_copy: INTEGER = 13
+			-- Codes for built-in procedures from class "ANY"
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "SPECIAL"
