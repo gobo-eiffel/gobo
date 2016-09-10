@@ -30,10 +30,13 @@ feature -- Test
 			create l_r
 			assert_false ("toto_dd", l_r.is_special_any_type (({SPECIAL [DD]}).type_id))
 			assert_true ("toto_ref", l_r.is_special_any_type (({detachable SPECIAL [STRING]}).type_id))
+			assert_true ("toto_ref2", l_r.is_special_any_type (({attached SPECIAL [STRING]}).type_id))
 			assert_false ("toto_int", l_r.is_special_any_type (({SPECIAL [INTEGER]}).type_id))
 			assert_false ("tata_dd", l_r.is_special_type (({SPECIAL [DD]}).type_id))
 			assert_true ("tata_ref", l_r.is_special_type (({detachable SPECIAL [STRING]}).type_id))
+			assert_true ("tata_ref1", l_r.is_special_type (({attached SPECIAL [STRING]}).type_id))
 			assert_true ("tata_int", l_r.is_special_type (({detachable SPECIAL [INTEGER]}).type_id))
+			assert_true ("tata_int2", l_r.is_special_type (({attached SPECIAL [INTEGER]}).type_id))
 		end
 
 	test_compiler_version

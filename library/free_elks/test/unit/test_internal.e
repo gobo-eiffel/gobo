@@ -127,6 +127,7 @@ feature -- Test
 		do
 			create internal
 			assert ("special_string_8", internal.is_special_any_type (({detachable SPECIAL [STRING_8]}).type_id))
+			assert ("special_string_8_2", internal.is_special_any_type (({attached SPECIAL [STRING_8]}).type_id))
 			assert_false ("special_integer_16", internal.is_special_any_type (({SPECIAL [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_special_any_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_special_any_type (({INTEGER_16}).type_id))
@@ -139,7 +140,9 @@ feature -- Test
 		do
 			create internal
 			assert ("special_string_8", internal.is_special_type (({detachable SPECIAL [STRING_8]}).type_id))
+			assert ("special_string_8_2", internal.is_special_type (({attached SPECIAL [STRING_8]}).type_id))
 			assert ("special_integer_16", internal.is_special_type (({detachable SPECIAL [INTEGER_16]}).type_id))
+			assert ("special_integer_16_2", internal.is_special_type (({attached SPECIAL [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_special_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_special_type (({INTEGER_16}).type_id))
 		end
@@ -192,8 +195,11 @@ feature -- Test
 		do
 			create internal
 			assert ("tuple", internal.is_tuple_type (({detachable TUPLE}).type_id))
+			assert ("tuple_2", internal.is_tuple_type (({attached TUPLE}).type_id))
 			assert ("tuple_string_8", internal.is_tuple_type (({detachable TUPLE [STRING_8]}).type_id))
+			assert ("tuple_string_8_2", internal.is_tuple_type (({attached TUPLE [STRING_8]}).type_id))
 			assert ("tuple_integer_16", internal.is_tuple_type (({detachable TUPLE [INTEGER_16]}).type_id))
+			assert ("tuple_integer_16_2", internal.is_tuple_type (({attached TUPLE [INTEGER_16]}).type_id))
 			assert_false ("string_8", internal.is_tuple_type (({STRING_8}).type_id))
 			assert_false ("integer_16", internal.is_tuple_type (({INTEGER_16}).type_id))
 		end
