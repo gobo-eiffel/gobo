@@ -3229,7 +3229,11 @@ feature {ET_AST_NODE} -- Processing
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_precursor_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_precursor_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
@@ -3241,7 +3245,11 @@ feature {ET_AST_NODE} -- Processing
 	process_qualified_call_expression (an_expression: ET_QUALIFIED_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_qualified_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_qualified_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT)
@@ -3283,7 +3291,11 @@ feature {ET_AST_NODE} -- Processing
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_static_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_static_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
@@ -3313,7 +3325,11 @@ feature {ET_AST_NODE} -- Processing
 	process_unqualified_call_expression (an_expression: ET_UNQUALIFIED_CALL_EXPRESSION)
 			-- Process `an_expression'.
 		do
-			find_unqualified_call_expression_type (an_expression, current_context)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				find_qualified_call_expression_type (l_parenthesis_call, current_context)
+			else
+				find_unqualified_call_expression_type (an_expression, current_context)
+			end
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING)
