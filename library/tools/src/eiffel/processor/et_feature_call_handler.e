@@ -2050,25 +2050,17 @@ feature {ET_AST_NODE} -- Processing
 			l_class: ET_CLASS
 			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			if attached an_expression.arguments as l_arguments then
-				process_actual_arguments (l_arguments)
-				had_error := has_fatal_error
-			end
-			reset_fatal_error (False)
-			l_parent_type := an_expression.parent_type
-			if l_parent_type = Void then
-					-- Internal error: the Precursor construct should
-					-- already have been resolved when flattening the
-					-- features of `current_class_impl'.
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_expression (l_parenthesis_call)
 			else
-				l_precursor_keyword := an_expression.precursor_keyword
-				l_class := l_parent_type.base_class
-				if not attached l_class.seeded_query (l_precursor_keyword.seed) as l_query then
+				reset_fatal_error (False)
+				if attached an_expression.arguments as l_arguments then
+					process_actual_arguments (l_arguments)
+					had_error := has_fatal_error
+				end
+				reset_fatal_error (False)
+				l_parent_type := an_expression.parent_type
+				if l_parent_type = Void then
 						-- Internal error: the Precursor construct should
 						-- already have been resolved when flattening the
 						-- features of `current_class_impl'.
@@ -2077,26 +2069,38 @@ feature {ET_AST_NODE} -- Processing
 						error_handler.report_giaaa_error
 					end
 				else
-					if current_class /= current_class_impl and l_parent_type.is_generic then
-							-- Resolve generic parameters in the
-							-- context of `current_type'.
-						if attached current_class.ancestor (l_parent_type) as l_ancestor then
-							l_parent_type := l_ancestor
-						else
-								-- Internal error: `l_parent_type' is an ancestor
-								-- of `current_class_impl', and hence of `current_class'.
-							set_fatal_error
-							if internal_error_enabled or not current_class.has_implementation_error then
-								error_handler.report_giaaa_error
+					l_precursor_keyword := an_expression.precursor_keyword
+					l_class := l_parent_type.base_class
+					if not attached l_class.seeded_query (l_precursor_keyword.seed) as l_query then
+							-- Internal error: the Precursor construct should
+							-- already have been resolved when flattening the
+							-- features of `current_class_impl'.
+						set_fatal_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
+					else
+						if current_class /= current_class_impl and l_parent_type.is_generic then
+								-- Resolve generic parameters in the
+								-- context of `current_type'.
+							if attached current_class.ancestor (l_parent_type) as l_ancestor then
+								l_parent_type := l_ancestor
+							else
+									-- Internal error: `l_parent_type' is an ancestor
+									-- of `current_class_impl', and hence of `current_class'.
+								set_fatal_error
+								if internal_error_enabled or not current_class.has_implementation_error then
+									error_handler.report_giaaa_error
+								end
 							end
 						end
-					end
-					if not has_fatal_error then
-						report_precursor_expression (an_expression, l_parent_type, l_query)
+						if not has_fatal_error then
+							report_precursor_expression (an_expression, l_parent_type, l_query)
+						end
 					end
 				end
+				reset_fatal_error (had_error or has_fatal_error)
 			end
-			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION)
@@ -2108,52 +2112,56 @@ feature {ET_AST_NODE} -- Processing
 			l_class: ET_CLASS
 			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			if attached an_instruction.arguments as l_arguments then
-				process_actual_arguments (l_arguments)
-				had_error := has_fatal_error
-			end
-			reset_fatal_error (False)
-			l_parent_type := an_instruction.parent_type
-			if l_parent_type = Void then
-					-- Internal error: the Precursor construct should
-					-- already have been resolved when flattening the
-					-- features of `l_class_impl'.
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
-				end
+			if attached an_instruction.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_instruction (l_parenthesis_call)
 			else
-				l_precursor_keyword := an_instruction.precursor_keyword
-				l_class := l_parent_type.base_class
-				if not attached l_class.seeded_procedure (l_precursor_keyword.seed) as l_procedure then
+				reset_fatal_error (False)
+				if attached an_instruction.arguments as l_arguments then
+					process_actual_arguments (l_arguments)
+					had_error := has_fatal_error
+				end
+				reset_fatal_error (False)
+				l_parent_type := an_instruction.parent_type
+				if l_parent_type = Void then
 						-- Internal error: the Precursor construct should
 						-- already have been resolved when flattening the
-						-- features of `current_class_impl'.
+						-- features of `l_class_impl'.
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
 						error_handler.report_giaaa_error
 					end
 				else
-					if current_class /= current_class_impl and l_parent_type.is_generic then
-							-- Resolve generic parameters in the context of `current_type'.
-						if attached current_class.ancestor (l_parent_type) as l_ancestor then
-							l_parent_type := l_ancestor
-						else
-								-- Internal error: `l_parent_type' is an ancestor
-								-- of `current_class_impl', and hence of `current_class'.
-							set_fatal_error
-							if internal_error_enabled or not current_class.has_implementation_error then
-								error_handler.report_giaaa_error
+					l_precursor_keyword := an_instruction.precursor_keyword
+					l_class := l_parent_type.base_class
+					if not attached l_class.seeded_procedure (l_precursor_keyword.seed) as l_procedure then
+							-- Internal error: the Precursor construct should
+							-- already have been resolved when flattening the
+							-- features of `current_class_impl'.
+						set_fatal_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
+					else
+						if current_class /= current_class_impl and l_parent_type.is_generic then
+								-- Resolve generic parameters in the context of `current_type'.
+							if attached current_class.ancestor (l_parent_type) as l_ancestor then
+								l_parent_type := l_ancestor
+							else
+									-- Internal error: `l_parent_type' is an ancestor
+									-- of `current_class_impl', and hence of `current_class'.
+								set_fatal_error
+								if internal_error_enabled or not current_class.has_implementation_error then
+									error_handler.report_giaaa_error
+								end
 							end
 						end
-					end
-					if not has_fatal_error then
-						report_precursor_instruction (an_instruction, l_parent_type, l_procedure)
+						if not has_fatal_error then
+							report_precursor_instruction (an_instruction, l_parent_type, l_procedure)
+						end
 					end
 				end
+				reset_fatal_error (had_error or has_fatal_error)
 			end
-			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION)
@@ -2229,14 +2237,22 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_feature_call_expression (an_expression)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_expression (l_parenthesis_call)
+			else
+				process_qualified_feature_call_expression (an_expression)
+			end
 		end
 
 	process_qualified_call_instruction (an_instruction: ET_QUALIFIED_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_qualified_feature_call_instruction (an_instruction)
+			if attached an_instruction.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_instruction (l_parenthesis_call)
+			else
+				process_qualified_feature_call_instruction (an_instruction)
+			end
 		end
 
 	process_qualified_feature_call_expression (a_call: ET_QUALIFIED_FEATURE_CALL_EXPRESSION)
@@ -2426,29 +2442,33 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			l_type := an_expression.type
-			if anchored_types_enabled then
-				process_type (l_type)
-				had_error := has_fatal_error
-			end
-			if attached an_expression.arguments as l_arguments then
-				process_actual_arguments (l_arguments)
-				had_error := had_error or has_fatal_error
-			end
-			l_class := l_type.base_class (current_type)
-			l_seed := an_expression.name.seed
-			if attached l_class.seeded_query (l_seed) as l_query then
-				report_static_call_expression (an_expression, l_type, l_query)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_expression (l_parenthesis_call)
 			else
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+				reset_fatal_error (False)
+				l_type := an_expression.type
+				if anchored_types_enabled then
+					process_type (l_type)
+					had_error := has_fatal_error
 				end
+				if attached an_expression.arguments as l_arguments then
+					process_actual_arguments (l_arguments)
+					had_error := had_error or has_fatal_error
+				end
+				l_class := l_type.base_class (current_type)
+				l_seed := an_expression.name.seed
+				if attached l_class.seeded_query (l_seed) as l_query then
+					report_static_call_expression (an_expression, l_type, l_query)
+				else
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				end
+				reset_fatal_error (had_error or has_fatal_error)
 			end
-			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION)
@@ -2460,29 +2480,33 @@ feature {ET_AST_NODE} -- Processing
 			l_seed: INTEGER
 			had_error: BOOLEAN
 		do
-			reset_fatal_error (False)
-			l_type := an_instruction.type
-			if anchored_types_enabled then
-				process_type (l_type)
-				had_error := has_fatal_error
-			end
-			if attached an_instruction.arguments as l_arguments then
-				process_actual_arguments (l_arguments)
-				had_error := had_error or has_fatal_error
-			end
-			l_class := l_type.base_class (current_type)
-			l_seed := an_instruction.name.seed
-			if attached l_class.seeded_procedure (l_seed) as l_procedure then
-				report_static_call_instruction (an_instruction, l_type, l_procedure)
+			if attached an_instruction.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_instruction (l_parenthesis_call)
 			else
-					-- This error should have already been reported when checking
-					-- `current_feature' (using ET_FEATURE_CHECKER for example).
-				set_fatal_error
-				if internal_error_enabled or not current_class.has_implementation_error then
-					error_handler.report_giaaa_error
+				reset_fatal_error (False)
+				l_type := an_instruction.type
+				if anchored_types_enabled then
+					process_type (l_type)
+					had_error := has_fatal_error
 				end
+				if attached an_instruction.arguments as l_arguments then
+					process_actual_arguments (l_arguments)
+					had_error := had_error or has_fatal_error
+				end
+				l_class := l_type.base_class (current_type)
+				l_seed := an_instruction.name.seed
+				if attached l_class.seeded_procedure (l_seed) as l_procedure then
+					report_static_call_instruction (an_instruction, l_type, l_procedure)
+				else
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
+				end
+				reset_fatal_error (had_error or has_fatal_error)
 			end
-			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_strip_expression (an_expression: ET_STRIP_EXPRESSION)
@@ -2706,14 +2730,22 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_unqualified_feature_call_expression (an_expression)
+			if attached an_expression.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_expression (l_parenthesis_call)
+			else
+				process_unqualified_feature_call_expression (an_expression)
+			end
 		end
 
 	process_unqualified_call_instruction (an_instruction: ET_UNQUALIFIED_CALL_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
-			process_unqualified_feature_call_instruction (an_instruction)
+			if attached an_instruction.parenthesis_call as l_parenthesis_call then
+				process_qualified_feature_call_instruction (l_parenthesis_call)
+			else
+				process_unqualified_feature_call_instruction (an_instruction)
+			end
 		end
 
 	process_unqualified_feature_call_expression (a_call: ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION)
