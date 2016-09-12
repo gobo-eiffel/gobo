@@ -141,7 +141,7 @@ feature -- Basic operations
 	apply
 			-- Call routine with `operands' as last set.
 		require
-			valid_operands: valid_operands (operands)
+--			valid_operands: valid_operands (operands)
 		deferred
 		end
 
@@ -176,7 +176,7 @@ feature -- Obsolete
 			other_exists: other /= Void
 			conforming: conforms_to (other)
 		do
-			adapt (other)
+--			adapt (other)
 		end
 
 feature {ROUTINE} -- Implementation
