@@ -110,6 +110,14 @@ typedef __int64 intptr_t;
 typedef int intptr_t;
 #endif
 #endif
+#ifndef _UINTPTR_T_DEFINED
+#define _UINTPTR_T_DEFINED
+#ifdef _WIN64
+  typedef unsigned __int64 uintptr_t;
+#else
+  typedef unsigned int uintptr_t;
+#endif
+#endif
 #endif
 
 /* C type for underlying integer type identifying object's dynamic type. */
@@ -223,6 +231,8 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */
+typedef intptr_t	rt_int_ptr;
+typedef uintptr_t	rt_uint_ptr;
 #define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 
