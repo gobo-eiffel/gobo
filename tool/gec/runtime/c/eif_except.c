@@ -19,6 +19,9 @@
 #ifndef EIF_EXCEPT_H
 #include "eif_except.h"
 #endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,7 +96,7 @@ void esdie(int code)
  */
 EIF_REFERENCE eename(long code)
 {
-	return GE_str8(GE_exception_tag(code));
+	return GE_str(GE_exception_tag(code));
 }
 
 /*

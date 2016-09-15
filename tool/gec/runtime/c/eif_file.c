@@ -13,6 +13,10 @@
 #ifndef EIF_FILE_C
 #define EIF_FILE_C
 
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
+
 /* HAS_CHOWN:
  *	This symbol, if defined, indicates that the chown routine is
  *	available.
@@ -1567,7 +1571,7 @@ EIF_REFERENCE eif_file_owner(int uid) {
 #else
 	sprintf(str, "%d", uid);			/* Not available: use UID */
 #endif
-	return GE_str8(str);
+	return GE_str(str);
 }
 
 /*
@@ -1588,7 +1592,7 @@ EIF_REFERENCE eif_file_group(int gid) {
 #else
 	sprintf(str, "%d", gid);			/* Not available: use UID */
 #endif
-	return GE_str8(str);
+	return GE_str(str);
 }
 
 /*

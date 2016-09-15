@@ -19,6 +19,9 @@
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 #ifdef EIF_WINDOWS
 #include <winbase.h>
 #endif
@@ -486,34 +489,34 @@ static void GE_call_set_exception_data(GE_context* context, long code, int new_o
 		ge_exception_manager = context->exception_manager;
 	}
 	if (tag) {
-		l_tag = GE_str8(tag);
+		l_tag = GE_str(tag);
 	} else {
-		l_tag = GE_ms8("", 0);
+		l_tag = GE_ms("", 0);
 	}
 	if (recipient) {
-		l_recipient = GE_str8(recipient);
+		l_recipient = GE_str(recipient);
 	} else {
-		l_recipient = GE_ms8("", 0);
+		l_recipient = GE_ms("", 0);
 	}
 	if (eclass) {
-		l_eclass = GE_str8(eclass);
+		l_eclass = GE_str(eclass);
 	} else {
-		l_eclass = GE_ms8("", 0);
+		l_eclass = GE_ms("", 0);
 	}
 	if (rf_routine) {
-		l_rf_routine = GE_str8(rf_routine);
+		l_rf_routine = GE_str(rf_routine);
 	} else {
-		l_rf_routine = GE_ms8("", 0);
+		l_rf_routine = GE_ms("", 0);
 	}
 	if (rf_class) {
-		l_rf_class = GE_str8(rf_class);
+		l_rf_class = GE_str(rf_class);
 	} else {
-		l_rf_class = GE_ms8("", 0);
+		l_rf_class = GE_ms("", 0);
 	}
 	if (trace && context->exception_trace_enabled) {
-		l_trace = GE_str8(trace);
+		l_trace = GE_str(trace);
 	} else {
-		l_trace = GE_ms8("", 0);
+		l_trace = GE_ms("", 0);
 	}
 	GE_set_exception_data(context, ge_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
 }

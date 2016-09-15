@@ -783,6 +783,9 @@ feature -- Kernel types
 	function_type: ET_CLASS_TYPE
 			-- Class type "FUNCTION [TUPLE, ANY]", with implicit 'attached' type mark
 
+	immutable_string_32_type: ET_CLASS_TYPE
+			-- Class type "IMMUTABLE_STRING_32", with implicit 'attached' type mark
+
 	integer_type: ET_CLASS_TYPE
 			-- Class type "INTEGER"
 
@@ -942,6 +945,7 @@ feature -- Kernel types
 			set_exception_type
 			set_exception_manager_type
 			set_function_type
+			set_immutable_string_32_type
 			set_integer_type
 			set_integer_8_type
 			set_integer_16_type
@@ -1125,6 +1129,18 @@ feature -- Kernel types
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tuple_type)
 			create function_type.make_generic (tokens.implicit_attached_type_mark, l_name, l_parameters, l_master_class)
+		end
+
+	set_immutable_string_32_type
+			-- Set type "IMMUTABLE_STRING_32".
+		local
+			l_name: ET_CLASS_NAME
+			l_master_class: ET_MASTER_CLASS
+		do
+			l_name := tokens.immutable_string_32_class_name
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create immutable_string_32_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 		end
 
 	set_integer_type
@@ -1636,6 +1652,7 @@ feature -- Kernel types
 			detachable_exception_type := tokens.unknown_class_type
 			exception_manager_type := tokens.unknown_class_type
 			function_type := tokens.unknown_generic_class_type
+			immutable_string_32_type := tokens.unknown_class_type
 			integer_type := tokens.unknown_class_type
 			integer_8_type := tokens.unknown_class_type
 			integer_8_convert_feature := tokens.unknown_convert_feature
@@ -2588,6 +2605,7 @@ invariant
 	detachable_exception_type_not_void: exception_type /= Void
 	exception_manager_type_not_void: exception_manager_type /= Void
 	function_type_not_void: function_type /= Void
+	immutable_string_32_type_not_void: immutable_string_32_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
 	integer_32_type_not_void: integer_32_type /= Void

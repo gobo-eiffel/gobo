@@ -19,6 +19,9 @@
 #ifndef GE_TYPES_H
 #include "ge_types.h"
 #endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
@@ -222,7 +225,7 @@ EIF_REFERENCE GE_generator_of_type_index(EIF_TYPE_INDEX a_type)
 #else
 	l_generator = "";
 #endif
-	return GE_str8(l_generator);
+	return GE_str(l_generator);
 }
 
 /*
@@ -238,7 +241,7 @@ EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type)
 #else
 	l_name = "";
 #endif
-	return GE_str8(l_name);
+	return GE_str(l_name);
 }
 
 /*

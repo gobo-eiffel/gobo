@@ -143,7 +143,7 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.pointer_class_name) then
 				check_builtin_pointer_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.arguments_32_class_name) then
-				check_builtin_arguments_32_function_validity (a_feature)
+				check_builtin_arguments_32_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.com_failure_class_name) then
 				check_builtin_com_failure_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
@@ -246,6 +246,29 @@ feature {NONE} -- Built-in validity
 					-- Procedures.
 				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_copy)], tokens.copy_feature_name)
 				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_standard_copy)], tokens.standard_copy_feature_name)
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
+		end
+
+	check_builtin_arguments_32_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "ARGUMENTS_32".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
+		do
+			builtin_features.search (tokens.builtin_arguments_32_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (3)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_arguments_32_class)
+					-- Functions.
+				l_builtin_features.put_last ([Void, current_universe.integer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_argument_count)], tokens.argument_count_feature_name)
+				l_builtin_features.put_last ([<<current_universe.integer_type>>, current_universe.pointer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer)], tokens.i_th_argument_pointer_feature_name)
+				l_builtin_features.put_last ([<<current_universe.integer_type>>, current_universe.immutable_string_32_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_string)], tokens.i_th_argument_string_feature_name)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
@@ -797,53 +820,6 @@ feature {NONE} -- Built-in validity
 						-- The signature should be 'is_default_pointer: BOOLEAN'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-				end
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_arguments_32_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Check validity of built-in `a_feature' from class "ARGUMENTS_32".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_argument_count))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'argument_count: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'argument_count: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.i_th_argument_pointer_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'i_th_argument_pointer (i: INTEGER): POINTER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'i_th_argument_pointer (i: INTEGER): POINTER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
-						-- The signature should be 'i_th_argument_pointer (i: INTEGER): POINTER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
 				end
 			else
 					-- Unknown built-in routine.
@@ -3005,7 +2981,7 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.pointer_class_name) then
 				check_builtin_pointer_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.arguments_32_class_name) then
-				check_builtin_arguments_32_procedure_validity (a_feature)
+				check_builtin_arguments_32_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.com_failure_class_name) then
 				check_builtin_com_failure_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.memory_class_name) then
@@ -3415,33 +3391,6 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_pointer_feature (tokens.builtin_pointer_is_default_pointer))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_arguments_32_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "ARGUMENTS_32".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.argument_count_feature_name) then
-					-- 'ARGUMENTS_32.argument_count' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_argument_count))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-			elseif a_feature.name.same_feature_name (tokens.i_th_argument_pointer_feature_name) then
-					-- 'ARGUMENTS.i_th_argument_pointer' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, current_universe.pointer_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

@@ -138,6 +138,14 @@ feature -- Class names
 			identified_routines_class_name_not_void: Result /= Void
 		end
 
+	immutable_string_32_class_name: ET_CLASS_NAME
+			-- "IMMUTABLE_STRING_32" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_immutable_string_32_name)
+		ensure
+			immutable_string_32_class_name_not_void: Result /= Void
+		end
+
 	integer_class_name: ET_CLASS_NAME
 			-- "INTEGER" class name
 		once
@@ -4281,6 +4289,7 @@ feature -- Keyword and symbol names
 	capitalized_exception_manager_factory_name: STRING = "EXCEPTION_MANAGER_FACTORY"
 	capitalized_function_name: STRING = "FUNCTION"
 	capitalized_identified_routines_name: STRING = "IDENTIFIED_ROUTINES"
+	capitalized_immutable_string_32_name: STRING = "IMMUTABLE_STRING_32"
 	capitalized_integer_name: STRING = "INTEGER"
 	capitalized_integer_8_name: STRING = "INTEGER_8"
 	capitalized_integer_16_name: STRING = "INTEGER_16"

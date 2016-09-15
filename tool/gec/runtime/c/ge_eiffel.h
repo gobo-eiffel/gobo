@@ -16,6 +16,23 @@
 #pragma once
 #endif
 
+/* Class name mapping as defined in the FreeELKS library. */
+#ifndef EIF_INTEGER
+#define EIF_INTEGER EIF_INTEGER_32
+#endif
+#ifndef EIF_CHARACTER
+#define EIF_CHARACTER EIF_CHARACTER_8
+#endif
+#ifndef EIF_REAL
+#define EIF_REAL EIF_REAL_32
+#endif
+#ifndef EIF_DOUBLE
+#define EIF_DOUBLE EIF_REAL_64
+#endif
+#ifndef GE_ms
+#define GE_ms(s,c) GE_ms8((s),(c))
+#endif
+
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)
 #include <unistd.h>
 #endif
@@ -160,7 +177,8 @@ typedef float EIF_REAL_32;
 typedef double EIF_REAL_64;
 typedef struct {EIF_TYPE_INDEX id; uint16_t flags;} EIF_ANY;
 typedef EIF_ANY* EIF_REFERENCE;
-typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_INTEGER_32 count; EIF_INTEGER_32 capacity;} EIF_SPECIAL;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags; EIF_REFERENCE area; EIF_INTEGER count;} EIF_STRING;
+typedef struct {EIF_TYPE_INDEX id; uint16_t flags; uint32_t offset; EIF_INTEGER count; EIF_INTEGER capacity;} EIF_SPECIAL;
 
 #ifdef EIF_WINDOWS
 typedef wchar_t EIF_NATIVE_CHAR;
@@ -197,9 +215,6 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #endif
 #endif
 
-extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
-#define GE_str8(s) GE_ms8((s),strlen(s))
-
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)
@@ -217,10 +232,6 @@ extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
 #define RTI64C(x) GE_int64(x)
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
-#define EIF_INTEGER EIF_INTEGER_32
-#define EIF_CHARACTER EIF_CHARACTER_8
-#define EIF_REAL EIF_REAL_32
-#define EIF_DOUBLE EIF_REAL_64
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
 /* FUNCTION_CAST is for standard C calls. */
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */

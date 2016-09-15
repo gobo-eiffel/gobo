@@ -319,9 +319,12 @@ feature -- Built-in codes
 		end
 
 	builtin_arguments_32_class: INTEGER = 17
+			-- Codes for built-in features from class "ARGUMENTS_32" and related classes
+
 	builtin_arguments_32_argument_count: INTEGER = 1
 	builtin_arguments_32_i_th_argument_pointer: INTEGER = 2
 	builtin_arguments_32_i_th_argument_string: INTEGER = 3
+			-- Codes for built-in function from class "ARGUMENTS_32" and related classes
 
 	builtin_platform_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "PLATFORM"

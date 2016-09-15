@@ -19,6 +19,10 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -152,14 +156,14 @@ EIF_BOOLEAN eif_case_sensitive_path_names(void) {
 }
 
 EIF_REFERENCE eif_current_dir_representation(void) {
-	return GE_ms8(".", 1);
+	return GE_ms(".", 1);
 }
 
 EIF_REFERENCE eif_root_directory_name(void) {
 #ifdef EIF_WINDOWS
-	return GE_ms8("\\", 1);
+	return GE_ms("\\", 1);
 #else
-	return GE_ms8("/", 1);
+	return GE_ms("/", 1);
 #endif
 }
 

@@ -2816,6 +2816,8 @@ feature {NONE} -- Built-in features
 					mark_string_type_alive (l_result_type)
 				elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
 					mark_string_type_alive (l_result_type)
+				elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
+					mark_string_type_alive (l_result_type)
 				else
 					mark_type_alive (l_result_type)
 				end

@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			boolean_type := unknown_type
 			character_8_type := unknown_type
 			character_32_type := unknown_type
+			immutable_string_32_type := unknown_type
 			integer_8_type := unknown_type
 			integer_16_type := unknown_type
 			integer_32_type := unknown_type
@@ -82,6 +83,7 @@ feature {NONE} -- Initialization
 			boolean_type_not_void: boolean_type /= Void
 			character_8_type_not_void: character_8_type /= Void
 			character_32_type_not_void: character_32_type /= Void
+			immutable_string_32_type_not_void: immutable_string_32_type /= Void
 			integer_8_type_not_void: integer_8_type /= Void
 			integer_16_type_not_void: integer_16_type /= Void
 			integer_32_type_not_void: integer_32_type /= Void
@@ -183,6 +185,9 @@ feature -- Types
 
 	character_32_type: ET_DYNAMIC_TYPE
 			-- Type "CHARACTER_32"
+
+	immutable_string_32_type: ET_DYNAMIC_TYPE
+			-- Type "IMMUTABLE_STRING_32"
 
 	integer_8_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER_8"
@@ -1489,6 +1494,67 @@ feature {NONE} -- Compilation
 						end
 					end
 				end
+					-- Type "IMMUTABLE_STRING_32".
+				l_class_type := current_system.immutable_string_32_type
+				l_class := l_class_type.base_class
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+					immutable_string_32_type := unknown_type
+				else
+					immutable_string_32_type := dynamic_type (l_class_type, l_any)
+					if l_class.has_interface_error then
+							-- Error already reported.
+						set_fatal_error
+					else
+							-- Make features 'area' and 'count' alive at the first
+							-- two positions in the feature list of the IMMUTABLE_STRING_32 type.
+						if not attached l_class.named_query (tokens.area_feature_name) as l_area_feature then
+							if attached l_class.named_procedure (tokens.area_feature_name) as l_procedure then
+								set_fatal_error
+								error_handler.report_gvkfe2a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+							end
+						elseif not l_area_feature.is_attribute then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+						else
+							l_dynamic_feature := immutable_string_32_type.dynamic_query (l_area_feature, Current)
+							if not attached l_dynamic_feature.result_type_set as l_result_type_set then
+									-- Internal error: an attribute should have a result type.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							elseif l_result_type_set.static_type /= special_character_32_type then
+								set_fatal_error
+								error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_32_type.base_type)
+							end
+						end
+						if not attached l_class.named_query (tokens.count_feature_name) as l_count_feature then
+							if attached l_class.named_procedure (tokens.count_feature_name) as l_procedure then
+								set_fatal_error
+								error_handler.report_gvkfe2a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+							end
+						elseif not l_count_feature.is_attribute then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+						else
+							l_dynamic_feature := immutable_string_32_type.dynamic_query (l_count_feature, Current)
+							if not attached l_dynamic_feature.result_type_set as l_result_type_set then
+									-- Internal error: an attribute should have a result type.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							elseif not l_result_type_set.static_type.base_type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
+								set_fatal_error
+								error_handler.report_gvkfe3a_error (l_class, l_count_feature, l_class.universe.integer_type)
+							end
+						end
+					end
+				end
 					-- Class "ARRAY".
 				array_area_feature := Void
 				array_lower_feature := Void
@@ -2050,6 +2116,7 @@ invariant
 	boolean_type_not_void: boolean_type /= Void
 	character_8_type_not_void: character_8_type /= Void
 	character_32_type_not_void: character_32_type /= Void
+	immutable_string_32_type_not_void: immutable_string_32_type /= Void
 	integer_8_type_not_void: integer_8_type /= Void
 	integer_16_type_not_void: integer_16_type /= Void
 	integer_32_type_not_void: integer_32_type /= Void
