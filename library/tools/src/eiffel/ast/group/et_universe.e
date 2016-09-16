@@ -735,6 +735,9 @@ feature -- Kernel types
 	detachable_any_type: ET_CLASS_TYPE
 			-- Class type "detachable ANY"
 
+	detachable_separate_any_type: ET_CLASS_TYPE
+			-- Class type "detachable separate ANY"
+
 	separate_any_type: ET_CLASS_TYPE
 			-- Class type "separate ANY"
 
@@ -989,6 +992,7 @@ feature -- Kernel types
 			l_master_class.set_in_system (True)
 			create any_type.make (tokens.implicit_attached_type_mark, l_name, l_master_class)
 			create detachable_any_type.make (tokens.detachable_keyword, l_name, l_master_class)
+			create detachable_separate_any_type.make (tokens.detachable_separate_type_mark, l_name, l_master_class)
 			create separate_any_type.make (tokens.separate_keyword, l_name, l_master_class)
 				-- Implicit parent "ANY".
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
@@ -1630,6 +1634,7 @@ feature -- Kernel types
 		do
 			any_type := tokens.unknown_class_type
 			detachable_any_type := tokens.unknown_class_type
+			detachable_separate_any_type := tokens.unknown_class_type
 			separate_any_type := tokens.unknown_class_type
 			any_parent := tokens.unknown_parent
 			any_parents := tokens.unknown_parents
@@ -2592,6 +2597,7 @@ invariant
 		-- Kernel types.
 	any_type_not_void: any_type /= Void
 	detachable_any_type_not_void: detachable_any_type /= Void
+	detachable_separate_any_type_not_void: detachable_separate_any_type /= Void
 	separate_any_type_not_void: separate_any_type /= Void
 	any_parent_not_void: any_parent /= Void
 	any_parents_not_void: any_parents /= Void

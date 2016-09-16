@@ -408,6 +408,8 @@ feature -- Built-in codes
 		end
 
 	builtin_tuple_class: INTEGER = 23
+			-- Codes for built-in features from class "TUPLE"
+
 	builtin_tuple_boolean_item: INTEGER = 1
 	builtin_tuple_character_8_item: INTEGER = 2
 	builtin_tuple_character_32_item: INTEGER = 3
@@ -423,26 +425,28 @@ feature -- Built-in codes
 	builtin_tuple_natural_64_item: INTEGER = 13
 	builtin_tuple_object_comparison: INTEGER = 14
 	builtin_tuple_pointer_item: INTEGER = 15
-	builtin_tuple_put_boolean: INTEGER = 16
-	builtin_tuple_put_character_8: INTEGER = 17
-	builtin_tuple_put_character_32: INTEGER = 18
-	builtin_tuple_put_integer_8: INTEGER = 19
-	builtin_tuple_put_integer_16: INTEGER = 20
-	builtin_tuple_put_integer_32: INTEGER = 21
-	builtin_tuple_put_integer_64: INTEGER = 22
-	builtin_tuple_put_natural_8: INTEGER = 23
-	builtin_tuple_put_natural_16: INTEGER = 24
-	builtin_tuple_put_natural_32: INTEGER = 25
-	builtin_tuple_put_natural_64: INTEGER = 26
-	builtin_tuple_put_pointer: INTEGER = 27
-	builtin_tuple_put_real_32: INTEGER = 28
-	builtin_tuple_put_real_64: INTEGER = 29
-	builtin_tuple_put_reference: INTEGER = 30
-	builtin_tuple_real_32_item: INTEGER = 31
-	builtin_tuple_real_64_item: INTEGER = 32
+	builtin_tuple_real_32_item: INTEGER = 16
+	builtin_tuple_real_64_item: INTEGER = 17
+			-- Codes for built-in functions from class "TUPLE"
+
+	builtin_tuple_put_boolean: INTEGER = 18
+	builtin_tuple_put_character_8: INTEGER = 19
+	builtin_tuple_put_character_32: INTEGER = 20
+	builtin_tuple_put_integer_8: INTEGER = 21
+	builtin_tuple_put_integer_16: INTEGER = 22
+	builtin_tuple_put_integer_32: INTEGER = 23
+	builtin_tuple_put_integer_64: INTEGER = 24
+	builtin_tuple_put_natural_8: INTEGER = 25
+	builtin_tuple_put_natural_16: INTEGER = 26
+	builtin_tuple_put_natural_32: INTEGER = 27
+	builtin_tuple_put_natural_64: INTEGER = 28
+	builtin_tuple_put_pointer: INTEGER = 29
+	builtin_tuple_put_real_32: INTEGER = 30
+	builtin_tuple_put_real_64: INTEGER = 31
+	builtin_tuple_put_reference: INTEGER = 32
 	builtin_tuple_reference_item: INTEGER = 33
 	builtin_tuple_set_object_comparison: INTEGER = 34
-			-- Codes for built-in features from class "TUPLE"
+			-- Codes for built-in procedures from class "TUPLE"
 
 	builtin_memory_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "MEMORY"

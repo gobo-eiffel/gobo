@@ -3311,6 +3311,14 @@ feature -- Types
 			attached_separate_type_mark_not_void: Result /= Void
 		end
 
+	detachable_separate_type_mark: ET_ATTACHMENT_SEPARATE_KEYWORDS
+			-- 'detachable separate' type mark
+		once
+			create Result.make (detachable_keyword, separate_keyword)
+		ensure
+			detachable_separate_type_mark_not_void: Result /= Void
+		end
+
 	implicit_attached_type_mark: ET_IMPLICIT_TYPE_MARK
 			-- Implicit 'attached' type mark
 		once

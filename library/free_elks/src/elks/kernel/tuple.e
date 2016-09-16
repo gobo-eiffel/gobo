@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	reference_item (index: INTEGER): detachable ANY
+	reference_item (index: INTEGER): detachable separate ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -505,7 +505,7 @@ feature -- Element change
 			end
 		end
 
-	put_reference (v: detachable ANY; index: INTEGER)
+	put_reference (v: detachable separate ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -957,6 +957,86 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
+feature -- Access
+
+	plus alias "+" (a_other: TUPLE): detachable like Current
+			-- Concatenation of `Current' with `a_other'
+			--| note: it may be Void if the result exceeds the allowed capacity for a tuple.
+			--| warning: this function has poor performance, use it with parsimony.
+		local
+			l_reflector: REFLECTOR
+			i, n1,n2: INTEGER
+			t1, t2: TYPE [detachable TUPLE]
+			l_type_id: INTEGER
+			l_items: SPECIAL [detachable separate ANY]
+			l_type_string: STRING
+		do
+			n1 := count
+			n2 := a_other.count
+
+			if n1 = 0 then
+					-- There is no way to type this but we know that if
+					-- Current is a tuple without any actual generic parameter
+					-- then `a_other' does conform to `like Current'.
+				if attached {like plus} a_other.twin as l_res then
+					Result := l_res
+				else
+					check current_is_empty_tuple: count = 0 end
+				end
+			elseif n2 = 0 then
+				Result := twin
+			else
+				create l_type_string.make_from_string ("TUPLE [")
+
+				create l_items.make_empty (n1 + n2)
+				from
+					t1 := generating_type
+					check same_count: t1.generic_parameter_count = n1 end
+					i := 1
+				until
+					i > n1
+				loop
+					if i > 1 then
+						l_type_string.append_character (',')
+						l_type_string.append_character (' ')
+					end
+					l_type_string.append (t1.generic_parameter_type (i).name)
+					l_items.force (item (i), i - 1)
+					i := i + 1
+				end
+				from
+					t2 := a_other.generating_type
+					check same_count: t2.generic_parameter_count = n2 end
+				until
+					i > n1 + n2
+				loop
+					l_type_string.append_character (',')
+					l_type_string.append_character (' ')
+					l_type_string.append (t2.generic_parameter_type (i - n1).name)
+					l_items.force (a_other.item (i - n1), i - 1)
+					i := i + 1
+				end
+
+				l_type_string.append_character (']')
+				create l_reflector
+				l_type_id := l_reflector.dynamic_type_from_string (l_type_string)
+				if l_type_id >= 0 then
+					if attached {like plus} l_reflector.new_tuple_from_special (l_type_id, l_items) as res then
+						Result := res
+					end
+				else
+						--| It may be that the maximum tuple capacity was reached.
+						--| better return Void than a truncated tuple.
+				end
+			end
+		ensure
+			has_expected_count: Result /= Void implies Result.count = count + a_other.count
+			has_expected_items: Result /= Void implies (
+						(across 1 |..| count as ic_1 all Result[ic_1.item] = item (ic_1.item) end) and
+						(across 1 |..| a_other.count as ic_2 all Result[count + ic_2.item] = a_other [ic_2.item] end)
+					)
+		end
+
 feature -- Type conversion queries
 
 	convertible_to_double: BOOLEAN
@@ -1023,7 +1103,7 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [detachable ANY]
+	arrayed: ARRAY [detachable separate ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"

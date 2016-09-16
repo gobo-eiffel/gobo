@@ -5,7 +5,7 @@ note
 		"Test features of class TUPLE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -350,4 +350,29 @@ feature -- Test
 			assert_integers_equal ("equal_integer1", t1.i, t2.i)
 		end
 
+	test_plus
+			-- Test feature 'plus'.
+		local
+			t1: TUPLE [BOOLEAN, STRING]
+			t2: TUPLE [INTEGER, STRING]
+			t: TUPLE [BOOLEAN, STRING, INTEGER, STRING]
+			s1, s2: STRING
+		do
+				-- First, make sure that the result type is alive.
+			t := [False, "", 0, ""]
+			s1 := "gobo"
+			s2 := "eiffel"
+			t1 := [True, s1]
+			t2 := [5, s2]
+			if not attached {TUPLE [b: BOOLEAN; s1: STRING; i: INTEGER; s2: STRING]} (t1 + t2) as t3 then
+				assert ("tuple_type", False)
+			else
+				assert ("tuple_type", True)
+				assert_true ("b", t3.b)
+				assert_same ("s1", s1, t3.s1)
+				assert_integers_equal ("i", 5, t3.i)
+				assert_same ("s2", s2, t3.s2)
+			end
+		end
+		
 end
