@@ -61,15 +61,15 @@ feature -- Access
 	root_object: detachable ANY
 			-- Starting point of graph traversing
 
-	on_processing_object_action: detachable PROCEDURE [ANY, REFLECTED_OBJECT]
+	on_processing_object_action: detachable PROCEDURE [REFLECTED_OBJECT]
 			-- Action called on every object in the object graph.
 			-- Note: The argument is reused later for a different object. Do not alias it.
 
-	on_processing_reference_action: detachable PROCEDURE [ANY, TUPLE [referer: REFLECTED_OBJECT; referee: REFLECTED_OBJECT]]
+	on_processing_reference_action: detachable PROCEDURE [TUPLE [referer: REFLECTED_OBJECT; referee: REFLECTED_OBJECT]]
 			-- Action called on every reference in the object graph.
 			-- Note: The arguments are reused later for different objects. Do not alias them.
 
-	object_action: detachable PROCEDURE [ANY, separate ANY]
+	object_action: detachable PROCEDURE [separate ANY]
 			-- Action called on every object in object graph
 
 	visited_objects: detachable ARRAYED_LIST [separate ANY]
