@@ -166,6 +166,9 @@ feature {NONE} -- Initialization
 			create current_attachment_scope.make
 			create attachment_scope_builder.make
 			create unused_attachment_scopes.make (40)
+				-- Default creation call.
+			create default_creation_call_name.make (tokens.default_create_feature_name.name)
+			create default_creation_call.make (default_creation_call_name, Void)
 		end
 
 feature -- Status report
@@ -2662,7 +2665,7 @@ feature {NONE} -- Instruction validity
 						end
 						had_error := has_fatal_error
 							-- Check validity of the arguments of the call.
-						check_actual_arguments_validity (l_actuals, l_target_context, l_name, l_query, l_target_base_class)
+						check_actual_arguments_validity (l_call, l_target_context, l_query, l_target_base_class)
 						has_fatal_error := has_fatal_error or had_error
 							-- Check whether the query has an associated assigner procedure.
 						l_assigner_seed := an_instruction.name.seed
@@ -3394,14 +3397,12 @@ feature {NONE} -- Instruction validity
 						end
 					end
 					had_error := has_fatal_error
-					if l_call /= Void then
-						check_actual_arguments_validity (l_actuals, l_creation_context, l_name, l_procedure, l_class)
-					else
--- TODO: `l_name' is "default_create". It may be a shared identifier not holding the correct
--- position! A solution could be to inline `check_actual_arguments_validity' here. It's
--- not a big deal: just checking that `l_procedure' has no formal arguments.
-						check_actual_arguments_validity (Void, l_creation_context, l_name, l_procedure, l_class)
+					if l_call = Void then
+						l_call := default_creation_call
+						l_name_position := an_instruction.last_position
+						default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
 					end
+					check_actual_arguments_validity (l_call, l_creation_context, l_procedure, l_class)
 					if had_error then
 						set_fatal_error
 					end
@@ -3945,6 +3946,9 @@ feature {NONE} -- Instruction validity
 						l_seed := l_identifier.seed
 						l_query := current_class.seeded_query (l_seed)
 					end
+				elseif attached {ET_UNQUALIFIED_FEATURE_CALL} a_choice_constant as l_unqualified_call and then l_unqualified_call.arguments_count = 0 then
+					l_seed := l_unqualified_call.name.seed
+					l_query := current_class.seeded_query (l_seed)
 				elseif attached {ET_STATIC_CALL_EXPRESSION} a_choice_constant as l_static_call then
 					l_static_type := l_static_call.type
 					l_static_context := new_context (current_type)
@@ -4296,7 +4300,7 @@ feature {NONE} -- Instruction validity
 		do
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
-			check_actual_arguments_validity (an_instruction.arguments, l_actual_context, an_instruction.precursor_keyword, a_parent_procedure, a_parent_class)
+			check_actual_arguments_validity (an_instruction, l_actual_context, a_parent_procedure, a_parent_class)
 			free_context (l_actual_context)
 			if not has_fatal_error then
 				report_precursor_instruction (an_instruction, a_parent_type, a_parent_procedure)
@@ -4701,7 +4705,7 @@ feature {NONE} -- Instruction validity
 			check_qualified_vape_validity (l_name, a_procedure, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_procedure, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_procedure, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
 				report_static_call_instruction (a_call, l_type, a_procedure)
@@ -5033,7 +5037,7 @@ feature {NONE} -- Instruction validity
 			l_had_error := has_fatal_error
 				-- Check the validity of the arguments of the call.
 			l_context := new_context (current_type)
-			check_actual_arguments_validity (a_call.arguments, l_context, l_name, a_procedure, Void)
+			check_actual_arguments_validity (a_call, l_context, a_procedure, Void)
 			free_context (l_context)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
@@ -5636,6 +5640,7 @@ feature {NONE} -- Expression validity
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			l_creation_call: detachable ET_CALL_WITH_ACTUAL_ARGUMENTS
 		do
 			has_fatal_error := False
 			l_creation_type := an_expression.type
@@ -5845,10 +5850,13 @@ feature {NONE} -- Expression validity
 							end
 						end
 						had_error := has_fatal_error
--- TODO: When `an_expression.name' is Void, then `l_name' is "default_create". It may be a shared identifier
--- not holding the correct position! A solution could be to inline `check_actual_arguments_validity'
--- here. It's not a big deal: just checking that `l_procedure' has no formal arguments.
-						check_actual_arguments_validity (l_actuals, a_context, l_name, l_procedure, l_class)
+						l_creation_call := an_expression.creation_call
+						if l_creation_call = Void then
+							l_creation_call := default_creation_call
+							l_name_position := an_expression.last_position
+							default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
+						end
+						check_actual_arguments_validity (l_creation_call, a_context, l_procedure, l_class)
 						if had_error then
 							set_fatal_error
 						end
@@ -8427,7 +8435,7 @@ feature {NONE} -- Expression validity
 		do
 			l_actual_context := new_context (current_type)
 			l_actual_context.force_last (a_parent_type)
-			check_actual_arguments_validity (an_expression.arguments, l_actual_context, an_expression.precursor_keyword, a_parent_query, a_parent_class)
+			check_actual_arguments_validity (an_expression, l_actual_context, a_parent_query, a_parent_class)
 			free_context (l_actual_context)
 			if not has_fatal_error then
 -- TODO: like argument.
@@ -8688,7 +8696,7 @@ feature {NONE} -- Expression validity
 			check_qualified_vape_validity (l_name, a_feature, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_feature, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_feature, a_class)
 			reset_fatal_error (l_had_error or has_fatal_error)
 		end
 
@@ -9377,7 +9385,7 @@ feature {NONE} -- Expression validity
 			check_qualified_vape_validity (l_name, a_query, a_class)
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_query, a_class)
+			check_actual_arguments_validity (a_call, a_context, a_query, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
 -- TODO: check that `a_query' is a constant attribute or an external function.
@@ -9801,7 +9809,7 @@ feature {NONE} -- Expression validity
 			check_unqualified_vape_validity (l_name, a_query)
 			l_had_error := has_fatal_error
 				-- Check the validity of the arguments of the call.
-			check_actual_arguments_validity (a_call.arguments, a_context, l_name, a_query, Void)
+			check_actual_arguments_validity (a_call, a_context, a_query, Void)
 			reset_fatal_error (l_had_error or has_fatal_error)
 			if not has_fatal_error then
 				report_unqualified_call_expression (a_call, a_query)
@@ -10137,17 +10145,18 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_actual_arguments_validity (an_actuals: detachable ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: detachable ET_CLASS)
-			-- Check actual arguments validity when calling `a_feature' named `a_name'
+	check_actual_arguments_validity (a_call: ET_CALL_WITH_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT; a_feature: ET_FEATURE; a_class: detachable ET_CLASS)
+			-- Check actual arguments validity of `a_call' when calling `a_feature'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
+			a_call_not_void: a_call /= Void
 			a_context_not_void: a_context /= Void
-			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		local
+			l_actuals: detachable ET_ACTUAL_ARGUMENTS
+			l_name: ET_CALL_NAME
 			l_actual: ET_EXPRESSION
 			l_actual_list: detachable ET_ACTUAL_ARGUMENT_LIST
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
@@ -10164,21 +10173,23 @@ feature {NONE} -- Expression validity
 			l_actual_entity_attached: BOOLEAN
 		do
 			has_fatal_error := False
+			l_name := a_call.name
+			l_actuals := a_call.arguments
 			l_formals := a_feature.arguments
-			if an_actuals = Void or else an_actuals.is_empty then
+			if l_actuals = Void or else l_actuals.is_empty then
 				if l_formals /= Void and then not l_formals.is_empty then
 						-- The number of actual arguments is different from
 						-- the number of formal arguments.
 					set_fatal_error
 					if current_class = current_class_impl then
 						if a_class /= Void then
-							if a_name.is_precursor then
-								error_handler.report_vdpr4a_error (current_class, a_name.precursor_keyword, a_feature, a_class)
+							if l_name.is_precursor then
+								error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
 							else
-								error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
+								error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
 							end
 						else
-							error_handler.report_vuar1b_error (current_class, a_name, a_feature)
+							error_handler.report_vuar1b_error (current_class, l_name, a_feature)
 						end
 					elseif not has_implementation_error (current_feature_impl) then
 							-- Internal error: this error should have been reported when
@@ -10188,19 +10199,19 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif l_formals = Void or else l_formals.count /= an_actuals.count then
+			elseif l_formals = Void or else l_formals.count /= l_actuals.count then
 					-- The number of actual arguments is different from
 					-- the number of formal arguments.
 				set_fatal_error
 				if current_class = current_class_impl then
 					if a_class /= Void then
-						if a_name.is_precursor then
-							error_handler.report_vdpr4a_error (current_class, a_name.precursor_keyword, a_feature, a_class)
+						if l_name.is_precursor then
+							error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
 						else
-							error_handler.report_vuar1a_error (current_class, a_name, a_feature, a_class)
+							error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
 						end
 					else
-						error_handler.report_vuar1b_error (current_class, a_name, a_feature)
+						error_handler.report_vuar1b_error (current_class, l_name, a_feature)
 					end
 				elseif not has_implementation_error (current_feature_impl) then
 						-- Internal error: this error should have been reported when
@@ -10212,12 +10223,12 @@ feature {NONE} -- Expression validity
 			else
 				l_actual_context := new_context (current_type)
 				l_formal_context := a_context
-				if attached {ET_ACTUAL_ARGUMENT_LIST} an_actuals as l_attached_actual_list then
+				if attached {ET_ACTUAL_ARGUMENT_LIST} l_actuals as l_attached_actual_list then
 					l_actual_list := l_attached_actual_list
 				end
-				nb := an_actuals.count
+				nb := l_actuals.count
 				from i := 1 until i > nb loop
-					l_actual := an_actuals.actual_argument (i)
+					l_actual := l_actuals.actual_argument (i)
 					l_formal := l_formals.formal_argument (i)
 					l_formal_context.force_last (l_formal.type)
 					check_expression_validity (l_actual, l_actual_context, l_formal_context)
@@ -10268,13 +10279,13 @@ feature {NONE} -- Expression validity
 								l_actual_named_type := l_actual_context.named_type
 								l_formal_named_type := l_formal_context.named_type
 								if a_class /= Void then
-									if a_name.is_precursor then
-										error_handler.report_vdpr4b_error (current_class, current_class_impl, a_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+									if l_name.is_precursor then
+										error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
 									else
-										error_handler.report_vuar2a_error (current_class, current_class_impl, a_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+										error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
 									end
 								else
-									error_handler.report_vuar2b_error (current_class, current_class_impl, a_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+									error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
 								end
 							end
 						end
@@ -13972,10 +13983,6 @@ feature {ET_AST_NODE} -- Processing
 				check_object_test_local_validity (an_identifier, current_context)
 			elseif an_identifier.is_across_cursor then
 				check_across_cursor_validity (an_identifier, current_context)
-			elseif an_identifier.is_instruction then
-				check_unqualified_call_instruction_validity (an_identifier)
-			else
-				check_unqualified_call_expression_validity (an_identifier, current_context)
 			end
 		end
 
@@ -15036,6 +15043,14 @@ feature {NONE} -- Type contexts
 			-- Maximum capacity found in nested context so far when calling `free_context'.
 			-- Used in 'debug ("nested_type_context")' only.
 
+feature {NONE} -- Default creation call
+
+	default_creation_call: ET_QUALIFIED_CALL
+			-- Creation call to 'default_create'
+
+	default_creation_call_name: ET_IDENTIFIER
+			-- Call name of `default_creation_call'
+
 feature {NONE} -- Feature checker
 
 	feature_checker: ET_FEATURE_CHECKER
@@ -15092,6 +15107,9 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
+	default_creation_call_not_void: default_creation_call /= Void
+	default_creation_call_name_not_void: default_creation_call_name /= Void
+	default_creation_call_name_definition: default_creation_call_name = default_creation_call.name
 		-- Object-tests.
 	current_object_test_types_not_void: current_object_test_types /= Void
 	no_void_object_test_type: not current_object_test_types.has_void_item

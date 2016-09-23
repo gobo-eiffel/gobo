@@ -5,7 +5,7 @@ note
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,6 @@ inherit
 			process_assignment,
 			process_assignment_attempt,
 			process_bang_instruction,
-			process_bracket_argument_list,
 			process_bracket_expression,
 			process_call_agent,
 			process_check_instruction,
@@ -417,18 +416,6 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_call.arguments as an_arguments then
 					process_actual_argument_list (an_arguments)
 				end
-			end
-		end
-
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.actual_argument (i).process (Current)
-				i := i + 1
 			end
 		end
 

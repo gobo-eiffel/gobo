@@ -44,7 +44,6 @@ inherit
 			process_braced_class_name,
 			process_braced_type,
 			process_braced_type_list,
-			process_bracket_argument_list,
 			process_bracket_expression,
 			process_break,
 			process_c1_character_constant,
@@ -478,14 +477,6 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST)
-			-- Process `a_list'.
-		do
-			if not excluded_nodes.has (a_list) then
-				precursor (a_list)
-			end
-		end
-
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then

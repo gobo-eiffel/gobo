@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,10 @@ inherit
 
 create
 
-	make, make_with_capacity
+	make,
+	make_with_capacity,
+	make_bracketed,
+	make_bracketed_with_capacity
 
 feature {NONE} -- Initialization
 
@@ -45,6 +48,24 @@ feature {NONE} -- Initialization
 			left_symbol := tokens.left_parenthesis_symbol
 			right_symbol := tokens.right_parenthesis_symbol
 			precursor (nb)
+		end
+
+	make_bracketed
+			-- Create a new empty actual argument list
+			-- to be used in Bracket_expressions.
+		do
+			make
+			left_symbol := tokens.left_bracket_symbol
+			right_symbol := tokens.right_bracket_symbol
+		end
+
+	make_bracketed_with_capacity (nb: INTEGER)
+			-- Create a new empty actual argument list with capacity `nb'
+			-- to be used in Bracket_expressions.
+		do
+			make_with_capacity (nb)
+			left_symbol := tokens.left_bracket_symbol
+			right_symbol := tokens.right_bracket_symbol
 		end
 
 feature -- Initialization

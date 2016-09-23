@@ -5,7 +5,7 @@ note
 		"Eiffel precursor calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,10 @@ deferred class ET_PRECURSOR_CALL
 
 inherit
 
-	ET_AST_NODE
+	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
+		rename
+			name as precursor_keyword
+		end
 
 feature {NONE} -- Initialization
 
@@ -54,9 +57,6 @@ feature -- Access
 
 	parent_name: detachable ET_PRECURSOR_CLASS_NAME
 			-- Parent class name surrounded by braces
-
-	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
-			-- Arguments
 
 	parent_type: detachable ET_BASE_TYPE
 			-- Parent type;

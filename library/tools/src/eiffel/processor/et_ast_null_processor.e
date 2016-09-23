@@ -177,11 +177,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		do
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do

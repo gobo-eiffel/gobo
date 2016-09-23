@@ -6999,10 +6999,10 @@ feature {NONE} -- Instruction generation
 								elseif attached {ET_CHARACTER_CONSTANT} l_lower as l_character_constant then
 									l_lower_character := l_character_constant
 									l_lower_integer := Void
-								elseif not attached {ET_FEATURE_NAME} l_lower as l_feature_name then
+								elseif not attached {ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION} l_lower as l_feature_call then
 									l_lower_integer := Void
 									l_lower_character := Void
-								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_name.seed) as l_constant_attribute then
+								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_call.name.seed) as l_constant_attribute then
 									l_lower_integer := Void
 									l_lower_character := Void
 								elseif attached {ET_INTEGER_CONSTANT} l_constant_attribute.constant as l_integer_constant then
@@ -7021,10 +7021,10 @@ feature {NONE} -- Instruction generation
 								elseif attached {ET_CHARACTER_CONSTANT} l_upper as l_character_constant then
 									l_upper_character := l_character_constant
 									l_upper_integer := Void
-								elseif not attached {ET_FEATURE_NAME} l_upper as l_feature_name then
+								elseif not attached {ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION} l_upper as l_feature_call then
 									l_upper_integer := Void
 									l_upper_character := Void
-								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_name.seed) as l_constant_attribute then
+								elseif not attached {ET_CONSTANT_ATTRIBUTE} current_type.base_class.seeded_query (l_feature_call.name.seed) as l_constant_attribute then
 									l_upper_integer := Void
 									l_upper_character := Void
 								elseif attached {ET_INTEGER_CONSTANT} l_constant_attribute.constant as l_integer_constant then

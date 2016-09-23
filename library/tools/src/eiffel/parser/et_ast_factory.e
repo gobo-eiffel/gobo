@@ -1600,18 +1600,18 @@ feature -- AST nodes
 			end
 		end
 
-	new_bracket_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_BRACKET_ARGUMENT_LIST
+	new_bracket_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_ACTUAL_ARGUMENT_LIST
 			-- New bracket argument list with given capacity
 		require
 			nb_positive: nb >= 0
 		do
 			if nb > 0 then
-				create Result.make_with_capacity (nb)
+				create Result.make_bracketed_with_capacity (nb)
 			end
 		end
 
 	new_bracket_expression (a_target: detachable ET_EXPRESSION; a_name: detachable ET_BRACKET_SYMBOL;
-		args: detachable ET_BRACKET_ARGUMENT_LIST): detachable ET_BRACKET_EXPRESSION
+		args: detachable ET_ACTUAL_ARGUMENT_LIST): detachable ET_BRACKET_EXPRESSION
 			-- New bracket expression
 		do
 			if a_target /= Void and a_name /= Void then

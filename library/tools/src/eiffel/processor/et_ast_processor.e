@@ -242,13 +242,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		require
-			a_list_not_void: a_list /= Void
-		deferred
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		require

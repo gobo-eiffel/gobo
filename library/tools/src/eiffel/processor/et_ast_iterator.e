@@ -329,20 +329,6 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_brace.process (Current)
 		end
 
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.left_symbol.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
-			a_list.right_symbol.process (Current)
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do

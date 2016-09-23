@@ -5,7 +5,7 @@ note
 		"Eiffel qualified regular feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,8 +28,7 @@ inherit
 		rename
 			make as make_qualified_call
 		undefine
-			process,
-			arguments_count
+			process
 		redefine
 			reset,
 			position,

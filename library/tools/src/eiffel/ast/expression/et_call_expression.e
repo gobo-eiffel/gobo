@@ -5,7 +5,7 @@ note
 		"Eiffel call expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,14 +17,12 @@ inherit
 	ET_REGULAR_FEATURE_CALL
 		redefine
 			name,
-			arguments,
 			parenthesis_call
 		end
 
 	ET_FEATURE_CALL_EXPRESSION
 		redefine
 			name,
-			arguments,
 			parenthesis_call
 		end
 
@@ -37,11 +35,6 @@ feature -- Access
 
 	name: ET_FEATURE_NAME
 			-- Feature name
-		deferred
-		end
-
-	arguments: detachable ET_ACTUAL_ARGUMENT_LIST
-			-- Arguments
 		deferred
 		end
 

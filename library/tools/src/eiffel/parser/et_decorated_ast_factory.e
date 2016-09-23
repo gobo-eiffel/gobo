@@ -1935,10 +1935,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_bracket_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_BRACKET_ARGUMENT_LIST
+	new_bracket_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_ACTUAL_ARGUMENT_LIST
 			-- New bracket argument list with given capacity
 		do
-			create Result.make_with_capacity (nb)
+			create Result.make_bracketed_with_capacity (nb)
 			if a_left /= Void then
 				Result.set_left_symbol (a_left)
 			end

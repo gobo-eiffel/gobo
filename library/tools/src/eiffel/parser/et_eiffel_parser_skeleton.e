@@ -1175,13 +1175,12 @@ feature {NONE} -- AST factory
 				end
 			end
 
-	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_IDENTIFIER
+	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_EXPRESSION
 			-- New agent identifier target
 		local
 			a_seed: INTEGER
 		do
 			if an_identifier /= Void then
-				Result := an_identifier
 				if attached last_formal_arguments as l_last_formal_arguments then
 					a_seed := l_last_formal_arguments.index_of (an_identifier)
 					if a_seed /= 0 then
@@ -1198,21 +1197,24 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
+				if a_seed = 0 and then attached last_across_components as l_last_across_components then
+					a_seed := l_last_across_components.index_of_name (an_identifier)
+					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+							-- We set 'cursor_name.is_across_cursor' to False when
+							-- parsing withing its scope.
+						an_identifier.set_across_cursor (True)
+					end
+				end
+				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					a_seed := l_last_object_tests.index_of_name (an_identifier)
+					if a_seed /= 0 then
+						an_identifier.set_object_test_local (True)
+					end
+				end
 				if a_seed = 0 then
-					if attached last_object_tests as l_last_object_tests then
-						a_seed := l_last_object_tests.index_of_name (an_identifier)
-						if a_seed /= 0 then
-							an_identifier.set_object_test_local (True)
-						end
-					end
-					if attached last_across_components as l_last_across_components then
-						a_seed := l_last_across_components.index_of_name (an_identifier)
-						if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-								-- We set 'cursor_name.is_across_cursor' to False when
-								-- parsing withing its scope.
-							an_identifier.set_across_cursor (True)
-						end
-					end
+					Result := ast_factory.new_unqualified_call_expression (an_identifier, Void)
+				else
+					Result := an_identifier
 				end
 			end
 		end
@@ -1289,14 +1291,13 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_choice_attribute_constant (a_name: detachable ET_IDENTIFIER): detachable ET_IDENTIFIER
+	new_choice_attribute_constant (a_name: detachable ET_IDENTIFIER): detachable ET_CHOICE_CONSTANT
 			-- New choice constant which is supposed to be the name of
 			-- a constant attribute or unique attribute
 		local
 			a_seed: INTEGER
 		do
 			if a_name /= Void then
-				Result := a_name
 				if attached last_formal_arguments as l_last_formal_arguments then
 					a_seed := l_last_formal_arguments.index_of (a_name)
 					if a_seed /= 0 then
@@ -1313,21 +1314,24 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
+				if a_seed = 0 and then attached last_across_components as l_last_across_components then
+					a_seed := l_last_across_components.index_of_name (a_name)
+					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
+							-- We set 'cursor_name.is_across_cursor' to False when
+							-- parsing within its scope.
+						a_name.set_across_cursor (True)
+					end
+				end
+				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					a_seed := l_last_object_tests.index_of_name (a_name)
+					if a_seed /= 0 then
+						a_name.set_object_test_local (True)
+					end
+				end
 				if a_seed = 0 then
-					if attached last_object_tests as l_last_object_tests then
-						a_seed := l_last_object_tests.index_of_name (a_name)
-						if a_seed /= 0 then
-							a_name.set_object_test_local (True)
-						end
-					end
-					if attached last_across_components as l_last_across_components then
-						a_seed := l_last_across_components.index_of_name (a_name)
-						if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-								-- We set 'cursor_name.is_across_cursor' to False when
-								-- parsing within its scope.
-							a_name.set_across_cursor (True)
-						end
-					end
+					Result := ast_factory.new_unqualified_call_expression (a_name, Void)
+				else
+					Result := a_name
 				end
 			end
 		end
@@ -1418,20 +1422,18 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if l_seed = 0 then
-					if attached last_object_tests as l_last_object_tests then
-						l_seed := l_last_object_tests.index_of_name (l_identifier)
-						if l_seed /= 0 then
-							l_identifier.set_object_test_local (True)
-						end
+				if l_seed = 0 and then attached last_across_components as l_last_across_components then
+					l_seed := l_last_across_components.index_of_name (l_identifier)
+					if l_seed /= 0 and then not l_last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
+							-- We set 'cursor_name.is_across_cursor' to False when
+							-- parsing withing its scope.
+						l_identifier.set_across_cursor (True)
 					end
-					if attached last_across_components as l_last_across_components then
-						l_seed := l_last_across_components.index_of_name (l_identifier)
-						if l_seed /= 0 and then not l_last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
-								-- We set 'cursor_name.is_across_cursor' to False when
-								-- parsing within its scope.
-							l_identifier.set_across_cursor (True)
-						end
+				end
+				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
+					l_seed := l_last_object_tests.index_of_name (l_identifier)
+					if l_seed /= 0 then
+						l_identifier.set_object_test_local (True)
 					end
 				end
 			end
@@ -1787,11 +1789,6 @@ feature {NONE} -- AST factory
 		local
 			a_seed: INTEGER
 		do
-			if args /= Void then
-				Result := ast_factory.new_unqualified_call_expression (a_name, args)
-			else
-				Result := a_name
-			end
 			if a_name /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
 					a_seed := l_last_formal_arguments.index_of (a_name)
@@ -1822,6 +1819,11 @@ feature {NONE} -- AST factory
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
+				end
+				if a_seed = 0 or args /= Void then
+					Result := ast_factory.new_unqualified_call_expression (a_name, args)
+				else
+					Result := a_name
 				end
 			end
 		end
@@ -1831,11 +1833,6 @@ feature {NONE} -- AST factory
 		local
 			a_seed: INTEGER
 		do
-			if args /= Void then
-				Result := ast_factory.new_unqualified_call_instruction (a_name, args)
-			else
-				Result := a_name
-			end
 			if a_name /= Void then
 				if attached last_formal_arguments as l_last_formal_arguments then
 					a_seed := l_last_formal_arguments.index_of (a_name)
@@ -1867,8 +1864,10 @@ feature {NONE} -- AST factory
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 and args = Void then
-					a_name.set_instruction (True)
+				if a_seed = 0 or args /= Void then
+					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
+				else
+					Result := a_name
 				end
 			end
 		end

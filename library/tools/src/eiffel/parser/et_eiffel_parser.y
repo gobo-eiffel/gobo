@@ -99,7 +99,7 @@ create
 
 %type <detachable ET_ACROSS_EXPRESSION> Across_all_expression Across_some_expression Across_expression_header
 %type <detachable ET_ACROSS_INSTRUCTION> Across_instruction_header
-%type <detachable ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
+%type <detachable ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list Bracket_actual_list
 %type <detachable ET_ACTUAL_PARAMETER_ITEM> Type_no_identifier_comma
 %type <detachable ET_ACTUAL_PARAMETER_ITEM> Tuple_labeled_actual_parameter Tuple_labeled_actual_parameter_semicolon
 %type <detachable ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Actual_parameter_list Actual_parameters
@@ -112,7 +112,6 @@ create
 %type <detachable ET_ALIAS_NAME> Alias_name
 %type <detachable ET_ASSIGNER> Assigner_opt
 %type <detachable ET_BOOLEAN_CONSTANT> Boolean_constant
-%type <detachable ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
 %type <detachable ET_BRACKET_EXPRESSION> Bracket_expression Typed_bracket_expression Untyped_bracket_expression
 %type <detachable ET_CALL_AGENT> Call_agent
 %type <detachable ET_QUALIFIED_CALL_EXPRESSION> Qualified_call_expression

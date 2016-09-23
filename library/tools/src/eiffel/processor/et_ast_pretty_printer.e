@@ -37,7 +37,6 @@ inherit
 			process_bang_instruction,
 			process_binary_integer_constant,
 			process_braced_type_list,
-			process_bracket_argument_list,
 			process_bracket_expression,
 			process_break,
 			process_c1_character_constant,
@@ -768,33 +767,6 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.right_brace.process (Current)
-		end
-
-	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-			l_item: ET_EXPRESSION_ITEM
-			l_expression: ET_EXPRESSION
-		do
-			a_list.left_symbol.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				l_item := a_list.item (i)
-				l_expression := l_item.expression
-				l_expression.process (Current)
-				comment_finder.add_excluded_node (l_expression)
-				comment_finder.find_comments (l_item, comment_list)
-				comment_finder.reset_excluded_nodes
-				if i /= nb then
-						-- The AST may or may not contain the comma.
-						-- So we have to print it explicitly here.
-					tokens.comma_symbol.process (Current)
-					print_space
-				end
-				i := i + 1
-			end
-			a_list.right_symbol.process (Current)
 		end
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)

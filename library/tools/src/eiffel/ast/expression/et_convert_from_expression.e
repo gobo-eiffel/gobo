@@ -5,7 +5,7 @@ note
 		"Eiffel conversion-from expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,8 @@ inherit
 		end
 
 	ET_CREATION_EXPRESSION
+
+	ET_CALL_WITH_ACTUAL_ARGUMENTS
 
 create
 
@@ -49,6 +51,14 @@ feature -- Access
 
 	type: ET_TYPE
 			-- Creation type
+
+	creation_call: detachable ET_CALL_WITH_ACTUAL_ARGUMENTS
+			-- Call to creation procedure
+		do
+			Result := Current
+		ensure then
+			creation_call_not_void: Result /= Void
+		end
 
 	name: ET_FEATURE_NAME
 			-- Feature name
