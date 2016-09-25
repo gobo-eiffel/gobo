@@ -580,7 +580,7 @@ feature -- Removal
 							-- If `file_number' has been reached, call `action'.
 						if file_number > 0 and file_count >= file_number then
 							if action /= Void then
-								action.call ([deleted_files])
+								action (deleted_files)
 							end
 							if is_cancel_requested /= Void then
 								requested_cancel := is_cancel_requested (Void)
@@ -596,7 +596,7 @@ feature -- Removal
 			dir_temp.close
 				-- Process unprocessed deleted files (if any).
 			if file_number > 0 and file_count > 0 and action /= Void then
-				action.call ([deleted_files])
+				action (deleted_files)
 			end
 		rescue
 			if dir_temp /= Void and then not dir_temp.is_closed then
@@ -625,7 +625,7 @@ feature -- Removal
 				if file_number > 0 and action /= Void then
 					create deleted_files.make (1)
 					deleted_files.extend (internal_name)
-					action.call ([deleted_files])
+					action (deleted_files)
 				end
 			end
 		end
