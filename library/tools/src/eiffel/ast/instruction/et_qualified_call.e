@@ -16,6 +16,8 @@ inherit
 
 	ET_CALL_WITH_ACTUAL_ARGUMENT_LIST
 
+	ET_CREATION_CALL
+
 create
 
 	make

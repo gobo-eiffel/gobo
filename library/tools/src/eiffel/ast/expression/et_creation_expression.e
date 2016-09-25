@@ -28,7 +28,7 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	creation_call: detachable ET_CALL_WITH_ACTUAL_ARGUMENTS
+	creation_call: detachable ET_CREATION_CALL
 			-- Call to creation procedure
 		deferred
 		end

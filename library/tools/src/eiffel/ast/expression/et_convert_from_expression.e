@@ -23,7 +23,7 @@ inherit
 
 	ET_CREATION_EXPRESSION
 
-	ET_CALL_WITH_ACTUAL_ARGUMENTS
+	ET_CREATION_CALL
 
 create
 
@@ -52,7 +52,7 @@ feature -- Access
 	type: ET_TYPE
 			-- Creation type
 
-	creation_call: detachable ET_CALL_WITH_ACTUAL_ARGUMENTS
+	creation_call: ET_CREATION_CALL
 			-- Call to creation procedure
 		do
 			Result := Current

@@ -168,6 +168,7 @@ feature {NONE} -- Initialization
 			create unused_attachment_scopes.make (40)
 				-- Default creation call.
 			create default_creation_call_name.make (tokens.default_create_feature_name.name)
+			default_creation_call_name.set_seed (current_system.default_create_seed)
 			create default_creation_call.make (default_creation_call_name, Void)
 		end
 
@@ -3120,19 +3121,31 @@ feature {NONE} -- Instruction validity
 			l_explicit_creation_type: detachable ET_TYPE
 			l_explicit_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
-			l_call: detachable ET_QUALIFIED_CALL
-			l_name: detachable ET_FEATURE_NAME
+			l_creation_call: detachable ET_QUALIFIED_CALL
+			l_name: ET_FEATURE_NAME
 			l_position: ET_POSITION
 			had_error: BOOLEAN
 			l_type: detachable ET_TYPE
 			l_locals: detachable ET_LOCAL_VARIABLE_LIST
 			l_local_seed: INTEGER
-			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 		do
 			has_fatal_error := False
+			l_creation_call := an_instruction.creation_call
+			if l_creation_call /= Void then
+					-- There is an explicit creation call.
+				l_name := l_creation_call.name
+				l_seed := l_name.seed
+			else
+					-- No explicit creation call. Use 'default_create' instead.
+				l_creation_call := default_creation_call
+				l_name_position := an_instruction.last_position
+				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
+				l_name := default_creation_call_name
+				l_seed := current_system.default_create_seed
+			end
 			l_target := an_instruction.target
 			l_target_context := new_context (current_type)
 			l_explicit_creation_type := an_instruction.type
@@ -3196,11 +3209,8 @@ feature {NONE} -- Instruction validity
 				end
 			end
 			if not has_fatal_error then
-				l_call := an_instruction.creation_call
-				if l_call /= Void then
-					l_name := l_call.name
-					l_actuals := l_call.arguments
-					l_seed := l_name.seed
+				if l_creation_call /= default_creation_call then
+						-- There is an explicit creation call.
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
 							-- class of `current_feature_impl' first.
@@ -3233,6 +3243,7 @@ feature {NONE} -- Instruction validity
 										l_overloaded_procedures := new_overloaded_procedures
 										l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 										if not l_overloaded_procedures.is_empty then
+											l_actuals := l_creation_call.arguments
 											keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, l_creation_context, False, True)
 											if has_fatal_error then
 												-- Do nothing.
@@ -3272,9 +3283,6 @@ feature {NONE} -- Instruction validity
 							end
 						end
 					end
-				else
-					l_name := tokens.default_create_feature_name
-					l_seed := current_system.default_create_seed
 				end
 			end
 			if not has_fatal_error then
@@ -3304,7 +3312,7 @@ feature {NONE} -- Instruction validity
 					end
 				end
 			end
-			if not has_fatal_error and l_class /= Void and l_creation_type /= Void and l_name /= Void and l_target_type /= Void then
+			if not has_fatal_error and l_class /= Void and l_creation_type /= Void and l_target_type /= Void then
 				if l_explicit_creation_type /= Void then
 					l_explicit_creation_type_context := new_context (current_type)
 					l_explicit_creation_type_context.force_last (l_explicit_creation_type)
@@ -3338,7 +3346,7 @@ feature {NONE} -- Instruction validity
 					check
 							-- No creation call, and feature 'default_create' not
 							-- supported by the underlying Eiffel compiler.
-						no_call: l_call = Void
+						no_call: l_creation_call = default_creation_call
 						no_default_create: current_system.default_create_seed = 0
 					end
 					if l_class.creators /= Void then
@@ -3365,14 +3373,6 @@ feature {NONE} -- Instruction validity
 							l_creator := l_formal_parameter.creation_procedures
 							if l_creator = Void or else not l_creator.has_feature (l_procedure) then
 								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_instruction.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
 								error_handler.report_vgcc8b_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 							end
 						end
@@ -3385,24 +3385,11 @@ feature {NONE} -- Instruction validity
 							-- if the current class is deferred.
 						else
 							set_fatal_error
-							if l_name = tokens.default_create_feature_name then
-									-- The creation has no call part. Make sure that
-									-- the error message will give a valid position.
-								create l_name_identifier.make (l_name.name)
-								l_name_position := an_instruction.last_position
-								l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-								l_name := l_name_identifier
-							end
 							error_handler.report_vgcc6e_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 						end
 					end
 					had_error := has_fatal_error
-					if l_call = Void then
-						l_call := default_creation_call
-						l_name_position := an_instruction.last_position
-						default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
-					end
-					check_actual_arguments_validity (l_call, l_creation_context, l_procedure, l_class)
+					check_actual_arguments_validity (l_creation_call, l_creation_context, l_procedure, l_class)
 					if had_error then
 						set_fatal_error
 					end
@@ -5634,15 +5621,27 @@ feature {NONE} -- Expression validity
 			l_creation_type: ET_TYPE
 			l_creation_type_context: ET_NESTED_TYPE_CONTEXT
 			l_seed: INTEGER
-			l_name: detachable ET_FEATURE_NAME
+			l_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
-			l_name_identifier: ET_IDENTIFIER
 			l_name_position: ET_POSITION
 			l_actuals: detachable ET_ACTUAL_ARGUMENTS
 			l_overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
-			l_creation_call: detachable ET_CALL_WITH_ACTUAL_ARGUMENTS
+			l_creation_call: detachable ET_CREATION_CALL
 		do
 			has_fatal_error := False
+			l_creation_call := an_expression.creation_call
+			if l_creation_call /= Void then
+					-- There is an explicit creation call.
+				l_name := l_creation_call.name
+				l_seed := l_name.seed
+			else
+					-- No explicit creation call. Use 'default_create' instead.
+				l_creation_call := default_creation_call
+				l_name_position := an_expression.last_position
+				default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
+				l_name := default_creation_call_name
+				l_seed := current_system.default_create_seed
+			end
 			l_creation_type := an_expression.type
 			check_type_validity (l_creation_type)
 			if not has_fatal_error then
@@ -5652,11 +5651,8 @@ feature {NONE} -- Expression validity
 						-- descendant classes/types.
 					report_current_type_needed
 				end
-				l_name := an_expression.name
-				if l_name /= Void then
+				if l_creation_call /= default_creation_call then
 						-- There is an explicit creation call.
-					l_actuals := an_expression.arguments
-					l_seed := l_name.seed
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
 							-- class of `current_feature_impl' first.
@@ -5692,6 +5688,7 @@ feature {NONE} -- Expression validity
 									l_overloaded_procedures := new_overloaded_procedures
 									l_class.add_overloaded_procedures (l_name, l_overloaded_procedures)
 									if not l_overloaded_procedures.is_empty then
+										l_actuals := l_creation_call.arguments
 										keep_best_overloaded_features (l_overloaded_procedures, l_name, l_actuals, a_context, False, True)
 										if has_fatal_error then
 											-- Do nothing.
@@ -5730,10 +5727,6 @@ feature {NONE} -- Expression validity
 							end
 						end
 					end
-				else
-						-- No explicit creation call. Use 'default_create' instead.
-					l_name := tokens.default_create_feature_name
-					l_seed := current_system.default_create_seed
 				end
 			end
 			if not has_fatal_error then
@@ -5773,8 +5766,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				check l_class_not_void: l_class /= Void end
-				check l_name_not_void: l_name /= Void end
-				if l_class /= Void and l_name /= Void then
+				if l_class /= Void then
 					report_create_supplier (l_creation_type, current_class, current_feature)
 					l_creation_type_context := new_context (current_type)
 					l_named_creation_type := l_creation_type.shallow_named_type (l_creation_type_context)
@@ -5786,7 +5778,7 @@ feature {NONE} -- Expression validity
 							-- No creation call, and feature 'default_create' not
 							-- supported by the underlying Eiffel compiler.
 						check
-							no_call: an_expression.name = Void
+							no_call: l_creation_call = default_creation_call
 							no_default_create: current_system.default_create_seed = 0
 						end
 						if l_class.creators /= Void then
@@ -5818,14 +5810,6 @@ feature {NONE} -- Expression validity
 										-- The creation procedure of the expression is not
 										-- one of those declared with the associated constraint.
 									set_fatal_error
-									if l_name = tokens.default_create_feature_name then
-											-- The creation has no call part. Make sure that
-											-- the error message will give a valid position.
-										create l_name_identifier.make (l_name.name)
-										l_name_position := an_expression.last_position
-										l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-										l_name := l_name_identifier
-									end
 									error_handler.report_vgcc8a_error (current_class, current_class_impl, l_name, l_procedure, l_class, l_formal_parameter)
 								end
 							end
@@ -5838,24 +5822,10 @@ feature {NONE} -- Expression validity
 								-- if the current class is deferred.
 							else
 								set_fatal_error
-								if l_name = tokens.default_create_feature_name then
-										-- The creation has no call part. Make sure that
-										-- the error message will give a valid position.
-									create l_name_identifier.make (l_name.name)
-									l_name_position := an_expression.last_position
-									l_name_identifier.set_position (l_name_position.line, l_name_position.column)
-									l_name := l_name_identifier
-								end
 								error_handler.report_vgcc6c_error (current_class, current_class_impl, l_name, l_procedure, l_class)
 							end
 						end
 						had_error := has_fatal_error
-						l_creation_call := an_expression.creation_call
-						if l_creation_call = Void then
-							l_creation_call := default_creation_call
-							l_name_position := an_expression.last_position
-							default_creation_call_name.set_position (l_name_position.line, l_name_position.column)
-						end
 						check_actual_arguments_validity (l_creation_call, a_context, l_procedure, l_class)
 						if had_error then
 							set_fatal_error
