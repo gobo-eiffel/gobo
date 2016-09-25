@@ -1021,6 +1021,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
+			-- Process `a_list'.
+		do
+		end
+
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE)
 			-- Process `a_feature'.
 		do

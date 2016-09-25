@@ -10171,6 +10171,7 @@ feature {NONE} -- Expression validity
 			l_formal_type_detachable: BOOLEAN
 			l_actual_type_attached: BOOLEAN
 			l_actual_entity_attached: BOOLEAN
+			l_tuple_argument_position: INTEGER
 		do
 			has_fatal_error := False
 			l_name := a_call.name
@@ -10180,8 +10181,52 @@ feature {NONE} -- Expression validity
 				if l_formals /= Void and then not l_formals.is_empty then
 						-- The number of actual arguments is different from
 						-- the number of formal arguments.
-					set_fatal_error
 					if current_class = current_class_impl then
+						if
+							attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+							not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments and then
+							tuple_argument_position (l_formals, a_context) = 1
+						then
+							l_call.set_arguments (create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (Void, 1, 1))
+							check_actual_arguments_validity (l_call, a_context, a_feature, a_class)
+						else
+							set_fatal_error
+							if a_class /= Void then
+								if l_name.is_precursor then
+									error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
+								else
+									error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
+								end
+							else
+								error_handler.report_vuar1b_error (current_class, l_name, a_feature)
+							end
+						end
+					else
+						set_fatal_error
+						if not has_implementation_error (current_feature_impl) then
+								-- Internal error: this error should have been reported when
+								-- processing the implementation of `current_feature_impl' or in
+								-- the feature flattener when redeclaring `a_feature' in an
+								-- ancestor of `a_class' or `current_class'.
+							error_handler.report_giaaa_error
+						end
+					end
+				end
+			elseif l_formals = Void or else l_formals.count /= l_actuals.count then
+					-- The number of actual arguments is different from
+					-- the number of formal arguments.
+				if current_class = current_class_impl then
+					if
+						l_formals /= Void and then l_formals.count <= l_actuals.count + 1 and then
+						attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+						not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments and then
+						attached tuple_argument_position (l_formals, a_context) as l_tuple_position and then
+						l_tuple_position > 0
+					then
+						l_call.set_arguments (create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_position,l_formals.count))
+						check_actual_arguments_validity (l_call, a_context, a_feature, a_class)
+					else
+						set_fatal_error
 						if a_class /= Void then
 							if l_name.is_precursor then
 								error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
@@ -10191,7 +10236,10 @@ feature {NONE} -- Expression validity
 						else
 							error_handler.report_vuar1b_error (current_class, l_name, a_feature)
 						end
-					elseif not has_implementation_error (current_feature_impl) then
+					end
+				else
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
 							-- Internal error: this error should have been reported when
 							-- processing the implementation of `current_feature_impl' or in
 							-- the feature flattener when redeclaring `a_feature' in an
@@ -10199,28 +10247,8 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				end
-			elseif l_formals = Void or else l_formals.count /= l_actuals.count then
-					-- The number of actual arguments is different from
-					-- the number of formal arguments.
-				set_fatal_error
-				if current_class = current_class_impl then
-					if a_class /= Void then
-						if l_name.is_precursor then
-							error_handler.report_vdpr4a_error (current_class, l_name.precursor_keyword, a_feature, a_class)
-						else
-							error_handler.report_vuar1a_error (current_class, l_name, a_feature, a_class)
-						end
-					else
-						error_handler.report_vuar1b_error (current_class, l_name, a_feature)
-					end
-				elseif not has_implementation_error (current_feature_impl) then
-						-- Internal error: this error should have been reported when
-						-- processing the implementation of `current_feature_impl' or in
-						-- the feature flattener when redeclaring `a_feature' in an
-						-- ancestor of `a_class' or `current_class'.
-					error_handler.report_giaaa_error
-				end
 			else
+				l_tuple_argument_position := -1
 				l_actual_context := new_context (current_type)
 				l_formal_context := a_context
 				if attached {ET_ACTUAL_ARGUMENT_LIST} l_actuals as l_attached_actual_list then
@@ -10269,23 +10297,44 @@ feature {NONE} -- Expression validity
 							then
 								-- Compatibility with ISE 5.6.0610.
 							else
-								if current_universe.attachment_type_conformance_mode then
-									if l_actual_entity_attached then
-										l_actual_context.remove_last
-									end
+								if l_tuple_argument_position < 0 and then current_class = current_class_impl then
+										-- Try Tuple-argument-unfolding.
+									l_formal_context.remove_last
+									l_tuple_argument_position := tuple_argument_position (l_formals, a_context)
+									l_formal_context.force_last (l_formal.type)
 								end
-								had_error := True
-								set_fatal_error
-								l_actual_named_type := l_actual_context.named_type
-								l_formal_named_type := l_formal_context.named_type
-								if a_class /= Void then
-									if l_name.is_precursor then
-										error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									else
-										error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
-									end
+								if
+									l_tuple_argument_position = i and then
+									current_class = current_class_impl and then
+									attached {ET_CALL_WITH_ACTUAL_ARGUMENT_LIST} a_call as l_call and then
+									not attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} l_call.arguments
+								then
+									l_actual_list := create {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST}.make (l_call.arguments, l_tuple_argument_position, nb)
+									l_actuals := l_actual_list
+									l_call.set_arguments (l_actual_list)
+										-- Reprocess this actual argument now that it has been
+										-- converted to a Tuple argument.
+									i := i - 1
+
 								else
-									error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+									if current_universe.attachment_type_conformance_mode then
+										if l_actual_entity_attached then
+											l_actual_context.remove_last
+										end
+									end
+									had_error := True
+									set_fatal_error
+									l_actual_named_type := l_actual_context.named_type
+									l_formal_named_type := l_formal_context.named_type
+									if a_class /= Void then
+										if l_name.is_precursor then
+											error_handler.report_vdpr4b_error (current_class, current_class_impl, l_name.precursor_keyword, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+										else
+											error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, a_feature, a_class, i, l_actual_named_type, l_formal_named_type)
+										end
+									else
+										error_handler.report_vuar2b_error (current_class, current_class_impl, l_name, a_feature, i, l_actual_named_type, l_formal_named_type)
+									end
 								end
 							end
 						end
@@ -13710,6 +13759,36 @@ feature {NONE} -- Conversion
 			end
 		ensure
 			implementation_class: Result /= Void implies (current_class = current_class_impl)
+		end
+
+	tuple_argument_position (a_formals: ET_FORMAL_ARGUMENT_LIST; a_context: ET_NESTED_TYPE_CONTEXT): INTEGER
+			-- Position of the formal argument in `a_formals' with a Tuple type
+			-- when viewed from `a_context', where there is exactly one (i.e. when
+			-- the routine is a single-tuple routine).
+			-- Otherwise, 0.
+		require
+			a_formals_not_void: a_formals /= Void
+			a_context_not_void: a_context /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_formals.count
+			from i := 1 until i > nb loop
+				if a_formals.formal_argument (i).type.base_class (a_context).is_tuple_class then
+					if Result /= 0 then
+							-- This is not a single-tuple routine: there are more than one
+							-- formal argument with a Tuple type.
+						Result := 0
+						i := nb -- Jump out of the loop.
+					else
+						Result := i
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			tuple_argument_position_large_enough: Result >= 0
+			tuple_argument_position_small_enough: Result <= a_formals.count
 		end
 
 feature {ET_AST_NODE} -- Processing

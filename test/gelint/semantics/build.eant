@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for gelint semantics tests"
-		copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+		copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -136,6 +136,8 @@
 		<geant file="build.eant" target="clean" dir="parenthesis_alias" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="precursor"/>
 		<geant file="build.eant" target="clean" dir="precursor" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="tuple_argument_unfolding"/>
+		<geant file="build.eant" target="clean" dir="tuple_argument_unfolding" if="${do_clean}=true"/>
 	</target>
 
 </project>

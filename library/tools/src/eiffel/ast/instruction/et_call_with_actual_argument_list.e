@@ -16,6 +16,19 @@ inherit
 
 	ET_CALL_WITH_ACTUAL_ARGUMENTS
 
+feature -- Initialization
+
+	reset_arguments
+			-- Reset arguments as they were just after they were last parsed.
+		do
+			if attached {ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST} arguments as l_unfolded_tuple then
+				arguments := l_unfolded_tuple.actual_arguments
+			end
+			if attached arguments as l_arguments then
+				l_arguments.reset
+			end
+		end
+
 feature -- Access
 
 	arguments: detachable ET_ACTUAL_ARGUMENT_LIST

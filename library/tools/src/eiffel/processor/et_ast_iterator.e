@@ -2614,6 +2614,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
+			-- Process `a_list'.
+		do
+			if attached a_list.actual_arguments as l_actual_arguments then
+				l_actual_arguments.process (Current)
+			end
+		end
+
 	process_unfolded_tuple_actual_parameters (a_list: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS)
 			-- Process `a_list'.
 		do

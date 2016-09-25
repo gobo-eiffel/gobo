@@ -44,9 +44,7 @@ feature -- Initialization
 				-- set by the feature flattener if we only want to reset
 				-- what the implementation checker did, and especially since
 				-- it does not hurt to leave it there.
-			if attached arguments as l_arguments then
-				l_arguments.reset
-			end
+			reset_arguments
 			parenthesis_call := Void
 		end
 

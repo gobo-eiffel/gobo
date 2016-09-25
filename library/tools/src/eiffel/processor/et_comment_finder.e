@@ -194,6 +194,7 @@ inherit
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unfolded_empty_tuple_actual_parameters,
+			process_unfolded_tuple_actual_argument_list,
 			process_unfolded_tuple_actual_parameters,
 			process_unique_attribute,
 			process_unqualified_call_expression,
@@ -1696,6 +1697,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_unfolded_empty_tuple_actual_parameters (a_list: ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
+			end
+		end
+
+	process_unfolded_tuple_actual_argument_list (a_list: ET_UNFOLDED_TUPLE_ACTUAL_ARGUMENT_LIST)
 			-- Process `a_list'.
 		do
 			if not excluded_nodes.has (a_list) then

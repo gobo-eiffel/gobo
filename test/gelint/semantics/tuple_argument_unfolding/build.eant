@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="tuple_argument_unfolding" default="help">
+
+	<description>
+		system: "ECMA Tuple-argument-unfolding semantics Tester"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xtuple_argument_unfolding"/>
+		<set name="category" value="tuple_argument_unfolding"/>
+		<set name="system_dir" value="${GOBO}/test/gelint/semantics/${category}"/>
+	</target>
+
+</project>

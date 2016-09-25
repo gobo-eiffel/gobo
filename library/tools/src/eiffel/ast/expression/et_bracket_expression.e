@@ -49,9 +49,7 @@ feature -- Initialization
 		do
 			target.reset
 			name.reset
-			if attached arguments as l_arguments then
-				l_arguments.reset
-			end
+			reset_arguments
 		end
 
 feature -- Access
