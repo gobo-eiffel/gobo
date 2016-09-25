@@ -4,7 +4,7 @@ note
 
 		"Gelint test cases"
 
-	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -675,7 +675,7 @@ feature {NONE} -- Output logs
 			output3_log_not_empty: Result.count > 0
 		end
 
-	concat_output1 (a_filter: PROCEDURE [ANY, TUPLE [STRING, STRING]])
+	concat_output1 (a_filter: PROCEDURE [TUPLE [STRING, STRING]])
 			-- Concat the logs of the compilation to 'output.log'.
 		require
 			a_filter_not_void: a_filter /= Void

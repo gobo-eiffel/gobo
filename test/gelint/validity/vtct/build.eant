@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Test VTCT validity rule"
-		copyright: "Copyright (c) 2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -26,6 +26,7 @@
 			Install other items in ${system} directory.
 		</description>
 		<geant file="build.eant" target="install" dir="test4"/>
+		<geant file="build.eant" target="install" dir="test5"/>
 	</target>
 
 	<target name="other_clean" depend="init">
@@ -33,7 +34,9 @@
 			Remove other intermediary generated files.
 		</description>
 		<geant file="build.eant" target="clean" dir="test4"/>
+		<geant file="build.eant" target="clean" dir="test5"/>
 		<delete directory="Ttest4"/>
+		<delete directory="Ttest5"/>
 	</target>
 
 	<target name="other_clobber" depend="init">
@@ -41,6 +44,7 @@
 			Remove other generated files.
 		</description>
 		<geant file="build.eant" target="clobber" dir="test4"/>
+		<geant file="build.eant" target="clobber" dir="test5"/>
 	</target>
 
 	<target name="init_system">

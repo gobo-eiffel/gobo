@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<system name="aa">
+	<description>
+		system: "vtct_test5"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="AA" creation="make"/>
+	<option name="console_application" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="internal"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="vtct_test4" location="${GOBO}/test/gelint/validity/vtct/test5"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>

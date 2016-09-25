@@ -73,8 +73,10 @@ feature -- Processing
 				create a_processor.make
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
-				set_fatal_error (a_class)
-				error_handler.report_giaaa_error
+				if not a_class.interface_checked or else not a_class.has_interface_error then
+					set_fatal_error (a_class)
+					error_handler.report_giaaa_error
+				end
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
