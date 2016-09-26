@@ -101,6 +101,8 @@ inherit
 			process_once_manifest_string,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_postconditions,
 			process_preconditions,
@@ -2012,6 +2014,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_internal_routine_inline_agent (an_expression)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_expression (an_expression)
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_feature_call_instruction (an_instruction)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

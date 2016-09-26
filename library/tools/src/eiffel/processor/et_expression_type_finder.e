@@ -60,6 +60,7 @@ inherit
 			process_once_function_inline_agent,
 			process_once_manifest_string,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_prefix_expression,
@@ -3218,6 +3219,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_once_procedure_inline_agent_type (an_expression, current_context)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			find_qualified_call_expression_type (an_expression, current_context)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

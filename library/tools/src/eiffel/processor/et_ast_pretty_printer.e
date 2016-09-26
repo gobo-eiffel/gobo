@@ -128,6 +128,8 @@ inherit
 			process_once_procedure_inline_agent,
 			process_parent,
 			process_parent_list,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_postconditions,
 			process_preconditions,
 			process_precursor_expression,
@@ -4324,6 +4326,26 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_comments
 			dedent
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			an_expression.target.process (Current)
+			if attached an_expression.arguments as l_arguments then
+				print_space
+				l_arguments.process (Current)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_expression'.
+		do
+			an_instruction.target.process (Current)
+			if attached an_instruction.arguments as l_arguments then
+				print_space
+				l_arguments.process (Current)
+			end
 		end
 
 	process_postconditions (a_list: ET_POSTCONDITIONS)

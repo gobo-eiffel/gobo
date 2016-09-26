@@ -5,7 +5,7 @@ note
 		"Eiffel static feature calls"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
-	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_PARENTHESIS_CALL
 			-- Unfolded form when the current static call is of the parenthesis alias form;
 			-- For example, if the current static call is '{T}.f (args)', its parenthesis call
 			-- will be '{T].f.g (args)' where 'g' is declared as 'g alias "()"'.

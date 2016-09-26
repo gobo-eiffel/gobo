@@ -66,6 +66,8 @@ inherit
 			process_once_function_inline_agent,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -738,6 +740,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as an_arguments then
 				process_agent_argument_operand_list (an_arguments)
+			end
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if attached an_expression.arguments as an_arguments then
+				process_actual_argument_list (an_arguments)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if attached an_instruction.arguments as an_arguments then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 

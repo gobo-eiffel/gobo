@@ -77,6 +77,8 @@ inherit
 			process_once_manifest_string,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -32822,6 +32824,18 @@ feature {ET_AST_NODE} -- Processing
 			else
 				print_once_procedure_inline_agent (an_agent)
 			end
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			print_qualified_call_expression (an_expression)
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			print_qualified_call_instruction (an_instruction)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

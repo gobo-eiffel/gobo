@@ -86,6 +86,8 @@ inherit
 			process_once_manifest_string,
 			process_once_procedure,
 			process_once_procedure_inline_agent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_precursor_expression,
 			process_precursor_instruction,
@@ -10435,9 +10437,9 @@ feature {NONE} -- Parenthesis call validity
 					set_parenthesis_call_position (l_parenthesis, a_actuals)
 					l_parenthesis.set_seed (l_unfolded_feature.first_seed)
 					a_call.set_parenthesis_call (a_name, l_parenthesis, a_actuals)
-					if attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+					if attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 						check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-					elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+					elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 						check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 					else
 							-- The parenthesis call is either an instruction or an expression.
@@ -10502,9 +10504,9 @@ feature {NONE} -- Parenthesis call validity
 							end
 							if has_fatal_error then
 								-- Do nothing.
-							elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
+							elseif attached {ET_PARENTHESIS_INSTRUCTION} l_regular_call.parenthesis_call as l_parenthesis_call_instruction then
 								check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-							elseif attached {ET_QUALIFIED_CALL_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
+							elseif attached {ET_PARENTHESIS_EXPRESSION} l_regular_call.parenthesis_call as l_parenthesis_call_expression then
 								check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 							else
 									-- The parenthesis call is either an instruction or an expression.
@@ -10633,9 +10635,9 @@ feature {NONE} -- Parenthesis call validity
 						check_precursor_query_expression_validity (l_unfolded_target, a_parent_query, a_parent_class, a_parent_type, a_context)
 						if has_fatal_error then
 							-- Do nothing.
-						elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-						elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 							check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 						else
 								-- The parenthesis call is either an instruction or an expression.
@@ -10693,9 +10695,9 @@ feature {NONE} -- Parenthesis call validity
 						check_static_query_call_expression_validity (l_unfolded_target, a_query, a_class, a_context)
 						if has_fatal_error then
 							-- Do nothing.
-						elseif attached {ET_QUALIFIED_CALL_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
+						elseif attached {ET_PARENTHESIS_INSTRUCTION} a_call.parenthesis_call as l_parenthesis_call_instruction then
 							check_qualified_feature_call_instruction_validity (l_parenthesis_call_instruction, l_unfolded_feature, l_base_class, a_context)
-						elseif attached {ET_QUALIFIED_CALL_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
+						elseif attached {ET_PARENTHESIS_EXPRESSION} a_call.parenthesis_call as l_parenthesis_call_expression then
 							check_qualified_feature_call_expression_validity (l_parenthesis_call_expression, l_unfolded_feature, l_base_class, a_context)
 						else
 								-- The parenthesis call is either an instruction or an expression.
@@ -14147,6 +14149,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_once_procedure_inline_agent_validity (an_expression, current_context)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			check_qualified_call_expression_validity (an_expression, current_context)
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			check_qualified_call_instruction_validity (an_instruction)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

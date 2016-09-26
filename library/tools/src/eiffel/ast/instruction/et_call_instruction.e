@@ -33,7 +33,7 @@ feature -- Access
 		deferred
 		end
 
-	parenthesis_call: detachable ET_QUALIFIED_CALL_INSTRUCTION
+	parenthesis_call: detachable ET_PARENTHESIS_INSTRUCTION
 			-- <Precursor>
 
 feature -- Setting

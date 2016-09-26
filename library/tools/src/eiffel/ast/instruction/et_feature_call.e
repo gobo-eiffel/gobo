@@ -36,7 +36,7 @@ feature -- Access
 		deferred
 		end
 
-	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_PARENTHESIS_CALL
 			-- Unfolded form when the current call is of the parenthesis alias form;
 			-- For example, if the current call is 'f (args)', its parenthesis call
 			-- will be 'f.g (args)' where 'g' is declared as 'g alias "()"'.

@@ -5,7 +5,7 @@ note
 		"Eiffel '(' symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2014-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ inherit
 			process
 		end
 
-	ET_FEATURE_NAME
+	ET_CALL_NAME
 		undefine
 			first_position,
 			last_position,
@@ -72,13 +72,6 @@ feature -- Comparison
 			else
 				Result := other.is_parenthesis
 			end
-		end
-
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN
-			-- Are feature name and `other' the same feature name?
-			-- (case insensitive)
-		do
-			Result := ANY_.same_types (Current, other)
 		end
 
 feature -- Processing

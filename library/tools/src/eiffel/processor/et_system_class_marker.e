@@ -101,6 +101,8 @@ inherit
 			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parent,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_parent_list,
 			process_postconditions,
@@ -1168,6 +1170,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_parent'.
 		do
 			a_parent.type.process (Current)
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			process_feature_call (an_expression)
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			process_feature_call (an_instruction)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION)

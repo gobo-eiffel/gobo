@@ -1137,6 +1137,20 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
 	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
 			-- Process `a_symbol'.
 		require

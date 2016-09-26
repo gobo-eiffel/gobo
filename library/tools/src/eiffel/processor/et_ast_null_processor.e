@@ -811,6 +811,17 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_parent'.
 		do
 		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+		end
+
 	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
 			-- Process `a_symbol'.
 		do

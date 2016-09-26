@@ -38,7 +38,7 @@ feature -- Access
 		deferred
 		end
 
-	parenthesis_call: detachable ET_QUALIFIED_CALL_EXPRESSION
+	parenthesis_call: detachable ET_PARENTHESIS_EXPRESSION
 			-- <Precursor>
 
 feature -- Setting

@@ -60,7 +60,7 @@ feature -- Access
 			-- Parent type;
 			-- Void if not resolved yet.
 
-	parenthesis_call: detachable ET_QUALIFIED_REGULAR_FEATURE_CALL
+	parenthesis_call: detachable ET_PARENTHESIS_CALL
 			-- Unfolded form when the current precursor call is of the parenthesis alias form;
 			-- For example, if the current precursor call is 'precursor (args)', its parenthesis call
 			-- will be 'precursor.g (args)' where 'g' is declared as 'g alias "()"'.

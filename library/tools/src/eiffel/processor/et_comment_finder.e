@@ -161,6 +161,8 @@ inherit
 			process_once_procedure_inline_agent,
 			process_parent,
 			process_parent_semicolon,
+			process_parenthesis_expression,
+			process_parenthesis_instruction,
 			process_parenthesized_expression,
 			process_parent_list,
 			process_postconditions,
@@ -1435,6 +1437,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_parent) then
 				precursor (a_parent)
+			end
+		end
+
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			if not excluded_nodes.has (an_instruction) then
+				precursor (an_instruction)
 			end
 		end
 

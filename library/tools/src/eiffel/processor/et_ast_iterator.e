@@ -2215,6 +2215,24 @@ feature {ET_AST_NODE} -- Processing
 			a_parent.semicolon.process (Current)
 		end
 
+	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
+			-- Process `an_expression'.
+		do
+			an_expression.target.process (Current)
+			if attached an_expression.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
+		end
+
+	process_parenthesis_instruction (an_instruction: ET_PARENTHESIS_INSTRUCTION)
+			-- Process `an_instruction'.
+		do
+			an_instruction.target.process (Current)
+			if attached an_instruction.arguments as l_arguments then
+				l_arguments.process (Current)
+			end
+		end
+
 	process_parenthesis_symbol (a_symbol: ET_PARENTHESIS_SYMBOL)
 			-- Process `a_symbol'.
 		do
