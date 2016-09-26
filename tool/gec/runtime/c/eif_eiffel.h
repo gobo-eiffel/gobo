@@ -16,6 +16,12 @@
 #pragma once
 #endif
 
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
 #ifndef EIF_GLOBALS_H
 #include "eif_globals.h"
 #endif
