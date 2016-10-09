@@ -572,10 +572,10 @@ feature -- Removal
 								create file.make_with_path (l_file_name)
 							end
 							file.delete
-							-- Add the name of the deleted file to our array
-							-- of deleted files.
-						deleted_files.extend (l_file_name.name)
-						file_count := file_count + 1
+								-- Add the name of the deleted file to our array
+								-- of deleted files.
+							deleted_files.extend (l_file_name.name)
+							file_count := file_count + 1
 						end
 							-- If `file_number' has been reached, call `action'.
 						if file_number > 0 and file_count >= file_number then
