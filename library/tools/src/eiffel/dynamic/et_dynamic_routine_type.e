@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic ROUTINE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,19 @@ feature -- Access
 		deferred
 		end
 
+	set_rout_disp_final_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'set_rout_disp_final' in class "ROUTINE"
+
+feature -- Setting
+
+	set_set_rout_disp_final_feature (a_feature: like set_rout_disp_final_feature)
+			-- Set `set_rout_disp_final_feature' to `a_feature'
+		do
+			set_rout_disp_final_feature := a_feature
+		ensure
+			set_rout_disp_final_feature_set: set_rout_disp_final_feature = a_feature
+		end
+		
 invariant
 
 	open_operand_type_sets_not_void: open_operand_type_sets /= Void

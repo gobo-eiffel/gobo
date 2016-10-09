@@ -1190,6 +1190,22 @@ feature -- Feature names
 			extend_feature_name_not_void: Result /= Void
 		end
 
+	fast_call_feature_name: ET_FEATURE_NAME
+			-- 'fast_call' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (fast_call_name)
+		ensure
+			fast_call_feature_name_not_void: Result /= Void
+		end
+
+	fast_item_feature_name: ET_FEATURE_NAME
+			-- 'fast_item' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (fast_item_name)
+		ensure
+			fast_item_feature_name_not_void: Result /= Void
+		end
+
 	field_feature_name: ET_FEATURE_NAME
 			-- 'field' feature name
 		once
@@ -1980,14 +1996,6 @@ feature -- Feature names
 			is_special_of_reference_type_feature_name_not_void: Result /= Void
 		end
 
-	is_target_closed_feature_name: ET_FEATURE_NAME
-			-- 'is_target_closed' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (is_target_closed_name)
-		ensure
-			is_target_closed_feature_name_not_void: Result /= Void
-		end
-
 	is_thread_capable_feature_name: ET_FEATURE_NAME
 			-- 'is_thread_capable' feature name
 		once
@@ -2725,6 +2733,14 @@ feature -- Feature names
 			reference_item_feature_name_not_void: Result /= Void
 		end
 
+	rout_disp_feature_name: ET_FEATURE_NAME
+			-- 'rout_disp' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (rout_disp_name)
+		ensure
+			rout_disp_feature_name_not_void: Result /= Void
+		end
+
 	runtime_name_feature_name: ET_FEATURE_NAME
 			-- 'runtime_name' feature name
 		once
@@ -3035,6 +3051,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (set_reference_field_at_name)
 		ensure
 			set_reference_field_at_feature_name_not_void: Result /= Void
+		end
+
+	set_rout_disp_final_feature_name: ET_FEATURE_NAME
+			-- 'set_rout_disp_final' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_rout_disp_final_name)
+		ensure
+			set_rout_disp_final_feature_name_not_void: Result /= Void
 		end
 
 	standard_copy_feature_name: ET_FEATURE_NAME
@@ -4556,6 +4580,12 @@ feature -- Keyword and symbol names
 	extend_name: STRING = "extend"
 			-- Name of Eiffel feature 'extend'
 
+	fast_call_name: STRING = "fast_call"
+			-- Name of Eiffel feature 'fast_call'
+
+	fast_item_name: STRING = "fast_item"
+			-- Name of Eiffel feature 'fast_item'
+
 	field_name: STRING = "field"
 			-- Name of Eiffel feature 'field'
 
@@ -4774,9 +4804,6 @@ feature -- Keyword and symbol names
 
 	is_special_of_reference_type_name: STRING = "is_special_of_reference_type"
 			-- Name of Eiffel feature 'is_special_of_reference_type'
-
-	is_target_closed_name: STRING = "is_target_closed"
-			-- Name of Eiffel feature 'is_target_closed'
 
 	is_thread_capable_name: STRING = "is_thread_capable"
 			-- Name of Eiffel feature 'is_thread_capable'
@@ -5042,6 +5069,9 @@ feature -- Keyword and symbol names
 	reference_item_name: STRING = "reference_item"
 			-- Name of Eiffel feature 'reference_item'
 
+	rout_disp_name: STRING = "rout_disp"
+			-- Name of Eiffel feature 'rout_disp'
+
 	runtime_name_name: STRING = "runtime_name"
 			-- Name of Eiffel feature 'runtime_name'
 
@@ -5159,6 +5189,9 @@ feature -- Keyword and symbol names
 
 	set_reference_field_at_name: STRING = "set_reference_field_at"
 			-- Name of Eiffel feature 'set_reference_field_at'
+
+	set_rout_disp_final_name: STRING = "set_rout_disp_final"
+			-- Name of Eiffel feature 'set_rout_disp_final'
 
 	standard_copy_name: STRING = "standard_copy"
 			-- Name of Eiffel feature 'standard_copy'

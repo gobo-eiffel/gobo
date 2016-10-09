@@ -736,8 +736,8 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_special_type: a_type.base_class.is_special_class
 		do
-				-- Make feature 'count' and 'capacity' alive at the first two
-				-- positions in the feature list of the "SPECIAL" type.
+				-- Make attributes 'count' and 'capacity' alive at the first two
+				-- positions in the attribute list of the "SPECIAL" type.
 			if attached special_count_feature as l_special_count_feature then
 				a_type.set_attribute_position (a_type.dynamic_query (l_special_count_feature, Current), 1)
 			end
@@ -752,8 +752,8 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_array_type: a_type.base_class.is_array_class
 		do
-				-- Make features 'area', and 'lower' and 'upper' alive at the
-				-- first three positions in the feature list of the "ARRAY" type.
+				-- Make attributes 'area', and 'lower' and 'upper' alive at the
+				-- first three positions in the attribute list of the "ARRAY" type.
 			if attached array_area_feature as l_array_area_feature then
 				a_type.set_attribute_position (a_type.dynamic_query (l_array_area_feature, Current), 1)
 			end
@@ -771,8 +771,8 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_typed_pointer_type: a_type.base_class.is_typed_pointer_class
 		do
-				-- Make feature 'to_pointer' alive at the first position
-				-- in the feature list of the "TYPED_POINTER" type.
+				-- Make attribute 'to_pointer' alive at the first position
+				-- in the attribute list of the "TYPED_POINTER" type.
 			if attached typed_pointer_to_pointer_feature as l_typed_pointer_to_pointer_feature then
 				a_type.set_attribute_position (a_type.dynamic_query (l_typed_pointer_to_pointer_feature, Current), 1)
 			end
@@ -784,18 +784,27 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_procedure_type: a_type.base_class.is_procedure_class
 		do
-				-- Make feature 'closed_operands' alive at the first position
-				-- in the feature list of the "PROCEDURE" type.
-			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_type then
-					a_type.set_attribute_position (l_dynamic_type, 1)
+				-- Make attribute 'rout_disp' alive at the first position
+				-- in the attribute list of the "PROCEDURE" type.
+			if attached routine_rout_disp_feature as l_routine_rout_disp_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_rout_disp_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 1)
 				end
 			end
-				-- Make feature 'is_target_closed' alive at the second position
-				-- in the feature list of the "PROCEDURE" type.
-			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_feature then
-					a_type.set_attribute_position (l_dynamic_feature, 2)
+				-- Make attribute 'closed_operands' alive at the second position
+				-- in the attribute list of the "PROCEDURE" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_type then
+					a_type.set_attribute_position (l_dynamic_type, 2)
+				end
+			end
+				-- Make feature 'set_rout_disp_final' alive.
+			if attached {ET_DYNAMIC_ROUTINE_TYPE} a_type as l_agent_type then
+				if attached routine_set_rout_disp_final_feature as l_routine_set_rout_disp_final_feature then
+					if attached a_type.seeded_dynamic_procedure (l_routine_set_rout_disp_final_feature.first_seed, Current) as l_dynamic_feature then
+						l_dynamic_feature.set_regular (True)
+						l_agent_type.set_set_rout_disp_final_feature (l_dynamic_feature)
+					end
 				end
 			end
 		end
@@ -806,18 +815,27 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_function_type: a_type.base_class.is_function_class
 		do
-				-- Make feature 'closed_operands' alive at the first position
-				-- in the feature list of the "FUNCTION" type.
-			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
+				-- Make attribute 'rout_disp' alive at the first position
+				-- in the attribute list of the "FUNCTION" type.
+			if attached routine_rout_disp_feature as l_routine_rout_disp_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_rout_disp_feature.first_seed, Current) as l_dynamic_feature then
 					a_type.set_attribute_position (l_dynamic_feature, 1)
 				end
 			end
-				-- Make feature 'is_target_closed' alive at the second position
-				-- in the feature list of the "FUNCTION" type.
-			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_type then
-					a_type.set_attribute_position (l_dynamic_type, 2)
+				-- Make attribute 'closed_operands' alive at the second position
+				-- in the attribute list of the "FUNCTION" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
+					a_type.set_attribute_position (l_dynamic_feature, 2)
+				end
+			end
+				-- Make feature 'set_rout_disp_final' alive.
+			if attached {ET_DYNAMIC_ROUTINE_TYPE} a_type as l_agent_type then
+				if attached routine_set_rout_disp_final_feature as l_routine_set_rout_disp_final_feature then
+					if attached a_type.seeded_dynamic_procedure (l_routine_set_rout_disp_final_feature.first_seed, Current) as l_dynamic_feature then
+						l_dynamic_feature.set_regular (True)
+						l_agent_type.set_set_rout_disp_final_feature (l_dynamic_feature)
+					end
 				end
 			end
 		end
@@ -828,18 +846,27 @@ feature {NONE} -- Types
 			a_type_not_void: a_type /= Void
 			is_predicate_type: a_type.base_class.is_predicate_class
 		do
-				-- Make feature 'closed_operands' alive at the first position
-				-- in the feature list of the "PREDICATE" type.
-			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
+				-- Make attribute 'rout_disp' alive at the first position
+				-- in the attribute list of the "PREDICATE" type.
+			if attached routine_rout_disp_feature as l_routine_rout_disp_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_rout_disp_feature.first_seed, Current) as l_dynamic_feature then
 					a_type.set_attribute_position (l_dynamic_feature, 1)
 				end
 			end
-				-- Make feature 'is_target_closed' alive at the second position
-				-- in the feature list of the "PREDICATE" type.
-			if attached routine_is_target_closed_feature as l_routine_is_target_closed_feature then
-				if attached a_type.seeded_dynamic_query (l_routine_is_target_closed_feature.first_seed, Current) as l_dynamic_feature then
+				-- Make attribute 'closed_operands' alive at the second position
+				-- in the attribute list of the "PREDICATE" type.
+			if attached routine_closed_operands_feature as l_routine_closed_operands_feature then
+				if attached a_type.seeded_dynamic_query (l_routine_closed_operands_feature.first_seed, Current) as l_dynamic_feature then
 					a_type.set_attribute_position (l_dynamic_feature, 2)
+				end
+			end
+				-- Make feature 'set_rout_disp_final' alive.
+			if attached {ET_DYNAMIC_ROUTINE_TYPE} a_type as l_agent_type then
+				if attached routine_set_rout_disp_final_feature as l_routine_set_rout_disp_final_feature then
+					if attached a_type.seeded_dynamic_procedure (l_routine_set_rout_disp_final_feature.first_seed, Current) as l_dynamic_feature then
+						l_dynamic_feature.set_regular (True)
+						l_agent_type.set_set_rout_disp_final_feature (l_dynamic_feature)
+					end
 				end
 			end
 		end
@@ -1666,7 +1693,8 @@ feature {NONE} -- Compilation
 				end
 					-- Class "ROUTINE".
 				routine_closed_operands_feature := Void
-				routine_is_target_closed_feature := Void
+				routine_rout_disp_feature := Void
+				routine_set_rout_disp_final_feature := Void
 				l_class := current_system.routine_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
@@ -1696,23 +1724,56 @@ feature {NONE} -- Compilation
 						else
 							routine_closed_operands_feature := l_routine_closed_operands_feature
 						end
-							-- Check feature 'is_target_closed' of class "ROUTINE".
-						if not attached l_class.named_query (tokens.is_target_closed_feature_name) as l_routine_is_target_closed_feature then
-							if attached l_class.named_procedure (tokens.is_target_closed_feature_name) as l_procedure then
+							-- Check feature 'rout_disp' of class "ROUTINE".
+						if not attached l_class.named_query (tokens.rout_disp_feature_name) as l_routine_rout_disp_feature then
+							if attached l_class.named_procedure (tokens.rout_disp_feature_name) as l_procedure then
 								set_fatal_error
 								error_handler.report_gvkfe2a_error (l_class, l_procedure)
 							else
 								set_fatal_error
-								error_handler.report_gvkfe1a_error (l_class, tokens.is_target_closed_feature_name)
+								error_handler.report_gvkfe1a_error (l_class, tokens.rout_disp_feature_name)
 							end
-						elseif not l_routine_is_target_closed_feature.is_attribute then
+						elseif not l_routine_rout_disp_feature.is_attribute then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, l_routine_is_target_closed_feature)
-						elseif not l_routine_is_target_closed_feature.type.same_named_type (current_system.boolean_type, l_class, l_class) then
+							error_handler.report_gvkfe2a_error (l_class, l_routine_rout_disp_feature)
+						elseif not l_routine_rout_disp_feature.type.same_named_type (current_system.pointer_type, l_class, l_class) then
 							set_fatal_error
-							error_handler.report_gvkfe3a_error (l_class, l_routine_is_target_closed_feature, current_system.boolean_type)
+							error_handler.report_gvkfe3a_error (l_class, l_routine_rout_disp_feature, current_system.pointer_type)
 						else
-							routine_is_target_closed_feature := l_routine_is_target_closed_feature
+							routine_rout_disp_feature := l_routine_rout_disp_feature
+						end
+							-- Check feature 'set_rout_disp_final' of class "ROUTINE".
+						if not attached l_class.named_procedure (tokens.set_rout_disp_final_feature_name) as l_routine_set_rout_disp_final_feature then
+							if attached l_class.named_query (tokens.set_rout_disp_final_feature_name) as l_query then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_query)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.set_rout_disp_final_feature_name)
+							end
+						elseif not attached l_routine_set_rout_disp_final_feature.arguments as l_formal_arguments or else l_formal_arguments.count /= 6 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (1).type.same_named_type (current_system.universe.pointer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (2).type.same_named_type (current_system.universe.pointer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (3).type.same_named_type (current_system.universe.pointer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (4).type.same_named_type (current_system.universe.tuple_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (5).type.same_named_type (current_system.universe.boolean_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (6).type.same_named_type (current_system.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_routine_set_rout_disp_final_feature, <<current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.pointer_type.type, current_system.universe.tuple_type.type, current_system.universe.boolean_type.type, current_system.universe.integer_type.type>>, Void)
+						else
+							routine_set_rout_disp_final_feature := l_routine_set_rout_disp_final_feature
 						end
 					end
 				end
@@ -2092,8 +2153,11 @@ feature {NONE} -- Static features
 	routine_closed_operands_feature: detachable ET_QUERY
 			-- Expected attribute 'closed_operands' in class "ROUTINE"
 
-	routine_is_target_closed_feature: detachable ET_QUERY
-			-- Expected attribute 'is_target_closed' in class "ROUTINE"
+	routine_rout_disp_feature: detachable ET_QUERY
+			-- Expected attribute 'rout_disp' in class "ROUTINE"
+
+	routine_set_rout_disp_final_feature: detachable ET_PROCEDURE
+			-- Expected procedure 'set_rout_disp_final' in class "ROUTINE"
 
 feature {NONE} -- Implementation
 

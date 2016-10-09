@@ -2376,6 +2376,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_function_fast_item then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_function_fast_item_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_function_item then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -4086,6 +4092,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			when builtin_procedure_call then
 				fill_call_formal_arguments (a_feature)
 				print_builtin_procedure_call_call (current_feature, current_type, False)
+				call_operands.wipe_out
+			when builtin_procedure_fast_call then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_procedure_fast_call_call (current_feature, current_type, False)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -8184,6 +8194,8 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_procedure_call then
 				print_builtin_procedure_call_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_procedure_fast_call then
+				print_builtin_procedure_fast_call_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -8474,7 +8486,7 @@ feature {NONE} -- Expression generation
 			-- Print access to `an_attribute' applied to `a_target' of dynamic type `a_target_type'.
 			-- Useful for example when the access to `a_target' needs to be adapted depending on
 			-- the expandedness of the dynamic and static types of `a_target'. For example if the
-			-- static type is a reference type and the dynamic type is expaned, then `a_target' will
+			-- static type is a reference type and the dynamic type is expanded, then `a_target' will
 			-- need to be unboxed before accessing its attribute.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
@@ -8666,31 +8678,6 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_arrow)
 			end
 			print_attribute_name (an_attribute, a_target_type, current_file)
-		end
-
-	print_attribute_routine_function_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' an access to the function pointer pseudo attribute
-			-- of class "ROUTINE" applied to object `a_target' of type `a_targer_type'.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-		require
-			a_target_not_void: a_target /= Void
-			a_target_type_not_void: a_target_type /= Void
-		do
-			if a_target_type.is_expanded then
-				current_file.put_character ('(')
-				print_expression (a_target)
-				current_file.put_character (')')
-				current_file.put_character ('.')
-			else
-				current_file.put_character ('(')
-				print_type_cast (a_target_type, current_file)
-				current_file.put_character ('(')
-				print_non_void_expression (a_target, a_check_void_target)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-			end
-			print_attribute_routine_function_name (a_target_type, current_file)
 		end
 
 	print_attribute_special_capacity_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -14080,6 +14067,8 @@ feature {NONE} -- Query call generation
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_function_fast_item then
+				print_builtin_function_fast_item_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_function_item then
 				print_builtin_function_item_call (a_feature, a_target_type, a_check_void_target)
 			else
@@ -14835,10 +14824,10 @@ feature {NONE} -- Agent generation
 			end
 			print_agent_creation_name (current_agents.count, current_feature, current_type, current_file)
 			current_file.put_character ('(')
+			current_file.put_string (c_ac)
 			from i := 1 until i > nb_operands loop
-				if i /= 1 then
-					current_file.put_character (',')
-				end
+				current_file.put_character (',')
+				current_file.put_character (' ')
 -- TODO: use print_attachment_expression
 				print_expression (call_operands.item (i))
 				i := i + 1
@@ -15044,7 +15033,6 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 			l_arguments: detachable ET_AGENT_ARGUMENT_OPERANDS
 			l_argument: ET_AGENT_ARGUMENT_OPERAND
 			j, nb: INTEGER
-			l_agent_type: ET_DYNAMIC_TYPE
 			l_result_type: detachable ET_DYNAMIC_TYPE
 			l_type: ET_DYNAMIC_TYPE
 			old_closed_operands_type: ET_DYNAMIC_TYPE
@@ -15055,302 +15043,308 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 				--
 				-- Determine agent type.
 				--
-			l_agent_type := dynamic_type_set (an_agent).static_type
-				--
-				-- Determine target type.
-				--
-			l_target := an_agent.target
-			l_target_type := dynamic_type_set (l_target).static_type
-				--
-				-- Determine open and closed operands.
-				--
-			if l_target.is_open_operand then
-				nb_open_operands := 1
-				if agent_open_operands.count < nb_open_operands then
-					create l_open_operand.make ("a" + nb_open_operands.out)
-					l_open_operand.set_agent_open_operand (True)
-					l_open_operand.set_seed (nb_open_operands)
-					agent_open_operands.force_last (l_open_operand)
-				else
-					l_open_operand := agent_open_operands.item (nb_open_operands)
-				end
-				l_open_operand.set_index (l_target.index)
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} dynamic_type_set (an_agent).static_type as l_agent_type then
+					-- Internal error: the type of `an_agent' should be an Agent type.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			else
-				nb_closed_operands := 1
-				if agent_closed_operands.count < nb_closed_operands then
-					create l_closed_operand.make ("z" + nb_closed_operands.out)
-					l_closed_operand.set_agent_closed_operand (True)
-					l_closed_operand.set_seed (nb_closed_operands)
-					agent_closed_operands.force_last (l_closed_operand)
-				else
-					l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-				end
-				l_closed_operand.set_index (l_target.index)
-			end
-			l_arguments := an_agent.arguments
-			if l_arguments /= Void then
-				nb := l_arguments.count
-				from j := 1 until j > nb loop
-					l_argument := l_arguments.actual_argument (j)
-					if l_argument.is_open_operand then
-						nb_open_operands := nb_open_operands + 1
-						if agent_open_operands.count < nb_open_operands then
-							create l_open_operand.make ("a" + nb_open_operands.out)
-							l_open_operand.set_agent_open_operand (True)
-							l_open_operand.set_seed (nb_open_operands)
-							agent_open_operands.force_last (l_open_operand)
-						else
-							l_open_operand := agent_open_operands.item (nb_open_operands)
-						end
-						l_open_operand.set_index (l_argument.index)
+					--
+					-- Determine target type.
+					--
+				l_target := an_agent.target
+				l_target_type := dynamic_type_set (l_target).static_type
+					--
+					-- Determine open and closed operands.
+					--
+				if l_target.is_open_operand then
+					nb_open_operands := 1
+					if agent_open_operands.count < nb_open_operands then
+						create l_open_operand.make ("a" + nb_open_operands.out)
+						l_open_operand.set_agent_open_operand (True)
+						l_open_operand.set_seed (nb_open_operands)
+						agent_open_operands.force_last (l_open_operand)
 					else
-						nb_closed_operands := nb_closed_operands + 1
-						if agent_closed_operands.count < nb_closed_operands then
-							create l_closed_operand.make ("z" + nb_closed_operands.out)
-							l_closed_operand.set_agent_closed_operand (True)
-							l_closed_operand.set_seed (nb_closed_operands)
-							agent_closed_operands.force_last (l_closed_operand)
-						else
-							l_closed_operand := agent_closed_operands.item (nb_closed_operands)
-						end
-						l_closed_operand.set_index (l_argument.index)
+						l_open_operand := agent_open_operands.item (nb_open_operands)
 					end
-					j := j + 1
-				end
-			end
-			old_closed_operands_type := agent_closed_operands_type
-			create l_parameters.make_with_capacity (nb_closed_operands)
-			from j := nb_closed_operands until j < 1 loop
-				l_parameters.put_first (dynamic_type_set (agent_closed_operands.item (j)).static_type.base_type)
-				j := j - 1
-			end
-			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, l_agent_type.base_class.universe.tuple_type.named_base_class)
-			agent_closed_operands_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
-				--
-				-- Print function associated with the agent to `current_file'.
-				--
-			old_file := current_file
-			current_file := current_function_header_buffer
-			current_file.put_character ('/')
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_string ("Function for agent #")
-			current_file.put_integer (i)
-			current_file.put_string (" in feature ")
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-			current_file.put_character (' ')
-			current_file.put_character ('*')
-			current_file.put_character ('/')
-			current_file.put_new_line
-			l_result := an_agent.implicit_result
-			if l_result = Void then
-					-- Procedure.
-				current_file.put_string (c_void)
-			else
-					-- Query or Tuple label.
-				l_result_type := dynamic_type_set (l_result).static_type
-				print_type_declaration (l_result_type, current_file)
-			end
-			current_file.put_character (' ')
-			print_agent_function_name (i, current_feature, current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_string (c_ge_context)
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_string (c_ac)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			print_type_declaration (agent_closed_operands_type, current_file)
-			current_file.put_character (' ')
-			print_argument_name (formal_argument (1), current_file)
-			from j := 1 until j > nb_open_operands loop
-				l_open_operand := agent_open_operands.item (j)
-				l_type := dynamic_type_set (l_open_operand).static_type
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				print_type_declaration (l_type, current_file)
-				current_file.put_character (' ')
-				print_agent_open_operand_access (l_open_operand)
-				j := j + 1
-			end
-			current_file.put_character (')')
-			current_file.put_new_line
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-				--
-				-- Declaration of variables.
-				--
-				-- Variable for exception trace.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ge_call)
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				if current_in_exception_trace then
-					print_current_name (current_file)
-					current_file.put_character (',')
-				end
-				if l_result /= Void then
-					print_escaped_string (tokens.capitalized_function_name)
-					current_file.put_character (',')
-					print_escaped_string (tokens.item_name)
+					l_open_operand.set_index (l_target.index)
 				else
-					print_escaped_string (tokens.capitalized_procedure_name)
-					current_file.put_character (',')
-					print_escaped_string (tokens.call_name)
-				end
-				current_file.put_character (',')
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_call)
-				current_file.put_character ('}')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-				-- Make sure that `agent_target' is set correctly
-				-- before calling `print_agent_body_declaration'.
-			if l_target.is_open_operand then
-				agent_target := agent_open_operands.item (1)
-			else
-				agent_target := agent_closed_operands.item (1)
-			end
-				-- Make sure that `agent_arguments' is set correctly
-				-- before calling `print_agent_body_declaration'.
-			agent_arguments.wipe_out
-			if l_arguments /= Void then
-				nb := l_arguments.count
-				if agent_arguments.capacity < nb then
-					agent_arguments.resize (nb)
-				end
-				l_open_index := nb_open_operands
-				l_closed_index := nb_closed_operands
-				from j := nb until j < 1 loop
-					l_argument := l_arguments.actual_argument (j)
-					if l_argument.is_open_operand then
-						agent_arguments.put_first (agent_open_operands.item (l_open_index))
-						l_open_index := l_open_index - 1
+					nb_closed_operands := 1
+					if agent_closed_operands.count < nb_closed_operands then
+						create l_closed_operand.make ("z" + nb_closed_operands.out)
+						l_closed_operand.set_agent_closed_operand (True)
+						l_closed_operand.set_seed (nb_closed_operands)
+						agent_closed_operands.force_last (l_closed_operand)
 					else
-						agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
-						l_closed_index := l_closed_index - 1
+						l_closed_operand := agent_closed_operands.item (nb_closed_operands)
 					end
+					l_closed_operand.set_index (l_target.index)
+				end
+				l_arguments := an_agent.arguments
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					from j := 1 until j > nb loop
+						l_argument := l_arguments.actual_argument (j)
+						if l_argument.is_open_operand then
+							nb_open_operands := nb_open_operands + 1
+							if agent_open_operands.count < nb_open_operands then
+								create l_open_operand.make ("a" + nb_open_operands.out)
+								l_open_operand.set_agent_open_operand (True)
+								l_open_operand.set_seed (nb_open_operands)
+								agent_open_operands.force_last (l_open_operand)
+							else
+								l_open_operand := agent_open_operands.item (nb_open_operands)
+							end
+							l_open_operand.set_index (l_argument.index)
+						else
+							nb_closed_operands := nb_closed_operands + 1
+							if agent_closed_operands.count < nb_closed_operands then
+								create l_closed_operand.make ("z" + nb_closed_operands.out)
+								l_closed_operand.set_agent_closed_operand (True)
+								l_closed_operand.set_seed (nb_closed_operands)
+								agent_closed_operands.force_last (l_closed_operand)
+							else
+								l_closed_operand := agent_closed_operands.item (nb_closed_operands)
+							end
+							l_closed_operand.set_index (l_argument.index)
+						end
+						j := j + 1
+					end
+				end
+				old_closed_operands_type := agent_closed_operands_type
+				create l_parameters.make_with_capacity (nb_closed_operands)
+				from j := nb_closed_operands until j < 1 loop
+					l_parameters.put_first (dynamic_type_set (agent_closed_operands.item (j)).static_type.base_type)
 					j := j - 1
 				end
-			end
-				--
-				-- Instructions.
-				--
-			current_file := current_function_body_buffer
-				-- Call stack.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_call)
+				create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, l_agent_type.base_class.universe.tuple_type.named_base_class)
+				agent_closed_operands_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
+					--
+					-- Print function associated with the agent to `current_file'.
+					--
+				old_file := current_file
+				current_file := current_function_header_buffer
+				current_file.put_character ('/')
+				current_file.put_character ('*')
 				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_tc_address)
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-			print_agent_body_declaration (an_agent)
-				-- Call stack.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ac)
-				current_file.put_string (c_arrow)
-				current_file.put_string (c_call)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
+				current_file.put_string ("Function for agent #")
+				current_file.put_integer (i)
+				current_file.put_string (" in feature ")
+				current_file.put_string (current_type.base_type.unaliased_to_text)
 				current_file.put_character ('.')
-				current_file.put_string (c_caller)
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-			if l_result_type /= Void then
-				print_indentation
-				current_file.put_string (c_return)
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
 				current_file.put_character (' ')
-					-- In case of an inline agent, when there is a rescue clause,
-					-- the result entity might have been declared with a 'volatile'
-					-- qualifier. In that case we need a type cast here to
-					-- avoid C compiler warning (at least with MSVC 12).
-				print_declaration_type_cast (l_result_type, current_file)
-				print_result_name (current_file)
-				current_file.put_character (';')
+				current_file.put_character ('*')
+				current_file.put_character ('/')
 				current_file.put_new_line
-			end
-			dedent
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-			current_file := old_file
-				-- Do not flush code to C file here (no call to `flush_to_c_file')
-				-- because we want the function associated with this agent and the
-				-- creation of the agent (printed just below) to be in the same C file.
-				-- Indeed, the associated function is not declared in the C header file,
-				-- but it is used in the creation of the agent.
-			reset_temp_variables
-				--
-				-- Print creation function of the agent.
-				--
-				-- Print signature to `header_file' and `current_file'.
-			header_file.put_character ('/')
-			header_file.put_character ('*')
-			header_file.put_character (' ')
-			header_file.put_string ("Creation of agent #")
-			header_file.put_integer (i)
-			header_file.put_string (" in feature ")
-			header_file.put_string (current_type.base_type.unaliased_to_text)
-			header_file.put_character ('.')
-			header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-			header_file.put_character (' ')
-			header_file.put_character ('*')
-			header_file.put_character ('/')
-			header_file.put_new_line
-			current_file.put_character ('/')
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_string ("Creation of agent #")
-			current_file.put_integer (i)
-			current_file.put_string (" in feature ")
-			current_file.put_string (current_type.base_type.unaliased_to_text)
-			current_file.put_character ('.')
-			current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
-			current_file.put_character (' ')
-			current_file.put_character ('*')
-			current_file.put_character ('/')
-			current_file.put_new_line
-			header_file.put_string (c_extern)
-			header_file.put_character (' ')
-			print_type_declaration (l_agent_type, header_file)
-			print_type_declaration (l_agent_type, current_file)
-			header_file.put_character (' ')
-			current_file.put_character (' ')
-			print_agent_creation_name (i, current_feature, current_type, header_file)
-			print_agent_creation_name (i, current_feature, current_type, current_file)
-			header_file.put_character ('(')
-			current_file.put_character ('(')
-			if nb_closed_operands = 0 then
-				header_file.put_string (c_void)
-				current_file.put_string (c_void)
-			else
-				from j := 1 until j > nb_closed_operands loop
-					if j /= 1 then
-						header_file.put_character (',')
-						header_file.put_character (' ')
+				l_result := an_agent.implicit_result
+				if l_result = Void then
+						-- Procedure.
+					current_file.put_string (c_void)
+				else
+						-- Query or Tuple label.
+					l_result_type := dynamic_type_set (l_result).static_type
+					print_type_declaration (l_result_type, current_file)
+				end
+				current_file.put_character (' ')
+				print_agent_function_name (i, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_string (c_ge_context)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string (c_ac)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_type_declaration (agent_closed_operands_type, current_file)
+				current_file.put_character (' ')
+				print_argument_name (formal_argument (1), current_file)
+				from j := 1 until j > nb_open_operands loop
+					l_open_operand := agent_open_operands.item (j)
+					l_type := dynamic_type_set (l_open_operand).static_type
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					print_type_declaration (l_type, current_file)
+					current_file.put_character (' ')
+					print_agent_open_operand_access (l_open_operand)
+					j := j + 1
+				end
+				current_file.put_character (')')
+				current_file.put_new_line
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+					--
+					-- Declaration of variables.
+					--
+					-- Variable for exception trace.
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ge_call)
+					current_file.put_character (' ')
+					current_file.put_string (c_tc)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					if current_in_exception_trace then
+						print_current_name (current_file)
 						current_file.put_character (',')
-						current_file.put_character (' ')
 					end
+					if l_result /= Void then
+						print_escaped_string (tokens.capitalized_function_name)
+						current_file.put_character (',')
+						print_escaped_string (tokens.item_name)
+					else
+						print_escaped_string (tokens.capitalized_procedure_name)
+						current_file.put_character (',')
+						print_escaped_string (tokens.call_name)
+					end
+					current_file.put_character (',')
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character ('}')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+					-- Make sure that `agent_target' is set correctly
+					-- before calling `print_agent_body_declaration'.
+				if l_target.is_open_operand then
+					agent_target := agent_open_operands.item (1)
+				else
+					agent_target := agent_closed_operands.item (1)
+				end
+					-- Make sure that `agent_arguments' is set correctly
+					-- before calling `print_agent_body_declaration'.
+				agent_arguments.wipe_out
+				if l_arguments /= Void then
+					nb := l_arguments.count
+					if agent_arguments.capacity < nb then
+						agent_arguments.resize (nb)
+					end
+					l_open_index := nb_open_operands
+					l_closed_index := nb_closed_operands
+					from j := nb until j < 1 loop
+						l_argument := l_arguments.actual_argument (j)
+						if l_argument.is_open_operand then
+							agent_arguments.put_first (agent_open_operands.item (l_open_index))
+							l_open_index := l_open_index - 1
+						else
+							agent_arguments.put_first (agent_closed_operands.item (l_closed_index))
+							l_closed_index := l_closed_index - 1
+						end
+						j := j - 1
+					end
+				end
+					--
+					-- Instructions.
+					--
+				current_file := current_function_body_buffer
+					-- Call stack.
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc_address)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				print_agent_body_declaration (an_agent)
+					-- Call stack.
+				if exception_trace_mode then
+					print_indentation
+					current_file.put_string (c_ac)
+					current_file.put_string (c_arrow)
+					current_file.put_string (c_call)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_tc)
+					current_file.put_character ('.')
+					current_file.put_string (c_caller)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				if l_result_type /= Void then
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+						-- In case of an inline agent, when there is a rescue clause,
+						-- the result entity might have been declared with a 'volatile'
+						-- qualifier. In that case we need a type cast here to
+						-- avoid C compiler warning (at least with MSVC 12).
+					print_declaration_type_cast (l_result_type, current_file)
+					print_result_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+				current_file := old_file
+					-- Do not flush code to C file here (no call to `flush_to_c_file')
+					-- because we want the function associated with this agent and the
+					-- creation of the agent (printed just below) to be in the same C file.
+					-- Indeed, the associated function is not declared in the C header file,
+					-- but it is used in the creation of the agent.
+				reset_temp_variables
+					--
+					-- Print creation function of the agent.
+					--
+					-- Print signature to `header_file' and `current_file'.
+				header_file.put_character ('/')
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				header_file.put_string ("Creation of agent #")
+				header_file.put_integer (i)
+				header_file.put_string (" in feature ")
+				header_file.put_string (current_type.base_type.unaliased_to_text)
+				header_file.put_character ('.')
+				header_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				header_file.put_character (' ')
+				header_file.put_character ('*')
+				header_file.put_character ('/')
+				header_file.put_new_line
+				current_file.put_character ('/')
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				current_file.put_string ("Creation of agent #")
+				current_file.put_integer (i)
+				current_file.put_string (" in feature ")
+				current_file.put_string (current_type.base_type.unaliased_to_text)
+				current_file.put_character ('.')
+				current_file.put_string (STRING_.replaced_all_substrings (current_feature.static_feature.lower_name, "*/", "star/"))
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('/')
+				current_file.put_new_line
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				print_type_declaration (l_agent_type, header_file)
+				print_type_declaration (l_agent_type, current_file)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				print_agent_creation_name (i, current_feature, current_type, header_file)
+				print_agent_creation_name (i, current_feature, current_type, current_file)
+				header_file.put_character ('(')
+				current_file.put_character ('(')
+				header_file.put_string (c_ge_context)
+				current_file.put_string (c_ge_context)
+				header_file.put_character ('*')
+				current_file.put_character ('*')
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_string (c_ac)
+				current_file.put_string (c_ac)
+				from j := 1 until j > nb_closed_operands loop
+					header_file.put_character (',')
+					header_file.put_character (' ')
+					current_file.put_character (',')
+					current_file.put_character (' ')
 					l_type := dynamic_type_set (agent_closed_operands.item (j)).static_type
 					print_type_declaration (l_type, header_file)
 					print_type_declaration (l_type, current_file)
@@ -15362,122 +15356,142 @@ print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" no
 					current_file.put_integer (j)
 					j := j + 1
 				end
-			end
-			header_file.put_character (')')
-			current_file.put_character (')')
-			header_file.put_character (';')
-			header_file.put_new_line
-			current_file.put_new_line
-				-- Print body to `current_file'.
-			current_file.put_character ('{')
-			current_file.put_new_line
-			indent
-			print_indentation
-			print_type_declaration (l_agent_type, current_file)
-			current_file.put_character (' ')
-			print_result_name (current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			print_type_declaration (agent_closed_operands_type, current_file)
-			current_file.put_character (' ')
-			print_temp_name (temp_variable, current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
-			extra_dynamic_type_sets.force_last (agent_closed_operands_type)
-			temp_variable.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
-				-- Create agent object.
-			print_indentation
-			print_result_name (current_file)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_string (c_ge_new)
-			current_file.put_integer (l_agent_type.id)
-			current_file.put_character ('(')
-			current_file.put_string (c_eif_true)
-			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
-				-- Set function pointer.
-			print_indentation
-			print_attribute_routine_function_access (tokens.result_keyword, l_agent_type, False)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_character ('&')
-			print_agent_function_name (i, current_feature, current_type, current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
-				-- Set closed operands.
-			print_indentation
-			print_temp_name (temp_variable, current_file)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_string (c_ge_new)
-			current_file.put_integer (agent_closed_operands_type.id)
-			current_file.put_character ('(')
-			current_file.put_string (c_eif_true)
-			current_file.put_character (')')
-			current_file.put_character (';')
-			current_file.put_new_line
-			from j := 1 until j > nb_closed_operands loop
+				header_file.put_character (')')
+				current_file.put_character (')')
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+					-- Print body to `current_file'.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
 				print_indentation
-				print_agent_closed_operand_access (agent_closed_operands.item (j), temp_variable)
+				print_type_declaration (l_agent_type, current_file)
 				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('a')
-				current_file.put_integer (j)
+				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
-				j := j + 1
-			end
-			if l_agent_type.attribute_count < 2 then
-					-- Internal error: the Agent type should have at least
-					-- the attribute 'closed_operands' as first feature
-					-- and the attribute 'is_target_closed' as second feature.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-					-- Set 'closed_operands'.
 				print_indentation
-				print_attribute_access (l_agent_type.queries.first, tokens.result_keyword, l_agent_type, False)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
+				print_type_declaration (agent_closed_operands_type, current_file)
 				current_file.put_character (' ')
 				print_temp_name (temp_variable, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set 'is_target_closed'.
+				extra_dynamic_type_sets.force_last (agent_closed_operands_type)
+				temp_variable.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+					-- Create agent object.
 				print_indentation
-				print_attribute_access (l_agent_type.queries.item (2), tokens.result_keyword, l_agent_type, False)
+				print_result_name (current_file)
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				if l_target.is_open_operand then
-					current_file.put_string (c_eif_false)
-				else
-					current_file.put_string (c_eif_true)
-				end
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (l_agent_type.id)
+				current_file.put_character ('(')
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+					-- Build 'closed_operands'.
+				print_indentation
+				print_temp_name (temp_variable, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (agent_closed_operands_type.id)
+				current_file.put_character ('(')
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				from j := 1 until j > nb_closed_operands loop
+					print_indentation
+					print_agent_closed_operand_access (agent_closed_operands.item (j), temp_variable)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('a')
+					current_file.put_integer (j)
+					current_file.put_character (';')
+					current_file.put_new_line
+					j := j + 1
+				end
+					-- Call 'set_rout_disp_final'.
+				if not attached l_agent_type.set_rout_disp_final_feature as l_set_rout_disp_final_feature then
+						-- Internal error: the Agent type should have a procedure 'set_rout_disp_final'.
+						-- See ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					if not l_set_rout_disp_final_feature.is_generated then
+						l_set_rout_disp_final_feature.set_generated (True)
+						called_features.force_last (l_set_rout_disp_final_feature)
+					end
+					print_indentation
+					print_routine_name (l_set_rout_disp_final_feature, l_agent_type, current_file)
+					current_file.put_character ('(')
+					current_file.put_string (c_ac)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					if l_agent_type.is_expanded then
+						current_file.put_character ('&')
+						print_result_name (current_file)
+					else
+						print_result_name (current_file)
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_rout_disp'.
+					print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
+					current_file.put_character ('&')
+					print_agent_function_name (i, current_feature, current_type, current_file)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_encaps_rout_disp'.
+					print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
+					current_file.put_character ('&')
+					print_agent_function_name (i, current_feature, current_type, current_file)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_calc_rout_addr'.
+					print_declaration_type_cast (current_dynamic_system.pointer_type, current_file)
+					current_file.put_character ('0')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_closed_operands'.
+					print_temp_name (temp_variable, current_file)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_is_target_closed'.
+					if l_target.is_open_operand then
+						current_file.put_string (c_eif_false)
+					else
+						current_file.put_string (c_eif_true)
+					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
+						-- 'a_open_count'.
+					current_file.put_integer (nb_open_operands)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				extra_dynamic_type_sets.remove_last
+					-- Return the agent object.
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+				current_file.put_new_line
+				flush_to_c_file
+				agent_closed_operands_type := old_closed_operands_type
 			end
-			extra_dynamic_type_sets.remove_last
-				-- Return the agent object.
-			print_indentation
-			current_file.put_string (c_return)
-			current_file.put_character (' ')
-			print_result_name (current_file)
-			current_file.put_character (';')
-			current_file.put_new_line
-			dedent
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-			flush_to_c_file
-			agent_closed_operands_type := old_closed_operands_type
 		end
 
 	print_agent_body_declaration (an_agent: ET_AGENT)
@@ -19871,6 +19885,35 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			current_file.put_new_line
 		end
 
+	print_builtin_function_fast_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'FUNCTION.fast_item'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+
+				-- Not supported.
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_raise)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_prog)
+			current_file.put_character (')')
+			current_file.put_character (',')
+			if not attached a_feature.result_type_set as l_result_type_set then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_typed_default_entity_value (l_result_type_set.static_type, current_file)
+			end
+			current_file.put_character (')')
+		end
+
 	print_builtin_function_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_feature' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item'.
@@ -22349,6 +22392,27 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			print_builtin_routine_call_call (a_feature, a_target_type, a_check_void_target)
 		end
 
+	print_builtin_procedure_fast_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PROCEDURE.fast_call'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+				-- Not supported.
+			print_indentation
+			current_file.put_string (c_ge_raise)
+			current_file.put_character ('(')
+			current_file.put_string (c_ge_ex_prog)
+			current_file.put_character (')')
+			current_file.put_character (';')
+			current_file.put_new_line
+		end
+
 	print_builtin_routine_call_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'FUNCTION.item' or 'PROCEDURE.call'.
@@ -22385,6 +22449,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
 					-- This built-in feature can only be in class PROCEDURE (and
 					-- its descendants) or class FUNCTION (and its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_routine_type.attribute_count < 2 then
+					-- Internal error: the Agent type should have at least the attributes
+					-- 'rout_disp' and 'closed_operands' as first queries.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -22441,29 +22510,47 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 							-- We have enough operands to pass to the routine.
 						current_file.put_character ('(')
 						current_file.put_character ('(')
-						print_type_cast (a_target_type, current_file)
+						if attached l_routine_type.result_type_set as l_result_type_set then
+							print_type_declaration (l_result_type_set.static_type, current_file)
+						else
+							current_file.put_string (c_void)
+						end
+						current_file.put_character (' ')
 						current_file.put_character ('(')
--- TODO: we need to check whether the target is from an expanded descendant of FUNCTION or PROCEDURE.
--- In that case we need to use its address.
-						print_expression (l_routine_object)
+						current_file.put_character ('*')
+						current_file.put_character (')')
+						current_file.put_character ('(')
+						current_file.put_string (c_ge_context)
+						current_file.put_character ('*')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						if not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
+								-- Internal error: 'closed_operands' should be an attribute,
+								-- hence with a result type set.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							print_type_declaration (l_closed_operands_type_set.static_type, current_file)
+						end
+						from i := 1 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
+							i := i + 1
+						end
 						current_file.put_character (')')
 						current_file.put_character (')')
-						current_file.put_string (c_arrow)
-						print_attribute_routine_function_name (l_routine_type, current_file)
-						current_file.put_character (')')
+						current_file.put_character ('(')
+							-- Print attribute 'rout_disp'.
+						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
+                        current_file.put_character (')')
+                        current_file.put_character (')')
 						current_file.put_character ('(')
 						current_file.put_string (c_ac)
 						current_file.put_character (',')
 						current_file.put_character (' ')
-						if l_routine_type.attribute_count < 1 then
-								-- Internal error: the Agent type should have at least
-								-- the attribute 'closed_operands' as first feature.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-								-- Print attribute 'closed_operands'.
-							print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-						end
+							-- Print attribute 'closed_operands'.
+						print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
 						from i := 1 until i > nb loop
 							current_file.put_character (',')
 							current_file.put_character (' ')
@@ -22527,31 +22614,49 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 					end
 					current_file.put_character ('(')
 					current_file.put_character ('(')
-					print_type_cast (a_target_type, current_file)
+					if attached l_routine_type.result_type_set as l_result_type_set then
+						print_type_declaration (l_result_type_set.static_type, current_file)
+					else
+						current_file.put_string (c_void)
+					end
+					current_file.put_character (' ')
 					current_file.put_character ('(')
--- TODO: we need to check whether the target is from an expanded descendant of FUNCTION or PROCEDURE.
--- In that case we need to use its address.
-					print_expression (l_routine_object)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_string (c_ge_context)
+					current_file.put_character ('*')
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					if not attached l_routine_type.queries.item (2).result_type_set as l_closed_operands_type_set then
+							-- Internal error: 'closed_operands' should be an attribute,
+							-- hence with a result type set.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						print_type_declaration (l_closed_operands_type_set.static_type, current_file)
+					end
+					l_open_operand_type_sets := l_routine_type.open_operand_type_sets
+					nb := l_open_operand_type_sets.count
+					from i := 1 until i > nb loop
+						current_file.put_character (',')
+						current_file.put_character (' ')
+						print_type_declaration (l_open_operand_type_sets.item (i).static_type, current_file)
+						i := i + 1
+					end
 					current_file.put_character (')')
 					current_file.put_character (')')
-					current_file.put_string (c_arrow)
-					print_attribute_routine_function_name (l_routine_type, current_file)
+					current_file.put_character ('(')
+						-- Print attribute 'rout_disp'.
+					print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
+					current_file.put_character (')')
 					current_file.put_character (')')
 					current_file.put_character ('(')
 					current_file.put_string (c_ac)
 					current_file.put_character (',')
 					current_file.put_character (' ')
-					if l_routine_type.attribute_count < 1 then
-							-- Internal error: the Agent type should have at least
-							-- the attribute 'closed_operands' as first feature.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-							-- Print attribute 'closed_operands'.
-						print_adapted_attribute_access (l_routine_type.queries.first, l_routine_object, l_routine_type, False)
-					end
-					l_open_operand_type_sets := l_routine_type.open_operand_type_sets
-					nb := l_open_operand_type_sets.count
+						-- Print attribute 'closed_operands'.
+					print_adapted_attribute_access (l_routine_type.queries.item (2), l_routine_object, l_routine_type, False)
 					if nb > 0 then
 							-- Prepare dynamic type sets.
 							-- Temporarily change the dynamic type set of the
@@ -29904,7 +30009,6 @@ feature {NONE} -- Type generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -30036,60 +30140,6 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 						l_empty_struct := False
 						i := i + 1
 					end
-				elseif attached {ET_DYNAMIC_FUNCTION_TYPE} a_type as l_function_type then
-						-- Function pointer.
-					a_file.put_character ('%T')
-					print_type_declaration (l_function_type.result_type_set.static_type, a_file)
-					a_file.put_character (' ')
-					a_file.put_character ('(')
-					a_file.put_character ('*')
-					print_attribute_routine_function_name (l_function_type, a_file)
-					a_file.put_character (')')
-					a_file.put_character ('(')
-					a_file.put_string (c_ge_context)
-					a_file.put_character ('*')
-					a_file.put_character (',')
-					a_file.put_character (' ')
-					print_type_declaration (a_type, a_file)
-					l_open_operand_type_sets := l_function_type.open_operand_type_sets
-					nb := l_open_operand_type_sets.count
-					from i := 1 until i > nb loop
-						a_file.put_character (',')
-						a_file.put_character (' ')
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type, a_file)
-						i := i + 1
-					end
-					a_file.put_character (')')
-					a_file.put_character (';')
-					a_file.put_new_line
-					l_empty_struct := False
-				elseif attached {ET_DYNAMIC_PROCEDURE_TYPE} a_type as l_procedure_type then
-						-- Function pointer.
-					a_file.put_character ('%T')
-					a_file.put_string (c_void)
-					a_file.put_character (' ')
-					a_file.put_character ('(')
-					a_file.put_character ('*')
-					print_attribute_routine_function_name (l_procedure_type, a_file)
-					a_file.put_character (')')
-					a_file.put_character ('(')
-					a_file.put_string (c_ge_context)
-					a_file.put_character ('*')
-					a_file.put_character (',')
-					a_file.put_character (' ')
-					print_type_declaration (a_type, a_file)
-					l_open_operand_type_sets := l_procedure_type.open_operand_type_sets
-					nb := l_open_operand_type_sets.count
-					from i := 1 until i > nb loop
-						a_file.put_character (',')
-						a_file.put_character (' ')
-						print_type_declaration (l_open_operand_type_sets.item (i).static_type, a_file)
-						i := i + 1
-					end
-					a_file.put_character (')')
-					a_file.put_character (';')
-					a_file.put_new_line
-					l_empty_struct := False
 				end
 				if l_empty_struct then
 						-- Add a dummy field so that the struct is not empty (not allowed in C99).
@@ -31079,20 +31129,6 @@ feature {NONE} -- Default initialization values generation
 						l_empty_struct := False
 						i := i + 1
 					end
-				elseif attached {ET_DYNAMIC_FUNCTION_TYPE} a_type as l_function_type then
-						-- Function pointer.
-					if not l_empty_struct then
-						a_file.put_character (',')
-					end
-					a_file.put_character ('0')
-					l_empty_struct := False
-				elseif attached {ET_DYNAMIC_PROCEDURE_TYPE} a_type as l_procedure_type then
-						-- Function pointer.
-					if not l_empty_struct then
-						a_file.put_character (',')
-					end
-					a_file.put_character ('0')
-					l_empty_struct := False
 				end
 				if l_empty_struct then
 						-- Add a dummy field so that the struct is not empty (not allowed in C99).

@@ -357,8 +357,11 @@ feature -- Built-in codes
 		end
 
 	builtin_procedure_class: INTEGER = 19
-	builtin_procedure_call: INTEGER = 1
 			-- Codes for built-in features from class "PROCEDURE"
+
+	builtin_procedure_call: INTEGER = 1
+	builtin_procedure_fast_call: INTEGER = 2
+			-- Codes for built-in procedures from class "PROCEDURE"
 
 	builtin_function_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "FUNCTION"
@@ -367,9 +370,11 @@ feature -- Built-in codes
 		end
 
 	builtin_function_class: INTEGER = 20
-	builtin_function_item: INTEGER = 1
-	builtin_function_call: INTEGER = 2
 			-- Codes for built-in features from class "FUNCTION"
+
+	builtin_function_fast_item: INTEGER = 1
+	builtin_function_item: INTEGER = 2
+			-- Codes for built-in functions from class "FUNCTION"
 
 	builtin_type_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "TYPE"

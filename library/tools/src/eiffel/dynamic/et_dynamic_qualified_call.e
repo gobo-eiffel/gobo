@@ -5,7 +5,7 @@ note
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			if attached static_call.arguments as l_actuals then
 				nb := l_actuals.count
 				if nb > 0 then
-					if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
+					if (a_feature.is_builtin_procedure_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			if l_actuals /= Void then
 				nb := l_actuals.count
 				if nb > 0 then
-					if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
+					if (a_feature.is_builtin_procedure_call or a_feature.is_builtin_function_item) and then a_type.is_agent_type then
 							-- This is something of the form:  'my_agent.call ([...])' or 'my_agent.item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.

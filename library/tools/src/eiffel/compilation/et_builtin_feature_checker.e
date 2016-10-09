@@ -161,9 +161,9 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.platform_class_name) then
 				check_builtin_platform_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.procedure_class_name) then
-				check_builtin_procedure_function_validity (a_feature)
+				check_builtin_procedure_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.function_class_name) then
-				check_builtin_function_function_validity (a_feature)
+				check_builtin_function_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.tuple_class_name) then
 				check_builtin_tuple_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.integer_8_ref_class_name) then
@@ -232,20 +232,20 @@ feature {NONE} -- Built-in validity
 				l_builtin_features.set_key_equality_tester (feature_name_tester)
 				builtin_features.force_last (l_builtin_features, tokens.builtin_any_class)
 					-- Functions.
-				l_builtin_features.put_last ([<<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_conforms_to)], tokens.conforms_to_feature_name)
-				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_deep_twin)], tokens.deep_twin_feature_name)
-				l_builtin_features.put_last ([Void, current_universe.type_detachable_like_current_type, tokens.builtin_any_feature (tokens.builtin_any_generating_type)], tokens.generating_type_feature_name)
-				l_builtin_features.put_last ([Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_generator)], tokens.generator_feature_name)
-				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal)], tokens.is_deep_equal_feature_name)
-				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_equal)], tokens.is_equal_feature_name)
-				l_builtin_features.put_last ([<<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_same_type)], tokens.same_type_feature_name)
-				l_builtin_features.put_last ([<<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal)], tokens.standard_is_equal_feature_name)
-				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_standard_twin)], tokens.standard_twin_feature_name)
-				l_builtin_features.put_last ([Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_tagged_out)], tokens.tagged_out_feature_name)
-				l_builtin_features.put_last ([Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_twin)], tokens.twin_feature_name)
+				register_builtin_feature (tokens.conforms_to_feature_name, <<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_conforms_to), l_builtin_features)
+				register_builtin_feature (tokens.deep_twin_feature_name, Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_deep_twin), l_builtin_features)
+				register_builtin_feature (tokens.generating_type_feature_name, Void, current_universe.type_detachable_like_current_type, tokens.builtin_any_feature (tokens.builtin_any_generating_type), l_builtin_features)
+				register_builtin_feature (tokens.generator_feature_name, Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_generator), l_builtin_features)
+				register_builtin_feature (tokens.is_deep_equal_feature_name, <<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_deep_equal), l_builtin_features)
+				register_builtin_feature (tokens.is_equal_feature_name, <<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_is_equal), l_builtin_features)
+				register_builtin_feature (tokens.same_type_feature_name, <<current_universe.any_type.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_same_type), l_builtin_features)
+				register_builtin_feature (tokens.standard_is_equal_feature_name, <<tokens.like_current.type>>, current_universe.boolean_type, tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal), l_builtin_features)
+				register_builtin_feature (tokens.standard_twin_feature_name, Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_standard_twin), l_builtin_features)
+				register_builtin_feature (tokens.tagged_out_feature_name, Void, current_universe.string_type, tokens.builtin_any_feature (tokens.builtin_any_tagged_out), l_builtin_features)
+				register_builtin_feature (tokens.twin_feature_name, Void, tokens.like_current, tokens.builtin_any_feature (tokens.builtin_any_twin), l_builtin_features)
 					-- Procedures.
-				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_copy)], tokens.copy_feature_name)
-				l_builtin_features.put_last ([<<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_standard_copy)], tokens.standard_copy_feature_name)
+				register_builtin_feature (tokens.copy_feature_name, <<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_copy), l_builtin_features)
+				register_builtin_feature (tokens.standard_copy_feature_name, <<tokens.like_current.type>>, Void, tokens.builtin_any_feature (tokens.builtin_any_standard_copy), l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
@@ -266,9 +266,9 @@ feature {NONE} -- Built-in validity
 				l_builtin_features.set_key_equality_tester (feature_name_tester)
 				builtin_features.force_last (l_builtin_features, tokens.builtin_arguments_32_class)
 					-- Functions.
-				l_builtin_features.put_last ([Void, current_universe.integer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_argument_count)], tokens.argument_count_feature_name)
-				l_builtin_features.put_last ([<<current_universe.integer_type>>, current_universe.pointer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer)], tokens.i_th_argument_pointer_feature_name)
-				l_builtin_features.put_last ([<<current_universe.integer_type>>, current_universe.immutable_string_32_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_string)], tokens.i_th_argument_string_feature_name)
+				register_builtin_feature (tokens.argument_count_feature_name, Void, current_universe.integer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_argument_count), l_builtin_features)
+				register_builtin_feature (tokens.i_th_argument_pointer_feature_name, <<current_universe.integer_type>>, current_universe.pointer_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_pointer), l_builtin_features)
+				register_builtin_feature (tokens.i_th_argument_string_feature_name, <<current_universe.integer_type>>, current_universe.immutable_string_32_type, tokens.builtin_arguments_32_feature (tokens.builtin_arguments_32_i_th_argument_string), l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
@@ -1576,68 +1576,54 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_procedure_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+	check_builtin_procedure_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Check validity of built-in `a_feature' from class "PROCEDURE".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.call_feature_name) then
-					-- 'call' should be a procedure.
-				l_open_args := current_class.formal_parameter_type (1)
-				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
+			builtin_features.search (tokens.builtin_procedure_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
 			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
+				create l_builtin_features.make_map (1)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_procedure_class)
+					-- Procedures.
+				l_open_args := current_class.formal_parameter_type (1)
+				register_builtin_feature (tokens.call_feature_name, <<detachable_separate_formal_parameter_type (l_open_args).type>>, Void, tokens.builtin_procedure_feature (tokens.builtin_procedure_call), l_builtin_features)
+				register_builtin_feature (tokens.fast_call_feature_name, <<current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.boolean_type.type, current_universe.integer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, Void, tokens.builtin_procedure_feature (tokens.builtin_procedure_fast_call), l_builtin_features)
 			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
-	check_builtin_function_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
+	check_builtin_function_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Check validity of built-in `a_feature' from class "FUNCTION".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 			l_result_type: ET_FORMAL_PARAMETER_TYPE
 		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.item_feature_name) then
+			builtin_features.search (tokens.builtin_function_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (1)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_function_class)
+					-- Functions.
 				l_open_args := current_class.formal_parameter_type (1)
 				l_result_type := current_class.formal_parameter_type (2)
-				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type_with_type_marks (l_open_args, tokens.detachable_keyword, current_class, Void, current_class) then
-						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
-				elseif not a_feature.type.same_syntactical_type (l_result_type, current_class, current_class) then
-						-- The signature should be 'item (args: detachable OPEN_ARGS): RESULT_TYPE'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
-				end
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
+				register_builtin_feature (tokens.fast_item_feature_name, <<current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.pointer_type.type, current_universe.integer_type.type, current_universe.boolean_type.type, current_universe.integer_type.type, current_universe.integer_type.type, current_universe.pointer_type.type>>, l_result_type, tokens.builtin_function_feature (tokens.builtin_function_fast_item), l_builtin_features)
+				register_builtin_feature (tokens.item_feature_name, <<detachable_separate_formal_parameter_type (l_open_args).type>>, l_result_type, tokens.builtin_function_feature (tokens.builtin_function_item), l_builtin_features)
 			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
 	check_builtin_tuple_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
@@ -2669,9 +2655,9 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.platform_class_name) then
 				check_builtin_platform_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.procedure_class_name) then
-				check_builtin_procedure_procedure_validity (a_feature)
+				check_builtin_procedure_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.function_class_name) then
-				check_builtin_function_procedure_validity (a_feature)
+				check_builtin_function_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.tuple_class_name) then
 				check_builtin_tuple_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.integer_8_ref_class_name) then
@@ -3468,67 +3454,6 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_procedure_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "PROCEDURE".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_open_args: ET_FORMAL_PARAMETER_TYPE
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.call_feature_name) then
-				l_open_args := current_class.formal_parameter_type (1)
-				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'call (args: detachable OPEN_ARGS)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type_with_type_marks (l_open_args, tokens.detachable_keyword, current_class, Void, current_class) then
-						-- The signature should be 'call (args: detachable OPEN_ARGS)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, Void)
-				end
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_function_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-
-			-- Check validity of built-in `a_feature' from class "FUNCTION".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_open_args: ET_FORMAL_PARAMETER_TYPE
-			l_result_type: ET_FORMAL_PARAMETER_TYPE
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.item_feature_name) then
-					-- 'item' should be a function.
-				l_open_args := current_class.formal_parameter_type (1)
-				l_result_type := current_class.formal_parameter_type (2)
-				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<detachable_formal_parameter_type (l_open_args).type>>, l_result_type)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
 	check_builtin_sized_integer_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_integer_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in `a_feature' from the ref class of sized `a_integer_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_integer_type'.
@@ -4000,29 +3925,16 @@ feature {NONE} -- Implementation
 			a_builtin_features.force_last ([a_arguments, a_type, a_builtin_code], a_feature_name)
 		end
 
-	attached_formal_parameter_type (a_formal_parameter: ET_FORMAL_PARAMETER_TYPE): ET_FORMAL_PARAMETER_TYPE
-			-- Attached version of formal generic paramater `a_formal_parameter'
+	detachable_separate_formal_parameter_type (a_formal_parameter: ET_FORMAL_PARAMETER_TYPE): ET_FORMAL_PARAMETER_TYPE
+			-- Detachable separate version of formal generic paramater `a_formal_parameter'
 		require
 			a_formal_parameter_not_void: a_formal_parameter /= Void
 		do
-			create Result.make (tokens.attached_keyword, a_formal_parameter.name, a_formal_parameter.index, a_formal_parameter.implementation_class)
+			create Result.make (tokens.detachable_separate_type_mark, a_formal_parameter.name, a_formal_parameter.index, a_formal_parameter.implementation_class)
 		ensure
-			detachable_formal_parameter_type_not_void: Result /= Void
-			attached_type_mark: attached Result.type_mark as l_type_mark and then l_type_mark.is_attached_mark
-			same_name: Result.name = a_formal_parameter.name
-			same_index: Result.index = a_formal_parameter.index
-			same_implementation_class: Result.implementation_class = a_formal_parameter.implementation_class
-		end
-
-	detachable_formal_parameter_type (a_formal_parameter: ET_FORMAL_PARAMETER_TYPE): ET_FORMAL_PARAMETER_TYPE
-			-- Detachable version of formal generic paramater `a_formal_parameter'
-		require
-			a_formal_parameter_not_void: a_formal_parameter /= Void
-		do
-			create Result.make (tokens.detachable_keyword, a_formal_parameter.name, a_formal_parameter.index, a_formal_parameter.implementation_class)
-		ensure
-			detachable_formal_parameter_type_not_void: Result /= Void
-			detachable_type_mark: attached Result.type_mark as l_type_mark and then l_type_mark.is_detachable_mark
+			detachable_separate_formal_parameter_type_not_void: Result /= Void
+			detachable_type_mark: attached Result.type_mark as l_type_mark1 and then l_type_mark1.is_detachable_mark
+			separate_type_mark: attached Result.type_mark as l_type_mark2 and then l_type_mark2.is_separate_mark
 			same_name: Result.name = a_formal_parameter.name
 			same_index: Result.index = a_formal_parameter.index
 			same_implementation_class: Result.implementation_class = a_formal_parameter.implementation_class

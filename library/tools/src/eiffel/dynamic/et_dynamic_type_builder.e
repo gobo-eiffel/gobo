@@ -2582,7 +2582,7 @@ feature {NONE} -- Event handling
 					nb := l_actuals.count
 					if nb = 1 then
 						l_actual := l_actuals.actual_argument (1)
-						if l_dynamic_procedure.is_builtin_routine_call and then current_dynamic_type.is_agent_type then
+						if l_dynamic_procedure.is_builtin_procedure_call and then current_dynamic_type.is_agent_type then
 								-- This is something of the form:  'call ([...])'
 								-- Try to get the open operand type sets directly from the
 								-- argument if it is a manifest tuple.
@@ -2713,7 +2713,7 @@ feature {NONE} -- Event handling
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
-					if nb = 1 and then (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
+					if nb = 1 and then (a_feature.is_builtin_procedure_call or a_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.

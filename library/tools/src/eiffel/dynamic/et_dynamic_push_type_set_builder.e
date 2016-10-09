@@ -415,11 +415,11 @@ feature {NONE} -- Implementation
 			create l_tuple_type.make (tokens.implicit_attached_type_mark, l_parameters, current_universe_impl.tuple_type.named_base_class)
 			if attached {ET_DYNAMIC_TUPLE_TYPE} current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type) as l_dynamic_tuple_type then
 				mark_type_alive (l_dynamic_tuple_type)
-				if an_agent_type.attribute_count = 0 then
+				if an_agent_type.attribute_count < 2 then
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
 						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
-				elseif not attached an_agent_type.queries.item (1).result_type_set as l_result_type_set then
+				elseif not attached an_agent_type.queries.item (2).result_type_set as l_result_type_set then
 						-- Internal error: an attribute should have a result type set.
 					set_fatal_error
 					error_handler.report_giaaa_error

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic FUNCTION types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_type
 		redefine
-			new_dynamic_query, new_dynamic_procedure
+			new_dynamic_query
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -69,16 +69,6 @@ feature {NONE} -- Implementation
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
 				end
-			end
-		end
-
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE
-			-- Run-time procedure associated with `a_procedure';
-			-- Create a new object at each call.
-		do
-			Result := precursor (a_procedure, a_system)
-			if Result.builtin_code = tokens.builtin_function_feature (tokens.builtin_function_call) then
-				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end
 

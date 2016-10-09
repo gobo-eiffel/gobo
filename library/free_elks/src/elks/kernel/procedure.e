@@ -23,19 +23,29 @@ inherit
 		end
 
 create {NONE}
+	set_rout_disp,
+	set_rout_disp_final
 
 feature -- Calls
 
 	apply
 			-- Call procedure with `args' as last set.
-		local
-			l_args: detachable OPEN_ARGS
 		do
-			call (l_args)
+			call (operands)
 		end
-		
-	call alias "()" (args: detachable OPEN_ARGS)
+
+	call alias "()" (args: detachable separate OPEN_ARGS)
 			-- <Precursor>
+		external
+			"built_in"
+		end
+
+feature {NONE} -- Implementation
+
+	fast_call (a_rout_disp, a_calc_rout_addr: POINTER;
+		       a_closed_operands: POINTER; a_operands: POINTER;
+			   a_routine_id: INTEGER; a_is_basic: BOOLEAN; a_class_id_inline_agent: INTEGER;
+			   a_closed_count, a_open_count: INTEGER; a_open_map: POINTER)
 		external
 			"built_in"
 		end

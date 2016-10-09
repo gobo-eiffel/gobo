@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
-			l_name: ET_FEATURE_NAME
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
@@ -52,30 +51,6 @@ feature {NONE} -- Initialization
 			dynamic_type_sets := empty_dynamic_type_sets
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
 				builtin_code := l_external_routine.builtin_code
-			elseif a_target_type.base_class.is_procedure_class then
-				if a_feature.name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that PROCEDURE.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_procedure_feature (builtin_procedure_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
-			elseif a_target_type.base_class.is_function_class then
-				l_name := a_feature.name
-				if l_name.same_feature_name (tokens.item_feature_name) then
-						-- Make sure that FUNCTION.item is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (builtin_function_item)
-				elseif l_name.same_feature_name (tokens.call_feature_name) then
-						-- Make sure that FUNCTION.call is considered as
-						-- a built-in feature when computing dynamic type sets.
-						-- ISE still consider it as a regular routine.
-					builtin_code := tokens.builtin_function_feature (builtin_function_call)
-				else
-					builtin_code := builtin_not_builtin
-				end
 			else
 				builtin_code := builtin_not_builtin
 			end
@@ -437,15 +412,6 @@ feature -- Status report
 
 	builtin_code: INTEGER
 			-- Built-in code of current feature
-
-	is_builtin_routine_call: BOOLEAN
-			-- Is current feature the built-in feature 'ROUTINE.call'?
-		do
-			Result := (builtin_code = builtin_function_feature (builtin_function_call)) or
-				(builtin_code = builtin_procedure_feature (builtin_procedure_call))
-		ensure
-			builtin: Result implies is_builtin
-		end
 
 	is_builtin_function_item: BOOLEAN
 			-- Is current feature the built-in feature 'FUNCTION.item'?

@@ -23,6 +23,8 @@ inherit
 		end
 
 create {NONE}
+	set_rout_disp,
+	set_rout_disp_final
 
 feature -- Access
 
@@ -35,7 +37,7 @@ feature -- Access
 			last_result := item (args)
 		end
 
-	item alias "()" (args: detachable OPEN_ARGS): RESULT_TYPE
+	item alias "()" (args: detachable separate OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -45,11 +47,8 @@ feature -- Access
 
 	apply
 			-- Call function with `operands' as last set.
-		local
-			l_args: detachable OPEN_ARGS
 		do
---<			last_result := item (operands)
-			last_result := item (l_args)
+			last_result := item (operands)
 		end
 
 feature -- Comparison
@@ -114,5 +113,26 @@ feature -- Extended operations
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	fast_item (a_rout_disp, a_calc_rout_addr: POINTER
+		       a_closed_operands: POINTER; a_operands: POINTER
+			   a_routine_id: INTEGER; a_is_basic: BOOLEAN; a_class_id_inline_agent: INTEGER;
+			   a_closed_count, a_open_count: INTEGER; a_open_map: POINTER): RESULT_TYPE
+		external
+			"built_in"
+		end
+
+note
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

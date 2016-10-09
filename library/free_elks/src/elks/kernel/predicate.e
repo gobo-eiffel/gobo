@@ -16,6 +16,8 @@ inherit
 	FUNCTION [OPEN_ARGS, BOOLEAN]
 
 create {NONE}
+	set_rout_disp,
+	set_rout_disp_final
 
 note
 	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
