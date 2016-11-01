@@ -2049,6 +2049,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_external_builtin_arguments_32_function_body (a_feature)
 			when builtin_boolean_class then
 				print_external_builtin_boolean_function_body (a_feature)
+			when builtin_boolean_ref_class then
+				print_external_builtin_boolean_ref_function_body (a_feature)
 			when builtin_com_failure_class then
 				print_external_builtin_com_failure_function_body (a_feature)
 			when builtin_exception_manager_class then
@@ -2209,7 +2211,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 
 	print_external_builtin_boolean_function_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in function introduced in class "BOOLEAN" and related classes.
+			-- `a_feature' is a built-in function introduced in class "BOOLEAN".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_function: a_feature.is_function
@@ -2222,12 +2224,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_boolean_and_call (current_feature, current_type, False)
-				print_semicolon_newline
-				call_operands.wipe_out
-			when builtin_boolean_item then
-				fill_call_formal_arguments (a_feature)
-				print_indentation_assign_to_result
-				print_builtin_boolean_item_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when builtin_boolean_not then
@@ -2246,6 +2242,31 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_boolean_xor_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			else
+					-- Internal error: unknown built-in feature.
+					-- This error should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	print_external_builtin_boolean_ref_function_body (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Print to `current_file' the body of built-in feature `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "BOOLEAN_REF".
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_function: a_feature.is_function
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_boolean_ref: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_ref_class
+			valid_feature: current_feature.static_feature = a_feature
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_boolean_ref_item then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_boolean_ref_item_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			else
@@ -3675,8 +3696,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			inspect l_builtin_class
 			when builtin_any_class then
 				print_external_builtin_any_procedure_body (a_feature)
-			when builtin_boolean_class then
-				print_external_builtin_boolean_procedure_body (a_feature)
+			when builtin_boolean_ref_class then
+				print_external_builtin_boolean_ref_procedure_body (a_feature)
 			when builtin_com_failure_class then
 				print_external_builtin_com_failure_procedure_body (a_feature)
 			when builtin_exception_manager_class then
@@ -3756,20 +3777,20 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 		end
 
-	print_external_builtin_boolean_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
+	print_external_builtin_boolean_ref_procedure_body (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Print to `current_file' the body of built-in feature `a_feature'.
-			-- `a_feature' is a built-in procedure introduced in class "BOOLEAN" and related classes.
+			-- `a_feature' is a built-in procedure introduced in class "BOOLEAN_REF".
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_procedure: a_feature.is_procedure
 			a_feature_is_builtin: a_feature.is_builtin
-			a_feature_is_builtin_boolean: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_class
+			a_feature_is_builtin_boolean_ref: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_ref_class
 			valid_feature: current_feature.static_feature = a_feature
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_boolean_set_item then
+			when builtin_boolean_ref_set_item then
 				fill_call_formal_arguments (a_feature)
-				print_builtin_boolean_set_item_call (current_feature, current_type, False)
+				print_builtin_boolean_ref_set_item_call (current_feature, current_type, False)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -7893,8 +7914,8 @@ feature {NONE} -- Procedure call generation
 			inspect l_builtin_class
 			when builtin_any_class then
 				print_builtin_any_procedure_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_boolean_class then
-				print_builtin_boolean_procedure_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_boolean_ref_class then
+				print_builtin_boolean_ref_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_8_class then
 				print_builtin_sized_character_procedure_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_32_class then
@@ -7965,22 +7986,22 @@ feature {NONE} -- Procedure call generation
 			end
 		end
 
-	print_builtin_boolean_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+	print_builtin_boolean_ref_procedure_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to procedure `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
+			-- `a_feature' is a built-in feature introduced in class "BOOLEAN_REF".
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
-			a_feature_is_builtin_boolean: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_class
+			a_feature_is_builtin_boolean_ref: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_ref_class
 			a_target_type_not_void: a_target_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
-			when builtin_boolean_set_item then
-				print_builtin_boolean_set_item_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_boolean_ref_set_item then
+				print_builtin_boolean_ref_set_item_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -13862,6 +13883,8 @@ feature {NONE} -- Query call generation
 				print_builtin_arguments_32_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_class then
 				print_builtin_boolean_query_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_boolean_ref_class then
+				print_builtin_boolean_ref_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_8_class then
 				print_builtin_sized_character_query_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_character_32_class then
@@ -13977,7 +14000,7 @@ feature {NONE} -- Query call generation
 
 	print_builtin_boolean_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call to query `a_feature' (static binding).
-			-- `a_feature' is a built-in feature introduced in class "BOOLEAN" and related classes.
+			-- `a_feature' is a built-in feature introduced in class "BOOLEAN".
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 			-- Operands can be found in `call_operands'.
@@ -13999,8 +14022,6 @@ feature {NONE} -- Query call generation
 				print_builtin_boolean_and_then_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_implies then
 				print_builtin_boolean_implies_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_boolean_item then
-				print_builtin_boolean_item_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_not then
 				print_builtin_boolean_not_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_or then
@@ -14009,6 +14030,31 @@ feature {NONE} -- Query call generation
 				print_builtin_boolean_or_else_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_boolean_xor then
 				print_builtin_boolean_xor_call (a_feature, a_target_type, a_check_void_target)
+			else
+				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_boolean_ref_query_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call to query `a_feature' (static binding).
+			-- `a_feature' is a built-in feature introduced in class "BOOLEAN_REF".
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+			-- Note that the result of the query is not adapted to match the kind
+			-- of result type expected by the caller. It is recommended to use
+			-- `print_adapted_query_call' whenever possible.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_query: a_feature.result_type_set /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_boolean_ref: (a_feature.builtin_code // builtin_capacity) = builtin_boolean_ref_class
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_boolean_ref_item then
+				print_builtin_boolean_ref_item_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -18831,28 +18877,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			end
 		end
 
-	print_builtin_boolean_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN_REF.item'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- Operands can be found in `call_operands'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_target: ET_EXPRESSION
-		do
-			l_target := call_operands.first
-			if a_target_type.is_basic then
-				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
-			else
-					-- Internal attribute.
-				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
-			end
-		end
-
 	print_builtin_boolean_not_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.prefix "not"'.
@@ -18986,80 +19010,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 			end
 		end
 
-	print_builtin_boolean_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
-			-- Print to `current_file' a call (static binding) to `a_feature'
-			-- corresponding to built-in feature 'BOOLEAN_REF.set_item'.
-			-- `a_target_type' is the dynamic type of the target.
-			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- Operands can be found in `call_operands'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_target_type_not_void: a_target_type /= Void
-			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_target: ET_EXPRESSION
-			l_argument: ET_EXPRESSION
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_formal_type: ET_DYNAMIC_TYPE
-			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_query: ET_DYNAMIC_FEATURE
-			l_item_attribute: detachable ET_DYNAMIC_FEATURE
-			i, nb: INTEGER
-			l_builtin_item_code: INTEGER
-		do
-			if call_operands.count /= 2 then
-					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_target := call_operands.first
-				l_argument := call_operands.item (2)
-				l_actual_type_set := dynamic_type_set (l_argument)
-				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
-				if a_target_type.is_basic then
-					print_indentation
-					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-				else
-					l_builtin_item_code := builtin_boolean_feature (builtin_boolean_item)
-					l_queries := a_target_type.queries
-					nb := a_target_type.attribute_count
-					from i := 1 until i > nb loop
-						l_query := l_queries.item (i)
-						if l_query.builtin_code = l_builtin_item_code then
-							l_item_attribute := l_query
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					end
-					if l_item_attribute /= Void then
-							-- Set the built-in attribute 'item'.
-						print_indentation
-						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-						print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-					else
-						-- If `l_item_attribute' is Void, it means that it is never used,
-						-- therefore there is no need to set it.
-					end
-				end
-			end
-		end
-
 	print_builtin_boolean_xor_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'BOOLEAN.infix "xor"'.
@@ -19105,6 +19055,102 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
 				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_boolean_ref_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'BOOLEAN_REF.item'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+		do
+			l_target := call_operands.first
+			if a_target_type.is_basic then
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+			else
+					-- Internal attribute.
+				print_adapted_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
+			end
+		end
+
+	print_builtin_boolean_ref_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'BOOLEAN_REF.set_item'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_target: ET_EXPRESSION
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
+			l_item_attribute: detachable ET_DYNAMIC_FEATURE
+			i, nb: INTEGER
+			l_builtin_item_code: INTEGER
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this should already have been reported in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_target := call_operands.first
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				if a_target_type.is_basic then
+					print_indentation
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					l_builtin_item_code := builtin_boolean_ref_feature (builtin_boolean_ref_item)
+					l_queries := a_target_type.queries
+					nb := a_target_type.attribute_count
+					from i := 1 until i > nb loop
+						l_query := l_queries.item (i)
+						if l_query.builtin_code = l_builtin_item_code then
+							l_item_attribute := l_query
+							i := nb + 1
+						else
+							i := i + 1
+						end
+					end
+					if l_item_attribute /= Void then
+							-- Set the built-in attribute 'item'.
+						print_indentation
+						print_adapted_attribute_access (l_item_attribute, l_target, a_target_type, a_check_void_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					else
+						-- If `l_item_attribute' is Void, it means that it is never used,
+						-- therefore there is no need to set it.
+					end
+				end
 			end
 		end
 

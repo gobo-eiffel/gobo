@@ -178,6 +178,53 @@ feature -- Built-in codes
 	builtin_any_standard_copy: INTEGER = 13
 			-- Codes for built-in procedures from class "ANY"
 
+	builtin_arguments_32_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "ARGUMENTS_32"
+		do
+			Result := builtin_arguments_32_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_arguments_32_class: INTEGER = 17
+			-- Codes for built-in features from class "ARGUMENTS_32"
+
+	builtin_arguments_32_argument_count: INTEGER = 1
+	builtin_arguments_32_i_th_argument_pointer: INTEGER = 2
+	builtin_arguments_32_i_th_argument_string: INTEGER = 3
+			-- Codes for built-in functions from class "ARGUMENTS_32"
+
+	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "BOOLEAN"
+		do
+			Result := builtin_boolean_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_boolean_class: INTEGER = 5
+			-- Codes for built-in features from class "BOOLEAN"
+
+	builtin_boolean_and: INTEGER = 1
+	builtin_boolean_and_then: INTEGER = 2
+	builtin_boolean_implies: INTEGER = 3
+	builtin_boolean_not: INTEGER = 5
+	builtin_boolean_or: INTEGER = 6
+	builtin_boolean_or_else: INTEGER = 7
+	builtin_boolean_xor: INTEGER = 8
+			-- Codes for built-in functions from class "BOOLEAN"
+
+	builtin_boolean_ref_feature (a_feature_code: INTEGER): INTEGER
+			-- Full code for built-in feature from class "BOOLEAN_REF"
+		do
+			Result := builtin_boolean_ref_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_boolean_ref_class: INTEGER = 45
+			-- Codes for built-in features from class "BOOLEAN_REF"
+
+	builtin_boolean_ref_item: INTEGER = 1
+			-- Codes for built-in functions from class "BOOLEAN_REF"
+
+	builtin_boolean_ref_set_item: INTEGER = 2
+			-- Codes for built-in procedures from class "BOOLEAN_REF"
+
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "SPECIAL"
 		do
@@ -185,17 +232,21 @@ feature -- Built-in codes
 		end
 
 	builtin_special_class: INTEGER = 2
-	builtin_special_make_empty: INTEGER = 1
-	builtin_special_item: INTEGER = 2
-	builtin_special_put: INTEGER = 3
-	builtin_special_capacity: INTEGER = 4
-	builtin_special_count: INTEGER = 5
-	builtin_special_element_size: INTEGER = 6
-	builtin_special_aliased_resized_area: INTEGER = 7
-	builtin_special_base_address: INTEGER = 8
-	builtin_special_set_count: INTEGER = 9
-	builtin_special_extend: INTEGER = 10
 			-- Codes for built-in features from class "SPECIAL"
+
+	builtin_special_aliased_resized_area: INTEGER = 1
+	builtin_special_base_address: INTEGER = 2
+	builtin_special_capacity: INTEGER = 3
+	builtin_special_count: INTEGER = 4
+	builtin_special_element_size: INTEGER = 5
+	builtin_special_item: INTEGER = 6
+			-- Codes for built-in functions from class "SPECIAL"
+
+	builtin_special_extend: INTEGER = 7
+	builtin_special_make_empty: INTEGER = 8
+	builtin_special_put: INTEGER = 9
+	builtin_special_set_count: INTEGER = 10
+			-- Codes for built-in procedures from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER = 3
 	builtin_character_32_class: INTEGER = 4
@@ -206,24 +257,6 @@ feature -- Built-in codes
 	builtin_character_to_character_8: INTEGER = 5
 	builtin_character_to_character_32: INTEGER = 6
 			-- Codes for built-in features from class "CHARACTER" and related classes
-
-	builtin_boolean_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "BOOLEAN" and related classes
-		do
-			Result := builtin_boolean_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_boolean_class: INTEGER = 5
-	builtin_boolean_item: INTEGER = 1
-	builtin_boolean_set_item: INTEGER = 2
-	builtin_boolean_and: INTEGER = 3
-	builtin_boolean_or: INTEGER = 4
-	builtin_boolean_xor: INTEGER = 5
-	builtin_boolean_not: INTEGER = 6
-	builtin_boolean_and_then: INTEGER = 7
-	builtin_boolean_or_else: INTEGER = 8
-	builtin_boolean_implies: INTEGER = 9
-			-- Codes for built-in features from class "BOOLEAN" and related classes
 
 	builtin_integer_8_class: INTEGER = 6
 	builtin_integer_16_class: INTEGER = 7
@@ -311,20 +344,6 @@ feature -- Built-in codes
 	builtin_pointer_hash_code: INTEGER = 6
 	builtin_pointer_is_default_pointer: INTEGER = 7
 			-- Codes for built-in features from class "POINTER" and related classes
-
-	builtin_arguments_32_feature (a_feature_code: INTEGER): INTEGER
-			-- Full code for built-in feature from class "ARGUMENTS_32"
-		do
-			Result := builtin_arguments_32_class * builtin_capacity + a_feature_code
-		end
-
-	builtin_arguments_32_class: INTEGER = 17
-			-- Codes for built-in features from class "ARGUMENTS_32" and related classes
-
-	builtin_arguments_32_argument_count: INTEGER = 1
-	builtin_arguments_32_i_th_argument_pointer: INTEGER = 2
-	builtin_arguments_32_i_th_argument_string: INTEGER = 3
-			-- Codes for built-in function from class "ARGUMENTS_32" and related classes
 
 	builtin_platform_feature (a_feature_code: INTEGER): INTEGER
 			-- Full code for built-in feature from class "PLATFORM"

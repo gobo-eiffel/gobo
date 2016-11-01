@@ -125,7 +125,7 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.type_class_name) then
 				check_builtin_type_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.special_class_name) then
-				check_builtin_special_function_validity (a_feature)
+				check_builtin_special_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.character_8_ref_class_name) then
 				check_builtin_sized_character_ref_function_validity (a_feature, current_universe.character_8_type, tokens.builtin_character_8_class)
 			elseif l_name.same_class_name (tokens.character_8_class_name) then
@@ -135,9 +135,9 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.character_32_class_name) then
 				check_builtin_sized_character_function_validity (a_feature, tokens.builtin_character_32_class)
 			elseif l_name.same_class_name (tokens.boolean_ref_class_name) then
-				check_builtin_boolean_ref_function_validity (a_feature)
+				check_builtin_boolean_ref_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.boolean_class_name) then
-				check_builtin_boolean_function_validity (a_feature)
+				check_builtin_boolean_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.pointer_ref_class_name) then
 				check_builtin_pointer_ref_function_validity (a_feature)
 			elseif l_name.same_class_name (tokens.pointer_class_name) then
@@ -273,158 +273,54 @@ feature {NONE} -- Built-in validity
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
-	check_builtin_type_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
-			-- Check validity of built-in `a_feature' from class "TYPE".
+	check_builtin_boolean_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "BOOLEAN".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
-			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
-			builtin_features.search (tokens.builtin_type_class)
+			builtin_features.search (tokens.builtin_boolean_class)
 			if builtin_features.found then
 				l_builtin_features := builtin_features.found_item
 			else
-				create l_builtin_features.make_map (500)
+				create l_builtin_features.make_map (7)
 				l_builtin_features.set_key_equality_tester (feature_name_tester)
-				builtin_features.force_last (l_builtin_features, tokens.builtin_type_class)
-				l_formal_parameter := current_class.formal_parameter_type (1)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_boolean_class)
 					-- Functions.
-				register_builtin_feature (tokens.default_feature_name, Void, l_formal_parameter, tokens.builtin_type_feature (tokens.builtin_type_default), l_builtin_features)
-				register_builtin_feature (tokens.generic_parameter_type_feature_name, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type, tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_type), l_builtin_features)
-				register_builtin_feature (tokens.generic_parameter_count_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count), l_builtin_features)
-				register_builtin_feature (tokens.has_default_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_has_default), l_builtin_features)
-				register_builtin_feature (tokens.is_attached_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_attached), l_builtin_features)
-				register_builtin_feature (tokens.is_deferred_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_deferred), l_builtin_features)
-				register_builtin_feature (tokens.is_expanded_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_expanded), l_builtin_features)
-				register_builtin_feature (tokens.runtime_name_feature_name, Void, current_universe.string_type, tokens.builtin_type_feature (tokens.builtin_type_runtime_name), l_builtin_features)
-				register_builtin_feature (tokens.type_id_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_type_id), l_builtin_features)
+				register_builtin_feature (tokens.conjuncted_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_and), l_builtin_features)
+				register_builtin_feature (tokens.conjuncted_semistrict_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_and_then), l_builtin_features)
+				register_builtin_feature (tokens.disjuncted_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_or), l_builtin_features)
+				register_builtin_feature (tokens.disjuncted_exclusive_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_xor), l_builtin_features)
+				register_builtin_feature (tokens.disjuncted_semistrict_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_or_else), l_builtin_features)
+				register_builtin_feature (tokens.implication_feature_name, <<current_universe.boolean_type.type>>, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_implies), l_builtin_features)
+				register_builtin_feature (tokens.negated_feature_name, Void, current_universe.boolean_type, tokens.builtin_boolean_feature (tokens.builtin_boolean_not), l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
-	check_builtin_special_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Check validity of built-in `a_feature' from class "SPECIAL".
+	check_builtin_boolean_ref_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "BOOLEAN_REF".
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
 		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.item_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'item (i: INTEGER): G'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'item (i: INTEGER): G'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
-				elseif not a_feature.type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
-						-- The signature should be 'item (i: INTEGER): G'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
-				end
-			elseif a_feature.name.same_feature_name (tokens.capacity_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_capacity))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'capapcity: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'capapcity: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_count))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'count: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'count: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_element_size))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'element_size: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'element_size: INTEGER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.like_current)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.like_current)
-				elseif not a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class) then
-						-- The signature should be 'aliased_resized_area (n: INTEGER): like Current'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.like_current)
-				end
-			elseif a_feature.name.same_feature_name (tokens.base_address_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_base_address))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'base_address: POINTER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.pointer_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
-						-- The signature should be 'base_address: POINTER'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.pointer_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.extend_feature_name) then
-					-- 'SPECIAL.extend' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_extend))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type>>, Void)
-			elseif a_feature.name.same_feature_name (tokens.make_empty_feature_name) then
-					-- 'SPECIAL.make_empty' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_make_empty))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
-			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
-					-- 'SPECIAL.put' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
-			elseif a_feature.name.same_feature_name (tokens.set_count_feature_name) then
-					-- 'SPECIAL.set_count' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_set_count))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
+			builtin_features.search (tokens.builtin_boolean_ref_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
 			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
+				create l_builtin_features.make_map (2)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_boolean_ref_class)
+					-- Functions.
+				register_builtin_feature (tokens.item_feature_name, Void, current_universe.boolean_type, tokens.builtin_boolean_ref_feature (tokens.builtin_boolean_ref_item), l_builtin_features)
+					-- Procedures.
+				register_builtin_feature (tokens.set_item_feature_name, <<current_universe.boolean_type.type>>, Void, tokens.builtin_boolean_ref_feature (tokens.builtin_boolean_ref_set_item), l_builtin_features)
 			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
 	check_builtin_sized_character_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
@@ -522,183 +418,6 @@ feature {NONE} -- Built-in validity
 						-- The signature should be 'to_character_32: CHARACTER_32'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.character_32_type)
-				end
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_boolean_ref_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Check validity of built-in `a_feature' from class "BOOLEAN_REF".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.item_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_item))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'item: BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'item: BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-					-- 'BOOLEAN_REF.set_item' should be a procedure.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_set_item))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, Void)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_boolean_function_validity (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Check validity of built-in `a_feature' from class "BOOLEAN".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-		do
-				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.conjuncted_feature_name) or a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'conjuncted (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'conjuncted (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'conjuncted (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.conjuncted_semistrict_feature_name) or a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and_then))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'conjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'conjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'conjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_feature_name) or a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'disjuncted (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'disjuncted (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'disjuncted (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_semistrict_feature_name) or a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or_else))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'disjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'disjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'disjuncted_semistrict (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.negated_feature_name) or a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_not))
-				l_formals := a_feature.arguments
-				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'negated: BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_1_latest) and then a_feature.type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'negated: BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-					end
-				end
-			elseif a_feature.name.same_feature_name (tokens.implication_feature_name) or a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_implies))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'implication (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'implication (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'implication (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				end
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_exclusive_feature_name) or a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_xor))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'disjuncted_exclusive (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-					if not (current_system.older_or_same_ise_version (ise_6_2_7_2906) and then l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, current_class, current_class)) then
-							-- The signature should be 'disjuncted_exclusive (other: BOOLEAN): BOOLEAN'.
-						set_fatal_error
-						error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
-					end
-				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'disjuncted_exclusive (other: BOOLEAN): BOOLEAN'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, current_universe.boolean_type)
 				end
 			else
 					-- Unknown built-in routine.
@@ -1626,6 +1345,39 @@ feature {NONE} -- Built-in validity
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
 
+	check_builtin_special_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "SPECIAL".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
+		do
+			builtin_features.search (tokens.builtin_special_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (10)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_special_class)
+				l_formal_parameter := current_class.formal_parameter_type (1)
+					-- Functions.
+				register_builtin_feature (tokens.aliased_resized_area_feature_name, <<current_universe.integer_type.type>>, tokens.like_current, tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area), l_builtin_features)
+				register_builtin_feature (tokens.base_address_feature_name, Void, current_universe.pointer_type, tokens.builtin_special_feature (tokens.builtin_special_base_address), l_builtin_features)
+				register_builtin_feature (tokens.capacity_feature_name, Void, current_universe.integer_type, tokens.builtin_special_feature (tokens.builtin_special_capacity), l_builtin_features)
+				register_builtin_feature (tokens.count_feature_name, Void, current_universe.integer_type, tokens.builtin_special_feature (tokens.builtin_special_count), l_builtin_features)
+				register_builtin_feature (tokens.element_size_feature_name, Void, current_universe.integer_type, tokens.builtin_special_feature (tokens.builtin_special_element_size), l_builtin_features)
+				register_builtin_feature (tokens.item_feature_name, <<current_universe.integer_type.type>>, l_formal_parameter, tokens.builtin_special_feature (tokens.builtin_special_item), l_builtin_features)
+					-- Procedures.
+				register_builtin_feature (tokens.extend_feature_name, <<l_formal_parameter.type>>, Void, tokens.builtin_special_feature (tokens.builtin_special_extend), l_builtin_features)
+				register_builtin_feature (tokens.make_empty_feature_name, <<current_universe.integer_type.type>>, Void, tokens.builtin_special_feature (tokens.builtin_special_make_empty), l_builtin_features)
+				register_builtin_feature (tokens.put_feature_name, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void, tokens.builtin_special_feature (tokens.builtin_special_put), l_builtin_features)
+				register_builtin_feature (tokens.set_count_feature_name, <<current_universe.integer_type.type>>, Void, tokens.builtin_special_feature (tokens.builtin_special_set_count), l_builtin_features)
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
+		end
+
 	check_builtin_tuple_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
 			-- Check validity of built-in `a_feature' from class "TUPLE".
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1677,6 +1429,37 @@ feature {NONE} -- Built-in validity
 				register_builtin_feature (tokens.put_real_64_feature_name, <<current_universe.double_type.type, current_universe.integer_type.type>>, Void, tokens.builtin_tuple_feature (tokens.builtin_tuple_put_real_64), l_builtin_features)
 				register_builtin_feature (tokens.put_reference_feature_name, <<current_universe.detachable_separate_any_type.type, current_universe.integer_type.type>>, Void, tokens.builtin_tuple_feature (tokens.builtin_tuple_put_reference), l_builtin_features)
 				register_builtin_feature (tokens.set_object_comparison_feature_name, <<current_universe.boolean_type.type>>, Void, tokens.builtin_tuple_feature (tokens.builtin_tuple_set_object_comparison), l_builtin_features)
+			end
+			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
+		end
+
+	check_builtin_type_feature_validity (a_feature: ET_EXTERNAL_ROUTINE)
+			-- Check validity of built-in `a_feature' from class "TYPE".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_builtin_features: DS_HASH_TABLE [TUPLE [arguments: detachable ARRAY [ET_TYPE]; type: detachable ET_TYPE; code: INTEGER], ET_FEATURE_NAME]
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
+		do
+			builtin_features.search (tokens.builtin_type_class)
+			if builtin_features.found then
+				l_builtin_features := builtin_features.found_item
+			else
+				create l_builtin_features.make_map (9)
+				l_builtin_features.set_key_equality_tester (feature_name_tester)
+				builtin_features.force_last (l_builtin_features, tokens.builtin_type_class)
+				l_formal_parameter := current_class.formal_parameter_type (1)
+					-- Functions.
+				register_builtin_feature (tokens.default_feature_name, Void, l_formal_parameter, tokens.builtin_type_feature (tokens.builtin_type_default), l_builtin_features)
+				register_builtin_feature (tokens.generic_parameter_type_feature_name, <<current_universe.integer_type.type>>, current_universe.type_detachable_any_type, tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_type), l_builtin_features)
+				register_builtin_feature (tokens.generic_parameter_count_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_generic_parameter_count), l_builtin_features)
+				register_builtin_feature (tokens.has_default_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_has_default), l_builtin_features)
+				register_builtin_feature (tokens.is_attached_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_attached), l_builtin_features)
+				register_builtin_feature (tokens.is_deferred_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_deferred), l_builtin_features)
+				register_builtin_feature (tokens.is_expanded_feature_name, Void, current_universe.boolean_type, tokens.builtin_type_feature (tokens.builtin_type_is_expanded), l_builtin_features)
+				register_builtin_feature (tokens.runtime_name_feature_name, Void, current_universe.string_type, tokens.builtin_type_feature (tokens.builtin_type_runtime_name), l_builtin_features)
+				register_builtin_feature (tokens.type_id_feature_name, Void, current_universe.integer_type, tokens.builtin_type_feature (tokens.builtin_type_type_id), l_builtin_features)
 			end
 			check_expected_builtin_feature_validity (a_feature, l_builtin_features)
 		end
@@ -2619,7 +2402,7 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.type_class_name) then
 				check_builtin_type_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.special_class_name) then
-				check_builtin_special_procedure_validity (a_feature)
+				check_builtin_special_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.character_8_ref_class_name) then
 				check_builtin_sized_character_ref_procedure_validity (a_feature, current_universe.character_8_type, tokens.builtin_character_8_class)
 			elseif l_name.same_class_name (tokens.character_8_class_name) then
@@ -2629,9 +2412,9 @@ feature {NONE} -- Built-in validity
 			elseif l_name.same_class_name (tokens.character_32_class_name) then
 				check_builtin_sized_character_procedure_validity (a_feature, tokens.builtin_character_32_class)
 			elseif l_name.same_class_name (tokens.boolean_ref_class_name) then
-				check_builtin_boolean_ref_procedure_validity (a_feature)
+				check_builtin_boolean_ref_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.boolean_class_name) then
-				check_builtin_boolean_procedure_validity (a_feature)
+				check_builtin_boolean_feature_validity (a_feature)
 			elseif l_name.same_class_name (tokens.pointer_ref_class_name) then
 				check_builtin_pointer_ref_procedure_validity (a_feature)
 			elseif l_name.same_class_name (tokens.pointer_class_name) then
@@ -2710,111 +2493,6 @@ feature {NONE} -- Built-in validity
 			end
 		end
 
-	check_builtin_special_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "SPECIAL".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.extend_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_extend))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'extend (v: G)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
-						-- The signature should be 'extend (v: G)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.make_empty_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_make_empty))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'make_empty (nb: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'make_empty (nb: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 2 then
-						-- The signature should be 'put (v: G; i: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
-						-- The signature should be 'put (v: G; i: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'put (v: G; i: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.set_count_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_set_count))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'set_count (i: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
-						-- The signature should be 'set_count (i: INTEGER)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
-					-- 'SPECIAL.item' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
-				l_formal_parameter := current_class.formal_parameter_type (1)
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter.type)
-			elseif a_feature.name.same_feature_name (tokens.capacity_feature_name) then
-					-- 'SPECIAL.capacity' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_capacity))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-			elseif a_feature.name.same_feature_name (tokens.count_feature_name) then
-					-- 'SPECIAL.count' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_count))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-			elseif a_feature.name.same_feature_name (tokens.element_size_feature_name) then
-					-- 'SPECIAL.element_size' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_element_size))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.integer_type)
-			elseif a_feature.name.same_feature_name (tokens.aliased_resized_area_feature_name) then
-					-- 'SPECIAL.aliased_resized_area' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.like_current)
-			elseif a_feature.name.same_feature_name (tokens.base_address_feature_name) then
-					-- 'SPECIAL.base_address' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_base_address))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.pointer_type)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
 	check_builtin_sized_character_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE; a_character_type: ET_CLASS_TYPE; a_builtin_class_code: INTEGER)
 			-- Check validity of built-in`a_feature' from the ref class of sized `a_character_type'.
 			-- `a_builtin_class_code' is the built-in code of base class of `a_character_type'.
@@ -2881,94 +2559,6 @@ feature {NONE} -- Built-in validity
 				a_feature.set_builtin_code (tokens.builtin_feature (a_builtin_class_code, tokens.builtin_character_to_character_32))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.character_32_type)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_boolean_ref_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "BOOLEAN_REF".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.set_item_feature_name) then
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_set_item))
-				l_formals := a_feature.arguments
-				if l_formals = Void or else l_formals.count /= 1 then
-						-- The signature should be 'set_item (b: BOOLEAN)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
-						-- The signature should be 'set_item (b: BOOLEAN)'.
-					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.boolean_type.type>>, Void)
-				end
-			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
-					-- 'BOOLEAN_REF.item' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_item))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
-			else
-					-- Unknown built-in routine.
-				a_feature.set_builtin_code (tokens.builtin_unknown)
-				if unknown_builtin_reported then
-					set_fatal_error
-					error_handler.report_gvkbu1a_error (current_class, a_feature)
-				end
-			end
-		end
-
-	check_builtin_boolean_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE)
-			-- Check validity of built-in `a_feature' from class "BOOLEAN".
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.conjuncted_feature_name) or a_feature.name.same_feature_name (tokens.infix_and_feature_name) then
-					-- 'BOOLEAN.conjuncted' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.conjuncted_semistrict_feature_name) or a_feature.name.same_feature_name (tokens.infix_and_then_feature_name) then
-					-- 'BOOLEAN.conjuncted_seminstrict' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_and_then))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_feature_name) or a_feature.name.same_feature_name (tokens.infix_or_feature_name) then
-					-- 'BOOLEAN.disjuncted' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_semistrict_feature_name) or a_feature.name.same_feature_name (tokens.infix_or_else_feature_name) then
-					-- 'BOOLEAN.disjuncted_semistrict' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_or_else))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.implication_feature_name) or a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
-					-- 'BOOLEAN.implication' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_implies))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
-			elseif a_feature.name.same_feature_name (tokens.negated_feature_name) or a_feature.name.same_feature_name (tokens.prefix_not_feature_name) then
-					-- 'BOOLEAN.negated' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_not))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, tokens.like_current)
-			elseif a_feature.name.same_feature_name (tokens.disjuncted_exclusive_feature_name) or a_feature.name.same_feature_name (tokens.infix_xor_feature_name) then
-					-- 'BOOLEAN.disjuncted_exclusive' should be a function.
-				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_xor))
-				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.like_current.type>>, current_universe.boolean_type)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)

@@ -593,8 +593,8 @@ feature -- Features
 			a_feature_not_void: a_feature /= Void
 		do
 			inspect a_builtin_code // builtin_capacity
-			when builtin_boolean_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_boolean_item then
+			when builtin_boolean_ref_class then
+				if (a_builtin_code \\ builtin_capacity) = builtin_boolean_ref_item then
 					Result := True
 				end
 			when builtin_character_8_class then
