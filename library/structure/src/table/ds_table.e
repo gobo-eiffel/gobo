@@ -40,6 +40,9 @@ feature -- Access
 			if has (k) then
 				Result := item (k)
 			end
+		ensure then
+			item_if_has: has (k) implies Result = item (k)
+			default_if_not_has: not has (k) implies Result = ({G}).default_detachable_value
 		end
 
 feature -- Status report
