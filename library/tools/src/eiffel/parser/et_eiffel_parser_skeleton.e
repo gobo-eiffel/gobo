@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			create last_across_components_stack.make (Initial_last_across_components_capacity)
 			create last_across_components_pool.make (Initial_last_across_components_capacity)
 			create assertions.make (Initial_assertions_capacity)
-			create check_assertion_counters.make (Initial_check_assertion_counters_capacity)
+			create assertion_counters.make (Initial_assertion_counters_capacity)
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
@@ -101,7 +101,7 @@ feature -- Initialization
 			last_symbols.wipe_out
 			providers.wipe_out
 			assertions.wipe_out
-			check_assertion_counters.wipe_out
+			assertion_counters.wipe_out
 			queries.wipe_out
 			procedures.wipe_out
 			constraints.wipe_out
@@ -703,10 +703,14 @@ feature {NONE} -- Basic operations
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
 		local
+			l_old_count: INTEGER
 			an_assertion: detachable ET_ASSERTION_ITEM
 			done: BOOLEAN
 		do
-			if not assertions.is_empty then
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+			end
+			if assertions.count > l_old_count then
 				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
 					if an_expression /= Void then
 						l_tagged.set_expression (an_expression)
@@ -744,12 +748,16 @@ feature {NONE} -- Basic operations
 			an_assertion_item: detachable ET_ASSERTION_ITEM
 			l_position: ET_POSITION
 			l_file_position: ET_FILE_POSITION
+			l_old_count: INTEGER
 		do
 			if current_system.is_ise then
 					-- ISE does not accept assertions of the form:
 					--      a_tag: -- a comment assertion
 					-- when followed by another tagged assertion.
-				if not assertions.is_empty then
+				if not assertion_counters.is_empty then
+					l_old_count := assertion_counters.last
+				end
+				if assertions.count > l_old_count then
 					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
 						if a_tag = Void then
 							l_position := current_position
@@ -853,10 +861,10 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	start_check_instruction
-			-- Indicate that we start parsing a check-instruction.
+	start_assertions
+			-- Indicate that we start parsing a list of assertions.
 		do
-			check_assertion_counters.force_last (assertions.count)
+			assertion_counters.force_last (assertions.count)
 		end
 
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
@@ -1264,9 +1272,9 @@ feature {NONE} -- AST factory
 			l_old_count: INTEGER
 			l_first: INTEGER
 		do
-			if not check_assertion_counters.is_empty then
-				l_old_count := check_assertion_counters.last
-				check_assertion_counters.remove_last
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+				assertion_counters.remove_last
 			end
 			i := assertions.count
 			nb := i - l_old_count
@@ -1486,20 +1494,34 @@ feature {NONE} -- AST factory
 	new_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_INVARIANTS
 			-- New class invariants
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_old_count: INTEGER
+			l_first: INTEGER
 		do
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+				assertion_counters.remove_last
+			end
 			i := assertions.count
-			if i = 0 then
+			nb := i - l_old_count
+			if nb <= 0 then
 				Result := ast_factory.new_invariants (an_invariant, last_class, 0)
 			else
-				Result := ast_factory.new_invariants (an_invariant, last_class, i)
+				Result := ast_factory.new_invariants (an_invariant, last_class, nb)
 				if Result /= Void then
-					from until i < 1 loop
+					l_first := l_old_count + 1
+					from until i < l_first loop
 						Result.put_first (assertions.item (i))
+						assertions.remove_last
+						i := i - 1
+					end
+				else
+					l_first := l_old_count + 1
+					from until i < l_first loop
+						assertions.remove_last
 						i := i - 1
 					end
 				end
-				assertions.wipe_out
 			end
 			if Result /= Void then
 				if attached last_object_tests as l_last_object_tests then
@@ -1529,20 +1551,34 @@ feature {NONE} -- AST factory
 	new_loop_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_LOOP_INVARIANTS
 			-- New loop invariants
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_old_count: INTEGER
+			l_first: INTEGER
 		do
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+				assertion_counters.remove_last
+			end
 			i := assertions.count
-			if i = 0 then
+			nb := i - l_old_count
+			if nb <= 0 then
 				Result := ast_factory.new_loop_invariants (an_invariant, 0)
 			else
-				Result := ast_factory.new_loop_invariants (an_invariant, i)
+				Result := ast_factory.new_loop_invariants (an_invariant, nb)
 				if Result /= Void then
-					from until i < 1 loop
+					l_first := l_old_count + 1
+					from until i < l_first loop
 						Result.put_first (assertions.item (i))
+						assertions.remove_last
+						i := i - 1
+					end
+				else
+					l_first := l_old_count + 1
+					from until i < l_first loop
+						assertions.remove_last
 						i := i - 1
 					end
 				end
-				assertions.wipe_out
 			end
 		end
 
@@ -1670,40 +1706,68 @@ feature {NONE} -- AST factory
 	new_postconditions (an_ensure: detachable ET_KEYWORD; a_then: detachable ET_KEYWORD): detachable ET_POSTCONDITIONS
 			-- New postconditions
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_old_count: INTEGER
+			l_first: INTEGER
 		do
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+				assertion_counters.remove_last
+			end
 			i := assertions.count
-			if i = 0 then
+			nb := i - l_old_count
+			if nb <= 0 then
 				Result := ast_factory.new_postconditions (an_ensure, a_then, 0)
 			else
-				Result := ast_factory.new_postconditions (an_ensure, a_then, i)
+				Result := ast_factory.new_postconditions (an_ensure, a_then, nb)
 				if Result /= Void then
-					from until i < 1 loop
+					l_first := l_old_count + 1
+					from until i < l_first loop
 						Result.put_first (assertions.item (i))
+						assertions.remove_last
+						i := i - 1
+					end
+				else
+					l_first := l_old_count + 1
+					from until i < l_first loop
+						assertions.remove_last
 						i := i - 1
 					end
 				end
-				assertions.wipe_out
 			end
 		end
 
 	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD): detachable ET_PRECONDITIONS
 			-- New preconditions
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_old_count: INTEGER
+			l_first: INTEGER
 		do
+			if not assertion_counters.is_empty then
+				l_old_count := assertion_counters.last
+				assertion_counters.remove_last
+			end
 			i := assertions.count
-			if i = 0 then
+			nb := i - l_old_count
+			if nb <= 0 then
 				Result := ast_factory.new_preconditions (a_require, an_else, 0)
 			else
-				Result := ast_factory.new_preconditions (a_require, an_else, i)
+				Result := ast_factory.new_preconditions (a_require, an_else, nb)
 				if Result /= Void then
-					from until i < 1 loop
+					l_first := l_old_count + 1
+					from until i < l_first loop
 						Result.put_first (assertions.item (i))
+						assertions.remove_last
+						i := i - 1
+					end
+				else
+					l_first := l_old_count + 1
+					from until i < l_first loop
+						assertions.remove_last
 						i := i - 1
 					end
 				end
-				assertions.wipe_out
 			end
 		end
 
@@ -2026,8 +2090,8 @@ feature {NONE} -- Access
 	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
 			-- List of assertions currently being parsed
 
-	check_assertion_counters: DS_ARRAYED_LIST [INTEGER]
-			-- List of counters when parsing nested check-instructions
+	assertion_counters: DS_ARRAYED_LIST [INTEGER]
+			-- List of counters when we start parsing assertions
 
 	queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of queries currently being parsed
@@ -2344,8 +2408,8 @@ feature {NONE} -- Constants
 	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
 
-	Initial_check_assertion_counters_capacity: INTEGER = 10
-			-- Initial capacity for `check_assertion_counters'
+	Initial_assertion_counters_capacity: INTEGER = 10
+			-- Initial capacity for `assertion_counters'
 
 	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
@@ -2398,7 +2462,7 @@ invariant
 	last_symbols_not_void: last_symbols /= Void
 	assertions_not_void: assertions /= Void
 	no_void_assertion: not assertions.has_void
-	check_assertion_counters_not_void: check_assertion_counters /= Void
+	assertion_counters_not_void: assertion_counters /= Void
 	queries_not_void: queries /= Void
 	no_void_query: not queries.has_void
 	-- queries_registered: forall f in queries, f.is_registered

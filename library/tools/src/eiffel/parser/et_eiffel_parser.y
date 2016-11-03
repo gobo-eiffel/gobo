@@ -2467,27 +2467,31 @@ Assertions: Expression
 		{ add_tagged_assertion ($2, $3, $4) }
 	;
 
+Start_assertions:
+		{ start_assertions }
+	;
+	
 Precondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_REQUIRE
+	| E_REQUIRE Start_assertions
 		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE
+	| E_REQUIRE E_ELSE Start_assertions
 		{ $$ := new_preconditions ($1, $2) }
-	| E_REQUIRE Assertions
+	| E_REQUIRE Start_assertions Assertions
 		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE Assertions
+	| E_REQUIRE E_ELSE Start_assertions Assertions
 		{ $$ := new_preconditions ($1, $2) }
 	;
 
 Postcondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_ENSURE
+	| E_ENSURE Start_assertions
 		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN
+	| E_ENSURE E_THEN Start_assertions
 		{ $$ := new_postconditions ($1, $2) }
-	| E_ENSURE Assertions
+	| E_ENSURE Start_assertions Assertions
 		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN Assertions
+	| E_ENSURE E_THEN Start_assertions Assertions
 		{ $$ := new_postconditions ($1, $2) }
 	;
 
@@ -2497,9 +2501,9 @@ Invariant_clause_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Invariant_clause: E_INVARIANT Invariant_start_closure
+Invariant_clause: E_INVARIANT Start_assertions Invariant_start_closure
 		{ $$ := new_invariants ($1) }
-	| E_INVARIANT Invariant_start_closure Assertions
+	| E_INVARIANT Start_assertions Invariant_start_closure Assertions
 		{ $$ := new_invariants ($1) }
 	;
 
@@ -2513,9 +2517,9 @@ Loop_invariant_clause_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Loop_invariant_clause: E_INVARIANT
+Loop_invariant_clause: E_INVARIANT Start_assertions
 		{ $$ := new_loop_invariants ($1) }
-	| E_INVARIANT Assertions
+	| E_INVARIANT Start_assertions Assertions
 		{ $$ := new_loop_invariants ($1) }
 	;
 
@@ -3220,18 +3224,14 @@ Instruction: Creation_instruction
 	
 ------------------------------------------------------------------------------------
 
-Check_instruction: E_CHECK Start_check_instruction E_END
+Check_instruction: E_CHECK Start_assertions E_END
 		{ $$ := new_check_instruction ($1, Void, $3) }
-	| E_CHECK Start_check_instruction Assertions E_END
+	| E_CHECK Start_assertions Assertions E_END
 		{ $$ := new_check_instruction ($1, Void, $4) }
-	| E_CHECK Start_check_instruction Explicit_then_compound E_END
+	| E_CHECK Start_assertions Explicit_then_compound E_END
 		{ $$ := new_check_instruction ($1, $3, $4) }
-	| E_CHECK Start_check_instruction Assertions Explicit_then_compound E_END
+	| E_CHECK Start_assertions Assertions Explicit_then_compound E_END
 		{ $$ := new_check_instruction ($1, $4, $5) }
-	;
-
-Start_check_instruction:
-		{ start_check_instruction }
 	;
 	
 ------------------------------------------------------------------------------------
