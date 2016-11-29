@@ -118,6 +118,8 @@ feature {NONE} -- Processing
 			old_class: ET_CLASS
 			a_parent_class: ET_CLASS
 			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 			l_other_class: ET_CLASS
 		do
 			old_class := current_class
@@ -128,10 +130,12 @@ feature {NONE} -- Processing
 				if current_class.features_flattened and then not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
-					if attached current_class.parents as a_parents then
-						nb := a_parents.count
-						from i := 1 until i > nb loop
-							a_parent_class := a_parents.parent (i).type.base_class
+					nb := current_class.parents_count
+					from i := 1 until i > nb loop
+						l_parent_clause := current_class.parents (i)
+						nb2 := l_parent_clause.count
+						from j := 1 until j > nb2 loop
+							a_parent_class := l_parent_clause.parent (j).type.base_class
 							if not a_parent_class.is_preparsed then
 									-- Internal error: the VTCT error should have already been
 									-- reported in ET_ANCESTOR_BUILDER.
@@ -144,8 +148,9 @@ feature {NONE} -- Processing
 									set_fatal_error (current_class)
 								end
 							end
-							i := i + 1
+							j := j + 1
 						end
+						i := i + 1
 					end
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)

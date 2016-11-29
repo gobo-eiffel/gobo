@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,7 +106,9 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 			l_reset_needed: BOOLEAN
 			a_parent_class: ET_CLASS
 		do
@@ -121,10 +123,12 @@ feature {NONE} -- Processing
 					-- class will be reset to the previous processing step.
 				current_class.unset_ancestors_error
 					-- Process parents first.
-				if attached current_class.parents as a_parents then
-					nb := a_parents.count
-					from i := 1 until i > nb loop
-						a_parent_class := a_parents.parent (i).type.base_class
+				nb1 := current_class.parents_count
+				from i1 := 1 until i1 > nb1 loop
+					l_parent_clause := current_class.parents (i1)
+					nb2 := l_parent_clause.count
+					from i2 := 1 until i2 > nb2 loop
+						a_parent_class := l_parent_clause.parent (i2).type.base_class
 						if a_parent_class.is_preparsed then
 								-- This is a controlled recursive call to `internal_process_class'.
 							internal_process_class (a_parent_class)
@@ -134,8 +138,9 @@ feature {NONE} -- Processing
 						else
 							l_reset_needed := True
 						end
-						i := i + 1
+						i2 := i2 + 1
 					end
+					i1 := i1 + 1
 				end
 				if l_reset_needed then
 					set_fatal_error (current_class)
@@ -182,19 +187,26 @@ feature {NONE} -- Formal parameters and parents validity
 			-- Check whether none of the classes appearing in the
 			-- parent types of `current_class' has been modified.
 		local
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 		do
 			if current_class.ancestors_built then
-				if attached current_class.parents as l_parents then
-					nb := l_parents.count
-					from i := 1 until i > nb loop
-						class_type_checker.check_type_validity (l_parents.parent (i).type)
+				nb1 := current_class.parents_count
+				from i1 := 1 until i1 > nb1 loop
+					l_parent_clause := current_class.parents (i1)
+					nb2 := l_parent_clause.count
+					from i2 := 1 until i2 > nb2 loop
+						class_type_checker.check_type_validity (l_parent_clause.parent (i2).type)
 						if class_type_checker.has_fatal_error then
 							set_fatal_error (current_class)
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loops.
+							i2 := nb2 + 1
+							i1 := nb1 + 1
 						end
-						i := i + 1
+						i2 := i2 + 1
 					end
+					i1 := i1 + 1
 				end
 			end
 		end

@@ -47,19 +47,26 @@ feature -- Validity checking
 			a_class_preparsed: a_class.is_preparsed
 		local
 			i, nb: INTEGER
+			j, nb2: INTEGER
 			old_class: ET_CLASS
+			l_parent_list: ET_PARENT_LIST
 			l_parent: ET_PARENT
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			if attached current_class.parent_clause as l_parents then
+			if attached current_class.parent_clauses as l_parents then
 				nb := l_parents.count
 				from i := 1 until i > nb loop
-					l_parent := l_parents.parent (i)
-					current_parent := l_parent
-					l_parent.type.process (Current)
-					current_parent := Void
+					l_parent_list := l_parents.item (i)
+					nb2 := l_parent_list.count
+					from j := 1 until j > nb2 loop
+						l_parent := l_parent_list.parent (j)
+						current_parent := l_parent
+						l_parent.type.process (Current)
+						current_parent := Void
+						j := j + 1
+					end
 					i := i + 1
 				end
 			end

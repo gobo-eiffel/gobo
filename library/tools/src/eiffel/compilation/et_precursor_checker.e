@@ -134,10 +134,12 @@ feature {NONE} -- Precursor validity
 			a_precursor_feature: ET_FEATURE
 			an_effective: detachable ET_PARENT_FEATURE
 			a_deferred: detachable ET_PARENT_FEATURE
-			a_parents: detachable ET_PARENT_LIST
+			a_parents: detachable ET_PARENT_CLAUSE_LIST
+			l_parent_list: ET_PARENT_LIST
 			a_parent_found: BOOLEAN
 			a_feature: ET_FEATURE
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			a_parent_name := a_precursor.parent_name
 			if a_parent_name /= Void then
@@ -214,7 +216,7 @@ feature {NONE} -- Precursor validity
 								error_handler.report_vdpr3b_error (current_class, a_precursor, a_feature, a_deferred)
 							end
 						else
-							a_parents := current_class.parent_clause
+							a_parents := current_class.parent_clauses
 							if a_parents = Void then
 								if not a_class.is_any_class then
 									set_fatal_error
@@ -227,12 +229,19 @@ feature {NONE} -- Precursor validity
 							else
 								nb := a_parents.count
 								from i := 1 until i > nb loop
-									if a_parents.parent (i).type.base_class = a_class then
-										a_parent_found := True
-										i := nb + 1 -- Jump out of the loop.
-									else
-										i := i + 1
+									l_parent_list := a_parents.item (i)
+									nb2 := l_parent_list.count
+									from j := 1 until j > nb2 loop
+										if l_parent_list.parent (j).type.base_class = a_class then
+											a_parent_found := True
+												-- Jump out of the loop.
+											j := nb2 + 1
+											i := nb
+										else
+											j := j + 1
+										end
 									end
+									i := i + 1
 								end
 								if a_parent_found then
 									a_feature := current_feature.flattened_feature

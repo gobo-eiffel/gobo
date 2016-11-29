@@ -5,7 +5,7 @@ note
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -193,7 +193,9 @@ feature {NONE} -- Processing
 			a_error_in_parent: BOOLEAN
 			l_suppliers: detachable DS_HASH_SET [ET_NAMED_CLASS]
 			l_suppliers2: DS_HASH_SET [ET_NAMED_CLASS]
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 		do
 			old_class := current_class
 			current_class := a_class
@@ -203,10 +205,12 @@ feature {NONE} -- Processing
 				if current_class.interface_checked and then not current_class.has_interface_error then
 					current_class.set_implementation_checked
 						-- Process parents first.
-					if attached current_class.parents as a_parents then
-						nb := a_parents.count
-						from i := 1 until i > nb loop
-							a_parent_class := a_parents.parent (i).type.base_class
+					nb1 := current_class.parents_count
+					from i1 := 1 until i1 > nb1 loop
+						l_parent_clause := current_class.parents (i1)
+						nb2 := l_parent_clause.count
+						from i2 := 1 until i2 > nb2 loop
+							a_parent_class := l_parent_clause.parent (i2).type.base_class
 							if not a_parent_class.is_preparsed then
 									-- Internal error: the VTCT error should have already been
 									-- reported in ET_ANCESTOR_BUILDER.
@@ -220,8 +224,9 @@ feature {NONE} -- Processing
 									set_fatal_error (current_class)
 								end
 							end
-							i := i + 1
+							i2 := i2 + 1
 						end
+						i1 := i1 + 1
 					end
 					error_handler.report_compilation_status (Current, current_class)
 					if suppliers_enabled then

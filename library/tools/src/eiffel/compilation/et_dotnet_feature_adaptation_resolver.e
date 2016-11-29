@@ -5,7 +5,7 @@ note
 		"Feature adaptation resolvers for .NET classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -57,7 +57,8 @@ feature -- Feature adaptation resolving
 			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
-			a_parents: detachable ET_PARENT_LIST
+			l_parent_list: ET_PARENT_LIST
+			l_has_conforming_parent: BOOLEAN
 			i, nb: INTEGER
 		do
 			has_fatal_error := False
@@ -72,20 +73,20 @@ feature -- Feature adaptation resolving
 				-- Using `dotnet_features' helps here because it takes into
 				-- account possibly overloaded feature names when building
 				-- the inheritance links.
-			a_parents := current_class.parent_clause
-			if a_parents = Void or else a_parents.is_empty then
-				if current_class.is_system_object_class then
-						-- Features from "ANY" will be added at the end.
-					a_parents := Void
-				else
-					a_parents := current_universe.system_object_parents
+			if attached current_class.parent_clauses as l_parent_clauses then
+				nb := l_parent_clauses.count
+				from i := 1 until i > nb loop
+					l_parent_list := l_parent_clauses.item (i)
+					l_has_conforming_parent := l_has_conforming_parent or l_parent_list.has_conforming_parent
+					add_inherited_features_from_parents (l_parent_list, a_features)
+					i := i + 1
 				end
 			end
-			if a_parents /= Void then
-				nb := a_parents.count
-				from i := 1 until i > nb loop
-					add_inherited_features (a_parents.parent (i), a_features)
-					i := i + 1
+			if not l_has_conforming_parent then
+				if current_class.is_system_object_class then
+						-- Features from "ANY" will be added at the end.
+				else
+					add_inherited_features_from_parents (current_universe.system_object_parents, a_features)
 				end
 			end
 				-- Add to `a_features' features inherited from ANY.
@@ -194,6 +195,22 @@ feature {NONE} -- Feature recording
 			end
 		ensure
 			no_void_feature: not a_features.has_void_item
+		end
+
+	add_inherited_features_from_parents (a_parents: ET_PARENT_LIST; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])
+			-- Add to `a_features' the .NET features inherited from `a_parents'.
+		require
+			a_parents_not_void: a_parents /= Void
+			a_features_not_void: a_features /= Void
+			no_void_feature: not a_features.has_void_item
+		local
+			i, nb: INTEGER
+		do
+			nb := a_parents.count
+			from i := 1 until i > nb loop
+				add_inherited_features (a_parents.parent (i), a_features)
+				i := i + 1
+			end
 		end
 
 	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME])

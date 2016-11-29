@@ -5,7 +5,7 @@ note
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,20 +68,23 @@ feature -- Feature adaptation resolving
 			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
-			a_parents: detachable ET_PARENT_LIST
-			i, nb: INTEGER
+			l_parent_clause: detachable ET_PARENT_LIST
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
 		do
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			add_current_features (a_features)
-			a_parents := current_class.parents
-			if a_parents /= Void then
-				nb := a_parents.count
-				from i := 1 until i > nb loop
-					add_inherited_features (a_parents.parent (i), a_features)
-					i := i + 1
+			nb1 := current_class.parents_count
+			from i1 := 1 until i1 > nb1 loop
+				l_parent_clause := current_class.parents (i1)
+				nb2 := l_parent_clause.count
+				from i2 := 1 until i2 > nb2 loop
+					add_inherited_features (l_parent_clause.parent (i2), a_features)
+					i2 := i2 + 1
 				end
+				i1 := i1 + 1
 			end
 			process_replication (a_features)
 				-- Clean up.

@@ -101,10 +101,11 @@ inherit
 			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parent,
+			process_parent_clause_list,
+			process_parent_list,
 			process_parenthesis_expression,
 			process_parenthesis_instruction,
 			process_parenthesized_expression,
-			process_parent_list,
 			process_postconditions,
 			process_preconditions,
 			process_precursor_expression,
@@ -480,8 +481,8 @@ feature {ET_AST_NODE} -- Processing
 				if attached a_class.formal_parameters as a_formal_parameters then
 					process_formal_parameter_list (a_formal_parameters)
 				end
-				if attached a_class.parent_clause as a_parents then
-					process_parent_list (a_parents)
+				if attached a_class.parent_clauses as a_parents then
+					process_parent_clause_list (a_parents)
 				end
 				if attached a_class.convert_features as a_convert_features then
 					process_convert_feature_list (a_convert_features)
@@ -1172,6 +1173,30 @@ feature {ET_AST_NODE} -- Processing
 			a_parent.type.process (Current)
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				process_parent_list (a_list.item (i))
+				i := i + 1
+			end
+		end
+
+	process_parent_list (a_list: ET_PARENT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				process_parent (a_list.parent (i))
+				i := i + 1
+			end
+		end
+
 	process_parenthesis_expression (an_expression: ET_PARENTHESIS_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -1188,18 +1213,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
-		end
-
-	process_parent_list (a_list: ET_PARENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				process_parent (a_list.parent (i))
-				i := i + 1
-			end
 		end
 
 	process_postconditions (a_list: ET_POSTCONDITIONS)

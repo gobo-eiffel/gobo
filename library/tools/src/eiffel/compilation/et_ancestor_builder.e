@@ -5,7 +5,7 @@ note
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2015, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,6 +104,7 @@ feature {NONE} -- Processing
 		local
 			old_class: ET_CLASS
 			i, nb: INTEGER
+			i2, nb2: INTEGER
 		do
 			old_class := current_class
 			current_class := a_class
@@ -123,8 +124,10 @@ feature {NONE} -- Processing
 							else
 								current_class.set_ancestors_built
 								error_handler.report_compilation_status (Current, current_class)
-								if attached current_class.parents as a_parents then
-									set_ancestors (a_parents)
+								nb2 := current_class.parents_count
+								from i2 := 1 until i2 > nb2 loop
+									set_ancestors (current_class.parents (i2))
+									i2 := i2 + 1
 								end
 								if not current_class.is_dotnet then
 										-- No need to check validity of .NET classes.
@@ -143,8 +146,10 @@ feature {NONE} -- Processing
 								-- with `has_inheritance_error'.
 							current_class := a_class
 							set_fatal_error (current_class)
-							if attached current_class.parents as a_parents then
-								set_parents_inheritance_error (a_parents)
+							nb2 := current_class.parents_count
+							from i2 := 1 until i2 > nb2 loop
+								set_parents_inheritance_error (current_class.parents (i2))
+								i2 := i2 + 1
 							end
 								-- Report the validity error VHPR-1.
 							current_class := a_cycle.first
@@ -176,6 +181,9 @@ feature {NONE} -- Topological sort
 			l_any_class: ET_CLASS
 			l_system_object_class: ET_CLASS
 			old_class: ET_CLASS
+			i, nb: INTEGER
+			l_has_conforming_parent: BOOLEAN
+			l_parent_list: ET_PARENT_LIST
 		do
 			if a_class.is_none then
 				-- The validity error will be reported in `set_ancestors'.
@@ -192,11 +200,23 @@ feature {NONE} -- Topological sort
 							-- This error has already been reported
 							-- somewhere else (during the parsing).
 						set_fatal_error (current_class)
-					elseif not attached current_class.parent_clause as l_parent_clause or else l_parent_clause.is_empty then
-						if current_class.is_any_class then
-								-- "ANY" has no implicit parents.
-							current_class.set_ancestors_built
-						elseif not class_sorter.has (current_class) then
+					elseif current_class.is_any_class then
+							-- "ANY" has no implicit parents.
+						current_class.set_ancestors_built
+					elseif class_sorter.has (current_class) then
+							-- Nothing to be done.
+					else
+						if attached current_class.parent_clauses as l_parent_clauses then
+							class_sorter.force (current_class)
+							nb := l_parent_clauses.count
+							from i := 1 until i > nb loop
+								l_parent_list := l_parent_clauses.item (i)
+								l_has_conforming_parent := l_has_conforming_parent or l_parent_list.has_conforming_parent
+								add_parents_to_sorter (current_class, l_parent_list)
+								i := i + 1
+							end
+						end
+						if not l_has_conforming_parent then
 							if current_class.is_dotnet and not current_class.is_system_object_class then
 								l_system_object_class := current_universe.system_object_type.base_class
 								if not l_system_object_class.is_preparsed then
@@ -237,9 +257,6 @@ feature {NONE} -- Topological sort
 								end
 							end
 						end
-					elseif not class_sorter.has (current_class) then
-						class_sorter.force (current_class)
-						add_parents_to_sorter (current_class, l_parent_clause)
 					end
 				end
 				current_class := old_class
@@ -422,6 +439,7 @@ feature {NONE} -- Error handling
 			a_parents_not_void: a_parents /= Void
 		local
 			i, nb: INTEGER
+			i2, nb2: INTEGER
 			a_class: ET_CLASS
 		do
 			nb := a_parents.count
@@ -429,8 +447,10 @@ feature {NONE} -- Error handling
 				a_class := a_parents.parent (i).type.base_class
 				if not a_class.ancestors_built then
 					set_fatal_error (a_class)
-					if attached a_class.parents as l_grand_parents then
-						set_parents_inheritance_error (l_grand_parents)
+					nb2 := a_class.parents_count
+					from i2 := 1 until i2 > nb2 loop
+						set_parents_inheritance_error (a_class.parents (i2))
+						i2 := i2 + 1
 					end
 				end
 				i := i + 1

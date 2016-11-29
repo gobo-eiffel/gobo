@@ -5,7 +5,7 @@ note
 		"Eiffel inheritance clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset
-			-- Reset convert parents as they were when they were last parsed.
+			-- Reset parents as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -53,6 +53,17 @@ feature -- Initialization
 				storage.item (i).parent.reset
 				i := i + 1
 			end
+		end
+
+feature -- Status report
+
+	has_conforming_parent: BOOLEAN
+			-- Does current parent list contain at least one conforming parent?
+		do
+			Result := clients_clause = Void and count > 0
+		ensure
+			not_empty: Result implies not is_empty
+			has_no_clients_clause: Result implies clients_clause = Void
 		end
 
 feature -- Access
@@ -71,13 +82,20 @@ feature -- Access
 	inherit_keyword: ET_KEYWORD
 			-- 'inherit' keyword
 
+	clients_clause: detachable ET_CLIENTS
+			-- Clients clause
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
 		do
 			Result := inherit_keyword.position
-			if Result.is_null and not is_empty then
-				Result := first.position
+			if Result.is_null then
+				if attached clients_clause as l_clients_clause then
+					Result := l_clients_clause.position
+				elseif not is_empty then
+					Result := first.position
+				end
 			end
 		end
 
@@ -91,7 +109,11 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			if is_empty then
-				Result := inherit_keyword
+				if attached clients_clause as l_clients_clause then
+					Result := l_clients_clause.last_leaf
+				else
+					Result := inherit_keyword
+				end
 			else
 				Result := last.last_leaf
 			end
@@ -107,6 +129,14 @@ feature -- Setting
 			inherit_keyword := an_inherit
 		ensure
 			inherit_keyword_set: inherit_keyword = an_inherit
+		end
+
+	set_clients_clause (a_clients_clause: like clients_clause)
+			-- Set `clients_clause' to `a_clients_clause'.
+		do
+			clients_clause := a_clients_clause
+		ensure
+			clients_clause_set: clients_clause = a_clients_clause
 		end
 
 feature -- Processing

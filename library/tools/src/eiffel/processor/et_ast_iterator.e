@@ -453,8 +453,8 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_class.obsolete_message as l_obsolete_message then
 				l_obsolete_message.process (Current)
 			end
-			if attached a_class.parent_clause as l_parent_clause then
-				l_parent_clause.process (Current)
+			if attached a_class.parent_clauses as l_parent_clauses then
+				l_parent_clauses.process (Current)
 			end
 			if attached a_class.creators as l_creators then
 				l_creators.process (Current)
@@ -2208,6 +2208,34 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_parent_list (a_list: ET_PARENT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.inherit_keyword.process (Current)
+			if attached a_list.clients_clause as l_clients_clause then
+				l_clients_clause.process (Current)
+			end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_parent_semicolon (a_parent: ET_PARENT_SEMICOLON)
 			-- Process `a_parent'.
 		do
@@ -2245,19 +2273,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.left_parenthesis.process (Current)
 			an_expression.expression.process (Current)
 			an_expression.right_parenthesis.process (Current)
-		end
-
-	process_parent_list (a_list: ET_PARENT_LIST)
-			-- Process `a_list'.
-		local
-			i, nb: INTEGER
-		do
-			a_list.inherit_keyword.process (Current)
-			nb := a_list.count
-			from i := 1 until i > nb loop
-				a_list.item (i).process (Current)
-				i := i + 1
-			end
 		end
 
 	process_postconditions (a_list: ET_POSTCONDITIONS)

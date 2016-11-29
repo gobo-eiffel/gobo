@@ -144,8 +144,8 @@ feature -- Initialization
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
 			end
-			if attached parent_clause as l_parent_clause then
-				l_parent_clause.reset
+			if attached parent_clauses as l_parent_clauses then
+				l_parent_clauses.reset
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
@@ -180,8 +180,8 @@ feature -- Initialization
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
 			end
-			if attached parent_clause as l_parent_clause then
-				l_parent_clause.reset
+			if attached parent_clauses as l_parent_clauses then
+				l_parent_clauses.reset
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
@@ -974,7 +974,7 @@ feature -- Parsing status
 			tuple_constraint_position := 0
 			invariants := Void
 			obsolete_message := Void
-			parent_clause := Void
+			parent_clauses := Void
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			leading_break := Void
@@ -1347,6 +1347,19 @@ feature -- Ancestors
 			end
 		end
 
+	ancestors: ET_BASE_TYPE_LIST
+			-- Proper ancestors
+
+	set_ancestors (some_ancestors: like ancestors)
+			-- Set `ancestors' to `some_ancestors'.
+		require
+			some_ancestors_not_void: some_ancestors /= Void
+		do
+			ancestors := some_ancestors
+		ensure
+			ancestors_set: ancestors = some_ancestors
+		end
+
 	descendants: DS_ARRAYED_LIST [ET_CLASS]
 			-- Proper descendant classes of current class in the surrounding Eiffel system
 			-- (Note: you have to make sure that the ancestors of the classes in the
@@ -1391,52 +1404,73 @@ feature -- Ancestors
 			no_void_descendants: not a_descendants.has_void
 		end
 
-	parent_clause: detachable ET_PARENT_LIST
-			-- Parents explicitly specified in the Parent clause
+	parent_clauses: detachable ET_PARENT_CLAUSE_LIST
+			-- Parents explicitly specified in the Parent clauses
 
-	parents: detachable ET_PARENT_LIST
-			-- Parents of current class, either declared explicitly in `parent_clause'
-			-- or the implicit parent when no parents have been specified
+	set_parent_clauses (a_parents: like parent_clauses)
+			-- Set `parent_clauses' to `a_parents'.
+		do
+			parent_clauses := a_parents
+		ensure
+			parent_clauses_set: parent_clauses = a_parents
+		end
+
+	has_explicit_conforming_parent: BOOLEAN
+			-- Does current class have at least one explicit conforming parent?
+		do
+			Result := attached parent_clauses as l_parent_clauses and then l_parent_clauses.has_conforming_parent
+		ensure
+			definition: Result = (attached parent_clauses as l_parent_clauses and then l_parent_clauses.has_conforming_parent)
+		end
+
+	implicit_parent_clause: detachable ET_PARENT_LIST
+			-- Implicit parent clause when the current class has no explicit conforming parent.
 			--
 			-- Under .NET, the implicit parent in the "SYSTEM_OBJECT" class if the class
 			-- is not the "SYSTEM_OBJECT" class itself.
 			-- Otherwise the implicit parent if "ANY" if the class is not "ANY"
 			-- itself. As a consequence, "ANY" is the only class with no parents.
+		require
+			no_explicit_conforming_parent: not has_explicit_conforming_parent
 		do
-			Result := parent_clause
-			if Result = Void or else Result.is_empty then
-				if is_any_class then
-						-- "ANY" has no implicit parents.
-					Result := Void
-				elseif is_dotnet and then not is_system_object_class then
-					Result := universe.system_object_parents
-				else
-					Result := universe.any_parents
+			if is_any_class then
+					-- "ANY" has no implicit parents.
+				Result := Void
+			elseif is_dotnet and then not is_system_object_class then
+				Result := universe.system_object_parents
+			else
+				Result := universe.any_parents
+			end
+		end
+
+	parents_count: INTEGER
+			-- Number of explicit and implicit parent clauses
+		do
+			if attached parent_clauses as l_parent_clauses then
+				Result := l_parent_clauses.count
+			end
+			if not has_explicit_conforming_parent and then implicit_parent_clause /= Void then
+				Result := Result + 1
+			end
+		ensure
+			parents_count_not_negative: Result >= 0
+		end
+
+	parents (i: INTEGER): ET_PARENT_LIST
+			-- `i'-th parent clause (explicit or implicit)
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= parents_count
+		do
+			if attached parent_clauses as l_parent_clauses and then i <= l_parent_clauses.count then
+				Result := l_parent_clauses.item (i)
+			else
+				check has_implicit_parent: attached implicit_parent_clause as l_implicit_parent_clause then
+					Result := l_implicit_parent_clause
 				end
 			end
 		ensure
-			parents_not_void: not is_any_class implies Result /= Void
-		end
-
-	ancestors: ET_BASE_TYPE_LIST
-			-- Proper ancestors
-
-	set_parent_clause (a_parents: like parent_clause)
-			-- Set `parent_clause' to `a_parents'.
-		do
-			parent_clause := a_parents
-		ensure
-			parent_clause_set: parent_clause = a_parents
-		end
-
-	set_ancestors (some_ancestors: like ancestors)
-			-- Set `ancestors' to `some_ancestors'.
-		require
-			some_ancestors_not_void: some_ancestors /= Void
-		do
-			ancestors := some_ancestors
-		ensure
-			ancestors_set: ancestors = some_ancestors
+			parents_not_void: Result /= Void
 		end
 
 feature -- Ancestor building status

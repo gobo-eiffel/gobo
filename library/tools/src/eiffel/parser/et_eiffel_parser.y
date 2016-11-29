@@ -60,7 +60,7 @@ create
 %token <detachable ET_CHARACTER_CONSTANT> E_CHARACTER
 %token <detachable ET_CURRENT> E_CURRENT
 %token <detachable ET_FREE_OPERATOR> E_FREEOP
-%token <detachable ET_IDENTIFIER> E_IDENTIFIER E_TUPLE
+%token <detachable ET_IDENTIFIER> E_IDENTIFIER E_TUPLE E_NONE
 %token <detachable ET_INTEGER_CONSTANT> E_INTEGER
 %token <detachable ET_KEYWORD_OPERATOR> E_AND E_OR E_XOR E_NOT E_IMPLIES
 %token <detachable ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
@@ -123,7 +123,7 @@ create
 %type <detachable ET_CHOICE_LIST> Choices Choice_list
 %type <detachable ET_CLASS> Class_header Class_to_end Class_declaration
 %type <detachable ET_CLIENT_ITEM> Client Client_comma
-%type <detachable ET_CLIENTS> Clients Client_list
+%type <detachable ET_CLIENTS> Clients Client_list None_client
 %type <detachable ET_COMPOUND> Compound Rescue_opt Do_compound
 %type <detachable ET_COMPOUND> Then_compound Explicit_then_compound
 %type <detachable ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
@@ -145,7 +145,7 @@ create
 %type <detachable ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
 %type <detachable ET_CREATE_EXPRESSION> Create_expression
 %type <detachable ET_CREATOR> Creation_clause Creation_procedure_list
-%type <detachable ET_CREATOR_LIST> Creators Creators_opt Creators_list
+%type <detachable ET_CREATOR_LIST> Creators_opt Creators_list
 %type <detachable ET_DEBUG_INSTRUCTION> Debug_instruction
 %type <detachable ET_ELSEIF_PART> Elseif_part
 %type <detachable ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
@@ -197,9 +197,10 @@ create
 %type <detachable ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
 %type <detachable ET_OBSOLETE> Obsolete_opt
 %type <detachable ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
-%type <detachable ET_PARENT> Parent Parent_end
+%type <detachable ET_PARENT> Parent
+%type <detachable ET_PARENT_CLAUSE_LIST> Inheritance_opt Inheritance_list
 %type <detachable ET_PARENT_ITEM> Parent_semicolon
-%type <detachable ET_PARENT_LIST> Inheritance_opt Inheritance_end Parent_list Parent_list_end
+%type <detachable ET_PARENT_LIST> Inheritance_clause Parent_list
 %type <detachable ET_POSTCONDITIONS> Postcondition_opt
 %type <detachable ET_PRECONDITIONS> Precondition_opt
 %type <detachable ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
@@ -265,65 +266,7 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 			$$ := $1
 			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Creators Convert_clause_opt
-	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
-		{
-			$$ := $1
-			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Convert_clause
-	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
-		{
-			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, $5, $6, $7, $8, $9)
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
-	Features Invariant_clause_opt Indexing_clause_opt E_END Set_providers Class_declaration_opt
-		{
-			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, Void, $5, $6, $7, $8)
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
-	Invariant_clause Indexing_clause_opt E_END Set_providers Class_declaration_opt
-		{
-			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, Void, Void, $5, $6, $7)
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Set_providers
-		{
-			if not current_system.preparse_multiple_mode then
-					-- Raise syntax error: it is not valid to have more
-					-- than one class text in the same file.
-				raise_error
-			end
-		}
-	  Class_to_end
-		{
-			$$ := $1
-			set_class_to_inheritance_end ($$, $3, $4)
-			if attached $8 as l_class then
-				l_class.set_first_indexing ($5)
-			end
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Set_providers Class_declaration_opt
-		{
-			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, Void, Void, Void, $5, $6)
-		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Set_providers
-		{
-			$$ := $1
-			set_class_to_inheritance_end ($$, $3, $4)
-		}
 	;
-
-		-- Note: The constructs above are a workaround to solve
-		-- the following grammar ambiguity:
-		--		class FOO inherit BAR end
-		-- where, through shift/reduce conflicts, has
-		-- been parsed with 'end' being recognized as the
-		-- end of the feature adaptation of BAR instead of
-		-- as the end of the class FOO.
 
 Set_providers: { set_class_providers }
 	;
@@ -885,12 +828,7 @@ Constraint_actual_parameter_list: Constraint_type ']'
 			$$ := $2
 			add_to_constraint_actual_parameter_list ($1, $$)
 		}
-	| E_IDENTIFIER ',' Increment_counter Constraint_actual_parameter_list
-		{
-			$$ := $4
-			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_actual_parameter_comma (new_constraint_named_type (Void, $1, Void), $2), $$)
-		}
-	| E_TUPLE ',' Increment_counter Constraint_actual_parameter_list
+	| Identifier ',' Increment_counter Constraint_actual_parameter_list
 		{
 			$$ := $4
 			add_to_constraint_actual_parameter_list (ast_factory.new_constraint_actual_parameter_comma (new_constraint_named_type (Void, $1, Void), $2), $$)
@@ -944,18 +882,7 @@ Constraint_tuple_labeled_actual_parameter_list: Identifier ':' Constraint_type '
 			$$ := $2
 			add_to_constraint_actual_parameter_list ($1, $2)
 		}
-	| E_IDENTIFIER ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
-		{
-			$$ := $4
-			if $$ /= Void then
-				if not $$.is_empty then
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, $$.first.type), $$)
-				else
-					add_to_constraint_actual_parameter_list (ast_factory.new_constraint_labeled_comma_actual_parameter ($1, $2, Void), $$)
-				end
-			end
-		}
-	| E_TUPLE ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
+	| Identifier ',' Increment_counter Constraint_tuple_labeled_actual_parameter_list
 		{
 			$$ := $4
 			if $$ /= Void then
@@ -998,27 +925,72 @@ Obsolete_opt: -- Empty
 
 Inheritance_opt: -- Empty
 		-- { $$ := Void }
-	| E_INHERIT
+	| Add_counter Inheritance_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Inheritance_list: Inheritance_clause
+		{
+			if attached $1 as l_inheritance_clause then
+				$$ := ast_factory.new_parent_clauses (counter_value + 1)
+				if $$ /= Void then
+					$$.put_first (l_inheritance_clause)
+				end
+			else
+				$$ := ast_factory.new_parent_clauses (counter_value)
+			end
+		}
+	| Inheritance_clause
+		{
+			if $1 /= Void then
+				increment_counter
+			end
+		}
+	  Inheritance_list
+		{
+			$$ := $3
+			if $$ /= Void and attached $1 as l_inheritance_clause then
+				$$.put_first (l_inheritance_clause)
+			end
+		}
+	;
+	
+Inheritance_clause: E_INHERIT
 		{ $$ := ast_factory.new_parents ($1, 0) }
-	| Inherit Parent_list
+	| E_INHERIT None_client
 		{
-			$$ := $2
-			remove_counter
+			$$ := ast_factory.new_parents ($1, 0)
+			if $$ /= Void then
+				$$.set_clients_clause ($2)
+			end
 		}
-	;
-
-Inheritance_end: Inherit Parent_list_end
-		{
-			$$ := $2
-			remove_keyword
-			remove_counter
-		}
-	;
-
-Inherit: E_INHERIT
+	| E_INHERIT
 		{
 			add_keyword ($1)
 			add_counter
+		} 
+	 Parent_list
+		{
+			$$ := $3
+			remove_keyword
+			remove_counter
+		}
+	| E_INHERIT
+		{
+			add_keyword ($1)
+			add_counter
+		} 
+	 None_client Parent_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				$$.set_clients_clause ($3)
+			end
+			remove_keyword
+			remove_counter
 		}
 	;
 
@@ -1067,15 +1039,6 @@ Parent: Class_name Actual_parameters_opt
 		}
 	;
 
-Parent_end: Class_name Actual_parameters_opt E_END
-		{
-			$$ := new_parent ($1, $2, Void, Void, Void, Void, Void, $3)
-			if $$ /= Void then
-				increment_counter
-			end
-		}
-	;
-
 Parent_list: Parent
 		{
 			$$ := ast_factory.new_parents (last_keyword, counter_value)
@@ -1097,13 +1060,6 @@ Parent_list: Parent
 				$$.put_first (l_parent)
 			end
 		}
-	| Parent_end Parent_list
-		{
-			$$ := $2
-			if $$ /= Void and attached $1 as l_parent then
-				$$.put_first (l_parent)
-			end
-		}
 	| Parent_semicolon Parent_list
 		{
 			$$ := $2
@@ -1113,44 +1069,7 @@ Parent_list: Parent
 		}
 	;
 
-Parent_list_end: Parent_end
-		{
-			$$ := ast_factory.new_parents (last_keyword, counter_value)
-			if $$ /= Void and attached $1 as l_parent then
-				$$.put_first (l_parent)
-			end
-		}
-	| Parent Parent_list_end
-		{
-			$$ := $2
-			if $$ /= Void and attached $1 as l_parent then
-				$$.put_first (l_parent)
-			end
-		}
-	| Parent_end Parent_list_end
-		{
-			$$ := $2
-			if $$ /= Void and attached $1 as l_parent then
-				$$.put_first (l_parent)
-			end
-		}
-	| Parent_semicolon Parent_list_end
-		{
-			$$ := $2
-			if $$ /= Void and attached $1 as l_parent then
-				$$.put_first (l_parent)
-			end
-		}
-	;
-
 Parent_semicolon: Parent ';'
-		{
-			$$ := ast_factory.new_parent_semicolon ($1, $2)
-			if $$ /= Void and $1 = Void then
-				increment_counter
-			end
-		}
-	| Parent_end ';'
 		{
 			$$ := ast_factory.new_parent_semicolon ($1, $2)
 			if $$ /= Void and $1 = Void then
@@ -1386,6 +1305,15 @@ Client_comma: Identifier ','
 		}
 	;
 
+None_client: '{' E_NONE '}'
+		{
+			$$ := ast_factory.new_clients ($1, $3, 1)
+			if $$ /= Void and attached new_client ($2) as l_client then
+				$$.put_first (l_client)
+			end
+		}
+	;
+
 ------------------------------------------------------------------------------------
 
 Redefine_clause: E_REDEFINE
@@ -1493,13 +1421,6 @@ Feature_name_comma: Feature_name ','
 Creators_opt: -- Empty
 		-- { $$ := Void }
 	| Add_counter Creators_list
-		{
-			$$ := $2
-			remove_counter
-		}
-	;
-
-Creators: Add_counter Creators_list
 		{
 			$$ := $2
 			remove_counter
@@ -2699,6 +2620,8 @@ Type_no_bang_identifier: Class_name
 
 Class_name: E_IDENTIFIER
 		{ $$ := $1 }
+	| E_NONE
+		{ $$ := $1 }
 	;
 
 Actual_parameters_opt: -- Empty
@@ -2742,6 +2665,11 @@ Actual_parameter_list: Type ']'
 			add_to_actual_parameter_list ($1, $$)
 		}
 	| E_IDENTIFIER ',' Increment_counter Actual_parameter_list
+		{
+			$$ := $4
+			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_named_type (Void, $1, Void), $2), $$)
+		}
+	| E_NONE ',' Increment_counter Actual_parameter_list
 		{
 			$$ := $4
 			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_named_type (Void, $1, Void), $2), $$)
@@ -2807,6 +2735,17 @@ Tuple_labeled_actual_parameter_list: Identifier ':' Type ']'
 			add_to_actual_parameter_list ($1, $2)
 		}
 	| E_IDENTIFIER ',' Increment_counter Tuple_labeled_actual_parameter_list
+		{
+			$$ := $4
+			if $$ /= Void then
+				if not $$.is_empty then
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), $$.first.type), $$)
+				else
+					add_to_actual_parameter_list (ast_factory.new_labeled_comma_actual_parameter (ast_factory.new_label_comma ($1, $2), Void), $$)
+				end
+			end
+		}
+	| E_NONE ',' Increment_counter Tuple_labeled_actual_parameter_list
 		{
 			$$ := $4
 			if $$ /= Void then
@@ -4395,6 +4334,8 @@ Typed_real_constant: '{' Type '}' Untyped_real_constant
 	;
 
 Identifier: E_IDENTIFIER
+		{ $$ := $1 }
+	| E_NONE
 		{ $$ := $1 }
 	| E_TUPLE
 		{ $$ := $1 }

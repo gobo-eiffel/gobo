@@ -645,7 +645,7 @@ feature {NONE} -- Basic operations
 			providers.wipe_out
 		end
 
-	set_class_to_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_LIST;
+	set_class_to_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_CLAUSE_LIST;
 		a_creators: detachable ET_CREATOR_LIST; a_convert_features: detachable ET_CONVERT_FEATURE_LIST;
 		a_feature_clauses: detachable ET_FEATURE_CLAUSE_LIST; an_invariants: detachable ET_INVARIANTS;
 		a_second_indexing: detachable ET_INDEXING_LIST; an_end: detachable ET_KEYWORD)
@@ -653,7 +653,7 @@ feature {NONE} -- Basic operations
 		do
 			if a_class /= Void then
 				a_class.set_obsolete_message (an_obsolete)
-				a_class.set_parent_clause (a_parents)
+				a_class.set_parent_clauses (a_parents)
 				a_class.set_creators (a_creators)
 				a_class.set_convert_features (a_convert_features)
 				a_class.set_feature_clauses (a_feature_clauses)
@@ -663,32 +663,6 @@ feature {NONE} -- Basic operations
 					a_class.set_end_keyword (an_end)
 				end
 			end
-		end
-
-	set_class_to_inheritance_end (a_class: detachable ET_CLASS; an_obsolete: detachable ET_OBSOLETE; a_parents: detachable ET_PARENT_LIST)
-			-- Set various elements to `a_class'.
-			-- Note: This is the case where the following class declaration:
-			--		class FOO inherit BAR end
-			-- produces a grammar ambiguity and where, through shift/reduce
-			-- conflicts, it has been parsed with 'end' being recognized as
-			-- the end of the feature adaptation of BAR instead of as the
-			-- end of the class FOO.
-		local
-			a_parent: ET_PARENT
-			an_end: detachable ET_KEYWORD
-		do
-			if a_class /= Void then
-				if a_parents /= Void and then not a_parents.is_empty then
-					a_parent := a_parents.last.parent
-					an_end := a_parent.end_keyword
-					if an_end /= Void and not a_parent.has_feature_adaptation then
-						a_parent.set_end_keyword (Void)
-					else
-						an_end := Void
-					end
-				end
-			end
-			set_class_to_end (a_class, an_obsolete, a_parents, Void, Void, Void, Void, Void, an_end)
 		end
 
 	set_inline_agent_actual_arguments (a_inline_agent: detachable ET_INLINE_AGENT; a_actual_arguments: detachable ET_AGENT_ARGUMENT_OPERANDS)

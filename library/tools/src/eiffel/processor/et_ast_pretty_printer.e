@@ -127,6 +127,7 @@ inherit
 			process_once_procedure,
 			process_once_procedure_inline_agent,
 			process_parent,
+			process_parent_clause_list,
 			process_parent_list,
 			process_parenthesis_expression,
 			process_parenthesis_instruction,
@@ -1013,7 +1014,7 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				print_new_line
 			end
-			if attached a_class.parent_clause as l_parents then
+			if attached a_class.parent_clauses as l_parents then
 				l_parents.process (Current)
 				process_comments
 				print_new_line
@@ -4297,6 +4298,25 @@ feature {ET_AST_NODE} -- Processing
 			dedent
 		end
 
+	process_parent_clause_list (a_list: ET_PARENT_CLAUSE_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			l_parent_list: ET_PARENT_LIST
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_parent_list := a_list.item (i)
+				l_parent_list.process (Current)
+				if i /= nb then
+					process_comments
+					print_new_line
+					print_new_line
+				end
+				i := i + 1
+			end
+		end
+
 	process_parent_list (a_list: ET_PARENT_LIST)
 			-- Process `a_list'.
 		local
@@ -4305,10 +4325,14 @@ feature {ET_AST_NODE} -- Processing
 			l_parent: ET_PARENT
 		do
 			a_list.inherit_keyword.process (Current)
+			if attached a_list.clients_clause as l_clients then
+				print_space
+				l_clients.process (Current)
+			end
+			process_comments_on_same_line
 			print_new_line
 			print_new_line
 			indent
-			process_comments
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)

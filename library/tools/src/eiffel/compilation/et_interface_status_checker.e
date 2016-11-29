@@ -8,10 +8,10 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008-09-08 13:38:07 +0200 (Mon, 08 Sep 2008) $"
-	revision: "$Revision: 6501 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_INTERFACE_STATUS_CHECKER
 
@@ -111,7 +111,9 @@ feature {NONE} -- Processing
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 			l_reset_needed: BOOLEAN
 			a_parent_class: ET_CLASS
 		do
@@ -126,10 +128,12 @@ feature {NONE} -- Processing
 					-- be reset to the previous processing step.
 				current_class.unset_interface_error
 					-- Process parents first.
-				if attached current_class.parents as a_parents then
-					nb := a_parents.count
-					from i := 1 until i > nb loop
-						a_parent_class := a_parents.parent (i).type.base_class
+				nb1 := current_class.parents_count
+				from i1 := 1 until i1 > nb1 loop
+					l_parent_clause := current_class.parents (i1)
+					nb2 := l_parent_clause.count
+					from i2 := 1 until i2 > nb2 loop
+						a_parent_class := l_parent_clause.parent (i2).type.base_class
 						if not a_parent_class.is_preparsed then
 							l_reset_needed := True
 						else
@@ -139,8 +143,9 @@ feature {NONE} -- Processing
 								l_reset_needed := True
 							end
 						end
-						i := i + 1
+						i2 := i2 + 1
 					end
+					i1 := i1 + 1
 				end
 				if l_reset_needed then
 					set_fatal_error (current_class)
@@ -209,24 +214,31 @@ feature {NONE} -- Formal parameters and parents validity
 			-- parent types of `current_class' has been modified.
 		local
 			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 		do
 			if current_class.interface_checked then
-				if attached current_class.parents as l_parents then
-					nb := l_parents.count
-					from i := 1 until i > nb loop
+				nb := current_class.parents_count
+				from i := 1 until i > nb loop
+					l_parent_clause := current_class.parents (i)
+					nb2 := l_parent_clause.count
+					from j := 1 until j > nb2 loop
 							-- This check is probably too strong in many cases. What we
 							-- really need to check is whether the type of the parent
 							-- is valid as a creation type, in particular when some of
 							-- the corresponding formal generic parameters have a constraint
 							-- with a creation clause. But that would be too long to check.
 							-- We don't need such level of fine-grained checking here.
-						class_type_checker.check_type_validity (l_parents.parent (i).type)
+						class_type_checker.check_type_validity (l_parent_clause.parent (j).type)
 						if class_type_checker.has_fatal_error then
 							set_fatal_error (current_class)
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loops.
+							j := nb2 + 1
+							i := nb + 1
 						end
-						i := i + 1
+						j := j + 1
 					end
+					i := i + 1
 				end
 			end
 		end

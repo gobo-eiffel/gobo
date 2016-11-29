@@ -3168,6 +3168,14 @@ feature -- AST nodes
 			end
 		end
 
+	new_parent_clauses (nb: INTEGER): detachable ET_PARENT_CLAUSE_LIST
+			-- New inherit clauses with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+		end
+		
 	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SYMBOL): detachable ET_PARENT_ITEM
 			-- New parent-semicolon
 		do

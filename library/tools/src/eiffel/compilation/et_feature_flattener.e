@@ -125,7 +125,9 @@ feature {NONE} -- Processing
 		local
 			old_class: ET_CLASS
 			a_parent_class: ET_CLASS
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+			l_parent_clause: ET_PARENT_LIST
 		do
 			old_class := current_class
 			current_class := a_class
@@ -135,10 +137,12 @@ feature {NONE} -- Processing
 				if current_class.ancestors_built and then not current_class.has_ancestors_error then
 					current_class.set_features_flattened
 						-- Process parents first.
-					if attached current_class.parents as a_parents then
-						nb := a_parents.count
-						from i := 1 until i > nb loop
-							a_parent_class := a_parents.parent (i).type.base_class
+					nb1 := current_class.parents_count
+					from i1 := 1 until i1 > nb1 loop
+						l_parent_clause := current_class.parents (i1)
+						nb2 := l_parent_clause.count
+						from i2 := 1 until i2 > nb2 loop
+							a_parent_class := l_parent_clause.parent (i2).type.base_class
 							if not a_parent_class.is_preparsed then
 									-- Internal error: the VTCT error should have already been
 									-- reported in ET_ANCESTOR_BUILDER.
@@ -151,8 +155,9 @@ feature {NONE} -- Processing
 									set_fatal_error (current_class)
 								end
 							end
-							i := i + 1
+							i2 := i2 + 1
 						end
+						i1 := i1 + 1
 					end
 					if not current_class.has_flattening_error then
 						error_handler.report_compilation_status (Current, current_class)
@@ -1460,7 +1465,7 @@ feature {NONE} -- Precursor validity
 feature {NONE} -- Signature resolving
 
 	resolve_identifier_signature (a_feature: ET_FEATURE)
-			-- Resolve identifier types (e.g. "like identifier") in signature 
+			-- Resolve identifier types (e.g. "like identifier") in signature
 			-- of `a_feature' in `current_class'. Do not try to resolve
 			-- qualified anchored types. This is done after the features
 			-- of the corresponding classes have been flattened.
