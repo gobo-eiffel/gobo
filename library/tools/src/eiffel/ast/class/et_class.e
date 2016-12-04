@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := 0
 			ancestors := tokens.empty_ancestors
+			conforming_ancestors := tokens.empty_ancestors
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
@@ -1323,6 +1324,26 @@ feature -- Ancestors
 			end
 		end
 
+	has_conforming_ancestor (a_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' a conforming ancestor of current class?
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
+				Result := False
+			elseif a_class = Current then
+				Result := True
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
+				Result := True
+			else
+				Result := conforming_ancestors.has_class (a_class)
+			end
+		end
+
 	ancestor (a_type: ET_BASE_TYPE): detachable ET_BASE_TYPE
 			-- Ancestor of current class with same base class as `a_type';
 			-- Void if no such ancestor.
@@ -1347,8 +1368,35 @@ feature -- Ancestors
 			end
 		end
 
+	conforming_ancestor (a_type: ET_BASE_TYPE): detachable ET_BASE_TYPE
+			-- Conforming ancestor of current class with same base class as `a_type';
+			-- Void if no such ancestor.
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
+		require
+			a_type_not_void: a_type /= Void
+		local
+			a_class: ET_CLASS
+		do
+			a_class := a_type.base_class
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
+				Result := Void
+			elseif a_class = Current then
+				Result := a_type
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
+				Result := a_type
+			else
+				Result := conforming_ancestors.base_type (a_class)
+			end
+		end
+
 	ancestors: ET_BASE_TYPE_LIST
 			-- Proper ancestors
+
+	conforming_ancestors: ET_BASE_TYPE_LIST
+			-- Proper conforming ancestors
 
 	set_ancestors (some_ancestors: like ancestors)
 			-- Set `ancestors' to `some_ancestors'.
@@ -1358,6 +1406,16 @@ feature -- Ancestors
 			ancestors := some_ancestors
 		ensure
 			ancestors_set: ancestors = some_ancestors
+		end
+
+	set_conforming_ancestors (a_ancestors: like ancestors)
+			-- Set `conforming_ancestors' to `a_ancestors'.
+		require
+			a_ancestors_not_void: a_ancestors /= Void
+		do
+			conforming_ancestors := a_ancestors
+		ensure
+			conforming_ancestors_set: conforming_ancestors = a_ancestors
 		end
 
 	descendants: DS_ARRAYED_LIST [ET_CLASS]
@@ -1397,6 +1455,50 @@ feature -- Ancestors
 		do
 			if a_class /= Current then
 				if ancestors_built and then has_ancestor (a_class) then
+					a_descendants.force_last (Current)
+				end
+			end
+		ensure
+			no_void_descendants: not a_descendants.has_void
+		end
+
+	conforming_descendants: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper conforming descendant classes of current class in the surrounding Eiffel system
+			-- (Note: you have to make sure that the ancestors of the classes in the
+			-- surrounding Eiffel system have correctly been built first in order to
+			-- get the correct answer.)
+		do
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no descendants.
+				create Result.make (0)
+			elseif is_none then
+					-- Class "NONE" has no descendants.
+				create Result.make (0)
+			elseif not is_preparsed then
+					-- Current class is not preparsed, this means that we know nothing
+					-- about it, not even its filename. Therefore it cannot possibly
+					-- have descendant classes.
+				create Result.make (0)
+			else
+				create Result.make (initial_descendants_capacity)
+				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_conforming_descendants (Current, Result))
+			end
+		ensure
+			conforming_descendants_not_void: Result /= Void
+			no_void_conforming_descendant: not Result.has_void
+		end
+
+	add_to_conforming_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
+			-- Add current class to `a_descendants' if it is a proper conforming descendant of `a_class'.
+			-- (Note: you have to make sure that the ancestors of current class have correctly
+			-- been built first in order to get the correct behavior.)
+		require
+			a_class_not_void: a_class /= Void
+			a_descendants_not_void: a_descendants /= Void
+			no_void_descendants: not a_descendants.has_void
+		do
+			if a_class /= Current then
+				if ancestors_built and then has_conforming_ancestor (a_class) then
 					a_descendants.force_last (Current)
 				end
 			end
@@ -1513,6 +1615,7 @@ feature -- Ancestor building status
 			has_ancestors_error := False
 			ancestors_built := False
 			ancestors := tokens.empty_ancestors
+			conforming_ancestors := tokens.empty_ancestors
 		ensure
 			ancestors_not_built: not ancestors_built
 			no_ancestors_error: not has_ancestors_error
@@ -2363,6 +2466,7 @@ invariant
 	index_not_negative: index >= 0
 	group_not_void: group /= Void
 	ancestors_not_void: ancestors /= Void
+	conforming_ancestors_not_void: conforming_ancestors /= Void
 	queries_not_void: queries /= Void
 	-- queries_registered: forall f in queries, f.is_registered
 	procedures_not_void: procedures /= Void

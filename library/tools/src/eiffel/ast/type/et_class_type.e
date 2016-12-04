@@ -636,7 +636,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- course we might catch errors which are not errors
 						-- but just consequences of the error which occurred
 						-- when building the ancestors, but this is OK.
-					if attached other_base_class.ancestor (Current) as l_ancestor then
+					if attached other_base_class.conforming_ancestor (Current) as l_ancestor then
 						l_other_type_mark := other.overridden_type_mark (other_type_mark)
 						if (other.is_expanded and then not l_ancestor.is_expanded) and then (l_other_type_mark = Void or else not l_other_type_mark.is_attached_mark) then
 								-- Make sure to cover the case where "INTEGER" conforms to "attached ANY",

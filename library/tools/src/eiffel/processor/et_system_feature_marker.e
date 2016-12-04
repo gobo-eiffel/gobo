@@ -14,8 +14,8 @@ note
 
 		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
 		  context of the class they have been written in. For each feature
-		  call, mark the redeclarations of this feature in the descendant
-		  classes of the base class of the target as well.
+		  call, mark the redeclarations of this feature in the conforming
+		  descendant classes of the base class of the target as well.
 
 		  Note that assertions are not traversed, and features used as
 		  anchor of anchored types as not marked.
@@ -40,7 +40,7 @@ note
 		      class A feature f do ... end end
 		      class B inherit A end
 		      class C inherit A redefine f end feature f do ... end end
-		  feature C.f will marked even though C is not a descendant of B.
+		  feature C.f will be marked even though C is not a descendant of B.
 		  Also replication might produce false positives because even through
 		  there might be redeclaration, this is not necessarily the version
 		  that has been selected in the inheritance clause.
@@ -62,7 +62,7 @@ note
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
-		  be used as root creation procedure. This algorithm in the most accurate
+		  be used as root creation procedure. This algorithm is the most accurate
 		  of the four, but is slower.
 
 		  Note that assertions and debug instructions are not traversed, and
@@ -147,6 +147,7 @@ feature {NONE} -- Initialization
 		do
 			create used_features.make (500000)
 			create descendant_classes.make
+			descendant_classes.set_non_conforming_excluded (True)
 			descendant_classes.set_deferred_excluded (True)
 			descendant_classes.set_none_excluded (True)
 			create precursor_features.make
@@ -341,7 +342,7 @@ feature -- Processing
 			-- Does `a_caller_feature' (when viewed from the class it has been
 			-- written in -- its 'implementation_class') recursively depend on
 			-- `a_callee_feature' (either viewed from the class it has been
-			-- written in or one of its descendants that does not redefine it)?
+			-- written in or one of its conforming descendants that does not redefine it)?
 			--
 			-- A feature recursively depends on another feature if the latter might
 			-- be executed if the former is itself executed.
@@ -406,8 +407,8 @@ feature -- Processing
 feature {NONE} -- Event handling
 
 	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
-			-- Report a call to `a_feature' where its versions in descendants of
-			-- `a_target_class' should be taken into account.
+			-- Report a call to `a_feature' where its versions in conforming
+			-- descendants of `a_target_class' should be taken into account.
 		local
 			l_features: DS_HASH_SET [ET_FEATURE]
 			l_feature_impl: ET_FEATURE
@@ -446,7 +447,7 @@ feature {NONE} -- Event handling
 
 	report_descendant_feature_call (a_feature: ET_FEATURE; a_target_class, a_descendant: ET_CLASS)
 			-- Mark as used the version of this feature in `a_descendant'
-			-- which is supposed to be a descendant class of `a_target_class'.
+			-- which is supposed to be a conforming descendant class of `a_target_class'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_class_not_void: a_target_class /= Void
@@ -462,7 +463,7 @@ feature {NONE} -- Event handling
 			end
 			if l_other_feature = Void then
 				if a_descendant.features_flattened_successfully then
-						-- Internal error: `a_descendant' is a descendant of
+						-- Internal error: `a_descendant' is a conforming descendant of
 						-- `a_target_class', so it should have a version of `a_feature'.
 					set_fatal_error
 					if internal_error_enabled or not current_class.has_implementation_error then
@@ -502,7 +503,7 @@ feature {NONE} -- Access
 			-- have not been traversed yet
 
 	descendant_classes: ET_DESCENDANT_CLASSES
-			-- Descendants of classes, indexed by the given class
+			-- Conforming descendants of classes, indexed by the given class
 
 	precursor_features: ET_PRECURSOR_FEATURE_MARKER
 			-- Features marked as being the precursor of at least one other feature

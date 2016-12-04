@@ -14,8 +14,8 @@ note
 
 		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
 		  context of the class they have been written in. For each feature
-		  call, mark the redeclarations of this feature in the descendant
-		  classes of the base class of the target as well.
+		  call, mark the redeclarations of this feature in the conforming
+		  descendant classes of the base class of the target as well.
 
 		  Note that assertions are not traversed, and features used as
 		  anchor of anchored types as not marked.
@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #4 $"
@@ -557,7 +557,7 @@ feature {NONE} -- Event handling
 
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression `an_expression' has been processed,
-			-- where `a_query' is the query being called anf `a_type' is the type
+			-- where `a_query' is the query being called and `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
 		do
 			report_feature_called (a_query)
@@ -565,7 +565,7 @@ feature {NONE} -- Event handling
 
 	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction `an_instruction' has been processed,
-			-- where `a_procedure' is the procedure being called anf `a_type' is the type
+			-- where `a_procedure' is the procedure being called and `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
 		do
 			report_feature_called (a_procedure)

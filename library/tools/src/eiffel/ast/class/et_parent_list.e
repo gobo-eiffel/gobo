@@ -57,8 +57,17 @@ feature -- Initialization
 
 feature -- Status report
 
+	is_conforming: BOOLEAN
+			-- Is current parent list a conforming parent clause?
+		do
+			Result := clients_clause = Void
+		ensure
+			has_no_clients_clause: Result implies clients_clause = Void
+		end
+
 	has_conforming_parent: BOOLEAN
-			-- Does current parent list contain at least one conforming parent?
+			-- Is current parent list a conforming parent clause
+			-- containing at least one parent?
 		do
 			Result := clients_clause = Void and count > 0
 		ensure

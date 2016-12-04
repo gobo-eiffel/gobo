@@ -14,8 +14,8 @@ note
 
 		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
 		  context of the class they have been written in. For each feature
-		  call, mark the redeclarations of this feature in the descendant
-		  classes of the base class of the target as well.
+		  call, mark the redeclarations of this feature in the conforming
+		  descendant classes of the base class of the target as well.
 
 		  Note that assertions are not traversed, and features used as
 		  anchor of anchored types as not marked.
@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

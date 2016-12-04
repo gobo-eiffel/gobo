@@ -123,7 +123,7 @@ create
 %type <detachable ET_CHOICE_LIST> Choices Choice_list
 %type <detachable ET_CLASS> Class_header Class_to_end Class_declaration
 %type <detachable ET_CLIENT_ITEM> Client Client_comma
-%type <detachable ET_CLIENTS> Clients Client_list None_client
+%type <detachable ET_CLIENTS> Clients Client_list None_client None_client_opt
 %type <detachable ET_COMPOUND> Compound Rescue_opt Do_compound
 %type <detachable ET_COMPOUND> Then_compound Explicit_then_compound
 %type <detachable ET_COMPOUND> Else_compound Explicit_else_compound Rescue_compound
@@ -221,7 +221,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 82
+%expect 81
 %start Class_declarations
 
 %%
@@ -958,36 +958,23 @@ Inheritance_list: Inheritance_clause
 		}
 	;
 	
-Inheritance_clause: E_INHERIT
-		{ $$ := ast_factory.new_parents ($1, 0) }
-	| E_INHERIT None_client
+Inheritance_clause: E_INHERIT None_client_opt
 		{
 			$$ := ast_factory.new_parents ($1, 0)
 			if $$ /= Void then
 				$$.set_clients_clause ($2)
 			end
 		}
-	| E_INHERIT
+	| E_INHERIT None_client_opt
 		{
 			add_keyword ($1)
 			add_counter
 		} 
 	 Parent_list
 		{
-			$$ := $3
-			remove_keyword
-			remove_counter
-		}
-	| E_INHERIT
-		{
-			add_keyword ($1)
-			add_counter
-		} 
-	 None_client Parent_list
-		{
 			$$ := $4
 			if $$ /= Void then
-				$$.set_clients_clause ($3)
+				$$.set_clients_clause ($2)
 			end
 			remove_keyword
 			remove_counter
@@ -1305,6 +1292,13 @@ Client_comma: Identifier ','
 		}
 	;
 
+
+None_client_opt: -- Empty
+		-- { $$ := Void }
+	| None_client
+		{ $$ := $1 }
+	;
+	
 None_client: '{' E_NONE '}'
 		{
 			$$ := ast_factory.new_clients ($1, $3, 1)

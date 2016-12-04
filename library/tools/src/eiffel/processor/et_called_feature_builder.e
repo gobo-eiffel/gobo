@@ -6,7 +6,7 @@ note
 		"Builders of lists of features called by a given feature"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -101,8 +101,8 @@ feature -- Processing
 feature {NONE} -- Event handling
 
 	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
-			-- Report a call to `a_feature' where its versions in descendants of
-			-- `a_target_class' should be taken into account.
+			-- Report a call to `a_feature' where its versions in conforming
+			-- descendants of `a_target_class' should be taken into account.
 		do
 			called_features.add_polymorphic_feature (a_feature, a_target_class)
 		end

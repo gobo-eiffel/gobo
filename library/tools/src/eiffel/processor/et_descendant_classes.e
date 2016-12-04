@@ -5,7 +5,7 @@ note
 		"Lists of descendants of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -50,6 +50,9 @@ feature -- Initialization
 
 feature -- Status report
 
+	non_conforming_excluded: BOOLEAN
+			-- Should only conforming descendants be included in the list of descendants?
+
 	deferred_excluded: BOOLEAN
 			-- Should deferred classes not be included in the list of descendants?
 
@@ -57,6 +60,18 @@ feature -- Status report
 			-- Should class "NONE" not be included in the list of descendants?
 
 feature -- Status setting
+
+	set_non_conforming_excluded (b: BOOLEAN)
+			-- Set `non_conforming_excluded' to `b'.
+			--
+			-- Note that `reset' might need to be called for this to take effect
+			-- on lists of descendants which have already been computed and stored
+			-- in the cache.
+		do
+			non_conforming_excluded := b
+		ensure
+			non_conforming_excluded_set: non_conforming_excluded = b
+		end
 
 	set_deferred_excluded (b: BOOLEAN)
 			-- Set `deferred_excluded' to `b'.
@@ -127,7 +142,9 @@ feature {NONE} -- Implementation
 			a_descendants_not_void: a_descendants /= Void
 			no_void_descendants: not a_descendants.has_void
 		do
-			if not a_other_class.is_marked then
+			if a_class = a_other_class then
+				-- We are only interested in proper descendants.
+			elseif not a_other_class.is_marked then
 				-- Ignore this class: not in the compiled system.
 			elseif none_excluded and then a_other_class.is_none then
 				-- We are not interested in class "NONE".
@@ -136,11 +153,24 @@ feature {NONE} -- Implementation
 			elseif not a_other_class.ancestors_built_successfully then
 				-- We cannot determine whether `a_class' is an
 				-- ancestor of `a_other_class' in that case.
-			elseif a_other_class.has_ancestor (a_class) then
+			elseif is_descendant (a_other_class, a_class) then
 				a_descendants.force_last (a_other_class)
 			end
 		ensure
 			no_void_descendants: not a_descendants.has_void
+		end
+
+	is_descendant (a_class, a_other_class: ET_CLASS): BOOLEAN
+			-- Is `a_class' a descendant of `a_other_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_other_class_not_void: a_other_class /= Void
+		do
+			if non_conforming_excluded then
+				Result := a_class.has_conforming_ancestor (a_other_class)
+			else
+				Result := a_class.has_ancestor (a_other_class)
+			end
 		end
 
 	add_to_ancestors (a_class: ET_CLASS)
@@ -158,7 +188,7 @@ feature {NONE} -- Implementation
 				-- We cannot determine whether `a_class' is an
 				-- ancestor of `a_other_class' in that case.
 			else
-				a_class.ancestors.do_all (agent add_to_ancestor (a_class, ?))
+				ancestors (a_class).do_all (agent add_to_ancestor (a_class, ?))
 			end
 		end
 
@@ -180,6 +210,20 @@ feature {NONE} -- Implementation
 				descendants_cache.force_last_new (l_descendants, l_ancestor_class)
 			end
 			l_descendants.force_last (a_class)
+		end
+
+	ancestors (a_class: ET_CLASS): ET_BASE_TYPE_LIST
+			-- Proper ancestors of `a_class'
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if non_conforming_excluded then
+				Result := a_class.conforming_ancestors
+			else
+				Result := a_class.ancestors
+			end
+		ensure
+			ancestors_not_void: Result /= Void
 		end
 
 	add_no_descendants (a_class: ET_CLASS)

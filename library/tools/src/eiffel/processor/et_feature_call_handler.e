@@ -159,7 +159,7 @@ feature -- Processing
 
 	process_feature (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
 			-- Traverse `a_feature' in `a_current_type' and report when feature calls
-			-- are found using 'report_*' features that can be redefined in descendants.
+			-- are found using 'report_*'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
@@ -268,8 +268,8 @@ feature -- Status setting
 feature {NONE} -- Event handling
 
 	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS)
-			-- Report a call to `a_feature' where its versions in descendants of
-			-- `a_target_class' should be taken into account.
+			-- Report a call to `a_feature' where its versions in conforming
+			-- descendants of `a_target_class' should be taken into account.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_class_not_void: a_target_class /= Void
@@ -516,7 +516,7 @@ feature {NONE} -- Event handling
 
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression `an_expression' has been processed,
-			-- where `a_query' is the query being called anf `a_type' is the type
+			-- where `a_query' is the query being called and `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
 		require
 			no_error: not has_fatal_error
@@ -532,7 +532,7 @@ feature {NONE} -- Event handling
 
 	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE)
 			-- Report that a static call instruction `an_instruction' has been processed,
-			-- where `a_procedure' is the procedure being called anf `a_type' is the type
+			-- where `a_procedure' is the procedure being called and `a_type' is the type
 			-- as declared in the class where `an_expression' was written.
 		require
 			no_error: not has_fatal_error

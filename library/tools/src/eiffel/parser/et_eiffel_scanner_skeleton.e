@@ -1604,6 +1604,14 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'o', 'O' then
 						inspect text_item (3)
+						when 'n', 'N' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_NONE
+								last_detachable_et_identifier_value := ast_factory.new_identifier (Current)
+							else
+								-- Do nothing.
+							end
 						when 't', 'T' then
 							inspect text_item (4)
 							when 'e', 'E' then
@@ -1893,24 +1901,6 @@ feature {NONE} -- Processing
 								else
 									-- Do nothing.
 								end
-							else
-								-- Do nothing.
-							end
-						else
-							-- Do nothing.
-						end
-					else
-						-- Do nothing.
-					end
-				when 'n', 'N' then
-					inspect text_item (2)
-					when 'o', 'O' then
-						inspect text_item (3)
-						when 'n', 'N' then
-							inspect text_item (4)
-							when 'e', 'E' then
-								last_token := E_NONE
-								last_detachable_et_identifier_value := ast_factory.new_identifier (Current)
 							else
 								-- Do nothing.
 							end

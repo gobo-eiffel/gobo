@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			precursor {ET_CLASS_PROCESSOR}
 			create class_sorter.make_default
 			create ancestors.make_map (10)
+			create conforming_ancestors.make_map (10)
 			create parent_checker.make
 			create formal_parameter_checker.make
 			create parent_context.make_with_capacity (current_class, 1)
@@ -124,11 +125,7 @@ feature {NONE} -- Processing
 							else
 								current_class.set_ancestors_built
 								error_handler.report_compilation_status (Current, current_class)
-								nb2 := current_class.parents_count
-								from i2 := 1 until i2 > nb2 loop
-									set_ancestors (current_class.parents (i2))
-									i2 := i2 + 1
-								end
+								set_ancestors
 								if not current_class.is_dotnet then
 										-- No need to check validity of .NET classes.
 									check_formal_parameters_validity
@@ -143,7 +140,7 @@ feature {NONE} -- Processing
 							class_sorter.wipe_out
 								-- Make sure that all classes involved in the
 								-- cycle and their descendants are marked
-								-- with `has_inheritance_error'.
+								-- with `has_ancestors_error'.
 							current_class := a_class
 							set_fatal_error (current_class)
 							nb2 := current_class.parents_count
@@ -294,89 +291,108 @@ feature {NONE} -- Ancestors
 	ancestors: DS_HASH_TABLE [ET_BASE_TYPE, ET_CLASS]
 			-- Ancestors of `current_class'
 
-	set_ancestors (a_parents: ET_PARENT_LIST)
-			-- Set the ancestors of `current_class' with `a_parents'
-			-- and their ancestors. `a_parents' are the parents of
-			-- `current_class'.
-		require
-			a_parents_not_void: a_parents /= Void
+	conforming_ancestors: DS_HASH_TABLE [ET_BASE_TYPE, ET_CLASS]
+			-- Conforming ancestors of `current_class'
+
+	set_ancestors
+			-- Set the ancestors of `current_class' with its parents
+			-- and their ancestors.
 		local
-			a_class: ET_CLASS
+			l_parent_clause: ET_PARENT_LIST
+			a_parent_class: ET_CLASS
 			a_type: ET_BASE_TYPE
 			a_parent: ET_PARENT
-			i, nb: INTEGER
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
 			has_error: BOOLEAN
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_BASE_TYPE, ET_CLASS]
-			anc: ET_BASE_TYPE_LIST
+			l_ancestors, l_conforming_ancestors: ET_BASE_TYPE_LIST
 			system_object_parents: ET_PARENT_LIST
 			any_parents: ET_PARENT_LIST
+			l_is_conforming: BOOLEAN
 		do
 			any_parents := current_system.any_parents
 			system_object_parents := current_system.system_object_parents
-			nb := a_parents.count
-			from i := 1 until i > nb loop
-				a_parent := a_parents.parent (i)
-				a_type := a_parent.type
-				a_class := a_type.base_class
-				if a_class.is_none then
-					set_fatal_error (current_class)
-					error_handler.report_vhpr1b_error (current_class, a_type)
-					has_error := True
-				elseif not a_class.is_preparsed then
-					set_fatal_error (current_class)
-					if a_parents = any_parents then
-							-- Error: class "ANY" not in universe (VHAY, ETL2 p.88).
-						error_handler.report_vhay0a_error (current_class)
-					elseif a_parents = system_object_parents then
-							-- Error: class "SYSTEM_OBJECT" not in universe (GVHSO-1, not in ETL2).
-						error_handler.report_gvhso1a_error (current_class)
-					else
-							-- Error: class not in universe (VTCT, ETL2 p.199).
-						error_handler.report_vtct0a_error (current_class, a_type)
-					end
-					has_error := True
-				elseif a_class.has_ancestors_error then
-					set_fatal_error (current_class)
-					if a_parents = system_object_parents and not a_class.is_dotnet then
-							-- Error: class "SYSTEM_OBJECT" not a .NET class (GVHSO-2, not in ETL2).
-						error_handler.report_gvhso2a_error (current_class)
-					end
-					has_error := True
-				elseif not has_error then
-					add_parent_to_ancestors (a_parent)
-					if current_class.has_ancestors_error then
+			nb1 := current_class.parents_count
+			from i1 := 1 until i1 > nb1 loop
+				l_parent_clause := current_class.parents (i1)
+				l_is_conforming := l_parent_clause.is_conforming
+				nb2 := l_parent_clause.count
+				from i2 := 1 until i2 > nb2 loop
+					a_parent := l_parent_clause.parent (i2)
+					a_type := a_parent.type
+					a_parent_class := a_type.base_class
+					if a_parent_class.is_none then
+						set_fatal_error (current_class)
+						error_handler.report_vhpr1b_error (current_class, a_type)
 						has_error := True
+					elseif not a_parent_class.is_preparsed then
+						set_fatal_error (current_class)
+						if l_parent_clause = any_parents then
+								-- Error: class "ANY" not in universe (VHAY, ETL2 p.88).
+							error_handler.report_vhay0a_error (current_class)
+						elseif l_parent_clause = system_object_parents then
+								-- Error: class "SYSTEM_OBJECT" not in universe (GVHSO-1, not in ETL2).
+							error_handler.report_gvhso1a_error (current_class)
+						else
+								-- Error: class not in universe (VTCT, ETL2 p.199).
+							error_handler.report_vtct0a_error (current_class, a_type)
+						end
+						has_error := True
+					elseif a_parent_class.has_ancestors_error then
+						set_fatal_error (current_class)
+						if l_parent_clause = system_object_parents and not a_parent_class.is_dotnet then
+								-- Error: class "SYSTEM_OBJECT" not a .NET class (GVHSO-2, not in ETL2).
+							error_handler.report_gvhso2a_error (current_class)
+						end
+						has_error := True
+					elseif not has_error then
+						add_parent_to_ancestors (a_parent, l_is_conforming)
+						if current_class.has_ancestors_error then
+							has_error := True
+						end
 					end
+					i2 := i2 + 1
 				end
-				i := i + 1
+				i1 := i1 + 1
 			end
-			create anc.make_with_capacity (ancestors.count)
-			a_cursor := ancestors.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				anc.put_last (a_cursor.item)
-				a_cursor.forth
+			create l_ancestors.make_with_capacity (ancestors.count)
+			from ancestors.start until ancestors.after loop
+				l_ancestors.put_last (ancestors.item_for_iteration)
+				ancestors.forth
+			end
+			if conforming_ancestors.count = ancestors.count then
+				l_conforming_ancestors := l_ancestors
+			else
+				create l_conforming_ancestors.make_with_capacity (conforming_ancestors.count)
+				from conforming_ancestors.start until conforming_ancestors.after loop
+					l_conforming_ancestors.put_last (conforming_ancestors.item_for_iteration)
+					conforming_ancestors.forth
+				end
 			end
 			ancestors.wipe_out
-			current_class.set_ancestors (anc)
+			conforming_ancestors.wipe_out
+			current_class.set_ancestors (l_ancestors)
+			current_class.set_conforming_ancestors (l_conforming_ancestors)
 		end
 
-	add_parent_to_ancestors (a_parent: ET_PARENT)
+	add_parent_to_ancestors (a_parent: ET_PARENT; a_is_conforming: BOOLEAN)
 			-- Add `a_parent' and its ancestors to `ancestors'.
 			-- `a_parent' is a parent of `current_class'.
+			-- `a_is_conforming' means that `a_parent' is a conforming parent.
 		require
 			a_parent_not_void: a_parent /= Void
 		local
-			a_class: ET_CLASS
+			a_class, a_parent_class: ET_CLASS
 			a_parameters: detachable ET_ACTUAL_PARAMETERS
 			a_parent_type: ET_BASE_TYPE
-			a_type, l_ancestor_type: ET_BASE_TYPE
+			a_type, l_ancestor_type, l_parent_ancestor_type: ET_BASE_TYPE
 			i, nb: INTEGER
 			anc: ET_BASE_TYPE_LIST
 		do
 				-- Add current parent to `ancestors'.
 			a_parent_type := a_parent.type
-			a_class := a_parent_type.base_class
-			ancestors.search (a_class)
+			a_parent_class := a_parent_type.base_class
+			ancestors.search (a_parent_class)
 			if ancestors.found then
 				l_ancestor_type := ancestors.found_item
 					-- The context in which the current parent appears is
@@ -387,30 +403,28 @@ feature {NONE} -- Ancestors
 					error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_parent_type)
 				end
 			else
-				a_parameters := a_parent.type.actual_parameters
-				ancestors.force_new (a_parent_type, a_class)
+				l_ancestor_type := a_parent_type
+				ancestors.force_new (l_ancestor_type, a_parent_class)
 					-- Add proper ancestors of current parent
-					-- to the ancestors of `an_heir'.
+					-- to the ancestors of `current_class'.
+				a_parameters := a_parent.type.actual_parameters
 				parent_context.set (a_parent_type, current_class)
-				anc := a_class.ancestors
+				anc := a_parent_class.ancestors
 				nb := anc.count
 				from i := 1 until i > nb loop
 					a_type := anc.item (i)
 					a_class := a_type.base_class
 					ancestors.search (a_class)
 					if ancestors.found then
-						l_ancestor_type := ancestors.found_item
-						if not l_ancestor_type.same_syntactical_type (a_type, parent_context, current_class) then
+						l_parent_ancestor_type := ancestors.found_item
+						if not l_parent_ancestor_type.same_syntactical_type (a_type, parent_context, current_class) then
 								-- Compute actual generic derivation of `a_type' in
 								-- `current_class' if needed before reporting the error.
 							if a_parameters /= Void then
 								a_type := a_type.resolved_formal_parameters (a_parameters)
 							end
 							set_fatal_error (current_class)
-							error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_type)
-							i := nb + 1 -- Jump out of the loop.
-						else
-							i := i + 1
+							error_handler.report_gvagp0a_error (current_class, l_parent_ancestor_type, a_type)
 						end
 					else
 							-- Compute actual generic derivation of `a_type' in
@@ -420,6 +434,31 @@ feature {NONE} -- Ancestors
 							a_type := a_type.resolved_formal_parameters (a_parameters)
 						end
 						ancestors.force_new (a_type, a_class)
+					end
+					i := i + 1
+				end
+			end
+			if a_is_conforming then
+				conforming_ancestors.search (a_parent_class)
+				if not conforming_ancestors.found then
+					conforming_ancestors.force_new (l_ancestor_type, a_parent_class)
+					anc := a_parent_class.conforming_ancestors
+					nb := anc.count
+					from i := 1 until i > nb loop
+						a_type := anc.item (i)
+						a_class := a_type.base_class
+						conforming_ancestors.search (a_class)
+						if not conforming_ancestors.found then
+							ancestors.search (a_class)
+							if not ancestors.found then
+									-- Internal error: a conforming ancestor is an ancestor.
+								set_fatal_error (current_class)
+								error_handler.report_giaaa_error
+							else
+								l_parent_ancestor_type := ancestors.found_item
+								conforming_ancestors.force_new (l_parent_ancestor_type, a_class)
+							end
+						end
 						i := i + 1
 					end
 				end
@@ -432,7 +471,7 @@ feature {NONE} -- Ancestors
 feature {NONE} -- Error handling
 
 	set_parents_inheritance_error (a_parents: ET_PARENT_LIST)
-			-- Set `has_inheritance_error' to true to `a_parents'
+			-- Set `has_ancestors_error' to true to `a_parents'
 			-- (and recursively to their parents) whose ancestors
 			-- has not been built yet.
 		require
@@ -492,6 +531,8 @@ invariant
 	-- classes_in_sorter_preparsed: forall c in `class_sorter', c.is_preparsed
 	ancestors_not_void: ancestors /= Void
 	no_void_ancestor: not ancestors.has_void_item
+	conforming_ancestors_not_void: conforming_ancestors /= Void
+	no_void_conforming_ancestor: not conforming_ancestors.has_void_item
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 	parent_context_not_void: parent_context /= Void

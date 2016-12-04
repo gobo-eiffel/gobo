@@ -334,7 +334,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
-			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(Removing Unused Code)|(\s*\(version .*\))|(Version .*)|(\s*1 file\(s\) copied\.)"
+			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation.*\.\.\.)|(Removing Dead Code)|(Removing Unused Code)|(\s*\(version .*\))|(Version .*)|(\s*1 file\(s\) copied\.)"
 			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)

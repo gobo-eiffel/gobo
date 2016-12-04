@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			hash_code := a_class.hash_code
 			queries := empty_features
 			procedures := empty_features
-			create conforming_ancestors.make (a_class.ancestors.count)
+			create conforming_ancestors.make (a_class.conforming_ancestors.count)
 			create conforming_descendants.make_empty (Current)
 			create alive_conforming_descendants.make_empty (Current)
 			conforming_descendants.put_type (Current)
