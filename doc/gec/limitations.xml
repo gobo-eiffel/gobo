@@ -6,7 +6,7 @@
 		"Limitations"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>18 March 2006</date>
+	<date>4 December 2016</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -33,19 +33,11 @@ The following Eiffel constructs have not been implemented yet:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term>Assertions</term>
-		<listitem></listitem>
+		<term>Assertions: not monitored at runtime</term>
+		<listitem>f</listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Exceptions</term>
-		<listitem></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>Garbage Collection</term>
-		<listitem></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term><featurename>deep_*</featurename> features in <classname>ANY</classname></term>
+		<term>Garbage Collection: no internal GC, the Boehm GC can be plugged instead</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -53,11 +45,7 @@ The following Eiffel constructs have not been implemented yet:
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>User-defined expanded classes</term>
-		<listitem></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>BIT types</term>
+		<term>User-defined expanded classes: semantics of attachement and comparison not fully implemented</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -65,15 +53,11 @@ The following Eiffel constructs have not been implemented yet:
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Class <classname>INTERNAL</classname></term>
+		<term>Non-conforming inheritance: feature replication still uses the pre-ECMA semantics of 'select'</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Options and external declarations in the Ace files</term>
-		<listitem></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>Multithreading</term>
+		<term>Multithreading: partially implemented</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
