@@ -252,6 +252,7 @@ create
 	make_vuex1a,
 	make_vuex2a,
 	make_vuex2b,
+	make_vuno3a,
 	make_vuot1a,
 	make_vuot1b,
 	make_vuot1c,
@@ -10908,6 +10909,55 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of target of the call
 		end
 
+	make_vuno3a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
+			-- Create a new VUNO-3 error: `a_feature' of class `a_target' is not valid for
+			-- static call when called from `a_class', one of the descendants
+			-- of `a_class_impl' (possibly itself) where the static
+			-- call `a_name' appears.
+			--
+			-- ECMA: 367-2: p.121
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vuno3a_template_code)
+			etl_code := vuno3_etl_code
+			default_template := default_message_template (vuno3a_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_target.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call
+		end
+
 	make_vuot1a (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE)
 			-- Create a new VUOT-1 error: The local of `a_object_test' has the same
 			-- name as `a_feature' in `a_class'.
@@ -13925,6 +13975,7 @@ feature {NONE} -- Implementation
 	vuex1a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING = "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING = "feature `$8' of class $9 is not exported to class $5."
+	vuno3a_default_template: STRING = "feature `$8' of class $9 is not valid for static call."
 	vuot1a_default_template: STRING = "object-test local name '$6' is also the final name of a feature."
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
@@ -14104,6 +14155,7 @@ feature {NONE} -- Implementation
 	vuar4_etl_code: STRING = "VUAR-4"
 	vuex1_etl_code: STRING = "VUEX-1"
 	vuex2_etl_code: STRING = "VUEX-2"
+	vuno3_etl_code: STRING = "VUNO-3"
 	vuot1_etl_code: STRING = "VUOT-1"
 	vuot3_etl_code: STRING = "VUOT-3"
 	vuot4_etl_code: STRING = "VUOT-4"
@@ -14387,6 +14439,7 @@ feature {NONE} -- Implementation
 	vuex1a_template_code: STRING = "vuex1a"
 	vuex2a_template_code: STRING = "vuex2a"
 	vuex2b_template_code: STRING = "vuex2b"
+	vuno3a_template_code: STRING = "vuno3a"
 	vuot1a_template_code: STRING = "vuot1a"
 	vuot1b_template_code: STRING = "vuot1b"
 	vuot1c_template_code: STRING = "vuot1c"

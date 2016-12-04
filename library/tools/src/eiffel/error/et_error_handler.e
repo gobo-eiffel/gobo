@@ -5767,6 +5767,29 @@ feature -- Validity errors
 			end
 		end
 
+	report_vuno3a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
+			-- Report VUNO-3 error: `a_feature' of class `a_target' is not valid for
+			-- static call when called from `a_class', one of the descendants
+			-- of `a_class_impl' (possibly itself) where the static
+			-- call `a_name' appears.
+			--
+			-- ECMA: 367-2: p.121
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuno3_error (a_class) then
+				create an_error.make_vuno3a (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE)
 			-- Report VUOT-1 error: The local of `a_object_test' has the same
 			-- name as `a_feature' in `a_class'.
@@ -8137,6 +8160,16 @@ feature -- Validity error status
 
 	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuno3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUNO-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

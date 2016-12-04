@@ -127,6 +127,9 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
@@ -4695,6 +4698,9 @@ feature {NONE} -- Instruction validity
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
 			check_actual_arguments_validity (a_call, a_context, a_procedure, a_class)
+			l_had_error := has_fatal_error or l_had_error
+				-- Check the validity `a_procedure' as a feature of a static call.
+			check_static_feature_validity (a_call, a_procedure, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
 				report_static_call_instruction (a_call, l_type, a_procedure)
@@ -9358,13 +9364,76 @@ feature {NONE} -- Expression validity
 			l_had_error := has_fatal_error or l_had_error
 				-- Check the validity of the arguments of the call.
 			check_actual_arguments_validity (a_call, a_context, a_query, a_class)
+			l_had_error := has_fatal_error or l_had_error
+				-- Check the validity `a_query' as a feature of a static call.
+			check_static_feature_validity (a_call, a_query, a_class)
 			reset_fatal_error (has_fatal_error or l_had_error)
 			if not has_fatal_error then
--- TODO: check that `a_query' is a constant attribute or an external function.
 -- TODO: like argument.
 				l_result_type := a_query.type
 				a_context.force_last (l_result_type)
 				report_static_call_expression (a_call, l_type, a_query)
+			end
+		end
+
+	check_static_feature_validity (a_call: ET_STATIC_FEATURE_CALL; a_feature: ET_FEATURE; a_class: ET_CLASS)
+			-- Check validity of `a_feature' as the feature of static call `a_call'.
+			-- `a_class' is the base class of the static type part of the call.
+			--
+			-- To be valid, the feature needs to be a constant attribute, a unique attribute,
+			-- an external routine with no assertions other than a built-in non-static routine,
+			-- or a static .NET feature.
+			-- For the assertions in external routines, ECMA says that it's possible to have
+			-- assertions provided that they do not involve "Current" or unqualified calls
+			-- (see ECMA VUNO-3). But ISE is more strict and does not accept any assertions
+			-- apart from empty ones or those containing only the expression "True".
+			--
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_call_not_void: a_call /= Void
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_external_language: STRING
+			l_assertions: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
+			l_is_valid_feature: BOOLEAN
+		do
+			has_fatal_error := False
+			if attached {ET_CONSTANT_ATTRIBUTE} a_feature then
+				l_is_valid_feature := True
+			elseif attached {ET_UNIQUE_ATTRIBUTE} a_feature then
+				l_is_valid_feature := True
+			elseif attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_feature then
+				l_is_valid_feature := True
+				if l_external_feature.is_builtin then
+					l_external_language := l_external_feature.language.manifest_string.value
+					l_is_valid_feature := STRING_.same_case_insensitive (l_external_language, tokens.builtin_static_marker) or STRING_.same_case_insensitive (l_external_language, tokens.static_builtin_marker)
+				end
+				if l_is_valid_feature then
+					if attached l_external_feature.preconditions as l_preconditions and then not l_preconditions.are_all_true then
+						l_is_valid_feature := False
+					elseif attached l_external_feature.postconditions as l_postconditions and then not l_postconditions.are_all_true then
+						l_is_valid_feature := False
+					else
+						create l_assertions.make_map (30)
+						add_precursors_with_preconditions_recursive (a_feature, l_assertions)
+						if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
+							l_is_valid_feature := False
+						else
+							l_assertions.wipe_out
+							add_precursors_with_postconditions_recursive (a_feature, l_assertions)
+							if not l_assertions.for_all (agent {ET_ASSERTIONS}.are_all_true) then
+								l_is_valid_feature := False
+							end
+						end
+					end
+				end
+			elseif attached {ET_DOTNET_FEATURE} a_feature as l_dotnet_feature and then l_dotnet_feature.is_static then
+				l_is_valid_feature := True
+			end
+			if not l_is_valid_feature then
+				set_fatal_error
+				error_handler.report_vuno3a_error (current_class, current_class_impl, a_call.name, a_feature, a_class)
 			end
 		end
 
@@ -14511,7 +14580,7 @@ feature {NONE} -- Attachments
 			l_old_attachment_scope: like current_attachment_scope
 			l_preconditions_attachment_scope: like current_attachment_scope
 			l_count: INTEGER
-			l_set: DS_HASH_TABLE [ET_PRECONDITIONS, ET_FEATURE]
+			l_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE]
 		do
 			create l_set.make_map (30)
 			add_precursors_with_preconditions_recursive (a_feature, l_set)
@@ -14546,43 +14615,6 @@ feature {NONE} -- Attachments
 				current_attachment_scope.merge_scope (l_preconditions_attachment_scope)
 				free_attachment_scope (l_preconditions_attachment_scope)
 			end
-		end
-
-	add_precursors_with_preconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_PRECONDITIONS, ET_FEATURE])
-			-- Add to `a_set', recursively, the precursors of `a_feature' which have a precondition.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_set_not_void: a_set /= Void
-			no_void_precursors: not a_set.has_void
-			no_void_preconditions: not a_set.has_void_item
-		local
-			i, nb: INTEGER
-			l_other_precursor: ET_FEATURE
-		do
-			if attached a_feature.first_precursor as l_first_precursor then
-				add_precursors_with_preconditions_recursive (l_first_precursor, a_set)
-				if attached l_first_precursor.preconditions as l_preconditions then
-					a_set.force_last (l_preconditions, l_first_precursor)
-				end
-				if attached a_feature.other_precursors as l_other_precursors then
-					from
-						i := 1
-						nb := l_other_precursors.count
-					until
-						i > nb
-					loop
-						l_other_precursor := l_other_precursors.item (i)
-						add_precursors_with_preconditions_recursive (l_other_precursor, a_set)
-						if attached l_other_precursor.preconditions as l_preconditions then
-							a_set.force_last (l_preconditions, l_other_precursor)
-						end
-						i := i + 1
-					end
-				end
-			end
-		ensure
-			no_void_precursors: not a_set.has_void
-			no_void_preconditions: not a_set.has_void_item
 		end
 
 	current_initialization_scope: ET_ATTACHMENT_SCOPE
@@ -14621,6 +14653,82 @@ feature {NONE} -- Attachments
 
 	unused_attachment_scopes: DS_ARRAYED_LIST [ET_ATTACHMENT_SCOPE]
 			-- Attachment scopes that are not currently used
+
+feature {NONE} -- Assertions
+
+	add_precursors_with_preconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE])
+			-- Add to `a_set', recursively, the precursors of `a_feature' which have a precondition.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_set_not_void: a_set /= Void
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached a_feature.first_precursor as l_first_precursor then
+				add_precursors_with_preconditions_recursive (l_first_precursor, a_set)
+				if attached l_first_precursor.preconditions as l_preconditions then
+					a_set.force_last (l_preconditions, l_first_precursor)
+				end
+				if attached a_feature.other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						add_precursors_with_preconditions_recursive (l_other_precursor, a_set)
+						if attached l_other_precursor.preconditions as l_preconditions then
+							a_set.force_last (l_preconditions, l_other_precursor)
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		end
+
+	add_precursors_with_postconditions_recursive (a_feature: ET_FEATURE; a_set: DS_HASH_TABLE [ET_ASSERTIONS, ET_FEATURE])
+			-- Add to `a_set', recursively, the precursors of `a_feature' which have a postcondition.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_set_not_void: a_set /= Void
+			no_void_precursors: not a_set.has_void
+			no_void_preconditions: not a_set.has_void_item
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached a_feature.first_precursor as l_first_precursor then
+				add_precursors_with_postconditions_recursive (l_first_precursor, a_set)
+				if attached l_first_precursor.postconditions as l_postconditions then
+					a_set.force_last (l_postconditions, l_first_precursor)
+				end
+				if attached a_feature.other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						add_precursors_with_postconditions_recursive (l_other_precursor, a_set)
+						if attached l_other_precursor.postconditions as l_postconditions then
+							a_set.force_last (l_postconditions, l_other_precursor)
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			no_void_precursors: not a_set.has_void
+			no_void_postconditions: not a_set.has_void_item
+		end
 
 feature {NONE} -- Status report
 

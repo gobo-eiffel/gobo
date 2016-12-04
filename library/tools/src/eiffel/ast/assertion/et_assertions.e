@@ -5,7 +5,7 @@ note
 		"Eiffel assertion lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,27 @@ feature -- Initialization
 			nb := count - 1
 			from i := 0 until i > nb loop
 				storage.item (i).assertion.reset
+				i := i + 1
+			end
+		end
+
+feature -- Status report
+
+	are_all_true: BOOLEAN
+			-- Are all assertion expressions the 'True' entity (possibly parenthesized)?
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := count
+			from i := 1 until i > nb loop
+				if attached assertion (i).expression as l_expression then
+					if not l_expression.is_true then
+						Result := False
+							-- Jump out of the loop.
+						i := nb
+					end
+				end
 				i := i + 1
 			end
 		end

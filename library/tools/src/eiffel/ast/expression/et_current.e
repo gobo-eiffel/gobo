@@ -5,7 +5,7 @@ note
 		"Eiffel current entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,8 @@ inherit
 			make_current as make
 		undefine
 			is_current,
-			is_false
+			is_false,
+			is_true
 		redefine
 			process
 		end

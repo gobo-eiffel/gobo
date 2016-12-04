@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+
+Error code: VSTA(2)
+
+Error: feature is not available for static access.
+What to do: make sure that feature is either a C external routine
+    without assertions, a .NET static external or a constant.
+
+Class: AA
+Feature: make
+Not valid for static call: f from BB
+Line: 11
+      do
+->      {BB}.f
+      end
+
+-------------------------------------------------------------------------------

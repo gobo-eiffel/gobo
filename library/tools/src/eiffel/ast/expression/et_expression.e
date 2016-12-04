@@ -5,7 +5,7 @@ note
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,6 +110,12 @@ feature -- Status report
 
 	is_false: BOOLEAN
 			-- Is current expression the 'False' entity (possibly parenthesized)?
+		do
+			-- Result := False
+		end
+
+	is_true: BOOLEAN
+			-- Is current expression the 'True' entity (possibly parenthesized)?
 		do
 			-- Result := False
 		end
