@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="geant_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Ant Documentation"
+		copyright: "Copyright (c) 2002-2016, Sven Ehrke and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+	
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="overview"/>
+		<geant target="${target}" arguments="introduction"/>
+		<geant target="${target}" arguments="examples"/>
+		<geant target="${target}" arguments="builtin_variables"/>
+		<geant target="${target}" arguments="target"/>
+		<geant target="${target}" arguments="tasks"/>
+		<geant target="${target}" arguments="fileset_element"/>
+		<geant target="${target}" arguments="map_element"/>
+		<geant target="${target}" arguments="available_task"/>
+		<geant target="${target}" arguments="copy_task"/>
+		<geant target="${target}" arguments="delete_task"/>
+		<geant target="${target}" arguments="echo_task"/>
+		<geant target="${target}" arguments="exec_task"/>
+		<geant target="${target}" arguments="exit_task"/>
+		<geant target="${target}" arguments="geant_task"/>
+		<geant target="${target}" arguments="gec_task"/>
+		<geant target="${target}" arguments="gelex_task"/>
+		<geant target="${target}" arguments="geyacc_task"/>
+		<geant target="${target}" arguments="gepp_task"/>
+		<geant target="${target}" arguments="getest_task"/>
+		<geant target="${target}" arguments="gexace_task"/>
+		<geant target="${target}" arguments="input_task"/>
+		<geant target="${target}" arguments="ise_task"/>
+		<geant target="${target}" arguments="mkdir_task"/>
+		<geant target="${target}" arguments="move_task"/>
+		<geant target="${target}" arguments="outofdate_task"/>
+		<geant target="${target}" arguments="precursor_task"/>
+		<geant target="${target}" arguments="replace_task"/>
+		<geant target="${target}" arguments="set_task"/>
+		<geant target="${target}" arguments="setenv_task"/>
+		<geant target="${target}" arguments="unset_task"/>
+		<geant target="${target}" arguments="xslt_task"/>
+	</target>
+
+
+
+</project>

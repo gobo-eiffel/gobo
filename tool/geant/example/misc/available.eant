@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+
+<project name="geant_available" default="t1">
+	
+	<target name="t1">
+		<available resource="${GOBO}/Readme.md" variable="available"/>
+		<echo message="${GOBO}/readme.md available?: ${available}"/>
+
+		<available resource="${GOBO}/readme2.txt" variable="available"/>
+		<echo message="${GOBO}/readme2.txt available?: ${available}"/>
+
+		<available resource="${GOBO}" variable="available"/>
+		<echo message="${GOBO} available?: ${available}"/>
+	</target>
+
+</project>
+

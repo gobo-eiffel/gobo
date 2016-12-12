@@ -4,88 +4,39 @@
 
 	<description>
 		description: "Gobo Eiffel Unicode Library documentation"
-		copyright: "Copyright (c) 2005, Colin Adams and others"
+		copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install">
-		<description>
-			Install the Gobo Eiffel Unicode Library documentation.
-		</description>
-
-		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
-		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
-
-		<set name="previous" value="index"/>
-		<set name="current" value="index"/>
-		
-		<geant target="xslt_and_shift" arguments="classes"/>
-		<geant target="xslt_and_shift" arguments="case"/>
-		<geant target="xslt_and_shift" arguments="about"/>
-		<geant target="xslt_and_shift" arguments="routines"/>
-		<geant target="xslt_and_shift" arguments="see_also"/>
-		<geant target="xslt_and_shift" arguments="index"/>
-	</target>
-
-	<target name="clean">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<!-- do nothing -->
-	</target>
-
-	<target name="clobber">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<delete file="classes.html"/>
-		<delete file="case.html"/>
-		<delete file="about.html"/>
-		<delete file="routines.html"/>
-		<delete file="see_also.html"/>
-		<delete file="index.html"/>
-	</target>
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/doc.eant">
+			<redefine target="init"/>
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
 
 <!-- Implementation -->
 
-	<target name="xslt_and_shift" export="NONE">
-		<description>
-			Call `xslt' and shift variables `previous' and `current' one chapter forward.
-		</description>
-		<argument name="a_next"/>
-
-		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
-			<!-- Shift parameters -->
-		<set name="previous" value="${current}"/>
-		<set name="current" value="${a_next}"/>
+	<target name="init" export="NONE">
+		<precursor/>
+		<set name="image" value="../${image}"/>
 	</target>
 
-	<target name="xslt" export="NONE">
+	<target name="for_each" export="NONE">
 		<description>
-			Execute XSL Transformation for argument ${a_file}, ${a_previous}
-			and ${a_next} using processor ${xslt_processor}.
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
 		</description>
-		<argument name="a_previous"/>
-		<argument name="a_file"/>
-		<argument name="a_next"/>
+		<argument name="target"/>
 
-		<xslt processor="${xslt_processor}" input="${a_file}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
-			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
-			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
-			<parameter name="toc" value="&quot;'index.html'&quot;"/>
-			<parameter name="images" value="&quot;'../../image/'&quot;"/>
-		</xslt>
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="classes"/>
+		<geant target="${target}" arguments="case"/>
+		<geant target="${target}" arguments="about"/>
+		<geant target="${target}" arguments="routines"/>
+		<geant target="${target}" arguments="see_also"/>
 	</target>
 
 </project>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="geant" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'geant'"
+		system: "Gobo Eiffel Ant"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="geant"/>
+		<set name="system_dir" value="${GOBO}/tool/${system}/src"/>
+	</target>
+
+</project>

@@ -10,53 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install" depend="init">
-		<description>
-			Install the library.
-		</description>
-
-		<geant target="do_all" arguments="install"/>
-	</target>
-
-	<target name="clean" depend="init">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<geant target="do_all" arguments="clean"/>
-	</target>
-
-	<target name="clobber" depend="init">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="do_all" arguments="clobber"/>
-	</target>
-
-
-<!-- Implementation -->
-
-	<target name="init">
-		<!-- do nothing -->
-	</target>
-
-	<target name="do_all" depend="init">
-		<description>
-			Call 'geant' with the same target ${target} (first argument)
-			in all subdirectories.
-		</description>
-		<argument name="target"/>
-
-		<geant file="build.eant" target="${target}" dir="doc"/>
-		<geant file="build.eant" target="${target}" dir="test"/>
-	</target>
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/library.eant"/>
+	</inherit>
 
 </project>

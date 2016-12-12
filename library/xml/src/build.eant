@@ -5,15 +5,11 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
 		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
-
-	<inherit>
-		<parent location="${GOBO}/misc/ge2e.eant"/>
-	</inherit>
 
 	<target name="help">
 		<echo message="usage:"/>
@@ -26,7 +22,6 @@
 		<description>
 			Install the Gobo Eiffel XML Library.
 			Generate scanner and parser files.
-			Generate Eiffel files from .ge files.
 		</description>
 
 		<geant target="xm_eiffel_scanner"/>

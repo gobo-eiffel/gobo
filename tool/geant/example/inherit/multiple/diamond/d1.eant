@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<project name="D" default="cf">
+	<inherit>
+		<parent location="${GOBO}/tool/geant/example/inherit/multiple/diamond/b1.eant">
+		</parent>
+		<parent location="${GOBO}/tool/geant/example/inherit/multiple/diamond/c1.eant">
+			<rename target="f" as="cf"/>
+			<redefine target="cf"/>
+			<select target="cf"/>
+		</parent>
+	</inherit>
+
+	<target name="dummy_first_target"/>
+
+	<target name="cf">
+		<echo message="this is D.cf"/>
+		<precursor/>
+	</target>
+
+</project>

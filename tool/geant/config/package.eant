@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+
+<project name="package">
+
+	<description>
+		description: "Gobo Eiffel package"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="tests.eant">
+			<redefine target="test"/>
+			<redefine target="test_ge"/>
+			<redefine target="test_ise"/>
+			<redefine target="test_debug"/>
+			<redefine target="test_debug_ge"/>
+			<redefine target="test_debug_ise"/>
+			<redefine target="test_unit"/>
+			<redefine target="test_unit_ge"/>
+			<redefine target="test_unit_ise"/>
+			<redefine target="test_unit_debug"/>
+			<redefine target="test_unit_debug_ge"/>
+			<redefine target="test_unit_debug_ise"/>
+			<redefine target="test_example"/>
+			<redefine target="test_example_ge"/>
+			<redefine target="test_example_ise"/>
+			<redefine target="test_example_debug"/>
+			<redefine target="test_example_debug_ge"/>
+			<redefine target="test_example_debug_ise"/>
+			<redefine target="test_all"/>
+			<redefine target="test_all_ge"/>
+			<redefine target="test_all_ise"/>
+			<redefine target="test_all_debug"/>
+			<redefine target="test_all_debug_ge"/>
+			<redefine target="test_all_debug_ise"/>
+		</parent>
+	</inherit>
+	
+	<target name="test" depend="init">
+		<description>
+			Run all tests.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_ge" depend="init">
+		<description>
+			Run all tests with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_ise" depend="init">
+		<description>
+			Run all tests with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Run all tests in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_debug,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_debug_ge" depend="init">
+		<description>
+			Run all tests with Gobo Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_debug_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Run all tests with ISE Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_debug_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit" depend="init">
+		<description>
+			Run all unit tests.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit_ge" depend="init">
+		<description>
+			Run all unit tests with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit_ise" depend="init">
+		<description>
+			Run all unit tests with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit_debug" depend="init">
+		<description>
+			Run all unit tests in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit_debug,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit_debug_ge" depend="init">
+		<description>
+			Run all unit tests with Gobo Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit_debug_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_unit_debug_ise" depend="init">
+		<description>
+			Run all unit tests with ISE Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_unit_debug_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example" depend="init">
+		<description>
+			Run all example tests.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example_ge" depend="init">
+		<description>
+			Run all example tests with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example_ise" depend="init">
+		<description>
+			Run all example tests with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example_debug" depend="init">
+		<description>
+			Run all tests in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example_debug,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example_debug_ge" depend="init">
+		<description>
+			Run all example tests with Gobo Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example_debug_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_example_debug_ise" depend="init">
+		<description>
+			Run all example tests with ISE Eiffel in debug mode.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_example_debug_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all" depend="init">
+		<description>
+			Run all tests.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all_ge" depend="init">
+		<description>
+			Run all tests with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all_ise" depend="init">
+		<description>
+			Run all tests with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+			Remove intermediary generated files after running tests.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all_ise,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all_debug" depend="init">
+		<description>
+			Run all tests in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all_debug,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all_debug_ge" depend="init">
+		<description>
+			Run all tests with Gobo Eiffel in debug mode.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all_debug_ge,test" dir="${current.absdir}"/>
+	</target>
+
+	<target name="test_all_debug_ise" depend="init">
+		<description>
+			Run all tests with ISE Eiffel in debug mode.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="test_all_debug_ise,test" dir="${current.absdir}"/>
+	</target>
+	
+</project>

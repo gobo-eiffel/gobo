@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xace3">
+	<target name="xace3">
+		<root class="FOO" feature="make"/>
+		<option trace="false" profile="false" debug="false" warning="true" void_safety="none"/>
+		<setting name="console_application" value="true"/>
+		<cluster name="foo" location="${GOBO}/test/src/gexace/foo"/>
+		<override name="bar" location="${GOBO}/test/src/gexace/bar"/>
+	</target>
+</system>

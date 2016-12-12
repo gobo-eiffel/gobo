@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="gelex" default="help">
+
+	<description>
+		system: "Gobo Eiffel Lex Tester"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tgelex"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xgelex_tool"/>
+		<set name="tool" value="gelex"/>
+		<set name="system_dir" value="${GOBO}/tool/${tool}/test/tool"/>
+	</target>
+
+</project>

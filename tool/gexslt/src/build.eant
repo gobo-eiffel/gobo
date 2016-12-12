@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="gexslt" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'gexslt'"
+		system: "Gobo Eiffel XSLT"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="gexslt"/>
+		<set name="system_dir" value="${GOBO}/tool/${system}/src"/>
+	</target>
+
+</project>

@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+
+<project name="geant_outofdate" default="ood1">
+	
+	<target name="init">
+		<set name="gepp_in_dir" value="${GOBO}/library/kernel/io"/>
+		<set name="gepp_out_dir" value="${GOBO}/tool/geant/example/tmp"/>
+		<set name="gepp_file" value="kl_file_system"/>
+
+		<set name="ls" value="ls" if="${GOBO_OS}=unix"/>
+		<set name="ls" value="dir" unless="${GOBO_OS}=unix"/>
+	</target>
+
+	<target name="ood1" depend="init">
+		<outofdate
+			variable="generate"
+			source="${gepp_in_dir}/${gepp_file}.ge"
+			target="${gepp_out_dir}/${gepp_file}.e"
+		/>
+		<echo message="generate: ${generate}"/>
+		<geant target="gepp" if="${generate}=true"/>
+	</target>
+
+	<target name="ood2" depend="init">
+		<outofdate variable="generate" dir="${GOBO}/library/kernel">
+			<fileset include="@(**/*.ge)">
+				<map type="glob" from="*.ge" to="${GOBO}/tool/geant/example/tmp/*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+	</target>
+
+	<target name="ood3" depend="init">
+		<description>
+			Create new file '${gepp_out_dir}/toto.txt' if either file 'outofdate.eant' or
+			file '${GOBO}/Readme.txt' is new than '${gepp_out_dir}/toto.txt' or if file
+			'${gepp_out_dir}/toto.txt' does not exist.
+			This mechanism can be used for example to check if a new compilation run
+			is necessary by checking if one of the sourcefiles or resource files is
+			newer than the produced executable.
+		</description>
+		<mkdir directory="${gepp_out_dir}"/>
+		<outofdate variable="generate">
+			<fileset>
+				<include name="outofdate.eant"/>
+				<include name="${GOBO}/Readme.md"/>
+				<map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
+			</fileset>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+		<exec executable="${ls} ${GOBO} > ${gepp_out_dir}/toto.txt" if="${generate}=true"/>
+	</target>
+
+	<target name="ood4" depend="init">
+		<outofdate variable="generate" dir="${GOBO}/library/kernel">
+			<fileset>
+				<include name="${gepp_in_dir}/${gepp_file}.ge"/>
+				<include name="${GOBO}/tool/geant/example/misc/outofdate.eant)"/>
+				<map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
+					<map type="flat"/>
+				</map>
+			</fileset>
+		</outofdate>
+		<echo message="generate: ${generate}"/>
+	</target>
+
+	<target name="gepp">
+		<gepp
+			input="${gepp_in_dir}/${gepp_file}.ge"
+			output="${gepp_out_dir}/${gepp_file}.e"
+		>
+			<define name="ISE"/>
+		</gepp>
+	</target>
+
+	<target name="clean" depend="init">
+		<delete directory="${gepp_out_dir}"/>
+	</target>
+
+</project>
+

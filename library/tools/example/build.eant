@@ -4,58 +4,14 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel Tools Library examples"
-		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install" depend="init">
-		<description>
-			Install the Gobo Eiffel Tools Library examples.
-		</description>
-
-		<geant target="do_all" arguments="install"/>
-	</target>
-
-	<target name="clean" depend="init">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<geant target="do_all" arguments="clean"/>
-	</target>
-
-	<target name="clobber" depend="init">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="do_all" arguments="clobber"/>
-	</target>
-
-<!-- Implementation -->
-
-	<target name="init">
-		<!-- do nothing -->
-	</target>
-
-	<target name="do_all" depend="init">
-		<description>
-			Call 'geant' with the same target ${target} (first argument)
-			in all subdirectories.
-		</description>
-		<argument name="target"/>
-
-		<geant file="build.eant" target="${target}" dir="bang2create"/>
-		<geant file="build.eant" target="${target}" dir="pretty_printer"/>
-	</target>
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/do_all.eant"/>
+	</inherit>
 
 </project>

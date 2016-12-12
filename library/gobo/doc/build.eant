@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel documentation"
+		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/do_all.eant"/>
+	</inherit>
+
+</project>

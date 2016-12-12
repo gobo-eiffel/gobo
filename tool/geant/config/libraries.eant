@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="libraries">
+
+	<description>
+		description: "Gobo Eiffel libraries"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="packages.eant"/>
+	</inherit>
+
+</project>

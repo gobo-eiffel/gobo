@@ -5,89 +5,35 @@
 	<description>
 		description: "Gobo Eiffel XPath Library documentation"
 		library: "Gobo Eiffel XPath Library"
-		copyright: "Copyright (c) 2004, Colin Adams and others"
+		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install">
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+	
+	<target name="for_each" export="NONE">
 		<description>
-			Install the Gobo Eiffel XPath Library documentation.
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
 		</description>
+		<argument name="target"/>
 
-		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
-		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="${GOBO_XSLT_PROCESSOR}"/>
-
-		<set name="previous" value="invoking"/>
-		<set name="current" value="invoking"/>
-		<set name="input_wrapper" value=""/>
-		<geant target="xslt_and_shift" arguments="collection"/>
-		<geant target="xslt_and_shift" arguments="evaluation_process"/>
-		<geant target="xslt_and_shift" arguments="implemented_functions"/>
-		<geant target="xslt_and_shift" arguments="xpointer"/>
+		<geant target="${target}" arguments="invoking"/>
+		<geant target="${target}" arguments="collection"/>
+		<geant target="${target}" arguments="evaluation_process"/>
+		<geant target="${target}" arguments="implemented_functions"/>
 		<set name="input_wrapper" value="_wrapper" unless="${GESTALT}"/>
 		<set name="input_wrapper" value="_wrapper_2" if="${GESTALT}"/>
-		<geant target="xslt_and_shift" arguments="invoking"/>
+		<geant target="${target}" arguments="xpointer"/>
 		<set name="input_wrapper" value=""/>
-	</target>
-
-	<target name="clean">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<!-- do nothing -->
-	</target>
-
-	<target name="clobber">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<delete file="collection.html"/>
-		<delete file="invoking.html"/>
-		<delete file="evaluation_process.html"/>
-		<delete file="implemented_functions.html"/>
-		<delete file="xpointer.html"/>
-	</target>
-
-<!-- Implementation -->
-
-	<target name="xslt_and_shift" export="NONE">
-		<description>
-			Call `xslt' and shift variables `previous' and `current' one chapter forward.
-		</description>
-		<argument name="a_next"/>
-
-		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
-			<!-- Shift parameters -->
-		<set name="previous" value="${current}"/>
-		<set name="current" value="${a_next}"/>
-	</target>
-
-	<target name="xslt" export="NONE">
-		<description>
-			Execute XSL Transformation for argument ${a_file}, ${a_previous}
-			and ${a_next} using processor ${xslt_processor}.
-		</description>
-		<argument name="a_previous"/>
-		<argument name="a_file"/>
-		<argument name="a_next"/>
-
-		<xslt processor="${xslt_processor}" input="${a_file}${input_wrapper}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
-			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
-			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
-			<parameter name="toc" value="&quot;'invoking.html'&quot;"/>
-			<parameter name="images" value="'../../image/'"/>
-		</xslt>
 	</target>
 
 </project>

@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/misc/eiffel.eant">
+		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
 			<redefine target="help"/>
 			<redefine target="other_install"/>
 			<redefine target="other_clobber"/>

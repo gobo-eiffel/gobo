@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="tool" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel tools"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/tools.eant">
+			<redefine target="other_help"/>
+		</parent>
+	</inherit>
+
+	<target name="install_src" depend="init">
+		<description>
+			Install the Gobo Eiffel tools sources.
+		</description>
+
+		<geant target="do_all" arguments="install,*/src" dir="${current.absdir}"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="other_help" export="NONE">
+		<echo message="   geant install_src"/>
+		<precursor/>
+	</target>
+
+</project>

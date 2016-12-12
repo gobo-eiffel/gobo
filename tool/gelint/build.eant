@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="gelint" default="help">
+
+	<description>
+		description: "Gobo Eiffel Lint"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/tool.eant"/>
+	</inherit>
+
+</project>

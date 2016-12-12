@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="gec_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Compiler documentation"
+		copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/doc.eant">
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+	
+<!-- Implementation -->
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="usage"/>
+		<geant target="${target}" arguments="technology"/>
+		<geant target="${target}" arguments="limitations"/>
+		<geant target="${target}" arguments="future"/>
+		<geant target="${target}" arguments="platforms"/>
+		<geant target="${target}" arguments="see_also"/>
+	</target>
+
+</project>

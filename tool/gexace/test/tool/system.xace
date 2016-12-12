@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<system name="xgexace_tool">
+	<description>
+		system: "Gobo Eiffel Xace Tester"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="XGEXACE_TOOL" creation="make"/>
+	<option name="console_application" value="true"/>
+	<option unless="${DEBUG}">
+		<option name="assertion" value="none"/>
+		<option name="garbage_collector" value="none"/>
+		<option name="finalize" value="true"/>
+	</option>
+	<option if="${DEBUG}">
+		<option name="assertion" value="all"/>
+		<option name="garbage_collector" value="internal"/>
+		<option name="finalize" value="false"/>
+	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
+
+	<cluster name="gexace_tester" location="${GOBO}/tool/gexace/test/tool" prefix="tool_"/>
+	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="src_gexace_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/regexp/library.xace"/>
+	<mount location="${GOBO}/library/kernel.xace"/>
+</system>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="test" default="help">
+<project name="time_test" default="help">
 
 	<description>
 		description: "Gobo Eiffel Time Library Tester"
@@ -10,120 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<target name="help">
-		<echo message="usage:"/>
-		<echo message="   geant install"/>
-		<echo message="   geant test"/>
-		<echo message="   geant test_ge"/>
-		<echo message="   geant test_ise"/>
-		<echo message="   geant test_debug"/>
-		<echo message="   geant test_debug_ge"/>
-		<echo message="   geant test_debug_ise"/>
-		<echo message="   geant clean"/>
-		<echo message="   geant clobber"/>
-	</target>
-
-	<target name="install" depend="init">
-		<description>
-			Install the Gobo Eiffel tests.
-		</description>
-
-		<geant target="do_all" arguments="install,false"/>
-	</target>
-
-	<target name="test" depend="init">
-		<description>
-			Run Gobo tests.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'ge' if this variable is not defined.
-		</description>
-
-		<geant target="do_all" arguments="test,true"/>
-	</target>
-
-	<target name="test_ge" depend="init">
-		<description>
-			Run Gobo tests with Gobo Eiffel.
-		</description>
-
-		<geant target="do_all" arguments="test_ge,true"/>
-	</target>
-
-	<target name="test_ise" depend="init">
-		<description>
-			Run Gobo tests with ISE Eiffel.
-		</description>
-
-		<geant target="do_all" arguments="test_ise,true"/>
-	</target>
-
-	<target name="test_debug" depend="init">
-		<description>
-			Run Gobo tests in debug mode.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'ge' if this variable is not defined.
-		</description>
-
-		<geant target="do_all" arguments="test_debug,true"/>
-	</target>
-
-	<target name="test_debug_ge" depend="init">
-		<description>
-			Run Gobo tests with Gobo Eiffel in debug mode.
-		</description>
-
-		<geant target="do_all" arguments="test_debug_ge,true"/>
-	</target>
-
-	<target name="test_debug_ise" depend="init">
-		<description>
-			Run Gobo tests with ISE Eiffel in debug mode.
-		</description>
-
-		<geant target="do_all" arguments="test_debug_ise,true"/>
-	</target>
-
-	<target name="clean" depend="init">
-		<description>
-			Remove intermediary generated files.
-		</description>
-
-		<geant target="do_all" arguments="clean,false"/>
-	</target>
-
-	<target name="clobber" depend="init">
-		<description>
-			Remove all generated files.
-		</description>
-
-		<geant target="do_all" arguments="clobber,false"/>
-	</target>
-
-<!-- Implementation -->
-
-	<target name="init">
-		<!-- do nothing -->
-	</target>
-
-	<target name="do_all" depend="init">
-		<description>
-			Call 'geant' with the same target ${target} (first argument)
-			in all subdirectories. Call 'clean' after each target has
-			been executed if ${do_clean} (second argument) is true.
-		</description>
-		<argument name="target"/>
-		<argument name="do_clean"/>
-
-			<!--
-				The attribute "if" does not seem to interpret arguments.
-				Therefore set the variable "do_clean" with the value
-				of argument "do_clean".
-			-->
-		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="unit"/>
-		<geant file="build.eant" target="clean" dir="unit" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="example"/>
-		<geant file="build.eant" target="clean" dir="example" if="${do_clean}=true"/>
-	</target>
+	<inherit>
+		<parent location="${GOBO}/tool/geant/config/tests.eant"/>
+	</inherit>
 
 </project>

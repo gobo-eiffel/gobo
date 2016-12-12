@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<project name="xslt" default="xslt">
+
+	<target name="xslt">
+		<xslt
+			input="${GOBO}/library/structure/doc/index.xml"
+			output="${GOBO}/library/structure/doc/index2.html"
+			stylesheet="${GOBO}/tool/gexslt/config/gobo2html.xsl"
+		>
+			<parameter name="previous" value="../license.html"/>
+			<parameter name="next" value="../time/index.html"/>
+			<parameter name="toc" value="../index.html"/>
+		</xslt>
+<!--
+		<xslt
+			input="${GOBO}/library/structure/doc/index.xml"
+			output="${GOBO}/library/structure/doc/index2.xml"
+			stylesheet="${GOBO}/tool/gexslt/config/gobo2db.xsl">
+		</xslt>
+-->		
+	</target>
+
+</project>
