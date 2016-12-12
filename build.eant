@@ -60,7 +60,7 @@
 		</description>
 
 		<geant file="build.eant" target="clobber" dir="tool"/>
-		<geant file="build.eant" target="install" dir="tool"/>
+		<geant file="build.eant" target="install_src" dir="tool"/>
 		<geant file="../tool/gexace/src/build.eant" target="compile" dir="bin"/>
 		<geant file="../tool/gexace/src/build.eant" target="clean" dir="bin"/>
 		<geant file="../tool/gelex/src/build.eant" target="compile" dir="bin"/>

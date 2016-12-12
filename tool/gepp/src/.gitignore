@@ -9,8 +9,10 @@ gepp_tokens.e
 *ve.esd
 *ve.xace
 gepp[0-9]*
-gepp*.[^e]*
+gepp*.[^ely]*
 gepp*.e?*
+gepp*.l?*
+gepp*.y?*
 libgepp*.dll
 EIFGEN*
 preferences.wb
