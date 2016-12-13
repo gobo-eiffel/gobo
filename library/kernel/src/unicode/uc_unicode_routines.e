@@ -5,7 +5,7 @@ note
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,11 +54,9 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a_unicode: detachable UC_STRING
 			i, nb: INTEGER
 		do
-			a_unicode ?= a_string
-			if a_unicode /= Void then
+			if attached {UC_STRING} a_string as a_unicode then
 				Result := a_unicode.is_ascii
 			else
 				Result := True

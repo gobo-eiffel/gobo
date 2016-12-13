@@ -5,7 +5,7 @@ note
 		"Routines that ought to be in class ARRAY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,10 +87,8 @@ feature -- Status report
 			a_array_not_void: a_array /= Void
 		local
 			i, nb: INTEGER
-			l_array: detachable ARRAY [detachable G]
 		do
-			l_array ?= a_array
-			if l_array /= Void then
+			if attached {ARRAY [detachable G]} a_array as l_array then
 				from
 					i := l_array.lower
 					nb := l_array.upper

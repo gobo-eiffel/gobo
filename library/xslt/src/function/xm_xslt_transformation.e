@@ -5,7 +5,7 @@ note
 		"Objects that implement the gexslt:transformation() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2006-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2006-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,7 +80,11 @@ feature -- Optimization
 	check_static_type (a_replacement: DS_CELL [detachable XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE)
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			static_context ?= a_context
+			if attached {like static_context} a_context as l_static_context then
+				static_context := l_static_context
+			else
+				static_context := Void
+			end
 			Precursor (a_replacement, a_context, a_context_item_type)
 		end
 

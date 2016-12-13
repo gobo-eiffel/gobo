@@ -10,7 +10,7 @@ note
 		whenever a STRING is expected.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,15 +49,13 @@ feature -- Initialization
 			s_not_void: s /= Void
 		local
 			i, j, nb: INTEGER
-			uc_string: detachable UC_STRING
 		do
 			if ANY_.same_types (s, dummy_string) then
 				create Result.make_from_string (s)
 			else
 				nb := s.count
 				create Result.make (nb)
-				uc_string ?= s
-				if uc_string /= Void then
+				if attached {UC_STRING} s as uc_string then
 					nb := uc_string.byte_count
 					from
 						j := 1
@@ -307,14 +305,11 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 			non_negative_n: n >= 0
-		local
-			uc_string: detachable UC_STRING
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 				create Result.make (n)
 			else
-				uc_string ?= a_string
-				if uc_string /= Void then
+				if attached {UC_STRING} a_string as uc_string then
 					Result := uc_string.new_empty_string (n)
 				else
 					Result := cloned_string (a_string)
@@ -334,10 +329,8 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb, a_code, a_high, a_low, a_surrogate: INTEGER
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string.to_utf16_be
 			else
 				nb := a_string.count
@@ -381,10 +374,8 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb, a_code, a_high, a_low, a_surrogate: INTEGER
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string.to_utf16_le
 			else
 				nb := a_string.count
@@ -428,10 +419,8 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, j, k, l, m, nb, a_code: INTEGER
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string.to_utf32_be
 			else
 				nb := a_string.count
@@ -468,10 +457,8 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, j, k, l, m, nb, a_code: INTEGER
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string.to_utf32_le
 			else
 				nb := a_string.count
@@ -519,7 +506,6 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code: INTEGER
-			other_unicode: detachable UC_STRING
 			k, end_index: INTEGER
 			found: BOOLEAN
 			max_code: INTEGER
@@ -539,74 +525,71 @@ feature -- Access
 						if ANY_.same_types (a_string, dummy_string) then
 							if ANY_.same_types (other, dummy_string) then
 								Result := a_string.substring_index (other, start_index)
-							else
-								other_unicode ?= other
-								if other_unicode /= Void then
-									nb := other_unicode.byte_count
-									max_code := Platform.Maximum_character_code
+							elseif attached {UC_STRING} other as other_unicode then
+								nb := other_unicode.byte_count
+								max_code := Platform.Maximum_character_code
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
+									j := k
+									found := True
 									from
-										k := start_index
+										i := 1
 									until
-										k > end_index
+										i > nb
 									loop
-										j := k
-										found := True
-										from
-											i := 1
-										until
-											i > nb
-										loop
-											a_code := other_unicode.item_code_at_byte_index (i)
-											if a_code > max_code then
-												a_code := 0
-											end
-											if a_string.item_code (j) /= a_code then
-												found := False
-													-- Jump out of the loop.
-												i := nb + 1
-											else
-												j := j + 1
-												i := other_unicode.next_byte_index (i)
-											end
+										a_code := other_unicode.item_code_at_byte_index (i)
+										if a_code > max_code then
+											a_code := 0
 										end
-										if found then
-											Result := k
+										if a_string.item_code (j) /= a_code then
+											found := False
 												-- Jump out of the loop.
-											k := end_index + 1
+											i := nb + 1
 										else
-											k := k + 1
+											j := j + 1
+											i := other_unicode.next_byte_index (i)
 										end
 									end
-								else
-									nb := other_count
+									if found then
+										Result := k
+											-- Jump out of the loop.
+										k := end_index + 1
+									else
+										k := k + 1
+									end
+								end
+							else
+								nb := other_count
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
+									j := k
+									found := True
 									from
-										k := start_index
+										i := 1
 									until
-										k > end_index
+										i > nb
 									loop
-										j := k
-										found := True
-										from
-											i := 1
-										until
-											i > nb
-										loop
-											if a_string.item (j) /= other.item (i) then
-												found := False
-													-- Jump out of the loop.
-												i := nb + 1
-											else
-												j := j + 1
-												i := i + 1
-											end
-										end
-										if found then
-											Result := k
+										if a_string.item (j) /= other.item (i) then
+											found := False
 												-- Jump out of the loop.
-											k := end_index + 1
+											i := nb + 1
 										else
-											k := k + 1
+											j := j + 1
+											i := i + 1
 										end
+									end
+									if found then
+										Result := k
+											-- Jump out of the loop.
+										k := end_index + 1
+									else
+										k := k + 1
 									end
 								end
 							end
@@ -667,19 +650,13 @@ feature -- Access
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
-		local
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				Result := uc_string + other
+			elseif attached {UC_STRING} other as uc_string then
+				Result := uc_string.prefixed_string (a_string)
 			else
-				uc_string ?= other
-				if uc_string /= Void then
-					Result := uc_string.prefixed_string (a_string)
-				else
-					Result := a_string + other
-				end
+				Result := a_string + other
 			end
 		ensure
 			concat_not_void: Result /= Void
@@ -729,36 +706,31 @@ feature -- Comparison
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: detachable UC_STRING
 			i, nb: INTEGER
 		do
 			if other = a_string then
 				Result := True
 			elseif other.count = a_string.count then
-				uc_string ?= a_string
-				if uc_string /= Void then
+				if attached {UC_STRING} a_string as uc_string then
 					Result := uc_string.same_unicode_string (other)
+				elseif attached {UC_STRING} other as uc_string then
+					Result := uc_string.same_unicode_string (a_string)
+				elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
+					Result := elks_same_string (a_string, other)
 				else
-					uc_string ?= other
-					if uc_string /= Void then
-						Result := uc_string.same_unicode_string (a_string)
-					elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
-						Result := elks_same_string (a_string, other)
-					else
-						Result := True
-						nb := a_string.count
-						from
-							i := 1
-						until
-							i > nb
-						loop
-							if a_string.item_code (i) /= other.item_code (i) then
-								Result := False
-									-- Jump out of the loop.
-								i := nb + 1
-							else
-								i := i + 1
-							end
+					Result := True
+					nb := a_string.count
+					from
+						i := 1
+					until
+						i > nb
+					loop
+						if a_string.item_code (i) /= other.item_code (i) then
+							Result := False
+								-- Jump out of the loop.
+							i := nb + 1
+						else
+							i := i + 1
 						end
 					end
 				end
@@ -849,7 +821,6 @@ feature -- Comparison
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: detachable UC_STRING
 			i, nb, nb1, nb2: INTEGER
 			a1, a2: CHARACTER
 			c1, c2: INTEGER
@@ -893,50 +864,44 @@ feature -- Comparison
 						Result := 1
 					end
 				end
+			elseif attached {UC_STRING} a_string as uc_string then
+				Result := uc_string.three_way_unicode_comparison (other)
+			elseif attached {UC_STRING} other as uc_string then
+				Result := -uc_string.three_way_unicode_comparison (a_string)
 			else
-				uc_string ?= a_string
-				if uc_string /= Void then
-					Result := uc_string.three_way_unicode_comparison (other)
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
 				else
-					uc_string ?= other
-					if uc_string /= Void then
-						Result := -uc_string.three_way_unicode_comparison (a_string)
+					nb := nb2
+				end
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					c1 := a_string.item_code (i)
+					c2 := other.item_code (i)
+					if c1 = c2 then
+						i := i + 1
+					elseif c1 < c2 then
+						found := True
+						Result := -1
+							-- Jump out of the loop.
+						i := nb + 1
 					else
-						nb1 := a_string.count
-						nb2 := other.count
-						if nb1 < nb2 then
-							nb := nb1
-						else
-							nb := nb2
-						end
-						from
-							i := 1
-						until
-							i > nb
-						loop
-							c1 := a_string.item_code (i)
-							c2 := other.item_code (i)
-							if c1 = c2 then
-								i := i + 1
-							elseif c1 < c2 then
-								found := True
-								Result := -1
-									-- Jump out of the loop.
-								i := nb + 1
-							else
-								found := True
-								Result := 1
-									-- Jump out of the loop.
-								i := nb + 1
-							end
-						end
-						if not found then
-							if nb1 < nb2 then
-								Result := -1
-							elseif nb1 /= nb2 then
-								Result := 1
-							end
-						end
+						found := True
+						Result := 1
+							-- Jump out of the loop.
+						i := nb + 1
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
 					end
 				end
 			end
@@ -1080,21 +1045,15 @@ feature -- Element change
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
-		local
-			uc_string: detachable UC_STRING
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				uc_string.append_string (other)
 				Result := uc_string
+			elseif attached {UC_STRING} other as uc_string then
+				Result := concat (a_string, other)
 			else
-				uc_string ?= other
-				if uc_string /= Void then
-					Result := concat (a_string, other)
-				else
-					a_string.append_string (other)
-					Result := a_string
-				end
+				a_string.append_string (other)
+				Result := a_string
 			end
 		ensure
 			append_not_void: Result /= Void
@@ -1126,31 +1085,27 @@ feature -- Element change
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
 		local
-			uc_string: detachable UC_STRING
+			l_uc_string: UC_STRING
 			i: INTEGER
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				uc_string.gobo_append_substring (other, s, e)
 				Result := uc_string
+			elseif attached {UC_STRING} other as l_other_uc_string then
+				l_uc_string := l_other_uc_string.new_empty_string (a_string.count + e - s + 1)
+				l_uc_string.append_string (a_string)
+				l_uc_string.gobo_append_substring (other, s, e)
+				Result := l_uc_string
 			else
-				uc_string ?= other
-				if uc_string /= Void then
-					uc_string := uc_string.new_empty_string (a_string.count + e - s + 1)
-					uc_string.append_string (a_string)
-					uc_string.gobo_append_substring (other, s, e)
-					Result := uc_string
-				else
-					from
-						i := s
-					until
-						i > e
-					loop
-						a_string.append_character (other.item (i))
-						i := i + 1
-					end
-					Result := a_string
+				from
+					i := s
+				until
+					i > e
+				loop
+					a_string.append_character (other.item (i))
+					i := i + 1
 				end
+				Result := a_string
 			end
 		ensure
 			append_not_void: Result /= Void
@@ -1181,15 +1136,12 @@ feature -- Element change
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
-		local
-			uc_string: detachable UC_STRING
 		do
 			if ANY_.same_types (a_string, other) then
 				a_string.replace_substring (other, start_index, end_index)
 				Result := a_string
 			else
-				uc_string ?= a_string
-				if uc_string /= Void then
+				if attached {UC_STRING} a_string as uc_string then
 					uc_string.replace_substring_by_string (other, start_index, end_index)
 					Result := uc_string
 				else
@@ -1212,11 +1164,9 @@ feature -- Element change
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
 		local
-			uc_string: detachable UC_STRING
 			i: INTEGER
 		do
-			uc_string ?= a_string
-			if uc_string /= Void then
+			if attached {UC_STRING} a_string as uc_string then
 				uc_string.gobo_append_substring (other, s, e)
 			else
 				from
@@ -1315,14 +1265,11 @@ feature -- Conversion
 			-- of UC_STRING, return 'string (a_string)' otherwise.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			uc_string: detachable UC_STRING
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 				Result := a_string
 			else
-				uc_string ?= a_string
-				if uc_string /= Void then
+				if attached {UC_STRING} a_string as uc_string then
 					Result := uc_string.as_string
 				else
 					Result := a_string.string

@@ -6,7 +6,7 @@ note
 		%(8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -198,11 +198,8 @@ feature -- Input
 			-- (Note that even if at least `nb' characters are available
 			-- in the input file, there is no guarantee that they
 			-- will all be read.)
-		local
-			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
-			char_buffer ?= a_buffer
-			if char_buffer /= Void then
+			if attached {KL_CHARACTER_BUFFER} a_buffer as char_buffer then
 				Result := char_buffer.fill_from_stream (Current, pos, nb)
 			else
 				Result := precursor (a_buffer, pos, nb)

@@ -5,7 +5,7 @@ note
 		"Objects that implement the XPointer element scheme"
 
 	library: "Gobo Eiffel XPointer Library"
-	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,7 +95,11 @@ feature -- Element change
 							loop
 								a_counter := a_counter + 1
 								if a_counter = a_child_number then
-									an_element ?= an_iterator.item
+									if attached {XM_XPATH_ELEMENT} an_iterator.item as l_item then
+										an_element := l_item
+									else
+										an_element := Void
+									end
 								else
 									an_iterator.forth
 								end

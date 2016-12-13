@@ -16,10 +16,10 @@ note
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #9 $"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 class UC_STRING
 
@@ -391,8 +391,8 @@ feature {NONE} -- Initialization
 				-- This is what the following tries to determine. In
 				-- the end, if `l_uc_string' is Void this means that
 				-- `a_string' is not `Current'.
-			l_uc_string ?= a_string
-			if l_uc_string /= Void then
+			if attached {UC_STRING} a_string as l_uc_string_2 then
+				l_uc_string := l_uc_string_2
 				area := l_uc_string.area
 				if a_string /= Current then
 					l_uc_string := Void
@@ -443,8 +443,8 @@ feature {NONE} -- Initialization
 				-- This is what the following tries to determine. In
 				-- the end, if `l_uc_string' is Void this means that
 				-- `a_string' is not `Current'.
-			l_uc_string ?= a_string
-			if l_uc_string /= Void then
+			if attached {UC_STRING} a_string as l_uc_string_2 then
+				l_uc_string := l_uc_string_2
 				area := l_uc_string.area
 				if a_string /= Current then
 					l_uc_string := Void
@@ -683,7 +683,6 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -700,8 +699,7 @@ feature -- Access
 					end_index := count - other_count + 1
 					if start_index <= end_index then
 						if count = byte_count then
-							other_unicode ?= other
-							if other_unicode /= Void then
+							if attached {UC_STRING} other as other_unicode then
 								nb := other_unicode.byte_count
 								from
 									k := start_index
@@ -767,8 +765,7 @@ feature -- Access
 							end
 						else
 							z := byte_index (start_index)
-							other_unicode ?= other
-							if other_unicode /= Void then
+							if attached {UC_STRING} other as other_unicode then
 								nb := other_unicode.byte_count
 								from
 									k := start_index
@@ -855,7 +852,6 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -872,8 +868,7 @@ feature -- Access
 					end_index := count - other_count + 1
 					if start_index <= end_index then
 						if count = byte_count then
-							other_unicode ?= other
-							if other_unicode /= Void then
+							if attached {UC_STRING} other as other_unicode then
 								nb := other_unicode.byte_count
 								from
 									k := start_index
@@ -942,8 +937,7 @@ feature -- Access
 							end
 						else
 							z := byte_index (start_index)
-							other_unicode ?= other
-							if other_unicode /= Void then
+							if attached {UC_STRING} other as other_unicode then
 								nb := other_unicode.byte_count
 								from
 									k := start_index
@@ -1937,8 +1931,6 @@ feature -- Element change
 			old_a_string_count: INTEGER
 			new_byte_count: INTEGER
 			new_count: INTEGER
-			a_utf8_string: detachable UC_UTF8_STRING
-			a_uc_string: detachable UC_STRING
 			b: BOOLEAN
 		do
 			if ANY_.same_types (a_string, dummy_string) then
@@ -1964,10 +1956,8 @@ feature -- Element change
 					gobo_append_substring (a_string, 1, a_string.count)
 				end
 			else
-				a_uc_string ?= a_string
-				if a_uc_string /= Void then
-					a_utf8_string ?= a_string
-					if a_utf8_string /= Void or ANY_.same_types (a_uc_string, dummy_uc_string) then
+				if attached {UC_STRING} a_string as a_uc_string then
+					if attached {UC_UTF8_STRING} a_string or ANY_.same_types (a_uc_string, dummy_uc_string) then
 							-- Because bytes are in linear order, we may move bytes.
 						if a_uc_string = Current then
 							new_byte_count := 2 * byte_count

@@ -5,10 +5,10 @@ note
 		"Test config clusters"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/05/03 $"
-	revision: "$Revision: #13 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TS_CLUSTER
 
@@ -154,9 +154,9 @@ feature -- Processing
 		local
 			l_procedures: ET_PROCEDURE_LIST
 			i, nb: INTEGER
-			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 			l_default_test_name: STRING
+			l_default_identifier: ET_IDENTIFIER
 		do
 			testcases.set_class_prefix (a_class, class_prefix)
 			l_procedures := a_class.procedures
@@ -166,20 +166,19 @@ feature -- Processing
 			until
 				i > nb
 			loop
-				an_identifier ?= l_procedures.item (i).name
-				if an_identifier /= Void then
-					a_name := an_identifier.name
+				if attached {ET_IDENTIFIER} l_procedures.item (i).name as l_identifier then
+					a_name := l_identifier.name
 					if feature_regexp.recognizes (a_name) then
-						testcases.put_testcase (a_class, an_identifier)
+						testcases.put_testcase (a_class, l_identifier)
 					end
 				end
 				i := i + 1
 			end
 			if default_test_included then
 				l_default_test_name := "default_test"
-				create an_identifier.make (l_default_test_name)
+				create l_default_identifier.make (l_default_test_name)
 				if not feature_regexp.recognizes (l_default_test_name) then
-					testcases.put_testcase (a_class, an_identifier)
+					testcases.put_testcase (a_class, l_default_identifier)
 				end
 			end
 		end

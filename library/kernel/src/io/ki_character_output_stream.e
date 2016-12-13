@@ -5,7 +5,7 @@ note
 		"Interface for character output streams"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -275,11 +275,8 @@ feature -- Output
 			-- Read items of `an_input_stream' until the end
 			-- of input is reached, and write these items to
 			-- current output stream.
-		local
-			a_character_input: detachable KI_CHARACTER_INPUT_STREAM
 		do
-			a_character_input ?= an_input_stream
-			if a_character_input /= Void then
+			if attached {KI_CHARACTER_INPUT_STREAM} an_input_stream as a_character_input then
 				from
 					if not a_character_input.end_of_input then
 						a_character_input.read_string (512)
