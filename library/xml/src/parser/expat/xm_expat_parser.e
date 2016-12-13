@@ -5,7 +5,7 @@ note
 		"XML parsers using Expat"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create a new parser.
 		do
+			initialize
 			init_api
 			is_correct := True
 			last_error := Xml_err_none
@@ -61,6 +62,12 @@ feature {NONE} -- Initialization
 
 			create {XM_NULL_EXTERNAL_RESOLVER} dtd_resolver
 			entity_resolver := dtd_resolver
+		end
+
+	initialize
+			-- Initialize current callbacks and DTD callbacks.
+		do
+			dtd_callbacks := null_dtd_callbacks
 		end
 
 feature -- Status report
@@ -518,21 +525,24 @@ feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 			-- and put them in the parent items list.
 		require
 			has_parent: parent /= Void
+			has_items: parent.items /= Void
 			has_model_ptr: model_ptr /= default_pointer
 			has_children: exml_XML_cp_numchildren (model_ptr) > 0
 		local
 			i: INTEGER
 		do
-			from
-				i := 0
-			until
-				i >= exml_XML_cp_numchildren (model_ptr)
-			loop
-				parent.items.put_last (create_element_content (exml_XML_cp_children (model_ptr, i)))
-				i := i + 1
+			check precondition_has_items: attached parent.items as l_parent_items then
+				from
+					i := 0
+				until
+					i >= exml_XML_cp_numchildren (model_ptr)
+				loop
+					l_parent_items.put_last (create_element_content (exml_XML_cp_children (model_ptr, i)))
+					i := i + 1
+				end
 			end
 		ensure
-			children_created: parent.items.count > 0
+			children_created: attached parent.items as l_parent_items and then l_parent_items.count > 0
 		end
 
 	create_element_content (model_ptr: POINTER): XM_DTD_ELEMENT_CONTENT
@@ -562,6 +572,8 @@ feature {NONE} -- Turn Expat DTD description into XM_DTD_ELEMENT_CONTENT
 			elseif type = XML_CTYPE_SEQ then
 				create Result.make_sequence
 				create_children (Result, model_ptr)
+			else
+				check invalid_value: False then end
 			end
 				-- Set repetition.
 			quant := exml_XML_cp_quant (model_ptr)
@@ -724,13 +736,19 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 	frozen on_processing_instruction_procedure (target_ptr, data_ptr: POINTER)
 		local
 			data: STRING
+			l_name: STRING
 		do
 			if data_ptr = default_pointer then
 				data := new_unicode_string_empty
 			else
 				data := new_uc_string_from_c_utf8_zero_terminated_string (data_ptr)
 			end
-			on_processing_instruction (new_uc_string_from_c_utf8_zero_terminated_string_safe (target_ptr), data)
+			if target_ptr = default_pointer then
+				l_name := new_unicode_string_empty
+			else
+				l_name := new_uc_string_from_c_utf8_zero_terminated_string (target_ptr)
+			end
+			on_processing_instruction (l_name, data)
 		end
 
 	frozen on_comment_procedure (data_ptr: POINTER)
@@ -829,7 +847,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					-- For now assume we simply encounter files, URI not
 					-- supported.
 				if system_id_ptr /= default_pointer then
-					system_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr)
+					system_id := new_uc_string_from_c_utf8_zero_terminated_string (system_id_ptr)
 					create in_file.make (system_id.to_utf8)
 					in_file.open_read
 					if in_file.is_open_read then
@@ -865,11 +883,11 @@ feature {NONE} -- Orphan expat events
 		do
 		end
 
-	on_start_namespace_declaration (a_prefix: STRING; a_uri: STRING)
+	on_start_namespace_declaration (a_prefix: detachable STRING; a_uri: detachable STRING)
 		do
 		end
 
-	on_end_namespace_declaration (a_prefix: STRING)
+	on_end_namespace_declaration (a_prefix: detachable STRING)
 		do
 		end
 

@@ -31,10 +31,6 @@
 			<cluster name="eiffel"/>
 			<cluster name="expat" if="${GOBO_XML_EXPAT}">
         <!-- Note, we expect Expat 1.95.4 -->
-				<cluster name="spec">
-					<option name="abstract" value="true"/>
-					<cluster name="${GOBO_EIFFEL}" prefix="parser_expat_spec_"/>
-				</cluster>
 				<option unless="${GOBO_OS}=windows">
 					<option name="header" value="${EXPAT}/include"/>
 					<option name="link" value="-lexpat"/>

@@ -5,7 +5,7 @@ note
 		"Expat API"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,12 +146,10 @@ feature -- Parsing
 			str_not_void: str /= Void
 		local
 			int: INTEGER
-			u: UC_STRING
 			s: STRING
 			c_str: ANY
 		do
-			u ?= str
-			if (u = Void) or else (u.count = u.byte_count) then
+			if not attached {UC_STRING} str as u or else (u.count = u.byte_count) then
 				s := str
 			else
 				s := u.as_string
@@ -255,7 +253,7 @@ feature -- Parse state
 
 feature -- Miscellaneous
 
-	set_callback_object (a_parser: POINTER; a_callback: XM_EXPAT_CALLBACK)
+	set_callback_object (a_parser: POINTER; a_callback: detachable XM_EXPAT_CALLBACK)
 			-- Attach `a_callback' to the user data of Expat.
 			-- Make sure that `a_callback' is not moved by the GC.
 		require
@@ -1077,7 +1075,7 @@ feature -- Conversion: C Strings to STRING
 			string_not_void: Result /= Void
 		end
 
-	new_string_from_c_zero_terminated_string_safe (psz: POINTER): STRING
+	new_string_from_c_zero_terminated_string_safe (psz: POINTER): detachable STRING
 			-- Same as `new_string_from_c_zero_terminated_string',
 			-- except you may give it a `default_pointer' - in that case
 			-- it will give you back Void
@@ -1089,7 +1087,7 @@ feature -- Conversion: C Strings to STRING
 
 feature -- Conversion: C Strings to UC_STRING
 
-	new_uc_string_from_c_utf8_zero_terminated_string_safe (psz: POINTER): UC_STRING
+	new_uc_string_from_c_utf8_zero_terminated_string_safe (psz: POINTER): detachable UC_STRING
 			-- Same as `new_string_from_c_utf8_zero_terminated_string',
 			-- except you may give it a `default_pointer' - in that case
 			-- it will give you back Void
