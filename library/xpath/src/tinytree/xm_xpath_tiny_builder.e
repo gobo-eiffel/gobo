@@ -5,7 +5,7 @@ note
 		"Callbacks filter producing tiny trees"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2003-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -164,7 +164,7 @@ feature -- Events
 				end
 				current_depth := current_depth + 1
 				if current_depth > l_previously_at_depth.count then
-					INTEGER_ARRAY_.resize (l_previously_at_depth, 1, l_previously_at_depth.count)
+					INTEGER_ARRAY_.resize_with_default (l_previously_at_depth, 0, 1, l_previously_at_depth.count)
 				end
 				l_previously_at_depth.put (-1, current_depth) -- no previous sibling
 

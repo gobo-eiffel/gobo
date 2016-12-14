@@ -31,7 +31,7 @@ inherit
 	DIRECTORY
 		rename
 			make as old_make,
-			name as string_name,
+			name as old_name,
 			open_read as old_open_read,
 			is_readable as old_is_readable,
 			exists as old_exists,
@@ -101,7 +101,7 @@ feature -- Access
 							nb := nb + 1
 							if nb > k then
 								k := k + 10
-								STRING_ARRAY_.resize (an_array, 1, k)
+								STRING_ARRAY_.resize_with_default (an_array, "", 1, k)
 							end
 							an_array.put (a_name, nb)
 						end
@@ -153,7 +153,7 @@ feature -- Access
 								nb := nb + 1
 								if nb > k then
 									k := k + 10
-									STRING_ARRAY_.resize (an_array, 1, k)
+									STRING_ARRAY_.resize_with_default (an_array, "", 1, k)
 								end
 								an_array.put (a_name, nb)
 							end
@@ -635,6 +635,16 @@ feature {NONE} -- Implementation
 			-- (do not take `unread_entry' into account)?
 		do
 			Result := (lastentry = Void)
+		end
+
+	string_name: STRING_8
+			-- File name as a STRING_8 instance. The value might be truncated
+			-- from the original name used to create the current FILE instance.
+		do
+			Result := internal_name.as_string_8
+		ensure
+			string_name_not_void: Result /= Void
+			string_name_not_empty: not Result.is_empty
 		end
 
 	tmp_file: KL_TEXT_INPUT_FILE

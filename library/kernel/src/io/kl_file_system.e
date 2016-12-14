@@ -5,7 +5,7 @@ note
 		"File systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -419,7 +419,7 @@ feature -- Working directory
 			-- convention of the underlying file system
 			-- (Return a new object at each call.)
 		do
-			Result := execution_environment.current_working_directory
+			Result := execution_environment.current_working_path.utf_8_name
 		end
 
 	cd, set_current_working_directory (a_dirname: STRING)
@@ -432,11 +432,13 @@ feature -- Working directory
 		local
 			rescued: BOOLEAN
 			a_string_dirname: STRING
+			l_path: PATH
 		do
 			if not rescued then
 				a_string_dirname := STRING_.as_string (a_dirname)
 				if a_string_dirname.count > 0 then
-					execution_environment.change_working_directory (a_string_dirname)
+					create l_path.make_from_string (a_string_dirname)
+					execution_environment.change_working_path (l_path)
 				end
 			end
 		rescue

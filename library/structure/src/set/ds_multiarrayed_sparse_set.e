@@ -7,7 +7,7 @@ note
 
 	storable_version: "20130823"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 	item_storage_resize (n: INTEGER)
 			-- Resize `item_storage'.
 		do
-			array_special_item_routines.resize (item_storage, 0, ((n - 1) // chunk_size))
+			array_special_item_routines.resize_with_default (item_storage, Void, 0, ((n - 1) // chunk_size))
 		end
 
 	item_storage_wipe_out
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 	clashes_resize (n: INTEGER)
 			-- Resize `clashes'.
 		do
-			ARRAY_SPECIAL_INTEGER_.resize (clashes, 0, ((n - 1) // chunk_size))
+			ARRAY_SPECIAL_INTEGER_.resize_with_default (clashes, Void, 0, ((n - 1) // chunk_size))
 		end
 
 	clashes_wipe_out
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 	slots_resize (n: INTEGER)
 			-- Resize `slots'.
 		do
-			ARRAY_SPECIAL_INTEGER_.resize (slots, 0, ((n - 1) // chunk_size))
+			ARRAY_SPECIAL_INTEGER_.resize_with_default (slots, Void, 0, ((n - 1) // chunk_size))
 		end
 
 	slots_wipe_out

@@ -5,7 +5,7 @@ note
 		"Eiffel feature id lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,7 +121,7 @@ feature -- Element change
 		do
 			count := count + 1
 			if feature_ids.upper < count then
-				INTEGER_ARRAY_.resize (feature_ids, 1, count)
+				INTEGER_ARRAY_.resize_with_default (feature_ids, 0, 1, count)
 			end
 			feature_ids.put (an_id, count)
 		ensure

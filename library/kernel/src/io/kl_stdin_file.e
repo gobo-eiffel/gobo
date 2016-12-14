@@ -10,7 +10,7 @@ note
 		%and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -137,7 +137,7 @@ feature -- Input
 					if not s.is_empty then
 						last_string.subcopy (s, 1, s.count, 1)
 						i := s.count
-						last_string.set_internal_hash_code (0)
+						last_string.reset_hash_codes
 						last_string.set_count (i)
 					end
 				else
@@ -262,7 +262,7 @@ feature -- Input
 						s := console.last_string
 						if not s.is_empty then
 							a_string.subcopy (s, 1, s.count, j)
-							a_string.set_internal_hash_code (0)
+							a_string.reset_hash_codes
 						end
 						Result := i + s.count
 					else
@@ -273,7 +273,7 @@ feature -- Input
 						s := console.last_string
 						if not s.is_empty then
 							tmp_string.subcopy (s, 1, s.count, 1)
-							tmp_string.set_internal_hash_code (0)
+							tmp_string.reset_hash_codes
 						end
 						nb2 := s.count
 						from

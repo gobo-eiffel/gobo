@@ -121,7 +121,7 @@ feature -- Input
 				if not old_end_of_file then
 					last_string.set_count (nb)
 					i := old_read_to_string (last_string, 1, nb)
-					last_string.set_internal_hash_code (0)
+					last_string.reset_hash_codes
 					last_string.set_count (i)
 				else
 					last_string.set_count (0)
@@ -164,16 +164,16 @@ feature -- Input
 				if not old_end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
 						i := i + old_read_to_string (a_string, j, nb - i)
-						a_string.set_internal_hash_code (0)
+						a_string.reset_hash_codes
 					elseif ANY_.same_types (a_string, dummy_kl_character_buffer) then
 						i := i + old_read_to_string (a_string, j, nb - i)
-						a_string.set_internal_hash_code (0)
+						a_string.reset_hash_codes
 					else
 						nb2 := nb - i
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
-						tmp_string.set_internal_hash_code (0)
+						tmp_string.reset_hash_codes
 						from
 							k := 1
 						until

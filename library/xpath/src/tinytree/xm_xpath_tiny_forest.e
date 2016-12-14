@@ -5,7 +5,7 @@ note
 		"Tiny-tree Document collections"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -626,11 +626,11 @@ feature -- Element change
 			number_of_nodes := number_of_nodes + 1
 			if number_of_nodes > node_kinds.count then
 				a_new_size := node_kinds.count * 2
-				INTEGER_ARRAY_.resize (node_kinds, 1, a_new_size)
-				INTEGER_ARRAY_.resize (depth, 1, a_new_size)
-				INTEGER_ARRAY_.resize (alpha, 1, a_new_size)
-				INTEGER_ARRAY_.resize (beta, 1, a_new_size)
-				INTEGER_ARRAY_.resize (name_codes, 1, a_new_size)
+				INTEGER_ARRAY_.resize_with_default (node_kinds, 0, 1, a_new_size)
+				INTEGER_ARRAY_.resize_with_default (depth, 0, 1, a_new_size)
+				INTEGER_ARRAY_.resize_with_default (alpha, 0, 1, a_new_size)
+				INTEGER_ARRAY_.resize_with_default (beta, 0, 1, a_new_size)
+				INTEGER_ARRAY_.resize_with_default (name_codes, 0, 1, a_new_size)
 			end
 			node_kinds.put (a_new_node_type, number_of_nodes)
 			depth.put (a_depth_value, number_of_nodes)
@@ -658,7 +658,7 @@ feature -- Element change
 			valid_next_sibling: a_next_node >= -1 -- -1 means no next sibling
 		do
 			if which_node > next_sibling_indices.count then
-				INTEGER_ARRAY_.resize (next_sibling_indices, 1, 2 * next_sibling_indices.count)
+				INTEGER_ARRAY_.resize_with_default (next_sibling_indices, 0, 1, 2 * next_sibling_indices.count)
 			end
 			next_sibling_indices.put (a_next_node, which_node)
 		ensure
@@ -707,7 +707,7 @@ feature -- Element change
 			if l_attribute_type_codes /= Void then
 				if l_attribute_type_codes.count < number_of_attributes then
 					a_new_size := last_node_added.max (number_of_attributes * 2)
-					INTEGER_ARRAY_.resize (l_attribute_type_codes, 1, a_new_size)
+					INTEGER_ARRAY_.resize_with_default (l_attribute_type_codes, 0, 1, a_new_size)
 				end
 				l_attribute_type_codes.put (another_type_code, number_of_attributes)
 			end
@@ -977,7 +977,7 @@ feature {NONE} -- Implementation
 	depth: ARRAY [INTEGER]
 			-- Depth of node in hierarchy (document root is level 1, so = the number of ancestors + 1).
 
-	next_sibling_indices: ARRAY[INTEGER]
+	next_sibling_indices: ARRAY [INTEGER]
 			-- Node number of the next sibling;
 			-- unless it points backwards, in which case it is the node number of the parent
 

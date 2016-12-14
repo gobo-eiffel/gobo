@@ -12,7 +12,7 @@ note
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,9 @@ feature -- Access
 			-- the bytes of its associated UTF unicode encoding will
 			-- be used to query its value to the environment.
 		do
-			Result := environment_impl.get (STRING_.as_string (a_variable))
+			if attached environment_impl.item (STRING_.as_string (a_variable)) as l_item then
+				Result := l_item.as_string_8
+			end
 		end
 
 feature -- Setting

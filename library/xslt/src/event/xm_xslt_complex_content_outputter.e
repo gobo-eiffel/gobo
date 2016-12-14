@@ -4,7 +4,7 @@ note
 		"Objects that output complex content."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -227,7 +227,7 @@ feature -- Events
 
 						pending_namespaces_list_size := pending_namespaces_list_size + 1
 						if pending_namespaces_list_size > pending_namespaces.count then
-							INTEGER_ARRAY_.resize (pending_namespaces, 1, 2 * pending_namespaces_list_size)
+							INTEGER_ARRAY_.resize_with_default (pending_namespaces, 0, 1, 2 * pending_namespaces_list_size)
 						end
 						pending_namespaces.put (a_namespace_code, pending_namespaces_list_size)
 						previous_atomic := False
@@ -277,10 +277,10 @@ feature -- Events
 					if not duplicate_found then
 						if pending_attributes_lists_size >= pending_attributes_type_codes.upper then
 							a_new_size := 2 * pending_attributes_type_codes.upper
-							INTEGER_ARRAY_.resize (pending_attributes_name_codes, 1, a_new_size)
-							INTEGER_ARRAY_.resize (pending_attributes_type_codes, 1, a_new_size)
-							STRING_ARRAY_.resize (pending_attributes_values, 1, a_new_size)
-							INTEGER_ARRAY_.resize (pending_attributes_properties, 1, a_new_size)
+							INTEGER_ARRAY_.resize_with_default (pending_attributes_name_codes, 0, 1, a_new_size)
+							INTEGER_ARRAY_.resize_with_default (pending_attributes_type_codes, 0, 1, a_new_size)
+							STRING_ARRAY_.resize_with_default (pending_attributes_values, Void, 1, a_new_size)
+							INTEGER_ARRAY_.resize_with_default (pending_attributes_properties, 0, 1, a_new_size)
 						end
 						pending_attributes_lists_size := pending_attributes_lists_size + 1
 						pending_attributes_name_codes.put (a_name_code, pending_attributes_lists_size)

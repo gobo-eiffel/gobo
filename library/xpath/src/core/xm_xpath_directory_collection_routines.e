@@ -5,7 +5,7 @@ note
 		"Objects that support the default collection and file: collections"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 		do
 			a_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, a_uri.full_uri, 0)
 			check attached File_uri.uri_to_filename (a_uri) as l_uri_to_filename then
-				create l_file.make (l_uri_to_filename)
+				create l_file.make_with_name (l_uri_to_filename)
 				l_info := l_file.file_info
 				ensure_protection_code
 				a_builder.notify_attribute (protection_code, Untyped_atomic_type_code, l_info.protection.out, 0)

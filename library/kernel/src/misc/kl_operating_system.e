@@ -5,7 +5,7 @@ note
 		"Underlying operating systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			-- convention of the underlying file system
 			-- (Return a new object at each call.)
 		do
-			Result := execution_environment.current_working_directory
+			Result := execution_environment.current_working_path.utf_8_name
 		ensure
 			current_working_directory_not_void: Result /= Void
 		end
@@ -89,7 +89,9 @@ feature {NONE} -- Implementation
 		require
 			a_variable_not_void: a_variable /= Void
 		do
-			Result := execution_environment.get (a_variable)
+			if attached execution_environment.item (a_variable) as l_item then
+				Result := l_item.as_string_8
+			end
 		end
 
 	execution_environment: EXECUTION_ENVIRONMENT

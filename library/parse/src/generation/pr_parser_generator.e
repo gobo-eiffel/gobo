@@ -1570,8 +1570,8 @@ feature {NONE} -- Building
 							if loc > yytable.upper then
 								ii := yycheck.upper + 1
 								nb2 := loc + Max_table_size_increment
-								INTEGER_ARRAY_.resize (yytable, 0, nb2)
-								INTEGER_ARRAY_.resize (yycheck, 0, nb2)
+								INTEGER_ARRAY_.resize_with_default (yytable, 0, 0, nb2)
+								INTEGER_ARRAY_.resize_with_default (yycheck, 0, 0, nb2)
 								from
 								until
 									ii > nb2
