@@ -5,7 +5,7 @@ note
 		"Objects that manage OASIS XML Catalogs"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -319,7 +319,7 @@ feature -- Output
 			end
 		end
 
-feature {TS_TEST_CASE} -- initialization
+feature {XM_CATALOG_MANAGER_HANDLER} -- initialization
 
 	reinit
 			-- Establish system catalogs
@@ -332,7 +332,7 @@ feature {TS_TEST_CASE} -- initialization
 			establish_system_catalog_files
 		end
 
-feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
+feature {XM_CATALOG, XM_CATALOG_MANAGER_HANDLER} -- Implementation
 
 	retrieved_catalog (a_catalog_name: STRING): detachable XM_CATALOG
 			-- Parsed catalog named `a_catalog_name'

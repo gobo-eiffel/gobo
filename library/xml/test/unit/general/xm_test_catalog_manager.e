@@ -23,6 +23,8 @@ inherit
 
 	XM_SHARED_CATALOG_MANAGER
 
+	XM_CATALOG_MANAGER_HANDLER
+
 create
 
 	make_default

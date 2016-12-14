@@ -5,7 +5,7 @@ note
 		"Objects that compile astylesheet"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ inherit
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
 
-create {XM_XSLT_TRANSFORMER_FACTORY, XM_XSLT_TEST_STYLESHEET_BUILDER}
+create {XM_XSLT_TRANSFORMER_FACTORY, XM_XSLT_STYLESHEET_COMPILER_HANDLER}
 
 	make
 
