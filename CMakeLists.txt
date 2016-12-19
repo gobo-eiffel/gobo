@@ -1,0 +1,8 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+PROJECT (Gobo)
+
+IF (NOT DEFINED ENV{GOBO})
+	MESSAGE(FATAL_ERROR "GOBO environment variable undefined")
+ENDIF()
+
+ADD_SUBDIRECTORY(work/bootstrap bin)

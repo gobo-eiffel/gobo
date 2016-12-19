@@ -16,12 +16,14 @@ The procedure is quite simple:
 . Make sure that your Eiffel and C compilers are in your $PATH.
 . Depending on your platform, run either:
 
+  Under Windows:
      bootstrap.bat [-v] <c_compiler> <eiffel_compiler>
-
-  or:
-
+  or under Unix:
      bootstrap.sh [-v] <c_compiler> <eiffel_compiler>
-  
+  or with CMake builder toolchain (from gobo root directory):
+     cmake -G <generator> -DCMAKE_BUILD_TYPE=RELEASE
+     make (depending of selected generator)
+
 To find out about the already supported values for
 <c_compiler> and <eiffel_compiler>, run the same command
 but with the option '-help'. The optional command-line
