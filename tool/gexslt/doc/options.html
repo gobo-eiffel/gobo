@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Gobo Eiffel XSLT Command-line usage and options</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Gobo Eiffel XSLT Command-line usage and options</h1>
+    </td>
+    <td align="right"><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>How to invoke gexslt</h2>
+   
+   <p>
+    Gexslt is invoked from the command line. The general form is:
+    
+    <ul>
+     <li>gexslt --help</li>
+     <li>gexslt --version</li>
+     <li>gexslt [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</li>
+     <li>gexslt [--file=|--uri=]stylesheet --template=template-name (--options)* (string-parameter)*</li>
+     <li>gexslt --use-pi [(--pi-options)*] [--file=|--uri=]source-document (--options)* (string-parameter)*</li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Stylesheet and source documents</h2>
+   
+   <p>
+    The stylesheet and source documents can be written either as URIs or as names in the local file system.
+    Gexslt will attempt to convert a local file name into a URI, if it detects such a name is not already a URI. 
+    
+   </p>
+   
+   <p>
+    If you want to use a file name that starts with --, or includes = as a character in the name, or might look 
+    to the system like a URI (e.g. if http://foo/bar is a valid file name on your system), then you can
+    force gexslt to interpret it as a file name by writing it as --file=my/file.name.
+    
+   </p>
+   
+   <p>
+    If you want to ensure that gexslt treats a name as a URI (necessary if it starts with -- or includes =), then you can write
+    it as --uri=my:strange=uri.
+    
+   </p>
+   
+   <div>
+    
+    <h3>Fragment identifiers</h3>
+    
+    <p>
+     	If the URI for a source document includes a fragment identifier, then gexslt will parse the document
+     	as normal, but will attempt to set the initial context node to be that specified by the fragment (according to the
+     	semantics for the particular media type). Note, that in this case, the initial context node will not necessarily match the
+     pattern <font color="#008080">/</font>,
+     	so the initial template may vary according to the fragment identifier. Note also, that the document root and document element
+     are exactly the same nodes
+     	as they would be if no fragment identifier is supplied.
+     
+    </p>
+    
+    <p>
+     	Gexslt recognizes the following media types:
+     	
+     <ul>
+      <li>application/xhtml+xml</li>
+      <li>application/xslt+xml</li>
+      <li>application/xml</li>
+      <li>application/xml-external-parsed-entity</li>
+      <li>
+       	      application/*+xml
+       	      
+       <p>
+        		This is treated according to the rules for application/xml, if no
+        		more specific rule is present.
+        	      
+       </p>
+      </li>
+      <li>text/xml</li>
+      <li>text/xml-external-parsed-entity</li>
+     </ul>
+     
+    </p>
+    
+    <p>
+     	If the resolver is unable to supply the media type, then application/xml is assumed,
+     	except for stylesheet modules, where application/xslt+xml is assumed (since the latter
+     	is defined to have identical fragment identifier semantics to the former, there is
+     	no significance to this difference).
+     
+    </p>
+    
+    <p>
+     	Only shorthand pointers are supported for stylesheets. In this case, the shorthand pointer
+     	must point to an ID attribute (and the DTD must be available), or an xml:id attribute, on
+     	the xsl:transform or xsl:stylesheet element.
+     
+    </p>
+    
+   </div>
+   
+  </div>
+  <div>
+   
+   <h2>Parameters</h2>
+   
+   <p>
+    To set a global parameter on a stylesheet (as defined by a top-level xsl:param declaration),
+    you may set it via an option. However, gexslt provides a more convenient syntax for the most common usage pattern, 
+    string-valued parameters:
+    
+    <ul>
+     <li>name=value</li>
+     <li>name='value with embedded blanks'</li>
+    </ul>
+    
+   </p>
+   
+   <p>
+    Note that single quotes are only needed to avoid mis-interpretation by the command shell.
+    
+   </p>
+   
+   <p>
+    These string parameters may, in principle, appear anywhere within the command line,
+    although it is conventional to put them at the end.
+    
+   </p>
+   
+   <p>
+    If you wish to pass general XPath expressions to the stylesheet, you have to use the --xpath-param option.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Options</h2>
+   
+   <p>The following is a list of the options that can be given on the command-line:</p>
+   
+   <div>
+    
+    <h3>Stylesheet control</h3>
+    
+    <p>The following options control stylesheet execution:
+     
+     <dl>
+      	
+      <dt>--use-pi</dt>
+      <dd>
+       	      Interpret the first file or URI argument as a source document, rather than a stylesheet.
+       	      Search for one or more xml-stylesheet processing instructions within that source document, and use them to find
+       	      the stylesheet.
+       	    
+       <p>
+        	      Gexslt has to parse the source document twice. Once to find the processing instruction, and again, 
+        	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
+        	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
+        	      this does mean that a stream that can only be read once may not be used with this option.
+        	    
+       </p>
+       <p>
+        	      There are additional options that further control the interpretation of the xml-stylesheet processing
+        	      instructions:
+        	      
+        <dl>
+         		
+         <dt>--medium={medium-name}</dt>
+         <dd>
+          		      The target medium. This must be a single word, consisting solely of the characters [a-z][A-z][0-9][-].
+          		      Only processing instructions that contain this medium name (or the special name "all") within
+          		      their media pseudo-attribute will be selected. The default is "screen", both for this parameter and the processing
+          instruction
+          		      media pseudo-attribute. Case is significant. The word "all" is not permitted.
+          		    
+         </dd>
+         		
+         <dt>--title={preference}</dt>
+         <dd>
+          		      The preferred style. This may be any text string (leading and trailing double quotes will be removed, so you may
+          		      include spaces).
+          		      Only processing instructions that have this style name for
+          		      their title pseudo-attribute will be selected, along with any persistent stylesheets (those that
+          		      do not specify the title pseudo-attribute). If this parameter is omitted, then the first preferred
+          		      stylesheet for the medium (that is, one that supplies the title pseudo-attribute and does not supply
+          		      the alternate pseudo-attribute with a value of "yes") will also be selected. Case is significant.
+          		    
+         </dd>
+         	      
+        </dl>
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--output=&lt;local-file-name&gt;</dt>
+      <dd>
+       	      Names the destination for the transformation results. If omitted, the results are written
+       	      to the standard output stream.
+       	    
+      </dd>
+      	
+      <dt>--mode=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</dt>
+      <dd>
+       	      Specifies an initial mode. This is a QName. If the name is qualified by a prefix within the
+       	      stylesheet, then prefix the local name with the namespace URI followed by #.
+       	    
+       <p>
+        	      If this parameter is omitted (the usual situation), then the default mode is used.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--template=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</dt>
+      <dd>
+       	      Specifies a named template to be invoked. This is a QName. If the name is qualified by a prefix within the
+       	      stylesheet, then prefix the local name with the namespace URI followed by #.
+       	    
+       <p>
+        	      If this parameter is omitted (the usual situation), then the initial template is the one
+        	      that matches the initial context node, normally the document node, of the source document. If this parameter is supplied,
+        	      then the source document may be omitted.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--context=&lt;name&gt;=&lt;XPath expression&gt;</dt>
+      <dd>
+       	      Specifies an XPath expression to be applied to the source document in order to determine the initial context node.
+       This
+       	      parameter must be omitted if a source document is not supplied. It is a non-recoverable error is the supplied expression
+       	      does not select a single node.
+       	    
+       <p>
+        	      If this parameter is omitted (the usual situation), then the initial context node is the document node of the source
+        document.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--param=&lt;name&gt;=&lt;string-value&gt;</dt>
+      <dd>
+       	      Sets a string-valued global parameter on the stylesheet.
+       	      Enclose the value in single quotes if it includes embedded blanks.
+       	    
+      </dd>
+      	
+      <dt>--xpath-param=&lt;name&gt;=&lt;XPath expression&gt;</dt>
+      <dd>
+       	      Sets a global parameter on the stylesheet, passing an XPath expression
+       	      as the value.
+       	      Enclose the value in single quotes if it includes embedded blanks.
+       	    
+      </dd>
+      	
+      <dt>--default-template-warning</dt>
+      <dd>
+       	      Issues a warning message when a built-in template is invoked.
+       	    
+       <p>
+        	      The default-template-warning and suppress-default-action options
+        	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--suppress-default-action</dt>
+      <dd>
+       	      Suppresses all invocations of built-in templates.
+       	      
+       <p><font color="#FF0000">
+         		Use of this option gives non-compliant behaviour.
+         	      </font></p>
+       	    
+       <p>
+        	      The default-template-warning and suppress-default-action options
+        	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+        	    
+       </p>
+      </dd>
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>Tracing</h3>
+    
+    <p>The following options control stylesheet execution tracing:
+     
+     <dl>
+      	
+      <dt>--trace[=&lt;trace-file&gt;]</dt>
+      <dd>
+       	      Turn on stylesheet tracing.
+       	    
+       <p>
+        	      Set the destination for trace output to be "trace-file". If "trace-file"
+        	      is omitted, then trace output is sent to the standard output stream.
+        	    
+       </p>
+       <p>
+        	      If neither this option nor the <font color="#008080"><i><tt>timed-trace</tt></i></font> 
+        	      option is given, then no trace output is produced.
+        	    
+       </p>
+      </dd>      
+      	
+      <dt>--timed-trace[=&lt;trace-file&gt;]</dt>
+      <dd>
+       	      Turn on stylesheet tracing with timings.
+       	    
+       <p>
+        	      Set the destination for trace output to be "trace-file". If "trace-file"
+        	      is omitted, then trace output is sent to the standard output stream.
+        	    
+       </p>
+      </dd>      
+      	
+      <dt>--suppress-xpath-tracing</dt>
+      <dd>
+       	      Suppress output from the XPath <font color="#008080">fn:trace()</font> function.
+       	    
+      </dd>      
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>Errors and warnings</h3>
+    
+    <p>The following options control issuing of error and warning messages:
+     
+     <dl>
+      	
+      <dt>--secure</dt>
+      <dd>
+       	      Operate in secure mode. Any attempt by an xsl:document instruction
+       	      to write to any destination other than the standard output stream
+       	      or an in-memory string will result in a fatal error.
+       	    
+      </dd>
+      	
+      <dt>--warnings=[&lt;warning-file&gt;]</dt>
+      <dd>
+       	      Set the destination for warnings to be "warning-file". If "warning-file"
+       	      is omitted, then all warning messages are ignored.
+       	    
+       <p>
+        	      If this parameter is not given, then warnings are sent to the standard error
+        	      stream.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--errors=[&lt;error-file&gt;]</dt>
+      <dd>
+       	      Set the destination for error messages to be "error-file". If "error-file"
+       	      is omitted, then all error messages are ignored.
+       	    
+       <p>
+        	      If this parameter is not given, then error messages are sent to the standard error
+        	      stream.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--errors-and-warnings=[&lt;error-file&gt;]</dt>
+      <dd>
+       	      Set the destination for both error and warning messages to be "error-file". If "error-file"
+       	      is omitted, then all such messages are ignored.
+       	    
+      </dd>
+      	
+      <dt>--no-line-numbers</dt>
+      <dd>
+       	      By default, diagnostics will include the line number where the
+       	      error was detected. This option turns off this facility.
+       	    
+       <p>
+        	     The intention is to save memory when processing very large files.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--warning-threshold=&lt;number&gt;</dt>
+      <dd>
+       	      Do not display any warning messages once more than &lt;number&gt;
+       	      warnings have been displayed. The default value is 25.
+       	    
+       <p>
+        	      Setting this value to a negative number means that <i>all</i>
+        	      warning messages will be displayed. Setting it to zero means that
+        	      no warning messages will ever be displayed.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--treat-warnings-as-errors</dt>
+      <dd>
+       	      Treat warnings as if they were recoverable errors.
+       	    
+      </dd>
+      	
+      <dt>--recover-silently</dt>
+      <dd>
+       	      When a recoverable error occurs, take the appropriate recovery action,
+       	      but do not issue any diagnostic message.
+       	    
+       <p>
+        	      The default is to take the appropriate recovery action and 
+        	      issue a diagnostic message.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--do-not-recover</dt>
+      <dd>
+       	      Treat all recoverable errors as fatal errors.
+       	    
+       <p>
+        	      The default is to take the appropriate recovery action and 
+        	      issue a diagnostic message.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--error-threshold=&lt;number&gt;</dt>
+      <dd>
+       	      Do not display any  messages for recoverable errors once more than &lt;number&gt;
+       	      recoverable errors have been displayed. The default value is 25.
+       	    
+       <p>
+        	      Setting this value to a negative number means that <i>all</i>
+        	      recoverable error messages will be displayed.
+        	    
+       </p>
+      </dd>
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>OASIS Entity Resolution Technical Committee XML catalogs</h3>
+    
+    <p>The following options control the use of OASIS ETRC XML catalogs
+     
+     <dl>
+      	
+      <dt>--no-catalogs</dt>
+      <dd>
+       	      Do not use OASIS ERTC XML catalogs for entity resolution or
+       	      URI reference resolution.
+       	    
+      </dd>
+      	
+      <dt>--no-default-catalog</dt>
+      <dd>
+       	      Do not use the system default catalog.
+       	    
+       <p>
+        	      In this case, only catalogs specified by the environment variable <font color="#008080">XM_CATALOG_FILES</font>,
+        	      plus any per-document-catalogs named in <font color="#008080">oasis-xml-catalog</font>
+        	      processing instructions, are searched.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--prefer-system</dt>
+      <dd>
+       	      Prefer <font color="#008080">SYSTEM</font> ids to <font color="#008080">PUBLIC</font> ids when both are given.
+       	      The catalog resolver only attempts to match on <font color="#008080">PUBLIC</font> ids
+       	      when there is either no <font color="#008080">SYSTEM</font> id given, or else the catalog resolver
+       	      fails to find a match for the <font color="#008080">SYSTEM</font> id.
+       	    
+       <p>
+        	      In the latter case, when this option is given,
+        	      <font color="#008080">PUBLIC</font> entries are only considered for a match if
+        	      they were defined when <font color="#008080">prefer="system"</font> was in effect.
+        	    
+       </p>
+       <p>
+        	      The default is to always consider <font color="#008080">PUBLIC</font> ids, when no
+        	      match is found for the <font color="#008080">SYSTEM</font> id.
+        	    
+       </p>
+       <p>
+        	      If no <font color="#008080">SYSTEM</font> id is given, then this option has no effect.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--no-catalog-pi</dt>
+      <dd>
+       	      Ignore any <font color="#008080">oasis-xml-catalog</font> processing instructions in source
+       	      documents and stylesheets.
+       	    
+      </dd>
+      	
+      <dt>--catalog-debug-level=&lt;0-10&gt;</dt>
+      <dd>
+       	      Set the level of debugging messages produced by the catalog resolver.
+       	      0 means no messages. 10 Means maximum verbosity.
+       	    
+      </dd>
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>Performance</h3>
+    
+    <p>The following options are available for performance tuning:
+     
+     <dl>
+      	
+      <dt>--no-gc</dt>
+      <dd>
+       	      Disables garbage collection. This might improve performance under some circumstances.
+       	      Or it might make it worse.
+       	    
+      </dd>
+      	
+      <dt>--tiny-tree</dt>
+      <dd>
+       	      The source document is built using the tiny-tree model, rather than
+       	      the standard tree model. This saves on memory, but will often result
+       	      in slower execution. But with some tranformations, such as the 
+       	      identity transform, it may actually improve execution speed.
+       	    
+      </dd>
+      	
+      <dt>--report-document-statistics</dt>
+      <dd>
+       	      Report statistics about the source document (and for each document read by the <font color="#008080">doc()</font> 
+       	      and <font color="#008080">document()</font> functions). This only applies when the tiny-tree option is selected.
+       	    
+       <p>
+        	      This option is useful for choosing values for the nodes, attributes, namespaces and characters options.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--nodes=[estimated-node-count]</dt>
+      <dd>
+       	      The estimated number of nodes (excluding attributes and namespaces) in the source document (and for each document read
+       by the <font color="#008080">doc()</font>  
+       	      and <font color="#008080">document()</font> functions). This only applies when the tiny-tree option is selected.
+       	    
+       <p>
+        	      If omitted, this defaults to 4000.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--attributes=[estimated-attribute-count]</dt>
+      <dd>
+       	      The estimated number of attributes in the source document (and for each document read by the <font color="#008080">doc()</font> 
+       	      and <font color="#008080">document()</font> functions). This only applies when the tiny-tree option is selected.
+       	    
+       <p>
+        	      If omitted, this defaults to 100.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--namespaces=[estimated-namespace-count]</dt>
+      <dd>
+       	      The estimated number of namespaces in the source document (and for each document read by the <font color="#008080">doc()</font> 
+       	      and <font color="#008080">document()</font> functions). This only applies when the tiny-tree option is selected.
+       	    
+       <p>
+        	      If omitted, this defaults to 20.
+        	    
+       </p>
+      </dd>
+      	
+      <dt>--characters=[estimated-character-count]</dt>
+      <dd>
+       	      The estimated number of content characters in the source document (and for each document read by the <font color="#008080">doc()</font> 
+       	      and <font color="#008080">document()</font> functions). This only applies when the tiny-tree option is selected.
+       	    
+       <p>
+        	      If omitted, this defaults to 4000.
+        	    
+       </p>
+      </dd>
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+   <div>
+    
+    <h3>Media types and URI fragment identifiers</h3>
+    
+    <p>The following options affect the mapping of URIs onto media-types, for interpretation of fragment identifies:
+     
+     <dl>
+      	
+      <dt>--html-text-ok</dt>
+      <dd>
+       	      By default, gexslt assumes that a web server is serving up XHTML
+       	      documents as media type text/html (to get round the fact that MSIE does not recognize 
+       	      application/xhtml+xml). So if it sees a media type of text/html, it pretends that it is actually
+       	      application/xhtml+xml. Using this option means it respects the media type as text/html.
+       	      The result is that this is a media type that the program chooses not to recognize, so you will
+       	      get recoverable error XTRE1160.
+       	    
+       <p>
+        	      Without this option, it might be argued that gexslt is non-compliant. Apart from that, 
+        	      it doesn't serve any useful purpose.
+        	    
+       </p>
+      </dd>
+      
+     </dl>
+     
+    </p>
+    
+   </div>
+   
+  </div>
+  <div>
+   
+   <h2>Extensions</h2>
+   
+   <p>The following options control the availability of extensions:
+    
+    <dl>
+     
+     <dt>--no-output-extensions</dt>
+     <dd>
+      	    Disables use of <font color="#008080">QName</font>s for the
+      	    value of the <font color="#008080">xsl:output</font> <font color="#008080">method</font> attribute.
+      	  
+     </dd>
+     
+     <dt>--no-extension-functions</dt>
+     <dd>
+      	    Disables use of extension functions.
+      	  
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Miscellaneous</h2>
+   
+   <dl>
+    
+    <dt>--time</dt>
+    <dd>
+     	   Print timing information for each phase on standard error stream.
+     	  
+    </dd>
+    
+    <dt>--suppress-dtd</dt>
+    <dd>
+     	   Prevent the XML parser from reading external DTDs. This applies to the fn:document(), fn:doc() and fn:collection()
+     	   functions, as well to the principal source document and all transformation modules.
+     	  
+    </dd>
+    
+    <dt>--force-explaining</dt>
+    <dd>
+     	   Act as if the principal stylesheet module had a gexslt:explain="all" attribute coded.
+     	  
+    </dd>
+    
+    <dt>--digits=[maximum_decimal_digits]</dt>
+    <dd>
+     	   Maximum number of digits permitted in xs:decimal and xs:integer values. Default (and minimum) is 18.
+     	  
+    </dd>
+    
+    <dt>--user</dt>
+    <dd>
+     	   User name for HTTP basic authentication.
+     	  
+    </dd>
+    
+    <dt>--password</dt>
+    <dd>
+     	   Password for HTTP basic authentication.
+     	  
+    </dd>
+    
+    <dt>--no-network-protocols</dt>
+    <dd>
+     	    Disables use of any URI schemes that imply access
+     	    to the outside world (e.g. <font color="#008080">http</font>, <font color="#008080">ftp</font>
+     	    and <font color="#008080">telnet</font>) that might otherwise be registered.
+     	  
+    </dd>
+    
+   </dl>
+   
+  </div>
+  <div>
+   
+   <h2>Execution phases</h2>
+   
+   <dl>
+    
+    <dt>--stop-after-compilation</dt>
+    <dd>
+     	    Compile the stylesheet, but do not parse the principal
+     	    source document, and do not execute the transformation.
+     	  
+    </dd>
+    
+    <dt>--stop-after-source-document</dt>
+    <dd>
+     	    Compile the stylesheet, and parse the principal
+     	    source document, but do not execute the transformation.
+     	  
+    </dd>
+    
+   </dl>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, September 5th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

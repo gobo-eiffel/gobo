@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>The Error Listener</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>The Error Listener</h1>
+    </td>
+    <td align="right"><a href="results.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="tracing.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The Error Listener receives notification of all warnings and errors (whether recoverable or not)
+   generated when compiling the stylesheet, or produced by the <a href="xslt_transformer.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMER</tt></i></font></a>.
+   
+  </p>
+  <p>
+   XSLT defines some errors as recoverable (and specifies optional recovery options), and others
+   as non-recoverable. Conditions not defined by XSLT are raised by the library as warnings.
+   
+  </p>
+  <div>
+   
+   <h2>Features</h2>
+   
+   <p>
+    The following features may be of interest to the Eiffel programmer:
+    
+   </p>
+   
+   <p>
+    
+    <dl>
+     	
+     <dt><font color="#008080"><i><tt>recovery_policy: INTEGER / set_recovery_policy (a_recovery_policy: like recovery_policy)</tt></i></font></dt>
+     <dd>
+      	      The recovery policy is an instruction to the <font color="#008080"><i><tt>error</tt></i></font> routine
+      	      as to how to handle recoverable errors. If it evaluates to <font color="#008080"><i><tt>Recover_silently</tt></i></font>,
+      	      then <font color="#008080"><i><tt>error</tt></i></font> is supposed to set <font color="#008080"><i><tt>recovered</tt></i></font> to
+      	      <font color="#008080"><i><tt>True</tt></i></font>, and not issue any message (although it may choose to log the error).
+      	    
+      <p>
+       	      If it evaluates to <font color="#008080"><i><tt>Recover_with_warnings</tt></i></font>, then it should additionally
+       	      inform the user of the recovered condition, provided <font color="#008080"><i><tt>recoverable_error_threshold</tt></i></font>
+       	      has not been exceeded (although it is not obliged to honour this threshold).
+       	    
+      </p>
+      <p>
+       	      If, however, it evaluates to <font color="#008080"><i><tt>Do_not_recover</tt></i></font>, then it should inform the user
+       	      of the error condition, and set <font color="#008080"><i><tt>recovered</tt></i></font> to <font color="#008080"><i><tt>False</tt></i></font>.
+       	    
+      </p>
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>warning_threshold: INTEGER / set_warning_threshold (a_warning_threshold: like warning_threshold)</tt></i></font></dt>
+     <dd>
+      	      This threshold is available to request the <font color="#008080"><i><tt>warning</tt></i></font> routine
+      	      not to issue an informatory message once this number of warning messages have been issued.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>recoverable_error_threshold: INTEGER / set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold)</tt></i></font></dt>
+     <dd>
+      	      This threshold is available to request the <font color="#008080"><i><tt>error</tt></i></font> routine
+      	      not to issue an informatory message once this number of recoverable errors have been seen.
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</tt></i></font></dt>
+     <dd>
+      	      This routine is called by the library to warn of problematic conditions which are not defined as errors
+      	      by XSLT. It should inform the user (in some unspecified way) about the condition, provided that
+      	      <font color="#008080"><i><tt>warning_threshold</tt></i></font> has not been exceeded (but there is no obligation to
+      	      maintain a count of warning messages, so an error listener could ignore this threshold).
+      	    
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>error (a_error: XM_XPATH_ERROR_VALUE)</tt></i></font></dt>
+     <dd>
+      	      This routine is called by the library to inform the user (in some unspecified way) about a recoverable
+      	      error, provided that <font color="#008080"><i><tt>recoverable_error_threshold</tt></i></font> has not been exceeded (but there is no obligation to
+      	      maintain a count of error messages, so an error listener could ignore this threshold)
+      	      and perhaps recover from the error (both actions depend upon the current setting of <font color="#008080"><i><tt>recovery_policy</tt></i></font>).
+      	    
+      <p>
+       	      This routine <i>must</i> set <font color="#008080"><i><tt>recovered</tt></i></font> to <font color="#008080"><i><tt>True</tt></i></font>
+       	      if it recovers from an error, so that the transformer can take the defined recovery action.
+       	    
+      </p>
+      <p>
+       	     If the error listener exposes the error code (and its namespace uri) in any way, then it <i>must</i> honour
+       	     the <font color="#008080"><i><tt>error_change_stack</tt></i></font>. See <font color="#008080"><i><tt>XM_XSLT_DEFAULT_ERROR_LISTENER</tt></i></font> for how to do
+       	     this. It may be necessary to copy the error location information.
+       	    
+      </p>
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>fatal_error (a_error: XM_XPATH_ERROR_VALUE)</tt></i></font></dt>
+     <dd>
+      	      This routine is called by the library to inform the user (in some unspecified way) about a
+      	      non-recoverable error.
+      	    
+      <p>
+       	     If the error listener exposes the error code (and its namespace uri) in any way, then it <i>must</i> honour
+       	     the <font color="#008080"><i><tt>error_change_stack</tt></i></font>. See <font color="#008080"><i><tt>XM_XSLT_DEFAULT_ERROR_LISTENER</tt></i></font> for how to do
+       	     this. It may be necessary to copy the error location information.
+       	    
+      </p>
+     </dd>
+     	
+     <dt><font color="#008080"><i><tt>treat_warnings_as_recoverable_errors</tt></i></font></dt>
+     <dd>
+      	      This routine may be called by the programmer on an error listener, 
+      	      to request the <font color="#008080"><i><tt>warning</tt></i></font>
+      	      routine to behave identically to the <font color="#008080"><i><tt>error</tt></i></font> routine.
+      	    
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>The default error listener: <i><tt>XM_XSLT_DEFAULT_ERROR_LISTENER</tt></i></h2>
+   
+   <p>
+    This is the chief concrete error listener provided by the library. It maintains error 
+    counts. The recovery policy is passed as an argument to the creation routine, as also is
+    a <font color="#008080"><i><tt>UT_ERROR_HANDLER</tt></i></font> to receive the warning and error messages.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>A testing error listener: <i><tt>XM_XSLT_TESTING_ERROR_LISTENER</tt></i></h2>
+   
+   <p>
+    This error listener supresses all output, but records which error message codes it has seen.
+    It was written for use in the XSLT test suite, so as to avoid confusing the user by displaying
+    error messages which are intentionally being produced.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Tuesday, October 19th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="results.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="tracing.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

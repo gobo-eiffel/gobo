@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Output extensions and additional serialization parameters</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Output extensions and additional serialization parameters</h1>
+    </td>
+    <td align="right"><a href="transformation_source.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="extension_functions.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This chapter relates to the <font color="#008080">xsl:output</font> and <font color="#008080">xsl:result-document</font> elements.
+   
+  </p>
+  <div>
+   
+   <h2>Output extensions</h2>
+   
+   <p>
+    The syntax of the <font color="#008080">xsl:output</font> and <font color="#008080">xsl:result-document</font> elements allows
+    the "method" parameter to take a <font color="#008080">QName-but-not-NCName</font> value. This allows
+    an implementation to provide additional output methods other than the four standard ones of "xml", 
+    "html", "xhtml" and "text".
+    
+   </p>
+   
+   <p>
+    The library provides an example of how to write your own output methods. This example only implements one method,
+    which is the same as the standard "xml" method, except that it allows the XSLT programmer to supply an internal subset
+    for the DTD, via an additional serialization parameter. If the serialization parameter is not supplied, then
+    no internal subset is written.
+    
+   </p>
+   
+   <p>
+    In this section I will talk you through the steps you need to take to implement your own methods, with reference to the example.
+    
+   </p>
+   
+   <ol>
+    <li>
+     	  Create a descendant of <font color="#008080"><i><tt> XM_XSLT_EXTENSION_EMITTER_FACTORY</tt></i></font>. The example is
+     	  <font color="#008080"><i><tt>XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY</tt></i></font>. The example only implements one method, 
+     	  but you can implement as many methods as you like in your class, provided they will all
+     	  share the same namespace.
+     	
+     <p>
+      	  There are four features which you must implement:
+      	
+     </p>
+     <dl>
+      	  
+      <dt><font color="#008080"><i><tt>namespace_uri: STRING</tt></i></font></dt>
+      <dd>
+       		This is the namespace-uri which the XSLT programmer will use to call your
+       		output methods. Note that it must be a non-null namespace and cannot be the XSLT namespace 
+       		nor the XSLT library's extension namespace.
+       	      
+      </dd>
+      	  
+      <dt><font color="#008080"><i><tt>is_valid_output_method (a_method_local_name: STRING)</tt></i></font></dt>
+      <dd>
+       		This is called (indirectly) from <font color="#008080"><i><tt>gather_output_properties</tt></i></font> in <font color="#008080"><i><tt>XM_XSLT_OUTPUT</tt></i></font>,
+       		to determine if the <font color="#008080">QName</font> supplied as an argument to <font color="#008080">xsl:output</font>'s <font color="#008080">method</font>
+       		attribute is supported by the implementation.
+       	      
+      </dd>
+      	  
+      <dt><font color="#008080"><i><tt>set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER)</tt></i></font></dt>
+      <dd>
+       		This is called (indirectly) from <font color="#008080"><i><tt>gather_output_properties</tt></i></font> in <font color="#008080"><i><tt>XM_XSLT_OUTPUT</tt></i></font>,
+       		to set the default serialization parameters for your method. The example does not check the local name, as it only supports
+       		one method, and <font color="#008080"><i><tt>is_valid_output_method</tt></i></font> has already returned <font color="#008080"><i><tt>True</tt></i></font>
+       		when this routine is called. But if you want to have different defaults for your different routines, then you can test the
+       
+       		value of <font color="#008080"><i><tt>a_method_local_name</tt></i></font>.
+       	      
+       <p>
+        		You do not need to set most of the defaults, as they will be set when <font color="#008080"><i><tt>some_properties</tt></i></font> is created (using
+        		feature <font color="#008080"><i><tt>set_xml_defaults</tt></i></font> from <font color="#008080"><i><tt>XM_XSLT_OUTPUT_PROPERTIES</tt></i></font>, but the example
+        		sets them all, purely for illustration. Note that you <i>must</i> set the method in exactly the same
+        		way that the example does.
+        	      
+       </p>
+       <p>
+        		You can also set defaults for any additional serialization parameters that your method(s) require(s). The example
+        		shows how to do this, but only as a comment, since the serialization parameter is not required in this case.
+        		
+        <p><font color="#FF0000">It is not possible to require the presence of an additional serialization parameter, so if 
+          		your method requires a value, you should set a default.</font></p>
+        	      
+       </p>
+      </dd>
+      	  
+      <dt><font color="#008080"><i><tt>new_receiver</tt></i></font></dt>
+      <dd>
+       		This routine provides the serializer for the transformer. You have to return a chain of <font color="#008080"><i><tt>XM_XPATH_RECEIVER</tt></i></font>s,
+       		of which the last (and possibly only) one must be a descendant of <font color="#008080"><i><tt>XM_XSLT_EMITTER</tt></i></font>. You will write this 
+       		descendant in the next step.
+       	      
+       <p>
+        		The example first checks the method's local name, and ignores it if it doesn't match. In the latter case, this will result
+        in returning 
+        		<font color="#008080"><i><tt>Void</tt></i></font>, which violates the post-condition, but for this to happen the pre-condition would have been violated, so this is OK.
+        	      
+       </p>
+       <p>
+        		Next, the example creates the emitter (you will write your emitter in the next step). Typically, it passes through the values
+        for the transformer, the result stream, and
+        		the output properties. You will almost certainly need to do the same. It also passes an <font color="#008080"><i><tt>XM_XSLT_CHARACTER_MAP_EXPANDER</tt></i></font>,
+        		which it gets from the helper routine <font color="#008080"><i><tt>character_map_expander</tt></i></font> in
+        		<font color="#008080"><i><tt>XM_XSLT_EMITTER_FACTORY_ROUTINES</tt></i></font>. If you wish to support <font color="#008080">xsl:output</font>'s <font color="#008080">use-character-maps</font>
+        		parameter, then you should do the same. Note that the third parameter to that routine says whether or not the <font color="#008080"><i><tt>XM_XSLT_CHARACTER_MAP_EXPANDER</tt></i></font>
+        		should surround any mapped characters with ASCII NULs. This is used by the standard methods (other than the "text" method)
+        to avoid further escaping
+        		of mapped characters (and also Unicode normalization, but this isn't implemented yet), as required by the standard. 
+        		It is entirely up to you whether you implement escaping of characters in your emitter, and if so, 
+        		whether you want mapped characters to avoid further escaping and normalization, but if you do, then you should specify <font color="#008080"><i><tt>True</tt></i></font>
+        		here, and implement the appropriate routines in your emitter accordingly. Otherwise you should specify <font color="#008080"><i><tt>False</tt></i></font>.
+        	      
+       </p>
+       <p>
+        		Next the example checks the value of the <font color="#008080">indent</font> serialization parameter, and adds an indenter to the front of the chain. If you choose to
+        		support indenting for your method(s), then you should do the same. You can either use one of the existing indenters (<font color="#008080"><i><tt>XM_XSLT_XML_INDENTER</tt></i></font>,
+        		<font color="#008080"><i><tt>XM_XSLT_HTML_INDENTER</tt></i></font> or <font color="#008080"><i><tt>XM_XSLT_XHTML_INDENTER</tt></i></font>), or write your own 
+        		(which must be a descendant of <font color="#008080"><i><tt>XM_XPATH_PROXY_RECEIVER</tt></i></font>).
+        	      
+       </p>
+       <p>
+        		Next the example checks whether any <font color="#008080">cdata-section-elements</font> have been requested, and if so, adds a <font color="#008080"><i><tt>XM_XSLT_CDATA_FILTER</tt></i></font>.
+        		Again, it is up to you whether or not you want to implement this parameter in your method(s). If you chose to do so, then
+        I suggest using the
+        		standard filter.
+        	      
+       </p>
+      </dd>
+      	
+     </dl>
+    </li>
+    <li>
+     	  Next, you must create your emitter. This must be a descendant of <font color="#008080"><i><tt>XM_XSLT_EMITTER</tt></i></font>.
+     	
+     <p>
+      	  The example (<font color="#008080"><i><tt>XM_XSLT_GEXSLT_EXAMPLES_XML_EMITTER</tt></i></font>) simply inherits from <font color="#008080"><i><tt>XM_XSLT_XML_EMITTER</tt></i></font>,
+      	  and redefines <font color="#008080"><i><tt>write_doctype</tt></i></font>. If your method is a variation on one of the standard methods, then this might be appropriate
+      	  for you too. Note that the other standard methods are all implemented as descendants of  <font color="#008080"><i><tt>XM_XSLT_XML_EMITTER</tt></i></font>, even
+      	  <font color="#008080"><i><tt>XM_XSLT_TEXT_EMITTER</tt></i></font>, so certainly consider this approach.
+      	
+     </p>
+     <p>
+      	  On the other hand, if your emitter is doing something highly specialized, such as writing to a relational database, then
+      you
+      	  probably have to write your own emitter from scratch. So we will take a brief look at <font color="#008080"><i><tt>XM_XSLT_EMITTER</tt></i></font>.
+      	
+     </p>
+     <p>
+      	  There is actually very little in here. The <font color="#008080"><i><tt>outputter: XM_XSLT_OUTPUT_ENCODER</tt></i></font> is necessary
+      	  for implementing the <font color="#008080">encoding</font> parameter, although even this isn't absolutely required (it is possible that it is meaningless for your
+      	  method). The <font color="#008080"><i><tt>output_properties: XM_XSLT_OUTPUT_PROPERTIES</tt></i></font> is surely necessary (unless your method is completely parameterless),
+      	  so it is required to be non-void. This is where you can find the values of the serialization parameters.
+      	
+     </p>
+     <p>
+      	  The <font color="#008080"><i><tt>character_map_expander: XM_XSLT_CHARACTER_MAP_EXPANDER</tt></i></font> is optionally available for implementing <font color="#008080">use-character-maps</font>,
+      	  if your method supports that. When Unicode normalization is implemented, it will be in <font color="#008080"><i><tt>normalized_string </tt></i></font>.
+      	  The <font color="#008080"><i><tt>transformer</tt></i></font> must also be non-Void, as it is needed for error reporting. 
+      	
+     </p>
+    </li>
+    <li>
+     	  Finally, you need to register your <font color="#008080"><i><tt> XM_XSLT_EXTENSION_EMITTER_FACTORY</tt></i></font> with the library.
+     	  You do this by inheriting from <font color="#008080"><i><tt>XM_XSLT_SHARED_EMITTER_FACTORY</tt></i></font>, and calling
+     	  <font color="#008080"><i><tt>emitter_factory.register_extension_emitter_factory</tt></i></font>
+     	  paasing an instance of your extension emitter factory as the sole argument. This uses the 
+     	  <font color="#008080"><i><tt>namespace_uri</tt></i></font> feature of the factory to direct requests for that namespace URI
+     	  to your factory.
+     	
+    </li>
+   </ol>
+   
+  </div>
+  <div>
+   
+   <h2>Additional serialization parameters</h2>
+   
+   <p>
+    See <a href="../../gexslt/extension/index.html">Extensions</a>
+    
+   </p>
+   
+   <p>
+    You can also add your own serialization parameters in a namespace, for use
+    with a <font color="#008080">QName-but-not-NCName</font> output method that you have written. This must be a non-null namespace,
+    and it must <i>not</i> be the XSLT namespace, nor can it be
+    <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension</font>. Apart from that, you may use any namespace you wish, 
+    but it is strongly recommanded that this be a URI which you control, so as to prevent clashes with other possible
+    extensions. I would suggest using the same namespace as you do for your <font color="#008080">QName</font> output method.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Tuesday, October 19th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="transformation_source.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="extension_functions.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

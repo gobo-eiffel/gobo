@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Geant examples</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Geant examples</h1>
+    </td>
+    <td align="right"><a href="introduction.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_variables.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   		This document explains the individual geant examples and how to use them.
+   		It serves as a first draft version for the geant documentation.
+   		All examples should be invoked from the commandline.
+   	
+  </p>
+  <p>Here ist the commandline syntax of geant:</p><pre>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile&gt;] [-D&lt;varname&gt;=&lt;varvalue&gt;]* [target]</pre><div><a name="introduction"></a>
+   		
+   <h2>Getting started</h2>
+   
+   		
+   <p>
+    			cd to the examples/hello directory and type 'geant'. You should see the following output:
+    		
+   </p>
+   		<pre>
+		</pre>
+   		<pre>Hello world</pre>
+   
+   		<p>
+    			Let's have a look at the project file which produces this output:
+    		
+   </p>
+   		<pre>
+  &lt;project name="hello" default="hi"&gt;
+    &lt;target name="hi"&gt;
+      &lt;echo message="Hello world"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>
+    			Since we do not provide a buildfile on the commandline the default
+    			name (build.eant) is used. With the option '-b' respectively
+    			'--buildfile' it is possible to use a different file.  There is no
+    			target specified on the commandline either. In this case geant tries
+    			to find a 'default' attribute in the &lt;project&gt; element by which the
+    			start target for the build process can be specified. When there is no
+    			default attribute geant gives up and terminates with the message
+    			'Cannot determine start target.'.
+    		
+   </p>
+   		
+   <p>
+    			With the option '-v' respectively '--verbose' geant's output is more verbose:
+    		
+   </p>
+   		<pre>
+Loading Project's configuration from build.eant
+
+  Building Project
+
+  hello.hi:
+
+    [echo]
+  Hello world
+        	</pre>
+   
+   		<p>
+    			A target can have an optional 'description' subelement which should
+    			describe briefly what the target does. It must be the first subelement.
+    			In a future version there will be a '--projecthelp' commandline option
+    			which will just list all the targetnames with its description without
+    			starting the build process.
+    		
+   </p>
+   		
+   <p>
+    			A &lt;target&gt; element may contain zero or more task elements as direct
+    			children. Each task element is executed in sequential order. The
+    			specific action which is performed is dependent on the individual
+    			tasks.
+    		
+   </p>
+   		
+   <p>
+    			The only task which our 'hi' target contains is &lt;echo&gt;. &lt;echo&gt; has a
+    			single attribute called 'message' and this message is printed to
+    			stdout. This is the reason why you see 'Hello world' on your screen.
+    		
+   </p>
+   		
+   <p>
+    			In the following sections all other examples are explained. We usually
+    			do not use 'build.eant' as filename for the examples since we have
+    			mostly more than one build file in a directory.
+    		
+   </p>
+   	
+  </div>
+  <div>
+   		
+   <h2>Variables</h2>
+   		
+   <p>The following example shows how to set and query the value variables.
+    		cd to examples/variables and open the buildfile 'variable1.eant'
+    		
+   </p>
+   		<pre>
+  &lt;project name="variables1" default="var"&gt;
+    &lt;target name="var"&gt;
+      &lt;description&gt;set and query a variable&lt;/description&gt;
+        &lt;set name="who" value="world"/&gt;
+        &lt;echo message="Hello ${who}"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>Invoking 'geant -v -b variables1.eant' produces:</p>
+   		<pre>
+  Loading Project's configuration from variables1.eant
+  Building Project
+
+  variables1.var:
+
+    [set] who=world
+    [echo]
+  Hello world
+        	</pre>
+   		<p>
+    			With the &lt;set&gt; task a variable can be defined. The 'name' attribute specifies
+    			the name of the variable and the 'value' attribute it's value.
+    			The values of variables can be retrieved using the ${&lt;variablename&gt;} syntax.
+    			Thus ${who} in the examples returns 'world'.
+    		
+   </p>
+   		
+   <p>The value of a variable can be overridden by a -D option on the commandline</p>
+   		
+   <p>'geant -v -b variables1.eant -Dwho=Eiffel' produces:</p>
+   		<pre>
+  Loading Project's configuration from variables1.eant
+  Building Project
+
+  variables1.var:
+
+    [set] who=world
+    [echo]
+  Hello world
+        	</pre>
+   		<p>
+    Loading Project's configuration from variables1.eant
+    Building Project
+    
+    variables1.var:
+    
+    [set] who=world
+    [echo]
+    Hello Eiffel
+    		
+   </p>
+   	
+  </div>
+  <div>
+   		
+   <h2>Cascading Variables</h2>
+   		
+   <p>cd to examples/variables and open buildfile 'variables2.eant':</p>
+   		<pre>
+  &lt;project name="variables2" default="var"&gt;
+    &lt;target name="var"&gt;
+      &lt;description&gt;set and query a variable&lt;/description&gt;
+      &lt;set name="firstname" value="Bart"/&gt;
+      &lt;set name="fullname" value="${firstname} Simpson"/&gt;
+      &lt;echo message="Hello ${fullname}"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>'geant -v -b variable2.eant' produces:</p>
+   		<pre>
+Loading Project's configuration from variables2.eant
+Building Project
+
+variables2.var:
+
+  [set] firstname=Bart
+  [set] fullname=Bart Simpson
+  [echo]
+Hello Bart Simpson
+        	</pre>
+   
+   		<p>This examples demonstrates how variables can be constructed from other variables.</p>
+   	
+  </div>
+  <div>
+   		
+   <h2>exec</h2>
+   		
+   <p>cd to examples/exec and open the buildfile 'dir.eant' (for Windows only):</p>
+   		<pre>
+  &lt;project name="dir" default="dir"&gt;
+    &lt;target name="dir"&gt;
+      &lt;description&gt;executes a dir command under dos/windows&lt;/description&gt;
+      &lt;set name="directory" value="."/&gt;
+      &lt;exec executable="dir ${directory}"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>'geant -v -b dir.eant' produces:</p>
+   		<pre>
+Loading Project's configuration from dir.eant
+Building Project
+
+dir.dir:
+
+  [set] directory=.
+  [exec] dir .
+ Volume in drive D is D
+ Volume Serial Number is 5C52-67D3
+
+ Directory of D:\svnstuff\gobo-eiffel\gobo\example\geant\exec
+
+09/08/2002  07:32a      &lt;DIR&gt;          .
+09/08/2002  07:32a      &lt;DIR&gt;          ..
+05/04/2002  01:45p               2,429 build.eant
+11/26/2002  08:41p      &lt;DIR&gt;          .svn
+09/01/2001  01:30p                 261 dir.eant
+09/01/2001  01:30p                 519 dir2.eant
+09/08/2002  07:32a                 875 exec1.eant
+09/01/2001  01:30p                 251 ls.eant
+               5 File(s)          4,335 bytes
+               3 Dir(s)   7,162,626,048 bytes free
+        	</pre>
+   		<p>
+    			The exec task can be used as a general means to execute a command as
+    			one would do on the commandline. This can always be used when there
+    			is no appropriate task available.
+    			The attribute 'executable' takes the exact string one would specify
+    			on the commandline after replacing possibly existing variables.
+    		
+   </p>
+   		
+   <p>On Unix call: 'geant -b ls.eant' which produces the same output as a 'ls -l'
+    		command on the commandline would show.
+    		
+   </p>
+   	
+  </div>
+  <div>
+   		
+   <h2>geant</h2>
+   		
+   <p>cd to examples/geant and open buildfile 'geant1.eant':</p>
+   		<pre>
+  &lt;project name="geant" default="one"&gt;
+    &lt;target name="one"&gt;
+      &lt;description&gt;calls other ant files&lt;/description&gt;
+      &lt;set name="who" value="Bart"/&gt;
+
+      &lt;set name="buildfile" value="../variables/variables5.eant"/&gt;
+
+      &lt;echo message="------------------------"/&gt;
+      &lt;echo message="before call of ${buildfile}"/&gt;
+      &lt;geant file="${buildfile}" target="var"/&gt;
+      &lt;echo message="after call of ${buildfile}"/&gt;
+      &lt;echo message="-------" /&gt;
+      &lt;echo message="before call of ${buildfile}"/&gt;
+      &lt;geant file="${buildfile}" reuse_variables="true" target="var"/&gt;
+      &lt;echo message="after call of ${buildfile}"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>'geant -v -b geant1.eant' produces:</p>
+   		<pre>
+Loading Project's configuration from geant1.eant
+Building Project
+
+geant.one:
+
+  [set] who=Bart
+  [set] buildfile=../variables/variables5.eant
+  [echo]
+------------------------
+  [echo]
+before call of ../variables/variables5.eant
+Loading Project's configuration from ..\variables\variables5.eant
+Building Project
+
+variables5.var:
+
+  [echo]
+Hello ${who}
+  [echo]
+after call of ../variables/variables5.eant
+  [echo]
+-------
+  [echo]
+before call of ../variables/variables5.eant
+Loading Project's configuration from ..\variables\variables5.eant
+Building Project
+
+variables5.var:
+
+  [echo]
+Hello Bart
+  [echo]
+after call of ../variables/variables5.eant
+        	</pre>
+   		<p>
+    			With the geant task other geant files can be invoked. This can be
+    			done in the within the same project scope (default behaviour) or in
+    			a new project scope when the 'file' attribute is set to 'true'.
+    			At the moment the big difference is that for an invocation in the
+    			same scope all defined variables are still available in the called build
+    			file. The example makes this visible by displaying 'Hello ${who}'
+    			instead of 'Hello Bart' for the first &lt;geant&gt; invokation. The
+    			second &lt;geant&gt; invocation passes all variables and thats why you see
+    			'Hello Bart'.
+    		
+   </p>
+   		
+   <p>
+    			In the future &lt;geant&gt; will be able to take arguments which can be passed
+    			to the called build project exactly like you can do it on the commandline already.
+    		
+   </p>
+   	
+  </div>
+  <div>
+   		
+   <h2>depend</h2>
+   		
+   <p>
+    			Demonstrates the attribute 'depend' of targets. cd to examples/depends and
+    			open the buildscript 'depends1.eant'
+    		
+   </p>
+   		<pre>
+  &lt;project name="depend_demo" default="C"&gt;
+
+    &lt;target name="A"&gt;
+      &lt;echo message="A"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="B" depend="A"&gt;
+      &lt;echo message="B"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="C" depend="B"&gt;
+      &lt;echo message="C"/&gt;
+    &lt;/target&gt;
+
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>'geant -v -b depends1.eant' produces:</p>
+   		<pre>
+Loading Project's configuration from depends1.eant
+Building Project
+
+depend_demo.A:
+
+  [echo]
+A
+
+depend_demo.B:
+
+  [echo]
+B
+
+depend_demo.C:
+
+  [echo]
+C
+        	</pre>
+   		<p>
+    			With the XML attribute 'depend' targets can be made dependent on
+    			another. In the example target 'C' is dependent on target
+    			'B'. This means that target 'B' will be executed before target 'C'
+    			is executed. It is possible to specify more than one target
+    			dependency using comma separated target names in the 'depend'
+    			attribute:
+    		
+   </p>
+   		<pre>
+    &lt;target name="C" depend="B,A" &gt;
+      &lt;echo message="C" /&gt;
+    &lt;/target&gt;
+        	</pre>
+   		<p>
+    			This means that target 'B' is executed first, then target 'A' and
+    			then target 'C'.
+    		
+   </p>
+   
+   	
+  </div>
+  <div>
+   		
+   <h2>gexace</h2>
+   		
+   <p>
+    			Demonstrates how to generate a compiler specific ace/esd file from a
+    			compiler independent xace file. It builds on the 'gexace' tool which is
+    			able to produce specific ace/esd files from xace files.
+    		
+   </p>
+   		
+   <p>cd to examples/gexace and open buildfile 'buildfile build.eant'</p>
+   		<pre>
+  &lt;project name="geant" default="compile"&gt;
+    &lt;target name="init"&gt;
+      &lt;set name="system" value="hello"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="compile" depend="init"&gt;
+      &lt;description&gt;compiles HELLO&lt;/description&gt;
+      &lt;gexace system="ge" xace="${system}.xace"/&gt;
+      &lt;gec ace="ge.xace"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="run" depend="init"&gt;
+      &lt;description&gt;executes example&lt;/description&gt;
+      &lt;exec executable="${system}"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="clean" depend="init"&gt;
+      &lt;description&gt;deletes generated files&lt;/description&gt;
+      &lt;gec clean="${system}"/&gt;
+      &lt;delete file="${system}${exe}"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+        	</pre>
+   
+   		<p>Now invoke 'geant'. &lt;gexace&gt; calls the gexace tool which generates a SmartEiffel ace file.
+    	&lt;se&gt; then will compile our system using SmartEiffel
+    		
+   </p>
+   		
+   <p>
+    			Now we could simply invoke the hello program from the commandline
+    			but since this would be too easy simply invoke 'geant -v run' which
+    			produces the following output:
+    		
+   </p>
+   		<pre>
+Loading Project's configuration from build.eant
+Building Project
+
+geant.init:
+
+  [set] system=hello
+
+geant.run:
+
+  [exec] hello
+Hello World
+        	</pre>
+   	</div>
+  <div>
+   		
+   <h2>conditional/if,unless</h2>
+   		
+   <p>
+    			Demonstrates the optional 'if' and 'unless' XML attributes of targets.
+    		
+   </p>
+   		
+   <p>cd to examples/conditional and open buildfile 'if1.eant'</p>
+   		<pre>
+  &lt;project name="if_demo1" default="C"&gt;
+
+	&lt;target name="A" if="$runa"&gt;
+		&lt;echo message="A"/&gt;
+	&lt;/target&gt;
+
+	&lt;target name="B" if="${runb}"&gt;
+		&lt;echo message="B"/&gt;
+	&lt;/target&gt;
+
+	&lt;target name="C" depend="A,B"&gt;
+		&lt;echo message="C"/&gt;
+	&lt;/target&gt;
+
+  &lt;/project&gt;
+        	</pre>
+   		<p>'geant -v -b if1.eant' produces:</p>
+   		<pre>
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.C:
+
+  [echo]
+C
+        	</pre>
+   
+   		<p>
+    			As values of the 'if' and 'unless' XML attributes of target elements
+    			you can use variable values and environmentvariables. This
+    			means the 'if' attribute returns true if the variable is defined
+    			otherwise true. The value of the variable does not matter. The same
+    			is true for 'unless' except that it returns true if it is not
+    			defined.
+    		
+   </p>
+   		
+   <p>
+    			Since the variables 'runa' and 'runb' are not defined target 'A' and
+    			target 'B' do not produce any output.		
+   </p>
+   		
+   <p>e_you_like' produces:</p>
+   		<pre>
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.A:
+
+  [echo]
+A
+
+if_demo1.C:
+
+  [echo]
+C
+        	</pre>
+   
+   		<p>geant -v -b if1.eant -Druna=any_value_you_like -Drunb=another_value_you_like</p>
+   		<pre>
+Loading Project's configuration from if1.eant
+Building Project
+
+if_demo1.A:
+
+  [echo]
+A
+
+if_demo1.B:
+
+  [echo]
+B
+
+if_demo1.C:
+
+  [echo]
+C
+        	</pre>
+   		<p>
+    			As you can see the if's return true and targets 'A' respectively 'B'
+    			get executed.
+    		
+   </p>
+   		
+   <p>
+    			The file unless1.eant contains the same examples but the if's have
+    			been replaced with unless's.
+    		
+   </p>
+   	
+  </div>
+  <div>
+   		
+   <h2>conditional/if2</h2>
+   		
+   <p>
+    			Demonstrates how we can use 'if' and 'unless' to create a os
+    			independent buildfile. cd to examples/conditional and open buildfile 'if2.eant':
+    		
+   </p>
+   		<pre>
+  &lt;project name="if_demo2" default="list"&gt;
+
+	&lt;target name="list_for_windows" if="$WINDIR"&gt;
+		&lt;exec executable="dir"/&gt;
+	&lt;/target&gt;
+
+	&lt;target name="list_for_unix" unless="$WINDIR"&gt;
+		&lt;exec executable="ls -l"/&gt;
+	&lt;/target&gt;
+
+	&lt;target name="list" depend="list_for_windows,list_for_unix"&gt;
+	&lt;/target&gt;
+
+  &lt;/project&gt;
+        	</pre>
+   		<p>'geant -v -b if2.eant' produces (windows only):</p>
+   		<pre>
+Loading Project's configuration from if2.eant
+Building Project
+
+if_demo2.list_for_windows:
+
+  [exec] dir
+ Volume in drive D is D
+ Volume Serial Number is 5C52-67D3
+
+ Directory of D:\svnstuff\gobo-eiffel\gobo\example\geant\conditional
+
+09/03/2002  08:15p      &lt;DIR&gt;          .
+09/03/2002  08:15p      &lt;DIR&gt;          ..
+11/26/2002  08:41p      &lt;DIR&gt;          .svn
+11/11/2001  10:58p                 261 if1.eant
+11/11/2001  10:58p                 316 if2.eant
+11/11/2001  10:58p                 593 if3.eant
+11/11/2001  10:58p                 925 if4.eant
+05/12/2002  05:30p                 724 if5.eant
+09/03/2001  05:58p                 271 unless1.eant
+               6 File(s)          3,090 bytes
+               3 Dir(s)   7,162,556,416 bytes free
+
+if_demo2.list:
+        	</pre>
+   
+   		<p>
+    			Note: for simplicity we assume here that if a environment variable
+    			'windir' exists that we are in a windows environment. Otherwise we
+    			are on unix. This should be ok for most situations.
+    		
+   </p>
+   
+   		
+   <p>
+    			File if3.eant basically has the same behaviour but introduces an
+    			additional abstraction layer by introducing some variables defining
+    			the operating system:
+    		
+   </p>
+   		<pre>
+  &lt;project name="if_demo3" default="list"&gt;
+
+    &lt;target name="windows" if="$WINDIR"&gt;
+      &lt;set name="os.windows" value="true"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="unix" unless="$WINDIR"&gt;
+      &lt;set name="os.unix" value="true"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="init" depend="windows,unix"&gt;
+    &lt;/target&gt;
+
+
+    &lt;target name="list_for_windows" depend="init" if="$os.windows"&gt;
+      &lt;exec executable="dir"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="list_for_unix" depend="init"  if="$os.unix"&gt;
+      &lt;exec executable="ls -l"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="list" depend="list_for_windows,list_for_unix"&gt;
+    &lt;/target&gt;
+
+  &lt;/project&gt;
+        	</pre>
+   		<p>
+    		
+   </p>
+   	
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="introduction.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_variables.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

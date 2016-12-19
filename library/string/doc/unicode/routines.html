@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Unicode normalization routines provided by the library</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Unicode normalization routines provided by the library</h1>
+    </td>
+    <td align="right"><a href="about.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>Which class to choose</h2>
+   
+   <p>
+    	You have the choice of using the latest version of Unicode that
+    	is supported by the library, or you can choose a specific version.
+    
+   </p>
+   
+   <p>
+    	You have the choice of inheriting the routines, or using them as
+    	a client object. The latter is the only way to use more than one version of 
+    	Unicode within a class, although this seems an unlikely requirement.
+    
+   </p>
+   
+   <p>
+    	At the time I write this documentation, 4.1.0 is the latest version of
+    	Unicode, and it is also the latest and only version supported by this library.
+    	But 5.0.0 is currently in beta. So for the purposes of illustration, I shall assume
+    	that 5.0.0 is now live, and that this library supports it.
+    	So you could inherit from one of the following:
+    
+    	
+    <dl>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_UNICODE_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      				This would give you direct access to routines for version 5.0.0 of Unicode,
+      				but when 5.1.0 was supported by the library, you would then get the 5.1.0 routines.
+      			
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_UNICODE_V500_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      			This would also give you direct access to routines for version 5.0.0 of Unicode,
+      			but this would not change, even when the library was updated to support 5.1.0.
+      		
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_UNICODE_V410_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      				This would give you direct access to routines for version 4.1.0 of Unicode,
+      				and this would not change, even when the library was updated.
+      			
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_IMPORTED_UNICODE_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      				This would give you indirect access to routines for version 5.0.0 of Unicode, via
+      				<font color="#008080"><i><tt>normalization</tt></i></font>,
+      				but when 5.1.0 was supported by the library, you would then get indirect access 
+      				to the 5.1.0 routines via the same feature.
+      			
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_IMPORTED_UNICODE_V500_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      				This would give you indirect access to routines for version 5.0.0 of Unicode, via
+      				<font color="#008080"><i><tt>normalization_v500</tt></i></font>,
+      				but this would not change, even when the library was updated to support 5.1.0.
+      			
+     </dd>
+     
+     	
+     <dt><font color="#008080"><i><tt>ST_IMPORTED_UNICODE_V410_NORMALIZATION_ROUTINES</tt></i></font></dt>
+     <dd>
+      				This would give you indirect access to routines for version 4.1.0 of Unicode, via
+      				<font color="#008080"><i><tt>normalization_v410</tt></i></font>.
+      			
+     </dd>
+     
+     	
+    </dl>
+    
+    
+   </p>
+   
+   
+   <p>
+    	To use routines from both 5.0.0 and 4.1.0 versions of Unicode, you would import both of the
+    	last two classes in the preceding list.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>The routines provided by the library</h2>
+   
+   
+   <p>
+    	All these classes provide access to the same set of routines, via inheritance from
+    	<font color="#008080"><i><tt>ST_UNICODE_NORMALIZATION_INTERFACE</tt></i></font>. Note that ASCII and Latin-1
+    	<font color="#008080"><i><tt>STRING</tt></i></font>s can be passed to all of these routines, as well as  
+    	<font color="#008080"><i><tt>UC_UTF8_STRING</tt></i></font>s, as they all operate on code-points, accessed via the <font color="#008080"><i><tt>item_code</tt></i></font>
+    	feature. By design, Unicode allocates the same code points to Latin-1 characters as the
+    	ISO-8859-1 encoding does. Thus we keep compatibility.
+    
+   </p>
+   
+   
+   <p>
+    	The following routines are available to check if a <font color="#008080"><i><tt>STRING</tt></i></font> is
+    	in the desired normalization form:
+    	
+    <ul>
+     <li><font color="#008080"><i><tt>is_nfd (a_source: STRING): BOOLEAN</tt></i></font></li>
+     <li><font color="#008080"><i><tt>is_nfkd (a_source: STRING): BOOLEAN</tt></i></font></li>
+     <li><font color="#008080"><i><tt>is_nfc (a_source: STRING): BOOLEAN</tt></i></font></li>
+     <li><font color="#008080"><i><tt>is_nfkc (a_source: STRING): BOOLEAN</tt></i></font></li>
+    </ul>
+    
+   </p>
+   
+   
+   <p>
+    	The following routines do not assume anything about the current normalization state of their argument.
+    	If the argument is already in the desired normalization form, then the original object will be returned.
+    	Otherwise a new object will be allocated and returned:
+    	
+    <ul>
+     <li><font color="#008080"><i><tt>as_nfd (a_source: STRING): STRING</tt></i></font></li>
+     <li><font color="#008080"><i><tt>as_nfkd (a_source: STRING): STRING</tt></i></font></li>
+    </ul>
+    
+   </p>
+   
+   
+   <p>
+    	The following routines require that their argument is <i>not</i> in the required normalization
+    	form, and always allocate and return a new object:
+    	
+    <ul>
+     <li><font color="#008080"><i><tt>to_nfd (a_source: STRING): STRING</tt></i></font></li>
+     <li><font color="#008080"><i><tt>to_nfkd (a_source: STRING): STRING</tt></i></font></li>
+    </ul>
+    
+   </p>
+   
+   
+   <p>
+    	So when you desire to work with a decomposed form:
+    	
+    <ol>
+     <li>If you know that your string is in the desired form, do nothing </li>
+     <li>
+      			If you know that your string is <i>not</i> in the desired form,
+      			call <font color="#008080"><i><tt>to_nfd</tt></i></font> or <font color="#008080"><i><tt>to_nfkd</tt></i></font></li>
+     <li>
+      			Otherwise, call <font color="#008080"><i><tt>as_nfd</tt></i></font> or <font color="#008080"><i><tt>as_nfkd</tt></i></font>.
+      			You can then test for object identity, if you wish to know whether normalization was actually performed.
+     </li>
+    </ol>
+    
+   </p>
+   
+   
+   <p>
+    	The composing routines always allocate and return a new object, irrespective of the status of the argument:
+    	
+    <ul>
+     <li><font color="#008080"><i><tt>to_nfc (a_source: STRING): STRING</tt></i></font></li>
+     <li><font color="#008080"><i><tt>to_nfkc (a_source: STRING): STRING</tt></i></font></li>
+    </ul>
+    
+   </p>
+   
+   
+   <p>
+    	The Unicode Character Database tabulates a lot of properties for each code-point. Some of these are relevant for
+    	the normalization process. There are three that in some circumstances might be of interest to an application. They are:
+    	
+    <ul>
+     <li><font color="#008080"><i><tt>canonical_combining_class_property (a_code_point: INTEGER): INTEGER</tt></i></font></li>
+     <li><font color="#008080"><i><tt>decomposition_type_property (a_code_point: INTEGER): INTEGER</tt></i></font></li>
+     <li><font color="#008080"><i><tt>decomposition_mapping_property (a_code_point: INTEGER): DS_ARRAYED_LIST [INTEGER]</tt></i></font></li>
+    </ul>
+    
+   </p>
+   
+   
+   <p>
+    	The canonical combining class determines how different parts of a character are overlayed when
+    	displayed. 
+    
+   </p>
+   
+   
+   <p>
+    	The decomposition mapping lists the code-points in the decomposition of a code-point. The decomposition type
+    	indicates whether a code-point has a canonical decomposition, or if not, what <i>type</i> of
+    	compatibility decomposition it has. The results of this routine are available as symbolic constants in 
+    	<font color="#008080"><i><tt>UC_UNICODE_CONSTANTS</tt></i></font>. Note that if a code-point has no decomposition, then the result of
+    	this routine will be <font color="#008080"><i><tt>Canonical_decomposition_mapping</tt></i></font>, so you must check
+    	for a non-Void result from <font color="#008080"><i><tt>decomposition_mapping_property</tt></i></font> to confirm that
+    	a code-point actually has a canonical decomposition.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams</b><br /><b>mailto:</b><a href="mailto:colin-adams@users.sourceforge.net">colin-adams@users.sourceforge.net</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>4 November 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="about.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>outofdate</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>outofdate</h1>
+    </td>
+    <td align="right"><a href="move_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="precursor_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="outofdate_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Compare timestamps of files and set the value of a variable depending on the result.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="outofdate_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>source</dt>
+    <dd><i>Description: </i>filename
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>target</dt>
+    <dd><i>Description: </i>target file to compare to
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>variable</dt>
+    <dd><i>Description: </i>variable which reflects the result of the comparison
+     <p><i>Domain: </i>valid variable name
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>true_value</dt>
+    <dd><i>Description: </i>result value of positive comparison
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>true
+     </p>
+    </dd>
+    
+    			
+    <dt>false_value</dt>
+    <dd><i>Description: </i>result value of negative comparison
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="outofdate_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="outofdate"&gt;
+    &lt;element name="outofdate"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;choice&gt;
+        &lt;group&gt;
+          &lt;attribute name="source"/&gt;
+          &lt;attribute name="target"/&gt;
+        &lt;/group&gt;
+        &lt;ref name="fileset"/&gt;
+      &lt;/choice&gt;
+      &lt;attribute name="variable"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="true_value"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="false_value"/&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+	</pre>
+   	</div>
+  <div><a name="outofdate_examples"></a>
+   		
+   <h2>Examples</h2>
+   	<pre>
+  &lt;outofdate
+    variable="generate"
+    source="${gepp_in_dir}/${gepp_file}.ge"
+    target="${gepp_out_dir}/${gepp_file}.e"
+  /&gt;
+
+  &lt;outofdate variable="generate" dir="${GOBO}/library/kernel"&gt;
+    &lt;fileset dir="." include="@(**/*.ge)"&gt;
+      &lt;map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"&gt;
+        &lt;map type="flat"/&gt;
+      &lt;/map&gt;
+    &lt;/fileset&gt;
+  &lt;/outofdate&gt;
+
+  &lt;outofdate variable="generate"&gt;
+    &lt;fileset dir="."&gt;
+      &lt;include name="outofdate.eant"/&gt;
+      &lt;include name="build.eant"/&gt;
+      &lt;map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/&gt;
+    &lt;/fileset&gt;
+  &lt;/outofdate&gt;
+
+  &lt;outofdate variable="generate" dir="${GOBO}/library/kernel"&gt;
+    &lt;fileset dir="."&gt;
+    &lt;include name="${gepp_in_dir}/${gepp_file}.ge"/&gt;
+    &lt;include name="${GOBO}/example/geant/misc/outofdate.eant)"/&gt;
+    &lt;map type="glob" from="*.ge" to="${gepp_out_dir}/*.e"&gt;
+      &lt;map type="flat"/&gt;
+    &lt;/map&gt;
+    &lt;/fileset&gt;
+  &lt;/outofdate&gt;
+
+	</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="move_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="precursor_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

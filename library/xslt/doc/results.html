@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Accessing the Transformation Results</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Accessing the Transformation Results</h1>
+    </td>
+    <td align="right"><a href="transforming.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="error_listener.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   Once the transformation has run, check <font color="#008080"><i><tt>is_error</tt></i></font> to
+   see if it ran OK. If it did not, then your error listener 
+   (<a href="error_listener.html"><font color="#008080"><i><tt>XM_XSLT_ERROR_LISTENER</tt></i></font></a>) will
+   have been informed, and taken any appropriate actions you may have programmed into it.
+   
+  </p>
+  <p>
+   In many cases, you will not be programatically interested in the results, other than whether an error has occurred.
+   However, in some cases you may need to access the results from your program (typically, when you have written them to a <font color="#008080"><i><tt>STRING</tt></i></font>,
+   or some other in-memory format). In these cases, refer to <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>
+   and  <a href="output_resolver.html"><font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font></a>.
+   
+  </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, October 31st, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="transforming.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="error_listener.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Creating a Transformer</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Creating a Transformer</h1>
+    </td>
+    <td align="right"><a href="security_manager.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="transforming.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   Once the XSLT processor is configured, you then need to create an executable version
+   of your XSLT stylesheet or transform, and an <font color="#008080"><i><tt>XM_XSLT_TRANSFORMER</tt></i></font> to use it.
+   
+  </p>
+  <p>
+   The first step is to create an an <font color="#008080"><i><tt>XM_XSLT_TRANSFORMER_FACTORY</tt></i></font>. You simply call <font color="#008080"><i><tt>make</tt></i></font>,
+   passing it the configuration you created in the previous step. By default, this caches compiled stylesheets for you. You can
+   change this behaviour
+   at any time by calling <font color="#008080"><i><tt>set_caching (on_or_off: BOOLEAN)</tt></i></font>.
+   
+  </p>
+  <p>
+   Then you call <font color="#008080"><i><tt>create_new_transformer</tt></i></font>. This takes a <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font> as a parameter,
+   so you first have to create one to represent your stylesheet. If you are starting with XML text, then you do this by creating
+   an
+   <a href="transformation_source.html"><font color="#008080"><i><tt>XM_XSLT_URI_SOURCE</tt></i></font></a>, 
+   passing it the <font color="#008080">URI</font> of your text file. You must also pass an absolute URI as the base URI for the application. This
+   will be used to resolve the first argument if it is relative, amongst other things.
+   
+  </p>
+  <p>
+   If instead, you wish to transform a source document according to any xml-stylesheet processing instructions contained within
+   it, then
+   you should first call <font color="#008080"><i><tt>associated_stylesheet</tt></i></font> to create the <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font>. This takes
+   the <font color="#008080">URI</font> of the source document as the first argument, the medium for the transformed document as the second
+   argument, and an <font color="#008080"><i><tt>XM_XSLT_PI_CHOOSER</tt></i></font> as the third argument. This last argument is to allow choosing between
+   alternate stylesheets. See <a href="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents</a> for an
+   understanding of what is involved.
+   
+  </p>
+  <p>
+   The transformer factory either sets <font color="#008080"><i><tt>was_error</tt></i></font>, or else the new transformer is made available in
+   <font color="#008080"><i><tt>created_transformer</tt></i></font>.
+   
+  </p>
+  <p>
+   The compiled stylesheets are re-usable (which is why they are cached). To re-use one, simply call  <font color="#008080"><i><tt>create_new_transformer</tt></i></font>
+   again with an <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font> that has the same <font color="#008080">URI</font>.
+   
+  </p>
+  <p>
+   However, you should <i>not</i> attempt to run two transformations at once (not even if they involve different stylesheets).
+   
+  </p>
+  <p>
+   If you reuse a transformer, then before calling <font color="#008080"><i><tt>transform</tt></i></font> a second time,
+   you may wish to call <font color="#008080"><i><tt>clear_document_pool</tt></i></font>. This clears all document nodes
+   from memory, and destroys the mapping of URIs to document nodes. The reasons you might want to do this are:
+   
+   <ul>
+    <li>
+     	To save memory (and hence garbage collection cycles) by throwing away documents which will not be used again.
+     
+    </li>
+    <li>
+     	If you reuse the same URIs to refer to different documents from one transformation to another. This is a doubtful practice,
+     	but if you insist on doing it then you <i>must</i> call <font color="#008080"><i><tt>clear_document_pool</tt></i></font>
+     	otherwise you will get incorrect results.
+     
+    </li>
+   </ul>
+   
+  </p>
+  <p>
+   In general, it is better to <i>not </i> call <font color="#008080"><i><tt>clear_document_pool</tt></i></font>, as you
+   will then get better performance if you reuse a document (for example, by using the <font color="#008080">document()</font> function), as the transformer will not have
+   to parse the document afresh.
+   
+  </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, October 31st, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="security_manager.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="transforming.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

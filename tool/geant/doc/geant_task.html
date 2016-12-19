@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>geant</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>geant</h1>
+    </td>
+    <td align="right"><a href="exit_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="gec_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="geant_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Sometimes when projects get large it is useful to make build scripts more
+    			modular. It would be useful for example to call subtargets in a procedural manner
+    			and it would be useful to use more than one build script since the build script usually
+    			grows with the size of the project. With the geant task you can accomplish this.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="geant_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>arguments</dt>
+    <dd><i>Description: </i>Comma separated list of values to be passed
+     					as arguments to the target to be called. The number of values must match the number of
+     					formal arguments of that target. The sequence is important: the first value
+     					will be used for the first actual parameter, the second as the second and so on. This is
+     					the so called terse way of argument passing.
+     					
+     <p><i>Domain: </i>Comma separated list of values
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>fork</dt>
+    <dd>
+     						<i>Description: </i>Should a new operation system process be spawned for call?
+     						
+     <p>
+      						When not specified the following default behavior applies:
+      						If parameter 'file' has been specified the default value for 'fork' is 'true'. 
+      						If no parameter 'file' has been specified the default value for 'fork' is 'false',
+      						
+     </p>
+     					
+     <p><i>Domain: </i>true|false
+     </p>
+     <p><i>Default: </i>see description
+     </p>
+    </dd>
+    
+    			
+    <dt>file</dt>
+    <dd><i>Description: </i>Name of build file to invoke
+     <p><i>Domain: </i>Name of existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>target</dt>
+    <dd>
+     						<i>Description: </i>Name of target to invoke in current build file
+     						respectively in buildfile specified through attribute <i>file</i>
+     						if provided.
+     					
+     <p><i>Domain: </i>existing target
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    
+    <dt>exit_code_variable</dt>
+    <dd><i>Description: </i>Name of variable holding the execution's return code
+     
+     
+     <p><i>Domain: </i>Integer (usually 0 for OK, and any other number for not OK)
+     </p>
+     <p><i>Default: </i>`Void' (no variable is set if attribute is not specified)
+     </p>
+    </dd>
+    
+    			
+    <dt>reuse_variables</dt>
+    <dd>
+     						<i>Description: </i>Should variables defined in current build file
+     						be available in invoked build file?
+     						Note: This attribute is only evaluated if attribute <i>file</i>
+     						if provided.
+     					
+     <p><i>Domain: </i>true|false
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="geant_nested_parameters"></a>
+   		
+   <h2>Parameters specified as nested elements</h2>
+   
+   		
+   <dl>
+    			
+    <dt>argument</dt>
+    <dd><i>Description: </i>Element representing a actual argument
+     					for the target to be called. The name of the matching formal argument is specified
+     					by the attribute 'name'. The value to be used is specified through the attribute 'value'.
+     					The names of the arguments and the number of arguments must match the formal ones of
+     					the target to be called.
+     					
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="geant_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+&lt;define name="geant"&gt;
+  &lt;element name="geant"&gt;
+    &lt;ref name="dir_if_unless"/&gt;
+    &lt;optional&gt;
+      &lt;choice&gt;
+        &lt;attribute name="arguments"/&gt;
+        &lt;zeroOrMore&gt;
+          &lt;element name="argument"&gt;
+            &lt;attribute name="name"/&gt;
+            &lt;attribute name="value"/&gt;
+          &lt;/element&gt;
+	    &lt;/zeroOrMore&gt;
+      &lt;/choice&gt;
+    &lt;/optional&gt;
+    &lt;optional&gt;
+      &lt;attribute name="fork"&gt;
+        &lt;!-- runtime evaluation
+        &lt;choice&gt;
+          &lt;value&gt;true&lt;/value&gt;
+          &lt;value&gt;false&lt;/value&gt;
+        &lt;/choice&gt;
+        --&gt;
+      &lt;/attribute&gt;
+    &lt;/optional&gt;
+    &lt;optional&gt;
+      &lt;attribute name="exit_code_variable"/&gt;
+    &lt;/optional&gt;
+    &lt;choice&gt;
+      &lt;attribute name="target"/&gt;
+      &lt;group&gt;
+        &lt;attribute name="file"/&gt;
+          &lt;optional&gt;
+            &lt;attribute name="reuse_variables"&gt;
+              &lt;!-- runtime evaluation
+              &lt;choice&gt;
+                &lt;value&gt;true&lt;/value&gt;
+                &lt;value&gt;false&lt;/value&gt;
+              &lt;/choice&gt;
+              --&gt;
+            &lt;/attribute&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;ref name="fileset"/&gt;
+          &lt;/optional&gt;
+        &lt;/group&gt;
+        &lt;group&gt;
+          &lt;attribute name="file"/&gt;
+          &lt;attribute name="target"/&gt;
+          &lt;optional&gt;
+            &lt;attribute name="reuse_variables"&gt;
+              &lt;!-- runtime evaluation
+              &lt;choice&gt;
+                &lt;value&gt;true&lt;/value&gt;
+                &lt;value&gt;false&lt;/value&gt;
+              &lt;/choice&gt;
+              --&gt;
+            &lt;/attribute&gt;
+          &lt;/optional&gt;
+          &lt;optional&gt;
+            &lt;ref name="fileset"/&gt;
+          &lt;/optional&gt;
+        &lt;/group&gt;
+      &lt;ref name="fileset"/&gt;
+      &lt;/choice&gt;
+  &lt;/element&gt;
+&lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="geant_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;geant file="build2.eant"/&gt;
+
+  &lt;geant file="build2.eant" target="compile"/&gt;
+
+  &lt;geant file="build2.eant" target="compile" reuse_variables="true"/&gt;
+
+  &lt;geant target="compile"/&gt;
+
+		</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="exit_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="gec_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

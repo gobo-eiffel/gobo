@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>XML serializers</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>XML serializers</h1>
+    </td>
+    <td align="right"><a href="using.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="resolvers.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <h2>Serializing an <i><tt>XM_DOCUMENT</tt></i></h2>
+   
+   
+   <p>
+    To serialize an <font color="#008080"><i><tt>XM_DOCUMENT</tt></i></font>, you should use an <font color="#008080"><i><tt>XM_NODE_PROCESSOR</tt></i></font>
+    to generate an event stream, and send this event stream into one of the serializers mentioned below.
+    
+   </p>
+   
+   
+   <p>
+    The convenience class <font color="#008080"><i><tt>XM_FORMATTER</tt></i></font> does this for you with the <font color="#008080"><i><tt>XM_PRETTY_PRINT_FILTER</tt></i></font> serializer.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Event stream serializers</h2>
+   
+   
+   <p>
+    The following event-stream serializers are provided directly within Gobo:
+    
+    
+    <dl>
+     
+     
+     <dt><font color="#008080"><i><tt>XM_PRETTY_PRINT_FILTER</tt></i></font></dt>
+     <dd>
+      This provides basic pretty-printing of the body of an XML document. It does not add any indentation, so
+      it is not all that pretty.
+      
+     </dd>
+     
+     
+     <dt><font color="#008080"><i><tt>XM_INDENT_PRETTY_PRINT_FILTER</tt></i></font></dt>
+     <dd>
+      This adds indentation to <font color="#008080"><i><tt>XM_PRETTY_PRINT_FILTER</tt></i></font>, so the output is more
+      what you might expect from a pretty printer.
+      
+     </dd>
+     
+     
+     <dt><font color="#008080"><i><tt>XM_NAMESPACE_PRETTY_PRINT_FILTER</tt></i></font></dt>
+     <dd>
+      This prints <font color="#008080">QNames</font> in Clark notation. The resulting output is not well-formed XML.
+      
+     </dd>
+     
+     
+     <dt><font color="#008080"><i><tt>XM_DTD_PRETTY_PRINT_FILTER</tt></i></font></dt>
+     <dd>
+      This prints DTD declarations. It does not generate a properly well-formed internal subset DTD, so should probably
+      not be used for serialzing. It is rather meant as a debugging aid, i think.
+      
+     </dd>
+     
+     
+     <dt>XSLT 2.0 and XQuery 1.0 Serialization</dt>
+     <dd>
+      The XSLT library includes a serializer that conforms to the <a href="http://www.w3.org/TR/xslt-xquery-serialization/">XSLT 2.0 and XQuery 1.0 Serialization specification</a>, and so gives
+      you all the customizing power of an <a href="http://www.w3.org/TR/xslt20/#element-output">xsl:output</a> statement.
+      It is not necessary to invoke the XSLT engine in order to use this serializer, although you do need to include the XPath and
+      XSLT library
+      clusters (just include the XSLT library.xace file in your system.xace file).
+      
+      <p>
+       To see how to use the serializer, refer to <font color="#800000"><i><tt>${GOBO}/library/xslt/example/serializer/Readme.txt</tt></i></font>, or to the documentation in 
+       <a href="xslt/xslt_serializer.html">XSLT 2.0 Serializer</a>.
+       
+      </p>
+     </dd>
+     
+     
+    </dl>
+    
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2007, Colin Adams</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7th October 2007</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="using.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="resolvers.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

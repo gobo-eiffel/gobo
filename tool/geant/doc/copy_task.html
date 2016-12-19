@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>copy</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>copy</h1>
+    </td>
+    <td align="right"><a href="available_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="delete_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="copy_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Copy a file or fileset to a new file or directory. Files are only copied if the source file
+    			is newer than the destination file, or when the destination file does not exist.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="copy_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>file</dt>
+    <dd><i>Description: </i>File to be copied
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>to_file</dt>
+    <dd><i>Description: </i>File to copy to
+     <p><i>Domain: </i>Valid filename
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>to_directory</dt>
+    <dd><i>Description: </i>Directory to which file(s) should be copied to
+     <p><i>Domain: </i>Valid directoryname pointing to existing directory
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>force</dt>
+    <dd>
+     						<i>Description: </i>Copy file even when the
+     						possibly existing target file is not out of date.
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="copy_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="copy"&gt;
+    &lt;element name="copy"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+        &lt;choice&gt;
+          &lt;group&gt;
+            &lt;attribute name="file"/&gt;
+            &lt;attribute name="to_file"/&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;attribute name="file"/&gt;
+            &lt;attribute name="to_directory"/&gt;
+          &lt;/group&gt;
+          &lt;group&gt;
+            &lt;attribute name="to_directory"/&gt;
+            &lt;ref name="fileset"/&gt;
+          &lt;/group&gt;
+        &lt;/choice&gt;
+      &lt;optional&gt;
+        &lt;attribute name="force"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+      &lt;/optional&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+	</pre>
+   	</div>
+  <div><a name="copy_examples"></a><h2>Examples</h2>
+   		
+   <p><i><b>Copy a single file:</b></i></p>
+   	<pre>
+  &lt;copy file="readme.txt" to_file="readme1.txt"/&gt;
+</pre>
+   
+   		<p><i><b>Copy a single file to a directory:</b></i></p>
+   	<pre>
+  &lt;copy file="readme.txt" to_directory="/tmp"/&gt;
+</pre>
+   
+   
+   		<p><i><b>Copy a single file even if this would not be necessary:</b></i></p>
+   		
+   <p>
+    			By default the copy task only copies files if the target file is out of date. With the force flag
+    			set to true it is always copied.
+    		
+   </p>
+   	<pre>
+  &lt;copy file="readme.txt" to_directory="/tmp" force="true"/&gt;
+</pre>
+   
+   		<p><i><b>Copy a directory to another directory:</b></i></p>
+   		
+   <p>
+    			Let's assume we have the directories 'input' and 'output' under the current directory.
+    			If we want to copy the directory 'input' to directory 'output' do it as follows:
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(input/**/*)"/&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   		<p><i><b>Copy a directory to another directory</b></i></p>
+   		
+   <p>
+    			Let's assume we have the directories 'input', 'input/1' and 'output' under the current directory.
+    			What we want is to copy the directory '1' in directory 'input' to directory 'output'. There are a couple of ways to
+    			achieve this from which three are shown here:
+    		
+   </p>
+   		
+   <p>
+    			Possibility 1 (probably the easiest way):
+    		
+   </p>
+   
+   	<pre>
+    &lt;copy to_directory="../output" dir="input"&gt;
+      &lt;fileset include="@(1/**/*)"/&gt;
+    &lt;/copy&gt;
+</pre>
+   
+   		<p>
+    			 Possibility 2:
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(1/**/*)" filename_directory="input" dir="input"/&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   		<p>
+    			 Possibility 3:
+    		
+   </p>
+   <pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(input/1/**/*)"&gt;
+      &lt;map type="glob" from="input/*" to="*"/&gt;
+    &lt;/fileset&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   
+   		<p><i>Description for possibility 1:</i></p>
+   		
+   <p>
+    			The 'copy' task is executed from within the directory 'input'. Therefore the attribute 'to_directory'
+    			has to be set to '../output'.
+    		
+   </p>
+   
+   		
+   <p><i>Description for possibility 2:</i></p>
+   		
+   <p>
+    			In a first attempt we might use this approach:
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(input/1/**/*)"/&gt;
+  &lt;/copy&gt;
+</pre>
+   		<p>
+    			But with this approach we end up with the directory 'output/input/1/...' which is not what we want.
+    			We need to get rid of the input in the selected filenames. To achieve this we
+    			set the attribute 'dir' of the fileset to the directory 'input' so that for the time the fileset executes
+    			it is collecting the appropriate filenames from within the directory 'input':
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(1/**/*)" dir="input"/&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   		<p>
+    			Now the fileset contains the filenames we want. Unfortunately the 'copy' task cannot work with them
+    			since it cannot copy files from '1/**' because they are in the directory 'input'. So what we need is that
+    			'input' is prepended anyway but only to read the files while copying and not for writing. To achieve
+    			this we set the attribute 'filename_directory' to 'input'. The value of this attribute ('input' in
+    			this case) will be prepended to the source name while the target name remains as is. For example
+    			for a matched filename '1/somedir/readme.txt' the source filename will become 'input/1/somedir/readme.txt'
+    			but the target filename will still be '1/somedir/readme.txt'. So our working 'copy' task is:
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(1/**/*)" filename_directory="input" dir="input"/&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   		<p><i>Description for possibility 3:</i></p>
+   		
+   <p>
+    			If we start again go back to our first attempt from possibility 2 which produces the undesired 'input' directory:
+    		
+   </p>
+   	<pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(input/1/**/*)"/&gt;
+  &lt;/copy&gt;
+</pre>
+   
+   		<p>
+    			... it is more natural to come to the conclusion that all that needs to be done is removing
+    			that 'input/' from the target filenames. The element 'fileset' provides an attribute called
+    			'mapped_filename_directory' but that is only for prepending and not for removal. But using
+    			a nested map does the trick:
+    		
+   </p>
+   <pre>
+  &lt;copy to_directory="output"&gt;
+    &lt;fileset include="@(input/1/**/*)"&gt;
+      &lt;map type="glob" from="input/*" to="*"/&gt;
+    &lt;/fileset&gt;
+  &lt;/copy&gt;
+</pre>
+   	</div>
+  <p>
+   			With this approach all leading 'input/' text is removed from our target filenames.
+   		
+  </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="available_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="delete_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Programming Style</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Programming Style</h1>
+    </td>
+    <td align="right"><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="documentation.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="assertions"></a><h2>Assertions</h2>
+   
+   
+   <p>
+    Routines should be properly equipped with pre- and postconditions and classes 
+    with invariants. This is useful as documentation in addition to the header 
+    comments to make sure that the routines and class instances are correctly used. 
+    These assertions can also be enabled when running the 
+    <a href="test.html">test suite</a> in 
+    <font color="#800000"><i><tt>$GOBO/test/&lt;library-name&gt;</tt></i></font> in order to check the 
+    correctness of the library classes.
+    
+   </p>
+   
+   
+   <p>
+    All assertions should have a tag, as in the following example:
+    
+   </p>
+   
+   
+   <p>
+    <pre>
+_   foo_not_void: <i><tt>foo</tt></i> /= Void
+</pre>
+    </p>
+   
+   
+   <p>
+    Note that in the example above the tag &#147;foo_not_void&#148; is preferred
+    to &#147;foo_exists&#148; as it may cause confusion when 
+    <font color="#008080"><i><tt>exists</tt></i></font> is a feature of the class of 
+    <font color="#008080"><i><tt>foo</tt></i></font>. So using systematically &#147;*_not_void&#148; 
+    is a good way to avoid such possible confusion.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="note_clause"></a><h2>Note Clause</h2>
+   
+   
+   <p>
+    Each class should have a note clause at the top of the file which looks like 
+    that:
+    
+   </p>
+   
+   
+   <p>
+    <pre>
+note
+
+_   description:
+
+_   _   "Short description of the class"
+
+_   library:    "Gobo Eiffel Lexical Library"
+_   author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
+_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
+_   license:    "MIT License"
+_   date:       "$Date$"
+_   revision:   "$Revision$"
+</pre>
+    </p>
+   
+   
+   <p>
+    Put a short description of the class in the &#147;description&#148; field.
+    Replace &#147;Lexical&#148; in the &#147;library&#148; field by the name 
+    of your library. Replace &#147;Eric Bezault&#148; by your name in the 
+    &#147;author&#148; and &#147;copyright&#148; fields and put your e-mail 
+    address in the &#147;author&#148; field. The fields &#147;date&#148; and 
+    &#147;revision&#148; are automatically expanded by <a href="git.html">Git</a>.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="header_comments"></a><h2>Header Comments</h2>
+   
+   
+   <p>
+    Every feature and feature clause should have a header comment such as:
+    
+   </p>
+   
+   
+   <p>
+    <pre>
+feature <font color="#008000"><tt>-- Access</tt></font>
+
+_   <i><tt>title</tt></i>: <i><tt>STRING</tt></i>
+_   _   _   <font color="#008000"><tt>-- Title displayed in the title bar</tt></font>
+
+feature <font color="#008000"><tt>-- Setting</tt></font>
+
+_   <i><tt>set_title</tt></i> (<i><tt>a_title</tt></i>: like <i><tt>title</tt></i>)
+_   _   _   <font color="#008000"><tt>-- Set <i><tt>title</tt></i> to <i><tt>a_title</tt></i>.</tt></font>
+_   _   require
+_   _   _   a_title_not_void: <i><tt>a_title</tt></i> /= Void
+_   _   do
+_   _   _   <i><tt>title</tt></i><tt> := </tt><i><tt>a_title</tt></i>
+_   _   ensure
+_   _   _   title_set: <i><tt>title</tt></i><tt> = </tt><i><tt>a_title</tt></i>
+_   _   end
+</pre>
+    </p>
+   
+   
+   <p>
+    (Borrow guidelines to write good header comments from OOSC2 section 26.4 
+    page 886-888.)
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="free_comments"></a><h2>Free Comments</h2>
+   
+   
+   <p>
+    They should give useful information and not just paraphrase the software text. 
+    They should appear on the line before the instruction(s) to be explained and 
+    should have one more indentation level to the right than the instruction(s).
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="semicolons"></a><h2>Semicolons</h2>
+   
+   
+   <p>
+    Semicolons are optional in Eiffel. For consistency reason, they should not be 
+    used in the <i>Gobo Eiffel</i> classes. The only places where 
+    they are used are:
+    
+    
+    <ul>
+     <li>to separate formal arguments of routines:
+      		
+      <blockquote><pre>
+<i><tt>f</tt></i> (<i><tt>a_foo</tt></i>: <i><tt>FOO</tt></i>; <i><tt>a_bar</tt></i>: <i><tt>BAR</tt></i>)</pre></blockquote>
+      	
+     </li>
+     <li>to separate several instructions on the same line, 
+      		although this programming style is not recommended:
+      		
+      <blockquote><pre>
+<i><tt>print</tt></i><tt> (</tt><i><tt>"Hello "</tt></i><tt>)</tt>; <i><tt>print</tt></i><tt> (</tt><i><tt><i><tt>you</tt></i><tt>.</tt><i><tt>name</tt></i></tt></i><tt>)</tt></pre></blockquote>
+      	
+     </li>
+     <li>to remove parsing ambiguity:
+      		
+      <blockquote><pre>
+<i><tt>foo</tt></i><tt>.</tt><i><tt>bar</tt></i>; (<i><tt>baz</tt></i>)<tt>.</tt><i><tt>do_something</tt></i></pre></blockquote>
+      		
+      	
+     </li>
+     <li><a href="http://smarteiffel.loria.fr">SmartEiffel</a> 
+      		emits a warning when semicolons are missing in the Export 
+      		subclause of the Feature_adaptation clause. Semicolons can be 
+      		added here in order to keep SmartEiffel quiet.
+      	
+     </li>
+    </ul>
+    
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="exceptions"></a><h2>Exceptions</h2>
+   
+   
+   <p>
+    Exceptions should only be raised when an unexpected behavior occurs. Reading an 
+    integer from the standard input when the user actually typed &#147;hello&#148;, 
+    or trying to open a file in read mode when the file does not exist (it could just 
+    have been deleted) are not considered as unexpected behaviors in my point of view.
+    
+   </p>
+   
+   
+   <p>
+    Also raising exceptions in the creation routine should be avoided since it is not 
+    clear (unless I'm proven otherwise) that ETL describes precisely what should 
+    happen in that particular case. It is preferred to properly create the objects 
+    and  then call the routines which may raise the exception.
+    
+   </p>
+   
+   
+   <p>
+    Routines which may raise exceptions should make it clear in their header comment. 
+    (There is no need to report the fact that a No_more_memory exception can be 
+    raised in each routine creating objects though ;-))
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>9 March 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="documentation.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

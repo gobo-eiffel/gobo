@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>mkdir</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>mkdir</h1>
+    </td>
+    <td align="right"><a href="ise_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="move_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="mkdir_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Create a directory.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="mkdir_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>directory</dt>
+    <dd><i>Description: </i>Directory to be created
+     <p><i>Domain: </i>Valid directoryname or path
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="mkdir_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="mkdir"&gt;
+    &lt;element name="mkdir"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;attribute name="directory"/&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+	</pre>
+   	</div>
+  <div><a name="mkdir_examples"></a>
+   		
+   <h2>Examples</h2>
+   	<pre>
+  &lt;mkdir directory="out"/&gt;
+
+  &lt;mkdir directory="some/new/directory"/&gt;
+
+	</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="ise_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="move_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

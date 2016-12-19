@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Executing the Transformation</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Executing the Transformation</h1>
+    </td>
+    <td align="right"><a href="transformer.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="results.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   To actually perform the transformation, you need to perform one or more
+   actions.
+   
+  </p>
+  <div>
+   
+   <h2>Selecting XML source data</h2>
+   
+   <p>
+    This step is optional, but if you omit it, then you must name the initial template.
+    
+   </p>
+   
+   <p>
+    Create an <a href="transformation_source.html"><font color="#008080"><i><tt>XM_XSLT_URI_SOURCE</tt></i></font></a>, 
+    passing it the <font color="#008080">SYSTEM</font> id of your XML text data, as an absolute URI.
+    
+   </p>
+   
+   <p>
+    If your data source is not XML text, i.e. it is not in a form which an XML parser would recognize, 
+    then you will have to create some other descendant of
+    <a href="transformation_source.html"><font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font></a>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Naming the initial mode</h2>
+   
+   <p>
+    Normally the transformation will start executing in the default mode. If you wish to start
+    the transformation in some other mode, then pass the name of that mode 
+    (as an <font color="#008080">expanded QName</font>, that is, an optional namespace-URI, followed by #, followed
+    by a local name with no intervening space) to 
+    <font color="#008080"><i><tt>set_initial_mode</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Naming the initial template</h2>
+   
+   <p>
+    If you supply XML source data to the transformation, then the initial template will normally be found
+    by matching on the initial context item, that is, the document element of the source data, using the initial mode. 
+    
+   </p>
+   
+   <p>
+    If you do not supply any XML source data, or if you wish to override the normal choice for an initial template,
+    then pass the name of that template
+    (as an <font color="#008080">expanded QName</font>, that is, an optional namespace-URI followed by #, followed
+    by a local name with no intervening space) to 
+    <font color="#008080"><i><tt>set_initial_template</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Naming the initial context node</h2>
+   
+   <p>
+    If you supply a source document to the transformation, then the initial context node will be chosen as the document node of
+    that document.
+    If you wish another node in the document to be chosen as the initial context node, then call <font color="#008080"><i><tt>set_initial_context</tt></i></font>
+    on the transformer, passing the text of an XPath expression to the routine call.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Setting Global Parameters</h2>
+   
+   <p>
+    If your stylesheet has any top-level <font color="#008080">&lt;xsl:param&gt;</font>s, then
+    you may well wish to set values for them (if any of the parameters are required,
+    then this step is mandatory).
+    
+   </p>
+   
+   <p>
+    There are three features provided to set the value of a parameter. If, as is common, you
+    wish to supply a string value (type <font color="#008080">xs:string</font>), then you can call
+    <font color="#008080"><i><tt>set_string_parameter</tt></i></font>. This takes two <font color="#008080"><i><tt>STRING</tt></i></font>s
+    as arguments. The first is the name of the parameter, and the second is the value you wish to set.
+    
+   </p>
+   
+   <p>
+    In the general case, you may pass an XPath expression as the value for a parameter. In this case you call
+    <font color="#008080"><i><tt>set_xpath_parameter</tt></i></font>. The arguments are the same as for 
+    <font color="#008080"><i><tt>set_string_parameter</tt></i></font>, but in this case the value is interpreted as an XPath expression, not a literal string value.
+    
+   </p>
+   
+   <p>
+    The XPath expression is parsed using the <font color="#008080">xsl:stylesheet/xsl:transform</font> element of the principal stylesheet module 
+    for a static context (so if your XPath expression contains prefixed <font color="#008080">QName</font>s, then the namespaces will
+    be resolved using the bindings in scope on that element).
+    
+   </p>
+   
+   <p>
+    The XPath expression is evaluated using a dynamic context based on the document element of the XML source data file, if present.
+    
+   </p>
+   
+   <p>
+    Finally, you may already have an XPath value (or a node, which
+    can be treated as an XPath value by wrapping it in
+    an <font color="#008080"><i><tt>XM_XPATH_SINGLETON_NODE</tt></i></font> object). In
+    this case you can call <font color="#008080"><i><tt>set_value_parameter</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Defining the output destination</h2>
+   
+   <p>
+    You <i>must</i> define the destination for the output from the transformation. To do this, create an 
+    <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>.      
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Running the transformation</h2>
+   
+   <p>
+    At this point, all that remains to be done is to call 
+    <font color="#008080"><i><tt>transform</tt></i></font>. You pass the <font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font>
+    representing the XML source data as the first parameter (or <font color="#008080"><i><tt>Void</tt></i></font> if you have not supplied any),
+    and the <font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font> you defined for the output destination as the second parameter.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, October 31st, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="transformer.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="results.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Options</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Options</h1>
+    </td>
+    <td align="right"><a href="parser.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="alternate.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   	<font color="#008080"><i><tt>AP_OPTION</tt></i></font> is the common superclass of
+   	all options. It defines the fact that options can have a short
+   	and a long form and a descriptive text. It also can count the
+   	occurrences of an option and can mark the option as
+   	mandatory.
+   
+  </p>
+  <p>
+   	<font color="#008080"><i><tt>AP_OPTION_WITH_PARAMETER[G]</tt></i></font> extends
+   	<font color="#008080"><i><tt>AP_OPTION</tt></i></font> with the possibility of
+   	recoding parameters of type <font color="#008080"><i><tt>G</tt></i></font>. All
+   	options except for <font color="#008080"><i><tt>AP_FLAG</tt></i></font> inherit from
+   	this class.
+   
+  </p>
+  <div><a name="available"></a>
+   
+   	
+   <h2>Available option types</h2>
+   
+   	
+   <p>
+    		The following standard option types are available:
+    	
+   </p>
+   
+   	
+   <dl>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_FLAG</tt></i></font>
+     			
+    </dt>
+    <dd>
+     				A simple flag that does not take an
+     				argument.
+     			
+    </dd>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_STRING_OPTION</tt></i></font>
+     			
+    </dt>
+    <dd>
+     				A flag that takes an arbitrary string
+     				as argument.
+     			
+    </dd>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_BOOLEAN_OPTION</tt></i></font>
+     			
+    </dt>
+    <dd>
+     
+     				The flag needs to be supplied by a
+     				boolean value. The strings
+     				'yes','y','1','true' and 't' are
+     				regarded as true. The strings
+     				'no','n','0','false' and 'f' are
+     				regarded as false.
+     
+     			
+    </dd>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_ENUMERATION_OPTION</tt></i></font>
+     			
+    </dt>
+    <dd>
+     
+     				The enumeration options allows to
+     				choose one string out of a fixed set
+     				of choices. Available choices can be
+     				added to the option through the
+     				<font color="#008080"><i><tt>extend</tt></i></font>
+     				call.
+     
+     			
+    </dd>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_INTEGER_OPTION</tt></i></font>
+     			
+    </dt>
+    <dd>
+     
+     				This option takes an integer as an
+     				argument. Parsing will yield an error
+     				if no integer value is passed.
+     
+     			
+    </dd>
+    		
+    <dt>
+     				<font color="#008080"><i><tt>AP_DISPLAY_HELP_FLAG</tt></i></font>
+     			
+    </dt>
+    <dd>
+     
+     				This is a special flag to display a
+     				help message. It is normally added
+     				automatically through the call of
+     				<font color="#008080"><i><tt>make</tt></i></font> in
+     				<font color="#008080"><i><tt>AP_PARSER</tt></i></font>.
+     
+     			
+    </dd>
+    	
+   </dl>
+   
+   
+  </div>
+  <div><a name="ownoptions"></a>
+   
+   	
+   <h2>Defining own option types</h2>
+   
+   	
+   <p>
+    		It should be easy to implement own option types do
+    		define own parameters, for example for file names or
+    		dates. It is best to inherit form
+    		<font color="#008080"><i><tt>AP_OPTION_WITH_PARAMETER[G]</tt></i></font> or one
+    		of its decedents.
+    	
+   </p>
+   
+   
+  </div>
+  <div><a name="optional_parameters"></a>
+   
+   	
+   <h2>Options with optional parameters</h2>
+   
+   	
+   <p>
+    		Sometimes, mostly for backward compatibility, it is
+    		necessary to make the parameter to an option
+    		optional. This can be done by calling the
+    		<font color="#008080"><i><tt>set_parameter_as_optional</tt></i></font>
+    		feature in class
+    		<font color="#008080"><i><tt>AP_STRING_OPTION</tt></i></font>. To prevent
+    		the grammar from becoming ambiguous, this only works
+    		for long options. Also, it is impossible to use the
+    		space as a delimiter between option and parameter:
+    		'--foo=X' will parse as option foo with parameter 'X',
+    		'--foo X' will parse as foo without a parameter, and
+    		then the global parameter 'X'.
+    	
+   </p>
+   
+   	
+   <p>
+    		The parameters list in the option will record usages
+    		of the option without parameters as Void values.
+    	
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="parser.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="alternate.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

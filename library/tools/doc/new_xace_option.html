@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Adding a new Xace option</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Adding a new Xace option</h1>
+    </td>
+    <td align="right"><a href="xace.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_routines.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The following sections will describe step by step what needs to be done
+   in order to let the library recognize a new option in Xace.
+   
+  </p>
+  <div>
+   <h2>Updating the documentation</h2>
+   
+   <p>
+    The first thing to do is to describe the new option in the documentation.
+    All Xace options are specified in this file:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>$GOBO/doc/gexace/options.txt</tt></i></font>
+     
+    </blockquote>
+    The file is divided in four sections: "System options", "Cluster options",
+    "Class options" and "Feature options". Note that some options are applicable
+    to several of these sections. This is for example the case for the option
+    'assertion' which can be set at the system level, at the cluster level or
+    at the class level. In that case the description of this option is repeated
+    in each applicable section.
+    
+   </p>
+   
+   
+   <p>
+    There are three categories of options. Boolean options are options whose only
+    possible values are "true" or "false". For example 'multithreaded' is a boolean
+    option. Other options may have a fixed set of possible values. For example the
+    option 'garbage_collector' can only have one of the following values: "none",
+    "internal" or "boehm". The remaining options have no such constraints. This is
+    for example the case of the option 'exclude' which specifies the pathnames to
+    be ignored when looking for Eiffel files in clusters.
+    
+   </p>
+   
+   
+   <p>
+    All these kinds of options are described thanks to the compulsory entries
+    "Name", "Values", "Default" and "Description", and optional "Note" entries.
+    Then follows a short description of how the given option is translated to
+    Eiffel compiler specific configuration notation. The template is as follows:
+    
+    <blockquote><pre>
+NAME: &lt;put the option name here&gt;
+
+VALUES: &lt;possible values&gt;
+DEFAULT: &lt;put the default value here, or just "no default"&gt;
+DESCRIPTION: &lt;put the description here&gt;
+NOTE: &lt;optional note. There might be several of them.&gt;
+
+ISE:
+	&lt;some value&gt; -&gt; &lt;some translated notation&gt;
+...
+</pre></blockquote>
+    Note that if an Eiffel compiler suports several notations, the translation for
+    each notation should be specified. This is for example the case with ISE which
+    supports both Ace and ECF files. In that case the template will look something
+    like that:
+    
+    <blockquote><pre>
+ISE Ace:
+	&lt;some value&gt; -&gt; &lt;some translated Ace notation&gt;
+ISE ECF:
+	&lt;some value&gt; -&gt; &lt;some translated ECF notation&gt;
+</pre></blockquote>
+    The best thing to do is to have a look at already specified options as examples.
+    Please keep the options sorted in alphabetical order within each section of the
+    documentation for easier reference.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Option names and values</h2>
+   
+   <p>
+    The name of the option should be declared in class <font color="#008080"><i><tt>ET_XACE_OPTION_NAMES</tt></i></font>.
+    For example, if the name of the option is "assertion", then the following feature will be added:
+    
+    <blockquote><pre>
+assertion_name: STRING is "assertion"
+</pre></blockquote>
+    Each option is associated with a unique code which should be declared in the same class.
+    For the option "assertion", the feature to be added will be <font color="#008080"><i><tt>assertion_code</tt></i></font>.
+    The table <font color="#008080"><i><tt>option_codes</tt></i></font> should be updated accordingly. Don't forget
+    to increase the size of the table.
+    When the given option can have a fixed set of possible values, these values are also
+    listed in the class. Please keep all entries in each feature clause in alphabetic order.
+    
+   </p>
+   
+   
+   <p>
+    Then, information about the new option should be added to class <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font>.
+    The first feature to add is <font color="#008080"><i><tt>declared_foo</tt></i></font> where "foo" is the name of the option.
+    This represents the value for this option if explicitly specified in the Xace file. For boolean option, it will
+    look like that:
+    
+    <blockquote><pre>
+declared_foo: UT_TRISTATE
+		-- Declared value for 'foo' option
+</pre></blockquote>
+    When the option can have several simultaneous values, such as "debug_tag", the feature will look like that:
+    
+    <blockquote><pre>
+declared_foo: DS_HASH_SET [STRING]
+		-- Declared values for 'foo' option
+</pre></blockquote>
+    Otherwise it will look like that:
+    
+    <blockquote><pre>
+declared_foo: STRING
+		-- Declared value for 'foo' option
+</pre></blockquote>
+    Note that some option may expect some non-negative integer values. In that case the declaration will look
+    like that:
+    
+    <blockquote><pre>
+declared_foo: INTEGER
+		-- Declared value for 'foo' option
+</pre></blockquote>
+    and its value will be set to -1 in the creation procedure of <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    The next feature to add to class <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font> is the feature
+    <font color="#008080"><i><tt>default_foo</tt></i></font> representing the default value for this option.
+    It will be of type <font color="#008080"><i><tt>BOOLEAN</tt></i></font> for boolean options,
+    <font color="#008080"><i><tt>INTEGER</tt></i></font> when the option can have non-negative integer values,
+    <font color="#008080"><i><tt>DS_HASH_SET [STRING]</tt></i></font> when the option can have several values
+    simultaneously, and <font color="#008080"><i><tt>STRING</tt></i></font> otherwise.
+    
+   </p>
+   
+   
+   <p>
+    For options whose values can be among a fixed set of possible values, a feature like
+    the following will also be added to class <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font>:
+    
+    <blockquote><pre>
+valid_dead_code_removal: DS_HASH_SET [STRING] is
+		-- Valid values for 'dead_code_removal' option
+	once
+		create Result.make (5)
+		Result.set_equality_tester (string_equality_tester)
+		Result.put_last (options.none_value)
+		Result.put_last (options.low_level_value)
+		Result.put_last (options.feature_value)
+		Result.put_last (options.class_value)
+		Result.put_last (options.all_value)
+	ensure
+		valid_dead_code_removal_not_void: Result /= Void
+		valid_dead_code_removal_not_empty: not Result.is_empty
+		no_void_value: not Result.has_void
+		-- all_lower: forall v in Result, v.is_lower
+	end
+</pre></blockquote>
+    It will be used in assertions. The values inserted in the set are those that have
+    been declared earlier in class <font color="#008080"><i><tt>ET_XACE_OPTION_NAMES</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    There remains four features to be added to class <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font>.
+    Feature <font color="#008080"><i><tt>is_foo_declared</tt></i></font> indicates whether this option
+    has been explicitly specified in the Xace file. Its implementation depends on the 
+    kind of option. Typically, having <font color="#008080"><i><tt>declared_foo</tt></i></font> set to
+    Void is a good indication that this option has not been specified in the Xace file.
+    The feature <font color="#008080"><i><tt>unset_foo</tt></i></font> will do what is necessary to make sure
+    that <font color="#008080"><i><tt>is_foo_declared</tt></i></font> returns False.
+    The feature <font color="#008080"><i><tt>foo</tt></i></font> will either return
+    <font color="#008080"><i><tt>declared_foo</tt></i></font> when this option has been explicitly specifed
+    in the Xace file, or <font color="#008080"><i><tt>default_foo</tt></i></font> otherwise. And finally,
+    feature <font color="#008080"><i><tt>set_foo</tt></i></font> will indicate that the value passed
+    as argument has been explicitly specified in the Xace file. It will either replace
+    any other previously specified value, or add it to the set of values when the
+    corresponding option can have several values simultaneously.
+    
+   </p>
+   
+   
+   <p>
+    All these features should be kept in alphabetic order in their respective feature clauses.
+    It is recommended to have a look at the set of features for existing options of the same kind
+    in class <font color="#008080"><i><tt>ET_XACE_OPTIONS</tt></i></font> when adding a new option.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Xace parser</h2>
+   
+   <p>
+    The next step is to let the parser of Xace files recognize the new option. This is
+    done in class <font color="#008080"><i><tt>ET_XACE_PARSER_SKELETON</tt></i></font>. In feature
+    <font color="#008080"><i><tt>fill_options</tt></i></font> there is a big inspect instruction
+    corresponding to all possible options that can be found in an Xace file. For
+    boolean option, the following will need to be added:
+    
+    <blockquote><pre>
+when foo_code then
+	if is_true (a_value) then
+		an_option.set_foo (True)
+	elseif is_false (a_value) then
+		an_option.set_foo (False)
+	else
+		error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+	end
+</pre></blockquote>
+    still assuming that the option name is "foo". For options whose values can only
+    be one of a fixed set of possible values, we will have that:
+    
+    <blockquote><pre>
+when foo_code then
+	if an_option.valid_foo.has (a_value) then
+		an_option.set_foo (a_value)
+	else
+		error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_foo, a_position_table.item (an_element))
+	end
+</pre></blockquote>
+    And for unconstrained options, we will just call the feature <font color="#008080"><i><tt>set_foo</tt></i></font> directly.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Translation to other Eiffel configuration notations</h2>
+   
+   <p>
+    The tool gexace is able to translate Xace files to other configuration notations supported
+    by various Eiffel compilers, such as Ace files or ECF files. If the given option is supported
+    by the targetted notation, then the corresponding generator class
+    <font color="#008080"><i><tt>ET_XACE_&lt;notation&gt;_GENERATOR</tt></i></font> needs to be updated. These classes
+    will typically have features of the form <font color="#008080"><i><tt>print_options</tt></i></font>,
+    <font color="#008080"><i><tt>print_cluster_options</tt></i></font>,
+    <font color="#008080"><i><tt>print_class_options</tt></i></font>,
+    <font color="#008080"><i><tt>print_feature_options</tt></i></font> or
+    <font color="#008080"><i><tt>print_settings</tt></i></font>. Please have a look at them.
+    
+   </p>
+   
+  </div>
+  <div>
+   <h2>Gobo Eiffel toolset</h2>
+   
+   <p>
+    If the new option is supported by the Gobo Eiffel toolset, then the classes
+    <font color="#008080"><i><tt>ET_XACE_SYSTEM</tt></i></font> and <font color="#008080"><i><tt>ET_XACE_SYSTEM_PARSER</tt></i></font>
+    will need to be updated accordingly.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2010, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>28 February 2010</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="xace.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="builtin_routines.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Using the XML parser</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Using the XML parser</h1>
+    </td>
+    <td align="right"><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="serializers.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="first_xml_example"></a>
+   
+   <h2>A first example: counting tags</h2>
+   
+   
+   <p>
+    Let's start with a simple example of an XML parser that counts the number of tags in an input file. This example has two classes,
+    the main class that opens the file and creates the parser, and a descendant of the callbacks class that receives events from
+    the parser. The main class will connect this event consumer with the parser. 
+    
+   </p>
+   
+   
+   <p>
+    The base class for events is <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font> which has all features deferred. For this example, only a couple of events are needed, so <font color="#008080"><i><tt>XM_CALLBACKS_NULL</tt></i></font> which provides empty bodies for all events is used for convenience. The events we redefine are routines called when the parser
+    is started, and whenever it encounters a start (opening) XML tag.
+    
+   </p>
+   
+   <pre>
+class TAGCOUNT_CALLBACKS
+
+inherit
+
+	XM_CALLBACKS_NULL
+		redefine
+			on_start,
+			on_start_tag
+		end
+
+create
+
+	make
+
+feature -- Events
+	
+	on_start
+			-- Reset tag count.
+		do
+			count := 0
+		end
+		
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
+			-- Count start tags.
+		do
+			count := count + 1
+		end
+	
+feature -- Access
+	
+	count: INTEGER
+			-- Number of tags seen.
+			
+end
+</pre>
+   
+   <p>
+    The main class creates the parser, the routines that read the command line and open the 
+    file are standard and omitted here, which leaves the main routine that sets up 
+    and starts the parser, and prints the result:
+    
+   </p>
+   
+   <pre>
+	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM)
+			-- Parse open stream.
+		require
+			a_stream_not_void: a_stream /= Void
+			a_stream_open: a_stream.is_open_read
+		local
+			a_parser: XM_PARSER
+			a_consumer: TAGCOUNT_CALLBACKS
+		do
+			-- Create the parser. 
+			-- It is left in the default state, which means: 
+			-- ascii only, no external entities or DTDs, 
+			-- no namespace resolving.
+			create {XM_EIFFEL_PARSER} a_parser.make
+			
+			-- Create the event consumer that counts start tags. 
+			create {TAGCOUNT_CALLBACKS} a_consumer.make	
+			a_parser.set_callbacks (a_consumer)
+			
+			-- Parse and display result
+			a_parser.parse_from_stream (a_stream)
+			if not a_parser.is_correct then
+				error_handler.report_error_message (a_parser.last_error_extended_description)
+			else
+				error_handler.report_info_message ("Number of tags found: " + a_consumer.count.out)
+			end
+		end
+</pre>
+   
+   <p>
+    The full example is available at <font color="#800000"><i><tt>example/xml/event/tagcount</tt></i></font>.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="xml_event_interfaces"></a>
+   
+   <h2>Event interfaces</h2>
+   
+   
+   <p>
+    Event interfaces are the lowest level of communication with an XML parser. An event interface is a deferred class containing
+    callback calls. Sources of events, like a parser, have routines to attach a descendant of the event interface.
+    
+   </p>
+   
+   
+   <p>
+    For each event interface, there is a purely deferred class with the callbacks, of which clients inherit, and a 'source' class,
+    which events sources, like the parser, inherit. For the main XML content events, the event interface is <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font>, and the source is <font color="#008080"><i><tt>XM_CALLBACKS_SOURCE</tt></i></font>. It provides a <font color="#008080"><i><tt>set_callbacks</tt></i></font> feature, and the parser inherits from it.
+    
+   </p>
+   
+   
+   <p>
+    DTD events are covered separately, for parsers that support them, using <font color="#008080"><i><tt>XM_DTD_CALLBACKS</tt></i></font> and <font color="#008080"><i><tt>XM_DTD_CALLBACKS_SOURCE</tt></i></font> (with <font color="#008080"><i><tt>set_dtd_callbacks</tt></i></font>).
+    
+   </p>
+   
+  </div>
+  <div><a name="xml_parsers"></a>
+   
+   <h2>The XML parser interface</h2>
+   
+   
+   <p>
+    The public interface of XML parsers is represented in the deferred class <font color="#008080"><i><tt>XM_PARSER</tt></i></font>. Parsers are event sources, inheriting from the event sources classes to provide <font color="#008080"><i><tt>set_callbacks</tt></i></font> and <font color="#008080"><i><tt>set_dtd_callbacks</tt></i></font>. An input document is parsed using <font color="#008080"><i><tt>parse_from_stream</tt></i></font> and similar features, which accept strings or IO streams from the Gobo Kernel library. Incremental parsing routines are available
+    to parse a document a chunk at a time, if the parser supports it, which can be checked with <font color="#008080"><i><tt>is_incremental</tt></i></font>. 
+    
+   </p>
+   
+   
+   <p>
+    Errors can be collected but are also forwarded to the event interface. Because an event filter stream as described below can
+    produce its own errors, not reflected in the event source that is the parser, it may be more sensible in most cases to collect
+    errors downstream.
+    
+   </p>
+   
+   
+   <p>
+    The parsers have a <i>string mode</i>. Because XML documents can contain unicode characters that do not fit in most Eiffel compilers' <font color="#008080"><i><tt>CHARACTER</tt></i></font> and <font color="#008080"><i><tt>STRING</tt></i></font> types, the Gobo Eiffel library provides a Unicode string class, that inherits from <font color="#008080"><i><tt>STRING</tt></i></font>. The base class of Gobo's unicode string classes is <font color="#008080"><i><tt>UC_STRING</tt></i></font>. There are some subtle issues with polymorphism, for instance:
+    
+   </p>
+   
+   <pre>
+"hello".append_string (a_uc_string)
+</pre>
+   
+   <p>
+    will not work because the call target is of dynamic type <font color="#008080"><i><tt>STRING</tt></i></font> which does not know about <font color="#008080"><i><tt>UC_STRING</tt></i></font>. A library routine, <font color="#008080"><i><tt>KL_STRING_ROUTINES</tt></i></font>'s <font color="#008080"><i><tt>appended_string</tt></i></font>, that copes with polymorphism is provided to replace the original routine. Other polymorphic routines are treated similarly.
+    The Gobo Unicode facilities are described in more detail elsewhere along with the rationale for this design. 
+    
+   </p>
+   
+   
+   <p>
+    As this potential polymorphism puts a burden of care on the client, and could lead to hard to detect problems for unprepared
+    clients, the XML parsers default to a safe mode, where only instances of <font color="#008080"><i><tt>STRING</tt></i></font> are produced, and a parsing error occurs if the XML input contains some characters that do not fit in <font color="#008080"><i><tt>STRING</tt></i></font>. If the application input is only ASCII files, nothing else needs to be done. Otherwise, it may be necessary to set the string
+    mode to some other mode, such as producing exclusively <font color="#008080"><i><tt>UC_STRING</tt></i></font> descendants, or producing them only when needed. These string mode settings are contained in the class <font color="#008080"><i><tt>XM_STRING_MODE</tt></i></font>, a parent of the parser classes.
+    
+   </p>
+   
+   
+   <p>
+    Another setting a parser user may want to change from the default relates to external references, described below.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="concrete_xml_parsers"></a>
+   
+   <h2>Concrete parsers</h2>
+   
+   
+   <p>
+    Several concrete parsers are available, which are descendants of this interface. The pure Eiffel parser is <font color="#008080"><i><tt>XM_EIFFEL_PARSER</tt></i></font>. The parser making use of and depending on the Expat C library is <font color="#008080"><i><tt>XM_EXPAT_PARSER</tt></i></font>. These classes can be created directly.
+    
+   </p>
+   
+   
+   <p>
+    Because Expat introduces external dependencies in the library, a factory class is available to allow the same client code
+    to work independently of whether or not the Expat parser is compiled in: <font color="#008080"><i><tt>XM_EXPAT_PARSER_FACTORY</tt></i></font>. The value of <font color="#008080"><i><tt>is_expat_available</tt></i></font> depends on whether Expat is available, and code may portably act accordingly, for instance falling back to the Eiffel parser.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="xml_event_filters"></a>
+   
+   <h2>Event filters and streams</h2>
+   
+   
+   <p>
+    On top of the event interface, the XML library provides a set of filters and a framework for using filters. The filters are
+    arranged in a stream, in a manner similar to the Unix command shell.
+    
+   </p>
+   
+   
+   <p>
+    Each component of a filter pipe is a descendant of a filter base class, <font color="#008080"><i><tt>XM_CALLBACKS_FILTER</tt></i></font> for content events, which has a <font color="#008080"><i><tt>next</tt></i></font> attribute. The default implementation of each event is simply to forward the event to the next filter. A filter that uses
+    only a few events can redefine only the required routines. Redefinition of routines are expected to do their processing and
+    then forward the event to the next filter, for instance using <font color="#008080"><i><tt>Precursor</tt></i></font>. The class provides two routines that can be used as creation procedures: <font color="#008080"><i><tt>make_null</tt></i></font> sets <font color="#008080"><i><tt>next</tt></i></font> to a filter that does nothing on each event. This null filter, <font color="#008080"><i><tt>XM_CALLBACKS_NULL</tt></i></font> for content events, allows each component of a pipe to be used at any position in the pipe, including at the end, and the
+    next filter to be set when convenient, while maintaining an invariant that <font color="#008080"><i><tt>next</tt></i></font> is not Void. The feature <font color="#008080"><i><tt>set_next</tt></i></font> can also be used as a creation procedure.
+    
+   </p>
+   
+   
+   <p>
+    From an Eiffel typing viewpoint, the whole stream has the same type: each filter can be at any position in the pipe. It maybe
+    that some filters have extra dependencies (one must be before the other) that are not captured by the static type system.
+    This seems acceptable given the flexibility of the system, and that many practical filters can indeed be placed anywhere on
+    a pipe. A good point for encapsulation is that each filter is a small component with a clear interface, providing much better
+    encapsulation than some other event filter patterns (like each stage inheriting from the previous one, with high coupling
+    between each component).
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Content events</h2>
+   
+   
+   <p>
+    The content events are the core of the XML parser interface. They cover elements and attributes, in addition to less fundamental
+    feature like comments and processing instructions. There are also events called on startup and at the end of parsing.
+    
+   </p>
+   
+   
+   <p>
+    All events of <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font> that take names of tags or attributes, follow the same convention. The signature includes the namespace (a string representing
+    the namespace URI), name prefix and local part. The parser is not expected to provide to resolve namespaces, with a filter
+    introduced below resolving the namespaces and replacing the non-resolved namespaces (Void) downstream of the filter pipe.
+    Whether a namespace is set can be checked with <font color="#008080"><i><tt>has_namespace</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures.
+    Data structures are built downstream, or as intermediary internal structures of a specific filter. In particular, this means
+    there is one event per attribute.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Content event filters</h2>
+   
+   
+   <p>
+    A set of standard content event filters is available in the library. There is a factory class <font color="#008080"><i><tt>XM_CALLBACKS_FILTER_FACTORY</tt></i></font> with creation routines and convenience routines to build pipes and bind the filters to each other. The filters can be created
+    directly, the factory is only there for convenience.
+    
+   </p>
+   
+   
+   <p>
+    The namespace resolving filter <font color="#008080"><i><tt>XM_NAMESPACE_RESOLVER</tt></i></font> will be in most standard pipes. It reads XML namespace declaration attributes (these events are not forwarded downstream)
+    and adds a resolved namespace URI to all outgoing names.
+    
+   </p>
+   
+   
+   <p>
+    For completely correct validation of unicode character classes in XML names, the filter <font color="#008080"><i><tt>XM_UNICODE_VALIDATION_FILTER</tt></i></font> should be used. It is transparent unless an error occurs when it issues an error event, so an error filter should be connected
+    later in the pipe.
+    
+   </p>
+   
+   
+   <p>
+    The atomicity of content events is not guaranteed by the parser, that is two or more <font color="#008080"><i><tt>on_content</tt></i></font> events may follow each other. The <font color="#008080"><i><tt>XM_CONTENT_CONCATENATOR</tt></i></font> filter turns succeeding content events into one. It will be usually be preceded by a <font color="#008080"><i><tt>XM_NO_COMMENT_FILTER</tt></i></font> filter which removes comment events, because otherwise events placed in the middle of content will also contribute  non-atomic
+    content events separated by comment events.
+    
+   </p>
+   
+   
+   <p>
+    Without <font color="#008080"><i><tt>XM_STOP_ON_ERROR_FILTER</tt></i></font> the event flow may continue after an error. This filter stops all event forwarding from the first error, which it remembers
+    for later use (<font color="#008080"><i><tt>has_error</tt></i></font> and <font color="#008080"><i><tt>last_error</tt></i></font>). It is useful for most standard pipes, indeed an error condition is better collected here, including errors within the preceding
+    filters, than in the parser itself.
+    
+   </p>
+   
+   
+   <p>
+    <font color="#008080"><i><tt>XM_PRETTY_PRINT_FILTER</tt></i></font> is a filter that prints out the event stream as an XML document, to the standard output, or a string. It can be placed anywhere
+    in the stream, which may be convenient for debugging.
+    
+   </p>
+   
+   
+   <p>
+    To produce the output in a tree structure (descendants from <font color="#008080"><i><tt>XM_NODE</tt></i></font>), the filter <font color="#008080"><i><tt>XM_CALLBACKS_TO_TREE_FILTER</tt></i></font> is used. It expects resolved namespaces.
+    
+   </p>
+   
+   
+   <p>
+    <font color="#008080"><i><tt>XM_SHARED_STRINGS_FILTER</tt></i></font> saves memory and possibly comparison time by making all equal strings point to a single instance. The downstream events must
+    then consider strings immutable. This sharing is across event categories: for example, if a content happens to be the same
+    as an element name, it will be the same string.
+    
+   </p>
+   
+   
+   <p>
+    To finish this section, here is an example of a filter pipe, using the factory class convenience routines <font color="#008080"><i><tt>callbacks_pipe</tt></i></font> that simply binds the next pipe of each filter in an array and returns the first element:
+    
+   </p>
+   
+   <pre>
+...
+inherit
+	XM_CALLBACKS_FILTER_FACTORY
+...
+
+a_parser: XM_PARSER
+...
+
+a_parser.set_callbacks (callbacks_pipe (
+		&lt;&lt; new_namespace_resolver,
+			new_stop_on_error,
+			new_tree_builder &gt;&gt;))
+...
+</pre>
+   
+   <p>
+    In a real program, references may be kept to individual filters, to recover the result or check their state after processing.
+    <font color="#008080"><i><tt>XM_TREE_CALLBACKS_PIPE</tt></i></font> provides a standard pipe for tree creation with attributes for the interesting component filters.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="serializers.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

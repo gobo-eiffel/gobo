@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Conformance to standards</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Conformance to standards</h1>
+    </td>
+    <td align="right"><a href="examples.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="xslt_serializer.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This library is aligned with the Recommendations issued on the 23rd January 2007
+   for XPath 2.0 and XSLT 2.0. An XSLT processor claiming conformance with theseRecommendations
+   is required to document what choices it makes for features that are listed as implementation-defined.
+   
+  </p>
+  <p>
+   The library claims conformance to a Basic XSLT processor, and in addition supports the optional features
+   Serialization Feature and Backwards Compatibility Feature.
+   
+  </p>
+  <div>
+   
+   <h2>Implementation-defined choices</h2>
+   
+   <p>
+    
+    <dl>
+     
+     <dt>Invocation of the processor</dt>
+     <dd>
+      	This is described elsewhere in the documentation starting from <a href="overview.html">Overview</a>.
+      	The Base Output URI is equal to the value of <font color="#008080"><i><tt>system_id</tt></i></font> in 
+      	<font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font>, and this is set by whichever creation procedure
+      	you use to create the object. See <a href="transformation_result.html">Transformation Result</a>.
+      
+      <p>
+       	The command-line processor, by default, sets it to <font color="#008080">stdout:</font>. This URI scheme (defined by the library), has only
+       	the one lexical value, so relative URIs are not possible with this default.
+       
+      </p>
+     </dd>
+     
+     <dt>Creating new extension instructions and extension functions</dt>
+     <dd>
+      	There is no mechanism provided for creating new extension instructions.
+      	See <a href="extension_functions.html">Creating extension functions</a> for the mechanism for creating new extension functions.
+      
+     </dd>
+     
+     <dt>Recoverable Dynamic Errors</dt>
+     <dd>
+      	The decision on whether or not to recover from a recoverable dynamic error is made by the <font color="#008080"><i><tt>XM_XSLT_ERROR_LISTENER</tt></i></font>.
+      	See <a href="error_listener.html">The Error Listener</a> for more details.
+      
+     </dd>
+     
+     <dt>Type Errors</dt>
+     <dd>
+      	Type errors are signalled statically whenever possible.
+      
+     </dd>
+     
+     <dt>Extension Namespaces</dt>
+     <dd>
+      	See <a href="overview.html">Overview</a>.
+      
+     </dd> 
+     
+     <dt>User-defined Data Elements</dt>
+     <dd>
+      	See <a href="../../gexslt/extension/index.html">Extensions</a>.
+      
+     </dd> 
+     
+     <dt>Collection URIs</dt>
+     <dd>
+      	See <a href="../xpath/collection.html">Collections</a>.
+      
+     </dd> 
+     
+     <dt>URI References</dt>
+     <dd>
+      	The following URI schemes are directly supported by the library for reference
+      	by the <font color="#008080">href</font> attribute of <font color="#008080">xsl:import</font> and <font color="#008080">xsl:include</font>:
+      	
+      <ul>
+       <li>file</li>
+       <li>data</li>
+       <li>stdin</li>
+       <li>string</li>
+      </ul>
+      
+      <p>
+       	The last two schemes are used for reading from the standard input stream and text from Eiffel <font color="#008080"><i><tt>STRING</tt></i></font>s respectively. 
+       	They are documented in <a href="../resolvers.html">Resolvers</a>, which also documents how to add additional URI schemes.
+       
+      </p>
+      <p>
+       	The following additional URI schemes are supported by <a href="http://gestalt.sourceforge.net">Gestalt</a>:
+       	
+       <ul>
+        <li>http</li>
+        <li>https</li>
+        <li>ftp</li>
+       </ul>
+       
+      </p>
+      <p>
+       	For the list of supported media types and treatment of fragment identifiers, see <a href="../../gexslt/options.html">Options</a>
+       	This also applies to the <font color="#008080">document()</font> function.
+       
+      </p>
+     </dd> 
+     
+     <dt>Limits</dt>
+     <dd>
+      	
+      <ul>
+       <li>
+        	   The maximum number of digits permitted for an xs:decimal value is at least 18, but may be set
+        	   to any higher value.
+        	  
+       </li>
+       <li>
+        	   For dates and times, both positive and negative year values are supported for any value that can be
+        	   represented by a 32-bit signed integer. The maximum number of fractional second digits is three. Although additional digits
+        	   will be recognised, values are rounded to 3 digits.
+        	  
+       </li>
+       <li>
+        	   For durations, the maximum values for the years, months, days, hours, minutes and seconds components are those that can
+        be
+        	   represented by a 32-bit signed integer.
+        	  
+       </li>
+       <li>
+        	   For xs:yearMonth durations, the greatest durations that can be expressed in months is 13 times the maximum positive number
+        that can be expressed 
+        	   as a 32-bit signed integer.
+        	  
+       </li>
+       <li>
+        	   For xs:dayTime durations, the greatest durations that can be expressed in seconds is 24 * 60 * 60 times the maximum positive
+        number that can be expressed 
+        	   as a 32-bit signed integer.
+        	  
+       </li>
+       <li>
+        	   For xs:string, xs:hexBinary, xs:base64Binary, xs:QName, xs:anyURI and xs:NOTATION, the maximum length of a value
+        	   is the maximum positive number that can be expressed as a 32-bit signed integer.
+        	  
+       </li>
+       <li>
+        	   The maximum length of a sequence is the maximum positive number that can be expressed as a 32-bit signed integer.
+        	  
+       </li>
+      </ul>
+      
+     </dd> 
+     
+     <dt>Implicit Timezone</dt>
+     <dd>
+      	The implicit timezone is set to the local time zone when a transformer is created.
+      
+     </dd>
+     
+     <dt>Numbering sequences</dt>
+     <dd>
+      	No additional numbering sequences are defined.
+      
+     </dd>
+     
+     <dt>Upper bounds on numbering sequences with xsl:number</dt>
+     <dd>
+      	When using Roman Numerals, the maximum number is 3,999.
+      
+     </dd>
+     
+     <dt>Languages supported by xsl:number</dt>
+     <dd>
+      	The default language is English (en). The library does not have built-in support for any other languages right now,
+      	but these can be added by writing a descendant of <font color="#008080"><i><tt>XM_XSLT_NUMBERER</tt></i></font>, and editing 
+      	<font color="#008080"><i><tt>selected_numberer</tt></i></font> of <font color="#008080"><i><tt>XM_XSLT_NUMBER_ROUTINES</tt></i></font>.
+      	
+      <p><font color="#FF0000">TODO: there should be a plugin-mechanism for this.</font></p>
+      
+     </dd>
+     
+     <dt>Data-type attribute on xsl:sort</dt>
+     <dd>
+      	If the <font color="#008080">data-type</font> attribute on the <font color="#008080">xsl:sort</font> instruction has a value other than text or number then
+      	error <font color="#008080">XTDE0030</font> is issued at run-time.
+      
+     </dd>
+     
+     <dt>Defining collation URIs</dt>
+     <dd>
+      	There is currently no mechanism for defining collations.
+      
+     </dd>
+     
+     <dt>Selecting collations</dt>
+     <dd>
+      	The algorithm currently used by <font color="#008080">xsl:sort</font> for select a collation, given a <font color="#008080">lang</font> and <font color="#008080">case-order</font>
+      	attribute, is
+      	to use the Unicode Code-point collation for English, and to raise an error for any other language.
+      
+     </dd>
+     
+     <dt>Date/time formatting</dt>
+     <dd>
+      	The default language is English (en). No other languages are currently supported.
+      	The default calendar is CE. AD is also supported. The default country is US. The country is currently
+      	ignored, and all values are accepted. This will change.
+      
+      <p>
+       	The following abbreviations are used for the days of the week in English:
+       	
+       <ul>
+        <li>Sun</li>
+        <li>Mon</li>
+        <li>Tues</li>
+        <li>Weds</li>
+        <li>Thurs</li>
+        <li>Fri</li>
+        <li>Sat</li>
+       </ul>
+       
+      </p>
+     </dd>
+     
+     <dt>System properties</dt>
+     <dd>
+      	The following values are returned for the standard system-properties:
+      	
+      <dl>
+       	 
+       <dt>xsl:version</dt>
+       <dd>2.0</dd>
+       	 
+       <dt>xsl:vendor</dt>
+       <dd>Gobo
+        <p>
+         	   This is actually configurable, by calling <font color="#008080"><i><tt>set_vendor_name</tt></i></font> from
+         	   <font color="#008080"><i><tt>XM_XPATH_CONFIGURATION</tt></i></font>. For Gestalt, the value is Colin Adams.
+         	  
+        </p>
+       </dd>
+       	 
+       <dt>xsl:vendor-url</dt>
+       <dd>http://www.gobosoft.com/
+        <p>
+         	   This is actually configurable, by calling <font color="#008080"><i><tt>set_vendor_url</tt></i></font> from
+         	   <font color="#008080"><i><tt>XM_XPATH_CONFIGURATION</tt></i></font>. For Gestalt, the value is http://gestalt.sourceforge.net/.
+         	  
+        </p>
+       </dd>
+       	 
+       <dt>xsl:product-name</dt>
+       <dd>Gexslt
+        <p>
+         	    This is actually configurable, by calling <font color="#008080"><i><tt>set_product_name</tt></i></font> from
+         	    <font color="#008080"><i><tt>XM_XPATH_CONFIGURATION</tt></i></font>. For Gestalt, the value is Gestalt.
+         	   
+        </p>
+       </dd>
+       	 
+       <dt>xsl:product-version</dt>
+       <dd>This is equal to the version of the Gobo library. See <a href="http://www.gobosoft.com/whatsnew/index.html">Gobo news</a><p>
+         	   This is actually configurable, by calling <font color="#008080"><i><tt>set_product_version</tt></i></font> from
+         	   <font color="#008080"><i><tt>XM_XPATH_CONFIGURATION</tt></i></font>. For Gestalt, the value is the version of Gestalt.
+         	  
+        </p>
+       </dd>
+       	 
+       <dt>xsl:is-schema-aware</dt>
+       <dd>no</dd>
+       	 
+       <dt>xsl:supports-serialization</dt>
+       <dd>yes</dd>
+       	 
+       <dt>xsl:supports-backwards-compatibility</dt>
+       <dd>yes</dd>
+       	 
+       <dt>xsl:supports-namespace-axis</dt>
+       <dd>no</dd>
+       	
+      </dl>
+      	
+      <p>
+       	 Also, any property in the namespace http://exslt.org/system/environment is treated as the name
+       	 of an environment variable. If that environemnt variable is set, then it's value is returned.
+       	
+      </p>
+      <p>
+       	 Additional system properties in other namespaces may be registered. The standard implementation
+       	 provides the following properties in the namespace <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension</font>:
+       	 
+       <dl>
+        	  
+        <dt>gexslt:standard-file-collection</dt>
+        <dd>
+         	     A value of yes indicates collection URIs in the <font color="#008080">file</font> scheme are supported as documented in 
+         	     <a href="../xpath/collection.html">Collections</a>.
+         	    
+        </dd>
+        	  
+        <dt>gexslt:standard-ftp-collection</dt>
+        <dd>
+         	     A value of yes indicates collection URIs in the <font color="#008080">ftp</font> scheme are supported as documented in 
+         	     <a href="../xpath/collection.html">Collections</a>.
+         	    
+        </dd>
+        	  
+        <dt>gexslt:standard-http-collection</dt>
+        <dd>
+         	     A value of yes indicates collection URIs in the <font color="#008080">http</font> scheme are supported as documented in 
+         	     <a href="../xpath/collection.html">Collections</a>.
+         	    
+        </dd>
+        	 
+       </dl>
+       	
+      </p>
+     </dd>
+     
+     <dt>Destination for xsl:message</dt>
+     <dd>
+      	All xsl:message output goes to the standard error stream by default. This is configurable (see API documentation).
+      
+     </dd>
+     
+     <dt>Extension function string results</dt>
+     <dd>
+      	Extension functions are required to raise an error if they attempt to
+      	return a string that contains invalid XML characters. Since any extension
+      	functions must be linked into the executable, this effectively means that there will
+      	be a different implementation.
+      
+     </dd>
+     
+     <dt>External objects</dt>
+     <dd>
+      	None.
+      
+     </dd>
+     
+     <dt>Final result trees</dt>
+     <dd>
+      	See <a href="results.html">Accessing the Transformation Results</a> for how to access
+      	final result trees.
+      
+      <p>
+       	The following URI schemes are directly supported by the library for the value of the <font color="#008080">href</font> attribute
+       	of the <font color="#008080">xsl:result-document</font> instruction:
+       	
+       <ul>
+        <li>file</li>
+        <li>string</li>
+        <li>stdout</li>
+       </ul>
+       
+      </p>
+      <p>
+       	Stdout refers to the standard output stream. The only value permitted for URIs in this scheme
+       	is the the string <font color="#008080">stdout:</font>. String refers to Eiffel <font color="#008080"><i><tt>STRING</tt></i></font>s.
+       
+      </p>
+      <p>
+       	The following additional URI schemes are supported by <a href="http://gestalt.sourceforge.net">Gestalt</a>:
+       	
+       <ul>
+        <li>http</li>
+        <li>ftp</li>
+        <li>mailto</li>
+       </ul>
+       
+      </p>
+      <p>
+       	Eiffel programmers may add additional URI schemes. See <a href="output_resolver.html">The Output URI Resolver </a>
+       
+      </p>
+      <p>
+       	Serialization is to the destination implied by the URI scheme. In the case of <font color="#008080">string:</font>, these
+       	can only be retrieved by an Eiffel program, by accessing <font color="#008080"><i><tt>output_destinations</tt></i></font>
+       	from <font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font>.
+       
+      </p>
+     </dd>
+     
+     <dt>Encoding</dt>
+     <dd>
+      	The default value for the <font color="#008080">encoding</font> attribute of <font color="#008080">xsl:output</font> is UTF-8.
+      
+     </dd>
+     
+     <dt>Output versions</dt>
+     <dd>
+      	This implementation supports the values 1.0 and 1.1 for the <font color="#008080">version</font> attribute
+      	of <font color="#008080">xsl:output</font> when the method is <font color="#008080">xml</font> or  <font color="#008080">xhtml</font> .
+      	It supports 4.0 or 4.01 when the method is <font color="#008080">html</font>.
+      
+     </dd>
+     
+     <dt>Byte order mark</dt>
+     <dd>
+      	The default value for the <font color="#008080">byte-order-mark</font> attribute of <font color="#008080">xsl:output</font> is no when the encoding is UTF-8.
+      
+     </dd>
+     
+     <dt>Disabling Output Escaping</dt>
+     <dd>
+      	This is not supported.
+      
+     </dd>
+     
+     <dt>Normalization forms</dt>
+     <dd>
+      	Only NFC, NFKC, NFD and NFKD are supported.
+      
+     </dd>
+     
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, November 20th, 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="xslt_serializer.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

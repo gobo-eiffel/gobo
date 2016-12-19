@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Alternative Options Lists</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Alternative Options Lists</h1>
+    </td>
+    <td align="right"><a href="options.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   	Some application offer different 'modes' of operation, each
+   	one with a different set of options. For example, a
+   	compression program (think WinZip or gzip) may be used for
+   	compression and for decompression of files. In decompression
+   	mode, specifying the compression algorithm to use does not
+   	make any sense, as the program should be able to extract this
+   	information directly from the compressed file.
+   
+  </p>
+  <p>
+   	<i>Alternative options lists</i> allows you to
+   	define sets of options for different operation modes of the
+   	application. The very first option passed to the application
+   	is used to select one of the operation modes, altering the set
+   	of available options.
+   
+  </p>
+  <div><a name="usage"></a>
+   
+   	
+   <h2>Usage</h2>
+   
+   	
+   <p>
+    		Alternative options lists are created by instantiating
+    		<font color="#008080"><i><tt>ALTERNATIVE_OPTIONS_LIST</tt></i></font> and
+    		adding it to the
+    		<font color="#008080"><i><tt>alternative_options_lists</tt></i></font>
+    		list in <font color="#008080"><i><tt>AP_PARSER</tt></i></font> in the same
+    		way as options are added to the
+    		<font color="#008080"><i><tt>options</tt></i></font> list.
+    	
+   </p>
+   
+   	
+   <p>
+    
+    		<font color="#008080"><i><tt>ALTERNATIVE_OPTIONS_LIST</tt></i></font> is
+    		itself a list (a child of
+    		<font color="#008080"><i><tt>DS_LINKED_LIST[AP_OPTION]</tt></i></font>) that
+    		can contain option objects. Upon creation, a special
+    		option needs to be provided to
+    		<font color="#008080"><i><tt>make</tt></i></font>, the
+    		<i>introduction option</i>. If the first
+    		option that is encountered during parsing is the
+    		introduction option, then the list of available
+    		options during parsing will be replaced by the list
+    		provided in the alternative option list.
+    
+    	
+   </p>
+   
+   	
+   <p>
+    
+    		The same option can be added to the default options
+    		list in <font color="#008080"><i><tt>AP_PARSER</tt></i></font> as well as to
+    		an arbitrary set of
+    		<font color="#008080"><i><tt>ALTERNATIVE_OPTIONS_LIST</tt></i></font> at the
+    		same time. This makes it possible to offer the same
+    		option in different modes.
+    
+    	
+   </p>
+   
+   
+  </div>
+  <div><a name="example"></a>
+   
+   	
+   <h2>Example</h2>
+   
+   	
+   <p>
+    
+    		The following example creates a compression program
+    		that allows the user to compress and decompress
+    		files. The default is compression, while decompression
+    		can be introduced with --decompress (or
+    		-d). Compression allows the selection of a compression
+    		strength (1..9), decompression can add a checksum
+    		check. Both allow the specification of an output file.
+    
+    	
+   </p>
+   
+   <pre>
+class COMPR
+
+create
+
+   make
+
+feature -- Options and Flags
+
+   decompress_flag: AP_FLAG
+   strength_option: AP_INTEGER_OPTION
+   check_flag: AP_FLAG
+   output_option: AP_STRING_OPTION
+
+feature -- Main
+
+   make
+         -- Main routine, called when the program is executed.
+      local
+         parser: AP_PARSER
+         alternative_list: AP_ALTERNATIVE_OPTIONS_LIST
+      do
+         create parser.make
+         parser.set_application_description ("Compress or decompress a file")
+         parser.set_parameters_description ("file")
+
+         create decompress_flag.make ('d',"decompress")
+         decompress_flag.set_description ("Decompress file")
+
+         create strength_option.make ('s',"strength")
+         strength_option.set_description ("Compression strength (1..9)")
+
+         create check_flag.make ('c',"check")
+         check_flag.set_description ("Enable checksum computation after decompression")
+
+         create output_option.make ('o',"output")
+         output_option.set_description ("Output to specified file")
+         output_option.set_parameter_description ("file")
+
+         parser.options.force_last (strength_option)
+         parser.options.force_last (output_option)
+
+         create alternative_list.make (decompress_flag)
+         alternative_list.force_last (check_flag)
+         alternative_list.force_last (output_option)
+         alternative_list.set_parameters_description ("compressed_file")
+         parser.alternative_options_lists.force_first (alternative_list)
+
+         parser.parse_arguments
+      end
+
+end
+</pre>
+   
+   	<p>
+    		The generated help text looks like this:
+    	
+   </p>
+   
+   <pre>
+$ ./compr -h
+usage: compr [-s int] [-o file] file
+       compr --decompress [-c] [-o file] compressed_file
+       compr --help
+
+Compress or decompress a file
+
+Options:
+-c, --check        Enable checksum computation after decompression
+-d, --decompress   Decompress file
+-h, --help         Display this help text.
+-o, --output=file  Output to specified file
+-s, --strength=int Compression strength (1..9)
+</pre>
+   
+   	<p>
+    		Command line parsing will reject the -c flag without a
+    		-d flag, also it will reject the -s option when the -d
+    		flag is provided. The -o option is always accepted.
+    	
+   </p>
+   
+   	
+   <p>
+    		<i>P.S.:</i> You can see that the help
+    		flag was also added using an empty alternative options
+    		list.
+    	
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="options.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Implementation of XPath fn:collection()</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Implementation of XPath fn:collection()</h1>
+    </td>
+    <td align="right"><a href="invoking.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="evaluation_process.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   
+   <p>
+    URIs to be passed as the argument to <font color="#008080">fn:collection()</font> are implementation-defined. This library provides a fully
+    customizable interface, along with an extensible default implementation.
+    
+   </p>
+   
+   <p>
+    In order to provide your own implementation, you must call <font color="#008080"><i><tt>set_collection_resolver</tt></i></font> from <font color="#008080"><i><tt>XM_XPATH_CONFIGURATION</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Default implementation</h2>
+   
+   <p>
+    The default implementation provided by the library is implemented in class <font color="#008080"><i><tt>XM_XPATH_DEFAULT_COLLECTION_RESOLVER</tt></i></font>, along with
+    class <font color="#008080"><i><tt>XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER</tt></i></font>,
+    and in class <font color="#008080"><i><tt>XM_XPATH_DEFAULT_COLLECTION_SCHEME_RESOLVER</tt></i></font> for the
+    default collection (equivalent to passing a <font color="#008080">file:</font> URI pointing to the current working directory).
+    
+   </p>
+   
+   <p>
+    Class <font color="#008080"><i><tt>XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER</tt></i></font> resolves URIs in the <font color="#008080">file</font> scheme. The URI must point to 
+    a directory on the local disk, and it must end in a /. The resulting collection of nodes consists of document nodes, each
+    containing a single
+    element in the namespace <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension</font>. The local name of the element is either <font color="#008080">directory</font>
+    or <font color="#008080">file</font>. The element has no child element and a single text node naming the file or directory - all the additional information is
+    expressed as attributes.
+    
+   </p>
+   
+   <p>
+    The following attributes are present (integer values are as in the POSIX stat system call):
+    
+    <dl>
+     
+     <dt>xml:base</dt>
+     <dd>Base URI for the element
+      <p>In the case of a file element, this is suitable for passing to the <font color="#008080">fn:doc()</font> function.
+      </p>
+      <p>
+       In the case of a directory element, this is suitable for passing to the <font color="#008080">fn:collection()</font> function. In
+       this way, recursive directory listings are possible.
+       
+      </p>
+     </dd>
+     
+     <dt>protection</dt>
+     <dd>Integer value denoting the access rights (decode as 12 bits)</dd>
+     
+     <dt>inode</dt>
+     <dd>Inode number</dd>
+     
+     <dt>size</dt>
+     <dd>File size in bytes</dd>
+     
+     <dt>user</dt>
+     <dd>UID</dd>
+     
+     <dt>group</dt>
+     <dd>GID</dd>
+     
+     <dt>date</dt>
+     <dd>Last modification date</dd>
+     
+     <dt>access-date</dt>
+     <dd>Last access date</dd>
+     
+     <dt>change-date</dt>
+     <dd>Last change date</dd>
+     
+     <dt>device</dt>
+     <dd>Device number on which inode resides</dd>
+     
+     <dt>device-type</dt>
+     <dd>Device type on which inode resides</dd>
+     
+     <dt>links</dt>
+     <dd>Number of links</dd>
+     
+     <dt>owner-name</dt>
+     <dd>Name of file owner from /etc/passwd, or UID if not available</dd>
+     
+     <dt>group-name</dt>
+     <dd>Name of file's owning group from /etc/group, or GID if not available</dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2007, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Sunday, December 16th, 2007</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="invoking.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="invoking.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="evaluation_process.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

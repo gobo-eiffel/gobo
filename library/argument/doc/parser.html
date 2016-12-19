@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>The Argument Parser</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>The Argument Parser</h1>
+    </td>
+    <td align="right"><a href="introduction.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="options.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   
+   	The argument parser is provided through the class
+   	<font color="#008080"><i><tt>AP_PARSER</tt></i></font>. The parser will parse
+   	through the command line arguments, and look for matching
+   	options within the set of registered options. If a matching
+   	option is found, the parser will notify the option of the
+   	occurrence, supplying it (through the
+   	<font color="#008080"><i><tt>last_option_parameter</tt></i></font> query) with a
+   	parameter that was given to the option if the option required
+   	it.
+   
+   
+  </p>
+  <div><a name="creation"></a>
+   
+   	
+   <h2>Creation</h2>
+   
+   	
+   <p>
+    
+    		The following features are either used during creation
+    		or query the results of the object creation.
+    
+    	
+   </p>
+   
+   	
+   <dl>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>make</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This is the normal creation routine that
+     			initializes the parser with sane defaults.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>make_empty</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This creation routine does not create a help
+     			option. It should be used if an own or no help
+     			flag should be used.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>help_option</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This query allows access to the instance of
+     			<font color="#008080"><i><tt>AP_DISPLAY_HELP_FLAG</tt></i></font>
+     			that is created by the creation with
+     			<font color="#008080"><i><tt>make</tt></i></font>. If the
+     			instance was created with
+     			<font color="#008080"><i><tt>make_empty</tt></i></font>, the
+     			result of this query will be Void.
+     
+     		
+    </dd>
+    
+    	
+   </dl>
+   
+   
+  </div>
+  <div><a name="settings"></a>
+   
+   	
+   <h2>Parser settings</h2>
+   
+   	
+   <p>
+    
+    		The <font color="#008080"><i><tt>AP_PARSER</tt></i></font> is the class that
+    		captures the global options of the parsing process.
+    
+    	
+   </p>
+   
+   	
+   <dl>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>application_description</tt></i></font>
+     		
+    </dt>
+    <dd>
+     			The application description describes the
+     			overall purpose of the application. It is used
+     			for the generation of help texts and can be
+     			set by the
+     			<font color="#008080"><i><tt>set_application_description</tt></i></font>
+     			feature.
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>parameters_description</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This text is a short description of the kind
+     			of (non-option) parameters are expected by the
+     			application. The default value is 'parameters
+     			...', but should be set to a more descriptive text.
+     			It can be set by the
+     			<font color="#008080"><i><tt>set_parameters_description</tt></i></font>
+     			feature and is also used for the generation of the help
+     			text.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>options</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This is the <font color="#008080"><i><tt>DS_LIST</tt></i></font> of
+     			options that is used for command line
+     			parsing. New options are registered with the
+     			parser by adding them to the list (for example
+     			with
+     			<font color="#008080"><i><tt>force_last</tt></i></font>. Also,
+     			other operations from
+     			<font color="#008080"><i><tt>DS_LIST</tt></i></font> are valid, like
+     			removing or sorting options. The validity of
+     			all options can be checked at any time with
+     			the <font color="#008080"><i><tt>valid_options</tt></i></font>
+     			query.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>alternative_options_lists</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			The purpose of this list is described in
+     			section <a href="alternate.html">Alternative options
+      			lists</a>. It is also a <font color="#008080"><i><tt>DS_LIST</tt></i></font>
+     			and also changed directly, as with the <font color="#008080"><i><tt>options</tt></i></font>
+     			query. The validity of all options provided with
+     			alternative options list can be checked at any
+     			time with the
+     			<font color="#008080"><i><tt>valid_options</tt></i></font>
+     			query, too.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>error_handler</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This query returns the current error handler of the parser. A default
+     			error handler is provided through object creation. The error handler
+     			can be changed using the <font color="#008080"><i><tt>set_error_handler</tt></i></font>
+     			command.
+     
+     		
+    </dd>
+    
+    	
+   </dl>
+   
+   
+  </div>
+  <div><a name="parsing"></a>
+   
+   	
+   <h2>Parsing arguments</h2>
+   
+   	
+   <p>
+    		The parser offers the following features to start the parser.
+    		Any of these features calls <font color="#008080"><i><tt>reset_parser</tt></i></font>
+    		prior to parsing, which will reset the parser and the registered
+    		options.
+    	
+   </p>
+   
+   	
+   <dl>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>parse_arguments</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			The parser parses the arguments passed to the
+     			application. The arguments are read directly
+     			from the shared
+     			<font color="#008080"><i><tt>KL_ARGUMENTS</tt></i></font> class.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>parse_array</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			The parser parses the arguments from a
+     			supplied <font color="#008080"><i><tt>ARRAY</tt></i></font>.
+     
+     		
+    </dd>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>parse_list</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			The parser parses the arguments from a
+     			supplied <font color="#008080"><i><tt>DS_LIST</tt></i></font>. The
+     			cursor on the list will be used during parsing
+     			to mark the current argument that is parsed
+     			and should not be moved by other parts
+     			classes.
+     
+     		
+    </dd>
+    
+    	
+   </dl>
+   
+   
+  </div>
+  <div><a name="results"></a>
+   
+   	
+   <h2>Results of parsing</h2>
+   
+   	
+   <p>
+    		Options and their arguments can be directly read from the
+    		corresponding instances. The other results of the parsing
+    		process are provided through the following queries:
+    	
+   </p>
+   
+   	
+   <dl>
+    
+    		
+    <dt>
+     			<font color="#008080"><i><tt>parameters</tt></i></font>
+     		
+    </dt>
+    <dd>
+     
+     			This <font color="#008080"><i><tt>DS_LIST</tt></i></font>
+     			collects all non-option arguments that were
+     			encountered during parsing of the command
+     			line.
+     
+     		
+    </dd>
+    
+    	
+   </dl>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="introduction.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="options.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

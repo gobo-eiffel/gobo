@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Target</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Target</h1>
+    </td>
+    <td align="right"><a href="builtin_variables.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="tasks.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="target_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			A build file's target is comparable to a method of class in an object oriented
+    			programming language. Targets can be invoked from the command line or from within
+    			the build script itself. If a build script 'build.eant' contains a target 't1' for
+    			example you can invoke this target from the commondline like this:
+    		
+   </p>
+   		<pre>
+  geant t1
+
+		</pre>
+   	</div>
+  <div><a name="target_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>name</dt>
+    <dd><i>Description: </i>
+     					The target's name. The name must be unique within the build file. If the build file
+     					inherits from other build file(s) the inheritance rules must be followed as well.
+     					The mechanisms to resolve naming conflicts are basically the same as in the Eiffel
+     					programming language. Since probably all users of geant are Eiffel developers and thus
+     					are familiar with Eiffel's inheritance mechanisms these rules are not documented.
+     					Geant will display error messages in case these rules are violated.
+     					
+     <p><i>Domain: </i>String
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>if</dt>
+    <dd><i>Description: </i>
+     					execute target only if the variable used in the attribute value is defined. If the
+     					value is '$some_var' for example and the variable name 'some_var' is defined the target
+     					will be executed (but only if evaluation of attribute 'unless' does not prevent this).
+     					Note that the variable can also reference an environment variable like '$WINDIR' for example.
+     					In addition to simply checking if a variable is defined or not it is also possible to check if its
+     					value is equal to a certain string. This is done like this: '${some_var}=some_value'. At the
+     					moment only equality comparison is supported. For convenience (when automatically generating
+     					geant build files), it is also accepted to pass "true" or "false" as attribute value. In
+     					that case the target is executed only if the attribute value is "true".
+     					
+     <p><i>Domain: </i>variable definition or variable-value comparison
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>unless</dt>
+    <dd><i>Description: </i>
+     					The description of attribute 'if' is valid for this attribute as well with the difference
+     					that the evaluation of the attribute value is negated. Thus this means the target is
+     					executed only if the variable referenced in the attribute value is not defined etc.
+     					(but only if evaluation of attribute 'if' does not prevent this)
+     					
+     <p><i>Domain: </i>variable definition or variable-value comparison
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>once</dt>
+    <dd><i>Description: </i>Should target be executed only once?
+     						If set to 'true' this target will be executed only on it's first invocation.
+     						Note: Use this attribute instead of the obsolete attribute 'depend'
+     					
+     <p><i>Domain: </i>true|false
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    			
+    <dt>depend</dt>
+    <dd><i>Description: </i>Obsolete. Use attribute 'once' instead.
+     						Comma separated list of names of targets which should be invoked before this target is executed.
+     						Execution of targets is done from left to rights. Thus if the value of this attribute is 'a,b,c'
+     						The first target 'a', then target 'b' and finally target 'c' are called. Note that these targets
+     						are only executed if they have not been executed before.
+     					
+     <p><i>Domain: </i>Comma separated list of target names
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="fileset_nested_parameters"></a>
+   		
+   <h2>Parameters specified as nested elements</h2>
+   
+   		
+   <dl>
+    			
+    <dt>obsolete</dt>
+    <dd><i>Description: </i>If provided marks this target as obsolete.
+     					The nested text is displayed if this target gets executed. The target list (shown by
+     					invoking 'geant -t' will include this text as well next
+     					to the target's description.
+     					
+     <p><i>Domain: </i>Text
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>description</dt>
+    <dd><i>Description: </i>A description of what this target does.
+     					The target list (shown by invoking 'geant -t' will include this text next
+     					to the target's name.
+     					
+     <p><i>Domain: </i>Text
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>argument</dt>
+    <dd><i>Description: </i>Element representing a formal argument
+     					of this target. The name of the argument is specified by it's attribute 'name'.
+     					There can be any number of this element to specify an arbitrary number of arguments.
+     					It is not allowed to have two or more argument elements with the same name. The
+     					sequence of the argument definition is important since it defines the actual to
+     					formal argument value assignments when it is called in the so called terse way (see
+     					documentation of tasks 'geant' and 'precursor' for more information). If the target is
+     					redefined the number of arguments must match the precursor's.
+     					
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="target_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="target"&gt;
+    &lt;element name="target"&gt;
+    &lt;optional&gt;
+      &lt;element name="obsolete"&gt;
+        &lt;text/&gt;
+      &lt;/element&gt;
+    &lt;/optional&gt;
+    &lt;zeroOrMore&gt;
+      &lt;element name="argument"&gt;
+        &lt;attribute name="name"/&gt;
+      &lt;/element&gt;
+    &lt;/zeroOrMore&gt;
+    &lt;ref name="description"/&gt;
+    &lt;attribute name="name"/&gt;
+    &lt;optional&gt;
+      &lt;attribute name="once"/&gt;
+    &lt;/optional&gt;
+    &lt;optional&gt;
+      &lt;attribute name="depend"/&gt;
+    &lt;/optional&gt;
+    &lt;ref name="dir_if_unless"/&gt;
+    &lt;ref name="tasks"/&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+  &lt;define name="tasks"&gt;
+    &lt;zeroOrMore&gt;
+      &lt;choice&gt;
+        &lt;ref name="available"/&gt;
+        &lt;ref name="copy"/&gt;
+        &lt;ref name="echo"/&gt;
+        &lt;ref name="delete"/&gt;
+        &lt;ref name="exec"/&gt;
+        &lt;ref name="exit"/&gt;
+        &lt;ref name="geant"/&gt;
+        &lt;ref name="gelex"/&gt;
+        &lt;ref name="geyacc"/&gt;
+        &lt;ref name="gepp"/&gt;
+        &lt;ref name="getest"/&gt;
+        &lt;ref name="gexace"/&gt;
+        &lt;ref name="gexmlsplit"/&gt;
+        &lt;ref name="input"/&gt;
+        &lt;ref name="ise"/&gt;
+        &lt;ref name="mkdir"/&gt;
+        &lt;ref name="move"/&gt;
+        &lt;ref name="outofdate"/&gt;
+        &lt;ref name="precursor"/&gt;
+        &lt;ref name="replace"/&gt;
+        &lt;ref name="set"/&gt;
+        &lt;ref name="setenv"/&gt;
+        &lt;ref name="unset"/&gt;
+        &lt;ref name="xslt"/&gt;
+      &lt;/choice&gt;
+    &lt;/zeroOrMore&gt;
+  &lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="target_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;target name="t1"&gt;
+    &lt;echo message="This is target 't1'"/&gt;
+  &lt;/target&gt;
+
+		</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="builtin_variables.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="tasks.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

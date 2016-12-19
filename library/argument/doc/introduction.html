@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Argument Parser Introduction</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Argument Parser Introduction</h1>
+    </td>
+    <td align="right"><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="parser.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   	The argument library gives you the ability to parse the
+   	command line arguments that are passed to your application. It
+   	is a feature-rich library that tries to achieve the maximum
+   	comfort for the developer and for the user of the application
+   	at the same time.
+   
+  </p>
+  <div><a name="arguments"></a>
+   
+   	
+   <h2>About arguments</h2>
+   
+   	
+   <p>
+    		Arguments normally come in two different forms:
+    		<i>options</i> and
+    		<i>parameters</i>. Parameters (sometimes
+    		also called operands) are the main inputs to the
+    		program, for example the filename to a edit in a text
+    		editor or the URL that a web-browser should open on
+    		startup.
+    	
+   </p>
+   
+   	<pre>myprog parameter1 parameter2 ... parameterX</pre>
+   
+   	<p>
+    		Options - on the other hand - are normally not mandatory for
+    		the proper operation of the application. They are introduced
+    		with the - (minus) character.
+    	
+   </p>
+   
+   	
+   <p>
+    		There are short options and there are long
+    		options. <i>Short options</i> are
+    		introduced by a - (a single minus) followed by a
+    		single character. <i>Long options</i>
+    		are introduced by -- (two minus) and the name of the
+    		option.
+    	
+   </p>
+   
+   	<pre>myprog -o --foo --bar=HALLO</pre>
+   
+   	<p>
+    		In the given example, -o and --foo are so-called
+    		<i>flags</i> to the program. Flags are
+    		options that do not take any argument. The option
+    		--bar is an option that takes an argument, in this
+    		case the string HALLO.
+    	
+   </p>
+   
+   	
+   <p>
+    		Options and parameters can be mixed together and there are
+    		ways to combine options. This can create creating complex
+    		command lines. The following is an example call of the
+    		<i>GNU ls</i> command available on most Linux
+    		systems:
+    	
+   </p>
+   
+   	<pre>/bin/ls -Al /tmp -I '*~' -I*.bak --color=always</pre>
+   
+   	<p>
+    		Here, /tmp is the only parameter. The flags -A and -l
+    		have been merged into a single option. The option -I
+    		is set twice with the argument '*~' and '*.bak' and
+    		the option --color is set with the argument 'always'
+    		(note that the command line parser does not care
+    		whether the arguments to a short options are
+    		introduced by a space or follow directly).
+    	
+   </p>
+   
+  </div>
+  <div><a name="goals"></a>
+   
+   	
+   <h2>Design decisions and goals</h2>
+   
+   	
+   <p>
+    		The main focus of a developer is to create a program
+    		that provides a functionality. Comfortable
+    		command line parsing is difficult. Many programmers
+    		regard it as dispensable and few invest the necessary
+    		time to get it right.
+    	
+   </p>
+   
+   	
+   <p>
+    		As a consequence, the command line behavior of tools
+    		varies a lot. There are probably as many ways to parse
+    		the command line as there are developers writing
+    		applications. Help text is bad or missing.
+    	
+   </p>
+   
+   	
+   <p>
+    		The <i>Gobo Eiffel Argument Library</i>
+    		makes it simple to do proper command line parsing. You
+    		define a number of options that the application
+    		should have, call the parser and check which options
+    		were supplied and what the applications parameters
+    		are.
+    	
+   </p>
+   
+   	
+   <p>
+    		It should be easier to parse the command
+    		line of the application with the library than to write
+    		a manual parser, even if the application only has one or
+    		two options. Only this can motivate developers to use
+    		the library for their applications. At the same time,
+    		the library should provide a maximum in comfort for
+    		the user of the application, including support for
+    		many option styles, abbreviation facilities, and a
+    		useful, automatically generated help text.
+    	
+   </p>
+   
+   	
+   <p>
+    		With this goals in mind, the library will not satisfy
+    		every need you might have for parsing. Specially, the
+    		library imposes a certain, standard way of command
+    		line parsing onto the application. If you want a very
+    		different way of command line parsing, perhaps because
+    		you want to be 'backward compatible' with another
+    		application, the argument parsing library might not be
+    		the best choice for you. Also, if you have a very
+    		large application that requires complex argument
+    		patterns, then you will need a significant amount of
+    		extra work to parse them using this library.
+    	
+   </p>
+   
+   	
+   <p>
+    		This being said, it is my firm belief that the library
+    		should be suited for most application needs. And it
+    		enforces a consistent behavior of different
+    		applications, something that your users will appreciate.
+    	
+   </p>
+   
+   
+  </div>
+  <div><a name="features"></a>
+   
+   	
+   <h2>Feature overview</h2>
+   
+   	
+   <ul>
+    <li>
+     			Different types of options: flags, strings, integers, booleans ...
+     		
+    </li>
+    <li>
+     			Long (--make-love) and short (-l) options are supported.
+     		
+    </li>
+    <li>
+     			Short form can be joined (-abc instead of -a -b -c), assuming that
+     			every one but the last is a flag (does not require an argument).
+     		
+    </li>
+    <li>
+     			Arguments to the short form can be added with or without space
+     			(-ltoday or -l today).
+     		
+    </li>
+    <li>
+     			Arguments to the long form can be added with '=' or with a space
+     			(--make-love=today or --make-love today)
+     		
+    </li>
+    <li>
+     			Option termination introduced by '--'.
+     		
+    </li>
+    <li>
+     			Usage instructions and a help text will be generated automatically
+     			from the options.
+     		
+    </li>
+    <li>
+     			Good default values, minimal code is required for standard
+     			applications.
+     		
+    </li>
+    <li>
+     			No special 'option description language' is required. It is all just
+     			plain Eiffel code.
+     		
+    </li>
+   </ul>
+   
+   
+  </div>
+  <div><a name="strategy"></a>
+   
+   	
+   <h2>Usage strategy</h2>
+   
+   	
+   <p>
+    		The general usage strategy of the argument parser
+    		library involves the following four steps:
+    	
+   </p>
+   
+   	
+   <ol>
+    <li>
+     			Create an instance of <font color="#008080"><i><tt>AP_PARSER</tt></i></font> and configure
+     			it (for example setting up a descriptions of the application).
+     		
+    </li>
+    <li>
+     			Create instances of options types, that is of the classes that
+     			inherit from <font color="#008080"><i><tt>AP_OPTION</tt></i></font>. Configure these instances
+     			(for example with a help text for this option). Register these options
+     			at the parser.
+     		
+    </li>
+    <li>
+     			Parse the command line, most of the time by just calling
+     			<font color="#008080"><i><tt>parse_arguments</tt></i></font> on the parser.
+     		
+    </li>
+    <li>
+     			See if options were found by calling <font color="#008080"><i><tt>was_found</tt></i></font>
+     			in its instances. Get the parameters (non-option arguments) from the parser
+     			itself by querying it for <font color="#008080"><i><tt>parameters</tt></i></font>.
+     		
+    </li>
+   </ol>
+   
+   
+  </div>
+  <div><a name="example"></a>
+   
+   	
+   <h2>An example</h2>
+   
+   	
+   <p>
+    		Lets go for an example that shows how to apply these
+    		four steps in practice. The example is rather lengthy,
+    		but it shows most of the possibilities of the library.
+    		The different steps in the usage strategy above have
+    		been marked by comments.
+    	
+   </p>
+   
+   	
+   <p>
+    		As an example we look again at the <i>GNU
+     		ls</i> and implement command line parsing for
+    		only the four options we already used above.
+    	
+   </p>
+   
+   <pre>
+feature -- Options and Flags
+
+   allmost_all_flag: AP_FLAG
+   long_format_flag: AP_FLAG
+   color_option: AP_ENUMERATION_OPTION
+   ignore_option: AP_STRING_OPTION
+
+feature -- Main
+
+   make
+         -- Main routine, called when the program is executed.
+      local
+         parser: AP_PARSER
+      do
+            -- STEP 1: Creation and configuration of the parser
+
+         create parser.make
+         parser.set_application_description
+            ("List information about the FILEs (the current directory by default).")
+         parser.set_parameters_description ("[file] ...")
+
+            -- STEP 2: Creation and configuration of the flags
+
+         create allmost_all_flag.make ('A',"allmost-all")
+         allmost_all_flag.set_description ("do not list implied . and ..")
+         parser.options.force_last (allmost_all_flag)
+
+         create long_format_flag.make_with_short_form ('l')
+         long_format_flag.set_description ("use a long listing format")
+         parser.options.force_last (long_format_flag)
+
+         create color_option.make_with_long_form ("color")
+         color_option.set_description ("control whether color is used to distinguish file types.")
+         color_option.extend ("never")
+         color_option.extend ("always")
+         color_option.extend ("auto")
+         parser.options.force_last (color_option)
+
+         create ignore_option.make ('I',"ignore")
+         ignore_option.set_description ("do not list implied entries matching shell PATTERN")
+         ignore_option.set_parameter_description ("PATTERN")
+         parser.options.force_last (ignore_option)
+
+            -- STEP 3: Parse the arguments
+
+         parser.parse_arguments
+
+            -- STEP 4: Read results
+
+         if allmost_all_flag.was_found then
+            print ("list allmost all%N")
+         end
+         if long_format_flag.was_found then
+            print ("use long format%N")
+         end
+         if color_option.was_found then
+            print ("use coloring "+color_option.parameter+"%N")
+         end
+
+         if ignore_option.was_found then
+            from
+               ignore_option.parameters.start
+            until ignore_option.parameters.off loop
+               print ("ignore pattern: "+
+                      ignore_option.parameters.item_for_iteration+"%N")
+               ignore_option.parameters.forth
+            end
+         end
+         from
+            parser.parameters.start
+         until parser.parameters.off loop
+            print ("parameter: "+
+                   parser.parameters.item_for_iteration+"%N")
+            parser.parameters.forth
+         end
+      end
+</pre>
+   
+   	<p>
+    		If we now call the application with the arguments are
+    		given in the example above, we get the following output:
+    	
+   </p>
+   
+   <pre>
+$ ./my_ls -Al /tmp -I '*~' -I*.bak --color=always
+list allmost all
+use long format
+use coloring always
+ignore pattern: *~
+ignore pattern: *.bak
+parameter: /tmp
+</pre>
+   
+   	<p>
+    		Also, we get a full help text for free (!). See what
+    		happens when we call the application with '-h'.
+    	
+   </p>
+   
+   <pre>
+$ ./my_ls -h
+usage: ls_example [-A] [-l] [--color=never|always|auto] [-I PATTERN] [file] ...
+       ls_example --help
+
+List information about the FILEs (the current directory by default).
+
+Options:
+-A, --allmost-all             do not list implied . and ..
+    --color=never|always|auto control whether color is used to distinguish
+                              file types.
+-h, --help                    Display this help text.
+-I, --ignore=PATTERN          do not list implied entries matching shell
+                              PATTERN
+-l                            use a long listing format
+</pre>
+   
+   	<p>
+    		A second example is provided in the <font color="#008080"><i><tt>$GOBO/example/argument</tt></i></font>
+    		directory.
+    	
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2012, Bernd Schoeller</b><br /><b>mailto:</b><a href="mailto:bernd@fams.de">bernd@fams.de</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>3 December 2012</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="parser.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

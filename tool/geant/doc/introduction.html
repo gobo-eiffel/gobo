@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Introduction to geant</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Introduction to geant</h1>
+    </td>
+    <td align="right"><a href="overview.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="hello_world"></a>
+   		
+   <h2>Hello World</h2>
+   		
+   <p>
+    			To find out whether a tool or library is appropriate for my needs
+    			I always found it useful to have an easy start which does
+    			save my time and thus makes my decision easier. This is why I start
+    			with the ubiqituous 'Hello world'. Here is our 'hello_world' build script:
+    		
+   </p>
+   
+   		<pre>
+  &lt;?xml version="1.0" ?&gt;
+  &lt;project name="hello" default="hello"&gt;
+    &lt;target name="hello"&gt;
+      &lt;echo message="Hello world"/&gt;
+    &lt;/target&gt;
+  &lt;/project&gt;
+
+		</pre>
+   
+   		<p>
+    			On the first line you can find the usual XML declaration. The second line
+    			contains the <font color="#008080"><i><tt>project</tt></i></font> element which is the root element
+    			of an eant XML document. Then there is a <font color="#008080"><i><tt>target</tt></i></font> element
+    			containing one <font color="#008080"><i><tt>task</tt></i></font> element, <font color="#008080"><i><tt>echo</tt></i></font>
+    			in this case. Save the above code in a file called <i>build.eant</i>
+    			and invoke in that directory the command <i>geant</i>.
+    			The message <i>Hello world</i> will be output.
+    		
+   </p>
+   
+   	
+  </div>
+  <div><a name="typical_compile"></a>
+   
+   <h2>Typical script that covers compilation</h2>
+   
+   <p>
+    The following script covers 90% of the cases people use
+    <i>geant</i> for. It inherits the Gobo default
+    tasks and only adds project specific info:
+    
+   </p>
+   
+   <pre>
+&lt;?xml version="1.0"?&gt;
+
+&lt;project name="my_project" inherit="${GOBO}/misc/eiffel.eant" default="help"&gt;
+
+	&lt;description&gt;
+		system:      "My example"
+		author:      "John Doe [john@doe.net]"
+		copyright:   "Copyright (c) 2004, John Doe and others"
+		license:     "MIT License"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	&lt;/description&gt;
+
+	&lt;target name="init_system"&gt;
+		&lt;set name="system" value="my_program"/&gt;
+		&lt;set name="system_dir" value="."/&gt;
+	&lt;/target&gt;
+
+&lt;/project&gt;
+
+    </pre>
+   
+   <p>
+    This script assumes you have a <i>system.xace</i>
+    in your system_dir.
+    
+   </p>
+   
+   
+   <p>
+    With this script it is now possible to compile the project for
+    SmartEiffel by typing geant
+    compile_se. Compile it for VisualEiffel by typing
+    geant compile_ve. Compile it in debug
+    mode for ISE Eiffel by typing geant
+    compile_debug_ise.
+    
+   </p>
+   
+   
+   <p>
+    You have to be in the project directory when invoking
+    <i>geant</i>. This is due to the specification of
+    a dot as the directory in the <font color="#008080"><i><tt>set</tt></i></font>
+    system_dir task. If you have an environment variable that points
+    to the root of your project directory (recommended), the script
+    would look like this:
+    
+   </p>
+   
+   <pre>
+&lt;project name="my_project" inherit="${GOBO}/misc/eiffel.eant" default="help"&gt;
+
+	&lt;target name="init_system"&gt;
+		&lt;set name="system" value="my_program"/&gt;
+		&lt;set name="system_dir" value="${MY_PROJECT}/src/my_program"/&gt;
+	&lt;/target&gt;
+
+&lt;/project&gt;
+</pre>
+   
+   <p>
+    It is now possible to invoke this
+    <i>build.eant</i> script from any location.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="typical_test"></a>
+   
+   <h2>Typical script that covers Gobo Test</h2>
+   
+   <p>
+    The following script covers the typical cases of using the Gobo
+    Test frame work to test your classes. It inherits from
+    <i>test.eant</i> which provides most of the
+    scripting functionality.
+    
+   </p>
+   
+   <pre>
+&lt;?xml version="1.0"?&gt;
+
+&lt;project name="my_test" inherit="${GOBO}/misc/test.eant" default="help"&gt;
+
+	&lt;description&gt;
+		system:      "tests for my project"
+		author:      "John Doe [john@doe.com]"
+		copyright:   "Copyright (c) 2004, John Doe Ltd."
+	&lt;/description&gt;
+
+	&lt;target name="init_system"&gt;
+		&lt;set name="system" value="my_test"/&gt;
+		&lt;set name="system_dir" value="${MY_PROJECT}/test/feature"/&gt;
+	&lt;/target&gt;
+
+&lt;/project&gt;
+</pre>
+   
+   <p>
+    As for the compile <i>build.eant</i>, the only two
+    settings that are important are the values of the system and
+    system_dir variables.
+    
+   </p>
+   
+   
+   <p>
+    With this script it is now possible to test the project for
+    SmartEiffel by typing geant
+    test_se. Test it with VisualEiffel by typing
+    geant test_ve. Test it in debug
+    mode for ISE Eiffel by typing geant
+    test_debug_ise.
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

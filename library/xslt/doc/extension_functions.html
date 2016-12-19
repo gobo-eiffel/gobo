@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Creating extension functions</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Creating extension functions</h1>
+    </td>
+    <td align="right"><a href="output_extensions.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This chapter describes how to create your own library of XPath extension functions
+   which can be called within your XSLT transformations.
+   
+  </p>
+  <div>
+   
+   <h2>Creating your extension functions</h2>
+   
+   <p>
+    The first step is to write the Eiffel code for your extension functions. You do this by writing at least one 
+    Eiffel class. Usually you should create a separate class for each function, but if several functions are variations
+    on a theme, it might be simpler for them all to share one class, and just use a different creation procedure
+    for each implemented function. An example of this approach is the implementation of the core XPath functions
+    fn:encode-for-uri(), fn:iri-to-uri() and fn:escape-html-uri(), which all share the same implementation code
+    in XM_XPATH_ESCAPE_URI, the only difference between them being the set of reserved characters.
+    
+   </p>
+   
+   <p>
+    Your Eiffel class should be a descendant of <font color="#008080"><i><tt>XM_XPATH_SYSTEM_FUNCTION</tt></i></font> (if it is possible for
+    your function to always be evaluated when the transformation is compiled, then it is more efficient to inherit fron
+    <font color="#008080"><i><tt>XM_XPATH_COMPILE_TIME_FUNCTION</tt></i></font> instead). 
+    
+    <p><font color="#FF0000">
+      Writing extension functions as descendants of <font color="#008080"><i><tt>XM_XPATH_SYSTEM_FUNCTION</tt></i></font> probably requires some
+      understanding of how the XPath library works. This is not properly documented yet. If in doubt ask for help on one of the
+      Gobo
+      mailing lists.
+      </font></p>
+    You will usually
+    want to redefine either <font color="#008080"><i><tt>evaluate_item</tt></i></font> or  <font color="#008080"><i><tt>create_iterator</tt></i></font>, or both
+    (if your function ever returns sequences of more than one item, then you will need to redefine <font color="#008080"><i><tt>create_iterator</tt></i></font>).
+    
+   </p>
+   
+   <p>
+    You may also need to redefine other routines. These routines are likely candidates:
+    
+    <dl>
+     
+     <dt><font color="#008080"><i><tt>pre_evaluate</tt></i></font></dt>
+     <dd>
+      	 By default, the library will attempt to pre-evaluate your function at compile time, if it can
+      	 determine that all the arguments are fixed values. If for some reason that is unsuitable behaviour, then
+      	 you should redefine this routine to do nothing.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>simplify</tt></i></font></dt>
+     <dd>
+      	 This performs optimizations that do not depend upon the XPath static context. By
+      	 default it just simplifies all the other arguments. This is a suitable point for
+      	 setting optimization flags that depend upon the number of arguments actually passed.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>check_arguments</tt></i></font></dt>
+     <dd>
+      	 This routine checks the number and type of arguments.
+      	 This is a suitable place for performing additional checks or optimizations on particular arguments.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>calculate_effective_boolean_value</tt></i></font></dt>
+     <dd>
+      	 This routine evaluates the function as a boolean.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>check_static_type</tt></i></font></dt>
+     <dd>
+      	 This routine performs static type checking on the function.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>optimize</tt></i></font></dt>
+     <dd>
+      	 This routine performs optimizations at compile time. By default it optimizes
+      	 all the arguments.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>evaluate_as_string</tt></i></font></dt>
+     <dd>
+      	 This routine evaluates the function when it is known to return a single string.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>compute_special_properties</tt></i></font></dt>
+     <dd>
+      	 This routine sets flags for the optimization process.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>compute_intrinsic_dependencies</tt></i></font></dt>
+     <dd>
+      	 This routine sets flags for the optimization process.
+      	
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+   <p>
+    You will also need to implement the following routines:
+    
+    <dl>
+     
+     <dt><font color="#008080"><i><tt>item_type</tt></i></font></dt>
+     <dd>
+      	 This routine tells the static type checker and optimizer what type of items might be returned by
+      	 the function. Be as specific as you can, so that more optimizations can be performed.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>required_type</tt></i></font></dt>
+     <dd>
+      	 This routine tells the static type checker what type and length of sequence is allowed
+      	 for each argument.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>compute_cardinality</tt></i></font></dt>
+     <dd>
+      	 This routine tells the static type checker and optimizer now many items might be returned by
+      	 the function.
+      	
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+   <p>
+    You must also implement a creation routine with zero arguments. This <i>must</i> perform the following operations:
+    
+    <ul>
+     <li>
+      	Set the attributes <font color="#008080"><i><tt>name</tt></i></font> and <font color="#008080"><i><tt>namespace_uri</tt></i></font> to name
+      	your function.
+      
+     </li>
+     <li>
+      	Set <font color="#008080"><i><tt>fingerprint</tt></i></font> to match <font color="#008080"><i><tt>name</tt></i></font> and <font color="#008080"><i><tt>namespace_uri</tt></i></font>.
+      
+     </li>
+     <li>
+      	Set the attributes <font color="#008080"><i><tt>minimum_argument_count</tt></i></font> and <font color="#008080"><i><tt>maximum_argument_count</tt></i></font> to 
+      	specify the number of permitted arguments.
+      
+     </li>
+     <li>
+      	Finally create <font color="#008080"><i><tt>arguments</tt></i></font> and set <font color="#008080"><i><tt>initialized</tt></i></font> to <font color="#008080"><i><tt>True</tt></i></font>.
+      
+     </li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Creating an extension function library</h2>
+   
+   <p>
+    Next you should create a descendant of <font color="#008080"><i><tt>XM_XPATH_FUNCTION_LIBRARY</tt></i></font>. You need to implement two 
+    routines:
+    
+    <dl>
+     
+     <dt><font color="#008080"><i><tt>is_function_available</tt></i></font></dt>
+     <dd>
+      	 If <font color="#008080"><i><tt>a_fingerprint</tt></i></font> is equal to the value of <font color="#008080"><i><tt>fingerprint</tt></i></font> for your function,
+      	 then you should return <font color="#008080"><i><tt>True</tt></i></font> if <font color="#008080"><i><tt>an_arity</tt></i></font> is -1, or if it lies (inclusively)
+      	 between the values that you set for <font color="#008080"><i><tt>minimum_argument_count</tt></i></font> and <font color="#008080"><i><tt>maximum_argument_count</tt></i></font>
+      	 for your function.
+      	
+     </dd>
+     
+     <dt><font color="#008080"><i><tt>bind_function</tt></i></font></dt>
+     <dd>
+      	 You should create the function that matches <font color="#008080"><i><tt>a_fingerprint</tt></i></font>.
+      	 Then call <font color="#008080"><i><tt>set_arguments</tt></i><tt> (</tt><i><tt>some_arguments</tt></i><tt>)</tt></font>.
+      	 Then you should set <font color="#008080"><i><tt>last_bound_function</tt></i></font> to the created function.
+      	
+      <p>
+       	  If the argument <font color="#008080"><i><tt>is_restricted</tt></i></font> is <font color="#008080"><i><tt>True</tt></i></font>, then your function is being
+       	  bound within an [xsl:]use-when context. If it is sensible for your function to be callable in such a context, then
+       	  by all means ignore this argument. Otherwise you should create an instance of <font color="#008080"><i><tt>XM_XSLT_DEFERRED_ERROR</tt></i></font>.
+       	  See <font color="#008080"><i><tt>XM_XSLT_BUILTIN_EXTENSION_FUNCTIONS</tt></i></font> for an example.
+       	
+      </p>
+     </dd>
+     
+    </dl>     
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Informing the XSLT library of your extension function library</h2>
+   
+   <p>
+    There is one last step to take, you have to tell the library about the existence of your
+    function library.
+    
+   </p>
+   
+   <p>
+    Just pass your library as the sole argument to <font color="#008080"><i><tt>add_extension_function_library</tt></i></font>
+    of <font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font>. After this call, your library will be searched whenever
+    a transformation is compiled.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Monday, November 21st, 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="output_extensions.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

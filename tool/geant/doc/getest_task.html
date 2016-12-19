@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>getest</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>getest</h1>
+    </td>
+    <td align="right"><a href="gepp_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="gexace_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="getest_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Execute getest.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="getest_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>config</dt>
+    <dd><i>Description: </i>Name of configuration file
+     <p><i>Domain: </i>Valid filename pointing to existing file
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>compile</dt>
+    <dd><i>Description: </i>compile
+     <p><i>Domain: </i>Optional compilation command
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>class</dt>
+    <dd><i>Description: </i>
+     						Regular expression to determine names
+     						of classes wich will be included into test suite. Note that this overrides the
+     						corresponding value in the configuration file.
+     					
+     <p><i>Domain: </i>Valid regular expression
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>feature</dt>
+    <dd><i>Description: </i>
+     						Regular expression to determine names of features of classes preselected by
+     						<i>class</i> to be tested. Note that this overrides the
+     						corresponding value in the configuration file.
+     					
+     <p><i>Domain: </i>Valid regular expression
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    
+    			
+    <dt>default_test</dt>
+    <dd><i>Description: </i>
+     						Specify whether the feature <font color="#008080"><i><tt>default_test</tt></i></font>
+     						should be included in the generated test cases.
+     					
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>generation</dt>
+    <dd><i>Description: </i>TBD
+     <p><i>Domain: </i>TBD
+     </p>
+     <p><i>Default: </i>TBD
+     </p>
+    </dd>
+    
+    			
+    <dt>compilation</dt>
+    <dd><i>Description: </i>TBD
+     <p><i>Domain: </i>TBD
+     </p>
+     <p><i>Default: </i>TBD
+     </p>
+    </dd>
+    
+    			
+    <dt>execution</dt>
+    <dd><i>Description: </i>TBD
+     <p><i>Domain: </i>TBD
+     </p>
+     <p><i>Default: </i>TBD
+     </p>
+    </dd>
+    
+    			
+    <dt>abort</dt>
+    <dd><i>Description: </i>TBD
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    			
+    <dt>verbose</dt>
+    <dd><i>Description: </i>verbose
+     <p><i>Domain: </i>Boolean (true|false)
+     </p>
+     <p><i>Default: </i>false
+     </p>
+    </dd>
+    
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="getest_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+  &lt;define name="getest"&gt;
+    &lt;element name="getest"&gt;
+      &lt;ref name="dir_if_unless"/&gt;
+      &lt;attribute name="config"/&gt;
+      &lt;optional&gt;
+        &lt;attribute name="compile"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="class"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="feature"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="default_test"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="generation"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="compilation"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="execution"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="abort"/&gt;
+      &lt;/optional&gt;
+      &lt;optional&gt;
+        &lt;attribute name="verbose"/&gt;
+      &lt;/optional&gt;
+      &lt;zeroOrMore&gt;
+        &lt;ref name="define"/&gt;
+      &lt;/zeroOrMore&gt;
+    &lt;/element&gt;
+  &lt;/define&gt;
+
+	</pre>
+   
+   	</div>
+  <div><a name="getest_examples"></a>
+   		
+   <h2>Examples</h2>
+   	<pre>
+  &lt;getest
+    config="${system_dir}/getest.cfg"
+    compile="geant -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} &amp;gt; compilation_log.txt 2&amp;gt;&amp;amp;1"
+  &gt;
+    &lt;define name="debug" value="true" if="${debug}"/&gt;
+  &lt;/getest&gt;
+
+
+	</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>16 November 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="gepp_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="gexace_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Geant's built-in variables</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Geant's built-in variables</h1>
+    </td>
+    <td align="right"><a href="examples.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="target.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="cwd"></a>
+   		
+   <h2>cwd</h2>
+   		
+   <p>
+    			Current working directory. The value of this variable changes whenever the current working
+    			directory changes. This usually happens when the attribute 'dir' is used which is supported
+    			by tasks and the element 'target'.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="GOBO_OS"></a>
+   		
+   <h2>GOBO_OS</h2>
+   		
+   <p>
+    			The value of this variable contains the name of the used operating system: 'windows', 'unix'
+    		
+   </p>
+   	
+  </div>
+  <div><a name="is_windows"></a>
+   		
+   <h2>is_windows</h2>
+   		
+   <p>
+    			If the used operating system is windows then this variable is set (to the value 'true'). Thus
+    			you can simply use it in all targets/tasks in the if/unless attributes: ... if="${is_windows}"
+    		
+   </p>
+   	
+  </div>
+  <div><a name="is_unix"></a>
+   		
+   <h2>is_unix</h2>
+   		
+   <p>
+    			If the used operating system is unix then this variable is set (to the value 'true'). Thus
+    			you can simply use it in all targets/tasks in the if/unless attributes: ... if="${is_unix}"
+    		
+   </p>
+   	
+  </div>
+  <div><a name="path_separator"></a>
+   		
+   <h2>path_separator</h2>
+   		
+   <p>
+    			The value of this variable is '\' if the used operating system is windows and '/' if it is unix.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="exe"></a>
+   		
+   <h2>exe</h2>
+   		
+   <p>
+    			The value of this variable is '.exe' if the used operating system is windows and '' (empty string) if it is unix.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="verbose"></a>
+   		
+   <h2>verbose</h2>
+   		
+   <p>
+    			This variable is set (to 'true') when geant is run in verbose mode.
+    		
+   </p>
+   	
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2005, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="examples.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="target.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

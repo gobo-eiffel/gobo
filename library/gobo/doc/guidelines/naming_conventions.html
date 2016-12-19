@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Naming Conventions</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Naming Conventions</h1>
+    </td>
+    <td align="right"><a href="language.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   All names appearing in the software, comments, directory names, 
+   <a href="documentation.html">documentations</a>, etc. should be written in 
+   American English.
+   
+  </p>
+  <div><a name="class_names"></a><h2>Class Names</h2>
+   
+   
+   <p>
+    In order to avoid class name clashes between different libraries, some Eiffel 
+    compilers support class renaming in the Ace file or equivalent. But some don't. 
+    Therefore the name of the classes should systematically be prefixed with a 
+    two-letter library code followed by an underscore. For example the classes from 
+    the <i>Gobo Eiffel Structure Library</i> have been prefixed 
+    by <font color="#008080"><i><tt>DS</tt></i></font> (which stands for <font color="#008080"><i><tt>D</tt></i></font>ata 
+    <font color="#008080"><i><tt>S</tt></i></font>tructures), as in <font color="#008080"><i><tt>DS_CONTAINER</tt></i></font>, 
+    whereas classes from the <i>Gobo Eiffel Lexical Library</i> 
+    have been prefixed by <font color="#008080"><i><tt>LX</tt></i></font>, as in 
+    <font color="#008080"><i><tt>LX_SCANNER</tt></i></font>. Some libraries may use several prefixes, 
+    provided that they are not already used by other libraries. The list of already 
+    used prefixes per library will be available on-line.
+    
+   </p>
+   
+   
+   <p>
+    Class names should usually be singular nouns, such as 
+    <font color="#008080"><i><tt>DS_STACK</tt></i></font>. If the noun is qualified, words should be 
+    separated by underscores, as in <font color="#008080"><i><tt>DS_LINKED_LIST</tt></i></font>. Class 
+    names in Eiffel are written in upper-case letters and it is considered bad style 
+    to use letter-case difference to concatenate words such as 
+    <font color="#008080"><i><tt>LinkedList</tt></i></font> for example. The name of deferred classes can 
+    also be adjective when they describe a property, such as 
+    <font color="#008080"><i><tt>DS_SORTABLE</tt></i></font>. It is suspicious to have verbs as class names
+    since classes should describe objects rather than actions.
+    
+   </p>
+   
+   
+   <p>
+    Classes containing only constants can have the suffix 
+    <font color="#008080"><i><tt>_CONSTANTS</tt></i></font> and those containing only facility routines 
+    can have the suffix <font color="#008080"><i><tt>_ROUTINES</tt></i></font>. Some classes are used as a 
+    means to share objects using once functions. These classes can have the word 
+    <font color="#008080"><i><tt>SHARED</tt></i></font> just after the prefix of the class. For example the 
+    class used to share a singleton object of type <font color="#008080"><i><tt>KL_ARGUMENTS</tt></i></font> 
+    is called <font color="#008080"><i><tt>KL_SHARED_ARGUMENTS</tt></i></font>. An alternative is to use 
+    <font color="#008080"><i><tt>IMPORTED</tt></i></font> instead of <font color="#008080"><i><tt>SHARED</tt></i></font> when the
+    purpose of the class is not to give access to an object but rather to routines or 
+    constants without the inconvenience of polluting the feature name space with 
+    mixin classes. Have a look at <font color="#008080"><i><tt>KL_IMPORTED_STRING_ROUTINES</tt></i></font> 
+    as an example.
+    
+   </p>
+   
+   
+   <p>
+    In Eiffel it is considered bad practice to use abbreviations in class and feature 
+    names. However this can be accepted when the abbreviation is commonly used in the 
+    domain of expertise such as <font color="#008080"><i><tt>LX_DFA</tt></i></font> for example, which 
+    stands for <font color="#008080"><i><tt>D</tt></i></font>eterministic <font color="#008080"><i><tt>F</tt></i></font>inite 
+    state <font color="#008080"><i><tt>A</tt></i></font>utomaton and is used for compiling regular 
+    expressions.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="filenames"></a><h2>Filenames</h2>
+   
+   
+   <p>
+    Some the Eiffel compilers supported in the Gobo package do not
+    allow to have several classes in the same file (even though some might).
+    So each file should contain only one class.
+    
+   </p>
+   
+   
+   <p>
+    Likewise, <a href="http://smarteiffel.loria.fr">SmartEiffel</a> expects by 
+    default to have a one-to-one relation between the name of the class and the name 
+    of the enclosing file. Therefore the name of the file should be the name of the 
+    class followed by the extension <font color="#800000"><i><tt>.e</tt></i></font>, all in lower case. For 
+    example file <font color="#800000"><i><tt>ds_list.e</tt></i></font> contains class <font color="#008080"><i><tt>DS_LIST</tt></i></font>.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="cluster_names"></a><h2>Cluster Names</h2>
+   
+   
+   <p>
+    Library classes should be organized in clusters in 
+    <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;</tt></i></font>. Likewise the source code 
+    of tools should be put in <font color="#800000"><i><tt>$GOBO/src/&lt;tool-name&gt;</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    Cluster names should be in lower-case and words should be separated by 
+    underscores. Abbreviations should be avoided unless well accepted and understood 
+    in the domain of expertise of the underlying library. Exceptions to this rule are 
+    <font color="#800000"><i><tt>spec</tt></i></font> for Eiffel compiler dependent 
+    clusters and <font color="#800000"><i><tt>impl</tt></i></font> which stands for 
+    &#147;implementation&#148;. For the cluster 
+    <font color="#800000"><i><tt>spec</tt></i></font>, compiler-dependent classes should 
+    have the same name and put into the three following clusters:
+    
+   </p>
+   
+   
+   <p>
+    
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt><font color="#800000"><i><tt>spec/ise</tt></i></font>
+       			        
+       			<font color="#008000"><tt>-- Implementation for ISE Eiffel</tt></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>spec/ge</tt></i></font>
+       			         
+       			<font color="#008000"><tt>-- Implementation for Gobo Eiffel</tt></font></dt>
+      <dd></dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+    
+   </p>
+   
+   
+   <p>
+    Only one of these clusters will be included in the Ace file, loadpath file or 
+    ESD/Xace file of the application depending on the 
+    <a href="compilers.html">Eiffel compiler</a> used. These clusters can be
+    automatically generated with the tool <i>gepp</i> if the different 
+    implementations are put in a single file whose extension is 
+    <font color="#800000"><i><tt>.ge</tt></i></font> instead of the Eiffel extension <font color="#800000"><i><tt>.e</tt></i></font>. 
+    I usually find it easier for development and maintenance to have these 
+    <font color="#800000"><i><tt>.ge</tt></i></font> files.
+    
+   </p>
+   
+   
+   <p>
+    For <font color="#800000"><i><tt>impl</tt></i></font> cluster, it can be used to 
+    provide several implementations of a common interface. For example:
+    
+   </p>
+   
+   
+   <p>
+    
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt><font color="#800000"><i><tt>interface</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/c</tt></i></font></dt>
+      <dd></dd>	
+      	
+      <dt><font color="#800000"><i><tt>impl/dotnet</tt></i></font></dt>
+      <dd></dd>	
+      	
+      <dt><font color="#800000"><i><tt>impl/eiffel</tt></i></font></dt>
+      <dd></dd>	
+      	
+      <dt><font color="#800000"><i><tt>impl/jvm</tt></i></font></dt>
+      <dd></dd>	
+      	
+      <dt><font color="#800000"><i><tt>impl/posix</tt></i></font></dt>
+      <dd></dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+    
+   </p>
+   
+   
+   <p>
+    Here again the names of the classes in the different subclusters of 
+    <font color="#800000"><i><tt>impl</tt></i></font> will be the same, and only one of 
+    these subclusters will be included in the Ace file or equivalent in order to 
+    provide a concrete implementation of the deferred classes in cluster 
+    <font color="#800000"><i><tt>interface</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    Cluster <font color="#800000"><i><tt>impl</tt></i></font> can also be used with the bridge pattern.
+    In that case the cluster structure will look like this:
+    
+   </p>
+   
+   
+   <p>
+    
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt><font color="#800000"><i><tt>foo</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>bar</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/interface/foo</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/interface/bar</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/gtk/foo</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/gtk/bar</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/motif/foo</tt></i></font></dt>
+      <dd></dd>
+      	
+      <dt><font color="#800000"><i><tt>impl/motif/bar</tt></i></font></dt>
+      <dd></dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+    
+   </p>
+   
+   
+   <p>
+    The classes in <font color="#800000"><i><tt>gtk</tt></i></font> and 
+    <font color="#800000"><i><tt>motif</tt></i></font> implement the deferred classes in 
+    <font color="#800000"><i><tt>interface</tt></i></font>, and in the Ace file or 
+    equivalent the clusters with <font color="#800000"><i><tt>gtk</tt></i></font> or with 
+    <font color="#800000"><i><tt>motif</tt></i></font> will be included depending on the 
+    fact that GTK+ or Motif has been chosen to build the graphical interface for example.
+    
+   </p>
+   
+   
+  </div>
+  <div><a name="feature_names"></a><h2>Feature Names</h2>
+   
+   
+   <p>
+    Feature names should be in lower-case and words should be separated by 
+    underscores. Abbreviations should be avoided unless well accepted and understood 
+    in the domain of expertise of the class. Names of constants can possibly have 
+    upper-case letters, but in that case please make sure that all calls to this 
+    constant use the same letter-case in order to be compilable by 
+    <a href="http://smarteiffel.loria.fr">SmartEiffel</a> without requiring
+    the -no_case_sensitive command-line option.
+    
+   </p>
+   
+   
+   <p>
+    Names of procedures should be verbs as they describe actions or commands. On the 
+    other hand names of functions or attributes should be nouns, possibly qualified, 
+    as they describe entities. The names of boolean queries should have an 
+    interrogative form as in <font color="#008080"><i><tt>is_empty</tt></i></font>, 
+    <font color="#008080"><i><tt>is_closed</tt></i></font> or <font color="#008080"><i><tt>has_error</tt></i></font>. 
+    They can also be simple adjectives such as <font color="#008080"><i><tt>closable</tt></i></font>, 
+    or past participles as in <font color="#008080"><i><tt>found</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    Names of creation procedures usually start with <font color="#008080"><i><tt>make</tt></i></font> 
+    in Eiffel, for example <font color="#008080"><i><tt>make</tt></i></font> or 
+    <font color="#008080"><i><tt>make_from_string</tt></i></font>.
+    
+   </p>
+   
+   
+   <p>
+    Names of factory functions can have the prefix <font color="#008080"><i><tt>new_*</tt></i></font>, 
+    as in the following example:
+    
+   </p>
+   
+   
+   <p>
+    
+    <pre>
+_   <i><tt>new_foo</tt></i> (<i><tt>a_string</tt></i>: <i><tt>STRING</tt></i>): <i><tt>FOO</tt></i>
+_   _   _   <font color="#008000"><tt>-- Foo made up of characters of <i><tt>a_string</tt></i></tt></font>
+_   _   _   <font color="#008000"><tt>-- (Create a new objet at each call.)</tt></font>
+_   _   require
+_   _   _   a_string_not_void: <i><tt>a_string</tt></i> /= Void
+_   _   do
+_   _   _   create Result<tt>.</tt><i><tt>make_from_string</tt></i><tt> (</tt><i><tt>a_string</tt></i><tt>)</tt>
+_   _   ensure
+_   _   _   new_foo_not_void: Result /= Void
+_   _   end
+</pre>
+    
+    </p>
+   
+   
+  </div>
+  <div><a name="feature_category_names"></a><h2>Feature Category names</h2>
+   
+   
+   <p>
+    All feature clauses should be equipped with a comment, as in the following 
+    example:
+    
+   </p>
+   
+   
+   <p>
+    
+    
+    <blockquote>
+     <pre>
+feature <font color="#008000"><tt>-- Access</tt></font>
+feature {<i><tt>NONE</tt></i>} <font color="#008000"><tt>-- Initialization</tt></font>
+</pre>
+     </blockquote>
+    
+    
+   </p>
+   
+   
+   <p>
+    Here are some examples of feature category names, taken from the 
+    <a href="../structure/index.html">
+     <i>Gobo Eiffel Structure Library</i> documentation</a>:
+    
+   </p>
+   
+   
+   <p>
+    
+    <blockquote>
+     
+     <dl>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Initialization</tt></font>
+       		
+      </dt>
+      <dd>
+       			Creation procedures.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Access</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries used to get elements or properties about the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Measurement</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries concerning the number of elements and size of
+       			the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Status report</tt></font>
+       		
+      </dt>
+      <dd>
+       			Queries used to determine general boolean properties
+       			of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Comparison</tt></font>
+       		
+      </dt>
+      <dd>
+       			Equality tests between containers.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Duplication</tt></font>
+       		
+      </dt>
+      <dd>
+       			Features which produce copies of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Setting</tt></font>
+       		
+      </dt>
+      <dd>
+       			Procedures which change the general properties of the
+       			container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Cursor movement</tt></font>
+       		
+      </dt>
+      <dd>
+       			Procedures that change the cursor position.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Element change</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which add or change items in the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Removal</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which remove items from the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Resizing</tt></font>
+       		
+      </dt>
+      <dd>
+       			Commands which change the size of the container.
+       		
+      </dd>
+      	
+      <dt>
+       			<font color="#008000"><tt>-- Implementation</tt></font>
+       		
+      </dt>
+      <dd>
+       			Secret features used for implementation purposes.
+       		
+      </dd>
+      
+     </dl>
+     
+    </blockquote>
+    
+   </p>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2001-2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>8 March 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="language.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

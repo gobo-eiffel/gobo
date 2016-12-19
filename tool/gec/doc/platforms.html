@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Supported Platforms</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Supported Platforms</h1>
+    </td>
+    <td align="right"><a href="future.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   If you are not sure whether <i>gec</i> works with your C compiler
+   on your operating system and hardware, you can see below if others already
+   succeeded in doing so. If your platform or C compiler does not appear in
+   this list, you can still give it a try. You just have to follow the 
+   instructions given at the end of this chapter.
+   
+  </p>
+  <div>
+   <h2>Hardware, Operating systems and C compilers</h2>
+   
+   <p>
+    This table shows the C compilers and platforms on which <i>gec</i>
+    has already been used successfully:
+    
+   </p>
+   
+   <table border="2" alt="">
+    <caption></caption>
+    <col span="3" />
+    <thead>
+     <tr>
+      <td><b>Operating System</b></td>
+      <td><b>C Compiler</b></td>
+      <td><b>Hardware</b></td>
+      <td><b>Comment</b></td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>Windows XP Pro</td>
+      <td>msc 7.1 (Visual Studio .NET 2003)</td>
+      <td>32-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>Windows XP</td>
+      <td>msc 8 (Visual Studio .NET 2005)</td>
+      <td>32-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>Windows XP Pro</td>
+      <td>bcc 5.5.1</td>
+      <td>32-bit x86</td>
+      <td>
+       				bcc raises floating-point overflow exceptions (msc does not).
+       				bcc ignores all '\r' when reading text files (msc ignores '\r' only when followed by '\n').
+       			
+      </td>
+     </tr>
+     <tr>
+      <td>Linux Ubuntu 5.10 "The Breezy Badger"</td>
+      <td>gcc 4.0.2</td>
+      <td>32-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>Debian Linux 2.6.15</td>
+      <td>tcc 0.9.23</td>
+      <td>32-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>Red Hat Enterprise Linux 4</td>
+      <td>gcc 3.4.5</td>
+      <td>64-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>OpenBSD 3.8</td>
+      <td>gcc ???</td>
+      <td>32-bit x86</td>
+      <td></td>
+     </tr>
+     <tr>
+      <td>alpha OSF1 V5.1</td>
+      <td>Compaq C V6.4</td>
+      <td>64-bit, little endian, Tru64</td>
+      <td></td>
+     </tr>
+    </tbody>
+   </table>
+   
+   <p>
+    And using computers from SourceForge's
+    <a href="https://sourceforge.net/docs/compile_farm#devel_tools">Compile Farm</a>:
+    
+   </p>
+   
+   <table border="2" alt="">
+    <caption></caption>
+    <col span="4" />
+    <thead>
+     <tr>
+      <td><b>Name</b></td>
+      <td><b>Operating System</b></td>
+      <td><b>C Compiler</b></td>
+      <td><b>Hardware</b></td>
+     </tr>
+    </thead>
+    <tbody>
+     <tr>
+      <td>x86-linux2</td>
+      <td>Fedora Linux FC2</td>
+      <td>gcc 3.3.3</td>
+      <td>32-bit x86, little endian</td>
+     </tr>
+     <tr>
+      <td>x86-linux1</td>
+      <td>Debian GNU/Linux 3.1</td>
+      <td>gcc 3.3.5</td>
+      <td>32-bit x86, little endian</td>
+     </tr>
+     <tr>
+      <td>x86-openbsd1</td>
+      <td>OpenBSD 3.8</td>
+      <td>gcc 3.3.5</td>
+      <td>32-bit x86, little endian</td>
+     </tr>
+     <tr>
+      <td>sparc-solaris1</td>
+      <td>Sun Solaris 9 (SunOS 5.9)</td>
+      <td>gcc 3.3.2</td>
+      <td>64-bit Sun UltraSPARC-II, big-endian</td>
+     </tr>
+    </tbody>
+   </table>
+   
+  </div>
+  <div>
+   <h2>Testing gec on a new platform</h2>
+   
+   <p>
+    This section explains what to do in order to test <i>gec</i>
+    on a new platform or with a new C compiler using the code from the Git repository.
+    
+   </p>
+   
+   <p>
+    First you need to check-out the code from the
+    <a href="https://sourceforge.net/scm/?type=git&amp;group_id=24591">Gobo Git
+     repository</a>. Then you should set the environment variable $GOBO
+    to the directory where you checked out the code, and add
+    <font color="#800000"><i><tt>$GOBO/bin</tt></i></font> to your $PATH.
+    All this is explained in <font color="#800000"><i><tt>$GOBO/work/bootstrap/Readme.txt</tt></i></font>.
+    If you are using a C compiler other than Microsoft Visual C
+    <i>cl</i> on Windows or GNU <i>gcc</i>
+    on other operating systems such as Linux, you should provide a configuration
+    file for your compiler as explained in the section <a href="usage.html">"Back-end
+     C compiler"</a>.
+    
+   </p>
+   
+   <p>
+    Then, depending on your platform and your C compiler, you should run either one of these:
+    
+    <blockquote>
+     <pre>
+<font color="#800000"><i><tt>bootstrap.bat &lt;c_compiler&gt; ge</tt></i></font>
+<font color="#800000"><i><tt>bootstrap.sh &lt;c_compiler&gt; ge</tt></i></font>
+</pre>
+     </blockquote>
+    If this completes successfully (no "BUILD FAILED!" message), you can then run
+    the following test:
+    
+    <blockquote>
+     <pre>
+<font color="#800000"><i><tt>cd $GOBO/test</tt></i></font>
+<font color="#800000"><i><tt>geant test_debug_ge</tt></i></font>
+</pre>
+     </blockquote>
+    
+   </p>
+   
+   <p>
+    Please don't forget to send feedbacks to the Gobo 
+    <a href="http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop">development
+     team</a> about your experiments, and whether we should add new entries to the list
+    of platforms and C compilers above or add new config files to
+    <font color="#800000"><i><tt>$GOBO/tool/gec/config/c/</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2006, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>18 March 2006</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="future.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

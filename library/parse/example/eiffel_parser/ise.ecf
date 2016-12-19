@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="eiffel_parser">
+	<target name="eiffel_parser">
+		<root class="EIFFEL_PARSER" feature="benchmark"/>
+		<option trace="false" profile="false" debug="false" warning="true" void_safety="none">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
+		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
+		<cluster name="eiffel_parser" location="${GOBO}/library/parse/example/eiffel_parser"/>
+		<cluster name="pr_parse" location="${GOBO}/library/parse/src">
+			<option void_safety="none"/>
+			<cluster name="pr_error" location="$|error"/>
+			<cluster name="pr_fsm" location="$|fsm"/>
+			<cluster name="pr_generation" location="$|generation"/>
+			<cluster name="pr_grammar" location="$|grammar"/>
+			<cluster name="pr_parser" location="$|parser"/>
+			<cluster name="pr_support" location="$|support"/>
+			<cluster name="pr_yacc" location="$|yacc"/>
+		</cluster>
+		<cluster name="lx_lexical" location="${GOBO}/library/lexical/src">
+			<option void_safety="none"/>
+			<cluster name="lx_automaton" location="$|automaton"/>
+			<cluster name="lx_error" location="$|error"/>
+			<cluster name="lx_generation" location="$|generation"/>
+			<cluster name="lx_lex" location="$|lex"/>
+			<cluster name="lx_regexp" location="$|regexp"/>
+			<cluster name="lx_scanner" location="$|scanner"/>
+			<cluster name="lx_support" location="$|support"/>
+		</cluster>
+		<cluster name="ut_utility" location="${GOBO}/library/utility/src">
+			<option void_safety="none"/>
+			<cluster name="ut_error" location="$|error"/>
+			<cluster name="ut_formatter" location="$|formatter"/>
+			<cluster name="ut_config" location="$|config"/>
+			<cluster name="ut_support" location="$|support"/>
+			<cluster name="ut_transcoder" location="$|transcoder"/>
+			<cluster name="ut_uri" location="$|uri"/>
+		</cluster>
+		<cluster name="kl_kernel" location="${GOBO}/library/kernel/src">
+			<option void_safety="none"/>
+			<cluster name="kl_basic" location="$|basic"/>
+			<cluster name="kl_io" location="$|io"/>
+			<cluster name="kl_misc" location="$|misc"/>
+			<cluster name="kl_unicode" location="$|unicode"/>
+			<cluster name="kl_support" location="$|support"/>
+			<cluster name="kl_spec" location="$|spec">
+				<option void_safety="none"/>
+				<cluster name="kl_spec_ise" location="$|ise"/>
+			</cluster>
+		</cluster>
+		<cluster name="lx_skeleton" location="${GOBO}/library/lexical/src/skeleton"/>
+		<cluster name="pr_skeleton" location="${GOBO}/library/parse/src/skeleton"/>
+		<cluster name="ds_structure" location="${GOBO}/library/structure/src">
+			<option void_safety="none"/>
+			<cluster name="ds_container" location="$|container"/>
+			<cluster name="ds_dispenser" location="$|dispenser"/>
+			<cluster name="ds_list" location="$|list"/>
+			<cluster name="ds_set" location="$|set"/>
+			<cluster name="ds_sort" location="$|sort"/>
+			<cluster name="ds_support" location="$|support"/>
+			<cluster name="ds_table" location="$|table"/>
+		</cluster>
+		<cluster name="dp_pattern" location="${GOBO}/library/pattern/src">
+			<option void_safety="none"/>
+			<cluster name="dp_bridge" location="$|bridge"/>
+			<cluster name="dp_command" location="$|command"/>
+		</cluster>
+		<cluster name="rx_regexp" location="${GOBO}/library/regexp/src">
+			<option void_safety="none"/>
+			<cluster name="rx_interface" location="$|interface"/>
+			<cluster name="rx_pcre" location="$|pcre"/>
+			<cluster name="rx_support" location="$|support"/>
+		</cluster>
+	</target>
+</system>

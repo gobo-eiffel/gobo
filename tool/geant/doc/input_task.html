@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>input</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>input</h1>
+    </td>
+    <td align="right"><a href="gexace_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="ise_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="input_description"></a>
+   		
+   <h2>Description</h2>
+   		
+   <p>
+    			Input a message from stdin.
+    		
+   </p>
+   	
+  </div>
+  <div><a name="input_parameters"></a>
+   		
+   <h2>Parameters</h2>
+   
+   		
+   <dl>
+    			
+    <dt>message</dt>
+    <dd><i>Description: </i>Message to be echoed
+     <p><i>Domain: </i>-
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>variable</dt>
+    <dd><i>Description: </i>variable which will hold the input value
+     <p><i>Domain: </i>valid variable name
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>defaultvalue</dt>
+    <dd><i>Description: </i>If defined, this value is the default input value
+     <p><i>Domain: </i>valid value (text)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>validargs</dt>
+    <dd><i>Description: </i>If defined, this value defines the valid input values
+     <p><i>Domain: </i>comma separated string containing valid input values
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>validregexp</dt>
+    <dd><i>Description: </i>If defined, this input value must be matched by the regular expression
+     <p><i>Domain: </i>regular expression (text)
+     </p>
+     <p><i>Default: </i>-
+     </p>
+    </dd>
+    			
+    <dt>answer_required</dt>
+    <dd><i>Description: </i>If False, an empty input value is valid, otherwise the input value must be non empty
+     <p><i>Domain: </i>valid boolean (True|False)
+     </p>
+     <p><i>Default: </i>True
+     </p>
+    </dd>
+    		
+   </dl>
+   	
+  </div>
+  <div><a name="input_specification"></a>
+   		
+   <h2>RNG Specification</h2>
+   
+   		<pre>
+&lt;define name="input"&gt;
+  &lt;element name="input"&gt;
+    &lt;ref name="dir_if_unless"/&gt;
+    &lt;attribute name="message"/&gt;
+    &lt;attribute name="variable"/&gt;
+    &lt;optional&gt;
+      &lt;attribute name="defaultvalue"/&gt;
+      &lt;attribute name="validargs"/&gt;
+      &lt;attribute name="validregexp"/&gt;
+	  &lt;attribute name="answer_required"&gt;
+          &lt;!-- runtime evaluation
+          &lt;choice&gt;
+            &lt;value&gt;true&lt;/value&gt;
+            &lt;value&gt;false&lt;/value&gt;
+          &lt;/choice&gt;
+          --&gt;
+        &lt;/attribute&gt;
+    &lt;/optional&gt;
+  &lt;/element&gt;
+&lt;/define&gt;
+
+		</pre>
+   	</div>
+  <div><a name="input_examples"></a>
+   		
+   <h2>Examples</h2>
+   
+   		<pre>
+  &lt;input message="Do you want to continue ?" variable="answer" defaultvalue="y" validargs="y,n" /&gt;
+  &lt;input message="Enter a string :" variable="answer" answer_required="true" /&gt;
+  &lt;input message="Enter a number :" variable="answer" validregexp="^[0-9]+$" answer_required="true" /&gt;
+
+		</pre>
+   	</div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2002-2006, Sven Ehrke</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="gexace_task.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="ise_task.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

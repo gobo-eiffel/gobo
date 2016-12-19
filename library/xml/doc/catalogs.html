@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>XML catalogs and the Catalog Resolver</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>XML catalogs and the Catalog Resolver</h1>
+    </td>
+    <td align="right"><a href="resolvers.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div><a name="about_catalogs"></a>
+   
+   <h2>About OASIS ERTC XML Catalogs</h2>
+   
+   
+   <p>
+    The resolvers mentioned in the previous chapter are take a string from
+    an xml document, and attempt to open an input stream for the parser or application
+    to read from. This is all very well, if the string concerned can easily be mapped
+    to a local resource. 
+    
+   </p>
+   
+   
+   <p>
+    The moment you start to think beyond the local machine, this approach has limitations. 
+    For instance, if a <font color="#008080">SYSTEM</font> id refers to a network resource, 
+    you don't have many options. If you have a local copy of the resource, you could edit
+    the source document and change the <font color="#008080">SYSTEM</font> id. But you may
+    have to do a lot of editing, and if you want to distribute the document, it gets complicated.
+    Alternatively, you might have a resolver available that handles the http protocol, but
+    if you lose your network connection, or the remote server goes down, you are in trouble.
+    
+   </p>
+   
+   
+   <p>
+    Using a string-based resolver can releave some of these problems, but having to code, or configure
+    in code, a dedicated class is not very flexible. A good answer to these problems is the catalog resolver.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>The Catalog Resolver</h2>
+   
+   
+   <p>
+    <font color="#008080"><i><tt>XM_CATALOG_RESOLVER</tt></i></font> is a resolver that implements a two-stage 
+    resolution process. In the first stage, it uses XML catalogs (as defined by the
+    <a href="http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html">
+     OASIS Entity Resolution Technical Committee's 1.1 specification of 7th October 2005</a>) to look up
+    a <font color="#008080">SYSTEM</font> or <font color="#008080">PUBLIC</font> id, or a 
+    URI reference from the source document, and fetches another URI reference
+    to feed into the second stage.
+    
+   </p>
+   
+   
+   <p>
+    In the second stage, an <font color="#008080"><i><tt>XM_URI_EXTERNAL_RESOLVER</tt></i></font> is used to open a stream
+    to the mapped URI reference.
+    
+   </p>
+   
+   
+   <p>
+    The actual format of an OASIS ERTC XML Catalog is quite complex, and allows delegation and URI re-writing.
+    Read the specification to understand the full power of these catalogs.
+    
+   </p>
+   
+   
+  </div>
+  <div>
+   
+   <h2>Configuring the Catalog Resolver</h2>
+   
+   
+   <p>
+    A number of options control the way the ctaalog resolver finds catalogs, and the resolution itself.
+    
+    
+    <dl>
+     	
+     <dt>System catalog list</dt>
+     <dd>
+      			The initial list of system catalogs searched by the resolver is taken from
+      			the environment variable <font color="#008080">XML_CATALOG_FILES</font>, which
+      			must be a list of file names separated by colons or semi-colons. If this list
+      			is empty, then the file <font color="#800000"><i><tt>/etc/xml/catalog</tt></i></font>
+      			is used, unless <font color="#008080"><i><tt>suppress_default_system_catalog_file</tt></i></font>
+      			is called on <font color="#008080"><i><tt>XM_SHARED_CATALOG_MANAGER</tt></i></font>.
+      		
+     </dd>
+     
+     	
+     <dt>Document control of catalog files</dt>
+     <dd>
+      			Additional catalogs are searched for particular documents if one or more
+      			<font color="#008080">oasis-xml-catalog</font> processing instructions appear
+      			within that documents (see <a href="http://www.oasis-open.org/committees/download.php/12075/xml-catalogs.html#oasis-er-tc-abc">
+       			the specification for restrictions</a>).
+      			This behaviour can be suppressed by calling <font color="#008080"><i><tt>suppress_processing_instructions</tt></i></font>.
+      		
+     </dd>
+     
+     	
+     <dt>Public/System preference</dt>
+     <dd>
+      			If the <font color="#008080">prefer</font> attribute is not coded for a particular catalog,
+      			then the default is <font color="#008080">prefer="public"</font>. This can be changed to
+      			<font color="#008080">prefer="system"</font> by calling <font color="#008080"><i><tt>set_prefer_system</tt></i></font>.
+      		
+     </dd>
+     
+     	
+     <dt>Debugging</dt>
+     <dd>
+      			To assist in creating catalogs, or to find possible bugs in the resolver, you can get
+      			debugging messages written to the standard error stream, by calling
+      			<font color="#008080"><i><tt>set_debug_level (a_level: INTEGER)</tt></i></font>. Level 0 is the default,
+      			and level 10 gives the most voluminous ouptut. It is quite a good idea to turn on
+      			level 1 at least, as it will tell you if there are serious errors in your catalogs.
+      		
+     </dd>
+     
+    </dl>
+    
+    
+   </p>
+   
+   
+   <div>
+    
+    <h3>Debug level settings</h3>
+    
+    
+    <p>
+     The level parameter controls which classes of debugging messages are generated thus:
+     
+    </p>
+    
+    
+    <ol>
+     <li>
+      		Any errors that cause a catalog to fail parsing.
+      	
+     </li>
+     <li>
+      		Near-errors, loading catalogs, or switching to a delegated catalog.
+      	
+     </li>
+     <li>
+      		Catalogs that do not exist, traces of calls to resolve routines,
+      		and setting options on the catalog manager.
+      	
+     </li>
+     <li>
+      		Parsing a named catalog, and entries encountered within it.
+      	
+     </li>
+     <li>
+      		Resolution results. Setting xml:base. 
+      	
+     </li>
+     <li>
+      		Preference status of found public entries. Duplicates.
+      	
+     </li>
+     <li>
+      		Catalog's base URI. Identity of retrieved catalogs, and whether they fail parsing.
+      	
+     </li>
+     <li>
+      		Normalization messages. Number of system catalogs.
+      	
+     </li>
+     <li>
+      		Checking for delegates, next catalogs and re-write rules. Matches found/not-found.
+      	
+     </li>
+     <li>
+      		Prefix strings. Candidate matches.
+      	
+     </li>
+    </ol>
+    
+    
+   </div>
+   
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>7 July 2005</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="resolvers.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

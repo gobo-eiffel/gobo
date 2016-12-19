@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Overview of the XSLT library</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Overview of the XSLT library</h1>
+    </td>
+    <td align="right"><a href="overview.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="configuration.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   This chapter gives Eiffel programmers an introduction to the Gobo Eiffel XSLT library, which
+   implements the World Wide Web Consortium's 
+   <a href="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</a>.
+   
+  </p>
+  <p>
+   The library supports a Basic XSLT processor, and is in line with the Recommendation.
+   
+  </p>
+  <p>
+   The support is not yet quite complete. The following features have yet to be implemented:
+   
+   <ul>
+    <li>
+     	    Xsl:sort case-order attribute is not supported yet.
+     	  
+    </li>
+    <li>
+     	    The functions unparsed-text() and unparsed-text-available() do not work properly
+     	    yet. They will probably work OK for 7-bit ASCII and UTF-8 files.
+     	  
+    </li>
+    <li>
+     	    The functions lower-case() and upper-case() only use simple
+     	    case mappings (one's that don't change the string length).
+     	  
+    </li>
+   </ul>
+   
+  </p>
+  <p>
+   See <a href="examples.html">Examples</a> for examples of how to use the library.
+   
+  </p>
+  <div>
+   
+   <h2>Invoking XSLT</h2>
+   
+   <p>
+    
+    <ul>
+     <li>
+      	    The first step involved in using the XSLT library, is to set the 
+      	    <a href="http://www.w3.org/TR/xslt20/#conformance">conformance</a> level.
+      	    At present, only Basic XSLT Processor is supported. In the future, we hope to add support 
+      	    for Schema-Aware XSLT Processor, so the first step is to inherit from
+      	    <font color="#008080"><i><tt>XM_XPATH_SHARED_CONFORMANCE</tt></i></font> and call <font color="#008080"><i><tt>conformance.set_basic_xslt_processor</tt></i></font>.
+      	  
+     </li>
+     <li>
+      	    The next step is to configure the processor, by creating an
+      	    <a href="configuration.html"><font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font></a>.
+      	  
+     </li>
+     <li>
+      	    The next step is <a href="transformer.html">Creating a Transformer</a>.
+      	  
+     </li>
+     <li>
+      	    The next step is <a href="transforming.html">Executing the Transformation</a>.
+      	  
+     </li>
+     <li>
+      	    Finally, <a href="results.html">Accessing the Transformation Results</a>.
+      	  
+     </li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Customizable interfaces</h2>
+   
+   <p>
+    The following is a list of XSLT interfaces that the Eiffel programmer
+    may need to implement. In all cases, the library provides at least one
+    concrete implementation.
+    
+    <ul>
+     <li>
+      	    <a href="output_resolver.html"><font color="#008080"><i><tt>XM_XSLT_OUTPUT_URI_RESOLVER</tt></i></font></a>
+      	  
+     </li>
+     <li>
+      	    <a href="error_listener.html"><font color="#008080"><i><tt>XM_XSLT_ERROR_LISTENER</tt></i></font></a>
+      	  
+     </li>
+     <li>
+      	    <a href="tracing.html"><font color="#008080"><i><tt>XM_XSLT_TRACE_LISTENER</tt></i></font></a>
+      	  
+     </li>
+     <li>
+      	    <a href="transformation_result.html"><font color="#008080"><i><tt>XM_XSLT_TRANSFORMATION_RESULT</tt></i></font></a>
+      	  
+     </li>
+     <li>
+      	    <a href="transformation_source.html"><font color="#008080"><i><tt>XM_XSLT_SOURCE</tt></i></font></a>
+      	  
+     </li>
+     <li>
+      	    <font color="#008080"><i><tt>XM_XSLT_ENCODER_FACTORY</tt></i></font> is explained in <a href="configuration.html"><font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font></a>.
+      	  
+     </li>
+     <li>
+      	    <font color="#008080"><i><tt>XM_XSLT_MESSAGE_EMITTER_FACTORY</tt></i></font> is explained in <a href="configuration.html"><font color="#008080"><i><tt>XM_XSLT_CONFIGURATION</tt></i></font></a>.
+      	  
+     </li>
+    </ul>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Extensions</h2>
+   
+   <p>
+    XSLT and XPath provide for standard mechanisms to access extensions to the language.
+    This library provides some built-in extensions in the namespace <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension</font>.
+    In order to make use of them, you must provide a namespace declaration in your stylesheets, something like:
+    <font color="#008080">gexslt:xmlns="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"</font>. Don't forget
+    to exclude this namespace from your result documents with: <font color="#008080">exclude-result-prefixes="gexslt"</font> when
+    appropriate.
+    
+   </p>
+   
+   <p>
+    You can also provide your own extensions. In this case, you should allocate a namespace URI that you control
+    to your extensions. 
+    
+   </p>
+   
+   <p>
+    In some cases (notably output extensions), the mechanism for accessing built-in extensions differs slightly 
+    from that for user-written extensions. In these cases, I have incorporated example classes into the library so
+    you can see how to code your own extensions. These examples are all in the namespace
+    <font color="#008080">http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example</font>.
+    
+   </p>
+   
+   <p>
+    <a href="output_extensions.html">Output extensions</a>
+    
+   </p>
+   
+   <p>
+    <a href="../../gexslt/extension/index.html">Other extensions</a>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Compiling programs which use the XSLT library</h2>
+   
+   <p>
+    To see which libraries need to be mounted in your system.xace file,
+    take a look at the example program in <font color="#800000"><i><tt>${GOBO}/library/xslt/example/schematron</tt></i></font>.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Conformance</h2>
+   
+   <p>See <a href="conformance.html">Conformance to standards</a></p>
+   
+  </div>
+  <div>
+   
+   <h2>Serializer</h2>
+   
+   <p>
+    For documentation on the serializer (which is a separate component for general XML serialization - that is, you do
+    not have to use the XSLT engine to use it), see <a href="xslt_serializer.html">XSLT 2.0 serialization</a>.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Monday, October 18th, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="overview.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="configuration.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<system name="do_nothing">
+	<root class="DO_NOTHING" creation="make"/>
+	<option name="assertion" value="none"/>
+	<option name="console_application" value="true"/>
+	<option name="finalize" value="true"/>
+	<option name="garbage_collector" value="none"/>
+	<cluster name="singleton" location="${GOBO}/library/pattern/example/singleton/do_nothing"/>
+	<cluster name="kernel" location="${GOBO}/library/kernel/src" prefix="kl_">
+		<option name="abstract" value="true"/>
+		<cluster name="basic"/>
+		<cluster name="io"/>
+		<cluster name="misc"/>
+		<cluster name="unicode"/>
+		<cluster name="support"/>
+		<cluster name="spec">
+			<option name="abstract" value="true"/>
+			<cluster name="ge" prefix="kl_spec_"/>
+		</cluster>
+	</cluster>
+	<cluster name="structure" location="${GOBO}/library/structure/src" prefix="ds_">
+		<option name="abstract" value="true"/>
+		<cluster name="container"/>
+		<cluster name="dispenser"/>
+		<cluster name="list"/>
+		<cluster name="set"/>
+		<cluster name="sort"/>
+		<cluster name="support"/>
+		<cluster name="table"/>
+	</cluster>
+	<cluster name="pattern" location="${GOBO}/library/pattern/src" prefix="dp_">
+		<option name="abstract" value="true"/>
+		<cluster name="bridge"/>
+		<cluster name="command"/>
+	</cluster>
+	<cluster name="ge" location="${GOBO}/library"/>
+	<cluster name="free_elks" location="${GOBO}/library/free_elks/src" prefix="fe_">
+		<option name="abstract" value="true"/>
+		<cluster name="fake"/>
+		<cluster name="elks">
+			<cluster name="kernel">
+				<cluster name="exceptions"/>
+				<cluster name="string"/>
+			</cluster>
+			<cluster name="refactoring"/>
+			<cluster name="structures">
+				<cluster name="access"/>
+				<cluster name="cursor_tree"/>
+				<cluster name="cursors"/>
+				<cluster name="dispenser"/>
+				<cluster name="iteration"/>
+				<cluster name="list"/>
+				<cluster name="set">
+					<cluster name="strategies"/>
+				</cluster>
+				<cluster name="sort"/>
+				<cluster name="storage"/>
+				<cluster name="table"/>
+				<cluster name="traversing"/>
+				<cluster name="tree"/>
+			</cluster>
+			<cluster name="support"/>
+		</cluster>
+		<cluster name="ise">
+			<cluster name="kernel">
+				<cluster name="exceptions"/>
+			</cluster>
+		</cluster>
+	</cluster>
+</system>

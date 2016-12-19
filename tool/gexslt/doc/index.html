@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Introduction to Gobo Eiffel XSLT</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <h1>Introduction to Gobo Eiffel XSLT</h1>
+    </td>
+    <td align="right"><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="options.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>Gobo Eiffel XSLT is a command-line processor for the XSLT 2.0 language. 
+   It is very much still under development at the moment, but it is now close to the XSLT 2.0 Recomendation. It is used to produce
+   the XHTML pages
+   for all of the Gobo documentation that is written in accordance with <font color="#800000"><i><tt>$GOBO/doc/misc/gobo.rng</tt></i></font>.
+   
+  </p>
+  <div>
+   
+   <h2>Using gexslt</h2>
+   
+   <p>
+    <a href="options.html">Command line options</a>
+    
+   </p>
+   
+   <p>
+    <a href="extension/index.html">Extensions</a>
+    
+   </p>
+   
+   <p>
+    <a href="../xml/xslt/overview.html">The Eiffel programmers guide to the Gobo XSLT library</a>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Exit codes</h2>
+   
+   <p>
+    The following are the meanings of the various exit codes from the processor:
+    
+    <dl>
+     	
+     <dt>0</dt>
+     <dd>
+      	     Successful execution.
+      	    
+     </dd>
+     	
+     <dt>1</dt>
+     <dd>
+      	     Syntax error in the command line.
+      	    
+     </dd>
+     	
+     <dt>2</dt>
+     <dd>
+      	     Syntax error in the stylesheet.
+      	    
+     </dd>
+     	
+     <dt>3</dt>
+     <dd>
+      	     Runtime error in the transformation. This includes termination via <font color="#008080">xsl:message terminate='yes'</font>.
+      	    
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Status and conformance</h2>
+   
+   <p>
+    Gexslt is intended to conform to a Basic-level XSLT 2.0 Processor. However, no formal
+    conformance statement is provided yet.
+    
+   </p>
+   
+   <p>
+    The implementation status of the core XPath functions can be found at
+    <a href="../xml/xpath/implemented_functions.html">Implemented XPath functions</a>
+    In summary, all are implemented.
+    
+   </p>
+   
+   <p>
+    In general, if a message beginning with TODO appears on the standard error stream, then you should
+    not expect your stylesheet to execute correctly. If however, no errors or TODO messages are reported, then output
+    should be correct.
+    
+   </p>
+   
+  </div>
+  <div>
+   
+   <h2>Credits</h2>
+   
+   <p>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which Gobo Eiffel XSLT is built,
+    are largely derived from <a href="http://www.saxonica.com/index.html">Saxon</a>, an open source XSLT Processor written in Java, by Michael Kay. 
+    I am very grateful to Michael for making the source code available for study, and for answering all my questions.
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2004, Colin Adams and others</b><br /><b>mailto:</b><a href="mailto:colin@colina.demon.co.uk">colin@colina.demon.co.uk</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>Tuesday, August 31st, 2004</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="options.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>
