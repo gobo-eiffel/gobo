@@ -61,6 +61,8 @@ fi
 
 BIN_DIR=$GOBO/bin
 BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
+PATH=$BIN_DIR:$PATH
+export PATH
 cd $BIN_DIR
 $BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $CC
 
@@ -80,15 +82,13 @@ if [ "$EIF" = "ge" ]; then
 	$STRIP getest${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
 	$STRIP gelint${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexslt/src/ge.xace
+	$BIN_DIR/geant$EXE --buildfilename=$GOBO/tool/gexslt/src/build.eant compile_ge
 	$STRIP gexslt${EXE}
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1
 fi
 
-PATH=$BIN_DIR:$PATH
-export PATH
 cd $BIN_DIR
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
