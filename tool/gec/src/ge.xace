@@ -5,7 +5,7 @@
 	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
-	<option name="garbage_collector" value="boehm"/>
+	<option name="garbage_collector" value="none"/>
 	<cluster name="gec" location="${GOBO}/tool/gec/src"/>
 	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
