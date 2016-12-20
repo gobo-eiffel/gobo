@@ -1,13 +1,13 @@
 @echo off
 
-rem description: "Install Gobo Eiffel package"
-rem copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
+rem copyright: "Copyright (c) 2016, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
 
 
-rem "usage: install.bat [-v] <c_compiler>"
+rem "usage: bootstrap.bat [-v] <c_compiler>"
 
 
 if .%1. == .-v. goto verbose
@@ -34,19 +34,18 @@ goto no_verbose
 	goto exit
 
 :windows
-	set CP=copy
 	set MV=rename
 	set RM=del
 	set BIN_DIR=%GOBO%\bin
-	set BOOTSTRAP_DIR=%GOBO%\bin
+	set BOOTSTRAP_DIR=%GOBO%\tool\gec\bootstrap
 	set OBJ=.obj
 	set EXE=.exe
-	goto c_compilation
+	goto c_compiler
 
-:c_compilation
+:c_compiler
 
 set BIN_DIR=%GOBO%\bin
-set BOOTSTRAP_DIR=%GOBO%\bin
+set BOOTSTRAP_DIR=%GOBO%\tool\gec\bootstrap
 cd %BIN_DIR%
 
 if .%CC%. == .. goto usage
@@ -179,34 +178,26 @@ goto exit
 	goto exit
 
 :ge
-	set GOBO_EIFFEL=ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geant\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexace\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelex\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geyacc\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gepp\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\getest\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelint\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexslt\ge.xace
-	goto clean
-
-:clean
-	set PATH=%BIN_DIR%;%PATH%
-	cd %BIN_DIR%
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gec\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\geant\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gexace\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gelex\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\geyacc\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gepp\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\getest\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gelint\build.eant clean
-	geant %VERBOSE% --buildfilename=%GOBO%\src\gexslt\build.eant clean
+	rem Compile gec twice to get a bootstrap effect.
+	%BIN_DIR%\gec%EXE% --finalize --cc=no %GOBO%\tool\gec\src\ge.xace
+	call .\gec.bat
+	%BIN_DIR%\gec%EXE% --finalize --cc=no %GOBO%\tool\gec\src\ge.xace
+	call .\gec.bat
+	%RM% gec*.h
+	%RM% gec*.c
+	%RM% gec*%OBJ%
+	rem Make sure 'gec.bat' exists to avoid getting some warning when removing it.
+	echo "" > gec.bat
+	%RM% gec*.bat
+	rem Make sure 'gec.sh' exists to avoid getting some warning when removing it.
+	echo "" > gec.sh
+	%RM% gec*.sh
+	if .%CC%. == .bcc32. %RM% gec.tds
 	goto exit
 
 :usage
-	echo usage: install.bat [-v] ^<c_compiler^>
+	echo usage: bootstrap.bat [-v] ^<c_compiler^>
 	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 

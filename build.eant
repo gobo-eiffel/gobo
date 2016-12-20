@@ -28,82 +28,14 @@
 		<geant target="clean"/>
 	</target>
 
-	<target name="bootstrap1" depend="init">
-		<description>
-			Bootstrap the Gobo Eiffel package (first pass).
-		</description>
-
-		<geant file="build.eant" target="clobber" dir="library"/>
-		<geant file="build.eant" target="install_src" dir="library"/>
-		<geant file="build.eant" target="clobber" dir="tool/gec/src"/>
-		<geant file="build.eant" target="install" dir="tool/gec/src"/>
-			<!-- Compile gec twice to get a bootstrap effect -->
-		<geant file="build.eant" target="compile" dir="tool/gec/src" if="${GOBO_EIFFEL}=ge"/>
-		<move file="tool/gec/src/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
-		<geant file="build.eant" target="clean" dir="tool/gec/src" if="${GOBO_EIFFEL}=ge"/>
-		<geant file="build.eant" target="compile" dir="tool/gec/src" if="${GOBO_EIFFEL}=ge"/>
-		<move file="tool/gec/src/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
-		<geant file="build.eant" target="clean" dir="tool/gec/src" if="${GOBO_EIFFEL}=ge"/>
-			<!-- Compile gec only once with other Eiffel compilers -->
-		<geant file="../tool/gec/src/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
-		<geant file="../tool/gec/src/build.eant" target="clean" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
-			<!-- Compile geant -->
-		<geant file="build.eant" target="clobber" dir="tool/geant/src"/>
-		<geant file="build.eant" target="install" dir="tool/geant/src"/>
-		<geant file="../tool/geant/src//build.eant" target="compile" fork="false" dir="bin"/>
-		<geant file="../tool/geant/src/build.eant" target="clean" dir="bin"/>
-	</target>
-
-	<target name="bootstrap2" depend="init">
-		<description>
-			Bootstrap the Gobo Eiffel package (second pass).
-		</description>
-
-		<geant file="build.eant" target="clobber" dir="tool"/>
-		<geant file="build.eant" target="install_src" dir="tool"/>
-		<geant file="../tool/gexace/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/gexace/src/build.eant" target="clean" dir="bin"/>
-		<geant file="../tool/gelex/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/gelex/src/build.eant" target="clean" dir="bin"/>
-		<geant file="../tool/gepp/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/gepp/src/build.eant" target="clean" dir="bin"/>
-		<geant file="../tool/geyacc/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/geyacc/src/build.eant" target="clean" dir="bin"/>
-		<geant target="clobber"/>
-		<geant file="build.eant" target="install_src" dir="library"/>
-		<geant file="build.eant" target="install_src" dir="tool"/>
-		<geant file="../tool/getest/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/getest/src/build.eant" target="clean" dir="bin"/>
-		<geant file="../tool/gelint/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/gelint/src/build.eant" target="clean" dir="bin"/>
-		<geant file="../tool/gexslt/src/build.eant" target="compile" dir="bin"/>
-		<geant file="../tool/gexslt/src/build.eant" target="clean" dir="bin"/>
-		<geant file="build.eant" target="install" dir="library"/>
-		<geant file="build.eant" target="install" dir="tool"/>
-		<geant target="clean"/>
-	</target>
-
 	<target name="delivery" depend="init">
 		<description>
-			Build delivery package (third pass of bootstrap).
+			Build delivery package.
+			The bootstrap should be run first.
 		</description>
-
-		<geant file="../tool/gec/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/gexace/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/gelex/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/geyacc/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/gepp/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/getest/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/gelint/src/build.eant" target="clobber" dir="bin"/>
-		<geant file="../tool/gexslt/src/build.eant" target="clobber" dir="bin"/>
-		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
-		<copy to_directory="bin">
-			<fileset include="work/bootstrap/gec*.c">
-				<map type="flat"/>
-			</fileset>
-		</copy>
+		
+		<geant target="develop"/>
 		<delete>
-			<directoryset directory="." include="@(**/.svn)"/>
 			<directoryset directory="." include="@(**/.git)"/>
 		</delete>
 		<delete directory="work"/>
@@ -133,8 +65,6 @@
 	<target name="other_help" export="NONE">
 		<echo message="   geant develop"/>
 		<echo message="   geant delivery"/>
-		<echo message="   geant bootstrap1"/>
-		<echo message="   geant bootstrap2"/>
 		<precursor/>
 	</target>
 

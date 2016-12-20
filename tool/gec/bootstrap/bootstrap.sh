@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# description: "Install Gobo Eiffel package"
-# copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+# description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
+# copyright: "Copyright (c) 2016, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
 
 
-# usage: install.sh [-v] <c_compiler>
+# usage: bootstrap.sh [-v] <c_compiler>
 
 
 gobo_usage() {
-	echo "usage: install.sh [-v] <c_compiler>"
+	echo "usage: bootstrap.sh [-v] <c_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
@@ -30,13 +30,13 @@ if [ "$GOBO" = "" ]; then
 	exit 1
 fi
 
-CP=cp
 MV=mv
 RM=rm
+STRIP=strip
 OBJ=.o
 EXE=
 BIN_DIR=$GOBO/bin
-BOOTSTRAP_DIR=$GOBO/bin
+BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 
 cd $BIN_DIR
 
@@ -50,7 +50,6 @@ c_compilation() {
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec1.c
 	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ $LLIBS
-	strip gec${EXE}
 	$RM gec*$OBJ
 }
 
@@ -78,6 +77,8 @@ elif [ "$EIF" = "" ]; then
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
 	LD=link
+	STRIP=echo
+	OBJ=.obj
 	EXE=.exe
 	CFLAGS='-O2 -nologo -wd4049'
 	LFLAGS='-nologo -subsystem:console'
@@ -143,6 +144,7 @@ elif [ "$CC" = "icc" ]; then
 	CFLAGS='-O2'
 	LFLAGS=''
 	LFLAG_OUT='-o '
+	LLIBS=''
 	echo icc > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "tcc" ]; then
@@ -162,39 +164,24 @@ else
 fi
 
 if [ "$EIF" = "ge" ]; then
-	GOBO_EIFFEL=ge
-	export GOBO_EIFFEL
 	cd $BIN_DIR
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.xace
-	strip geant${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.xace
-	strip gexace${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.xace
-	strip gelex${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/geyacc/ge.xace
-	strip geyacc${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gepp/ge.xace
-	strip gepp${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/getest/ge.xace
-	strip getest${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelint/ge.xace
-	strip gelint${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexslt/ge.xace
-	strip gexslt${EXE}
+	# Compile gec twice to get a bootstrap effect.
+	$MV gec$EXE gec1$EXE
+	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
+	$MV gec$EXE gec1$EXE
+	$BIN_DIR/gec1$EXE --finalize $GOBO/tool/gec/src/ge.xace
+	$STRIP gec$EXE
+	$RM gec1$EXE
+	$RM gec*.h
+	$RM gec*.c
+	$RM gec*$OBJ
+	# Make sure 'gec.bat' exists to avoid getting some warning when removing it.
+	echo "" > gec.bat
+	$RM gec*.bat
+	# Make sure 'gec.sh' exists to avoid getting some warning when removing it.
+	echo "" > gec.sh
+	$RM gec*.sh
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1
 fi
-
-PATH=$BIN_DIR:$PATH
-export PATH
-cd $BIN_DIR
-geant $VERBOSE --buildfilename=$GOBO/src/gec/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/geant/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/gexace/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/gelex/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/geyacc/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/gepp/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/getest/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/gelint/build.eant clean
-geant $VERBOSE --buildfilename=$GOBO/src/gexslt/build.eant clean

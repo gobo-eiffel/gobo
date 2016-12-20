@@ -9,7 +9,7 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 	T0* t1;
 	GE_context tc = GE_default_context;
 	GE_context* ac = &tc;
-	GE_type_info_count = 1897;
+	GE_type_info_count = 1906;
 	GE_argc = argc;
 	GE_argv = argv;
 	GE_main_context = ac;
