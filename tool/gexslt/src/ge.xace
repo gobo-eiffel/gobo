@@ -4,7 +4,6 @@
 	<root class="GEXSLT" creation="execute"/>
 	<option name="assertion" value="none"/>
 	<option name="console_application" value="true"/>
-	<option name="garbage_collector" value="boehm"/>
 	<option name="inlining" value="all"/>
 	<option name="profile" value="false"/>
 	<cluster name="gexslt" location="${GOBO}/tool/gexslt/src"/>
