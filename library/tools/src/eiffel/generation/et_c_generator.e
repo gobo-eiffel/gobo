@@ -26835,14 +26835,14 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 					-- that class TYPE has a generic parameter.
 				set_fatal_error
 				error_handler.report_giaaa_error
+			elseif not current_system.attachment_type_conformance_mode then
+				current_file.put_string (c_eif_true)
+			elseif l_parameters.type (1).is_type_expanded (a_target_type.base_type) then
+				current_file.put_string (c_eif_true)
+			elseif l_parameters.type (1).is_type_detachable (a_target_type.base_type) then
+				current_file.put_string (c_eif_true)
 			else
-				if l_parameters.type (1).is_type_expanded (a_target_type.base_type) then
-					current_file.put_string (c_eif_true)
-				elseif l_parameters.type (1).is_type_detachable (a_target_type.base_type) then
-					current_file.put_string (c_eif_true)
-				else
-					current_file.put_string (c_eif_false)
-				end
+				current_file.put_string (c_eif_false)
 			end
 		end
 
