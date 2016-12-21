@@ -1545,10 +1545,10 @@ feature -- Pathname handling
 			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
-				a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel")
+				a_name := Execution_environment.interpreted_string ("$GOBO/library/kernel/test/unit")
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				a_name := Execution_environment.interpreted_string ("$GOBO/test")
+				a_name := Execution_environment.interpreted_string ("$GOBO/library/kernel/test")
 				a_name := a_file_system.absolute_pathname (a_name)
 				assert ("parent1", a_file_system.same_pathnames (a_name, a_parent))
 				assert ("cwd1", a_file_system.same_pathnames (cwd, a_file_system.cwd))
@@ -1566,13 +1566,13 @@ feature -- Pathname handling
 			create a_file_system.make
 			if a_file_system.is_current_file_system then
 				cwd := a_file_system.cwd
-				a_name := Execution_environment.interpreted_string ("$GOBO/test")
+				a_name := Execution_environment.interpreted_string ("$GOBO/library/kernel/test")
 				assert ("readable1", a_file_system.is_directory_readable (a_name))
 				a_file_system.cd (a_name)
-				a_name := a_file_system.pathname ("kernel", "data")
+				a_name := a_file_system.pathname ("unit", "data")
 				assert ("readable2", a_file_system.is_directory_readable (a_name))
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel")
+				a_name := Execution_environment.interpreted_string ("$GOBO/library/kernel/test/unit")
 				a_name := a_file_system.absolute_pathname (a_name)
 				assert ("parent1", a_file_system.same_pathnames (a_name, a_parent))
 				a_file_system.cd (cwd)
