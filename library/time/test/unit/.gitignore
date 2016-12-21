@@ -3,6 +3,7 @@ compile_*.*
 *.exe
 *.dll
 *.bat
+*.sh
 *.h
 *.c
 *.o
