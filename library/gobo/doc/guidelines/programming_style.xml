@@ -5,7 +5,7 @@
 
 		"Programming Style"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>9 March 2005</date>
+	<date>22 December 20016</date>
 </chapterinfo>
 
 <title>Programming Style</title>
@@ -35,7 +35,7 @@ with invariants. This is useful as documentation in addition to the header
 comments to make sure that the routines and class instances are correctly used. 
 These assertions can also be enabled when running the 
 <link linkend="test">test suite</link> in 
-<filename>$GOBO/test/&lt;library-name&gt;</filename> in order to check the 
+<filename>$GOBO/library/&lt;library-name&gt;/test</filename> in order to check the 
 correctness of the library classes.
 </para>
 
@@ -75,8 +75,7 @@ _   </text>description:
 _   _   </text>"Short description of the class"
 <text>
 _   </text>library:    "Gobo Eiffel Lexical Library"
-<text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
-<text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
+<text>_   </text>copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
 <text>_   </text>license:    "MIT License"
 <text>_   </text>date:       "$Date$"
 <text>_   </text>revision:   "$Revision$"
@@ -87,9 +86,10 @@ _   </text>library:    "Gobo Eiffel Lexical Library"
 Put a short description of the class in the <quote>description</quote> field.
 Replace <quote>Lexical</quote> in the <quote>library</quote> field by the name 
 of your library. Replace <quote>Eric Bezault</quote> by your name in the 
-<quote>author</quote> and <quote>copyright</quote> fields and put your e-mail 
-address in the <quote>author</quote> field. The fields <quote>date</quote> and 
-<quote>revision</quote> are automatically expanded by <link linkend="git">Git</link>.
+<quote>copyright</quote> field. The fields <quote>date</quote> and 
+<quote>revision</quote> are automatically expanded by the Version
+Control Systems supporting these keyword expansions. Note that 
+<link linkend="git">Git</link> does not support such expansion.
 </para>
 
 </section>
@@ -110,7 +110,7 @@ _   </text><featurename>title</featurename>: <classname>STRING</classname>
 </text>feature <comment>Setting</comment>
 <text>
 _   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>)
-<text>_   _   _   </text><comment>Set <featurename>title</featurename> to <argument>a_title</argument>.</comment>
+<text>_   _   _   </text><comment>Set `<featurename>title</featurename>' to `<argument>a_title</argument>'.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_title_not_void: <argument>a_title</argument> /= Void
 <text>_   _   </text>do
@@ -176,11 +176,6 @@ they are used are:
 <featurename>do_something</featurename></featurecall></programlisting></informalexample>
 		
 	</para></listitem>	
-	<listitem><para><ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> 
-		emits a warning when semicolons are missing in the Export 
-		subclause of the Feature_adaptation clause. Semicolons can be 
-		added here in order to keep SmartEiffel quiet.
-	</para></listitem>
 </itemizedlist>
 
 </para>
@@ -198,9 +193,8 @@ have been deleted) are not considered as unexpected behaviors in my point of vie
 
 <para>
 Also raising exceptions in the creation routine should be avoided since it is not 
-clear (unless I'm proven otherwise) that ETL describes precisely what should 
-happen in that particular case. It is preferred to properly create the objects 
-and  then call the routines which may raise the exception.
+clear to me what should happen in that particular case. It is preferred to properly 
+create the objects and  then call the routines which may raise the exception.
 </para>
 
 <para>

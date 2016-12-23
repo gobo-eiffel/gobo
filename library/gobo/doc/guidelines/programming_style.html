@@ -22,7 +22,7 @@
     comments to make sure that the routines and class instances are correctly used. 
     These assertions can also be enabled when running the 
     <a href="test.html">test suite</a> in 
-    <font color="#800000"><i><tt>$GOBO/test/&lt;library-name&gt;</tt></i></font> in order to check the 
+    <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;/test</tt></i></font> in order to check the 
     correctness of the library classes.
     
    </p>
@@ -71,8 +71,7 @@ _   description:
 _   _   "Short description of the class"
 
 _   library:    "Gobo Eiffel Lexical Library"
-_   author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
-_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
+_   copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
 _   license:    "MIT License"
 _   date:       "$Date$"
 _   revision:   "$Revision$"
@@ -84,9 +83,10 @@ _   revision:   "$Revision$"
     Put a short description of the class in the &#147;description&#148; field.
     Replace &#147;Lexical&#148; in the &#147;library&#148; field by the name 
     of your library. Replace &#147;Eric Bezault&#148; by your name in the 
-    &#147;author&#148; and &#147;copyright&#148; fields and put your e-mail 
-    address in the &#147;author&#148; field. The fields &#147;date&#148; and 
-    &#147;revision&#148; are automatically expanded by <a href="git.html">Git</a>.
+    &#147;copyright&#148; field. The fields &#147;date&#148; and 
+    &#147;revision&#148; are automatically expanded by the Version
+    Control Systems supporting these keyword expansions. Note that 
+    <a href="git.html">Git</a> does not support such expansion.
     
    </p>
    
@@ -111,7 +111,7 @@ _   _   _   <font color="#008000"><tt>-- Title displayed in the title bar</tt></
 feature <font color="#008000"><tt>-- Setting</tt></font>
 
 _   <i><tt>set_title</tt></i> (<i><tt>a_title</tt></i>: like <i><tt>title</tt></i>)
-_   _   _   <font color="#008000"><tt>-- Set <i><tt>title</tt></i> to <i><tt>a_title</tt></i>.</tt></font>
+_   _   _   <font color="#008000"><tt>-- Set `<i><tt>title</tt></i>' to `<i><tt>a_title</tt></i>'.</tt></font>
 _   _   require
 _   _   _   a_title_not_void: <i><tt>a_title</tt></i> /= Void
 _   _   do
@@ -173,12 +173,6 @@ _   _   end
       		
       	
      </li>
-     <li><a href="http://smarteiffel.loria.fr">SmartEiffel</a> 
-      		emits a warning when semicolons are missing in the Export 
-      		subclause of the Feature_adaptation clause. Semicolons can be 
-      		added here in order to keep SmartEiffel quiet.
-      	
-     </li>
     </ul>
     
     
@@ -200,9 +194,8 @@ _   _   end
    
    <p>
     Also raising exceptions in the creation routine should be avoided since it is not 
-    clear (unless I'm proven otherwise) that ETL describes precisely what should 
-    happen in that particular case. It is preferred to properly create the objects 
-    and  then call the routines which may raise the exception.
+    clear to me what should happen in that particular case. It is preferred to properly 
+    create the objects and  then call the routines which may raise the exception.
     
    </p>
    
@@ -220,7 +213,7 @@ _   _   end
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>9 March 2005</font></address>
+     <address><font size="2"><b>Copyright © 2001-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 December 20016</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="documentation.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

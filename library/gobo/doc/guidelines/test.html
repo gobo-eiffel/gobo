@@ -14,19 +14,19 @@
   </table>
   <hr size="1" />
   <p>
-   Each Eiffel library should come with a test suite runnable with 
+   Each Eiffel library should come with a unit test suite runnable with 
    <i>getest</i>. The test case classes should be placed in
-   <font color="#800000"><i><tt>$GOBO/test/&lt;library-name&gt;</tt></i></font> along with the Ace files, 
-   loadpath files, ESD/Xace files and the <i>getest</i> configuration 
+   <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;/test/unit</tt></i></font> along with the Xace files, 
+   ECF files and the <i>getest</i> configuration 
    files to run the tests.
    
   </p>
   <p>
    The purpose of these tests is to make sure that the library classes work as 
    expected (i.e. as specified by the assertions) and also to make sure that they 
-   compile correctly with <a href="compilers.html">compilers</a> such as 
-   <a href="http://smarteiffel.loria.fr">SmartEiffel</a> which compiles only 
-   alive code.
+   compile correctly with the <a href="compilers.html">compilers</a> 
+   which compile only alive code. Note that this was the case with the
+   previously supported compiler <a href="http://smarteiffel.loria.fr">SmartEiffel</a>.
    
   </p>
   <p>
@@ -38,14 +38,14 @@
    
   </p>
   <p>
-   Finally the <font color="#800000"><i><tt>$GOBO/test/&lt;library-name&gt;</tt></i></font> directory is 
+   Finally the <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;/test</tt></i></font> directory is 
    used as regression test to make sure that no new bugs have been introduced 
    between two releases.
    
   </p>
   <p>
    Note: <i>getest</i> is based on Jim Weirich's 
-   <a href="../getest/see_also.html#eiffelunit"><i>EiffelUnit</i></a> 
+   <a href="../../../../tool/getest/doc/see_also.html#eiffelunit"><i>EiffelUnit</i></a> 
    tool but has the advantage to work with all 
    <a href="compilers.html">Eiffel compilers</a> supported by the 
    <i>Gobo Eiffel Project</i>.
@@ -55,7 +55,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>8 March 2005</font></address>
+     <address><font size="2"><b>Copyright © 2001-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 December 2016</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="examples.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="git.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

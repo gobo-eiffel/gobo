@@ -24,7 +24,7 @@
    
    <p>
     In order to avoid class name clashes between different libraries, some Eiffel 
-    compilers support class renaming in the Ace file or equivalent. But some don't. 
+    compilers support class renaming in the ECF file or equivalent. But some don't. 
     Therefore the name of the classes should systematically be prefixed with a 
     two-letter library code followed by an underscore. For example the classes from 
     the <i>Gobo Eiffel Structure Library</i> have been prefixed 
@@ -94,7 +94,7 @@
    
    
    <p>
-    Likewise, <a href="http://smarteiffel.loria.fr">SmartEiffel</a> expects by 
+    Likewise, some Eiffel compilers expect by 
     default to have a one-to-one relation between the name of the class and the name 
     of the enclosing file. Therefore the name of the file should be the name of the 
     class followed by the extension <font color="#800000"><i><tt>.e</tt></i></font>, all in lower case. For 
@@ -109,8 +109,8 @@
    
    <p>
     Library classes should be organized in clusters in 
-    <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;</tt></i></font>. Likewise the source code 
-    of tools should be put in <font color="#800000"><i><tt>$GOBO/src/&lt;tool-name&gt;</tt></i></font>.
+    <font color="#800000"><i><tt>$GOBO/library/&lt;library-name&gt;/src</tt></i></font>. Likewise the source code 
+    of tools should be put in <font color="#800000"><i><tt>$GOBO/tool/&lt;tool-name&gt;/src</tt></i></font>.
     
    </p>
    
@@ -118,12 +118,11 @@
    <p>
     Cluster names should be in lower-case and words should be separated by 
     underscores. Abbreviations should be avoided unless well accepted and understood 
-    in the domain of expertise of the underlying library. Exceptions to this rule are 
+    in the domain of expertise of the underlying library. Exception to this rule is 
     <font color="#800000"><i><tt>spec</tt></i></font> for Eiffel compiler dependent 
-    clusters and <font color="#800000"><i><tt>impl</tt></i></font> which stands for 
-    &#147;implementation&#148;. For the cluster 
+    clusters. For the cluster 
     <font color="#800000"><i><tt>spec</tt></i></font>, compiler-dependent classes should 
-    have the same name and put into the three following clusters:
+    have the same name and put into the two following clusters:
     
    </p>
    
@@ -154,121 +153,14 @@
    
    
    <p>
-    Only one of these clusters will be included in the Ace file, loadpath file or 
-    ESD/Xace file of the application depending on the 
+    Only one of these clusters will be included in the ECF file or 
+    Xace file of the application depending on the 
     <a href="compilers.html">Eiffel compiler</a> used. These clusters can be
     automatically generated with the tool <i>gepp</i> if the different 
     implementations are put in a single file whose extension is 
     <font color="#800000"><i><tt>.ge</tt></i></font> instead of the Eiffel extension <font color="#800000"><i><tt>.e</tt></i></font>. 
     I usually find it easier for development and maintenance to have these 
     <font color="#800000"><i><tt>.ge</tt></i></font> files.
-    
-   </p>
-   
-   
-   <p>
-    For <font color="#800000"><i><tt>impl</tt></i></font> cluster, it can be used to 
-    provide several implementations of a common interface. For example:
-    
-   </p>
-   
-   
-   <p>
-    
-    
-    <blockquote>
-     
-     <dl>
-      	
-      <dt><font color="#800000"><i><tt>interface</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/c</tt></i></font></dt>
-      <dd></dd>	
-      	
-      <dt><font color="#800000"><i><tt>impl/dotnet</tt></i></font></dt>
-      <dd></dd>	
-      	
-      <dt><font color="#800000"><i><tt>impl/eiffel</tt></i></font></dt>
-      <dd></dd>	
-      	
-      <dt><font color="#800000"><i><tt>impl/jvm</tt></i></font></dt>
-      <dd></dd>	
-      	
-      <dt><font color="#800000"><i><tt>impl/posix</tt></i></font></dt>
-      <dd></dd>
-      
-     </dl>
-     
-    </blockquote>
-    
-    
-   </p>
-   
-   
-   <p>
-    Here again the names of the classes in the different subclusters of 
-    <font color="#800000"><i><tt>impl</tt></i></font> will be the same, and only one of 
-    these subclusters will be included in the Ace file or equivalent in order to 
-    provide a concrete implementation of the deferred classes in cluster 
-    <font color="#800000"><i><tt>interface</tt></i></font>.
-    
-   </p>
-   
-   
-   <p>
-    Cluster <font color="#800000"><i><tt>impl</tt></i></font> can also be used with the bridge pattern.
-    In that case the cluster structure will look like this:
-    
-   </p>
-   
-   
-   <p>
-    
-    
-    <blockquote>
-     
-     <dl>
-      	
-      <dt><font color="#800000"><i><tt>foo</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>bar</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/interface/foo</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/interface/bar</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/gtk/foo</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/gtk/bar</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/motif/foo</tt></i></font></dt>
-      <dd></dd>
-      	
-      <dt><font color="#800000"><i><tt>impl/motif/bar</tt></i></font></dt>
-      <dd></dd>
-      
-     </dl>
-     
-    </blockquote>
-    
-    
-   </p>
-   
-   
-   <p>
-    The classes in <font color="#800000"><i><tt>gtk</tt></i></font> and 
-    <font color="#800000"><i><tt>motif</tt></i></font> implement the deferred classes in 
-    <font color="#800000"><i><tt>interface</tt></i></font>, and in the Ace file or 
-    equivalent the clusters with <font color="#800000"><i><tt>gtk</tt></i></font> or with 
-    <font color="#800000"><i><tt>motif</tt></i></font> will be included depending on the 
-    fact that GTK+ or Motif has been chosen to build the graphical interface for example.
     
    </p>
    
@@ -283,8 +175,10 @@
     in the domain of expertise of the class. Names of constants can possibly have 
     upper-case letters, but in that case please make sure that all calls to this 
     constant use the same letter-case in order to be compilable by 
-    <a href="http://smarteiffel.loria.fr">SmartEiffel</a> without requiring
-    the -no_case_sensitive command-line option.
+    case-sensitive Eiffel compilers. Note that, even though none of the
+    currently supported Eiffel compilers is case-sensitive, 
+    the previously supported compiler <a href="http://smarteiffel.loria.fr">SmartEiffel</a>
+    was case-sensitive (when not using the -no_case_sensitive command-line option).
     
    </p>
    
@@ -320,7 +214,7 @@
     
     <pre>
 _   <i><tt>new_foo</tt></i> (<i><tt>a_string</tt></i>: <i><tt>STRING</tt></i>): <i><tt>FOO</tt></i>
-_   _   _   <font color="#008000"><tt>-- Foo made up of characters of <i><tt>a_string</tt></i></tt></font>
+_   _   _   <font color="#008000"><tt>-- Foo made up of characters of `<i><tt>a_string</tt></i>'</tt></font>
 _   _   _   <font color="#008000"><tt>-- (Create a new objet at each call.)</tt></font>
 _   _   require
 _   _   _   a_string_not_void: <i><tt>a_string</tt></i> /= Void
@@ -361,7 +255,7 @@ feature {<i><tt>NONE</tt></i>} <font color="#008000"><tt>-- Initialization</tt><
    
    <p>
     Here are some examples of feature category names, taken from the 
-    <a href="../structure/index.html">
+    <a href="../../../../library/structure/doc/index.html">
      <i>Gobo Eiffel Structure Library</i> documentation</a>:
     
    </p>
@@ -496,7 +390,7 @@ feature {<i><tt>NONE</tt></i>} <font color="#008000"><tt>-- Initialization</tt><
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2001-2005, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>8 March 2005</font></address>
+     <address><font size="2"><b>Copyright © 2001-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>22 December 2016</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="language.html"><img src="../../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="class_layout.html"><img src="../../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

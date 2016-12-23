@@ -5,7 +5,7 @@
 
 		"Documentation"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,21 +15,22 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/documentation">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>8 March 2005</date>
+	<date>22 December 2016</date>
 </chapterinfo>
 
 <title>Documentation</title>
 
 <para>
 Each Eiffel library or tool should come with some documentation to be placed in 
-<filename>$GOBO/doc/&lt;library-or-tool-name&gt;</filename>. Documentation should 
+<filename>$GOBO/library/&lt;library-name&gt;/doc</filename> or
+<filename>$GOBO/tool/&lt;tool-name&gt;/doc</filename>. Documentation should 
 be written in American English. It is possible to provide the documentation in 
 other languages (French, Spanish, Dutch, German, ...), but it should at least be 
 available in American English.

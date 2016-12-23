@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="gobo" default="help">
+<project name="libraries">
 
 	<description>
-		description: "Gobo Eiffel Library"
+		description: "Gobo Eiffel libraries"
 		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/library.eant"/>
+		<parent location="packages.eant"/>
 	</inherit>
 
 </project>

@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>

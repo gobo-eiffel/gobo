@@ -33,7 +33,10 @@ features provided by different Eiffel compilers. <font size="2">NICE</font>
 (Nonprofit International Consortium for Eiffel) has made the
 first step towards a better interoperability in this area by
 adopting <font size="2">ELKS '95</font> as the kernel library
-standard. But this standard is not perfect yet.</p>
+standard. But this standard is not perfect yet, even though
+Eiffel compilers using <a href="https://github.com/EiffelSoftware/FreeELKS">FreeELKS</a>,
+a free implementation of ELKS, have the advantage of being
+interoperatable at the source code level.</p>
 
 <p>The other problem encountered when writing portable code is
 incompatibility between the different language dialects provided
@@ -41,15 +44,15 @@ by the Eiffel compilers. The definition of the Eiffel language is
 controlled by the <a
 href="http://www.ecma-international.org/memento/TC49-TG4.htm"><font
 size="2">ECMA TC49-TG4</font></a> committee for the
-standardization of the Eiffel Language, after the specification
+standardization of the Eiffel Language, with the specification
 given in <a
-href="http://www.prenhall.com/books/ptr_0132479257.html"><em>Eiffel:
-The Language</em></a>, second printing. However no Eiffel
+href="http://www.ecma-international.org/publications/standards/Ecma-367.htm">
+<em>Eiffel: Analysis, Design and Programming Language</em></a>. However no Eiffel
 compiler will realistically implement the <em>standard</em>
 Eiffel language. Some compilers will implement only part of it,
-failing to support expanded types or exception handling. Some
+failing to support non-conforming inheritance or multiple generic constraints. Some
 compilers will add extensions to the language to support
-concurrency or wide characters. And some compilers will have bugs
+concurrency. And some compilers will have bugs
 in their implementation. Workarounds usually exist for these
 bugs, but these workarounds are very often not supported by the
 other Eiffel compilers. A solution could be to use only the
@@ -68,9 +71,9 @@ is to get help from a preprocessor.</p>
 
 <p><em>Gobo Eiffel Preprocessor</em> is a simple filter program
 which has been developed in Eiffel using <a
-href="../gelex/index.html"><em>gelex</em></a> and <a
-href="../geyacc/index.html"><em>geyacc</em></a>. It takes a text
-file as input, interprets the processing instructions contained
+href="../../../../tool/gelex/doc/index.html"><em>gelex</em></a> and <a
+href="../../../../tool/geyacc/doc/index.html"><em>geyacc</em></a>. It takes a text
+file as input, interprets the preprocessing instructions contained
 in that file, and returns the resulting file as output. The
 command-line usage message for <em>gepp</em> is as follows:</p>
 
@@ -299,7 +302,7 @@ sketched below, the compiler was reporting a validity error
 unless two select clauses were specified, one in <font
 color="#008080"><em><tt>NUMERIC</tt></em></font> and one in <font
 color="#008080"><em><tt>HASHABLE</tt></em></font>. However,
-according to <em>Eiffel: The Language</em> and all other
+according to the Eiffel standard and all other
 compilers, the class is valid if and only if one and only one
 select clause is specified for <font color="#008080"><em><tt>is_equal</tt></em></font>,
 either in <font color="#008080"><em><tt>NUMERIC</tt></em></font><font
@@ -347,21 +350,13 @@ alphabetical order:</p>
 
 <blockquote>
     <table border="0">
+         <tr>
+             <td width="160">Gobo Eiffel</td>
+             <td><font color="#800080"><tt>GE</tt></font></td>
+        </tr>
         <tr>
             <td width="160">ISE Eiffel</td>
             <td><font color="#800080"><tt>ISE</tt></font></td>
-        </tr>
-        <tr>
-            <td width="160">Gobo Eiffel</td>
-            <td><font color="#800080"><tt>GE</tt></font></td>
-        </tr>
-        <tr>
-            <td width="160">SmartEiffel</td>
-            <td><font color="#800080"><tt>SE</tt></font></td>
-        </tr>
-        <tr>
-            <td width="160">Visual Eiffel (deprecated)</td>
-            <td><font color="#800080"><tt>VE</tt></font></td>
         </tr>
     </table>
 </blockquote>
@@ -376,18 +371,13 @@ uppercase because <em>gepp</em> is case-sensitive.)</p>
 <blockquote>
     <table border="0">
         <tr>
-            <td width="140">ISE Eiffel</td>
-            <td><font color="#800000"><tt>gepp -D</tt><em><tt>ISE</tt></em><tt>
-            </tt><em><tt>foo.ge foo.e</tt></em></font></td>
-        </tr>
-        <tr>
             <td width="140">Gobo Eiffel</td>
             <td><font color="#800000"><tt>gepp -D</tt><em><tt>GE</tt></em><tt>
             </tt><em><tt>foo.ge foo.e</tt></em></font></td>
         </tr>
         <tr>
-            <td width="140">SmartEiffel</td>
-            <td><font color="#800000"><tt>gepp -D</tt><em><tt>SE</tt></em><tt>
+            <td width="140">ISE Eiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>ISE</tt></em><tt>
             </tt><em><tt>foo.ge foo.e</tt></em></font></td>
         </tr>
     </table>
@@ -411,21 +401,16 @@ such as:</p>
 <em><strong>feature</strong></em> -- Conversion
 
     <em>to_character</em> (<em>an_int</em>: <em>INTEGER</em>): <em>CHARACTER</em>
-            -- Character whose ASCII code is <em>an_int</em>
+            -- Character whose ASCII code is `<em>an_int</em>'
         <em><strong>require</strong></em>
             <em>a_int_large_enough</em>: <em>an_int</em> &gt;= <em>Minimum_character_code</em>
             <em>a_int_small_enough</em>: <em>an_int</em> &lt;= <em>Maximum_character_code</em>
         <em><strong>do</strong></em>
-</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
-color="#800080">VE</font><font color="#008080">
-            <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
-</font><font color="#0000FF">#else
-#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font
+</font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font
 color="#008080">
             <em>Result</em> := <em>'%U'</em> + <em>an_int</em>
 </font><font color="#0000FF">#else</font><font color="#008080">
             <em>Result</em> := <em>an_int</em>.<em>to_character</em>
-</font><font color="#0000FF">#endif</font><font color="#008080">
 </font><font color="#0000FF">#endif</font><font color="#008080">
         <em><strong>ensure</strong></em>
             <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
@@ -435,10 +420,10 @@ color="#008080">
 </blockquote>
 
 <p>The corresponding class <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>
-for Visual Eiffel, generated with the following command-line:</p>
+for ISE Eiffel, generated with the following command-line:</p>
 
 <blockquote>
-    <pre><font color="#800000">gepp -D<em>VE</em> <em>kl_integer_routines.ge kl_integer_routines.e</em></font></pre>
+    <pre><font color="#800000">gepp -D<em>ISE</em> <em>kl_integer_routines.ge kl_integer_routines.e</em></font></pre>
 </blockquote>
 
 <p>will then be:</p>
@@ -452,13 +437,13 @@ for Visual Eiffel, generated with the following command-line:</p>
 
 <em><strong>feature</strong></em> -- Conversion
 
-    <em>to_character</em> (<em>an_int</em>: <em>INTEGER</em>): <em>CHARACTER<</em>
-            -- Character whose ASCII code is <em>an_int</em>
+    <em>to_character</em> (<em>an_int</em>: <em>INTEGER</em>): <em>CHARACTER</em>
+            -- Character whose ASCII code is `<em>an_int</em>'
         <em><strong>require</strong></em>
             <em>a_int_large_enough</em>: <em>an_int</em> &gt;= <em>Minimum_character_code</em>
             <em>a_int_small_enough</em>: <em>an_int</em> &lt;= <em>Maximum_character_code</em>
         <em><strong>do</strong></em>
-            <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
+            <em>Result</em> := <em>'%U'</em> + <em>an_int</em>
         <em><strong>ensure</strong></em>
             <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
         <em><strong>end</strong></em>
@@ -494,7 +479,7 @@ where no other solutions were satisfactory.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2008</b></font><font
+            <font size="2"><b>Copyright © 1998-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -504,7 +489,7 @@ where no other solutions were satisfactory.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 19 April 2008</font><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="doc" default="help">
+<project name="gobo_doc" default="help">
 
 	<description>
 		description: "Gobo Eiffel documentation"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/do_all.eant"/>
+		<parent location="${GOBO}/library/gobo/config/do_all.eant"/>
 	</inherit>
 
 </project>

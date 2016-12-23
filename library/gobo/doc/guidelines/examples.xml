@@ -5,7 +5,7 @@
 
 		"Examples"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,21 +15,22 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/examples">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>8 March 2005</date>
+	<date>22 December 2016</date>
 </chapterinfo>
 
 <title>Examples</title>
 
 <para>
 Eiffel libraries or tools may be provided with a set of examples. These examples 
-should be put in <filename>$GOBO/example/&lt;library-or-tool-name&gt;</filename>.
+should be put in <filename>$GOBO/library/&lt;library-name&gt;/example</filename>
+or <filename>$GOBO/tool/&lt;tool-name&gt;/example</filename>.
 </para>
 
 </chapter>

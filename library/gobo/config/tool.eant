@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<project name="tool">
+
+	<description>
+		description: "Gobo Eiffel tool"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="package.eant">
+			<redefine target="other_help"/>
+		</parent>
+	</inherit>
+
+	<target name="compile" depend="init">
+		<description>
+			Compile tool.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile,src" dir="${current.absdir}"/>
+	</target>
+
+	<target name="compile_ge" depend="init">
+		<description>
+			Compile tool with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile_ge,src" dir="${current.absdir}"/>
+	</target>
+
+	<target name="compile_ise" depend="init">
+		<description>
+			Compile tool with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile_ise,src" dir="${current.absdir}"/>
+	</target>
+
+	<target name="compile_debug" depend="init">
+		<description>
+			Compile tool in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile_debug,src" dir="${current.absdir}"/>
+	</target>
+
+	<target name="compile_debug_ge" depend="init">
+		<description>
+			Compile tool with Gobo Eiffel in debug mode.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile_debug_ge,src" dir="${current.absdir}"/>
+	</target>
+
+	<target name="compile_debug_ise" depend="init">
+		<description>
+			Compile tool with ISE Eiffel in debug mode.
+		</description>
+
+		<geant target="do_in_subfolder" arguments="compile_debug_ise,src" dir="${current.absdir}"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="other_help" export="NONE">
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<precursor/>
+	</target>
+	
+</project>

@@ -6,7 +6,7 @@
 		"Test Suite"
 
 	library: "Gobo Eiffel Developer Guidelines"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,32 +16,32 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/test">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>8 March 2005</date>
+	<date>22 December 2016</date>
 </chapterinfo>
 
 <title>Test Suite</title>
 
 <para>
-Each Eiffel library should come with a test suite runnable with 
+Each Eiffel library should come with a unit test suite runnable with 
 <emphasis>getest</emphasis>. The test case classes should be placed in
-<filename>$GOBO/test/&lt;library-name&gt;</filename> along with the Ace files, 
-loadpath files, ESD/Xace files and the <emphasis>getest</emphasis> configuration 
+<filename>$GOBO/library/&lt;library-name&gt;/test/unit</filename> along with the Xace files, 
+ECF files and the <emphasis>getest</emphasis> configuration 
 files to run the tests.
 </para>
 
 <para>
 The purpose of these tests is to make sure that the library classes work as 
 expected (i.e. as specified by the assertions) and also to make sure that they 
-compile correctly with <link linkend="compilers">compilers</link> such as 
-<ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> which compiles only 
-alive code.
+compile correctly with the <link linkend="compilers">compilers</link> 
+which compile only alive code. Note that this was the case with the
+previously supported compiler <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink>.
 </para>
 
 <para>
@@ -53,14 +53,14 @@ platforms or with other compilers for them.
 </para>
 
 <para>
-Finally the <filename>$GOBO/test/&lt;library-name&gt;</filename> directory is 
+Finally the <filename>$GOBO/library/&lt;library-name&gt;/test</filename> directory is 
 used as regression test to make sure that no new bugs have been introduced 
 between two releases.
 </para>
 
 <para>
 Note: <emphasis>getest</emphasis> is based on Jim Weirich's 
-<link linkend="../getest/see_also#eiffelunit"><projectname>EiffelUnit</projectname></link> 
+<link linkend="../../../../tool/getest/doc/see_also#eiffelunit"><projectname>EiffelUnit</projectname></link> 
 tool but has the advantage to work with all 
 <link linkend="compilers">Eiffel compilers</link> supported by the 
 <projectname>Gobo Eiffel Project</projectname>.

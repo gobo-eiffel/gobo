@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+
+<!--
+	description: "Gobo Documentation RelaxNG specification"
+	system: "Gobo Eiffel"
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<grammar
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	ns="http://www.gobosoft.com/eiffel/gobo/documentation"
+>
+
+<start>
+	<choice>
+		<ref name="chapter"/>
+		<ref name="book"/>
+	</choice>
+</start>
+
+<!-- Document structure -->
+
+<define name="book">
+	<element name="book" >
+		<ref name="title"/>
+		<!-- bookinfo? -->
+		<oneOrMore>
+			<ref name="chapter"/>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="chapter">
+	<element name="chapter">
+		<attribute name="id"/>
+		<ref name="chapterinfo"/>
+		<ref name="title"/>
+		<ref name="paras"/>
+		<zeroOrMore>
+		  <ref name="section"/>
+		</zeroOrMore>
+	</element>
+</define>
+
+<define name="section">
+	<element name="section">
+		<optional>
+			<attribute name="id"/>
+		</optional>
+		<ref name="title"/>
+		<ref name="paras"/>
+		<zeroOrMore>
+			<ref name="section"/>
+		</zeroOrMore>
+	</element>
+</define>
+
+<define name="title">
+	<element name="title">
+		<oneOrMore>
+			<choice>
+				<ref name="inline_eiffel"/>
+				<ref name="inline_markup"/>
+				<text/>
+			</choice>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="chapterinfo">
+	<optional>
+		<element name="chapterinfo">
+			<element name="copyright">
+				<element name="year"><text/></element>
+				<element name="holder"><text/></element>
+			</element>
+			<element name="author">
+				<element name="firstname"><text/></element>
+				<element name="surname"><text/></element>
+			</element>
+			<element name="email"><text/></element>
+			<element name="date"><text/></element>
+		</element>
+	</optional>
+</define>
+
+<!-- Paragraph -->
+
+<define name="paras">
+	<zeroOrMore>
+		<choice>
+			<element name="para">
+				<ref name="inline_content"/>
+			</element>
+			<element name="programlisting">
+				<text/>
+			</element>
+			<ref name="variablelist"/>
+			<ref name="orderedlist"/>
+			<ref name="itemizedlist"/>
+			<ref name="table"/>
+			<ref name="synopsis"/>
+		</choice>
+	</zeroOrMore>
+</define>
+
+<define name="synopsis">
+	<element name="synopsis">
+		<text/>
+	</element>
+</define>
+
+<define name="variablelist">
+	<element name="variablelist">
+		<oneOrMore>
+			<element name="varlistentry">
+				<oneOrMore>
+					<element name="term">
+						<ref name="inline_content"/>
+					</element>
+				</oneOrMore>
+				<oneOrMore>
+					<ref name="listitem"/>
+				</oneOrMore>
+			</element>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="itemizedlist">
+	<element name="itemizedlist">
+		<oneOrMore>
+			<ref name="listitem"/>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="orderedlist">
+	<element name="orderedlist">
+		<oneOrMore>
+			<ref name="listitem"/>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="listitem">
+	<element name="listitem">
+		<ref name="paras"/>
+	</element>
+</define>
+
+<define name="table">
+	<element name="table">
+		<element name="title"><text/></element>
+		<element name="tgroup">
+			<attribute name="cols"/>
+			<element name="thead">
+				<ref name="tablerow"/>
+			</element>
+			<element name="tbody">
+				<oneOrMore>
+					<ref name="tablerow"/>
+				</oneOrMore>
+			</element>
+		</element>
+	</element>
+</define>
+
+<define name="tablerow">
+	<element name="row">
+		<oneOrMore>
+			<element name="entry"><text/></element>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="mediaobjectco">
+	<element name="mediaobjectco">
+		<element name="imageobjectco">
+			<element name="areaspec">
+				<oneOrMore>
+					<element name="area">
+						<attribute name="coords"/>
+						<attribute name="linkend"/>
+					</element>
+				</oneOrMore>
+			</element>
+			<element name="imageobject">
+				<element name="imagedata">
+					<attribute name="align"/>
+					<attribute name="fileref"/>
+				</element>
+			</element>
+		</element>
+	</element>
+</define>
+
+<!-- Inline content -->
+
+<define name="inline_content">
+	<oneOrMore>
+		<choice>
+			<ref name="inline_eiffel"/>
+			<ref name="inline_markup"/>
+			<text/>
+			
+			<!-- structured inlines (should be at para level?) -->
+			<ref name="variablelist"/>
+			<ref name="itemizedlist"/>
+			<ref name="mediaobjectco"/>
+			
+			<!-- are these structural? -->
+			<element name="blockquote">
+				<ref name="paras"/>
+				<ref name="inline_content"/>
+			</element>
+			<element name="warning">
+				<ref name="inline_content"/>
+			</element>
+		</choice>
+	</oneOrMore>
+</define>
+
+<define name="inline_markup">
+	<!-- Typographical inline markup -->
+	<choice>
+		<element name="emphasis">
+			<optional>
+				<attribute name="role"/>
+			</optional>
+			<ref name="inline_content"/>
+		</element>
+		<element name="quote">
+			<ref name="inline_content"/>
+		</element>
+		<element name="filename">
+			<attribute name="class"/>
+			<text/>
+		</element>
+		<element name="citetitle">
+			<optional>
+				<attribute name="pubwork"/>
+			</optional>
+			<ref name="inline_content"/>
+		</element>
+		<element name="anchor">
+			<attribute name="id"/>
+		</element>
+		<element name="link">
+			<attribute name="linkend"/>
+			<ref name="inline_content"/>
+		</element>
+		<element name="ulink">
+			<attribute name="url"/>
+			<ref name="inline_content"/>
+		</element>
+		<element name="exmlsyntax">
+		  <text/>
+		</element>
+		<element name="envar">
+		  <text/>
+		</element>
+		<element name="xpath">
+		  <text/>
+		</element>
+		<element name="uri">
+		  <text/>
+		</element>
+		<element name="xslt">
+		  <text/>
+		</element>
+		<element name="informalexample">
+			<ref name="programlisting"/>
+		</element>
+		<text/>
+	</choice>
+</define>
+
+<define name="inline_eiffel">
+	<choice>
+		<element name="projectname"><text/></element>
+		<element name="libraryname"><text/></element>
+		<element name="classname">
+			<ref name="inline_flatshort"/>
+		</element>
+		<element name="featurename">
+			<ref name="inline_flatshort"/>
+		</element>
+		<element name="infixname">
+			<ref name="inline_flatshort"/>
+		</element>
+		<element name="argument"><text/></element>
+		<element name="featurecall">
+			<element name="featurename">
+				<ref name="inline_flatshort"/>
+			</element>
+			<optional>
+				<element name="arguments">
+					<oneOrMore>
+						<element name="argument"><text/></element>
+					</oneOrMore>
+				</element>
+			</optional>
+		</element>
+		<element name="constructname"><text/></element>
+		<element name="comment"><text/></element> <!-- should be eiffel code more generally? -->
+	</choice>
+</define>
+
+<define name="inline_flatshort">
+	<optional>
+		<attribute name="flatshort"/>
+	</optional>
+	<text/>
+</define>
+
+<!-- Eiffel code -->
+
+<define name="programlisting">
+	<element name="programlisting">
+		<oneOrMore>
+			<choice>
+				<ref name="compound"/>
+			</choice>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="compound">
+	<element name="compound">
+		<optional>
+			<attribute name="role"/>
+		</optional>
+		<oneOrMore>
+			<choice>
+				<element name="if">
+					<ref name="expression"/>
+					<ref name="compound"/>
+					<ref name="compound"/>
+				</element>
+				<element name="assign">
+					<ref name="target"/>
+					<ref name="expression"/>
+				</element>
+				<element name="loop">
+					<attribute name="indent"/>
+					<zeroOrMore>
+						<ref name="compound"/>
+					</zeroOrMore>
+					<element name="until">
+						<ref name="expression"/>
+					</element>
+					<ref name="compound"/>
+				</element>
+				<ref name="featurecall"/>
+			</choice>
+		</oneOrMore>
+	</element>
+</define>
+
+<define name="expression">
+	<element name="expression">
+		<choice>
+			<element name="equal">
+				<ref name="expression"/>
+				<ref name="expression"/>
+			</element>
+			<element name="true">
+				<empty/>
+			</element>
+			<element name="false">
+				<empty/>
+			</element>
+			<element name="integer"><text/></element>
+			<ref name="featurecall"/>
+		</choice>
+	</element>
+</define>
+
+<define name="featurecall">
+	<element name="featurecall">
+		<optional>
+			<ref name="target"/>
+		</optional>
+		<element name="featurename"><text/></element>
+		<optional>
+			<element name="arguments">
+				<oneOrMore>
+					<ref name="featurecall"/>
+				</oneOrMore>
+			</element>
+		</optional>
+	</element>
+</define>
+
+<define name="target">
+	<element name="target">
+		<choice>
+			<element name="local"><text/></element>
+		</choice>
+	</element>
+</define>
+
+</grammar>

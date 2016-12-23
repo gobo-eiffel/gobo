@@ -6,7 +6,7 @@
 		"Naming Conventions"
 
 	library: "Gobo Eiffel Developer Guidelines"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,14 +16,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/naming_conventions">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>8 March 2005</date>
+	<date>22 December 2016</date>
 </chapterinfo>
 
 <title>Naming Conventions</title>
@@ -38,7 +38,7 @@ American English.
 
 <para>
 In order to avoid class name clashes between different libraries, some Eiffel 
-compilers support class renaming in the Ace file or equivalent. But some don't. 
+compilers support class renaming in the ECF file or equivalent. But some don't. 
 Therefore the name of the classes should systematically be prefixed with a 
 two-letter library code followed by an underscore. For example the classes from 
 the <libraryname>Gobo Eiffel Structure Library</libraryname> have been prefixed 
@@ -98,7 +98,7 @@ So each file should contain only one class.
 </para>
 
 <para>
-Likewise, <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> expects by 
+Likewise, some Eiffel compilers expect by 
 default to have a one-to-one relation between the name of the class and the name 
 of the enclosing file. Therefore the name of the file should be the name of the 
 class followed by the extension <filename>.e</filename>, all in lower case. For 
@@ -111,19 +111,18 @@ example file <filename>ds_list.e</filename> contains class <classname>DS_LIST</c
 
 <para>
 Library classes should be organized in clusters in 
-<filename>$GOBO/library/&lt;library-name&gt;</filename>. Likewise the source code 
-of tools should be put in <filename>$GOBO/src/&lt;tool-name&gt;</filename>.
+<filename>$GOBO/library/&lt;library-name&gt;/src</filename>. Likewise the source code 
+of tools should be put in <filename>$GOBO/tool/&lt;tool-name&gt;/src</filename>.
 </para>
 
 <para>
 Cluster names should be in lower-case and words should be separated by 
 underscores. Abbreviations should be avoided unless well accepted and understood 
-in the domain of expertise of the underlying library. Exceptions to this rule are 
+in the domain of expertise of the underlying library. Exception to this rule is 
 <filename class="directory">spec</filename> for Eiffel compiler dependent 
-clusters and <filename class="directory">impl</filename> which stands for 
-<quote>implementation</quote>. For the cluster 
+clusters. For the cluster 
 <filename class="directory">spec</filename>, compiler-dependent classes should 
-have the same name and put into the three following clusters:
+have the same name and put into the two following clusters:
 </para>
 
 <para>
@@ -146,101 +145,14 @@ have the same name and put into the three following clusters:
 </para>
 
 <para>
-Only one of these clusters will be included in the Ace file, loadpath file or 
-ESD/Xace file of the application depending on the 
+Only one of these clusters will be included in the ECF file or 
+Xace file of the application depending on the 
 <link linkend="compilers">Eiffel compiler</link> used. These clusters can be
 automatically generated with the tool <emphasis>gepp</emphasis> if the different 
 implementations are put in a single file whose extension is 
 <filename>.ge</filename> instead of the Eiffel extension <filename>.e</filename>. 
 I usually find it easier for development and maintenance to have these 
 <filename>.ge</filename> files.
-</para>
-
-<para>
-For <filename class="directory">impl</filename> cluster, it can be used to 
-provide several implementations of a common interface. For example:
-</para>
-
-<para>
-
-<blockquote>
-<variablelist>
-	<varlistentry>
-		<term><filename>interface</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/c</filename></term>
-	</varlistentry>	
-	<varlistentry>
-		<term><filename>impl/dotnet</filename></term>
-	</varlistentry>	
-	<varlistentry>
-		<term><filename>impl/eiffel</filename></term>
-	</varlistentry>	
-	<varlistentry>
-		<term><filename>impl/jvm</filename></term>
-	</varlistentry>	
-	<varlistentry>
-		<term><filename>impl/posix</filename></term>
-	</varlistentry>
-</variablelist>
-</blockquote>
-
-</para>
-
-<para>
-Here again the names of the classes in the different subclusters of 
-<filename class="directory">impl</filename> will be the same, and only one of 
-these subclusters will be included in the Ace file or equivalent in order to 
-provide a concrete implementation of the deferred classes in cluster 
-<filename class="directory">interface</filename>.
-</para>
-
-<para>
-Cluster <filename class="directory">impl</filename> can also be used with the bridge pattern.
-In that case the cluster structure will look like this:
-</para>
-
-<para>
-
-<blockquote>
-<variablelist>
-	<varlistentry>
-		<term><filename>foo</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>bar</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/interface/foo</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/interface/bar</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/gtk/foo</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/gtk/bar</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/motif/foo</filename></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename>impl/motif/bar</filename></term>
-	</varlistentry>
-</variablelist>
-</blockquote>
-
-</para>
-
-<para>
-The classes in <filename class="directory">gtk</filename> and 
-<filename class="directory">motif</filename> implement the deferred classes in 
-<filename class="directory">interface</filename>, and in the Ace file or 
-equivalent the clusters with <filename class="directory">gtk</filename> or with 
-<filename class="directory">motif</filename> will be included depending on the 
-fact that GTK+ or Motif has been chosen to build the graphical interface for example.
 </para>
 
 </section>
@@ -253,8 +165,10 @@ underscores. Abbreviations should be avoided unless well accepted and understood
 in the domain of expertise of the class. Names of constants can possibly have 
 upper-case letters, but in that case please make sure that all calls to this 
 constant use the same letter-case in order to be compilable by 
-<ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> without requiring
-the -no_case_sensitive command-line option.
+case-sensitive Eiffel compilers. Note that, even though none of the
+currently supported Eiffel compilers is case-sensitive, 
+the previously supported compiler <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink>
+was case-sensitive (when not using the -no_case_sensitive command-line option).
 </para>
 
 <para>
@@ -282,7 +196,7 @@ as in the following example:
 
 <programlisting>
 <text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue>
-<text>_   _   _   </text><comment>Foo made up of characters of <argument>a_string</argument></comment>
+<text>_   _   _   </text><comment>Foo made up of characters of `<argument>a_string</argument>'</comment>
 <text>_   _   _   </text><comment>(Create a new objet at each call.)</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
@@ -321,7 +235,7 @@ feature {<classname>NONE</classname>} <comment>Initialization</comment>
 
 <para>
 Here are some examples of feature category names, taken from the 
-<link linkend="../structure/index">
+<link linkend="../../../../library/structure/doc/index">
 <libraryname>Gobo Eiffel Structure Library</libraryname> documentation</link>:
 </para>
 

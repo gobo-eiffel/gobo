@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+
+<project name="eiffel" default="help">
+
+	<description>
+		description: "Eiffel compilation"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="ge2e.eant"/>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install ${system} directory.
+		</description>
+
+		<available resource="${system_dir}/system.xace" variable="xace_available"/>
+		<geant target="xace" if="${xace_available}=true">
+			<argument name="a_compiler" value="ge"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<geant target="xace" if="${xace_available}=true">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<geant target="other_install"/>
+	</target>
+
+	<target name="compile" depend="prepare_compile">
+		<description>
+			Compile '${system}'.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<geant target="compile_${eiffel}"/>
+	</target>
+
+	<target name="compile_ge" depend="prepare_compile">
+		<description>
+			Compile '${system}' with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ge.xace"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
+		<set name="eiffel" value="ge"/>
+		<geant target="xace" unless="${ecf_available}=true">
+			<argument name="a_compiler" value="ge"/>
+			<argument name="a_output" value="compile_ge.xace"/>
+		</geant>
+		<delete file="${system}${exe}"/>
+		<set name="finalize" value="true"/>
+		<set name="finalize" value="false" if="${debug}"/>
+		<set name="split" value="true"/>
+		<set name="split" value="false" if="${no_split}"/>
+		<set name="split_size_option" value="2500000" unless="${split_size}"/>
+		<set name="split_size_option" value="${split_size}" if="${split_size}"/>
+		<set name="gelint_option" value="false" unless="${gelint_option}"/>
+		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}" split_size="${split_size_option}"/>
+		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
+		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
+	</target>
+
+	<target name="compile_ise" depend="prepare_compile">
+		<description>
+			Compile '${system}' with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ise.ecf"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
+		<set name="eiffel" value="ise"/>
+		<geant target="xace" unless="${ecf_available}=true">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value="compile_ise.ecf"/>
+		</geant>
+		<delete file="${system}${exe}"/>
+		<delete file="${system}.melted"/>
+		<delete file="lib${system}.dll"/>
+		<delete>
+			<fileset include="?(${system}_)module_*.dll"/>
+		</delete>
+		<set name="finalize" value="true"/>
+		<set name="finalize" value="false" if="${debug}"/>
+		<set name="compatible" value="false"/>
+		<set name="compatible" value="true" if="${GOBO_COMPATIBLE}"/>
+		<set name="project_path" value="${GOBO_BUILD_PREFIX}" if="${GOBO_BUILD_PREFIX}"/>
+		<set name="project_path" value="" unless="${GOBO_BUILD_PREFIX}"/>
+		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" compatible="${compatible}" finish_freezing="true" project-path="${project_path}"/>
+		<set name="codedir" value="W_code" if="${finalize}=false"/>
+		<set name="codedir" value="F_code" if="${finalize}=true"/>
+		<set name="compilation_directory" value="EIFGENs" unless="${GOBO_BUILD_PREFIX}"/>
+		<set name="compilation_directory" value="${GOBO_BUILD_PREFIX}/EIFGENs" if="${GOBO_BUILD_PREFIX}"/>
+		<set name="prefix" value="${compilation_directory}/${system}/${codedir}"/>
+		<available resource="${prefix}/${system}${exe}" variable="file_available_for_move" unless="${GOBO_BUILD_PREFIX}"/>
+		<available resource="${prefix}/${system}${exe}" variable="file_available_for_copy" if="${GOBO_BUILD_PREFIX}"/>
+			<!-- If compilation directory is specified, might not be part of the system file system, so we copy instead. -->
+		<move file="${prefix}/${system}${exe}" to_directory="." if="${file_available_for_move}=true"/>
+			<!-- Problem: we copy if we think we cannot move, but that means the executable bit gets reset. No solution for this yet. -->
+		<copy file="${prefix}/${system}${exe}" to_directory="." if="${file_available_for_copy}=true" force="false"/>
+		<available resource="${prefix}/lib${system}.dll" variable="file_available"/>
+		<copy file="${prefix}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
+		<available resource="${prefix}/${system}.melted" variable="file_available"/>
+		<copy file="${prefix}/${system}.melted" to_directory="." if="${file_available}=true"/>
+		<copy to_directory=".">
+			<fileset include="${prefix}/?(${system}_)module_*.dll">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+		<copy to_directory=".">
+			<fileset include="${prefix}/Assemblies/*.@(dll|exe)">
+				<map type="flat"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile_debug" depend="prepare_compile">
+		<description>
+			Compile '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="debug" value="true"/>
+		<geant target="compile"/>
+	</target>
+
+	<target name="compile_debug_ge" depend="prepare_compile">
+		<description>
+			Compile '${system}' with Gobo Eiffel in debug mode.
+		</description>
+
+		<set name="eiffel" value="ge"/>
+		<set name="debug" value="true"/>
+		<geant target="compile"/>
+	</target>
+
+	<target name="compile_debug_ise" depend="prepare_compile">
+		<description>
+			Compile '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<set name="eiffel" value="ise"/>
+		<set name="debug" value="true"/>
+		<geant target="compile"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<gec clean="${system}"/>
+		<ise clean="${system}"/>
+		<delete file="compile_ge.ace"/>
+		<delete file="compile_ge.xace"/>
+		<delete file="compile_ise.ace"/>
+		<delete file="compile_ise.ecf"/>
+		<delete>
+			<fileset include="vc*.pdb"/>
+		</delete>
+		<delete file="${system}.pdb"/>
+		<delete file="${system}.ilk"/>
+		<delete file="${system}.suo"/>
+		<geant target="other_clean"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="ge.ace"/>
+		<delete file="ge.xace"/>
+		<delete file="ise.ace"/>
+		<delete file="ise.ecf"/>
+		<delete file="${system}${exe}"/>
+		<delete file="${system}.melted"/>
+		<delete file="lib${system}.dll"/>
+		<delete>
+			<fileset include="?(${system}_)module_*.dll"/>
+		</delete>
+		<delete file="EiffelSoftware.Runtime.dll"/>
+		<geant target="other_clobber"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xace" depend="init">
+		<argument name="a_compiler"/>
+		<argument name="a_output"/>
+		<description>
+			Build Ace, Xace or ECF file for Eiffel compiler ${a_compiler}.
+			Generate file in ${a_output} if specified.
+			Pass $DEBUG option to 'gexace' if ${debug} is defined.
+			Pass $GOBO_EIFFEL value to 'gexace'.
+			Pass $GOBO_OS value to 'gexace'.
+			Pass $GOBO_CC value to 'gexace' if defined.
+			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
+			Pass $GOBO_DOTNET option to 'gexace' if defined.
+			Pass $GOBO_COMPATIBLE option to 'gexace' if defined.
+			Pass $BOEHM_GC option to 'gexace' if defined.
+			To be redefined in descendant if additional options are
+			necessary.
+		</description>
+
+		<set name="a_format" value="${xace_format}" if="${xace_format}"/>
+		<set name="a_format" value="" unless="${xace_format}"/>
+		<gexace system="${a_compiler}" output="${a_output}" format="${a_format}" xace="${system_dir}/system.xace">
+			<define name="DEBUG" value="${debug}" if="${debug}"/>
+			<define name="GOBO_EIFFEL" value="${eiffel}"/>
+			<define name="GOBO_OS" value="${GOBO_OS}"/>
+			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
+			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
+			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
+			<define name="GOBO_COMPATIBLE" value="true" if="${GOBO_COMPATIBLE}"/>
+			<define name="BOEHM_GC" value="${BOEHM_GC}" if="${BOEHM_GC}"/>
+		</gexace>
+	</target>
+
+	<target name="prepare_compile" depend="init">
+		<description>
+			Prepare compilation if necessary.
+		</description>
+
+		<!-- To be redefined in descendant if necessary -->
+	</target>
+
+	<target name="other_install" depend="init">
+		<description>
+			Install other items in ${system} directory.
+		</description>
+
+		<!-- To be redefined in descendant if necessary -->
+	</target>
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<!-- To be redefined in descendant if necessary -->
+	</target>
+
+	<target name="other_clobber" depend="init">
+		<description>
+			Remove other generated files.
+		</description>
+
+		<!-- To be redefined in descendant if necessary -->
+	</target>
+
+	<target name="init">
+		<set name="eiffel" value="ge"/>
+		<geant target="init_eiffel"/>
+		<geant target="init_os"/>
+		<geant target="init_system"/>
+	</target>
+
+	<target name="init_system">
+		<!--
+			Values to be defined:
+				. ${system} : name of the system to be compiled
+				. ${system_dir} : directory for the compilation
+		-->
+	</target>
+
+	<target name="init_eiffel" if="${GOBO_EIFFEL}">
+		<set name="eiffel" value="${GOBO_EIFFEL}"/>
+	</target>
+
+	<target name="init_os">
+		<geant target="init_windows"/>
+		<geant target="init_unix"/>
+	</target>
+
+	<target name="init_windows" if="${GOBO_OS}=windows">
+		<!-- No special windows tasks needed for now but target is kept for possible future instructions -->
+	</target>
+
+	<target name="init_unix" unless="${GOBO_OS}=windows">
+		<!-- No special unix tasks needed for now but target is kept for possible future instructions -->
+	</target>
+
+</project>

@@ -5,7 +5,7 @@
 
 		"Class Layout"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/class_layout">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>9 March 2005</date>
+	<date>22 December 2016</date>
 </chapterinfo>
 
 <title>Class Layout</title>
@@ -40,7 +40,7 @@ on the page. Here is a example:
 <para>
 <programlisting>
 <text>_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
-<text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
+<text>_   _   _   </text><comment>Set `<featurename>foo</featurename>' to `<argument>a_foo</argument>'.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
 <text>_   _   </text>do
@@ -77,8 +77,7 @@ _   </text>description:
 _   _   </text>"Short description of the class"
 <text>
 _   </text>library:    "Gobo Eiffel Lexical Library"
-<text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
-<text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
+<text>_   </text>copyright:  "Copyright (c) 2000-2016, Eric Bezault and others"
 <text>_   </text>license:    "MIT License"
 <text>_   </text>date:       "$Date$"
 <text>_   </text>revision:   "$Revision$"
@@ -116,7 +115,7 @@ _   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classna
 <text>_   _   </text>end
 <text>
 _   </text><featurename>make_from_string</featurename> (<argument>a_string</argument>: <classname>STRING</classname>)
-<text>_   _   _   </text><comment>Create a new bar from <argument>a_string</argument>.</comment>
+<text>_   _   _   </text><comment>Create a new bar from `<argument>a_string</argument>'.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
 <text>_   _   </text>do
@@ -135,7 +134,7 @@ _   </text><featurename>foo</featurename>: <classname>FOO</classname>
 </text>feature <comment>Setting</comment>
 <text>
 _   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>)
-<text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
+<text>_   _   _   </text><comment>Set `<featurename>foo</featurename>' to `<argument>a_foo</argument>'.</comment>
 <text>_   _   </text>require
 <text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
 <text>_   _   </text>do

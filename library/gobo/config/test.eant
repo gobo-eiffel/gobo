@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+
+<project name="test" default="help">
+
+	<description>
+		system: "Gobo Eiffel Kernel Library Tester"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="eiffel.eant">
+			<redefine target="help"/>
+			<redefine target="clean"/>
+			<redefine target="init"/>
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant test"/>
+		<echo message="   geant test_ge"/>
+		<echo message="   geant test_ise"/>
+		<echo message="   geant test_debug"/>
+		<echo message="   geant test_debug_ge"/>
+		<echo message="   geant test_debug_ise"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ge"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ge"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="test" depend="init">
+		<description>
+			Test '${system}'.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<set name="debug_suffix" value="_debug" if="${debug}"/>
+		<set name="debug_suffix" value="" unless="${debug}"/>
+		<set name="gobo_os" value="-DGOBO_OS=unix" if="${GOBO_OS}=unix"/>
+		<set name="gobo_os" value="-DGOBO_OS=windows" if="${GOBO_OS}=windows"/>
+		<echo message=""/>
+		<echo message="Testing ${system}..."/>
+		<set name="abort_option" value="false"/>
+		<set name="abort_option" value="true" if="${abort}=true"/>
+		<set name="verbose_option" value="false"/>
+		<set name="verbose_option" value="true" if="${verbose}"/>
+		<getest verbose="${verbose_option}" abort="${abort_option}" config="${system_dir}/getest.cfg" compile="geant ${gobo_os} -b ${system_dir}/build.eant compile${debug_suffix}_${eiffel} ${compilation_log}">
+			<attribute name="class" value="${class}" if="${class}"/>
+			<attribute name="feature" value="${feature}" if="${feature}"/>
+			<attribute name="default_test" value="true" if="${default_test}=true"/>
+			<define name="debug" value="true" if="${debug}"/>
+			<define name="full_test" value="true" if="${full_test}"/>
+			<define name="test" value="${test}" if="${test}"/>
+		</getest>
+	</target>
+
+	<target name="test_ge" depend="init">
+		<description>
+			Test '${system}' with Gobo Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<set name="eiffel" value="ge"/>
+		<geant target="test"/>
+	</target>
+
+	<target name="test_ise" depend="init">
+		<description>
+			Test '${system}' with ISE Eiffel.
+			Compile in debug mode if ${debug} is defined.
+		</description>
+
+		<set name="eiffel" value="ise"/>
+		<geant target="test"/>
+	</target>
+
+	<target name="test_debug" depend="init">
+		<description>
+			Test '${system}' in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'se' if this variable is not defined.
+		</description>
+
+		<set name="debug" value="true"/>
+		<geant target="test"/>
+	</target>
+
+	<target name="test_debug_ge" depend="init">
+		<description>
+			Test '${system}' with Gobo Eiffel in debug mode.
+		</description>
+
+		<set name="eiffel" value="ge"/>
+		<set name="debug" value="true"/>
+		<geant target="test"/>
+	</target>
+
+	<target name="test_debug_ise" depend="init">
+		<description>
+			Test '${system}' with ISE Eiffel in debug mode.
+		</description>
+
+		<set name="eiffel" value="ise"/>
+		<set name="debug" value="true"/>
+		<geant target="test"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<gec clean="${system}"/>
+		<ise clean="${system}"/>
+		<delete file="compile_ge.ace"/>
+		<delete file="compile_ge.xace"/>
+		<delete file="compile_ise.ace"/>
+		<delete file="compile_ise.ecf"/>
+		<delete>
+			<fileset include="vc*.pdb"/>
+		</delete>
+		<delete file="${system}.pdb"/>
+		<delete file="${system}.ilk"/>
+		<delete file="${system}${exe}" fail_on_error="false"/>
+		<delete file="${system}.melted"/>
+		<delete file="lib${system}.dll"/>
+		<delete>
+			<fileset include="?(${system}_)module_*.dll"/>
+		</delete>
+		<delete file="EiffelSoftware.Runtime.dll"/>
+		<delete file="${system}.h2o"/>
+		<delete directory="TESTGEN"/>
+		<delete file="xcompile.log"/>
+		<geant target="other_clean"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+		<set name="compilation_log" value="&gt; xcompile.log 2&gt;&amp;1"/>
+		<set name="eiffel" value="ge"/>
+		<geant target="init_eiffel"/>
+		<geant target="init_os"/>
+		<geant target="init_system"/>
+	</target>
+
+</project>

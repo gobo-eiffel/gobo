@@ -24,6 +24,12 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
+<p>
+[Note that the examples used below to illustrate this adaptation technique
+may be out of date and not relevant anymore for recent versions
+of the supported Eiffel compilers.]
+</p>
+
 <p><font size="2">NICE</font> (Nonprofit International Consortium
 for Eiffel) has provided us with a kernel library standard that
 we can rely on for interoperability between Eiffel compilers.
@@ -61,12 +67,12 @@ among other things should have the two following features:</p>
         <em>meaningful</em>: <em>Result</em> &gt;= <em>127</em></font></pre>
 </blockquote>
 
-<p>However these two features are missing in class <font
+<p>However these two features were missing in class <font
 color="#008080"><em><tt>PLATFORM</tt></em></font> provided with
 ISE Eiffel 4.2 and Halstenbach 2.0. The solution to this problem
 is to use class <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
 in the client code, where <font color="#008080"><em><tt>KL_PLATFORM</tt></em></font>
-will have the following form in the clusters associated with ISE
+had the following form in the clusters associated with ISE
 Eiffel and Halstenbach:</p>
 
 <blockquote>
@@ -106,10 +112,10 @@ wouldn't be true for clients of <font color="#008080"><em><tt>PLATFORM</tt></em>
 example the class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
 was not provided in SmallEiffel -0.81. However this class is
 useful when a system has to be terminated using feature <font
-color="#008080"><em><tt>die</tt></em></font>. This routine can
+color="#008080"><em><tt>die</tt></em></font>. This routine could
 easily be implemented using SmallEiffel's built-in <font
 color="#008080"><em><tt>die_with_code</tt></em></font> feature.
-SmallEiffel kernel adaptation cluster will hence end up with the
+SmallEiffel kernel adaptation cluster hence ended up with the
 following class:</p>
 
 <blockquote>
@@ -128,7 +134,7 @@ following class:</p>
 </blockquote>
 
 <p>whereas clusters for other compilers already supporting this
-facility will contain this simple class:</p>
+facility contained this simple class:</p>
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_EXCEPTIONS</em>
@@ -146,8 +152,8 @@ Once again one can in these situations inherit from the
 corresponding classes and rename or redefine the proper features.
 This is for example the case in class <font color="#008080"><em><tt>EXCEPTIONS</tt></em></font>
 from Halstenbach 2.0 where feature <font color="#008080"><em><tt>die</tt></em></font>
-is obsolete and feature <font color="#008080"><em><tt>new_die</tt></em></font>
-should be used instead:</p>
+was obsolete and feature <font color="#008080"><em><tt>new_die</tt></em></font>
+had to be used instead:</p>
 
 <blockquote>
     <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_EXCEPTIONS</em>
@@ -241,7 +247,7 @@ the client/supplier relationship, gets around these problems.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -251,7 +257,7 @@ the client/supplier relationship, gets around these problems.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

@@ -24,6 +24,12 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
+<p>
+[Note that the examples used below to illustrate this adaptation technique
+may be out of date and not relevant anymore for recent versions
+of the supported Eiffel compilers.]
+</p>
+
 <p><font size="3">Although it is the most object-oriented way to
 adapt existing classes, the </font><a href="inheritance.html"><font
 size="3">inheritance mechanism</font></a><font size="3">
@@ -71,7 +77,7 @@ containing the following routine:</p>
 
 <blockquote>
     <pre><font color="#008080"><em>to_character </em>(<em>an_integer</em>:<em> INTEGER</em>): <em>CHARACTER</em>
-        -- Character whose ASCII code is <em>an_integer</em>
+        -- Character whose ASCII code is `<em>an_integer</em>'
     <em><strong>require</strong></em>
         <em>an_integer_large_enough</em>: <em>an_integer</em> &gt;= <em>Minimum_character_code</em>
         <em>an_integer_small_enough</em>: <em>an_integer</em> &lt;= <em>Maximum_character_code</em>
@@ -130,7 +136,7 @@ this problem would be to declare facility classes, such as
 expanded and use them in local variables:
 
 <blockquote>
-    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
+    <pre><font color="#008080"><em><strong>expanded</strong></em> <em><strong>class</strong></em> <em>KL_INTEGER_ROUTINES</em>
 
 <em><strong>feature</strong></em>
 
@@ -162,7 +168,7 @@ expanded and use them in local variables:
 <p>Some Eiffel compilers will even optimized the code above by
 inlining the call to <font color="#008080"><em><tt>to_character</tt></em></font>
 and hence avoiding the (implicit) creation of the expanded
-object. Unfortunately, <em>expanded types</em> are not properly
+object. Unfortunately, <em>user-defined expanded types</em> are not properly
 supported by all Eiffel compilers, making it impossible to use
 this mechanism in portable code. To work around this problem and
 to avoid having to create an instance of these <font
@@ -200,7 +206,7 @@ will become:</p>
 
 <em><strong>feature</strong></em> -- Basic operations
 
-    <em>do_something<</em>
+    <em>do_something</em>
             -- Do something with a character obtained from
             -- its ASCII code provided as input by the user.
         <em><strong>local</strong></em><em>
@@ -224,15 +230,10 @@ have their first letter capitalized and all remaining in
 lowercase), has been chosen to make it clear that these routines
 really ought to be implemented in class <font color="#008080"><em><tt>INTEGER
 </tt></em></font>itself. The underscore at the end is to avoid
-compilation problems since <font color="#008080"><em><tt>INTEGER </tt></em></font>is,
-with no good reasons in my opinion, one of Eiffel's reserved
-words. (Note that if you are using SmartEiffel, you will have to
-specify the command line option <tt>-no_style_warning </tt>if you
-don't want to be overwhelmed by hundreds of warnings telling you
-that <font color="#008080"><em><tt>INTEGER_ </tt></em></font>and
-the like are in uppercase. I still don't understand why
-SmartEiffel generates these warnings since the corresponding code
-is correct Eiffel!)</p>
+compilation problems with some Eiffel compilers which could consider,
+with no good reasons in my opinion, <font color="#008080"><em><tt>INTEGER</tt></em></font>
+as one of Eiffel's reserved
+words.</p>
 
 <h2>Caveats</h2>
 
@@ -252,7 +253,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -262,7 +263,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <strong>Last Updated:</strong> 23 December 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

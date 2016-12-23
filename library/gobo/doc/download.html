@@ -23,17 +23,17 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
-<p>The main concern of the <a href="index.html"><em>Gobo Eiffel
+<p>One of the main concerns of the <a href="index.html"><em>Gobo Eiffel
 Project</em></a> is to provide the Eiffel community with <a
 href="license.html">free</a> and <a href="portability/index.html">portable</a>
 Eiffel tools and libraries. You might want to read the following
 files before downloading the latest version of <em>Gobo Eiffel</em>:</p>
 
 <blockquote>
-    <p><a href="../Readme.txt"><tt>Readme.txt</tt></a><font
+    <p><a href="../../../Readme.md"><tt>Readme.md</tt></a><font
     face="Times New Roman"><br>
-    </font><a href="../Release_notes.txt"><tt>Release_notes.txt</tt></a><tt><br>
-    </tt><a href="../History.txt"><tt>History.txt</tt></a></p>
+    </font><a href="../../../Release_notes.md"><tt>Release_notes.md</tt></a><tt><br>
+    </tt><a href="../../../History.txt"><tt>History.txt</tt></a></p>
 </blockquote>
 
 <h2><a name="License">License Agreement</a></h2>
@@ -85,7 +85,7 @@ Free Software License</a>.</p>
 
 <h2>Downloading Instructions</h2>
 
-<p><em>Gobo Eiffel </em>version 3.9 and older versions can be
+<p>Latest and older versions of <em>Gobo Eiffel </em> can be
 downloaded from <a
 href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">SourceForge</a>.
 The package has been split into two parts. The source code is
@@ -93,24 +93,22 @@ available in files of the form:</p>
 
 <blockquote>
     <ul>
-        <li>Windows: <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo39-src.7z</a>
-            or <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo39-src.zip</a></li>
-        <li>Unix/Linux: <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo39-src.tar.gz</a></li>
+        <li>Windows: <font face="Courier New">gobo*-src.7z</font></li>
+        <li>Unix/Linux: <font face="Courier New">gobo*-src.tar.gz</font></li>
     </ul>
 </blockquote>
 
-<p>They contain everything except the binary files of tools (e.g.
+<p>
+The source code is also available from the <a href="https://github.com/gobo-eiffel/gobo">Git repository</a> on GitHub.
+They contain everything except the binary files of tools (e.g.
 <em>gec</em>, <em>geant</em>, <em>geyacc</em>). You can either
 built them from the source code using one of the following
 commands:</p>
 
 <blockquote>
     <ul>
-        <li>Windows: <font face="Courier New">%GOBO%\install.bat <em>&lt;c_compiler&gt;</em></font></li>
-        <li>Unix/Linux: <font size="3" face="Courier New">$GOBO/install.sh
+        <li>Windows: <font face="Courier New">%GOBO%\bin\install.bat <em>&lt;c_compiler&gt;</em></font></li>
+        <li>Unix/Linux: <font size="3" face="Courier New">$GOBO/bin/install.sh
             </font><font face="Courier New"><em>&lt;c_compiler&gt;</em></font></li>
     </ul>
 </blockquote>
@@ -122,8 +120,7 @@ download the file of the form:</p>
 
 <blockquote>
     <ul>
-        <li><a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo39-bin-<em>&lt;platform&gt;</em>.<em>&lt;extension&gt;</em></a></li>
+        <li><font face="Courier New">gobo*-bin-<em>&lt;platform&gt;</em>.<em>&lt;extension&gt;</em></font></li>
     </ul>
 </blockquote>
 
@@ -131,33 +128,49 @@ download the file of the form:</p>
 such a case you just have to copy the binary files into the
 directory <em>$GOBO/bin</em>.</p>
 
-<h2>Known Bugs</h2>
-
-<p>A list of the known defects along with eventual bug fixes or
-workarounds is available in the <a
-href="https://sourceforge.net/tracker/?atid=381937&amp;group_id=24591&amp;func=browse">bug
-tracker</a> on SourceForge. If you find a bug which does not
-appear in this list yet, please <a
-href="https://sourceforge.net/tracker/?func=add&amp;group_id=24591&amp;atid=381937">report
-it</a>. We will try to provide a bug fix as soon as possible
-(usually within one or two days).</p>
-
-<p>You can also subscribe to the <em>Gobo Eiffel</em> <a
-href="http://groups.yahoo.com/group/gobo-eiffel/">mailing list</a>
+<h2>Feedback</h2>
+<p>
+A list of the known defects along with eventual bug fixes or
+workarounds is available in the
+<a href="https://github.com/gobo-eiffel/gobo/issues">issue tracker</a>
+on GitHub (an older
+<a href="https://sourceforge.net/tracker/?atid=381937&amp;group_id=24591&amp;func=browse">bug tracker</a>
+is available on SourceForge). If you find a bug which does not
+appear in this list yet, please
+<a href="https://github.com/gobo-eiffel/gobo/issues">report it</a>.
+We will try to provide a bug fix as soon as possible
+(usually within one or two days).
+</p><p>
+You can also subscribe to the <em>Gobo Eiffel</em>
+<a href="http://groups.yahoo.com/group/gobo-eiffel/">mailing list</a>
 and take part to the discussions or ask your questions there.
-Another <a
-href="http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop">mailing
-list</a> for discussions about the features under <a
-href="https://sourceforge.net/projects/gobo-eiffel/">development</a>
-in the <a href="https://sourceforge.net/scm/?type=git&group_id=24591">Git
-version</a> is hosted at SourceForge.</p>
+There is another
+<a href="http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop">mailing list</a>
+(hosted at SourceForge) for discussions about the features under
+development in the
+<a href="https://github.com/gobo-eiffel/gobo">Git repository</a>
+on GitHub.
+</p><p>
+Although the license allows you to do pretty much whatever you want
+with this software, we would be grateful to get your feedback,
+bug reports and/or bug fixes, improvements, etc. so that others
+could benefit from your work and ideas as well.
+We would also be interested in hearing about your projects and
+how easy (or difficult) it was to adapt this software for your
+specific needs. Thank you in advance.
+</p><p>
+You are also welcome to take part in the development of the
+<em>Gobo Eiffel Project</em>. Some
+<a href="guidelines/index.html">developer guidelines</a>
+are available to help you make the first steps.
+</p>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997-2008</b></font><font
+            <font size="2"><b>Copyright © 1997-2016</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> and others</strong><font
             size="2"><br>
@@ -167,12 +180,12 @@ version</a> is hosted at SourceForge.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 March 2010</font><br>
+            <strong>Last Updated:</strong> 21 December 2016</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

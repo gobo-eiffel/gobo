@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<project name="doc">
+
+	<description>
+		description: "Gobo Eiffel doc"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="package.eant">
+			<redefine target="init"/>
+			<redefine target="install"/>
+			<redefine target="clobber"/>
+		</parent>
+	</inherit>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel Documentation.
+		</description>
+		
+		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="${GOBO_XSLT_PROCESSOR}"/>
+		<set name="previous" value="${toc}"/>
+		<unset name="current"/>
+		<set name="current_input_wrapper" value=""/>
+		<set name="input_wrapper" value=""/>
+		<geant target="for_each" arguments="xslt_and_shift"/>
+		<geant target="xslt_and_shift" arguments="${first_file}" if="${first_file}"/>
+		<precursor/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+		
+		<geant target="for_each" arguments="delete_html"/>
+		<precursor/>
+	</target>	
+	
+<!-- Implementation -->
+
+	<target name="init" export="NONE">
+		<unset name="first_file"/>
+		<geant target="for_each" arguments="set_first_file"/>
+		<geant target="for_each" arguments="set_last_file"/>
+		<set name="toc" value="index"/>
+		<set name="toc" value="${first_file}" if="${first_file}"/>
+		<set name="image" value="../../../library/gobo/doc/image"/>
+	</target>	
+	
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+	</target>
+
+	<target name="set_first_file" export="NONE">
+		<description>
+			Set ${first_file} to ${file} (first argument)
+			unless it is already set.
+		</description>
+		<argument name="file"/>
+		
+		<set name="first_file" value="${file}" unless="${first_file}"/>
+	</target>
+
+	<target name="set_last_file" export="NONE">
+		<description>
+			Set ${last_file} to ${file} (first argument).
+		</description>
+		<argument name="file"/>
+		
+		<set name="last_file" value="${file}"/>
+	</target>
+	
+	<target name="delete_html" export="NONE">
+		<description>
+			Delete file ${file}.html (first argument).
+		</description>		
+		<argument name="file"/>
+		
+		<delete file="${file}.html"/>
+	</target>
+
+	<target name="xslt_and_shift" export="NONE">
+		<description>
+			Call 'xslt' on ${current} if set, 
+			and shift variables ${previous} and ${current} one chapter forward.
+		</description>
+		<argument name="a_next"/>
+
+		<geant target="xslt" arguments="${previous},${current},${a_next}" if="${current}"/>
+			<!-- Shift parameters -->
+		<set name="previous" value="${current}" if="${current}"/>
+		<set name="current" value="${a_next}"/>
+		<set name="current_input_wrapper" value="${input_wrapper}"/>
+	</target>
+
+	<target name="xslt" export="NONE">
+		<description>
+			Execute XSL Transformation for argument ${a_file}, ${a_previous}
+			and ${a_next} using processor ${xslt_processor}.
+		</description>
+		<argument name="a_previous"/>
+		<argument name="a_file"/>
+		<argument name="a_next"/>
+
+		<set name="xml_file" value="${a_file}${current_input_wrapper}.xml"/>
+		<outofdate variable="rebuild" source="${xml_file}" target="${a_file}.html"/>
+		<xslt processor="${xslt_processor}" input="${xml_file}" output="${a_file}.html" stylesheet="${GOBO}/library/gobo/doc/config/gobo2html.xsl">
+			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'${toc}.html'&quot;"/>
+			<parameter name="images" value="&quot;'${image}/'&quot;"/>
+		</xslt>
+	</target>
+</project>
