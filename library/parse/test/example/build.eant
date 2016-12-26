@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="parse" default="help">
+<project name="parse_example_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel Parse Example Tester"
@@ -11,16 +11,15 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -31,7 +30,7 @@
 		<delete directory="Trpcalc"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xparse"/>
 		<set name="library" value="parse"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>

@@ -11,23 +11,22 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="init_system"/>
 			<redefine target="other_clean"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xexpat"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/unit/expat"/>
 		<set name="GOBO_XML_EXPAT" value="true"/>
 	</target>
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>

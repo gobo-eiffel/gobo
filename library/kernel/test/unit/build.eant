@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="kernel" default="help">
+<project name="kernel_unit_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel Kernel Library Unit Tester"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
@@ -19,7 +19,7 @@
 
 <!-- Implementation -->
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -27,7 +27,7 @@
 		<delete directory="Tkernel"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xkernel"/>
 		<set name="library" value="kernel"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>

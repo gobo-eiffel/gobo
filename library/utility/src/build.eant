@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="utility" default="help">
+<project name="utility_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Utility Library"
 		library: "Gobo Eiffel Utility Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -47,11 +47,11 @@
 
 <!-- Implementation -->
 
-	<target name="config_scanner" dir="config">
+	<target name="config_scanner" dir="config" export="NONE">
 		<gelex input="ut_config_scanner.l"/>
 	</target>
 
-	<target name="config_parser" dir="config">
+	<target name="config_parser" dir="config" export="NONE">
 		<geyacc input="ut_config_parser.y" tokens="UT_CONFIG_TOKENS" output="ut_config_parser.e"/>
 	</target>
 

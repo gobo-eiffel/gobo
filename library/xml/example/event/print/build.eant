@@ -11,15 +11,14 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="print"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/example/event/${system}"/>

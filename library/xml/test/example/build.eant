@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xml_example_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel XML Example Tester"
@@ -11,16 +11,15 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -31,7 +30,7 @@
 		<delete directory="Ttagcount"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xxml"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="ap_example" default="help">
+<project name="argument_example" default="help">
 
 	<description>
 		system: "Argument parsing example"
@@ -11,14 +11,14 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="ap_example"/>
 		<set name="library" value="argument"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/example"/>

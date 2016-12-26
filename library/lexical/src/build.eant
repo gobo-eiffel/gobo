@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="lexical" default="help">
+<project name="lexical_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Lexical Library"
@@ -58,7 +58,7 @@
 
 <!-- Implementation -->
 
-	<target name="lex_scanner" dir="lex">
+	<target name="lex_scanner" dir="lex" export="NONE">
 		<gelex input="lx_lex_scanner.l"/>
 	</target>
 
@@ -66,7 +66,7 @@
 		<geyacc input="lx_lex_parser.y" tokens="LX_LEX_TOKENS" output="lx_lex_parser.e"/>
 	</target>
 
-	<target name="regexp_scanner" dir="regexp">
+	<target name="regexp_scanner" dir="regexp" export="NONE">
 		<gelex input="lx_regexp_scanner.l"/>
 	</target>
 
@@ -74,11 +74,11 @@
 		<geyacc input="lx_regexp_parser.y" tokens="LX_REGEXP_TOKENS" output="lx_regexp_parser.e"/>
 	</target>
 
-	<target name="wildcard_scanner" dir="regexp">
+	<target name="wildcard_scanner" dir="regexp" export="NONE">
 		<gelex input="lx_wildcard_scanner.l"/>
 	</target>
 
-	<target name="wildcard_parser" dir="regexp">
+	<target name="wildcard_parser" dir="regexp" export="NONE">
 		<geyacc input="lx_wildcard_parser.y" tokens="LX_WILDCARD_TOKENS" output="lx_wildcard_parser.e"/>
 	</target>
 

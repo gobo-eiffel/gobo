@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="kernel" default="help">
+<project name="kernel_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Kernel Library"
@@ -12,7 +12,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/ge2e.eant"/>
+		<parent location="${GOBO}/library/gobo/config/ge2e.eant"/>
 	</inherit>
 
 	<target name="help">
@@ -47,7 +47,7 @@
 
 <!-- Implementation -->
 	
-	<target name="install_io">
+	<target name="install_io" export="NONE">
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="io"/>
@@ -70,7 +70,7 @@
 		</geant>
 	</target>
 
-	<target name="install_misc">
+	<target name="install_misc" export="NONE">
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="misc"/>

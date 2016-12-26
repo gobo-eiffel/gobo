@@ -12,7 +12,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
@@ -20,7 +20,7 @@
 
 <!-- Implementation -->
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -28,7 +28,7 @@
 		<delete file="telco.outc"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="telco"/>
 		<set name="library" value="math"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/example/decimal/${system}"/>

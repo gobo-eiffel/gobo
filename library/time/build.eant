@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/library.eant"/>
+		<parent location="${GOBO}/library/gobo/config/library.eant"/>
 	</inherit>
 
 </project>

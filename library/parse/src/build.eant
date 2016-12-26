@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="parse" default="help">
+<project name="parse_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Parse Library"
 		library: "Gobo Eiffel Parse Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -46,14 +46,13 @@
 		<delete file="yacc/pr_yacc_tokens.e"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="yacc_scanner" dir="yacc">
+	<target name="yacc_scanner" dir="yacc" export="NONE">
 		<gelex input="pr_yacc_scanner.l"/>
 	</target>
 
-	<target name="yacc_parser" dir="yacc">
+	<target name="yacc_parser" dir="yacc" export="NONE">
 		<geyacc input="pr_yacc_parser.y" tokens="PR_YACC_TOKENS" output="pr_yacc_parser.e"/>
 	</target>
 

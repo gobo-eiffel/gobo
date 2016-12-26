@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="package.eant">
+		<parent location="do_all.eant">
 			<redefine target="init"/>
 			<redefine target="install"/>
 			<redefine target="clobber"/>

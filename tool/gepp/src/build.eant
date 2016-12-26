@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="gepp" default="help">
+<project name="gepp_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for 'gepp'"
@@ -12,7 +12,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="help"/>
 			<redefine target="other_install"/>
 			<redefine target="other_clobber"/>
@@ -51,10 +51,9 @@
 		<geant target="gepp_parser"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="other_install" depend="init">
+	<target name="other_install" depend="init" export="NONE">
 		<description>
 			Install other items in ${system} directory.
 		</description>
@@ -63,7 +62,7 @@
 		<geant target="parser"/>
 	</target>
 
-	<target name="other_clobber" depend="init">
+	<target name="other_clobber" depend="init" export="NONE">
 		<description>
 			Remove other generated files.
 		</description>
@@ -73,15 +72,15 @@
 		<delete file="gepp_tokens.e"/>
 	</target>
 
-	<target name="gepp_scanner">
+	<target name="gepp_scanner" export="NONE">
 		<gelex input="gepp_scanner.l"/>
 	</target>
 
-	<target name="gepp_parser">
+	<target name="gepp_parser" export="NONE">
 		<geyacc input="gepp_parser.y" tokens="GEPP_TOKENS" output="gepp_parser.e"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="gepp"/>
 		<set name="system_dir" value="${GOBO}/tool/${system}/src"/>
 	</target>

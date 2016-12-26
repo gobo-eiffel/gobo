@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="unicode" default="help">
+<project name="unicode_doc" default="help">
 
 	<description>
 		description: "Gobo Eiffel Unicode Library documentation"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/doc.eant">
+		<parent location="${GOBO}/library/gobo/config/doc.eant">
 			<redefine target="init"/>
 			<redefine target="for_each"/>
 		</parent>

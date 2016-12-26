@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="help"/>
 			<redefine target="other_install"/>
 			<redefine target="other_clobber"/>
@@ -50,10 +50,9 @@
 		<geant target="eiffel_scanner"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="other_install" depend="init">
+	<target name="other_install" depend="init" export="NONE">
 		<description>
 			Install other items in ${system} directory.
 		</description>
@@ -62,7 +61,7 @@
 		<geant target="scanner"/>
 	</target>
 
-	<target name="other_clobber" depend="init">
+	<target name="other_clobber" depend="init" export="NONE">
 		<description>
 			Remove other generated files.
 		</description>
@@ -72,15 +71,15 @@
 		<delete file="eiffel_tokens.e"/>
 	</target>
 
-	<target name="eiffel_scanner">
+	<target name="eiffel_scanner" export="NONE">
 		<gelex input="eiffel_scanner.l"/>
 	</target>
 
-	<target name="eiffel_parser">
+	<target name="eiffel_parser" export="NONE">
 		<geyacc input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="eiffel_parser"/>
 		<set name="library" value="parse"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/example/${system}"/>

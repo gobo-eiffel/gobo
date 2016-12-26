@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="structure_doc" default="help">
+<project name="tools_doc" default="help">
 
 	<description>
 		description: "Gobo Eiffel Tools Library documentation"
@@ -12,7 +12,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/doc.eant">
+		<parent location="${GOBO}/library/gobo/config/doc.eant">
 			<redefine target="for_each"/>
 		</parent>
 	</inherit>

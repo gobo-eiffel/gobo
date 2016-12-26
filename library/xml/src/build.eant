@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xml_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
@@ -46,14 +46,13 @@
 		<delete file="parser/eiffel/xm_eiffel_tokens.e"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="xm_eiffel_scanner" dir="parser/eiffel">
+	<target name="xm_eiffel_scanner" dir="parser/eiffel" export="NONE">
 		<gelex input="xm_eiffel_scanner.l" output="xm_eiffel_scanner.e"/>
 	</target>
 	
-	<target name="xm_eiffel_parser" dir="parser/eiffel">
+	<target name="xm_eiffel_parser" dir="parser/eiffel" export="NONE">
 		<geyacc input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
 	</target>
 

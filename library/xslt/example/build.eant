@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml_xslt" default="help">
+<project name="xslt_example" default="help">
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel XML Library 'xslt' examples"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/do_all.eant"/>
+		<parent location="${GOBO}/library/gobo/config/do_all.eant"/>
 	</inherit>
 
 </project>

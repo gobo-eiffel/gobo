@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="lexical" default="help">
+<project name="lexical_unit_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel Lexical Library Unit Tester"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
@@ -19,7 +19,7 @@
 
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xlexical"/>
 		<set name="library" value="lexical"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>

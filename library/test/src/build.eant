@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="test" default="help">
+<project name="test_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -46,14 +46,13 @@
 		<delete file="generation/ts_config_tokens.e"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="config_scanner" dir="generation">
+	<target name="config_scanner" dir="generation" export="NONE">
 		<gelex input="ts_config_scanner.l"/>
 	</target>
 
-	<target name="config_parser" dir="generation">
+	<target name="config_parser" dir="generation" export="NONE">
 		<geyacc input="ts_config_parser.y" tokens="TS_CONFIG_TOKENS" output="ts_config_parser.e"/>
 	</target>
 

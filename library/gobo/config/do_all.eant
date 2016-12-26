@@ -104,8 +104,8 @@
 		<argument name="target2"/>
 		<argument name="folders"/>
 
-		<geant target="do_one" arguments="${target1},${target2}">
-			<fileset include="@(${folder}/build.eant)">
+		<geant target="do_one_2" arguments="${target1},${target2}">
+			<fileset include="@(${folders}/build.eant)">
 				<map type="glob" from="*/build.eant" to="*"/>
 			</fileset>
 		</geant>
@@ -123,8 +123,8 @@
 		<argument name="folders"/>
 		<argument name="excluded_folders"/>
 
-		<geant target="do_one" arguments="${target1},${target2}">
-			<fileset include="@(${folder}/build.eant)" exclude="@(${excluded_folders}/build.eant)">
+		<geant target="do_one_2" arguments="${target1},${target2}">
+			<fileset include="@(${folders}/build.eant)" exclude="@(${excluded_folders}/build.eant)">
 				<map type="glob" from="*/build.eant" to="*"/>
 			</fileset>
 		</geant>
@@ -159,7 +159,7 @@
 		<description>
 			Call 'geant' with targets ${target1} (first argument)
 			and ${target2} (second argument) in directory 
-			${subfolders} (third argument) if there
+			${subfolder} (third argument) if there
 			exists a buildfile in this folder.
 		</description>
 		<argument name="target1"/>

@@ -145,10 +145,9 @@
 		<geant target="other_clean"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="init">
+	<target name="init" export="NONE">
 		<set name="compilation_log" value="&gt; xcompile.log 2&gt;&amp;1"/>
 		<set name="eiffel" value="ge"/>
 		<geant target="init_eiffel"/>

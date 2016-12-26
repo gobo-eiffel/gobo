@@ -11,15 +11,14 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xmloasis"/>
 		<set name="library" value="xml"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/unit/oasis/"/>

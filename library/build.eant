@@ -11,24 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/libraries.eant">
-			<redefine target="other_help"/>
-		</parent>
+		<parent location="${GOBO}/library/gobo/config/libraries.eant"/>
 	</inherit>
 
-	<target name="install_src" depend="init">
-		<description>
-			Install the Gobo Eiffel libraries sources.
-		</description>
-
-		<geant target="do_all" arguments="install,*/src" dir="${current.absdir}"/>
-	</target>
-
-<!-- Implementation -->
-
-	<target name="other_help" export="NONE">
-		<echo message="   geant install_src"/>
-		<precursor/>
-	</target>
-	
 </project>

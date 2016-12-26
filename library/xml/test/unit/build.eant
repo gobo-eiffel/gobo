@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xml_unit_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel XML Library Unit Tester"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/packages.eant"/>
+		<parent location="${GOBO}/library/gobo/config/test_all.eant"/>
 	</inherit>
 
 </project>

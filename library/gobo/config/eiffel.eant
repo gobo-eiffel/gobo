@@ -207,10 +207,9 @@
 		<geant target="other_clobber"/>
 	</target>
 
-
 <!-- Implementation -->
 
-	<target name="xace" depend="init">
+	<target name="xace" depend="init" export="NONE">
 		<argument name="a_compiler"/>
 		<argument name="a_output"/>
 		<description>
@@ -242,7 +241,7 @@
 		</gexace>
 	</target>
 
-	<target name="prepare_compile" depend="init">
+	<target name="prepare_compile" depend="init" export="NONE">
 		<description>
 			Prepare compilation if necessary.
 		</description>
@@ -250,7 +249,7 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="other_install" depend="init">
+	<target name="other_install" depend="init" export="NONE">
 		<description>
 			Install other items in ${system} directory.
 		</description>
@@ -258,7 +257,7 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -266,7 +265,7 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="other_clobber" depend="init">
+	<target name="other_clobber" depend="init" export="NONE">
 		<description>
 			Remove other generated files.
 		</description>
@@ -274,14 +273,14 @@
 		<!-- To be redefined in descendant if necessary -->
 	</target>
 
-	<target name="init">
+	<target name="init" export="NONE">
 		<set name="eiffel" value="ge"/>
 		<geant target="init_eiffel"/>
 		<geant target="init_os"/>
 		<geant target="init_system"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<!--
 			Values to be defined:
 				. ${system} : name of the system to be compiled
@@ -289,20 +288,20 @@
 		-->
 	</target>
 
-	<target name="init_eiffel" if="${GOBO_EIFFEL}">
+	<target name="init_eiffel" if="${GOBO_EIFFEL}" export="NONE">
 		<set name="eiffel" value="${GOBO_EIFFEL}"/>
 	</target>
 
-	<target name="init_os">
+	<target name="init_os" export="NONE">
 		<geant target="init_windows"/>
 		<geant target="init_unix"/>
 	</target>
 
-	<target name="init_windows" if="${GOBO_OS}=windows">
+	<target name="init_windows" if="${GOBO_OS}=windows" export="NONE">
 		<!-- No special windows tasks needed for now but target is kept for possible future instructions -->
 	</target>
 
-	<target name="init_unix" unless="${GOBO_OS}=windows">
+	<target name="init_unix" unless="${GOBO_OS}=windows" export="NONE">
 		<!-- No special unix tasks needed for now but target is kept for possible future instructions -->
 	</target>
 

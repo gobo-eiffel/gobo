@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="regexp" default="help">
+<project name="regexp_unit_test" default="help">
 
 	<description>
 		system: "Gobo Eiffel Regexp Library Unit Tester"
@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/test.eant">
+		<parent location="${GOBO}/library/gobo/config/test.eant">
 			<redefine target="other_install"/>
 			<redefine target="other_clean"/>
 			<redefine target="other_clobber"/>
@@ -21,14 +21,14 @@
 
 <!-- Implementation -->
 
-	<target name="other_install" depend="init">
+	<target name="other_install" depend="init" export="NONE">
 		<description>
 			Install other items in ${system} directory.
 		</description>
 		<geant file="build.eant" target="install" dir="pcretest"/>
 	</target>
 
-	<target name="other_clean" depend="init">
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
@@ -36,14 +36,14 @@
 		<delete directory="Tpcretest"/>
 	</target>
 
-	<target name="other_clobber" depend="init">
+	<target name="other_clobber" depend="init" export="NONE">
 		<description>
 			Remove other generated files.
 		</description>
 		<geant file="build.eant" target="clobber" dir="pcretest"/>
 	</target>
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="xregexp"/>
 		<set name="library" value="regexp"/>
 		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="geyacc" default="help">
+<project name="geyacc_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for 'geyacc'"
@@ -12,15 +12,14 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/tool/geant/config/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-
 <!-- Implementation -->
 
-	<target name="init_system">
+	<target name="init_system" export="NONE">
 		<set name="system" value="geyacc"/>
 		<set name="system_dir" value="${GOBO}/tool/${system}/src"/>
 	</target>
