@@ -17,34 +17,34 @@ while the official site (for stable releases) is located at
 
 *Gobo Eiffel* already consists of sixteen Eiffel libraries:
 
-+ Gobo Eiffel Argument Library
-+ Gobo Eiffel Kernel Library
-+ Gobo Eiffel Lexical Library
-+ Gobo Eiffel Math Library
-+ Gobo Eiffel Parse Library
-+ Gobo Eiffel Pattern Library
-+ Gobo Eiffel Regexp Library
-+ Gobo Eiffel String Library
-+ Gobo Eiffel Structure Library
-+ Gobo Eiffel Test Library
-+ Gobo Eiffel Time Library
-+ Gobo Eiffel Tools Library
-+ Gobo Eiffel Utility Library
-+ Gobo Eiffel XML Library
-+ Gobo Eiffel XPath Library
-+ Gobo Eiffel XSLT Library
+* Gobo Eiffel Argument Library
+* Gobo Eiffel Kernel Library
+* Gobo Eiffel Lexical Library
+* Gobo Eiffel Math Library
+* Gobo Eiffel Parse Library
+* Gobo Eiffel Pattern Library
+* Gobo Eiffel Regexp Library
+* Gobo Eiffel String Library
+* Gobo Eiffel Structure Library
+* Gobo Eiffel Test Library
+* Gobo Eiffel Time Library
+* Gobo Eiffel Tools Library
+* Gobo Eiffel Utility Library
+* Gobo Eiffel XML Library
+* Gobo Eiffel XPath Library
+* Gobo Eiffel XSLT Library
 
 and nine utilities:
 
-+ Gobo Eiffel Ant (geant)
-+ Gobo Eiffel Compiler (gec)
-+ Gobo Eiffel Lex (gelex)
-+ Gobo Eiffel Lint (gelint)
-+ Gobo Eiffel Preprocessor (gepp)
-+ Gobo Eiffel Test (getest)
-+ Gobo Eiffel Xace (gexace)
-+ Gobo Eiffel XSLT Processor (gexslt)
-+ Gobo Eiffel Yacc (geyacc)
+* Gobo Eiffel Ant (geant)
+* Gobo Eiffel Compiler (gec)
+* Gobo Eiffel Lex (gelex)
+* Gobo Eiffel Lint (gelint)
+* Gobo Eiffel Preprocessor (gepp)
+* Gobo Eiffel Test (getest)
+* Gobo Eiffel Xace (gexace)
+* Gobo Eiffel XSLT Processor (gexslt)
+* Gobo Eiffel Yacc (geyacc)
 
 Note that these utilities are not needed if you just want to use the
 library classes provided in this package.
@@ -53,8 +53,8 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-+ Gobo Eiffel Compiler (gec) 4.0
-+ ISE Eiffel 16.11 (Classic and .NET)
+* Gobo Eiffel Compiler (gec) 4.0
+* ISE Eiffel 16.11 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
 [Release_notes.md](Release_notes.md). 
@@ -79,14 +79,14 @@ To install this package, please follow the instructions below:
 
 ### Under Windows
 
-+ [Download](library/gobo/doc/download.html)
+* [Download](library/gobo/doc/download.html)
   the package `gobo*-src.7z`, or check-out the files from the
   [Git repository](https://github.com/gobo-eiffel/gobo).
-+ Copy the files to a directory of your choice on your disk 
+* Copy the files to a directory of your choice on your disk 
   and set the environment variable `%GOBO%` to that directory,
   known as the distribution directory. Also put the directory
   `%GOBO%\bin` in your `PATH`.
-+ To build the tools (e.g. gec, geyacc, ...), execute the script:
+* To build the tools (e.g. gec, geyacc, ...), execute the script:
 
 		%GOBO%\bin\install.bat <c_compiler>
 
@@ -95,14 +95,14 @@ To install this package, please follow the instructions below:
 
 ### Under Unix/Linux
 
-+ [Download](library/gobo/doc/download.html)
+* [Download](library/gobo/doc/download.html)
   the package `gobo*-src.tar.gz`, or check-out the files from the
   [Git repository](https://github.com/gobo-eiffel/gobo).
-+ Copy the files to a directory of your choice on your disk and 
+* Copy the files to a directory of your choice on your disk and 
   set the environment variable `$GOBO` to that directory, known
   as the distribution directory. Also put the directory 
   `$GOBO/bin` in your `PATH`.
-+ To build the tools (e.g. gec, geyacc, ...), execute the script:
+* To build the tools (e.g. gec, geyacc, ...), execute the script:
 
 		$GOBO/bin/install.sh <c_compiler>
 
@@ -144,7 +144,6 @@ You are also welcome to take part in the development of the
 *Gobo Eiffel Project*. Some
 [developer guidelines](library/gobo/doc/guidelines/index.html)
 are available to help you make the first steps.
-
 
 ## Authors 
 Copyright (c) 1997-2016, Eric Bezault and others

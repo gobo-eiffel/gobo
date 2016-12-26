@@ -1,4 +1,4 @@
-## Installing the Gobo Eiffel tools
+# Installing the Gobo Eiffel tools
 
 If you downloaded the source code of Gobo from Git or
 if you got it from a source package (e.g. `gobo*-src.7z`
@@ -8,8 +8,10 @@ placed in `$GOBO/bin`.
 
 The procedure is quite simple:
 
-* Check out the source code from the Gobo Git repository (or extract it from the source package).
-* Set the environment variable `$GOBO` to the directory where you installed the source.
+* Check out the source code from the Gobo Git repository
+  (or extract it from the source package).
+* Set the environment variable `$GOBO` to the directory where
+  you installed the source.
 * Add `$GOBO/bin` to your `$PATH`.
 * Make sure that your C compiler is in your `$PATH`.
 * Depending on your platform, run either:
