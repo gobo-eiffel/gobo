@@ -90,11 +90,11 @@ feature -- Test
 				-- (but can be invoked to test the exit code):
 			tasks := "{
 				<exec executable="echo ${fs.filename}">
-					<fileset include="@(Rel*.txt)" dir="${GOBO}"/>
+					<fileset include="@(Rel*.md)" dir="${GOBO}"/>
 				</exec>
 				}"
  			expected_task_output := "{
-				|Release_notes.txt
+				|Release_notes.md
 				|
 			}"
 
