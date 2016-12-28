@@ -35,12 +35,29 @@ feature {NONE} -- Initialization
 			a_build_filename_not_empty: a_build_filename.count > 0
 		local
 			a_absolute_pathname: STRING
+			l_gobo_misc: STRING
+			l_library_gobo_config: STRING
+			l_new_build_filename: STRING
 		do
 			build_filename := a_build_filename
 			if not file_system.is_file_readable (build_filename) then
-				a_absolute_pathname := file_system.absolute_pathname (
-					file_system.pathname_from_file_system (build_filename, unix_file_system))
-				exit_application (1, <<"cannot read build file '", a_absolute_pathname, "'">>)
+					-- Try to see whether the file is one which was in ${GOBO}/misc
+					-- and which has been moved to ${GOBO}/library/gobo/config.
+				l_gobo_misc := Execution_environment.interpreted_string ("${GOBO}/misc/")
+				if a_build_filename.starts_with (l_gobo_misc) then
+					l_library_gobo_config := Execution_environment.interpreted_string ("${GOBO}/library/gobo/config/")
+					l_new_build_filename := a_build_filename.twin
+					l_new_build_filename.remove_head (l_gobo_misc.count)
+					l_new_build_filename := l_library_gobo_config + l_new_build_filename
+					if file_system.is_file_readable (l_new_build_filename) then
+						build_filename := l_new_build_filename
+					end
+				end
+				if build_filename = a_build_filename then
+					a_absolute_pathname := file_system.absolute_pathname (
+						file_system.pathname_from_file_system (build_filename, unix_file_system))
+					exit_application (1, <<"cannot read build file '", a_absolute_pathname, "'">>)
+				end
 			end
 		ensure
 			build_filename_set: build_filename = a_build_filename
