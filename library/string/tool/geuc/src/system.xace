@@ -27,10 +27,11 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
-	<cluster name="geuc" location="${GOBO}/work/geuc"/>
+	<cluster name="geuc" location="${GOBO}/library/string/tool/geuc/src"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
+
 </system>

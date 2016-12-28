@@ -6,10 +6,10 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2011, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2011/01/04 $"
-	revision: "$Revision: #8 $"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 class ST_TEST_NORMALIZATION_ROUTINES
 
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"test", "string", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "string", "test", "unit", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_empty: Result /= Void and then not Result.is_empty

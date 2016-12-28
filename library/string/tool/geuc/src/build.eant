@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="geuc" default="help">
+<project name="geuc_source" default="help">
 
 	<description>
 		description: "Eiffel Ant file for 'geuc'"
@@ -12,34 +12,33 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/misc/eiffel.eant">
+		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
 			<redefine target="init_system"/>
 			<redefine target="other_clean"/>
 		</parent>
 	</inherit>
-
-
-<!-- Implementation -->
-
-	<target name="init_system">
-		<set name="system" value="geuc"/>
-		<set name="system_dir" value="${GOBO}/work/${system}"/>
-	</target>
 
 	<target name="deploy" depend="init">
 		<description>
 			Copy generated files.
 		</description>
 
-		<move to_directory="${GOBO}/library/string/unicode">
+		<move to_directory="${GOBO}/library/string/src/unicode">
 			<fileset include="@(st_*.e)" />
 		</move>
-		<move to_directory="${GOBO}/library/kernel/unicode">
+		<move to_directory="${GOBO}/library/kernel/src/unicode">
 			<fileset include="@(uc_*.e)" />
 		</move>
 	</target>
 
-	<target name="other_clean" depend="init">
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="geuc"/>
+		<set name="system_dir" value="${GOBO}/library/string/tool/${system}/src"/>
+	</target>
+
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove generated classes.
 		</description>

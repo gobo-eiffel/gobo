@@ -51,7 +51,7 @@ Usage
 
 The basic procedure for use is:
 
-1) Change directory to $GOBO/work/geuc and then remove any existing
+1) Change directory to $GOBO/library/string/tool/geuc/src and then remove any existing
    generated classes by:
 
 geant clean (or geant clobber).
@@ -62,7 +62,7 @@ geant compile
 
 or some variant of that command.
 
-3) Save copies of the Unicode Character Database in $GOBO/work/geuc.
+3) Save copies of the Unicode Character Database in $GOBO/library/string/tool/geuc/src.
 The following files need to be imported:
 
  ftp://www.unicode.org/Public/UNIDATA/UnicodeData.txt
@@ -104,8 +104,8 @@ UC_V410_CHARACTER_CLASS_ROUTINES
 
 geant deploy
 
-The target library is $GOBO/library/string/unicode for normalization
-routines, and $GOBO/library/kernel/unicode for all other routines.
+The target library is $GOBO/library/string/src/unicode for normalization
+routines, and $GOBO/library/kernel/src/unicode for all other routines.
 
 6) Edit the unversioned classes to inherit from the latest
 versioned class.
@@ -127,7 +127,7 @@ if it is the latest version, change UC_CTYPE to inherit from it.
 
  ftp://www.unicode.org/Public/UNIDATA/NormalizationTest.txt
 
-and save it in $GOBO/test/string/data
+and save it in $GOBO/library/string/test/unit/data
 
 The test class ST_TEST_NORMALIZATION_ROUTINES will look for this
 file, and use it to test the normalization code.
