@@ -1,123 +1,168 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html>
-
-<head>
-<meta http-equiv="Content-Type"
-content="text/html; charset=iso-8859-1">
-<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
-<title>Gobo Eiffel Structure Library</title>
-</head>
-
-<body bgcolor="#FFFFFF">
-
-<table border="0" width="100%">
-    <tr>
-        <td><font size="6"><strong>Gobo Eiffel Structure Library</strong></font></td>
-        <td align="right"><a href="../license.html"><img
-        src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="../time/index.html"><img
-        src="../image/next.gif" alt="Next" border="0" width="40"
-        height="40"></a></td>
-    </tr>
-</table>
-
-<hr size="1">
-
-<p>The<em> Gobo Eiffel Structure Library</em> is a portable
-Eiffel class library covering <em><strong>data structures and
-algorithms</strong></em>. When this library has been developed,
-there was no data structure library standard, and no portable
-library was publicly available. Each Eiffel compiler provides its
-own data structure library, but none of them is portable (see <a
-href="../portability/index.html">portability issues</a>). This
-library has hence been developed as a foundation for other
-portable libraries provided in the <a href="../index.html"><em>Gobo
-Eiffel</em> <em>Project</em></a>. The <em>Gobo Eiffel Structure
-Library</em> contains the classic containers needed in everyday
-programming, such as lists, stacks or tables, and provides
-different implementations such as linked, bilinked, arrayed,
-multiarrayed or hashed. More data structures may be added in the
-future if there is a need for them. There is nothing really new
-in this library. Most of the ideas come from other existing data
-structure libraries.</p>
-
-<p>This documentation is structured as follows:</p>
-
-<blockquote>
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Gobo Eiffel Structure Library</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Gobo Eiffel Structure Library</strong></font></td>
+    <td align="right"><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="terminology.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <p>
+   The <i>Gobo Eiffel Structure Library</i> is
+   a portable Eiffel class library covering <i><b>data structures
+     and algorithms</b></i>. When this library has been developed,
+   there was no data structure library standard, and no portable
+   library was publicly available. Each Eiffel compiler provides its
+   own data structure library, but none of them is portable (see
+   <a href="../../../library/gobo/doc/portability/index.html">portability issues</a>). This
+   library has hence been developed as a foundation for other
+   portable libraries provided in the <a href="../../../library/gobo/doc/index.html">
+    <i>Gobo Eiffel Project</i></a>.
+   The <i>Gobo Eiffel Structure Library</i>
+   contains the classic containers needed in everyday
+   programming, such as lists, stacks or tables, and provides
+   different implementations such as linked, bilinked, arrayed,
+   multiarrayed or hashed. More data structures may be added in the
+   future if there is a need for them. There is nothing really new
+   in this library. Most of the ideas come from other existing data
+   structure libraries.
+   
+  </p>
+  <p>
+   This documentation is structured as follows:
+   
+   
+   <blockquote>
+    
     <dl>
-        <dt><a href="terminology.html">Terminology</a></dt>
-        <dd>Naming conventions followed throughout this library.</dd>
-        <dt><a href="container.html">General Abstractions</a></dt>
-        <dd>Abstract properties of data structures [cluster <font
-            color="#800000"><em><tt>container</tt></em></font>].</dd>
-        <dt><a href="traversal.html">Traversable Containers</a></dt>
-        <dd>Data structure traversal mechanism [cluster <font
-            color="#800000"><em><tt>container</tt></em></font>].</dd>
-        <dt><a href="sort.html">Sortable Containers</a></dt>
-        <dd>Algorithms for sorting items in containers [cluster <font
-            color="#800000"><em><tt>sort</tt></em></font>].</dd>
-        <dt><a href="list.html">Lists</a></dt>
-        <dd>Various implementations of lists [cluster <font
-            color="#800000"><em><tt>list</tt></em></font>].</dd>
-        <dt><a href="table.html">Tables</a></dt>
-        <dd>Containers whose items are accessed by keys [cluster <font
-            color="#800000"><em><tt>table</tt></em></font>].</dd>
-        <dt><a href="set.html">Sets</a></dt>
-        <dd>Containers containing at most one occurrence of each
-            item [cluster <font color="#800000"><em><tt>set</tt></em></font>].</dd>
-        <dt><a href="dispenser.html">Dispensers</a></dt>
-        <dd>Stacks (LIFO) and queues (FIFO) [cluster <font
-            color="#800000"><em><tt>dispenser</tt></em></font>].</dd>
-        <dt><a href="base.html">EiffelBase Containers</a></dt>
-        <dd>Main <em>EiffelBase</em> containers implemented with <em>Gobo</em>
-            classes [cluster <font color="#800000"><em><tt>EiffelBase</tt></em></font>].</dd>
-        <dt><a href="flatshort/index.html">Flat-short Forms</a></dt>
-        <dd>Flat-short forms of the <em>Gobo Eiffel Structure
-            Library</em> classes.</dd>
-        <dt><a href="see_also.html">See Also</a></dt>
-        <dd>Bibliographical references, related resources and
-            acknowledgments.</dd>
-        <dt><a
-            href="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
-            Instructions</a></dt>
-        <dd>License agreement and downloading instructions.</dd>
+     	
+     <dt>
+      			<a href="terminology.html">Terminology</a>
+      		
+     </dt>
+     <dd>
+      			Naming conventions followed throughout this library.
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="container.html">General Abstractions</a>
+      		
+     </dt>
+     <dd>
+      			Abstract properties of data structures [cluster 
+      			<font color="#800000"><i><tt>container</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="traversal.html">Traversable Containers</a>
+      		
+     </dt>
+     <dd>
+      			Data structure traversal mechanism [cluster
+      			<font color="#800000"><i><tt>container</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="sort.html">Sortable Containers</a>
+      		
+     </dt>
+     <dd>
+      			Algorithms for sorting items in containers [cluster
+      			<font color="#800000"><i><tt>sort</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="list.html">Lists</a>
+      		
+     </dt>
+     <dd>
+      			Various implementations of lists [cluster
+      			<font color="#800000"><i><tt>list</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="table.html">Tables</a>
+      		
+     </dt>
+     <dd>
+      			Containers whose items are accessed by keys [cluster
+      			<font color="#800000"><i><tt>table</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="set.html">Sets</a>
+      		
+     </dt>
+     <dd>
+      			Containers containing at most one occurrence of each
+      			item [cluster <font color="#800000"><i><tt>set</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="dispenser.html">Dispensers</a>
+      		
+     </dt>
+     <dd>
+      			Stacks (LIFO) and queues (FIFO) [cluster
+      			<font color="#800000"><i><tt>dispenser</tt></i></font>].
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="flatshort/index.html">Flat-short Forms</a>
+      		
+     </dt>
+     <dd>
+      			Flat-short forms of the <i>Gobo Eiffel Structure
+       			Library</i> classes.
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="see_also.html">See Also</a>
+      		
+     </dt>
+     <dd>
+      			Bibliographical references, related resources and
+      			acknowledgments.
+      		
+     </dd>
+     	
+     <dt>
+      			<a href="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+       			Instructions</a>
+      		
+     </dt>
+     <dd>
+      			License agreement and downloading instructions.
+      		
+     </dd>
+     
     </dl>
-</blockquote>
-
-<hr size="1">
-
-<table border="0" width="100%">
-    <tr>
-        <td><address>
-            <font size="2"><b>Copyright © 1999-2001</b></font><font
-            size="1"><b>, </b></font><font size="2"><strong>Eric
-            Bezault</strong></font><strong> </strong><font
-            size="2"><br>
-            <strong>mailto:</strong></font><a
-            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
-            size="2"><br>
-            <strong>http:</strong></font><a
-            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
-            size="2"><br>
-            <strong>Last Updated:</strong> 31 March 2001</font><br>
-            <!--webbot bot="PurpleText"
-            preview="
-$Date$ 
-$Revision$"
-            --> 
-        </address>
-        </td>
-        <td align="right" valign="top"><a
-        href="http://www.gobosoft.com"><img
-        src="../image/home.gif" alt="Home" border="0" width="40"
-        height="40"></a><a href="../index.html"><img
-        src="../image/toc.gif" alt="Toc" border="0" width="40"
-        height="40"></a><a href="../license.html"><img
-        src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="../time/index.html"><img
-        src="../image/next.gif" alt="Next" border="0" width="40"
-        height="40"></a></td>
-    </tr>
-</table>
-</body>
+    
+   </blockquote>
+   
+   
+  </p>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 1999-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>26 December 2016</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="terminology.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
 </html>

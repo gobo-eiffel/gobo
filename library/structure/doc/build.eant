@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="structure_doc" default="help">
+
+	<description>
+		description: "Gobo Eiffel Strucure Library documentation"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/gobo/config/doc.eant">
+			<redefine target="install"/>
+			<redefine target="for_each"/>
+		</parent>
+	</inherit>
+
+	<target name="install" depend="init">
+		<description>
+			Install the Gobo Eiffel Documentation.
+		</description>
+		
+		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="${GOBO_XSLT_PROCESSOR}"/>
+		<set name="current_input_wrapper" value=""/>
+		<set name="input_wrapper" value=""/>
+		<geant target="xslt" arguments="index,index,terminology"/>
+		<geant target="xslt" arguments="index,terminology,container"/>
+		<geant target="xslt" arguments="terminology,container,traversal"/>
+		<geant target="xslt" arguments="container,traversal,sort"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="for_each" export="NONE">
+		<description>
+			Call 'geant' with the same target ${target} (first argument)
+			with each specified file as argument.
+		</description>
+		<argument name="target"/>
+
+		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="terminology"/>
+		<geant target="${target}" arguments="container"/>
+		<geant target="${target}" arguments="traversal"/>
+	</target>
+
+</project>

@@ -6,23 +6,23 @@
 		"Gobo Eiffel Structure Library"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
 
-<chapter id="structure/index">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/index">
 <chapterinfo>
 	<copyright>
-		<year>1999-2001</year>
+		<year>1999-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>31 March 2001</date>
+	<date>26 December 2016</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Structure Library</title>
@@ -34,9 +34,9 @@ and algorithms</emphasis>. When this library has been developed,
 there was no data structure library standard, and no portable
 library was publicly available. Each Eiffel compiler provides its
 own data structure library, but none of them is portable (see
-<link linkend="../portability/index">portability issues</link>). This
+<link linkend="../../../library/gobo/doc/portability/index">portability issues</link>). This
 library has hence been developed as a foundation for other
-portable libraries provided in the <link linkend="../index">
+portable libraries provided in the <link linkend="../../../library/gobo/doc/index">
 <projectname>Gobo Eiffel Project</projectname></link>.
 The <libraryname>Gobo Eiffel Structure Library</libraryname>
 contains the classic containers needed in everyday
@@ -122,16 +122,6 @@ This documentation is structured as follows:
 		<listitem><para>
 			Stacks (LIFO) and queues (FIFO) [cluster
 			<filename class="directory">dispenser</filename>].
-		</para></listitem>
-	</varlistentry>
-	<varlistentry>
-		<term>
-			<link linkend="base">EiffelBase Containers</link>
-		</term>
-		<listitem><para>
-			Main <libraryname>EiffelBase</libraryname> containers
-			implemented with <projectname>Gobo</projectname> classes
-			[cluster <filename class="directory">EiffelBase</filename>].
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

@@ -6,7 +6,7 @@
 		"Output URI Resolver"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_output_resolver">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, October 19th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>The Output URI Resolver</title>    
   <para>
@@ -54,11 +54,11 @@
 	    allocated to them. This is particularly useful when the principal output destination is to
 	    a <classname>STRING</classname> (selected by a <uri>string:</uri> URI), and the <xslt>href</xslt>
 	    attribute of <xslt>xsl:result-document</xslt> supplies a relative URL. In this case, the output resolver
-	    will allocate a <link linkend="xslt_transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link> that wraps a 
+	    will allocate a <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link> that wraps a 
 	    <classname>STRING</classname>. The Eiffel programmer can then retrieve this as it is indexed by the absolute URI.
 	    For example, if the principal output destination (as supplied by the Eiffel programmer) is <uri>string:</uri>,
 	    and the stylesheet specifies <uri>href="one"</uri>, then the absolute URI is <uri>string:/one</uri>,
-	    and this can be used to retrieve the <link linkend="xslt_transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>, and
+	    and this can be used to retrieve the <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>, and
 	    hence the <classname>STRING</classname>.
 	  </para>
 	  <para>
@@ -70,7 +70,7 @@
 	<term><featurename>resolve</featurename></term>
 	<listitem>
 	  <para>
-	    This routine is called to create an <link linkend="xslt_transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+	    This routine is called to create an <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
 	    for the output destination.
 	    But first, it must check with the security manager for permission to write to the URI.
 	  </para>

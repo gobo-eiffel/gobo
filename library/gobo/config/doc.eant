@@ -48,7 +48,6 @@
 	<target name="init" export="NONE">
 		<unset name="first_file"/>
 		<geant target="for_each" arguments="set_first_file"/>
-		<geant target="for_each" arguments="set_last_file"/>
 		<set name="toc" value="index"/>
 		<set name="toc" value="${first_file}" if="${first_file}"/>
 		<set name="image" value="../../../library/gobo/doc/image"/>
@@ -70,15 +69,6 @@
 		<argument name="file"/>
 		
 		<set name="first_file" value="${file}" unless="${first_file}"/>
-	</target>
-
-	<target name="set_last_file" export="NONE">
-		<description>
-			Set ${last_file} to ${file} (first argument).
-		</description>
-		<argument name="file"/>
-		
-		<set name="last_file" value="${file}"/>
 	</target>
 	
 	<target name="delete_html" export="NONE">
@@ -114,8 +104,8 @@
 		<argument name="a_next"/>
 
 		<set name="xml_file" value="${a_file}${current_input_wrapper}.xml"/>
-		<outofdate variable="rebuild" source="${xml_file}" target="${a_file}.html"/>
-		<xslt processor="${xslt_processor}" input="${xml_file}" output="${a_file}.html" stylesheet="${GOBO}/library/gobo/doc/config/gobo2html.xsl">
+		<outofdate variable="rebuild" source="${a_file}.xml" target="${a_file}.html"/>
+		<xslt processor="${xslt_processor}" input="${xml_file}" output="${a_file}.html" stylesheet="${GOBO}/library/gobo/doc/config/gobo2html.xsl" force="${rebuild}">
 			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'${toc}.html'&quot;"/>

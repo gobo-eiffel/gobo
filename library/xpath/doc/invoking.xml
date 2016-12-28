@@ -6,7 +6,7 @@
 		"Invoking the stand-alone evaluator"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_stand_alone_invoke">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, April 13th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Invoking the stand-alone XPath evaluator</title>
   <para>
@@ -112,7 +112,6 @@
 	  booleans, for instance).
 	  </para>
 	  <para>Having built your static context, you may then declare variables, if you wish.</para>
-	  <para>See also<link linkend="tailoring_static_context">Tailoring the static context</link>.</para>
 	</listitem>
       </itemizedlist>
     </para>

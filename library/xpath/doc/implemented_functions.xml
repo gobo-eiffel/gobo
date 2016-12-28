@@ -6,7 +6,7 @@ description:
 "Implemented core functions"
 
 library: "Gobo Eiffel XPath Library"
-copyright: "Copyright (c) 2004, Colin Adams and others"
+copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 license: "MIT License"
 date: "$Date$"
 revision: "$Revision$"
@@ -15,7 +15,7 @@ revision: "$Revision$"
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_implemented_functions">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@ revision: "$Revision$"
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, April 13th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Core functions - implementation status</title>
   <para>This chapter lists all the core functions (functions provided by host lanages such as XSLT are not listed here)
@@ -31,7 +31,7 @@ revision: "$Revision$"
   </para> 
   <para>The first column of the table gives the function's name, from <ulink url="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 and XPath 2.0 Functions and Operators</ulink>.
   The fn prefix represents the namespace uri http://www.w3.org/2004/10/xpath-functions.</para>
-  <para>To translate the function name into it's implementation class (which can be found in $GOBO/library/xml/xpath/functions/), remove
+  <para>To translate the function name into it's implementation class (which can be found in $GOBO/library/xpath/src/functions/), remove
   the leading fn:, uppercase the remaining part of the name, and translate any hyphens into underscores. Then prefix it with XM_XPATH_.
   For example, the function fn:normalize-space, is implemented by <classname>XM_XPATH_NORMALIZE_SPACE</classname>.
   </para>

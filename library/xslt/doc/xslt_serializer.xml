@@ -6,7 +6,7 @@
 		"XSLT 2.0 serializer"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@
  
   <chapterinfo>
    <copyright>
-    <year>2007</year>
+    <year>2007-2016</year>
     <holder>Colin Adams and others</holder>
    </copyright>
    <author>
@@ -24,7 +24,7 @@
     <surname>Adams</surname>
    </author>
    <email>colin@colina.demon.co.uk</email>
-   <date>Sunday, October 7th, 2007</date>
+   <date>27 December 2016</date>
   </chapterinfo>
   
   <title>XSLT 2.0 serializer</title>
@@ -127,7 +127,7 @@
      <listitem>
       <para>
        Calling <featurename>set_method</featurename> is equivalent to <xsl>xsl:output method=qname-but-not-ncname</xsl>. In order to
-       do this, you have to first write your own custom serializer. See <link likend="output_extensions">Output extensions</link> for details.
+       do this, you have to first write your own custom serializer. See <link linkend="output_extensions">Output extensions</link> for details.
       </para>
      </listitem>
 

@@ -6,7 +6,7 @@
 		"Examples of using the library"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_examples">
   <chapterinfo>
     <copyright>
-      <year>2005</year>
+      <year>2005-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,13 +23,13 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Monday, Octobber 10th, 2005</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Examples of using the library</title>
   <para>
     This chapter deals with examples of how to invoke XSLT transformations
     from within your Eiffel programs. It does not cover writing XSLT programs. For that
-    you should look elsewhere (a good starting point is the <ulink url="http://www.dpawson.co.uk/xsl/xslfaq.html">XSLT FAQ</ulink>).
+    you should look elsewhere (a good starting point is the <ulink url="http://www.dpawson.co.uk/xsl">XSLT FAQ</ulink>).
   </para>
   <section>
     <title>A Schematron validator</title>

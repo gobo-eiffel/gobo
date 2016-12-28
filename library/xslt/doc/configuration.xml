@@ -6,7 +6,7 @@
 		"configuration of the XSLT processor"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_configuration">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, October 19th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Configuring the XSLT processor</title>
   <para>
@@ -38,7 +38,7 @@
       The first argument is an <classname>XM_URI_EXTERNAL_RESOLVER</classname>, for use by 
       the XML parser to resolve
       <exmlsyntax>PUBLIC</exmlsyntax> and <exmlsyntax>SYSTEM</exmlsyntax> external identifiers.
-      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="../catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
+      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="../../../library/xml/doc/catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
       to look up the external identifiers in an OASIS ETRC XML catalog.
     </para>
     <para>

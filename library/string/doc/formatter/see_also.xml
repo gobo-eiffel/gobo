@@ -32,16 +32,14 @@
 
 <para>
 The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based on the
-<ulink url="http://www.eiffelzone.com/esd/fmt/index.html"><libraryname>SiG 
-Formatting Cluster</libraryname></ulink> of Eiffel/S (now 
-<ulink url="http://www.object-tools.com">Object Tools</ulink>). SiG put the 
+<ulink url="http://efsa.sourceforge.net/archive/objtools/formatti.htm"><libraryname>SiG 
+Formatting Cluster</libraryname></ulink> of Eiffel/S. SiG put the 
 <libraryname>Formatting Cluster</libraryname> in the public domain by licensing it 
 under the <ulink url="http://opensource.org/licenses/mit-license.html">MIT License</ulink>.
 It was ported by Friedrich Dominicus to other Eiffel 
 compilers. The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based 
-on Friedrich Dominicus's work, which can be 
-<ulink url="http://www.eiffelzone.com/esd/fc/index.html">downloaded</ulink> 
-from the <ulink url="http://www.eiffelzone.com">Eiffel Zone</ulink> page.
+on Friedrich Dominicus's work, which can be downloaded 
+<ulink url="http://efsa.sourceforge.net/archive/dominicu/format.htm">here</ulink>.
 </para>
 
 </section>

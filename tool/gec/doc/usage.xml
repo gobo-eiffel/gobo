@@ -6,7 +6,7 @@
 		"Using gec"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>18 March 2006</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>Using gec</title>
@@ -142,7 +142,7 @@ have to replace the EiffelBase clusters in your Ace file by:
 	<filename class="directory">all free_elks: "${GOBO}/library/free_elks"</filename>
 </informalexample>
 If you are new to Eiffel and don't know what an Ace file is, please have
-a look at this <link linkend="../tools/ace">description</link> from the
+a look at this <link linkend="../../../library/tools/doc/ace">description</link> from the
 documentation of the <libraryname>Gobo Eiffel Tools Library</libraryname>
 on which <projectname>gec</projectname> is based.
 </para>

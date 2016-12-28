@@ -6,7 +6,7 @@
 		"Overview of the XSLT library"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,7 +23,7 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Monday, October 18th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>Overview of the XSLT library</title>
   <para>
@@ -165,7 +165,7 @@
       <link linkend="output_extensions">Output extensions</link>
     </para>
     <para>
-      <link linkend="../../gexslt/extension/index">Other extensions</link>
+      <link linkend="../../../tool/gexslt/doc/extension/index">Other extensions</link>
     </para>
   </section>
   <section>

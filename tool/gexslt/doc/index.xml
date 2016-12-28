@@ -6,7 +6,7 @@
 		"Introduction to Gobo Eiffel XSLT"
 
 	library: "Gobo Eiffel XSLT"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@
 
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -22,12 +22,12 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, August 31st, 2004</date>
+    <date>28 December 2016</date>
   </chapterinfo>
   <title>Introduction to &title;</title>
   <para>&title; is a command-line processor for the XSLT 2.0 language. 
   It is very much still under development at the moment, but it is now close to the XSLT 2.0 Recomendation. It is used to produce the XHTML pages
-  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/doc/misc/gobo.rng</filename>.
+  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/library/gobo/doc/config/gobo.rng</filename>.
   </para> 
   <section>
     <title>Using &program_name;</title>
@@ -38,7 +38,7 @@
       <link linkend="extension/index">Extensions</link>
     </para>
     <para>
-      <link linkend="../xml/xslt/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
+      <link linkend="../../../library/xslt/doc/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
     </para>
   </section>
   <section>
@@ -89,7 +89,7 @@
     </para>
     <para>
       The implementation status of the core XPath functions can be found at
-      <link linkend="../xml/xpath/implemented_functions">Implemented XPath functions</link>
+      <link linkend="../../../library/xpath/doc/implemented_functions">Implemented XPath functions</link>
       In summary, all are implemented.
     </para>
     <para>

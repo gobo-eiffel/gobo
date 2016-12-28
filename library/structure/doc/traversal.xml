@@ -6,23 +6,23 @@
 		"Traversable Containers"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
 
-<chapter id="structure/traversal">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/traversal">
 <chapterinfo>
 	<copyright>
-		<year>1999-2005</year>
+		<year>1999-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>12 February 2005</date>
+	<date>26 December 2016</date>
 </chapterinfo>
 
 <title>Traversable Containers</title>
@@ -98,7 +98,7 @@ reason the <libraryname>Gobo Eiffel Structure Library</libraryname>
 supports both internal and external cursor mechanisms.
 </para>
 
-<sect1 id="ds_traversable">
+<section id="ds_traversable">
 <title>Classes <classname>DS_TRAVERSABLE</classname> and
 <anchor id="ds_cursor"/><classname>DS_CURSOR</classname></title>
 
@@ -161,9 +161,9 @@ happen to cursors when altering a container, just check the
 header comment of the corresponding procedure first.
 </para>
 
-</sect1>
+</section>
 
-<sect1>
+<section>
 <title>Classes <classname>DS_LINEAR</classname> and <classname>DS_LINEAR_CURSOR</classname></title>
 
 <para>
@@ -340,8 +340,8 @@ appear.
 </warning>
 </para>
 
-</sect1>
-<sect1 id="ds_bilinear">
+</section>
+<section id="ds_bilinear">
 <title>Classes <classname>DS_BILINEAR</classname> and
 <classname>DS_BILINEAR_CURSOR</classname></title>
 
@@ -367,8 +367,8 @@ to the <link linkend="container#ds_searchable">searchable
 mechanism criteria</link>.
 </para>
 
-</sect1>
-<sect1>
+</section>
+<section>
 <title>Classes <classname>DS_INDEXED_CURSOR</classname> and
 <classname>DS_DYNAMIC_CURSOR</classname></title>
 
@@ -392,6 +392,6 @@ to change the item at the cursor position, and
 to exchange items between to cursors.
 </para>
 
-</sect1>
+</section>
 
 </chapter>

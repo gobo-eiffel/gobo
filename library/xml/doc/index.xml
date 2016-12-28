@@ -74,7 +74,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="xslt/overview.html">XSLT library</ulink>
+			<ulink url="../../../library/xslt/doc/overview.html">XSLT library</ulink>
 		</term>
 		<listitem><para>
 			XSLT functionalities.
@@ -83,7 +83,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="xpath/xpointer.html">XPointer library</ulink>
+			<ulink url="../../../library/xpath/doc/xpointer.html">XPointer library</ulink>
 		</term>
 		<listitem><para>
 			XPointer functionalities.
@@ -92,7 +92,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="xpath/invoking.html">XPath library (not supported)</ulink>
+			<ulink url="../../../library/xpath/doc/invoking.html">XPath library (not supported)</ulink>
 		</term>
 		<listitem><para>
 			XPath functionalities.

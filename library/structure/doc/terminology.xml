@@ -6,28 +6,28 @@
 		"Terminology"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
 
-<chapter id="structure/terminology">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/terminology">
 <chapterinfo>
 	<copyright>
-		<year>1999-2001</year>
+		<year>1999-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>31 March 2001</date>
+	<date>26 December 2016</date>
 </chapterinfo>
 
 <title>Terminology</title>
 
-<sect1><title>Class names</title>
+<section><title>Class names</title>
 
 <para>
 In order to avoid classname clashes between different
@@ -71,9 +71,9 @@ their class names prefixed by <classname>HASH</classname>,
 <classname>DS_HASH_TABLE</classname>
 being an example of such class naming.
 </para>
-</sect1>
+</section>
 
-<sect1 id="feature_names"><title>Feature names</title>
+<section id="feature_names"><title>Feature names</title>
 
 <para>
 The <libraryname>Gobo Eiffel Structure Library</libraryname> follows the
@@ -90,7 +90,7 @@ it better than Bertrand Meyer, I'll let you read section 3.8 of
 his book, <citetitle pubwork="chapter">Naming Issues</citetitle>,
 for a detailed description. If unfortunately you don't own a copy
 of this book, you can still read the article
-<ulink url="http://www.sdmagazine.com/breakrm/features/s995f1.shtml"><citetitle pubwork="article">Rules
+<ulink url="http://www.drdobbs.com/rules-for-component-builders/184415684"><citetitle pubwork="article">Rules
 of Component Builders</citetitle></ulink> published in <citetitle>Software
 Development</citetitle> online magazine and from which the following
 paragraphs are extracted:
@@ -437,9 +437,9 @@ Their meaning should be straightforward: the first routine will add an
 item to the right of the cursor position, and the second will
 remove the first item of the container.
 </para>
-</sect1>
+</section>
 
-<sect1><title>Feature categories</title>
+<section><title>Feature categories</title>
 
 <para>
 To facilitate class learning, the numerous features of the
@@ -561,5 +561,5 @@ class text and flat-short forms, the feature categories generally
 appear in the same predictable order in the classes.
 </para>
 
-</sect1>
+</section>
 </chapter>

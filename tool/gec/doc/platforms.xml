@@ -6,7 +6,7 @@
 		"Supported Platforms"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/platforms">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>18 March 2006</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>Supported Platforms</title>
@@ -107,8 +107,7 @@ has already been used successfully:
 	</tgroup>
 </table>
 <para>
-And using computers from SourceForge's
-<ulink url="https://sourceforge.net/docs/compile_farm#devel_tools">Compile Farm</ulink>:
+And using computers from SourceForge's Compile Farm:
 </para>
 <table>
 	<title></title>
@@ -158,11 +157,11 @@ on a new platform or with a new C compiler using the code from the Git repositor
 </para>
 <para>
 First you need to check-out the code from the
-<ulink url="https://sourceforge.net/scm/?type=git&amp;group_id=24591">Gobo Git
+<ulink url="https://github.com/gobo-eiffel/gobo">Gobo Git
 repository</ulink>. Then you should set the environment variable $GOBO
 to the directory where you checked out the code, and add
 <filename class="directory">$GOBO/bin</filename> to your $PATH.
-All this is explained in <filename>$GOBO/work/bootstrap/Readme.txt</filename>.
+All this is explained in <filename>$GOBO/bin/Readme.md</filename>.
 If you are using a C compiler other than Microsoft Visual C
 <projectname>cl</projectname> on Windows or GNU <projectname>gcc</projectname>
 on other operating systems such as Linux, you should provide a configuration
@@ -173,15 +172,15 @@ C compiler"</link>.
 Then, depending on your platform and your C compiler, you should run either one of these:
 <blockquote>
 <programlisting>
-<filename>bootstrap.bat &lt;c_compiler&gt; ge</filename>
-<filename>bootstrap.sh &lt;c_compiler&gt; ge</filename>
+<filename>%GOB%\bin\install.bat &lt;c_compiler&gt;</filename>
+<filename>$GOBO/bin/install.sh &lt;c_compiler&gt;</filename>
 </programlisting>
 </blockquote>
 If this completes successfully (no "BUILD FAILED!" message), you can then run
 the following test:
 <blockquote>
 <programlisting>
-<filename>cd $GOBO/test</filename>
+<filename>cd $GOBO</filename>
 <filename>geant test_debug_ge</filename>
 </programlisting>
 </blockquote>

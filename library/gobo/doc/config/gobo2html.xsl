@@ -107,7 +107,7 @@
 	<table border="0" width="100%">
 	<tr>
 		<td>
-			<h1><xsl:value-of select="gobodoc:title"/></h1>
+			<font size="6"><strong><xsl:value-of select="gobodoc:title"/></strong></font>
 		</td>
 		<td align="right">
 			<xsl:choose>

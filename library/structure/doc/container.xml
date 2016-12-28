@@ -6,23 +6,23 @@
 		"General Abstractions"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1997-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1997-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
 
-<chapter id="structure/container">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="structure/container">
 <chapterinfo>
 	<copyright>
-		<year>1999-2005</year>
+		<year>1999-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>12 February 2005</date>
+	<date>26 December 2016</date>
 </chapterinfo>
 
 <title>General Abstractions</title>
@@ -52,12 +52,12 @@ The <libraryname>Gobo Eiffel Structure Library</libraryname> follows the
 classical design pattern whereby deferred classes introduce
 abstract properties, which leaves room for expansion by
 inheriting from these deferred classes to implement yet
-unavailable containers. The <classname>container</classname>
+unavailable containers. The <filename class="directory">container</filename>
 cluster contains classes describing general abstract notions such
 as traversable, resizable or sortable properties.
 </para>
 
-<sect1 id="ds_container"><title>Class <classname>DS_CONTAINER</classname></title>
+<section id="ds_container"><title>Class <classname>DS_CONTAINER</classname></title>
 
 <para>
 All data structures are descendant of class
@@ -80,8 +80,8 @@ The most direct descendant classes of <classname>DS_CONTAINER</classname>
 introduce some abstract properties of containers.
 </para>
 
-</sect1>
-<sect1 id="ds_searchable">
+</section>
+<section id="ds_searchable">
 <title>Class <classname>DS_SEARCHABLE</classname></title>
 
 <para>
@@ -132,8 +132,8 @@ provided by the cursor classes of the
 <link linkend="traversal">traversal mechanism</link>.
 </para>
 
-</sect1>
-<sect1><title>Class <classname>DS_TRAVERSABLE</classname></title>
+</section>
+<section><title>Class <classname>DS_TRAVERSABLE</classname></title>
 
 <para>
 Some containers can provide facilities in order to inspect
@@ -144,8 +144,8 @@ design and implementation of such pattern and hence deserves a
 documentation.
 </para>
 
-</sect1>
-<sect1><title>Class <classname>DS_SORTABLE</classname></title>
+</section>
+<section><title>Class <classname>DS_SORTABLE</classname></title>
 
 <para>
 Some containers such as priority queues or binary search trees
@@ -160,8 +160,8 @@ sorting algorithms and here again deserves a
 in this documentation.
 </para>
 
-</sect1>
-<sect1 id="ds_indexable"><title>Class <classname>DS_INDEXABLE</classname></title>
+</section>
+<section id="ds_indexable"><title>Class <classname>DS_INDEXABLE</classname></title>
 
 <para>
 Some containers provide an index-based access to their items,
@@ -190,8 +190,8 @@ Have a look at the <link linkend="flatshort/ds_indexable">flat-short form</link>
 for a complete list of these features.
 </para>
 
-</sect1>
-<sect1 id="ds_resizable"><title>Class <classname>DS_RESIZABLE</classname></title>
+</section>
+<section id="ds_resizable"><title>Class <classname>DS_RESIZABLE</classname></title>
 
 <para>
 Some containers allocate chunks of memory to hold their items.
@@ -214,6 +214,6 @@ checks whether the number of items in the container has reached this
 limit.
 </para>
 
-</sect1>
+</section>
 
 </chapter>

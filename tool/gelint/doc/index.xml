@@ -6,7 +6,7 @@
 		"Gobo Eiffel Lint"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,21 +15,21 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/index">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>28 December 2016</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Lint</title>
 
 <para>
 <projectname>Gobo Eiffel Lint</projectname>, or <projectname>gelint</projectname>
-for short, is a companion tool of <link linkend="../gec/index">
+for short, is a companion tool of <link linkend="../../../tool/gec/doc/index">
 <projectname>gec</projectname></link>. It's a <ulink
 url="http://en.wikipedia.org/wiki/Lint_programming_tool">lint-like</ulink> tool
 for Eiffel. In addition to reporting errors found by compilers, it also goes

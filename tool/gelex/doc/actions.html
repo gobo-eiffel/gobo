@@ -13,9 +13,9 @@ content="text/html; charset=iso-8859-1">
     <tr>
         <td><font size="6"><strong>Actions</strong></font></td>
         <td align="right"><a href="start_conditions.html"><img
-        src="../image/previous.gif" alt="Previous" border="0"
+        src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a href="skeleton.html"><img
-        src="../image/next.gif" alt="Next" border="0" width="40"
+        src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
 </table>
@@ -94,7 +94,7 @@ can be used in actions:</p>
     <dt><a href="skeleton.html#echo" name="echo"><font
         color="#008080"><em><tt>echo</tt></em></font></a></dt>
     <dd>Copy <a href="#text"><font color="#008080"><em><tt>text</tt></em></font></a>
-        to the scanner's output file using <a href="#output"><font 
+        to the scanner's output file using <a href="#output"><font
         color="#008080"><em><tt>output</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#Empty_buffer" name="Empty_buffer"><font
         color="#008080"><em><tt>Empty_buffer</tt></em></font></a><font
@@ -102,7 +102,7 @@ can be used in actions:</p>
     <dd>Empty input buffer (once function). When input sources
         are not known yet at the creation time of a scanner, this
         input buffer can be used by default with the creation
-        routine <a href="skeleton.html#make_with_buffer"><font 
+        routine <a href="skeleton.html#make_with_buffer"><font
         color="#008080"><em><tt>make_with_buffer</tt></em></font></a>.</dd>
     <dt><a href="skeleton.html#flush_input_buffer"
         name="flush_input_buffer"><font color="#008080"><em><tt>flush_input_buffer</tt></em></font></a></dt>
@@ -114,7 +114,7 @@ can be used in actions:</p>
         color="#008080"><tt>: </tt><em><tt>YY_BUFFER</tt></em></font></dt>
     <dd>Input buffer of the scanner. By default the input buffer
         is filled from the standard input. To avoid unexpected
-        behaviors, the routine <a href="#set_input_buffer"><font 
+        behaviors, the routine <a href="#set_input_buffer"><font
         color="#008080"><em><tt>set_input_buffer</tt></em></font></a>
         should be used to switch to other input buffers.</dd>
     <dt><a href="skeleton.html#last_character"
@@ -126,19 +126,19 @@ can be used in actions:</p>
         color="#008080"><em><tt>last_token</tt></em></font></a><font
         color="#008080"><tt>:</tt><em><tt> INTEGER</tt></em></font></dt>
     <dd>Code of the last token read. When this attribute is given
-        a non-negative value the procedure <a href="skeleton.html#read_token"><font 
+        a non-negative value the procedure <a href="skeleton.html#read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a>
         stops, giving the opportunity to its caller (e.g. a
         parser routine) to inspect this code. Each time <a href="skeleton.html#read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a> is
         called again it continues processing tokens from where it
-        last left off until either <font 
+        last left off until either <font
         color="#008080"><em><tt>last_token</tt></em></font>
         is given a non-negative value again or the end of the
         file is reached (yielding a null value). Non-positive
-        values are reserved by <a href="skeleton.html#read_token"><font 
+        values are reserved by <a href="skeleton.html#read_token"><font
         color="#008080"><em><tt>read_token</tt></em></font></a> to indicate internal errors which can
-        occur when too many <a href="#reject"><font 
+        occur when too many <a href="#reject"><font
         color="#008080"><em><tt>reject</tt></em></font></a> are
         called (and hence nothing can be matched anymore) or when
         the option <a href="options.html#nodefault"><font
@@ -156,7 +156,7 @@ can be used in actions:</p>
         be rescanned when the scanner looks for the next match. <a href="#text"><font
         color="#008080"><em><tt>text</tt></em></font></a> and <a href="#text_count"><font
         color="#008080"><em><tt>text_count</tt></em></font></a> are
-        adjusted appropriately (e.g., <a href="#text_count"><font 
+        adjusted appropriately (e.g., <a href="#text_count"><font
         color="#008080"><em><tt>text_count</tt></em></font></a>
         will now be equal to <font color="#008080"><em><tt>n</tt></em></font>).
         For example, on the input &quot;<tt>foobar</tt>&quot; the
@@ -172,7 +172,7 @@ can be used in actions:</p>
         color="#008080"><em><tt>less</tt></em></font> will cause
         the entire current input string to be scanned again.
         Unless the way the scanner subsequently process its input
-        has been changed (using <a href="#set_start_condition"><font 
+        has been changed (using <a href="#set_start_condition"><font
         color="#008080"><em><tt>set_start_condition</tt></em></font></a>,
         for example), this will result in an endless loop.</dd>
     <dt><a href="skeleton.html#line" name="line"><font
@@ -344,7 +344,7 @@ color="#0000FF">{</font>
     <dt><a href="skeleton.html#set_input_buffer"
         name="set_input_buffer"><font color="#008080"><em><tt>set_input_buffer</tt></em></font></a><font
         color="#008080"><em><tt> </tt></em><tt>(</tt><em><tt>a_buffer</tt></em><tt>:</tt><em><tt>
-        </tt></em><em><strong><tt>like </tt></strong></em><em><a 
+        </tt></em><em><strong><tt>like </tt></strong></em><em><a
         href="#input_buffer"><font color="#008080"><tt>input_buffer</tt></font></a></em><tt>)</tt></font></dt>
     <dd>Switch the scanner's input buffer so that subsequent
         tokens will come from <font color="#008080"><em><tt>a_buffer</tt></em></font>.
@@ -535,20 +535,20 @@ generated scanner class.</p>
             <strong>Last Updated:</strong> 22 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a
         href="http://www.gobosoft.com"><img
-        src="../image/home.gif" alt="Home" border="0" width="40"
+        src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" width="40"
         height="40"></a><a href="index.html"><img
-        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" width="40"
         height="40"></a><a href="start_conditions.html"><img
-        src="../image/previous.gif" alt="Previous" border="0"
+        src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0"
         width="40" height="40"></a><a href="skeleton.html"><img
-        src="../image/next.gif" alt="Next" border="0" width="40"
+        src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
 </table>

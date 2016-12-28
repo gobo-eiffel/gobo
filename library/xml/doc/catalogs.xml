@@ -1,14 +1,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_catalogs">
 <chapterinfo>
 	<copyright>
-		<year>2005</year>
+		<year>2005-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>XML catalogs and the Catalog Resolver</title>
@@ -92,7 +92,7 @@ A number of options control the way the ctaalog resolver finds catalogs, and the
 		<para>
 			Additional catalogs are searched for particular documents if one or more
 			<exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions appear
-			within that documents (see <ulink url="http://www.oasis-open.org/committees/download.php/12075/xml-catalogs.html#oasis-er-tc-abc">
+			within that documents (see <ulink url="http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html#oasis-er-tc-abc">
 			the specification for restrictions</ulink>).
 			This behaviour can be suppressed by calling <featurename>suppress_processing_instructions</featurename>.
 		</para>

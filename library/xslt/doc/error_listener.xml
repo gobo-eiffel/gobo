@@ -6,7 +6,7 @@
 		"Error Listener"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_error_listener">
   <chapterinfo>
     <copyright>
-      <year>2004</year>
+      <year>2004-2016</year>
       <holder>Colin Adams and others</holder>
     </copyright>
     <author>
@@ -23,12 +23,12 @@
       <surname>Adams</surname>
     </author>
     <email>colin@colina.demon.co.uk</email>
-    <date>Tuesday, October 19th, 2004</date>
+    <date>27 December 2016</date>
   </chapterinfo>
   <title>The Error Listener</title>    
   <para>
     The Error Listener receives notification of all warnings and errors (whether recoverable or not)
-    generated when compiling the stylesheet, or produced by the <link linkend="xslt_transformer"><classname>XM_XSLT_TRANSFORMER</classname></link>.
+    generated when compiling the stylesheet, or produced by the <link linkend="transformer"><classname>XM_XSLT_TRANSFORMER</classname></link>.
   </para>
   <para>
     XSLT defines some errors as recoverable (and specifies optional recovery options), and others

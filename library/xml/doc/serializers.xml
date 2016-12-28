@@ -1,14 +1,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_serializers">
 <chapterinfo>
 	<copyright>
-		<year>2007</year>
+		<year>2007-2016</year>
 		<holder>Colin Adams</holder>
 	</copyright>
 	<author>
 		<firstname>Colin</firstname><surname>Adams</surname>
 	</author>
 	<email>colin@colina.demon.co.uk</email>
-	<date>7th October 2007</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>XML serializers</title>
@@ -85,7 +85,7 @@
    </para>
    <para>
     To see how to use the serializer, refer to <filename>${GOBO}/library/xslt/example/serializer/Readme.txt</filename>, or to the documentation in 
-    <link linkend="xslt/xslt_serializer">XSLT 2.0 Serializer</link>.
+    <link linkend="../../../library/xslt/doc/xslt_serializer">XSLT 2.0 Serializer</link>.
    </para>
   </listitem>
  </varlistentry>

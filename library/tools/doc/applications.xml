@@ -6,7 +6,7 @@
 		"Applications using the Gobo Eiffel Tools Library"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/applications">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>Applications using the Gobo Eiffel Tools Library</title>
@@ -37,7 +37,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../gec/index">gec</link></term>
+		<term><link linkend="../../../tool/gec/doc/index">gec</link></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -48,7 +48,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../gelint/index">gelint</link></term>
+		<term><link linkend="../../../tool/gelint/doc/index">gelint</link></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -59,11 +59,11 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../getest/index">getest</link></term>
+		<term><link linkend="../../../tool/getest/doc/index">getest</link></term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term><ulink url="http://se.inf.ethz.ch/people/leitner/auto_test/">AutoTest</ulink></term>
+		<term><ulink url="http://se.inf.ethz.ch/old/people/leitner/test_studio/">TestStudio</ulink> (superseded by <ulink url="http://se.inf.ethz.ch/research/autotest/">AutoTest</ulink>)</term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -74,7 +74,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><ulink url="http://www.raboof.at/various/">gutentag</ulink></term>
+		<term><ulink url="https://github.com/oligot/Erl-G/tree/master/src/gutentag">gutentag</ulink></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -85,7 +85,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><ulink url="http://se.inf.ethz.ch/people/leitner/erl_g/">Erl-G</ulink></term>
+		<term><ulink url="https://github.com/oligot/Erl-G">Erl-G</ulink></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -96,7 +96,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><ulink url="http://se.inf.ethz.ch/research/scoop.html">SCOOP to SCOOPLI preprocessor</ulink></term>
+		<term><ulink url="http://se.inf.ethz.ch/old/people/arslan/data/scoop/workshops/Plzen_2003/SCOOPLI_on_.NET.pdf">SCOOP to SCOOPLI preprocessor</ulink></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>

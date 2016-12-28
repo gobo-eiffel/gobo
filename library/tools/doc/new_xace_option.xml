@@ -6,7 +6,7 @@
 		"Adding a new Xace option"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>28 February 2010</date>
+	<date>27 December 2016</date>
 </chapterinfo>
 
 <title>Adding a new Xace option</title>
@@ -37,7 +37,7 @@ in order to let the library recognize a new option in Xace.
 The first thing to do is to describe the new option in the documentation.
 All Xace options are specified in this file:
 <blockquote>
-	<filename>$GOBO/doc/gexace/options.txt</filename>
+	<filename>$GOBO/tool/gexace/doc/options.txt</filename>
 </blockquote>
 The file is divided in four sections: "System options", "Cluster options",
 "Class options" and "Feature options". Note that some options are applicable

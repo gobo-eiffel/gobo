@@ -6,9 +6,7 @@
  <body bgcolor="#FFFFFF">
   <table border="0" width="100%">
    <tr>
-    <td>
-     <h1>Supported Platforms</h1>
-    </td>
+    <td><font size="6"><strong>Supported Platforms</strong></font></td>
     <td align="right"><a href="future.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
   </table>
@@ -98,8 +96,7 @@
    </table>
    
    <p>
-    And using computers from SourceForge's
-    <a href="https://sourceforge.net/docs/compile_farm#devel_tools">Compile Farm</a>:
+    And using computers from SourceForge's Compile Farm:
     
    </p>
    
@@ -154,11 +151,11 @@
    
    <p>
     First you need to check-out the code from the
-    <a href="https://sourceforge.net/scm/?type=git&amp;group_id=24591">Gobo Git
+    <a href="https://github.com/gobo-eiffel/gobo">Gobo Git
      repository</a>. Then you should set the environment variable $GOBO
     to the directory where you checked out the code, and add
     <font color="#800000"><i><tt>$GOBO/bin</tt></i></font> to your $PATH.
-    All this is explained in <font color="#800000"><i><tt>$GOBO/work/bootstrap/Readme.txt</tt></i></font>.
+    All this is explained in <font color="#800000"><i><tt>$GOBO/bin/Readme.md</tt></i></font>.
     If you are using a C compiler other than Microsoft Visual C
     <i>cl</i> on Windows or GNU <i>gcc</i>
     on other operating systems such as Linux, you should provide a configuration
@@ -172,8 +169,8 @@
     
     <blockquote>
      <pre>
-<font color="#800000"><i><tt>bootstrap.bat &lt;c_compiler&gt; ge</tt></i></font>
-<font color="#800000"><i><tt>bootstrap.sh &lt;c_compiler&gt; ge</tt></i></font>
+<font color="#800000"><i><tt>%GOB%\bin\install.bat &lt;c_compiler&gt;</tt></i></font>
+<font color="#800000"><i><tt>$GOBO/bin/install.sh &lt;c_compiler&gt;</tt></i></font>
 </pre>
      </blockquote>
     If this completes successfully (no "BUILD FAILED!" message), you can then run
@@ -181,7 +178,7 @@
     
     <blockquote>
      <pre>
-<font color="#800000"><i><tt>cd $GOBO/test</tt></i></font>
+<font color="#800000"><i><tt>cd $GOBO</tt></i></font>
 <font color="#800000"><i><tt>geant test_debug_ge</tt></i></font>
 </pre>
      </blockquote>
@@ -202,7 +199,7 @@
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>18 March 2006</font></address>
+     <address><font size="2"><b>Copyright © 2006-2016, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>27 December 2016</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../../../library/gobo/doc/image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="../../../library/gobo/doc/image/toc.gif" alt="Toc" border="0" /></a><a href="future.html"><img src="../../../library/gobo/doc/image/previous.gif" alt="Previous" border="0" /></a><a href="see_also.html"><img src="../../../library/gobo/doc/image/next.gif" alt="Next" border="0" /></a></td>
    </tr>
