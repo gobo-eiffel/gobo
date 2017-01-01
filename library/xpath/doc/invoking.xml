@@ -34,19 +34,19 @@
    (or equivalently, from a host language of your own devising), follow the following steps:
    <itemizedlist>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_create_evaluator">Create an instance of <classname>XM_XPATH_EVALUATOR</classname></link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_static_context">Build a static context.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_static_context">Build a static context.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_evaluate">Call <featurename>evaluate</featurename> on the evaluator.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_evaluate">Call <featurename>evaluate</featurename> on the evaluator.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_check_errors">Check for evaluation errors.</link></para>
      </listitem>
      <listitem>
-       <para><ulink url="#xpath_stand_alone_invoke_results">Retrieving the results.</ulink></para>
+       <para><link linkend="invoking#xpath_stand_alone_invoke_results">Retrieving the results.</link></para>
      </listitem>
    </itemizedlist>
   </para> 

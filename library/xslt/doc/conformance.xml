@@ -92,7 +92,7 @@
       <term>User-defined Data Elements</term>
       <listitem>
        <para>
-	See <ulink url="../../../tool/gexslt/doc/extension/index.html">Extensions</ulink>.
+	See <link linkend="${tool/gexslt}/extension/index">Extensions</link>.
        </para>
       </listitem>
      </varlistentry> 
@@ -100,7 +100,7 @@
       <term>Collection URIs</term>
       <listitem>
        <para>
-	See <ulink url="../../../library/xpath/doc/collection.html">Collections</ulink>.
+	See <link linkend="${library/xpath}/collection">Collections</link>.
        </para>
       </listitem>
      </varlistentry> 
@@ -119,7 +119,7 @@
        </para>
        <para>
 	The last two schemes are used for reading from the standard input stream and text from Eiffel <classname>STRING</classname>s respectively. 
-	They are documented in <ulink url="../../../library/xml/doc/resolvers.html">Resolvers</ulink>, which also documents how to add additional URI schemes.
+	They are documented in <link linkend="${library/xml}/resolvers">Resolvers</link>, which also documents how to add additional URI schemes.
        </para>
        <para>
 	The following additional URI schemes are supported by <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>:
@@ -130,7 +130,7 @@
 	</itemizedlist>
        </para>
        <para>
-	For the list of supported media types and treatment of fragment identifiers, see <ulink url="../../../tool/gexslt/doc/options.html">Options</ulink>
+	For the list of supported media types and treatment of fragment identifiers, see <link linkend="${tool/gexslt}/options">Options</link>
 	This also applies to the <xslt>document()</xslt> function.
        </para>
       </listitem>
@@ -351,7 +351,7 @@
 	   <listitem>
 	    <para>
 	     A value of yes indicates collection URIs in the <uri>file</uri> scheme are supported as documented in 
-	     <ulink url="../../../library/xpath/doc/collection.html">Collections</ulink>.
+	     <link linkend="${library/xpath}/collection">Collections</link>.
 	    </para>
 	   </listitem>
 	  </varlistentry>
@@ -360,7 +360,7 @@
 	   <listitem>
 	    <para>
 	     A value of yes indicates collection URIs in the <uri>ftp</uri> scheme are supported as documented in 
-	     <ulink url="../../../library/xpath/doc/collection.html">Collections</ulink>.
+	     <link linkend="${library/xpath}/collection">Collections</link>.
 	    </para>
 	   </listitem>
 	  </varlistentry>
@@ -369,7 +369,7 @@
 	   <listitem>
 	    <para>
 	     A value of yes indicates collection URIs in the <uri>http</uri> scheme are supported as documented in 
-	     <ulink url="../../../library/xpath/doc/collection.html">Collections</ulink>.
+	     <link linkend="${library/xpath}/collection">Collections</link>.
 	    </para>
 	   </listitem>
 	  </varlistentry>

@@ -182,7 +182,7 @@
   <section>
     <title>Additional serialization parameters</title>
     <para>
-      See <link linkend="../../../tool/gexslt/doc/extension/index">Extensions</link>
+      See <link linkend="${tool/gexslt}/extension/index">Extensions</link>
     </para>
     <para>
       You can also add your own serialization parameters in a namespace, for use

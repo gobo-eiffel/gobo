@@ -38,7 +38,7 @@ This document is structured as follows:
 <variablelist>
 	<varlistentry>
 		<term>
-			<ulink url="introduction.html">Introduction</ulink>
+			<link linkend="introduction">Introduction</link>
 		</term>
 		<listitem><para>
 
@@ -49,7 +49,7 @@ This document is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<ulink url="parser.html">Parser</ulink>
+			<link linkend="parser">Parser</link>
 		</term>
 		<listitem><para>
 
@@ -62,7 +62,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="options.html">Options</ulink>
+			<link linkend="options">Options</link>
 		</term>
 		<listitem><para>
 
@@ -74,7 +74,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="alternate.html">Alternative options lists</ulink>
+			<link linkend="alternate">Alternative options lists</link>
 		</term>
 		<listitem><para>
 

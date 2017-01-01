@@ -13,7 +13,9 @@
 <xsl:param name="previous"/>
 <xsl:param name="next"/>
 <xsl:param name="toc"/>
-<xsl:param name="images" select="'../image/'"/>
+<xsl:param name="path_to_doc" select="''"/>
+<xsl:param name="path_to_gobo" select="concat($path_to_doc,'../../../')"/>
+<xsl:param name="images" select="concat($path_to_doc,'image/')"/>
 
 <xsl:output
 	method="xhtml"
@@ -1187,7 +1189,6 @@
 	</xsl:for-each>
 </xsl:template>
 
-
 <xsl:template name="linkend-to-url">
 		<!--
 			Replace id by URL.
@@ -1199,12 +1200,40 @@
 				result: xxx/yyy.html#zzz
 		-->
 	<xsl:param name="linkend"/>
+	<xsl:if test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
+		<xsl:variable name="linkend_kind_name" select="substring-before(substring-after($linkend,'/'),'}/')"/>
+		<xsl:variable name="linkend_kind_type" select="substring-before(substring-after($linkend,'${'),'/')"/>
+		<xsl:value-of select="$path_to_gobo"/>
+		<xsl:if test="not(ends-with($path_to_gobo,'/'))">
+			<xsl:value-of select="'/'"/>
+		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="starts-with($path_to_gobo,'http')">
+				<xsl:if test="compare($linkend_kind_name,'gobo')!=0">
+					<xsl:value-of select="concat($linkend_kind_name,'/')"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($linkend_kind_type,'/',$linkend_kind_name,'/doc/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:if>
+	<xsl:variable name="linkend_relative_name">
+		<xsl:choose>
+			<xsl:when test="starts-with($linkend,'${library/') or starts-with($linkend,'${tool/')">
+				<xsl:value-of select="substring-after($linkend,'}/')"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$linkend"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="contains($linkend,'#')">
-			<xsl:value-of select="concat(substring-before($linkend,'#'),'.html#',substring-after($linkend,'#'))"/>
+		<xsl:when test="contains($linkend_relative_name,'#')">
+			<xsl:value-of select="concat(substring-before($linkend_relative_name,'#'),'.html#',substring-after($linkend_relative_name,'#'))"/>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:value-of select="concat($linkend,'.html')"/>
+			<xsl:value-of select="concat($linkend_relative_name,'.html')"/>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

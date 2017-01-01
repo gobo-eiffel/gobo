@@ -29,7 +29,7 @@
 
 <para>
 <projectname>Gobo Eiffel Lint</projectname>, or <projectname>gelint</projectname>
-for short, is a companion tool of <link linkend="../../../tool/gec/doc/index">
+for short, is a companion tool of <link linkend="${tool/gec}/index">
 <projectname>gec</projectname></link>. It's a <ulink
 url="http://en.wikipedia.org/wiki/Lint_programming_tool">lint-like</ulink> tool
 for Eiffel. In addition to reporting errors found by compilers, it also goes

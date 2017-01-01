@@ -165,7 +165,7 @@
       <link linkend="output_extensions">Output extensions</link>
     </para>
     <para>
-      <link linkend="../../../tool/gexslt/doc/extension/index">Other extensions</link>
+      <link linkend="${tool/gexslt}/extension/index">Other extensions</link>
     </para>
   </section>
   <section>

@@ -45,10 +45,10 @@ to be tied to a single vendor.
 </para>
 <para>
 <projectname>gec</projectname> is the only open source Eiffel compiler
-that is released under a <link linkend="../../../library/gobo/doc/license">less constraining
+that is released under a <link linkend="${library/gobo}/license">less constraining
 license</link> than GNU GPL. To my knowledge it is also the first and only one whose
 source code can be compiled by all its major Eiffel compiler competitors, as is the
-case of all other classes provided in the <link linkend="../../../library/gobo/doc/index"><projectname>Gobo
+case of all other classes provided in the <link linkend="${library/gobo}/index"><projectname>Gobo
 Eiffel Project</projectname></link>. However, note that although it is already
 able to compile all Eiffel classes included in the <projectname>Gobo Eiffel
 Project</projectname>, <projectname>gec</projectname> is still under development.

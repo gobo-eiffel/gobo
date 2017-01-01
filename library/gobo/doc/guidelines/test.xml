@@ -60,7 +60,7 @@ between two releases.
 
 <para>
 Note: <emphasis>getest</emphasis> is based on Jim Weirich's 
-<link linkend="../../../../tool/getest/doc/see_also#eiffelunit"><projectname>EiffelUnit</projectname></link> 
+<link linkend="${tool/getest}/see_also#eiffelunit"><projectname>EiffelUnit</projectname></link> 
 tool but has the advantage to work with all 
 <link linkend="compilers">Eiffel compilers</link> supported by the 
 <projectname>Gobo Eiffel Project</projectname>.

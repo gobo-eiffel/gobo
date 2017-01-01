@@ -38,7 +38,7 @@
       The first argument is an <classname>XM_URI_EXTERNAL_RESOLVER</classname>, for use by 
       the XML parser to resolve
       <exmlsyntax>PUBLIC</exmlsyntax> and <exmlsyntax>SYSTEM</exmlsyntax> external identifiers.
-      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="../../../library/xml/doc/catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
+      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="${library/xml}/catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
       to look up the external identifiers in an OASIS ETRC XML catalog.
     </para>
     <para>

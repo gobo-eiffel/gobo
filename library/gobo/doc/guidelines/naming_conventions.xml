@@ -235,7 +235,7 @@ feature {<classname>NONE</classname>} <comment>Initialization</comment>
 
 <para>
 Here are some examples of feature category names, taken from the 
-<link linkend="../../../../library/structure/doc/index">
+<link linkend="${library/structure}/index">
 <libraryname>Gobo Eiffel Structure Library</libraryname> documentation</link>:
 </para>
 

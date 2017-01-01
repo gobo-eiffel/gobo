@@ -50,7 +50,6 @@
 		<geant target="for_each" arguments="set_first_file"/>
 		<set name="toc" value="index"/>
 		<set name="toc" value="${first_file}" if="${first_file}"/>
-		<set name="image" value="../../../library/gobo/doc/image"/>
 	</target>	
 	
 	<target name="for_each" export="NONE">
@@ -109,7 +108,9 @@
 			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'${toc}.html'&quot;"/>
-			<parameter name="images" value="&quot;'${image}/'&quot;"/>
+			<parameter name="path_to_doc" value="&quot;'${path_to_doc}'&quot;" if="${path_to_doc}"/>
+			<parameter name="path_to_gobo" value="&quot;'${path_to_gobo}'&quot;" if="${path_to_gobo}"/>
+			<parameter name="images" value="&quot;'${image}'&quot;" if="${image}"/>
 		</xslt>
 	</target>
 </project>

@@ -21,7 +21,7 @@
 
 	<target name="init" export="NONE">
 		<precursor/>
-		<set name="image" value="../${image}"/>
+		<set name="path_to_doc" value="../"/>
 	</target>
 
 	<target name="for_each" export="NONE">

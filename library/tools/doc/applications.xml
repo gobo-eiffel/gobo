@@ -37,7 +37,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../../../tool/gec/doc/index">gec</link></term>
+		<term><link linkend="${tool/gec}/index">gec</link></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -48,7 +48,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../../../tool/gelint/doc/index">gelint</link></term>
+		<term><link linkend="${tool/gelint}/index">gelint</link></term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
@@ -59,7 +59,7 @@ are a few examples using this library:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term><link linkend="../../../tool/getest/doc/index">getest</link></term>
+		<term><link linkend="${tool/getest}/index">getest</link></term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>

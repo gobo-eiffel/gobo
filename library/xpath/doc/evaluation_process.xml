@@ -38,10 +38,10 @@
   </para>
   <para>The steps taken by the Gobo XPath evaluation engine are as follows:
   <itemizedlist>
-    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_parsing">Parsing the expression text.</ulink></para></listitem>
-    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_simplifying">Simplifying the parsed expression.</ulink></para></listitem>
-    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_analysis">Performing static type checking and optimization.</ulink></para></listitem>
-    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_evaluation">Evaluating the expression.</ulink></para></listitem>
+    <listitem><para><link linkend="evaluation_process#xpath_stand_alone_evaluation_process_parsing">Parsing the expression text.</link></para></listitem>
+    <listitem><para><link linkend="evaluation_process#xpath_stand_alone_evaluation_process_simplifying">Simplifying the parsed expression.</link></para></listitem>
+    <listitem><para><link linkend="evaluation_process#xpath_stand_alone_evaluation_process_analysis">Performing static type checking and optimization.</link></para></listitem>
+    <listitem><para><link linkend="evaluation_process#xpath_stand_alone_evaluation_process_evaluation">Evaluating the expression.</link></para></listitem>
   </itemizedlist>
   </para>
   <section>

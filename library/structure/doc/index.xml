@@ -34,9 +34,9 @@ and algorithms</emphasis>. When this library has been developed,
 there was no data structure library standard, and no portable
 library was publicly available. Each Eiffel compiler provides its
 own data structure library, but none of them is portable (see
-<link linkend="../../../library/gobo/doc/portability/index">portability issues</link>). This
+<link linkend="${library/gobo}/portability/index">portability issues</link>). This
 library has hence been developed as a foundation for other
-portable libraries provided in the <link linkend="../../../library/gobo/doc/index">
+portable libraries provided in the <link linkend="${library/gobo}/index">
 <projectname>Gobo Eiffel Project</projectname></link>.
 The <libraryname>Gobo Eiffel Structure Library</libraryname>
 contains the classic containers needed in everyday

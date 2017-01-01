@@ -38,7 +38,7 @@
       <link linkend="extension/index">Extensions</link>
     </para>
     <para>
-      <link linkend="../../../library/xslt/doc/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
+      <link linkend="${library/xslt}/overview">The Eiffel programmers guide to the Gobo XSLT library</link>
     </para>
   </section>
   <section>
@@ -89,7 +89,7 @@
     </para>
     <para>
       The implementation status of the core XPath functions can be found at
-      <link linkend="../../../library/xpath/doc/implemented_functions">Implemented XPath functions</link>
+      <link linkend="${library/xpath}/implemented_functions">Implemented XPath functions</link>
       In summary, all are implemented.
     </para>
     <para>

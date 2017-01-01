@@ -46,8 +46,8 @@ The currently supported Eiffel compilers are:
 <para>
 <itemizedlist>
 	<listitem><para>
-		See <ulink url="../index.html#eiffel_compilers">Eiffel compilers</ulink> 
-		and <ulink url="../../../../Release_notes.md">Release_notes.md</ulink>.
+		See <link linkend="../index#eiffel_compilers">Eiffel compilers</link> 
+		and <ulink url="http://www.gobosoft.com/eiffel/gobo/Release_notes.md">Release_notes.md</ulink>.
 	</para></listitem>
 </itemizedlist>
 </para>

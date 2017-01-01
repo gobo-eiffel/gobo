@@ -36,13 +36,46 @@
 		
 		<geant target="develop"/>
 		<delete>
-			<directoryset directory="." include="@(**/.git)"/>
+			<fileset directory="." include="@(**/.git*)"/>
 		</delete>
-		<delete directory="work"/>
+		<delete>
+			<fileset directory="." include="@(**/.editorconfig)"/>
+		</delete>
 		<delete directory="library/structure/doc/visio"/>
 		<delete directory="library/time/doc/visio"/>
 	</target>
 
+	<target name="web_site" depend="init">
+		<description>
+			Build documentation package for the Web site.
+			The bootstrap should be run first.
+		</description>
+		
+		<setenv name="path_to_gobo" value="http://www.gobosoft.com/eiffel/gobo/"/>
+		<geant target="delivery"/>		
+		<geant target="move_doc_files" arguments="library">
+			<fileset include="@(library/*/build.eant)">
+				<map type="glob" from="library/*/build.eant" to="*"/>
+			</fileset>
+		</geant>
+		<geant target="move_doc_files" arguments="tool">
+			<fileset include="@(tool/*/build.eant)">
+				<map type="glob" from="tool/*/build.eant" to="*"/>
+			</fileset>
+		</geant>
+		<move to_directory=".">
+			<fileset include="@(gobo/**/*)">
+				<map type="glob" from="gobo/*" to="*"/>
+			</fileset>
+		</move>
+		<delete directory="library"/>
+		<delete directory="tool"/>
+		<delete directory="gobo"/>
+		<delete>
+			<fileset directory="." include="**/*.@(eant|xml|xsl)"/>
+		</delete>
+	</target>
+	
 <!-- Implementation -->
 
 	<target name="init" export="NONE">
@@ -65,7 +98,31 @@
 	<target name="other_help" export="NONE">
 		<echo message="   geant develop"/>
 		<echo message="   geant delivery"/>
+		<echo message="   geant web_site"/>
 		<precursor/>
 	</target>
 
+	<target name="move_doc_files" export="NONE">
+		<description>
+			Move documentation files for the Web site.
+		</description>
+		<argument name="kind_type"/>
+		
+		<geant file="build.eant" target="do_move_doc_files" arguments="${kind_type},${fs.mapped_filename}"/>
+	</target>		
+	
+	<target name="do_move_doc_files">
+		<description>
+			Move documentation files for the Web site.
+		</description>
+		<argument name="kind_type"/>
+		<argument name="kind_name"/>
+		
+		<move to_directory="${kind_name}">
+			<fileset include="@(${kind_type}/${kind_name}/doc/**/*)">
+				<map type="glob" from="${kind_type}/${kind_name}/doc/*" to="*"/>
+			</fileset>
+		</move>
+	</target>
+	
 </project>

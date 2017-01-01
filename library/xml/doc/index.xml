@@ -5,7 +5,7 @@
 
 		"Gobo Eiffel XML Library documentation"
 
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,14 +14,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml/index">
 <chapterinfo>
 	<copyright>
-		<year>2005</year>
+		<year>2005-2016</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>29 December 2016</date>
 </chapterinfo>
 
 <title>Gobo Eiffel XML Library</title>
@@ -74,7 +74,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="../../../library/xslt/doc/overview.html">XSLT library</ulink>
+			<link linkend="${library/xslt}/overview">XSLT library</link>
 		</term>
 		<listitem><para>
 			XSLT functionalities.
@@ -83,7 +83,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="../../../library/xpath/doc/xpointer.html">XPointer library</ulink>
+			<link linkend="${library/xpath}/xpointer">XPointer library</link>
 		</term>
 		<listitem><para>
 			XPointer functionalities.
@@ -92,7 +92,7 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
-			<ulink url="../../../library/xpath/doc/invoking.html">XPath library (not supported)</ulink>
+			<link linkend="${library/xpath}/invoking">XPath library (not supported)</link>
 		</term>
 		<listitem><para>
 			XPath functionalities.

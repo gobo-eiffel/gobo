@@ -85,7 +85,7 @@
    </para>
    <para>
     To see how to use the serializer, refer to <filename>${GOBO}/library/xslt/example/serializer/Readme.txt</filename>, or to the documentation in 
-    <link linkend="../../../library/xslt/doc/xslt_serializer">XSLT 2.0 Serializer</link>.
+    <link linkend="${library/xslt}/xslt_serializer">XSLT 2.0 Serializer</link>.
    </para>
   </listitem>
  </varlistentry>

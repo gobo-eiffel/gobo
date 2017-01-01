@@ -155,8 +155,8 @@
 		</term><listitem><para>
 
 			The purpose of this list is described in
-			section <ulink url="alternate.html">Alternative options
-			lists</ulink>. It is also a <classname>DS_LIST</classname>
+			section <link linkend="alternate">Alternative options
+			lists</link>. It is also a <classname>DS_LIST</classname>
 			and also changed directly, as with the <featurename>options</featurename>
 			query. The validity of all options provided with
 			alternative options list can be checked at any
