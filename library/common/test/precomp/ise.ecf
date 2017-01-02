@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="precomp_tester" location="${GOBO}/library/gobo/test/precomp"/>
+		<cluster name="precomp_tester" location="${GOBO}/library/common/test/precomp"/>
 		<cluster name="precomp_testgen" location="TESTGEN"/>
 		<cluster name="ts_test" location="${GOBO}/library/test/src">
 			<option void_safety="none"/>

@@ -10,7 +10,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/test.eant">
+		<parent location="${GOBO}/library/common/config/test.eant">
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>

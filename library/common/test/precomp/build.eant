@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/test.eant">
+		<parent location="${GOBO}/library/common/config/test.eant">
 			<redefine target="other_clean"/>
 			<redefine target="init_system"/>
 		</parent>
@@ -31,7 +31,7 @@
 	<target name="init_system" export="NONE">
 		<set name="system" value="xprecomp"/>
 		<set name="library" value="precomp"/>
-		<set name="system_dir" value="${GOBO}/library/gobo/test/${library}"/>
+		<set name="system_dir" value="${GOBO}/library/common/test/${library}"/>
 	</target>
 
 </project>

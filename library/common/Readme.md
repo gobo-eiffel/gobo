@@ -1,4 +1,4 @@
-# Gobo Eiffel Project Library
+# Gobo Eiffel Common Library
 
 This small library provides facilities commonly used by all
 tools and libraries included in the *Gobo Eiffel Project*.
@@ -13,4 +13,4 @@ tools and libraries included in the *Gobo Eiffel Project*.
   *Gobo Eiffel* libraries and tools to run their unit tests.
 
 ## Authors 
-Copyright (c) 2016, Eric Bezault and others
+Copyright (c) 2016-2017, Eric Bezault and others

@@ -27,7 +27,7 @@
 	</option>
 
 	<cluster name="gelex_tester" location="${GOBO}/tool/gelex/test/tool" prefix="tool_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gelex_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

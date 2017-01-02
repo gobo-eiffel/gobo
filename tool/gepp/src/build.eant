@@ -12,7 +12,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/eiffel.eant">
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
 			<redefine target="help"/>
 			<redefine target="other_install"/>
 			<redefine target="other_clobber"/>

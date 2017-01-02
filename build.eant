@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/packages.eant">
+		<parent location="${GOBO}/library/common/config/packages.eant">
 			<redefine target="init"/>
 			<redefine target="other_help"/>
 		</parent>
@@ -64,13 +64,13 @@
 			</fileset>
 		</geant>
 		<move to_directory=".">
-			<fileset include="@(gobo/**/*)">
-				<map type="glob" from="gobo/*" to="*"/>
+			<fileset include="@(common/**/*)">
+				<map type="glob" from="common/*" to="*"/>
 			</fileset>
 		</move>
 		<delete directory="library"/>
 		<delete directory="tool"/>
-		<delete directory="gobo"/>
+		<delete directory="common"/>
 		<delete>
 			<fileset directory="." include="**/*.@(eant|xml|xsl)"/>
 		</delete>

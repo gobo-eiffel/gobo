@@ -62,7 +62,7 @@ This software might work with other Eiffel compilers and/or other compiler
 versions, however no test has been made yet.
 To have a better understanding of the way this software has been designed
 and implemented, you can also have a look at
-[portability issues](library/gobo/doc/portability/index.html).
+[portability issues](http://www.gobosoft.com/eiffel/gobo/library/portability/index.html).
 
 ## Platforms
 
@@ -79,7 +79,7 @@ To install this package, please follow the instructions below:
 
 ### Under Windows
 
-* [Download](library/gobo/doc/download.html)
+* [Download](http://www.gobosoft.com/eiffel/gobo/download.html)
   the package `gobo*-src.7z`, or check-out the files from the
   [Git repository](https://github.com/gobo-eiffel/gobo).
 * Copy the files to a directory of your choice on your disk 
@@ -95,7 +95,7 @@ To install this package, please follow the instructions below:
 
 ### Under Unix/Linux
 
-* [Download](library/gobo/doc/download.html)
+* [Download](http://www.gobosoft.com/eiffel/gobo/download.html)
   the package `gobo*-src.tar.gz`, or check-out the files from the
   [Git repository](https://github.com/gobo-eiffel/gobo).
 * Copy the files to a directory of your choice on your disk and 
@@ -142,7 +142,7 @@ specific needs. Thank you in advance.
 
 You are also welcome to take part in the development of the
 *Gobo Eiffel Project*. Some
-[developer guidelines](library/gobo/doc/guidelines/index.html)
+[developer guidelines](http://www.gobosoft.com/eiffel/gobo/guidelines/index.html)
 are available to help you make the first steps.
 
 ## Authors 

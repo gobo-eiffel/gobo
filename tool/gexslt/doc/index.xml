@@ -27,7 +27,7 @@
   <title>Introduction to &title;</title>
   <para>&title; is a command-line processor for the XSLT 2.0 language. 
   It is very much still under development at the moment, but it is now close to the XSLT 2.0 Recomendation. It is used to produce the XHTML pages
-  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/library/gobo/doc/config/gobo.rng</filename>.
+  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/library/common/doc/config/gobo.rng</filename>.
   </para> 
   <section>
     <title>Using &program_name;</title>

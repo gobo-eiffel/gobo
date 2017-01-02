@@ -6,7 +6,7 @@
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
-	<cluster name="precomp_tester" location="${GOBO}/library/gobo/test/precomp"/>
+	<cluster name="precomp_tester" location="${GOBO}/library/common/test/precomp"/>
 	<cluster name="precomp_testgen" location="TESTGEN"/>
 	<cluster name="test" location="${GOBO}/library/test/src" prefix="ts_">
 		<option name="abstract" value="true"/>

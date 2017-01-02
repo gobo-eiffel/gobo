@@ -27,7 +27,7 @@
 	</option>
 
 	<cluster name="gepp_tester" location="${GOBO}/tool/gepp/test/tool" prefix="tool_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gepp_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

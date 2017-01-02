@@ -11,7 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/gobo/config/doc.eant">
+		<parent location="${GOBO}/library/common/config/doc.eant">
 			<redefine target="for_each"/>
 		</parent>
 	</inherit>

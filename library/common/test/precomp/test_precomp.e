@@ -5,7 +5,7 @@ note
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 	xace_filename: STRING
 			-- Name of Xace file used for precompilation
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "gobo", "test", "precomp", "precomp.xace">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "precomp", "precomp.xace">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			xace_filename_not_void: Result /= Void

@@ -4,7 +4,7 @@ note
 
 		"Program test cases"
 
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			-- by programs compiled with the free version
 			-- of ISE Eiffel under Linux/Unix
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "gobo", "test", "common", "data", "freeise.txt">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "common", "data", "freeise.txt">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			freeise_log_filename_not_void: Result /= Void
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			-- by programs compiled with Gobo Eiffel Compiler
 			-- when raising an exception
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"library", "gobo", "test", "common", "data", "geeraise.txt">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"library", "common", "test", "common", "data", "geeraise.txt">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			geeraise_log_filename_not_void: Result /= Void

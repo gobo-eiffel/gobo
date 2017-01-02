@@ -7,7 +7,7 @@
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
 	<cluster name="geant_tester" location="${GOBO}/tool/geant/test/tool" prefix="tool_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_geant_testgen" location="TESTGEN"/>
 	<cluster name="geant" location="${GOBO}/tool/geant/src" prefix="geant_">
 		<cluster name="command"/>

@@ -1209,7 +1209,7 @@
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="starts-with($path_to_gobo,'http')">
-				<xsl:if test="compare($linkend_kind_name,'gobo')!=0">
+				<xsl:if test="compare($linkend_kind_name,'common')!=0">
 					<xsl:value-of select="concat($linkend_kind_name,'/')"/>
 				</xsl:if>
 			</xsl:when>

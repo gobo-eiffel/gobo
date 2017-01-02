@@ -27,7 +27,7 @@
 	</option>
 
 	<cluster name="math_tester" location="${GOBO}/library/math/test/example" prefix="example_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="example_math_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

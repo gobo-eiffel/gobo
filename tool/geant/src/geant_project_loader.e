@@ -36,19 +36,19 @@ feature {NONE} -- Initialization
 		local
 			a_absolute_pathname: STRING
 			l_gobo_misc: STRING
-			l_library_gobo_config: STRING
+			l_library_common_config: STRING
 			l_new_build_filename: STRING
 		do
 			build_filename := a_build_filename
 			if not file_system.is_file_readable (build_filename) then
 					-- Try to see whether the file is one which was in ${GOBO}/misc
-					-- and which has been moved to ${GOBO}/library/gobo/config.
+					-- and which has been moved to ${GOBO}/library/common/config.
 				l_gobo_misc := Execution_environment.interpreted_string ("${GOBO}/misc/")
 				if a_build_filename.starts_with (l_gobo_misc) then
-					l_library_gobo_config := Execution_environment.interpreted_string ("${GOBO}/library/gobo/config/")
+					l_library_common_config := Execution_environment.interpreted_string ("${GOBO}/library/common/config/")
 					l_new_build_filename := a_build_filename.twin
 					l_new_build_filename.remove_head (l_gobo_misc.count)
-					l_new_build_filename := l_library_gobo_config + l_new_build_filename
+					l_new_build_filename := l_library_common_config + l_new_build_filename
 					if file_system.is_file_readable (l_new_build_filename) then
 						build_filename := l_new_build_filename
 					end

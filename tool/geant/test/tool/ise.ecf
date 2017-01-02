@@ -9,7 +9,7 @@
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="tool_geant_tester" location="${GOBO}/tool/geant/test/tool"/>
-		<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+		<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 		<cluster name="src_geant_testgen" location="TESTGEN"/>
 		<cluster name="geant_geant" location="${GOBO}/tool/geant/src">
 			<cluster name="geant_command" location="$|command"/>

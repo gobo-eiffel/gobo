@@ -9,7 +9,7 @@
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="example_test_tester" location="${GOBO}/library/test/test/example"/>
-		<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+		<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 		<cluster name="example_test_testgen" location="TESTGEN"/>
 		<cluster name="ts_test" location="${GOBO}/library/test/src">
 			<option void_safety="none"/>

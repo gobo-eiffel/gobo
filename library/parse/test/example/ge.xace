@@ -7,7 +7,7 @@
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
 	<cluster name="parse_tester" location="${GOBO}/library/parse/test/example" prefix="example_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="example_parse_testgen" location="TESTGEN"/>
 	<cluster name="test" location="${GOBO}/library/test/src" prefix="ts_">
 		<option name="abstract" value="true"/>

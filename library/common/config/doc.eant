@@ -104,7 +104,7 @@
 
 		<set name="xml_file" value="${a_file}${current_input_wrapper}.xml"/>
 		<outofdate variable="rebuild" source="${a_file}.xml" target="${a_file}.html"/>
-		<xslt processor="${xslt_processor}" input="${xml_file}" output="${a_file}.html" stylesheet="${GOBO}/library/gobo/doc/config/gobo2html.xsl" force="${rebuild}">
+		<xslt processor="${xslt_processor}" input="${xml_file}" output="${a_file}.html" stylesheet="${GOBO}/library/common/doc/config/gobo2html.xsl" force="${rebuild}">
 			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'${toc}.html'&quot;"/>

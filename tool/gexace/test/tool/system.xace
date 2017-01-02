@@ -27,7 +27,7 @@
 	</option>
 
 	<cluster name="gexace_tester" location="${GOBO}/tool/gexace/test/tool" prefix="tool_"/>
-	<cluster name="test_common" location="${GOBO}/library/gobo/test/common"/>
+	<cluster name="test_common" location="${GOBO}/library/common/test/common"/>
 	<cluster name="src_gexace_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

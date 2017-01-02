@@ -26,7 +26,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
-	<cluster name="precomp_tester" location="${GOBO}/library/gobo/test/precomp"/>
+	<cluster name="precomp_tester" location="${GOBO}/library/common/test/precomp"/>
 	<cluster name="precomp_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
