@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="integer_constant" default="help">
+
+	<description>
+		system: "ECMA integer constant semantics Tester"
+		copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xinteger_constant"/>
+		<set name="category" value="integer_constant"/>
+		<set name="system_dir" value="${GOBO}/library/tools/test/eiffel/semantics/${category}"/>
+	</target>
+
+</project>

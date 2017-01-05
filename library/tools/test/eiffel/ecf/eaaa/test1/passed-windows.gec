@@ -1,0 +1,2 @@
+[EAAA] ECF ${GOBO}\library\tools\test\eiffel\ecf\eaaa\test1\lib1\lib1.ecf (11,74): 'name' attribute is missing in element 'library'.
+	Used in ECF ${GOBO}\library\tools\test\eiffel\ecf\eaaa\test1\system.ecf (12,48)
