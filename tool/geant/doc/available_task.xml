@@ -117,7 +117,7 @@
 	<section id="available_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
-  <available resource="${GOBO}/readme.txt" variable="available"/>
+  <available resource="${GOBO}/Readme.md" variable="available"/>
 ]]>
 	</programlisting>
 	</section>

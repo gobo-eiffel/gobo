@@ -145,5 +145,6 @@ You are also welcome to take part in the development of the
 [developer guidelines](http://www.gobosoft.com/eiffel/gobo/guidelines/index.html)
 are available to help you make the first steps.
 
-## Authors 
-Copyright (c) 1997-2016, Eric Bezault and others
+## Authors
+
+Copyright (c) 1997-2017, Eric Bezault and others

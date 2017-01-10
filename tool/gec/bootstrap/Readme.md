@@ -34,4 +34,5 @@ tested, you are welcome to send patches and/or code to
 support other C compilers.
 
 ## Authors
+
 Copyright (c) 2001-2016, Eric Bezault and others

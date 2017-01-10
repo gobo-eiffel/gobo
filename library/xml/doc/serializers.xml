@@ -1,14 +1,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_serializers">
 <chapterinfo>
 	<copyright>
-		<year>2007-2016</year>
+		<year>2007-2017</year>
 		<holder>Colin Adams</holder>
 	</copyright>
 	<author>
 		<firstname>Colin</firstname><surname>Adams</surname>
 	</author>
 	<email>colin@colina.demon.co.uk</email>
-	<date>27 December 2016</date>
+	<date>8 January 2017</date>
 </chapterinfo>
 
 <title>XML serializers</title>
@@ -84,7 +84,7 @@
     clusters (just include the XSLT library.xace file in your system.xace file).
    </para>
    <para>
-    To see how to use the serializer, refer to <filename>${GOBO}/library/xslt/example/serializer/Readme.txt</filename>, or to the documentation in 
+    To see how to use the serializer, refer to <filename>${GOBO}/library/xslt/example/serializer/Readme.md</filename>, or to the documentation in 
     <link linkend="${library/xslt}/xslt_serializer">XSLT 2.0 Serializer</link>.
    </para>
   </listitem>

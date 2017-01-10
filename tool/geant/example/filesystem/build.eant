@@ -350,18 +350,18 @@
 			Copy the Readme from $GOBO to $GOBO/tool/geant/example/filesystem.
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
+		<copy file="${GOBO}/Readme.md" to_file="ttt1.txt"/>
 		<move file="ttt1.txt" to_file="ttt2.txt"/>
 		<move file="ttt2.txt" to_file="${GOBO}/ttt2.txt"/>
 	</target>
 
 	<target name="move_file2" dir="${GOBO}">
 		<description>
-			Copy Readme.txt from $GOBO to $GOBO/ttt.txt
+			Copy Readme.md from $GOBO to $GOBO/ttt.txt
 			setting the current working directory of this target to $GOBO.
 		</description>
 
-		<copy file="Readme.txt" to_file="ttt.txt"/>
+		<copy file="Readme.md" to_file="ttt.txt"/>
 		<move file="ttt.txt" to_directory="tool/geant/example/filesystem"/>
 	</target>
 
