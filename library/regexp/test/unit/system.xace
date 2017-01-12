@@ -30,7 +30,6 @@
 		<cluster name="pcretest"/>
 	</cluster>
 	<cluster name="rx_testgen" location="TESTGEN"/>
-	<cluster name="test_common" location="${GOBO}/test/common"/>
 	<mount location="${GOBO}/library/test/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>

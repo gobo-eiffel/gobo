@@ -42,6 +42,16 @@
 
 		<cluster name="kernel" location="./src/" recursive="true">
 			<file_rule>
+				<exclude>/16.05$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/(kl_input_file|kl_stdin_file)\.e$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+					<version type="compiler" max="16.05.9.9052"/>
+				</condition>
+			</file_rule>
+			<file_rule>
 				<exclude>/ge$</exclude>
 				<condition>
 					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
@@ -49,6 +59,21 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/ise$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" value="ge"/>
+				</condition>
+			</file_rule>
+		</cluster>
+		<cluster name="kernel_16_05" location="./src/16.05/" recursive="true">
+			<file_rule>
+				<exclude>/.*\.e$</exclude>
+				<condition>
+					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
+					<version type="compiler" min="16.05.9.9053"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>/.*\.e$</exclude>
 				<condition>
 					<custom name="GOBO_EIFFEL" value="ge"/>
 				</condition>

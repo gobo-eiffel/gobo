@@ -8,6 +8,8 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="gvwmc2_test2" location="${GOBO}/library/tools/test/eiffel/validity/gvwmc2/test2"/>
+		<cluster name="gvwmc2_test2" location="${GOBO}/library/tools/test/eiffel/validity/gvwmc2/test2">
+			<option void_safety="none"/>
+		</cluster>
 	</target>
 </system>

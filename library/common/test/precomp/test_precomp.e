@@ -77,7 +77,7 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate Ace file.
-			assert_execute ("gexace --library=ge " + xace_filename + output_log)
+			assert_execute ("gexace --system=ge " + xace_filename + output_log)
 				-- Gobo Eiffel Lint.
 			assert_execute ("gelint --flat ge.xace" + output_log)
 		end
@@ -121,7 +121,7 @@ feature {NONE} -- Precompilation
 			if define_option.count > 0 then
 				define_option.append_string ("%" ")
 			end
-			assert_execute ("gexace " + define_option + "--library=ise " + xace_filename + output_log)
+			assert_execute ("gexace " + define_option + "--system=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
 			assert_execute ("ecb " + l_compat_option + "-precompile -batch -config ise.ecf" + output_log)
 				-- Done.

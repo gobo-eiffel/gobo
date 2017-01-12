@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<library name="precomp">
+<system name="precomp">
 	<description>
 		system: "Gobo Eiffel Libraries precompilation"
-		copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,6 +14,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
+	<root class="ANY" creation="default_create"/>
 	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
@@ -29,4 +30,4 @@
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
-</library>
+</system>

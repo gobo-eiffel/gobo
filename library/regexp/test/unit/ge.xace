@@ -10,7 +10,6 @@
 		<cluster name="pcretest"/>
 	</cluster>
 	<cluster name="rx_testgen" location="TESTGEN"/>
-	<cluster name="test_common" location="${GOBO}/test/common"/>
 	<cluster name="test" location="${GOBO}/library/test/src" prefix="ts_">
 		<option name="abstract" value="true"/>
 		<cluster name="generation"/>

@@ -8,6 +8,8 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="vtct_test4" location="${GOBO}/library/tools/test/eiffel/validity/vtct/test4"/>
+		<cluster name="vtct_test4" location="${GOBO}/library/tools/test/eiffel/validity/vtct/test4">
+			<option void_safety="none"/>
+		</cluster>
 	</target>
 </system>
