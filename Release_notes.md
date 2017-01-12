@@ -17,7 +17,7 @@ For more details, see [History.md](History.md).
 
 ## Compiler specific notes
 
-### ISE 16.11 (ISE Eiffel)
+### ISE 16.05.9.8969 and 17.01.9.9700 (ISE Eiffel)
 
 * The ECF files for ISE Eiffel provided in this package are for
   Eiffel classic. In order to get ECF files configured for Eiffel

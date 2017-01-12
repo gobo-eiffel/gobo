@@ -1,6 +1,6 @@
 # Release History
 
-## Version 4.0 - ?
+## Version 4.0 - 14 January 2017
 
 ### geant
 
@@ -283,7 +283,7 @@
 * Removed classes and features that had been marked as obsolete
   in 2004 or before.
 * Removed warnings when compiling with ISE 6.6.
-* Removed warnings when compiling with ISE 16.11.
+* Removed warnings when compiling with ISE 17.01.
 * Converted Readme files to Markdown to be Github-friendly.
 
 ## Version 3.9 - 20 November 2008
