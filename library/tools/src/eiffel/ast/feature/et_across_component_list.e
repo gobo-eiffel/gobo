@@ -34,17 +34,22 @@ feature -- Access
 		end
 
 	index_of_name (a_name: ET_IDENTIFIER): INTEGER
-			-- Index of Across component with cursor named `a_name';
+			-- Index of first Across component with cursor named `a_name' which is in scope
+			-- (by convention, we are in the scope of an Across component if its `cursor_name'
+			-- is not marked as 'is_across_cursor');
 			-- 0 if it does not exist
 		require
 			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
+			l_cursor_name: ET_IDENTIFIER
 		do
 			from i := count until i < 1 loop
-				if storage.item (i).cursor_name.same_identifier (a_name) then
+				l_cursor_name := storage.item (i).cursor_name
+				if l_cursor_name.same_identifier (a_name) and then not l_cursor_name.is_across_cursor then
 					Result := i
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -52,6 +57,7 @@ feature -- Access
 		ensure
 			index_large_enough: Result >= 0
 			index_small_enough: Result <= count
+			in_scope: Result > 0 implies not across_component (Result).cursor_name.is_across_cursor
 		end
 
 feature -- Duplication

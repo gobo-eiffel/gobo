@@ -784,21 +784,13 @@ feature {NONE} -- Basic operations
 			-- They will be restored when we reach the end of the
 			-- closure by `set_end_closure'.
 		do
-			if not last_formal_arguments_stack.is_empty or last_formal_arguments /= Void then
-				last_formal_arguments_stack.force (last_formal_arguments)
-			end
+			last_formal_arguments_stack.force (last_formal_arguments)
 			last_formal_arguments := a_formal_arguments
-			if not last_local_variables_stack.is_empty or last_local_variables /= Void then
-				last_local_variables_stack.force (last_local_variables)
-			end
+			last_local_variables_stack.force (last_local_variables)
 			last_local_variables := Void
-			if not last_object_tests_stack.is_empty or last_object_tests /= Void then
-				last_object_tests_stack.force (last_object_tests)
-			end
+			last_object_tests_stack.force (last_object_tests)
 			last_object_tests := Void
-			if not last_across_components_stack.is_empty or last_across_components /= Void then
-				last_across_components_stack.force (last_across_components)
-			end
+			last_across_components_stack.force (last_across_components)
 			last_across_components := Void
 		end
 
@@ -821,11 +813,19 @@ feature {NONE} -- Basic operations
 			else
 				last_local_variables := Void
 			end
+			if attached last_object_tests as l_last_object_tests then
+				l_last_object_tests.wipe_out
+				last_object_tests_pool.force (l_last_object_tests)
+			end
 			if not last_object_tests_stack.is_empty then
 				last_object_tests := last_object_tests_stack.item
 				last_object_tests_stack.remove
 			else
 				last_object_tests := Void
+			end
+			if attached last_across_components as l_last_across_components then
+				l_last_across_components.wipe_out
+				last_across_components_pool.force (l_last_across_components)
 			end
 			if not last_across_components_stack.is_empty then
 				last_across_components := last_across_components_stack.item
@@ -1181,9 +1181,7 @@ feature {NONE} -- AST factory
 				end
 				if a_seed = 0 and then attached last_across_components as l_last_across_components then
 					a_seed := l_last_across_components.index_of_name (an_identifier)
-					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-							-- We set 'cursor_name.is_across_cursor' to False when
-							-- parsing withing its scope.
+					if a_seed /= 0 then
 						an_identifier.set_across_cursor (True)
 					end
 				end
@@ -1298,9 +1296,7 @@ feature {NONE} -- AST factory
 				end
 				if a_seed = 0 and then attached last_across_components as l_last_across_components then
 					a_seed := l_last_across_components.index_of_name (a_name)
-					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-							-- We set 'cursor_name.is_across_cursor' to False when
-							-- parsing within its scope.
+					if a_seed /= 0 then
 						a_name.set_across_cursor (True)
 					end
 				end
@@ -1406,9 +1402,7 @@ feature {NONE} -- AST factory
 				end
 				if l_seed = 0 and then attached last_across_components as l_last_across_components then
 					l_seed := l_last_across_components.index_of_name (l_identifier)
-					if l_seed /= 0 and then not l_last_across_components.across_component (l_seed).cursor_name.is_across_cursor then
-							-- We set 'cursor_name.is_across_cursor' to False when
-							-- parsing withing its scope.
+					if l_seed /= 0 then
 						l_identifier.set_across_cursor (True)
 					end
 				end
@@ -1846,9 +1840,7 @@ feature {NONE} -- AST factory
 				end
 				if a_seed = 0 and then attached last_across_components as l_last_across_components then
 					a_seed := l_last_across_components.index_of_name (a_name)
-					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-							-- We set 'cursor_name.is_across_cursor' to False when
-							-- parsing within its scope.
+					if a_seed /= 0 then
 						a_name.set_across_cursor (True)
 					end
 				end
@@ -1890,9 +1882,7 @@ feature {NONE} -- AST factory
 				end
 				if a_seed = 0 and then attached last_across_components as l_last_across_components then
 					a_seed := l_last_across_components.index_of_name (a_name)
-					if a_seed /= 0 and then not l_last_across_components.across_component (a_seed).cursor_name.is_across_cursor then
-							-- We set 'cursor_name.is_across_cursor' to False when
-							-- parsing within its scope.
+					if a_seed /= 0 then
 						a_name.set_across_cursor (True)
 					end
 				end

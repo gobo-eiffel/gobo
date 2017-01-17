@@ -14103,6 +14103,10 @@ feature {ET_AST_NODE} -- Processing
 				check_object_test_local_validity (an_identifier, current_context)
 			elseif an_identifier.is_across_cursor then
 				check_across_cursor_validity (an_identifier, current_context)
+			else
+					-- Internal error: invalid kind of identifier.
+				set_fatal_error
+				error_handler.report_giaaa_error
 			end
 		end
 
