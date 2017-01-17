@@ -2,7 +2,7 @@
 
 <system name="xgelint_tool">
 	<description>
-		system: "Gobo Eiffel Compiler Tester"
+		system: "Gobo Eiffel Lint Tester"
 		copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
