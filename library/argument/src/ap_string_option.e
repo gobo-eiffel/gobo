@@ -25,7 +25,7 @@ create
 feature -- Access
 
 	parameters: DS_LIST [detachable STRING]
-			-- List of parameters that were give to this option
+			-- List of parameters that were given to this option
 
 feature -- Status setting
 
