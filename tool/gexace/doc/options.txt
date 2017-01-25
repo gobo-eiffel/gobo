@@ -1053,7 +1053,7 @@ ISE ECF:
 NAME: syntax
 
 VALUES: obsolete | transitional | standard
-DEFAULT: transitional
+DEFAULT: standard 
 DESCRIPTION: Instruct the Eiffel parser to accept or reject some
   syntax notations for some Eiffel constructs. This is typically
   used during transitional periods.
