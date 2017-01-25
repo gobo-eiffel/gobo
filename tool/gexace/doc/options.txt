@@ -26,7 +26,7 @@ NAME: address_expression
 VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Enable expressions of the form '$(s.to_c)' instead
-  of having to declare 'a' of type ANY, and then having to 
+  of having to declare 'a' of type ANY, and then having to
   assign 's.to_c' to 'a' and passing '$a'. Turn this option on
   only if you have advanced knowledge of the garbage collector
   insides, since using this syntax illegally can lead to bugs
@@ -222,11 +222,11 @@ DEFAULT: true
 DESCRIPTION: Specify that 'create' should be considered as
   a keyword (replacing the old form !!) and not as an
   identifier.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -240,7 +240,7 @@ DESCRIPTION: Specifies options to be passed to the c compiler,
   which is responsible for compiling the C code that has been
   generated from the Eiffel system.
 NOTE: There can be several of these options.
-  Makes only sense for Eiffel compilers, which generate c 
+  Makes only sense for Eiffel compilers, which generate c
   code.
 
 ISE Ace:
@@ -333,7 +333,7 @@ DESCRIPTION: Specify in which directory the documentation
   Project/Generate documentation... menu). If no directory is
   specified, the documentation will be generated at the same
   level as the EIFGEN directory in a directory called
-  'Documentation'. 
+  'Documentation'.
 
 ISE Ace:
   <pathname> -> document ("<pathname>")
@@ -545,7 +545,7 @@ VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Allow the compiler to use more memory at compile
   time (caching, bigger buffers, etc.). Compilation is likely
-  to be quicker, if you have enough memory (RAM, not disk!)... 
+  to be quicker, if you have enough memory (RAM, not disk!)...
 
 ISE Ace:
   N/A
@@ -707,11 +707,11 @@ DESCRIPTION: The default FPU precision used by gcc for Linux
   behavior of gcc on other platforms or the behavior of other
   compilers on the same architecture (i386). The option
   has no effect if used on a different platform.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -933,11 +933,11 @@ NAME: portable_code_generation
 VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Should generated C code be portable?
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1029,11 +1029,11 @@ DESCRIPTION: Specify a list of class names (one per line) that
   should be marked as 'storable'. It's an alternative to declaring
   these classes in 'storable' clauses in cluster declarations
   in Ace files.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1053,7 +1053,7 @@ ISE ECF:
 NAME: syntax
 
 VALUES: obsolete | transitional | standard
-DEFAULT: transitional
+DEFAULT: standard
 DESCRIPTION: Instruct the Eiffel parser to accept or reject some
   syntax notations for some Eiffel constructs. This is typically
   used during transitional periods.
@@ -1144,11 +1144,11 @@ DESCRIPTION: Specify a list of class names (one per line) that
   should be marked as 'visible'. It's an alternative to declaring
   these classes in 'visible' clauses in cluster declarations
   in Ace files.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1321,11 +1321,11 @@ NAME: component
 VALUES: <pathname>
 DEFAULT: no default
 DESCRIPTION: Specify that the cluster is in fact a component library.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1602,11 +1602,11 @@ VALUES: true | false
 DEFAULT: no default
 DESCRIPTION: Specify that all classes in the cluster should
   be included into the system.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1832,11 +1832,11 @@ VALUES: true | false
 DEFAULT: no default
 DESCRIPTION: Specify that this class should be included into
   the system.
-NOTE: This option was for the Halstenbach compiler. 
+NOTE: This option was for the Halstenbach compiler.
   Even if Halstenbach is not supported any more, gexace
-  still supports this option because some Xace files may 
+  still supports this option because some Xace files may
   have it.
-  
+
 ISE Ace:
   N/A
 ISE ECF:
@@ -1947,4 +1947,3 @@ ISE ECF:
   <external_name> ->
       <visible class="CLASS_NAME" feature="feature_name" feature_rename="<external_name>"/>
 -------------------------------------------------------------
-
