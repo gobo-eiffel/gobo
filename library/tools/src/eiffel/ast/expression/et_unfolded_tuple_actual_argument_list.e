@@ -12,7 +12,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			i, nb, nb_tuple: INTEGER
 		do
 			make_with_capacity (a_count)
+			actual_arguments := a_actual_arguments
 			if a_actual_arguments /= Void then
 				left_symbol := a_actual_arguments.left_symbol
 				right_symbol := a_actual_arguments.right_symbol

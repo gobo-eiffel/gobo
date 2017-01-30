@@ -1,5 +1,16 @@
 # Release History
 
+## Version 4.1 - ??
+
+### Gobo Eiffel Tools Library
+
+* Fixed bug when a feature has an `across` construct followed by an
+  object-test with the same local name. The object-test local name
+  was considered as an `across` local name.
+* Fixed bug in Tuple-argument-unfolding mechanism after calling
+  `ET_CLASS.reset_after_interface_checked`. The original arguments
+  were not reset correctly.
+
 ## Version 4.0 - 14 January 2017
 
 ### geant
