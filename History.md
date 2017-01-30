@@ -10,6 +10,10 @@
 * Fixed bug in Tuple-argument-unfolding mechanism after calling
   `ET_CLASS.reset_after_interface_checked`. The original arguments
   were not reset correctly.
+* Fixed bug in Tuple-type-unfolding mechanism after calling
+  `ET_CLASS.reset_after_features_flattened` or 
+  `ET_CLASS.reset_after_ancestors_built`. The unfolded form was
+  erroneously discarded.
 
 ## Version 4.0 - 14 January 2017
 

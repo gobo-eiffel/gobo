@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,17 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name = a_name
 			implementation_class_set: implementation_class = a_class
+		end
+
+feature -- Initialization
+
+	reset_constraint_creation_procedures
+			-- Reset constraint creation procedures as they were just
+			-- after they were last parsed.
+		do
+			if attached creation_procedures as l_creation_procedures then
+				l_creation_procedures.reset
+			end
 		end
 
 feature -- Access

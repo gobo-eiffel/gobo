@@ -5,7 +5,7 @@ note
 		"Eiffel constrained formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,9 +52,7 @@ feature -- Initialization
 			-- Reset type as it was just after it was last parsed.
 		do
 			constraint.reset
-			if attached creation_procedures as l_creation_procedures then
-				l_creation_procedures.reset
-			end
+			reset_constraint_creation_procedures
 		end
 
 feature -- Access

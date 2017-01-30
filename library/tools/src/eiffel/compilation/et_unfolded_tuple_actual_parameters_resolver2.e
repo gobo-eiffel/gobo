@@ -5,7 +5,7 @@ note
 		"Tuple-type-unfolding type resolvers, phase 2."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,6 +76,7 @@ feature {NONE} -- Tuple-type-unfolding
 			an_actual: ET_TYPE
 			l_base_class: ET_CLASS
 		do
+			a_type.resolve_unfolded_tuple_actual_parameters_1 (current_universe)
 			if attached a_type.actual_parameters as an_actuals then
 					-- We need to process all actual parameters (and hence finish performing
 					-- all Tuple-type-unfolding) before trying to run the second phase of

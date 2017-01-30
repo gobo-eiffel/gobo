@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #46 $"
@@ -215,7 +215,7 @@ feature -- Initialization
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
 			if attached formal_parameters as l_formal_parameters then
-				l_formal_parameters.reset
+				l_formal_parameters.reset_constraint_creation_procedures
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset

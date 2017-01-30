@@ -5,7 +5,7 @@ note
 		"Eiffel lists of formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,21 @@ inherit
 create
 
 	make, make_with_capacity
+
+feature -- Initialization
+
+	reset_constraint_creation_procedures
+			-- Reset constraint creation procedures as they were just
+			-- after they were last parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				formal_parameter (i).reset_constraint_creation_procedures
+				i := i + 1
+			end
+		end
 
 feature -- Access
 
