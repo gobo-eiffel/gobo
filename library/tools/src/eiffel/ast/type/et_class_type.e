@@ -5,7 +5,7 @@ note
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -681,6 +681,8 @@ feature -- Type processing
 			l_actual_sublist: ET_ACTUAL_PARAMETER_SUBLIST
 			l_unfolded_tuple_actuals: ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS
 			l_tuple_constraint_position: INTEGER
+			l_tuple_keyword: ET_IDENTIFIER
+			l_position: ET_POSITION
 		do
 			if not tuple_actual_parameters_unfolded_1 then
 				tuple_actual_parameters_unfolded_1 := True
@@ -721,7 +723,11 @@ feature -- Type processing
 						tuple_actual_parameters_unfolded_2 := True
 					elseif l_actual_parameters.count > l_formal_parameters.count then
 						create l_actual_sublist.make (l_actual_parameters, l_tuple_constraint_position, l_tuple_constraint_position + l_actual_parameters.count - l_formal_parameters.count)
-						create l_tuple_type.make (tokens.attached_keyword, l_actual_sublist, a_universe.tuple_type.named_base_class)
+						create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actual_sublist, a_universe.tuple_type.named_base_class)
+						create l_tuple_keyword.make (tokens.tuple_keyword.name)
+						l_position := l_actual_sublist.position
+						l_tuple_keyword.set_position (l_position.line, l_position.column)
+						l_tuple_type.set_tuple_keyword (l_tuple_keyword)
 						create l_unfolded_tuple_actuals.make (l_actual_parameters, l_tuple_type, l_tuple_constraint_position)
 						actual_parameters := l_unfolded_tuple_actuals
 							-- No need to perform the second phase.
@@ -761,6 +767,8 @@ feature -- Type processing
 			l_tuple_type: ET_TUPLE_TYPE
 			l_actual_sublist: ET_ACTUAL_PARAMETER_SUBLIST
 			l_actual: ET_TYPE
+			l_tuple_keyword: ET_IDENTIFIER
+			l_position: ET_POSITION
 		do
 			if not tuple_actual_parameters_unfolded_2 then
 				tuple_actual_parameters_unfolded_2 := True
@@ -774,7 +782,11 @@ feature -- Type processing
 						l_actual := l_actual_parameters.type (l_tuple_constraint_position)
 						if not l_actual.conforms_to_type (l_tuple_constraint, a_constraint_context, a_context) then
 							create l_actual_sublist.make (l_actual_parameters, l_tuple_constraint_position, l_tuple_constraint_position)
-							create l_tuple_type.make (tokens.attached_keyword, l_actual_sublist, a_context.root_context.base_class.universe.tuple_type.named_base_class)
+							create l_tuple_type.make (tokens.implicit_attached_type_mark, l_actual_sublist, a_context.root_context.base_class.universe.tuple_type.named_base_class)
+							create l_tuple_keyword.make (tokens.tuple_keyword.name)
+							l_position := l_actual.position
+							l_tuple_keyword.set_position (l_position.line, l_position.column)
+							l_tuple_type.set_tuple_keyword (l_tuple_keyword)
 							create l_unfolded_tuple_actuals.make (l_actual_parameters, l_tuple_type, l_tuple_constraint_position)
 							actual_parameters := l_unfolded_tuple_actuals
 						end

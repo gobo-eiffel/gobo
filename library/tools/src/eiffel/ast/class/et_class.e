@@ -172,6 +172,11 @@ feature -- Initialization
 	reset_after_ancestors_built
 			-- Reset current class as it was just after its ancestors were last built.
 			-- Do nothing if ancestors not built.
+		local
+			l_unfolded_tuple_actual_parameters_resolver: detachable ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS_RESOLVER1
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_parent_list: ET_PARENT_LIST
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -180,9 +185,30 @@ feature -- Initialization
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
+				create l_unfolded_tuple_actual_parameters_resolver.make
+				nb := l_formal_parameters.count
+				from i := 1 until i > nb loop
+					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
+						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint, Current)
+					end
+					i := i + 1
+				end
 			end
 			if attached parent_clauses as l_parent_clauses then
 				l_parent_clauses.reset
+				if l_unfolded_tuple_actual_parameters_resolver = Void then
+					create l_unfolded_tuple_actual_parameters_resolver.make
+				end
+				nb := l_parent_clauses.count
+				from i := 1 until i > nb loop
+					l_parent_list := l_parent_clauses.item (i)
+					nb2 := l_parent_list.count
+					from j := 1 until j > nb2 loop
+						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_parent_list.parent (j).type, Current)
+						j := j + 1
+					end
+					i := i + 1
+				end
 			end
 			if attached invariants as l_invariants then
 				l_invariants.reset
