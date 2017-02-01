@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel tools"
-rem copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -67,6 +67,7 @@ goto no_verbose
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gepp\src\ge.xace
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\getest\src\ge.xace
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gelint\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gedoc\src\ge.xace
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gexslt\src\ge.xace
 	goto clean
 
@@ -81,6 +82,7 @@ goto no_verbose
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gepp\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\getest\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelint\src\build.eant clean
+	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gedoc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gexslt\src\build.eant clean
 	goto exit
 

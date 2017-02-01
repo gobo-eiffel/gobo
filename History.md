@@ -2,6 +2,11 @@
 
 ## Version 4.1 - ??
 
+### gedoc
+
+* New tool which is able to generate documentation from Eiffel classes
+  or Eiffel libraries. This first version pretty-prints Eiffel classes.
+
 ### Gobo Eiffel Tools Library
 
 * Fixed bug when a feature has an `across` construct followed by an

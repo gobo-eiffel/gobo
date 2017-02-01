@@ -75,6 +75,86 @@ feature -- Parsing
 			preparse_cluster (a_cluster)
 		end
 
+	preparse_file (a_filename: STRING; a_cluster: ET_CLUSTER)
+			-- Analyze the file `a_filename' in `a_cluster' to determine the
+			-- class(es) that it contains. When in shallow mode, it is assumed
+			-- to contain excactly one class whose name is 'CLASSNAME' if the
+			-- filename is of the form 'classname.e'. In single mode the file
+			-- is expected to contain exactly one class, whose name does not
+			-- necessarily match the filename. In multiple mode the file may
+			-- contain several classes.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_file: KL_TEXT_INPUT_FILE
+			l_time_stamp: INTEGER
+			l_basename: STRING
+			l_class_name: ET_IDENTIFIER
+			l_class: ET_MASTER_CLASS
+			old_group: ET_PRIMARY_GROUP
+		do
+			old_group := group
+			group := a_cluster
+			if current_system.preparse_shallow_mode then
+					-- With the "shallow" algorithm the time-stamp is only set when
+					-- parsing the class.
+				l_time_stamp := tokens.unknown_class.time_stamp
+				l_basename := file_system.basename (a_filename)
+				create l_class_name.make (l_basename.substring (1, l_basename.count - 2))
+				l_class := current_universe.master_class (l_class_name)
+				preparse_class (l_class, a_filename, l_time_stamp)
+			else
+				l_file := tmp_file
+				l_file.reset (a_filename)
+					-- Get time-stamp of the file.
+				l_time_stamp := l_file.time_stamp
+					-- Scan Eiffel file `l_file' to find the name of the class it
+					-- contains. The file is supposed to contain exactly one class
+					-- unless `current_system.preparse_multiple_mode' is set.
+				l_file.open_read
+				if l_file.is_open_read then
+					filename := a_filename
+					input_buffer := eiffel_buffer
+					eiffel_buffer.set_file (l_file)
+					yy_load_input_buffer
+					read_token
+					if attached last_classname as l_last_classname then
+						l_class := current_universe.master_class (l_last_classname)
+						preparse_class (l_class, a_filename, l_time_stamp)
+						if current_system.preparse_multiple_mode then
+							from
+								class_keyword_found := False
+								last_classname := Void
+								read_token
+							until
+								not attached last_classname as l_last_other_classname
+							loop
+								l_class := current_universe.master_class (l_last_other_classname)
+								preparse_class (l_class, a_filename, l_time_stamp)
+								class_keyword_found := False
+								last_classname := Void
+								read_token
+							end
+						end
+					else
+							-- No class name found.
+						error_handler.report_syntax_error (filename, current_position)
+					end
+					reset
+					l_file.close
+				else
+					error_handler.report_gcaab_error (a_cluster, a_filename)
+				end
+			end
+			group := old_group
+		end
+
 feature {NONE} -- Parsing
 
 	preparse_cluster (a_cluster: ET_CLUSTER)
@@ -169,82 +249,6 @@ feature {NONE} -- Parsing
 				preparse_clusters (l_subclusters)
 			end
 			group := old_group
-		end
-
-	preparse_file (a_filename: STRING; a_cluster: ET_CLUSTER)
-			-- Analyze the file `a_filename' in `a_cluster' to determine the
-			-- class(es) that it contains. When in shallow mode, it is assumed
-			-- to contain excactly one class whose name is 'CLASSNAME' if the
-			-- filename is of the form 'classname.e'. In single mode the file
-			-- is expected to contain exactly one class, whose name does not
-			-- necessarily match the filename. In multiple mode the file may
-			-- contain several classes.
-			--
-			-- The queries `current_system.preparse_*_mode' govern the way
-			-- preparsing works. Read the header comments of these features
-			-- for more details.
-		require
-			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: not a_filename.is_empty
-			a_cluster_not_void: a_cluster /= Void
-		local
-			l_file: KL_TEXT_INPUT_FILE
-			l_time_stamp: INTEGER
-			l_basename: STRING
-			l_class_name: ET_IDENTIFIER
-			l_class: ET_MASTER_CLASS
-		do
-			if current_system.preparse_shallow_mode then
-					-- With the "shallow" algorithm the time-stamp is only set when
-					-- parsing the class.
-				l_time_stamp := tokens.unknown_class.time_stamp
-				l_basename := file_system.basename (a_filename)
-				create l_class_name.make (l_basename.substring (1, l_basename.count - 2))
-				l_class := current_universe.master_class (l_class_name)
-				preparse_class (l_class, a_filename, l_time_stamp)
-			else
-				l_file := tmp_file
-				l_file.reset (a_filename)
-					-- Get time-stamp of the file.
-				l_time_stamp := l_file.time_stamp
-					-- Scan Eiffel file `l_file' to find the name of the class it
-					-- contains. The file is supposed to contain exactly one class
-					-- unless `current_system.preparse_multiple_mode' is set.
-				l_file.open_read
-				if l_file.is_open_read then
-					filename := a_filename
-					input_buffer := eiffel_buffer
-					eiffel_buffer.set_file (l_file)
-					yy_load_input_buffer
-					read_token
-					if attached last_classname as l_last_classname then
-						l_class := current_universe.master_class (l_last_classname)
-						preparse_class (l_class, a_filename, l_time_stamp)
-						if current_system.preparse_multiple_mode then
-							from
-								class_keyword_found := False
-								last_classname := Void
-								read_token
-							until
-								not attached last_classname as l_last_other_classname
-							loop
-								l_class := current_universe.master_class (l_last_other_classname)
-								preparse_class (l_class, a_filename, l_time_stamp)
-								class_keyword_found := False
-								last_classname := Void
-								read_token
-							end
-						end
-					else
-							-- No class name found.
-						error_handler.report_syntax_error (filename, current_position)
-					end
-					reset
-					l_file.close
-				else
-					error_handler.report_gcaab_error (a_cluster, a_filename)
-				end
-			end
 		end
 
 	preparse_class (a_class: ET_MASTER_CLASS; a_filename: STRING; a_time_stamp: INTEGER)

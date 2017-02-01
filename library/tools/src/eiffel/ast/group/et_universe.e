@@ -400,6 +400,31 @@ feature -- Access
 			no_void_class: not Result.has_void
 		end
 
+	add_classes_by_wildcarded_name (a_wildcard: LX_DFA_WILDCARD; a_list: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_list' all classes declared locally in current universe
+			-- whose name (in upper-case) matches `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_list_not_void: a_list /= Void
+		do
+			classes_do_all (agent do_class_by_wildcarded_name (?, a_wildcard, agent a_list.force_last))
+		end
+
+	add_classes_by_wildcarded_name_recursive (a_wildcard: LX_DFA_WILDCARD; a_list: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_list' all classes declared locally in current universe,
+			-- or recursively in one of the universes it depends on,
+			-- whose name (in upper-case) matches `a_wildcard'.
+			-- Do not take into account overridden classes.
+		require
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_list_not_void: a_list /= Void
+		do
+			universes_do_recursive (agent {ET_UNIVERSE}.add_classes_by_wildcarded_name (a_wildcard, a_list))
+		end
+
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes declared locally in current universe which are in `a_group'.
 			-- Overridden and ignored classes are also taken into account.
@@ -2427,6 +2452,20 @@ feature -- Actions
 		do
 			if attached class_by_name (a_name) as l_class then
 				a_action.call ([l_class])
+			end
+		end
+
+	do_class_by_wildcarded_name (a_class: ET_CLASS; a_wildcard: LX_DFA_WILDCARD; a_action: PROCEDURE [ET_CLASS])
+			-- Execute `a_action' on `a_class' if its name (in upper-case) matches `a_wildcard'.
+			-- Do nothing otherwise.
+		require
+			a_class_not_void: a_class /= Void
+			a_wildcard_not_void: a_wildcard /= Void
+			a_wildcard_compiled: a_wildcard.is_compiled
+			a_action_not_void: a_action /= Void
+		do
+			if a_wildcard.recognizes (a_class.upper_name) then
+				a_action.call ([a_class])
 			end
 		end
 

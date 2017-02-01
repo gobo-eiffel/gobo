@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel tools"
-# copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -82,6 +82,8 @@ if [ "$EIF" = "ge" ]; then
 	$STRIP getest${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
 	$STRIP gelint${EXE}
+	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gedoc/src/ge.xace
+	$STRIP gedoc${EXE}
 	$BIN_DIR/geant$EXE --buildfilename=$GOBO/tool/gexslt/src/build.eant compile_ge
 	$STRIP gexslt${EXE}
 else
@@ -98,4 +100,5 @@ geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gepp/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexslt/src/build.eant clean
