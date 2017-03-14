@@ -85,7 +85,7 @@ feature -- Access
 			else
 				l_long_form := long_form
 				check
-						-- invariant has_short_or_long ensures `log_form' is not Void
+						-- invariant has_short_or_long ensures `long_form' is not Void
 					not_has_short_form: l_long_form /= Void
 				end
 				Result.append_character (long_option_introduction)
