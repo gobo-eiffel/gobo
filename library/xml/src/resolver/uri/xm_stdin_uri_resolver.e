@@ -3,11 +3,11 @@ note
 	description:
 
 		"[
-		External URI resolver for the stdin scheme.
-      This represents reading from the standard input stream.
-      The only lexical form allowed is the literal stdin:
-       (plus optional fragment identifier)
-      ]"
+			External URI resolver for the stdin scheme.
+			This represents reading from the standard input stream.
+			The only lexical form allowed is the literal stdin:
+			(plus optional fragment identifier)
+		]"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2007-2014, Colin Adams and others"
