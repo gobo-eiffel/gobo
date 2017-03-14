@@ -3,7 +3,7 @@ note
 	description:
 
 		"Standard output files containing extended ASCII characters %
-		%(8-bit code between 0 and 255). The character '%N' is automatically %
+		%(8-bit code between 0 and 255). The character '%%N' is automatically %
 		%converted to the line separtor of the underlying file system when %
 		%written to the standard output file."
 
