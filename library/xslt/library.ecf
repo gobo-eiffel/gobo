@@ -3,7 +3,7 @@
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd"
-	name="xpath"
+	name="xslt"
 	uuid="E1FFE100-60B0-0019-0002-000020160829"
 	library_target="xslt">
 
