@@ -10,7 +10,7 @@ note
 		whenever a STRING is expected.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -918,6 +918,17 @@ feature -- Comparison
 		require
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
+		do
+			Result := three_way_lower_case_comparison (a_string, other)
+		end
+
+	three_way_lower_case_comparison (a_string, other: STRING): INTEGER
+			-- If `a_string' equal to `other', 0; if smaller, -1; if greater, 1
+			-- (case insensitive comparison, consider letters as lower-case)
+			-- (Not in ELKS 2001 STRING)
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
 		local
 			i, nb, nb1, nb2: INTEGER
 			c1, c2: CHARACTER
@@ -988,6 +999,108 @@ feature -- Comparison
 					else
 						d1 := unicode.lower_code (d1)
 						d2 := unicode.lower_code (d2)
+						if d1 = d2 then
+							i := i + 1
+						elseif d1 < d2 then
+							found := True
+							Result := -1
+								-- Jump out of the loop.
+							i := nb + 1
+						else
+							found := True
+							Result := 1
+								-- Jump out of the loop.
+							i := nb + 1
+						end
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			end
+		end
+
+	three_way_upper_case_comparison (a_string, other: STRING): INTEGER
+			-- If `a_string' equal to `other', 0; if smaller, -1; if greater, 1
+			-- (case insensitive comparison, consider letters as upper-case)
+			-- (Not in ELKS 2001 STRING)
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		local
+			i, nb, nb1, nb2: INTEGER
+			c1, c2: CHARACTER
+			d1, d2: INTEGER
+			found: BOOLEAN
+		do
+			if other = a_string then
+				Result := 0
+			elseif ANY_.same_types (a_string, dummy_string) and ANY_.same_types (other, dummy_string) then
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					c1 := a_string.item (i)
+					c2 := other.item (i)
+					if c1 = c2 then
+						i := i + 1
+					else
+						c1 := c1.upper
+						c2 := c2.upper
+						if c1 = c2 then
+							i := i + 1
+						elseif c1 < c2 then
+							found := True
+							Result := -1
+								-- Jump out of the loop.
+							i := nb + 1
+						else
+							found := True
+							Result := 1
+								-- Jump out of the loop.
+							i := nb + 1
+						end
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			else
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					d1 := a_string.item_code (i)
+					d2 := other.item_code (i)
+					if d1 = d2 then
+						i := i + 1
+					else
+						d1 := unicode.upper_code (d1)
+						d2 := unicode.upper_code (d2)
 						if d1 = d2 then
 							i := i + 1
 						elseif d1 < d2 then
