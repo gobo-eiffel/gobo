@@ -5,7 +5,7 @@ note
 		"Eiffel creation clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -151,6 +151,32 @@ feature -- Setting
 			creation_keyword := a_creation
 		ensure
 			creation_keyword_set: creation_keyword = a_creation
+		end
+
+feature -- Basic operations
+
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+			-- Add to `a_set' the feature name of creation procedures which are
+			-- exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_set_not_void: a_set /= Void
+			no_void_names: not a_set.has_void
+		local
+			i: INTEGER
+		do
+			if not is_empty then
+				if clients.has_descendant (a_client) then
+					from
+						i := count - 1
+					until
+						i < 0
+					loop
+						a_set.force_last (storage.item (i).feature_name)
+						i := i - 1
+					end
+				end
+			end
 		end
 
 feature -- Processing

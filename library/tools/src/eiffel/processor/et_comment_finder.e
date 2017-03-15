@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -228,6 +228,7 @@ feature -- Basic operations
 			-- and recursively in its sub-nodes, in the order they would appear
 			-- in a printed text. Do not take into account comments that appear
 			-- in nodes listed in `excluded_nodes'.
+			-- Do nothing if `comment_ignored' is True.
 		require
 			a_node_not_void: a_node /= Void
 			a_list_not_void: a_list /= Void
@@ -236,10 +237,12 @@ feature -- Basic operations
 		local
 			old_list: DS_ARRAYED_LIST [ET_BREAK]
 		do
-			old_list := comment_list
-			comment_list := a_list
-			a_node.process (Current)
-			comment_list := old_list
+			if not comments_ignored then
+				old_list := comment_list
+				comment_list := a_list
+				a_node.process (Current)
+				comment_list := old_list
+			end
 		ensure
 			no_void_comment: not a_list.has_void
 			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
@@ -267,6 +270,17 @@ feature -- Excluded nodes
 			excluded_nodes.wipe_out
 		ensure
 			no_excluded_nodes: excluded_nodes.is_empty
+		end
+
+	comments_ignored: BOOLEAN
+			-- Should all comments be ignored?
+
+	set_comments_ignored (b: BOOLEAN)
+			-- Set `comments_ignored' to `b'.
+		do
+			comments_ignored := b
+		ensure
+			comments_ignored_set: comments_ignored = b
 		end
 
 feature {ET_AST_NODE} -- Processing

@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -674,6 +674,7 @@ Constraint_create: E_CREATE E_END
 Constraint_create_procedure_list: Identifier E_END
 		{
 			if attached $1 as l_identifier then
+				l_identifier.set_feature_name (True)
 				$$ := ast_factory.new_constraint_creator (last_keyword, $2, counter_value + 1)
 				if $$ /= Void then
 					$$.put_first (l_identifier)
@@ -1508,6 +1509,7 @@ Creation_clause: E_CREATION Clients
 Creation_procedure_list: Identifier
 		{
 			if attached $1 as l_identifier then
+				l_identifier.set_feature_name (True)
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value + 1)
 				if $$ /= Void then
 					$$.put_first (l_identifier)
@@ -1539,7 +1541,12 @@ Creation_procedure_list: Identifier
 
 Creation_procedure_comma: Identifier ','
 		{
-			$$ := ast_factory.new_feature_name_comma ($1, $2)
+			if attached $1 as l_identifier then
+				l_identifier.set_feature_name (True)
+				$$ := ast_factory.new_feature_name_comma (l_identifier, $2)
+			else
+				$$ := ast_factory.new_feature_name_comma (Void, $2)
+			end
 			if $$ /= Void then
 				increment_counter
 			end
@@ -2001,7 +2008,12 @@ Assigner_opt: -- Empty
 ------------------------------------------------------------------------------------
 
 Feature_name: Identifier
-		{ $$ := $1 }
+		{
+			if attached $1 as l_identifier then
+				l_identifier.set_feature_name (True)
+				$$ := l_identifier 
+			end
+		}
 	| E_PREFIX E_STRNOT
 		{ $$ := ast_factory.new_prefix_not_name ($1, $2) }
 	| E_PREFIX E_STRPLUS
@@ -2088,7 +2100,14 @@ Feature_name: Identifier
 Extended_feature_name: Feature_name
 		{ $$ := $1 }
 	| Identifier Alias_name
-		{ $$ := ast_factory.new_aliased_feature_name ($1, $2) }
+		{
+			if attached $1 as l_identifier then
+				l_identifier.set_feature_name (True)
+				$$ := ast_factory.new_aliased_feature_name (l_identifier, $2)
+			else
+				$$ := ast_factory.new_aliased_feature_name (Void, $2)
+			end
+		}
 	;
 
 Alias_name: E_ALIAS E_STRNOT
@@ -2782,7 +2801,7 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 	;
 
 Anchored_type_with_no_type_mark: E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+		{ $$ := new_like_feature (Void, $1, $2) }
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
 	| Qualified_anchored_type_with_no_type_mark
@@ -2790,25 +2809,25 @@ Anchored_type_with_no_type_mark: E_LIKE Identifier
 	;
 	
 Anchored_type: E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+		{ $$ := new_like_feature (Void, $1, $2) }
 	| E_SEPARATE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ $$ := new_like_feature ($1, $2, $3) }
 	| E_ATTACHED E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ $$ := new_like_feature ($1, $2, $3) }
 	| E_ATTACHED E_SEPARATE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| E_DETACHABLE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ $$ := new_like_feature ($1, $2, $3) }
 	| E_DETACHABLE E_SEPARATE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4) }
 	| '!' E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ $$ := new_like_feature ($1, $2, $3) }
 	| '!' E_SEPARATE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| '?' E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ $$ := new_like_feature ($1, $2, $3) }
 	| '?' E_SEPARATE E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
+		{ $$ := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4) }
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, $1, $2) }
 	| E_SEPARATE E_LIKE E_CURRENT
@@ -2838,7 +2857,7 @@ Qualified_anchored_type_with_no_type_mark: E_LIKE '{' Type '}' '.' Identifier
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, ast_factory.new_dot_feature_name ($5, $6))
+				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, new_dot_feature_name ($5, $6))
 			end
 		}
 	| Anchored_type_with_no_type_mark '.' Identifier
@@ -2846,7 +2865,7 @@ Qualified_anchored_type_with_no_type_mark: E_LIKE '{' Type '}' '.' Identifier
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type (Void, $1, ast_factory.new_dot_feature_name ($2, $3))
+				$$ := ast_factory.new_qualified_like_type (Void, $1, new_dot_feature_name ($2, $3))
 			end
 		}
 	;
@@ -2858,7 +2877,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
 			end
 		}
 	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
@@ -2866,7 +2885,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
 			end
 		}
 	| E_ATTACHED E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
@@ -2874,7 +2893,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
@@ -2882,7 +2901,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
 			end
 		}
 	| E_DETACHABLE E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
@@ -2890,7 +2909,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
@@ -2900,7 +2919,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
 			end
 		}
 	| '!' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
@@ -2910,7 +2929,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
@@ -2920,7 +2939,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
 			end
 		}
 	| '?' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
@@ -2930,7 +2949,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, ast_factory.new_dot_feature_name ($7, $8))
+				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -2938,7 +2957,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
 			end
 		}
 	| E_ATTACHED Anchored_type_with_no_type_mark '.' Identifier
@@ -2946,7 +2965,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
 			end
 		}
 	| E_ATTACHED E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -2954,7 +2973,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))
 			end
 		}
 	| E_DETACHABLE Anchored_type_with_no_type_mark '.' Identifier
@@ -2962,7 +2981,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
 			end
 		}
 	| E_DETACHABLE E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -2970,7 +2989,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))
 			end
 		}
 	| '!' Anchored_type_with_no_type_mark '.' Identifier
@@ -2978,7 +2997,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
 			end
 		}
 	| '!' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -2986,7 +3005,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))
 			end
 		}
 	| '?' Anchored_type_with_no_type_mark '.' Identifier
@@ -2994,7 +3013,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, ast_factory.new_dot_feature_name ($3, $4))
+				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
 			end
 		}
 	| '?' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
@@ -3002,7 +3021,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, ast_factory.new_dot_feature_name ($4, $5))
+				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))
 			end
 		}
 	;
@@ -3172,27 +3191,27 @@ Check_instruction: E_CHECK Start_assertions E_END
 Creation_instruction: '!' Type_no_bang_identifier '!' Writable
 		{ $$ := ast_factory.new_bang_instruction ($1, $2, $3, $4, Void) }
 	| '!' Type_no_bang_identifier '!' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_bang_instruction ($1, $2, $3, $4, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($5, $6), $7)) }
+		{ $$ := ast_factory.new_bang_instruction ($1, $2, $3, $4, ast_factory.new_qualified_call (new_dot_feature_name ($5, $6), $7)) }
 	| '!' '!' Writable
 		{ $$ := ast_factory.new_bang_instruction ($1, Void, $2, $3, Void) }
 	| '!' '!' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_bang_instruction ($1, Void, $2, $3, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($4, $5), $6)) }
+		{ $$ := ast_factory.new_bang_instruction ($1, Void, $2, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
 	;
 
 Create_instruction: E_CREATE Creation_region '{' Type '}' Writable
 		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
 	| E_CREATE Creation_region '{' Type '}' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($7, $8), $9)) }
+		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (new_dot_feature_name ($7, $8), $9)) }
 	| E_CREATE Creation_region Writable
 		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, Void) }
 	| E_CREATE Creation_region Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($4, $5), $6)) }
+		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
 	;
 
 Create_expression: E_CREATE Creation_region '{' Type '}' 
 		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), Void) }
 	| E_CREATE Creation_region '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($6, $7), $8)) }
+		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (new_dot_feature_name ($6, $7), $8)) }
 	;
 
 Creation_region: -- Empty
@@ -3422,39 +3441,39 @@ Manifest_string_comma: Untyped_manifest_string ','
 Call_instruction: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_instruction ($1, $2) }
 	| Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_instruction ($1, new_dot_feature_name ($2, $3), $4) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_instruction ($1, new_dot_feature_name ($2, $3), $4) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, Void, $2) }
 	| E_PRECURSOR '{' Class_name '}' Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
 	| E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_target_type ($2, $3, $4), new_dot_feature_name ($5, $6), $7) }
 	| '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
+		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, $2, $3), new_dot_feature_name ($4, $5), $6) }
 	;
 
 Untyped_call_expression: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	;
 	
 Typed_call_expression: Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	;
 	
 Qualified_call_expression: Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	;
 
 Static_call_expression: E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_target_type ($2, $3, $4), new_dot_feature_name ($5, $6), $7) }
 	| '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
+		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, $2, $3), new_dot_feature_name ($4, $5), $6) }
 	;
 
 Precursor_expression: E_PRECURSOR Actuals_opt
@@ -3484,7 +3503,7 @@ Untyped_call_chain: Identifier Actuals_opt
 	| Static_call_expression
 		{ $$ := $1 }
 	| Untyped_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	;
 
 Typed_call_chain: Typed_bracket_expression
@@ -3496,7 +3515,7 @@ Typed_call_chain: Typed_bracket_expression
 			end
 		}
 	| Typed_call_chain '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_qualified_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
+		{ $$ := ast_factory.new_qualified_call_expression ($1, new_dot_feature_name ($2, $3), $4) }
 	;
 	
 ------------------------------------------------------------------------------------

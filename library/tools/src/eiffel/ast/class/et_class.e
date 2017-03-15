@@ -1601,6 +1601,37 @@ feature -- Ancestors
 			parents_not_void: Result /= Void
 		end
 
+	add_base_class_of_parents_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_CLASS])
+			-- Add to `a_set' the base class of the parents which are exported 
+			-- to `a_client' (all conforming parents, and if `a_client' is "NONE"
+			-- then the non-conforming parents as well).
+		require
+			a_client_not_void: a_client /= Void
+			a_set_not_void: a_set /= Void
+			no_void_classes: not a_set.has_void
+		local
+			l_is_none: BOOLEAN
+			l_parent_list: ET_PARENT_LIST
+			i1, nb1: INTEGER
+			i2, nb2: INTEGER
+		do
+			l_is_none := a_client.is_none
+			nb1 := parents_count
+			from i1 := 1 until i1 > nb1 loop
+				l_parent_list := parents (i1)
+				if l_is_none or else l_parent_list.is_conforming then
+					nb2 := l_parent_list.count
+					from i2 := 1 until i2 > nb2 loop
+						a_set.force (l_parent_list.parent (i2).type.base_class)
+						i2 := i2 + 1
+					end
+				end
+				i1 := i1 + 1
+			end
+		ensure
+			no_void_classes: not a_set.has_void
+		end
+
 feature -- Ancestor building status
 
 	ancestors_built: BOOLEAN
@@ -1676,6 +1707,19 @@ feature -- Creation
 		do
 			if attached creators as l_creators then
 				Result := l_creators.is_directly_exported_to (a_name, a_client)
+			end
+		end
+
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+			-- Add to `a_set' the feature name of creation procedures which are
+			-- exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_set_not_void: a_set /= Void
+			no_void_names: not a_set.has_void
+		do
+			if attached creators as l_creators then
+				l_creators.add_creations_exported_to (a_client, a_set)
 			end
 		end
 

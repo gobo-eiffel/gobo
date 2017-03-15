@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/04/06 $"
 	revision: "$Revision: #12 $"
@@ -76,7 +76,6 @@ inherit
 			process_formal_argument,
 			process_formal_argument_list,
 			process_hexadecimal_integer_constant,
-			process_identifier,
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
@@ -1606,26 +1605,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_integer_constant (a_constant)
-		end
-
-	process_identifier (an_identifier: ET_IDENTIFIER)
-			-- Process `an_identifier'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		do
-			reset_fatal_error (False)
-			if an_identifier.is_argument then
-				-- Do nothing
-			elseif an_identifier.is_local then
-				-- Do nothing
-			elseif an_identifier.is_object_test_local then
-				-- Do nothing
-			elseif an_identifier.is_across_cursor then
-				-- Do nothing
-			elseif an_identifier.is_instruction then
-				process_unqualified_feature_call_instruction (an_identifier)
-			else
-				process_unqualified_feature_call_expression (an_identifier)
-			end
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)

@@ -26,7 +26,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
-	<cluster name="gelint" location="${GOBO}/tool/gedoc/src"/>
+	<cluster name="gedoc" location="${GOBO}/tool/gedoc/src"/>
 
 	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>

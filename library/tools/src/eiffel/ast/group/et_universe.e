@@ -16,7 +16,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #18 $"
@@ -2076,6 +2076,33 @@ feature -- Iteration
 			end
 		end
 
+	classes_do_unless (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
+			-- Apply `an_action' on all classes declared locally in current universe
+			-- that do not satisfy `a_test'.
+			-- Do not take into account overridden classes.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
+			l_class: ET_CLASS
+		do
+			l_cursor := master_classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_master_class := l_cursor.item
+				if not l_master_class.is_mapped then
+					l_class := l_master_class.actual_class
+					if l_class.universe = Current then
+						if not a_test.item ([l_class]) then
+							an_action.call ([l_class])
+						end
+					end
+				end
+				l_cursor.forth
+			end
+		end
+
 	classes_do_if_until (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
@@ -2155,6 +2182,18 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		do
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if (an_action, a_test))
+		end
+
+	classes_do_unless_recursive (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN])
+			-- Apply `an_action' on all classes that do not satisfy `a_test', declared
+			-- locally in current universe as well as on the classes that are
+			-- declared in the universes it depends on recursively.
+			-- Do not take into account overridden classes.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_unless (an_action, a_test))
 		end
 
 	classes_do_if_recursive_until (an_action: PROCEDURE [ET_CLASS]; a_test: FUNCTION [ET_CLASS, BOOLEAN]; a_stop_request: detachable FUNCTION [BOOLEAN])

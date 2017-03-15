@@ -10,7 +10,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ class ET_UNFOLDED_EMPTY_TUPLE_ACTUAL_PARAMETERS
 inherit
 
 	ET_ACTUAL_PARAMETERS
+		redefine
+			folded_actual_parameters
+		end
 
 create
 
@@ -57,6 +60,12 @@ feature -- Access
 			-- Type of `i'-th item in list
 		do
 			Result := tuple_type
+		end
+
+	folded_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			-- Actual parameters as they were when last parsed
+		do
+			Result := Void
 		end
 
 	position: ET_POSITION

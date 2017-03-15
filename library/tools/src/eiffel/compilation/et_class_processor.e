@@ -5,7 +5,7 @@ note
 		"Eiffel class processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +49,18 @@ feature -- Access
 			Result := current_class.current_system
 		ensure
 			current_system_not_void: Result /= Void
+		end
+
+feature -- Setting
+
+	set_current_class (a_class: like current_class)
+			-- Set `current_class' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			current_class := a_class
+		ensure
+			current_class_set: current_class = a_class
 		end
 
 feature -- Error handling

@@ -5,7 +5,7 @@ note
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,25 +14,25 @@ class ET_TOKEN_CODES
 
 feature -- Keyword and symbol codes
 
-	infix_and_code: CHARACTER = '%/71/'
-	infix_implies_code: CHARACTER = '%/72/'
-	infix_or_code: CHARACTER = '%/73/'
-	infix_xor_code: CHARACTER = '%/74/'
-	infix_div_code: CHARACTER = '%/75/'
-	infix_divide_code: CHARACTER = '%/76/'
-	infix_ge_code: CHARACTER = '%/77/'
-	infix_gt_code: CHARACTER = '%/78/'
-	infix_le_code: CHARACTER = '%/79/'
-	infix_lt_code: CHARACTER = '%/80/'
-	infix_minus_code: CHARACTER = '%/81/'
-	infix_mod_code: CHARACTER = '%/82/'
-	infix_plus_code: CHARACTER = '%/83/'
-	infix_power_code: CHARACTER = '%/84/'
-	infix_times_code: CHARACTER = '%/85/'
-	infix_freeop_code: CHARACTER = '%/86/'
-	infix_and_then_code: CHARACTER = '%/87/'
-	infix_or_else_code: CHARACTER = '%/88/'
-	infix_dotdot_code: CHARACTER = '%/89/'
+	infix_div_code: CHARACTER = '%/71/'
+	infix_divide_code: CHARACTER = '%/72/'
+	infix_ge_code: CHARACTER = '%/73/'
+	infix_gt_code: CHARACTER = '%/74/'
+	infix_le_code: CHARACTER = '%/75/'
+	infix_lt_code: CHARACTER = '%/76/'
+	infix_minus_code: CHARACTER = '%/77/'
+	infix_mod_code: CHARACTER = '%/78/'
+	infix_plus_code: CHARACTER = '%/79/'
+	infix_power_code: CHARACTER = '%/80/'
+	infix_times_code: CHARACTER = '%/81/'
+	infix_freeop_code: CHARACTER = '%/82/'
+	infix_dotdot_code: CHARACTER = '%/83/'
+	infix_and_code: CHARACTER = '%/84/'
+	infix_implies_code: CHARACTER = '%/85/'
+	infix_or_code: CHARACTER = '%/86/'
+	infix_xor_code: CHARACTER = '%/87/'
+	infix_and_then_code: CHARACTER = '%/88/'
+	infix_or_else_code: CHARACTER = '%/89/'
 	min_infix_code: CHARACTER = '%/71/'
 	max_infix_code: CHARACTER = '%/89/'
 			-- Infix operator codes
@@ -44,6 +44,10 @@ feature -- Keyword and symbol codes
 	min_prefix_code: CHARACTER = '%/91/'
 	max_prefix_code: CHARACTER = '%/94/'
 			-- Prefix operator codes
+
+	min_keyword_code: CHARACTER = '%/84/'
+	max_keyword_code: CHARACTER = '%/91/'
+			-- Keyword operator codes
 
 	alias_bracket_code: CHARACTER = '%/100/'
 	alias_parenthesis_code: CHARACTER = '%/99/'

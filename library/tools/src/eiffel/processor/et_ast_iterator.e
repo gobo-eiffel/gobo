@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1664,7 +1664,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_name'.
 		do
 			a_name.infix_keyword.process (Current)
-			a_name.operator_name.process (Current)
+			a_name.operator_string.process (Current)
 		end
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
@@ -2364,7 +2364,7 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_name'.
 		do
 			a_name.prefix_keyword.process (Current)
-			a_name.operator_name.process (Current)
+			a_name.operator_string.process (Current)
 		end
 
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)

@@ -5,7 +5,7 @@ note
 		"Eiffel 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,12 +41,23 @@ feature -- Access
 			end
 		end
 
-	free_operator_name: STRING
-			-- Name of free operator
+	operator_name: STRING
+			-- Name of operator
 		deferred
 		ensure
-			free_operator_name_not_void: Result /= Void
-			free_operator_name_not_empty: Result.count > 0
+			operator_name_not_void: Result /= Void
+			operator_name_not_empty: Result.count > 0
+		end
+
+	operator_lower_name: STRING
+			-- Lower-name of operator
+			-- (May return the same object as `operator_name' if already in lower case.)
+		do
+			Result := operator_name
+		ensure
+			operator_lower_name_not_void: Result /= Void
+			operator_lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (operator_name.as_lower)
 		end
 
 	hash_code: INTEGER
@@ -64,10 +75,10 @@ feature -- Comparison
 				if hash_code = op.hash_code then
 					if is_infix_freeop /= op.is_infix_freeop then
 						Result := False
-					elseif op.free_operator_name = free_operator_name then
+					elseif op.operator_name = operator_name then
 						Result := True
 					else
-						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+						Result := STRING_.same_case_insensitive (operator_name, op.operator_name)
 					end
 				end
 			end

@@ -5,7 +5,7 @@ note
 		"Names of Eiffel infix features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,7 @@ inherit
 		rename
 			alias_keyword as infix_keyword,
 			set_alias_keyword as set_infix_keyword,
-			alias_string as operator_name
+			alias_string as operator_string
 		undefine
 			is_bracket,
 			is_parenthesis,

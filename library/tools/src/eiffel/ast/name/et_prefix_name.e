@@ -5,7 +5,7 @@ note
 		"Names of Eiffel prefix features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,7 @@ inherit
 			make_minus as make_infix_minus,
 			alias_keyword as prefix_keyword,
 			set_alias_keyword as set_prefix_keyword,
-			alias_string as operator_name
+			alias_string as operator_string
 		undefine
 			is_bracket,
 			is_parenthesis,
@@ -74,29 +74,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make_minus (an_operator: like operator_name)
+	make_minus (an_operator: like operator_string)
 			-- Create a new 'prefix "-"' feature name.
 		require
 			an_operator_not_void: an_operator /= Void
 		do
 			prefix_keyword := default_keyword
-			operator_name := an_operator
+			operator_string := an_operator
 			code := tokens.prefix_minus_code
 		ensure
-			operator_name_set: operator_name = an_operator
+			operator_string_set: operator_string = an_operator
 			is_prefix_minus: is_prefix_minus
 		end
 
-	make_plus (an_operator: like operator_name)
+	make_plus (an_operator: like operator_string)
 			-- Create a new 'prefix "+"' feature name.
 		require
 			an_operator_not_void: an_operator /= Void
 		do
 			prefix_keyword := default_keyword
-			operator_name := an_operator
+			operator_string := an_operator
 			code := tokens.prefix_plus_code
 		ensure
-			operator_name_set: operator_name = an_operator
+			operator_string_set: operator_string = an_operator
 			is_prefix_plus: is_prefix_plus
 		end
 

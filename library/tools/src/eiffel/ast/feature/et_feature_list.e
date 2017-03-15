@@ -5,7 +5,7 @@ note
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/08/02 $"
 	revision: "$Revision: #15 $"
@@ -336,6 +336,97 @@ feature -- Basic operations
 			end
 		ensure
 			no_void_item: not a_list.has_void
+		end
+
+	add_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features which are exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
+		end
+
+	add_user_defined_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features which are exported to `a_client',
+			-- unless they are inherited features declared in "ANY".
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+				nb := count - declared_count
+			until
+				i < nb
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+			from
+			until
+				i < 0
+			loop
+				l_feature := storage.item (i)
+				if not l_feature.implementation_class.is_any_class then
+					if l_feature.is_exported_to (a_client) then
+						a_list.force_last (l_feature)
+					end
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
+		end
+
+	add_declared_features_exported_to (a_client: ET_CLASS; a_list: DS_ARRAYED_LIST [ET_FEATURE])
+			-- Add to `a_list' the features declared in the corresponding class
+			-- which are exported to `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+			a_list_not_void: a_list /= Void
+			no_void_feature: not a_list.has_void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+		do
+			from
+				i := count - 1
+				nb := count - declared_count
+			until
+				i < nb
+			loop
+				l_feature := storage.item (i)
+				if l_feature.is_exported_to (a_client) then
+					a_list.force_last (l_feature)
+				end
+				i := i - 1
+			end
+		ensure
+			no_void_feature: not a_list.has_void
 		end
 
 feature -- Iteration

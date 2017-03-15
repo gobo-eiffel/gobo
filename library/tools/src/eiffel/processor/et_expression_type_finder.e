@@ -5,7 +5,7 @@ note
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/10/25 $"
 	revision: "$Revision: #6 $"
@@ -3132,8 +3132,16 @@ feature {ET_AST_NODE} -- Processing
 				find_object_test_local_type (an_identifier, current_context)
 			elseif an_identifier.is_across_cursor then
 				find_across_cursor_type (an_identifier, current_context)
-			elseif not an_identifier.is_instruction then
+			elseif an_identifier.is_feature_name then
 				find_unqualified_call_expression_type (an_identifier, current_context)
+			else
+					-- Internal error: invalid kind of identifier.
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			end
 		end
 

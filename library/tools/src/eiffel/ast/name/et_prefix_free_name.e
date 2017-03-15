@@ -5,7 +5,7 @@ note
 		"Names of Eiffel prefix 'free-operator' features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	ET_PREFIX_NAME
 		undefine
 			alias_name, alias_lower_name,
+			operator_name, operator_lower_name,
 			name, lower_name, hash_code, same_call_name,
 			process, same_alias_name,
 			is_prefix_freeop,
@@ -32,7 +33,7 @@ inherit
 			make_minus as make_infix_minus,
 			alias_keyword as prefix_keyword,
 			set_alias_keyword as set_prefix_keyword,
-			alias_string as operator_name
+			alias_string as operator_string
 		undefine
 			set_infix, set_prefix,
 			is_infixable, is_prefixable,
@@ -80,9 +81,9 @@ feature -- Access
 	name: STRING
 			-- Name of feature
 		do
-			create Result.make (free_operator_name.count + 9)
+			create Result.make (operator_name.count + 9)
 			Result.append_string (prefix_double_quote)
-			Result.append_string (free_operator_name)
+			Result.append_string (operator_name)
 			Result.append_character ('%"')
 		end
 

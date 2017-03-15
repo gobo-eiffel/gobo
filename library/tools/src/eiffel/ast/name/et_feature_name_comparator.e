@@ -2,19 +2,19 @@ note
 
 	description:
 
-		"Class comparators by name"
+		"Feature name comparators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_CLASS_COMPARATOR_BY_NAME
+class ET_FEATURE_NAME_COMPARATOR
 
 inherit
 
-	KL_COMPARATOR [ET_CLASS]
+	KL_COMPARATOR [ET_FEATURE_NAME]
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: ET_CLASS): BOOLEAN
+	less_than (u, v: ET_FEATURE_NAME): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
-			Result := (STRING_.three_way_upper_case_comparison (u.name.name, v.name.name) = -1)
+			Result := (STRING_.three_way_lower_case_comparison (u.name, v.name) = -1)
 		end
 
 end

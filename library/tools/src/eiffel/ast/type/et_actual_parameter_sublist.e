@@ -5,7 +5,7 @@ note
 		"Eiffel sublists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_ACTUAL_PARAMETER_SUBLIST
 inherit
 
 	ET_ACTUAL_PARAMETERS
+		redefine
+			folded_actual_parameters
+		end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -56,6 +59,12 @@ feature -- Access
 
 	actual_parameters: ET_ACTUAL_PARAMETERS
 			-- Actual parameters from which a sublist is used
+
+	folded_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			-- Actual parameters as they were when last parsed
+		do
+			Result := actual_parameters.folded_actual_parameters
+		end
 
 	lower: INTEGER
 			-- Lower bound in `actual_parameters'

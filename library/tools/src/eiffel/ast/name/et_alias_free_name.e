@@ -5,7 +5,7 @@ note
 		"Eiffel alias 'free-operator' feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,9 +41,12 @@ inherit
 			is_infix_dotdot,
 			is_prefix_minus,
 			is_prefix_plus,
-			is_prefix_not
+			is_prefix_not,
+			operator_lower_name
 		redefine
-			alias_name, alias_lower_name, process,
+			alias_name, alias_lower_name,
+			operator_name,
+			process,
 			is_infix, is_infix_freeop,
 			is_prefix, is_prefix_freeop,
 			is_prefixable, is_infixable,
@@ -72,7 +75,7 @@ feature {NONE} -- Initialization
 			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_freeop_code
-			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
+			hash_code := STRING_.case_insensitive_hash_code (operator_name)
 		ensure
 			alias_string_set: alias_string = a_string
 			is_infix_freeop: is_infix_freeop
@@ -87,7 +90,7 @@ feature {NONE} -- Initialization
 			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.prefix_freeop_code
-			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
+			hash_code := STRING_.case_insensitive_hash_code (operator_name)
 		ensure
 			alias_string_set: alias_string = a_string
 			is_prefix_freeop: is_prefix_freeop
@@ -136,9 +139,9 @@ feature -- Access
 	alias_name: STRING
 			-- Name of alias
 		do
-			create Result.make (free_operator_name.count + 8)
+			create Result.make (operator_name.count + 8)
 			Result.append_string (alias_double_quote)
-			Result.append_string (free_operator_name)
+			Result.append_string (operator_name)
 			Result.append_character ('%"')
 		end
 
@@ -162,7 +165,7 @@ feature -- Access
 			end
 		end
 
-	free_operator_name: STRING
+	operator_name: STRING
 			-- Name of free operator
 		do
 			Result := alias_string.value
@@ -196,10 +199,10 @@ feature -- Comparison
 				Result := True
 			elseif attached {ET_FREE_NAME} other as op then
 				if hash_code = op.hash_code then
-					if op.free_operator_name = free_operator_name then
+					if op.operator_name = operator_name then
 						Result := True
 					else
-						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+						Result := STRING_.same_case_insensitive (operator_name, op.operator_name)
 					end
 				end
 			end

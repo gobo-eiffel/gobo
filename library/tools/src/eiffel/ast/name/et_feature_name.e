@@ -5,7 +5,7 @@ note
 		"Eiffel feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,8 +28,11 @@ inherit
 
 feature -- Status report
 
-	is_feature_name: BOOLEAN = True
+	is_feature_name: BOOLEAN
 			-- Is current call name a feature name?
+		do
+			Result := True
+		end
 
 feature -- Access
 

@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,7 @@ inherit
 			break
 		redefine
 			reset,
+			is_feature_name,
 			is_tuple_label,
 			is_local,
 			is_argument,
@@ -121,11 +122,13 @@ inherit
 
 	ET_TOKEN
 		rename
-			text as name
+			text as name,
+			set_text as set_name
 		undefine
 			is_equal
 		redefine
-			make
+			make,
+			set_name
 		end
 
 	ET_UNQUALIFIED_FEATURE_CALL_EXPRESSION
@@ -205,7 +208,7 @@ feature -- Initialization
 			if not is_local and not is_argument then
 				seed := 0
 				if is_tuple_label then
-					set_tuple_label (False)
+					set_feature_name (True)
 				end
 			end
 		end
@@ -275,6 +278,12 @@ feature -- Status report
 	is_identifier: BOOLEAN = True
 			-- Is current feature name an identifier?
 
+	is_feature_name: BOOLEAN
+			-- Is current identier a feature name?
+		do
+			Result := (status_code = feature_name_code)
+		end
+
 	is_local: BOOLEAN
 			-- Is current identifier a local variable name?
 		do
@@ -324,12 +333,6 @@ feature -- Status report
 			Result := (status_code = agent_closed_operand_code)
 		end
 
-	is_instruction: BOOLEAN
-			-- Is current identifier an argumentless unqualified call?
-		do
-			Result := (status_code = instruction_code)
-		end
-
 	is_never_void: BOOLEAN
 			-- Can current expression never be void?
 		do
@@ -337,6 +340,18 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_feature_name (b: BOOLEAN)
+			-- Set `is_feature_name' to `b'.
+		do
+			if b then
+				status_code := feature_name_code
+			else
+				status_code := no_code
+			end
+		ensure
+			feature_name_set: is_local = b
+		end
 
 	set_local (b: BOOLEAN)
 			-- Set `is_local' to `b'.
@@ -434,16 +449,13 @@ feature -- Status setting
 			agent_closed_operand_set: is_agent_closed_operand = b
 		end
 
-	set_instruction (b: BOOLEAN)
-			-- Set `is_instruction' to `b'.
+feature -- Setting
+
+	set_name (a_name: like name)
+			-- Set `name' to `a_name'.
 		do
-			if b then
-				status_code := instruction_code
-			else
-				status_code := no_code
-			end
-		ensure
-			instruction_set: is_instruction = b
+			name := a_name
+			hash_code := new_hash_code (a_name)
 		end
 
 feature -- Comparison
@@ -595,13 +607,13 @@ feature {NONE} -- Implementation
 		end
 
 	status_code: CHARACTER
+	feature_name_code: CHARACTER = 'f'
 	local_code: CHARACTER = 'l'
 	object_test_local_code: CHARACTER = 'm'
 	across_cursor_code: CHARACTER = 'u'
 	argument_code: CHARACTER = 'a'
 	temporary_code: CHARACTER = 'v'
 	tuple_label_code: CHARACTER = 't'
-	instruction_code: CHARACTER = 'i'
 	agent_open_operand_code: CHARACTER = 'o'
 	agent_closed_operand_code: CHARACTER = 'c'
 	no_code: CHARACTER = '%U'

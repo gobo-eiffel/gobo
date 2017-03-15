@@ -11,7 +11,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,9 @@ class ET_UNFOLDED_TUPLE_ACTUAL_PARAMETERS
 inherit
 
 	ET_ACTUAL_PARAMETERS
+		redefine
+			folded_actual_parameters
+		end
 
 create
 
@@ -58,6 +61,12 @@ feature -- Access
 
 	actual_parameters: ET_ACTUAL_PARAMETERS
 			-- Actual parameters from which the current parameters are unfolded
+
+	folded_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			-- Actual parameters as they were when last parsed
+		do
+			Result := actual_parameters.folded_actual_parameters
+		end
 
 	tuple_position: INTEGER
 			-- Position of the tuple type is the new list of actual parameters

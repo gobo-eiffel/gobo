@@ -5,7 +5,7 @@ note
 		"Eiffel alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -354,6 +354,12 @@ feature -- Status report
 			Result := True
 		end
 
+	is_keyword: BOOLEAN
+			-- Is the operator a keyword (or two keywords)?
+		do
+			Result := (code >= tokens.min_keyword_code and code <= tokens.max_keyword_code)
+		end
+
 	is_bracket: BOOLEAN
 			-- Is current feature name of the form 'alias "[]"'?
 		do
@@ -528,6 +534,13 @@ feature -- Access
 			Result := alias_name
 		end
 
+	lower_name: STRING
+			-- Lower-name of feature call
+			-- (May return the same object as `name' if already in lower case.)
+		do
+			Result := name
+		end
+
 	alias_name: STRING
 			-- Name of alias
 		do
@@ -587,13 +600,6 @@ feature -- Access
 			alias_name_not_empty: Result.count > 0
 		end
 
-	lower_name: STRING
-			-- Lower-name of feature call
-			-- (May return the same object as `name' if already in lower case.)
-		do
-			Result := name
-		end
-
 	alias_lower_name: STRING
 			-- Lower-name of alias
 			-- (May return the same object as `alias_name' if already in lower case.)
@@ -603,6 +609,76 @@ feature -- Access
 			alias_lower_name_not_void: Result /= Void
 			alias_lower_name_not_empty: Result.count > 0
 			definition: Result.is_equal (alias_name.as_lower)
+		end
+
+	operator_name: STRING
+			-- Name of operator
+		do
+			inspect code
+			when alias_bracket_code then
+				Result := tokens.brackets_symbol_name
+			when alias_parenthesis_code then
+				Result := tokens.parentheses_symbol_name
+			when infix_and_code then
+				Result := tokens.and_keyword_name
+			when infix_and_then_code then
+				Result := tokens.and_then_keywords_name
+			when infix_div_code then
+				Result := tokens.div_symbol_name
+			when infix_divide_code then
+				Result := tokens.divide_symbol_name
+			when infix_ge_code then
+				Result := tokens.ge_symbol_name
+			when infix_gt_code then
+				Result := tokens.gt_symbol_name
+			when infix_implies_code then
+				Result := tokens.implies_keyword_name
+			when infix_le_code then
+				Result := tokens.le_symbol_name
+			when infix_lt_code then
+				Result := tokens.lt_symbol_name
+			when infix_minus_code then
+				Result := tokens.minus_symbol_name
+			when infix_mod_code then
+				Result := tokens.mod_symbol_name
+			when infix_or_code then
+				Result := tokens.or_keyword_name
+			when infix_or_else_code then
+				Result := tokens.or_else_keywords_name
+			when infix_plus_code then
+				Result := tokens.plus_symbol_name
+			when infix_power_code then
+				Result := tokens.power_symbol_name
+			when infix_times_code then
+				Result := tokens.times_symbol_name
+			when infix_xor_code then
+				Result := tokens.xor_keyword_name
+			when infix_dotdot_code then
+				Result := tokens.dotdot_symbol_name
+			when prefix_minus_code then
+				Result := tokens.minus_symbol_name
+			when prefix_plus_code then
+				Result := tokens.plus_symbol_name
+			when prefix_not_code then
+				Result := tokens.not_keyword_name
+			else
+					-- Should never happen.
+				Result := tokens.unknown_name
+			end
+		ensure
+			operator_name_not_void: Result /= Void
+			operator_name_not_empty: Result.count > 0
+		end
+
+	operator_lower_name: STRING
+			-- Lower-name of operator
+			-- (May return the same object as `operator_name' if already in lower case.)
+		do
+			Result := operator_name
+		ensure
+			operator_lower_name_not_void: Result /= Void
+			operator_lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (operator_name.as_lower)
 		end
 
 	hash_code: INTEGER

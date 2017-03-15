@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -1192,6 +1192,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if a_seed = 0 then
+					an_identifier.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_expression (an_identifier, Void)
 				else
 					Result := an_identifier
@@ -1307,6 +1308,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if a_seed = 0 then
+					a_name.set_feature_name (True)
 					Result := ast_factory.new_unqualified_call_expression (a_name, Void)
 				else
 					Result := a_name
@@ -1346,6 +1348,15 @@ feature {NONE} -- AST factory
 			else
 				Result := ast_factory.new_constraint_named_type (a_type_mark, a_name)
 			end
+		end
+
+	new_dot_feature_name (a_dot: detachable ET_SYMBOL; a_name: detachable ET_IDENTIFIER): detachable ET_QUALIFIED_FEATURE_NAME
+			-- New dot-feature_name
+		do
+			if a_name /= Void then
+				a_name.set_feature_name (True)
+			end
+			Result := ast_factory.new_dot_feature_name (a_dot, a_name)
 		end
 
 	new_external_function (a_name: detachable ET_EXTENDED_FEATURE_NAME; args: detachable ET_FORMAL_ARGUMENT_LIST;
@@ -1411,6 +1422,9 @@ feature {NONE} -- AST factory
 					if l_seed /= 0 then
 						l_identifier.set_object_test_local (True)
 					end
+				end
+				if l_seed = 0 then
+					l_identifier.set_feature_name (True)
 				end
 			end
 			Result := ast_factory.new_feature_address (d, a_name)
@@ -1505,6 +1519,16 @@ feature {NONE} -- AST factory
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
 			wipe_out_last_across_components_stack
+		end
+
+	new_like_feature (a_type_mark: detachable ET_TYPE_MARK; a_like: detachable ET_KEYWORD;
+		a_name: detachable ET_IDENTIFIER): detachable ET_LIKE_FEATURE
+			-- New 'like name' type
+		do
+			if a_name /= Void then
+				a_name.set_feature_name (True)
+			end
+			Result := ast_factory.new_like_feature (a_type_mark, a_like, a_name)
 		end
 
 	new_local_variables (a_local: detachable ET_KEYWORD; nb: INTEGER): detachable ET_LOCAL_VARIABLE_LIST
@@ -1611,35 +1635,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_parent (a_name: detachable ET_IDENTIFIER; a_generic_parameters: detachable ET_ACTUAL_PARAMETER_LIST;
-		a_renames: detachable ET_RENAME_LIST; an_exports: detachable ET_EXPORT_LIST; an_undefines, a_redefines,
-		a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST; an_end: detachable ET_KEYWORD): detachable ET_PARENT
-			-- New parent
-		local
-			a_type: detachable ET_CLASS_TYPE
-			a_last_class: like last_class
-			l_class: ET_MASTER_CLASS
-		do
-			a_last_class := last_class
-			if a_last_class /= Void and a_name /= Void then
-				if a_last_class.has_formal_parameter (a_name) then
-					-- Error
-				end
-				l_class := current_universe.master_class (a_name)
-				if providers_enabled then
-					providers.force_last (l_class)
-				end
-				l_class.set_in_system (True)
-				if a_generic_parameters /= Void then
-					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, l_class)
-				else
-					a_type := ast_factory.new_class_type (Void, a_name, l_class)
-				end
-				Result := ast_factory.new_parent (a_type, a_renames, an_exports,
-					an_undefines, a_redefines, a_selects, an_end)
-			end
-		end
-
 	new_old_object_test (a_left_brace: detachable ET_SYMBOL; a_name: detachable ET_IDENTIFIER;
 		a_colon: detachable ET_SYMBOL; a_type: detachable ET_TYPE; a_right_brace: detachable ET_SYMBOL;
 		a_expression: detachable ET_EXPRESSION): detachable ET_OLD_OBJECT_TEST
@@ -1668,6 +1663,35 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_once_manifest_string (a_once, a_string)
 			if Result /= Void then
 				current_system.register_inline_constant (Result)
+			end
+		end
+
+	new_parent (a_name: detachable ET_IDENTIFIER; a_generic_parameters: detachable ET_ACTUAL_PARAMETER_LIST;
+		a_renames: detachable ET_RENAME_LIST; an_exports: detachable ET_EXPORT_LIST; an_undefines, a_redefines,
+		a_selects: detachable ET_KEYWORD_FEATURE_NAME_LIST; an_end: detachable ET_KEYWORD): detachable ET_PARENT
+			-- New parent
+		local
+			a_type: detachable ET_CLASS_TYPE
+			a_last_class: like last_class
+			l_class: ET_MASTER_CLASS
+		do
+			a_last_class := last_class
+			if a_last_class /= Void and a_name /= Void then
+				if a_last_class.has_formal_parameter (a_name) then
+					-- Error
+				end
+				l_class := current_universe.master_class (a_name)
+				if providers_enabled then
+					providers.force_last (l_class)
+				end
+				l_class.set_in_system (True)
+				if a_generic_parameters /= Void then
+					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, l_class)
+				else
+					a_type := ast_factory.new_class_type (Void, a_name, l_class)
+				end
+				Result := ast_factory.new_parent (a_type, a_renames, an_exports,
+					an_undefines, a_redefines, a_selects, an_end)
 			end
 		end
 
@@ -1850,7 +1874,10 @@ feature {NONE} -- AST factory
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 or args /= Void then
+				if a_seed = 0 then
+					a_name.set_feature_name (True)
+					Result := ast_factory.new_unqualified_call_expression (a_name, args)
+				elseif args /= Void then
 					Result := ast_factory.new_unqualified_call_expression (a_name, args)
 				else
 					Result := a_name
@@ -1892,7 +1919,10 @@ feature {NONE} -- AST factory
 						a_name.set_object_test_local (True)
 					end
 				end
-				if a_seed = 0 or args /= Void then
+				if a_seed = 0 then
+					a_name.set_feature_name (True)
+					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
+				elseif args /= Void then
 					Result := ast_factory.new_unqualified_call_instruction (a_name, args)
 				else
 					Result := a_name
@@ -1914,6 +1944,9 @@ feature {NONE} -- AST factory
 						a_name.set_local (True)
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
+				end
+				if a_seed = 0 then
+					a_name.set_feature_name (True)
 				end
 			end
 		end

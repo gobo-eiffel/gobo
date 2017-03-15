@@ -5,7 +5,7 @@ note
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -142,6 +142,12 @@ feature -- Access
 		ensure
 			index_large_enough: Result >= 0
 			index_small_enough: Result <= count
+		end
+
+	folded_actual_parameters: detachable ET_ACTUAL_PARAMETERS
+			-- Actual parameters as they were when last parsed
+		do
+			Result := Current
 		end
 
 feature -- Status report

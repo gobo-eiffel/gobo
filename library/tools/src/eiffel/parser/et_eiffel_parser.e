@@ -5,7 +5,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1443,382 +1443,382 @@ feature {NONE} -- Semantic actions
 					--|#line 674 "et_eiffel_parser.y"
 				yy_do_action_74
 			when 75 then
-					--|#line 685 "et_eiffel_parser.y"
+					--|#line 686 "et_eiffel_parser.y"
 				yy_do_action_75
 			when 76 then
-					--|#line 693 "et_eiffel_parser.y"
+					--|#line 694 "et_eiffel_parser.y"
 				yy_do_action_76
 			when 77 then
-					--|#line 702 "et_eiffel_parser.y"
+					--|#line 703 "et_eiffel_parser.y"
 				yy_do_action_77
 			when 78 then
-					--|#line 704 "et_eiffel_parser.y"
+					--|#line 705 "et_eiffel_parser.y"
 				yy_do_action_78
 			when 79 then
-					--|#line 706 "et_eiffel_parser.y"
+					--|#line 707 "et_eiffel_parser.y"
 				yy_do_action_79
 			when 80 then
-					--|#line 708 "et_eiffel_parser.y"
+					--|#line 709 "et_eiffel_parser.y"
 				yy_do_action_80
 			when 81 then
-					--|#line 710 "et_eiffel_parser.y"
+					--|#line 711 "et_eiffel_parser.y"
 				yy_do_action_81
 			when 82 then
-					--|#line 712 "et_eiffel_parser.y"
+					--|#line 713 "et_eiffel_parser.y"
 				yy_do_action_82
 			when 83 then
-					--|#line 714 "et_eiffel_parser.y"
+					--|#line 715 "et_eiffel_parser.y"
 				yy_do_action_83
 			when 84 then
-					--|#line 716 "et_eiffel_parser.y"
+					--|#line 717 "et_eiffel_parser.y"
 				yy_do_action_84
 			when 85 then
-					--|#line 718 "et_eiffel_parser.y"
+					--|#line 719 "et_eiffel_parser.y"
 				yy_do_action_85
 			when 86 then
-					--|#line 720 "et_eiffel_parser.y"
+					--|#line 721 "et_eiffel_parser.y"
 				yy_do_action_86
 			when 87 then
-					--|#line 722 "et_eiffel_parser.y"
+					--|#line 723 "et_eiffel_parser.y"
 				yy_do_action_87
 			when 88 then
-					--|#line 724 "et_eiffel_parser.y"
+					--|#line 725 "et_eiffel_parser.y"
 				yy_do_action_88
 			when 89 then
-					--|#line 726 "et_eiffel_parser.y"
+					--|#line 727 "et_eiffel_parser.y"
 				yy_do_action_89
 			when 90 then
-					--|#line 728 "et_eiffel_parser.y"
+					--|#line 729 "et_eiffel_parser.y"
 				yy_do_action_90
 			when 91 then
-					--|#line 730 "et_eiffel_parser.y"
+					--|#line 731 "et_eiffel_parser.y"
 				yy_do_action_91
 			when 92 then
-					--|#line 732 "et_eiffel_parser.y"
+					--|#line 733 "et_eiffel_parser.y"
 				yy_do_action_92
 			when 93 then
-					--|#line 734 "et_eiffel_parser.y"
+					--|#line 735 "et_eiffel_parser.y"
 				yy_do_action_93
 			when 94 then
-					--|#line 736 "et_eiffel_parser.y"
+					--|#line 737 "et_eiffel_parser.y"
 				yy_do_action_94
 			when 95 then
-					--|#line 738 "et_eiffel_parser.y"
+					--|#line 739 "et_eiffel_parser.y"
 				yy_do_action_95
 			when 96 then
-					--|#line 740 "et_eiffel_parser.y"
+					--|#line 741 "et_eiffel_parser.y"
 				yy_do_action_96
 			when 97 then
-					--|#line 742 "et_eiffel_parser.y"
+					--|#line 743 "et_eiffel_parser.y"
 				yy_do_action_97
 			when 98 then
-					--|#line 744 "et_eiffel_parser.y"
+					--|#line 745 "et_eiffel_parser.y"
 				yy_do_action_98
 			when 99 then
-					--|#line 746 "et_eiffel_parser.y"
+					--|#line 747 "et_eiffel_parser.y"
 				yy_do_action_99
 			when 100 then
-					--|#line 750 "et_eiffel_parser.y"
+					--|#line 751 "et_eiffel_parser.y"
 				yy_do_action_100
 			when 101 then
-					--|#line 752 "et_eiffel_parser.y"
+					--|#line 753 "et_eiffel_parser.y"
 				yy_do_action_101
 			when 102 then
-					--|#line 754 "et_eiffel_parser.y"
+					--|#line 755 "et_eiffel_parser.y"
 				yy_do_action_102
 			when 103 then
-					--|#line 756 "et_eiffel_parser.y"
+					--|#line 757 "et_eiffel_parser.y"
 				yy_do_action_103
 			when 104 then
-					--|#line 758 "et_eiffel_parser.y"
+					--|#line 759 "et_eiffel_parser.y"
 				yy_do_action_104
 			when 105 then
-					--|#line 760 "et_eiffel_parser.y"
+					--|#line 761 "et_eiffel_parser.y"
 				yy_do_action_105
 			when 106 then
-					--|#line 762 "et_eiffel_parser.y"
+					--|#line 763 "et_eiffel_parser.y"
 				yy_do_action_106
 			when 107 then
-					--|#line 764 "et_eiffel_parser.y"
+					--|#line 765 "et_eiffel_parser.y"
 				yy_do_action_107
 			when 108 then
-					--|#line 766 "et_eiffel_parser.y"
+					--|#line 767 "et_eiffel_parser.y"
 				yy_do_action_108
 			when 109 then
-					--|#line 768 "et_eiffel_parser.y"
+					--|#line 769 "et_eiffel_parser.y"
 				yy_do_action_109
 			when 110 then
-					--|#line 770 "et_eiffel_parser.y"
+					--|#line 771 "et_eiffel_parser.y"
 				yy_do_action_110
 			when 111 then
-					--|#line 772 "et_eiffel_parser.y"
+					--|#line 773 "et_eiffel_parser.y"
 				yy_do_action_111
 			when 112 then
-					--|#line 774 "et_eiffel_parser.y"
+					--|#line 775 "et_eiffel_parser.y"
 				yy_do_action_112
 			when 113 then
-					--|#line 776 "et_eiffel_parser.y"
+					--|#line 777 "et_eiffel_parser.y"
 				yy_do_action_113
 			when 114 then
-					--|#line 778 "et_eiffel_parser.y"
+					--|#line 779 "et_eiffel_parser.y"
 				yy_do_action_114
 			when 115 then
-					--|#line 780 "et_eiffel_parser.y"
+					--|#line 781 "et_eiffel_parser.y"
 				yy_do_action_115
 			when 116 then
-					--|#line 782 "et_eiffel_parser.y"
+					--|#line 783 "et_eiffel_parser.y"
 				yy_do_action_116
 			when 117 then
-					--|#line 784 "et_eiffel_parser.y"
+					--|#line 785 "et_eiffel_parser.y"
 				yy_do_action_117
 			when 118 then
-					--|#line 786 "et_eiffel_parser.y"
+					--|#line 787 "et_eiffel_parser.y"
 				yy_do_action_118
 			when 119 then
-					--|#line 788 "et_eiffel_parser.y"
+					--|#line 789 "et_eiffel_parser.y"
 				yy_do_action_119
 			when 120 then
-					--|#line 790 "et_eiffel_parser.y"
+					--|#line 791 "et_eiffel_parser.y"
 				yy_do_action_120
 			when 121 then
-					--|#line 792 "et_eiffel_parser.y"
+					--|#line 793 "et_eiffel_parser.y"
 				yy_do_action_121
 			when 122 then
-					--|#line 794 "et_eiffel_parser.y"
+					--|#line 795 "et_eiffel_parser.y"
 				yy_do_action_122
 			when 123 then
-					--|#line 798 "et_eiffel_parser.y"
+					--|#line 799 "et_eiffel_parser.y"
 				yy_do_action_123
 			when 124 then
-					--|#line 800 "et_eiffel_parser.y"
+					--|#line 801 "et_eiffel_parser.y"
 				yy_do_action_124
 			when 125 then
-					--|#line 804 "et_eiffel_parser.y"
+					--|#line 805 "et_eiffel_parser.y"
 				yy_do_action_125
 			when 126 then
-					--|#line 807 "et_eiffel_parser.y"
+					--|#line 808 "et_eiffel_parser.y"
 				yy_do_action_126
 			when 127 then
-					--|#line 815 "et_eiffel_parser.y"
+					--|#line 816 "et_eiffel_parser.y"
 				yy_do_action_127
 			when 128 then
-					--|#line 826 "et_eiffel_parser.y"
+					--|#line 827 "et_eiffel_parser.y"
 				yy_do_action_128
 			when 129 then
-					--|#line 831 "et_eiffel_parser.y"
+					--|#line 832 "et_eiffel_parser.y"
 				yy_do_action_129
 			when 130 then
-					--|#line 838 "et_eiffel_parser.y"
+					--|#line 839 "et_eiffel_parser.y"
 				yy_do_action_130
 			when 131 then
-					--|#line 847 "et_eiffel_parser.y"
+					--|#line 848 "et_eiffel_parser.y"
 				yy_do_action_131
 			when 132 then
-					--|#line 849 "et_eiffel_parser.y"
+					--|#line 850 "et_eiffel_parser.y"
 				yy_do_action_132
 			when 133 then
-					--|#line 853 "et_eiffel_parser.y"
+					--|#line 854 "et_eiffel_parser.y"
 				yy_do_action_133
 			when 134 then
-					--|#line 856 "et_eiffel_parser.y"
+					--|#line 857 "et_eiffel_parser.y"
 				yy_do_action_134
 			when 135 then
-					--|#line 862 "et_eiffel_parser.y"
+					--|#line 863 "et_eiffel_parser.y"
 				yy_do_action_135
 			when 136 then
-					--|#line 870 "et_eiffel_parser.y"
+					--|#line 871 "et_eiffel_parser.y"
 				yy_do_action_136
 			when 137 then
-					--|#line 875 "et_eiffel_parser.y"
+					--|#line 876 "et_eiffel_parser.y"
 				yy_do_action_137
 			when 138 then
-					--|#line 880 "et_eiffel_parser.y"
+					--|#line 881 "et_eiffel_parser.y"
 				yy_do_action_138
 			when 139 then
-					--|#line 885 "et_eiffel_parser.y"
+					--|#line 886 "et_eiffel_parser.y"
 				yy_do_action_139
 			when 140 then
-					--|#line 898 "et_eiffel_parser.y"
+					--|#line 899 "et_eiffel_parser.y"
 				yy_do_action_140
 			when 141 then
-					--|#line 907 "et_eiffel_parser.y"
+					--|#line 908 "et_eiffel_parser.y"
 				yy_do_action_141
 			when 142 then
-					--|#line 918 "et_eiffel_parser.y"
+					--|#line 919 "et_eiffel_parser.y"
 				yy_do_action_142
 			when 143 then
-					--|#line 920 "et_eiffel_parser.y"
+					--|#line 921 "et_eiffel_parser.y"
 				yy_do_action_143
 			when 144 then
-					--|#line 926 "et_eiffel_parser.y"
+					--|#line 927 "et_eiffel_parser.y"
 				yy_do_action_144
 			when 145 then
-					--|#line 928 "et_eiffel_parser.y"
+					--|#line 929 "et_eiffel_parser.y"
 				yy_do_action_145
 			when 146 then
-					--|#line 935 "et_eiffel_parser.y"
+					--|#line 936 "et_eiffel_parser.y"
 				yy_do_action_146
 			when 147 then
-					--|#line 946 "et_eiffel_parser.y"
+					--|#line 947 "et_eiffel_parser.y"
 				yy_do_action_147
 			when 148 then
-					--|#line 946 "et_eiffel_parser.y"
+					--|#line 947 "et_eiffel_parser.y"
 				yy_do_action_148
 			when 149 then
-					--|#line 961 "et_eiffel_parser.y"
+					--|#line 962 "et_eiffel_parser.y"
 				yy_do_action_149
 			when 150 then
-					--|#line 968 "et_eiffel_parser.y"
+					--|#line 969 "et_eiffel_parser.y"
 				yy_do_action_150
 			when 151 then
-					--|#line 968 "et_eiffel_parser.y"
+					--|#line 969 "et_eiffel_parser.y"
 				yy_do_action_151
 			when 152 then
-					--|#line 984 "et_eiffel_parser.y"
+					--|#line 985 "et_eiffel_parser.y"
 				yy_do_action_152
 			when 153 then
-					--|#line 991 "et_eiffel_parser.y"
+					--|#line 992 "et_eiffel_parser.y"
 				yy_do_action_153
 			when 154 then
-					--|#line 999 "et_eiffel_parser.y"
+					--|#line 1000 "et_eiffel_parser.y"
 				yy_do_action_154
 			when 155 then
-					--|#line 1006 "et_eiffel_parser.y"
+					--|#line 1007 "et_eiffel_parser.y"
 				yy_do_action_155
 			when 156 then
-					--|#line 1013 "et_eiffel_parser.y"
+					--|#line 1014 "et_eiffel_parser.y"
 				yy_do_action_156
 			when 157 then
-					--|#line 1020 "et_eiffel_parser.y"
+					--|#line 1021 "et_eiffel_parser.y"
 				yy_do_action_157
 			when 158 then
-					--|#line 1029 "et_eiffel_parser.y"
+					--|#line 1030 "et_eiffel_parser.y"
 				yy_do_action_158
 			when 159 then
-					--|#line 1036 "et_eiffel_parser.y"
+					--|#line 1037 "et_eiffel_parser.y"
 				yy_do_action_159
 			when 160 then
-					--|#line 1043 "et_eiffel_parser.y"
+					--|#line 1044 "et_eiffel_parser.y"
 				yy_do_action_160
 			when 161 then
-					--|#line 1050 "et_eiffel_parser.y"
+					--|#line 1051 "et_eiffel_parser.y"
 				yy_do_action_161
 			when 162 then
-					--|#line 1059 "et_eiffel_parser.y"
+					--|#line 1060 "et_eiffel_parser.y"
 				yy_do_action_162
 			when 163 then
-					--|#line 1070 "et_eiffel_parser.y"
+					--|#line 1071 "et_eiffel_parser.y"
 				yy_do_action_163
 			when 164 then
-					--|#line 1072 "et_eiffel_parser.y"
+					--|#line 1073 "et_eiffel_parser.y"
 				yy_do_action_164
 			when 165 then
-					--|#line 1072 "et_eiffel_parser.y"
+					--|#line 1073 "et_eiffel_parser.y"
 				yy_do_action_165
 			when 166 then
-					--|#line 1085 "et_eiffel_parser.y"
+					--|#line 1086 "et_eiffel_parser.y"
 				yy_do_action_166
 			when 167 then
-					--|#line 1092 "et_eiffel_parser.y"
+					--|#line 1093 "et_eiffel_parser.y"
 				yy_do_action_167
 			when 168 then
-					--|#line 1101 "et_eiffel_parser.y"
+					--|#line 1102 "et_eiffel_parser.y"
 				yy_do_action_168
 			when 169 then
-					--|#line 1110 "et_eiffel_parser.y"
+					--|#line 1111 "et_eiffel_parser.y"
 				yy_do_action_169
 			when 170 then
-					--|#line 1119 "et_eiffel_parser.y"
+					--|#line 1120 "et_eiffel_parser.y"
 				yy_do_action_170
 			when 171 then
-					--|#line 1130 "et_eiffel_parser.y"
+					--|#line 1131 "et_eiffel_parser.y"
 				yy_do_action_171
 			when 172 then
-					--|#line 1132 "et_eiffel_parser.y"
+					--|#line 1133 "et_eiffel_parser.y"
 				yy_do_action_172
 			when 173 then
-					--|#line 1132 "et_eiffel_parser.y"
+					--|#line 1133 "et_eiffel_parser.y"
 				yy_do_action_173
 			when 174 then
-					--|#line 1145 "et_eiffel_parser.y"
+					--|#line 1146 "et_eiffel_parser.y"
 				yy_do_action_174
 			when 175 then
-					--|#line 1147 "et_eiffel_parser.y"
+					--|#line 1148 "et_eiffel_parser.y"
 				yy_do_action_175
 			when 176 then
-					--|#line 1151 "et_eiffel_parser.y"
+					--|#line 1152 "et_eiffel_parser.y"
 				yy_do_action_176
 			when 177 then
-					--|#line 1162 "et_eiffel_parser.y"
+					--|#line 1163 "et_eiffel_parser.y"
 				yy_do_action_177
 			when 178 then
-					--|#line 1162 "et_eiffel_parser.y"
+					--|#line 1163 "et_eiffel_parser.y"
 				yy_do_action_178
 			when 179 then
-					--|#line 1177 "et_eiffel_parser.y"
+					--|#line 1178 "et_eiffel_parser.y"
 				yy_do_action_179
 			when 180 then
-					--|#line 1181 "et_eiffel_parser.y"
+					--|#line 1182 "et_eiffel_parser.y"
 				yy_do_action_180
 			when 181 then
-					--|#line 1186 "et_eiffel_parser.y"
+					--|#line 1187 "et_eiffel_parser.y"
 				yy_do_action_181
 			when 182 then
-					--|#line 1186 "et_eiffel_parser.y"
+					--|#line 1187 "et_eiffel_parser.y"
 				yy_do_action_182
 			when 183 then
-					--|#line 1196 "et_eiffel_parser.y"
+					--|#line 1197 "et_eiffel_parser.y"
 				yy_do_action_183
 			when 184 then
-					--|#line 1200 "et_eiffel_parser.y"
+					--|#line 1201 "et_eiffel_parser.y"
 				yy_do_action_184
 			when 185 then
-					--|#line 1211 "et_eiffel_parser.y"
+					--|#line 1212 "et_eiffel_parser.y"
 				yy_do_action_185
 			when 186 then
-					--|#line 1219 "et_eiffel_parser.y"
+					--|#line 1220 "et_eiffel_parser.y"
 				yy_do_action_186
 			when 187 then
-					--|#line 1230 "et_eiffel_parser.y"
+					--|#line 1231 "et_eiffel_parser.y"
 				yy_do_action_187
 			when 188 then
-					--|#line 1230 "et_eiffel_parser.y"
+					--|#line 1231 "et_eiffel_parser.y"
 				yy_do_action_188
 			when 189 then
-					--|#line 1241 "et_eiffel_parser.y"
+					--|#line 1242 "et_eiffel_parser.y"
 				yy_do_action_189
 			when 190 then
-					--|#line 1245 "et_eiffel_parser.y"
+					--|#line 1246 "et_eiffel_parser.y"
 				yy_do_action_190
 			when 191 then
-					--|#line 1252 "et_eiffel_parser.y"
+					--|#line 1253 "et_eiffel_parser.y"
 				yy_do_action_191
 			when 192 then
-					--|#line 1260 "et_eiffel_parser.y"
+					--|#line 1261 "et_eiffel_parser.y"
 				yy_do_action_192
 			when 193 then
-					--|#line 1267 "et_eiffel_parser.y"
+					--|#line 1268 "et_eiffel_parser.y"
 				yy_do_action_193
 			when 194 then
-					--|#line 1277 "et_eiffel_parser.y"
+					--|#line 1278 "et_eiffel_parser.y"
 				yy_do_action_194
 			when 195 then
-					--|#line 1286 "et_eiffel_parser.y"
+					--|#line 1287 "et_eiffel_parser.y"
 				yy_do_action_195
 			when 196 then
-					--|#line 1296 "et_eiffel_parser.y"
+					--|#line 1297 "et_eiffel_parser.y"
 				yy_do_action_196
 			when 197 then
-					--|#line 1298 "et_eiffel_parser.y"
+					--|#line 1299 "et_eiffel_parser.y"
 				yy_do_action_197
 			when 198 then
-					--|#line 1302 "et_eiffel_parser.y"
+					--|#line 1303 "et_eiffel_parser.y"
 				yy_do_action_198
 			when 199 then
-					--|#line 1313 "et_eiffel_parser.y"
+					--|#line 1314 "et_eiffel_parser.y"
 				yy_do_action_199
 			when 200 then
-					--|#line 1315 "et_eiffel_parser.y"
+					--|#line 1316 "et_eiffel_parser.y"
 				yy_do_action_200
 			else
 				debug ("GEYACC")
@@ -1835,604 +1835,604 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 201 then
-					--|#line 1315 "et_eiffel_parser.y"
+					--|#line 1316 "et_eiffel_parser.y"
 				yy_do_action_201
 			when 202 then
-					--|#line 1328 "et_eiffel_parser.y"
+					--|#line 1329 "et_eiffel_parser.y"
 				yy_do_action_202
 			when 203 then
-					--|#line 1330 "et_eiffel_parser.y"
+					--|#line 1331 "et_eiffel_parser.y"
 				yy_do_action_203
 			when 204 then
-					--|#line 1334 "et_eiffel_parser.y"
+					--|#line 1335 "et_eiffel_parser.y"
 				yy_do_action_204
 			when 205 then
-					--|#line 1336 "et_eiffel_parser.y"
+					--|#line 1337 "et_eiffel_parser.y"
 				yy_do_action_205
 			when 206 then
-					--|#line 1336 "et_eiffel_parser.y"
+					--|#line 1337 "et_eiffel_parser.y"
 				yy_do_action_206
 			when 207 then
-					--|#line 1349 "et_eiffel_parser.y"
+					--|#line 1350 "et_eiffel_parser.y"
 				yy_do_action_207
 			when 208 then
-					--|#line 1351 "et_eiffel_parser.y"
+					--|#line 1352 "et_eiffel_parser.y"
 				yy_do_action_208
 			when 209 then
-					--|#line 1355 "et_eiffel_parser.y"
+					--|#line 1356 "et_eiffel_parser.y"
 				yy_do_action_209
 			when 210 then
-					--|#line 1357 "et_eiffel_parser.y"
+					--|#line 1358 "et_eiffel_parser.y"
 				yy_do_action_210
 			when 211 then
-					--|#line 1357 "et_eiffel_parser.y"
+					--|#line 1358 "et_eiffel_parser.y"
 				yy_do_action_211
 			when 212 then
-					--|#line 1370 "et_eiffel_parser.y"
+					--|#line 1371 "et_eiffel_parser.y"
 				yy_do_action_212
 			when 213 then
-					--|#line 1372 "et_eiffel_parser.y"
+					--|#line 1373 "et_eiffel_parser.y"
 				yy_do_action_213
 			when 214 then
-					--|#line 1376 "et_eiffel_parser.y"
+					--|#line 1377 "et_eiffel_parser.y"
 				yy_do_action_214
 			when 215 then
-					--|#line 1387 "et_eiffel_parser.y"
+					--|#line 1388 "et_eiffel_parser.y"
 				yy_do_action_215
 			when 216 then
-					--|#line 1395 "et_eiffel_parser.y"
+					--|#line 1396 "et_eiffel_parser.y"
 				yy_do_action_216
 			when 217 then
-					--|#line 1404 "et_eiffel_parser.y"
+					--|#line 1405 "et_eiffel_parser.y"
 				yy_do_action_217
 			when 218 then
-					--|#line 1415 "et_eiffel_parser.y"
+					--|#line 1416 "et_eiffel_parser.y"
 				yy_do_action_218
 			when 219 then
-					--|#line 1417 "et_eiffel_parser.y"
+					--|#line 1418 "et_eiffel_parser.y"
 				yy_do_action_219
 			when 220 then
-					--|#line 1424 "et_eiffel_parser.y"
+					--|#line 1425 "et_eiffel_parser.y"
 				yy_do_action_220
 			when 221 then
-					--|#line 1435 "et_eiffel_parser.y"
+					--|#line 1436 "et_eiffel_parser.y"
 				yy_do_action_221
 			when 222 then
-					--|#line 1435 "et_eiffel_parser.y"
+					--|#line 1436 "et_eiffel_parser.y"
 				yy_do_action_222
 			when 223 then
-					--|#line 1450 "et_eiffel_parser.y"
+					--|#line 1451 "et_eiffel_parser.y"
 				yy_do_action_223
 			when 224 then
-					--|#line 1452 "et_eiffel_parser.y"
+					--|#line 1453 "et_eiffel_parser.y"
 				yy_do_action_224
 			when 225 then
-					--|#line 1454 "et_eiffel_parser.y"
+					--|#line 1455 "et_eiffel_parser.y"
 				yy_do_action_225
 			when 226 then
-					--|#line 1454 "et_eiffel_parser.y"
+					--|#line 1455 "et_eiffel_parser.y"
 				yy_do_action_226
 			when 227 then
-					--|#line 1466 "et_eiffel_parser.y"
+					--|#line 1467 "et_eiffel_parser.y"
 				yy_do_action_227
 			when 228 then
-					--|#line 1466 "et_eiffel_parser.y"
+					--|#line 1467 "et_eiffel_parser.y"
 				yy_do_action_228
 			when 229 then
-					--|#line 1478 "et_eiffel_parser.y"
+					--|#line 1479 "et_eiffel_parser.y"
 				yy_do_action_229
 			when 230 then
-					--|#line 1480 "et_eiffel_parser.y"
+					--|#line 1481 "et_eiffel_parser.y"
 				yy_do_action_230
 			when 231 then
-					--|#line 1482 "et_eiffel_parser.y"
+					--|#line 1483 "et_eiffel_parser.y"
 				yy_do_action_231
 			when 232 then
-					--|#line 1482 "et_eiffel_parser.y"
+					--|#line 1483 "et_eiffel_parser.y"
 				yy_do_action_232
 			when 233 then
-					--|#line 1494 "et_eiffel_parser.y"
+					--|#line 1495 "et_eiffel_parser.y"
 				yy_do_action_233
 			when 234 then
-					--|#line 1494 "et_eiffel_parser.y"
+					--|#line 1495 "et_eiffel_parser.y"
 				yy_do_action_234
 			when 235 then
-					--|#line 1508 "et_eiffel_parser.y"
+					--|#line 1509 "et_eiffel_parser.y"
 				yy_do_action_235
 			when 236 then
-					--|#line 1519 "et_eiffel_parser.y"
+					--|#line 1521 "et_eiffel_parser.y"
 				yy_do_action_236
 			when 237 then
-					--|#line 1531 "et_eiffel_parser.y"
+					--|#line 1533 "et_eiffel_parser.y"
 				yy_do_action_237
 			when 238 then
-					--|#line 1540 "et_eiffel_parser.y"
+					--|#line 1542 "et_eiffel_parser.y"
 				yy_do_action_238
 			when 239 then
-					--|#line 1551 "et_eiffel_parser.y"
+					--|#line 1558 "et_eiffel_parser.y"
 				yy_do_action_239
 			when 240 then
-					--|#line 1553 "et_eiffel_parser.y"
+					--|#line 1560 "et_eiffel_parser.y"
 				yy_do_action_240
 			when 241 then
-					--|#line 1557 "et_eiffel_parser.y"
+					--|#line 1564 "et_eiffel_parser.y"
 				yy_do_action_241
 			when 242 then
-					--|#line 1557 "et_eiffel_parser.y"
+					--|#line 1564 "et_eiffel_parser.y"
 				yy_do_action_242
 			when 243 then
-					--|#line 1570 "et_eiffel_parser.y"
+					--|#line 1577 "et_eiffel_parser.y"
 				yy_do_action_243
 			when 244 then
-					--|#line 1577 "et_eiffel_parser.y"
+					--|#line 1584 "et_eiffel_parser.y"
 				yy_do_action_244
 			when 245 then
-					--|#line 1584 "et_eiffel_parser.y"
+					--|#line 1591 "et_eiffel_parser.y"
 				yy_do_action_245
 			when 246 then
-					--|#line 1593 "et_eiffel_parser.y"
+					--|#line 1600 "et_eiffel_parser.y"
 				yy_do_action_246
 			when 247 then
-					--|#line 1602 "et_eiffel_parser.y"
+					--|#line 1609 "et_eiffel_parser.y"
 				yy_do_action_247
 			when 248 then
-					--|#line 1606 "et_eiffel_parser.y"
+					--|#line 1613 "et_eiffel_parser.y"
 				yy_do_action_248
 			when 249 then
-					--|#line 1612 "et_eiffel_parser.y"
+					--|#line 1619 "et_eiffel_parser.y"
 				yy_do_action_249
 			when 250 then
-					--|#line 1614 "et_eiffel_parser.y"
+					--|#line 1621 "et_eiffel_parser.y"
 				yy_do_action_250
 			when 251 then
-					--|#line 1614 "et_eiffel_parser.y"
+					--|#line 1621 "et_eiffel_parser.y"
 				yy_do_action_251
 			when 252 then
-					--|#line 1627 "et_eiffel_parser.y"
+					--|#line 1634 "et_eiffel_parser.y"
 				yy_do_action_252
 			when 253 then
-					--|#line 1638 "et_eiffel_parser.y"
+					--|#line 1645 "et_eiffel_parser.y"
 				yy_do_action_253
 			when 254 then
-					--|#line 1647 "et_eiffel_parser.y"
+					--|#line 1654 "et_eiffel_parser.y"
 				yy_do_action_254
 			when 255 then
-					--|#line 1658 "et_eiffel_parser.y"
+					--|#line 1665 "et_eiffel_parser.y"
 				yy_do_action_255
 			when 256 then
-					--|#line 1663 "et_eiffel_parser.y"
+					--|#line 1670 "et_eiffel_parser.y"
 				yy_do_action_256
 			when 257 then
-					--|#line 1667 "et_eiffel_parser.y"
+					--|#line 1674 "et_eiffel_parser.y"
 				yy_do_action_257
 			when 258 then
-					--|#line 1675 "et_eiffel_parser.y"
+					--|#line 1682 "et_eiffel_parser.y"
 				yy_do_action_258
 			when 259 then
-					--|#line 1682 "et_eiffel_parser.y"
+					--|#line 1689 "et_eiffel_parser.y"
 				yy_do_action_259
 			when 260 then
-					--|#line 1691 "et_eiffel_parser.y"
+					--|#line 1698 "et_eiffel_parser.y"
 				yy_do_action_260
 			when 261 then
-					--|#line 1698 "et_eiffel_parser.y"
+					--|#line 1705 "et_eiffel_parser.y"
 				yy_do_action_261
 			when 262 then
-					--|#line 1707 "et_eiffel_parser.y"
+					--|#line 1714 "et_eiffel_parser.y"
 				yy_do_action_262
 			when 263 then
-					--|#line 1712 "et_eiffel_parser.y"
+					--|#line 1719 "et_eiffel_parser.y"
 				yy_do_action_263
 			when 264 then
-					--|#line 1719 "et_eiffel_parser.y"
+					--|#line 1726 "et_eiffel_parser.y"
 				yy_do_action_264
 			when 265 then
-					--|#line 1720 "et_eiffel_parser.y"
+					--|#line 1727 "et_eiffel_parser.y"
 				yy_do_action_265
 			when 266 then
-					--|#line 1721 "et_eiffel_parser.y"
+					--|#line 1728 "et_eiffel_parser.y"
 				yy_do_action_266
 			when 267 then
-					--|#line 1722 "et_eiffel_parser.y"
+					--|#line 1729 "et_eiffel_parser.y"
 				yy_do_action_267
 			when 268 then
-					--|#line 1727 "et_eiffel_parser.y"
+					--|#line 1734 "et_eiffel_parser.y"
 				yy_do_action_268
 			when 269 then
-					--|#line 1732 "et_eiffel_parser.y"
+					--|#line 1739 "et_eiffel_parser.y"
 				yy_do_action_269
 			when 270 then
-					--|#line 1740 "et_eiffel_parser.y"
+					--|#line 1747 "et_eiffel_parser.y"
 				yy_do_action_270
 			when 271 then
-					--|#line 1745 "et_eiffel_parser.y"
+					--|#line 1752 "et_eiffel_parser.y"
 				yy_do_action_271
 			when 272 then
-					--|#line 1751 "et_eiffel_parser.y"
+					--|#line 1758 "et_eiffel_parser.y"
 				yy_do_action_272
 			when 273 then
-					--|#line 1759 "et_eiffel_parser.y"
+					--|#line 1766 "et_eiffel_parser.y"
 				yy_do_action_273
 			when 274 then
-					--|#line 1770 "et_eiffel_parser.y"
+					--|#line 1777 "et_eiffel_parser.y"
 				yy_do_action_274
 			when 275 then
-					--|#line 1775 "et_eiffel_parser.y"
+					--|#line 1782 "et_eiffel_parser.y"
 				yy_do_action_275
 			when 276 then
-					--|#line 1783 "et_eiffel_parser.y"
+					--|#line 1790 "et_eiffel_parser.y"
 				yy_do_action_276
 			when 277 then
-					--|#line 1788 "et_eiffel_parser.y"
+					--|#line 1795 "et_eiffel_parser.y"
 				yy_do_action_277
 			when 278 then
-					--|#line 1794 "et_eiffel_parser.y"
+					--|#line 1801 "et_eiffel_parser.y"
 				yy_do_action_278
 			when 279 then
-					--|#line 1802 "et_eiffel_parser.y"
+					--|#line 1809 "et_eiffel_parser.y"
 				yy_do_action_279
 			when 280 then
-					--|#line 1813 "et_eiffel_parser.y"
+					--|#line 1820 "et_eiffel_parser.y"
 				yy_do_action_280
 			when 281 then
-					--|#line 1815 "et_eiffel_parser.y"
+					--|#line 1822 "et_eiffel_parser.y"
 				yy_do_action_281
 			when 282 then
-					--|#line 1817 "et_eiffel_parser.y"
+					--|#line 1824 "et_eiffel_parser.y"
 				yy_do_action_282
 			when 283 then
-					--|#line 1821 "et_eiffel_parser.y"
+					--|#line 1828 "et_eiffel_parser.y"
 				yy_do_action_283
 			when 284 then
-					--|#line 1823 "et_eiffel_parser.y"
+					--|#line 1830 "et_eiffel_parser.y"
 				yy_do_action_284
 			when 285 then
-					--|#line 1831 "et_eiffel_parser.y"
+					--|#line 1838 "et_eiffel_parser.y"
 				yy_do_action_285
 			when 286 then
-					--|#line 1833 "et_eiffel_parser.y"
+					--|#line 1840 "et_eiffel_parser.y"
 				yy_do_action_286
 			when 287 then
-					--|#line 1841 "et_eiffel_parser.y"
+					--|#line 1848 "et_eiffel_parser.y"
 				yy_do_action_287
 			when 288 then
-					--|#line 1844 "et_eiffel_parser.y"
+					--|#line 1851 "et_eiffel_parser.y"
 				yy_do_action_288
 			when 289 then
-					--|#line 1853 "et_eiffel_parser.y"
+					--|#line 1860 "et_eiffel_parser.y"
 				yy_do_action_289
 			when 290 then
-					--|#line 1857 "et_eiffel_parser.y"
+					--|#line 1864 "et_eiffel_parser.y"
 				yy_do_action_290
 			when 291 then
-					--|#line 1867 "et_eiffel_parser.y"
+					--|#line 1874 "et_eiffel_parser.y"
 				yy_do_action_291
 			when 292 then
-					--|#line 1870 "et_eiffel_parser.y"
+					--|#line 1877 "et_eiffel_parser.y"
 				yy_do_action_292
 			when 293 then
-					--|#line 1879 "et_eiffel_parser.y"
+					--|#line 1886 "et_eiffel_parser.y"
 				yy_do_action_293
 			when 294 then
-					--|#line 1883 "et_eiffel_parser.y"
+					--|#line 1890 "et_eiffel_parser.y"
 				yy_do_action_294
 			when 295 then
-					--|#line 1893 "et_eiffel_parser.y"
+					--|#line 1900 "et_eiffel_parser.y"
 				yy_do_action_295
 			when 296 then
-					--|#line 1895 "et_eiffel_parser.y"
+					--|#line 1902 "et_eiffel_parser.y"
 				yy_do_action_296
 			when 297 then
-					--|#line 1903 "et_eiffel_parser.y"
+					--|#line 1910 "et_eiffel_parser.y"
 				yy_do_action_297
 			when 298 then
-					--|#line 1906 "et_eiffel_parser.y"
+					--|#line 1913 "et_eiffel_parser.y"
 				yy_do_action_298
 			when 299 then
-					--|#line 1915 "et_eiffel_parser.y"
+					--|#line 1922 "et_eiffel_parser.y"
 				yy_do_action_299
 			when 300 then
-					--|#line 1918 "et_eiffel_parser.y"
+					--|#line 1925 "et_eiffel_parser.y"
 				yy_do_action_300
 			when 301 then
-					--|#line 1927 "et_eiffel_parser.y"
+					--|#line 1934 "et_eiffel_parser.y"
 				yy_do_action_301
 			when 302 then
-					--|#line 1931 "et_eiffel_parser.y"
+					--|#line 1938 "et_eiffel_parser.y"
 				yy_do_action_302
 			when 303 then
-					--|#line 1943 "et_eiffel_parser.y"
+					--|#line 1950 "et_eiffel_parser.y"
 				yy_do_action_303
 			when 304 then
-					--|#line 1946 "et_eiffel_parser.y"
+					--|#line 1953 "et_eiffel_parser.y"
 				yy_do_action_304
 			when 305 then
-					--|#line 1950 "et_eiffel_parser.y"
+					--|#line 1957 "et_eiffel_parser.y"
 				yy_do_action_305
 			when 306 then
-					--|#line 1953 "et_eiffel_parser.y"
+					--|#line 1960 "et_eiffel_parser.y"
 				yy_do_action_306
 			when 307 then
-					--|#line 1957 "et_eiffel_parser.y"
+					--|#line 1964 "et_eiffel_parser.y"
 				yy_do_action_307
 			when 308 then
-					--|#line 1959 "et_eiffel_parser.y"
+					--|#line 1966 "et_eiffel_parser.y"
 				yy_do_action_308
 			when 309 then
-					--|#line 1962 "et_eiffel_parser.y"
+					--|#line 1969 "et_eiffel_parser.y"
 				yy_do_action_309
 			when 310 then
-					--|#line 1965 "et_eiffel_parser.y"
+					--|#line 1972 "et_eiffel_parser.y"
 				yy_do_action_310
 			when 311 then
-					--|#line 1971 "et_eiffel_parser.y"
+					--|#line 1978 "et_eiffel_parser.y"
 				yy_do_action_311
 			when 312 then
-					--|#line 1979 "et_eiffel_parser.y"
+					--|#line 1986 "et_eiffel_parser.y"
 				yy_do_action_312
 			when 313 then
-					--|#line 1983 "et_eiffel_parser.y"
+					--|#line 1990 "et_eiffel_parser.y"
 				yy_do_action_313
 			when 314 then
-					--|#line 1985 "et_eiffel_parser.y"
+					--|#line 1992 "et_eiffel_parser.y"
 				yy_do_action_314
 			when 315 then
-					--|#line 1989 "et_eiffel_parser.y"
+					--|#line 1996 "et_eiffel_parser.y"
 				yy_do_action_315
 			when 316 then
-					--|#line 1991 "et_eiffel_parser.y"
+					--|#line 1998 "et_eiffel_parser.y"
 				yy_do_action_316
 			when 317 then
-					--|#line 1995 "et_eiffel_parser.y"
+					--|#line 2002 "et_eiffel_parser.y"
 				yy_do_action_317
 			when 318 then
-					--|#line 1997 "et_eiffel_parser.y"
+					--|#line 2004 "et_eiffel_parser.y"
 				yy_do_action_318
 			when 319 then
-					--|#line 2003 "et_eiffel_parser.y"
+					--|#line 2010 "et_eiffel_parser.y"
 				yy_do_action_319
 			when 320 then
-					--|#line 2005 "et_eiffel_parser.y"
+					--|#line 2017 "et_eiffel_parser.y"
 				yy_do_action_320
 			when 321 then
-					--|#line 2007 "et_eiffel_parser.y"
+					--|#line 2019 "et_eiffel_parser.y"
 				yy_do_action_321
 			when 322 then
-					--|#line 2009 "et_eiffel_parser.y"
+					--|#line 2021 "et_eiffel_parser.y"
 				yy_do_action_322
 			when 323 then
-					--|#line 2011 "et_eiffel_parser.y"
+					--|#line 2023 "et_eiffel_parser.y"
 				yy_do_action_323
 			when 324 then
-					--|#line 2013 "et_eiffel_parser.y"
+					--|#line 2025 "et_eiffel_parser.y"
 				yy_do_action_324
 			when 325 then
-					--|#line 2015 "et_eiffel_parser.y"
+					--|#line 2027 "et_eiffel_parser.y"
 				yy_do_action_325
 			when 326 then
-					--|#line 2017 "et_eiffel_parser.y"
+					--|#line 2029 "et_eiffel_parser.y"
 				yy_do_action_326
 			when 327 then
-					--|#line 2019 "et_eiffel_parser.y"
+					--|#line 2031 "et_eiffel_parser.y"
 				yy_do_action_327
 			when 328 then
-					--|#line 2021 "et_eiffel_parser.y"
+					--|#line 2033 "et_eiffel_parser.y"
 				yy_do_action_328
 			when 329 then
-					--|#line 2023 "et_eiffel_parser.y"
+					--|#line 2035 "et_eiffel_parser.y"
 				yy_do_action_329
 			when 330 then
-					--|#line 2025 "et_eiffel_parser.y"
+					--|#line 2037 "et_eiffel_parser.y"
 				yy_do_action_330
 			when 331 then
-					--|#line 2027 "et_eiffel_parser.y"
+					--|#line 2039 "et_eiffel_parser.y"
 				yy_do_action_331
 			when 332 then
-					--|#line 2029 "et_eiffel_parser.y"
+					--|#line 2041 "et_eiffel_parser.y"
 				yy_do_action_332
 			when 333 then
-					--|#line 2031 "et_eiffel_parser.y"
+					--|#line 2043 "et_eiffel_parser.y"
 				yy_do_action_333
 			when 334 then
-					--|#line 2033 "et_eiffel_parser.y"
+					--|#line 2045 "et_eiffel_parser.y"
 				yy_do_action_334
 			when 335 then
-					--|#line 2035 "et_eiffel_parser.y"
+					--|#line 2047 "et_eiffel_parser.y"
 				yy_do_action_335
 			when 336 then
-					--|#line 2037 "et_eiffel_parser.y"
+					--|#line 2049 "et_eiffel_parser.y"
 				yy_do_action_336
 			when 337 then
-					--|#line 2039 "et_eiffel_parser.y"
+					--|#line 2051 "et_eiffel_parser.y"
 				yy_do_action_337
 			when 338 then
-					--|#line 2041 "et_eiffel_parser.y"
+					--|#line 2053 "et_eiffel_parser.y"
 				yy_do_action_338
 			when 339 then
-					--|#line 2043 "et_eiffel_parser.y"
+					--|#line 2055 "et_eiffel_parser.y"
 				yy_do_action_339
 			when 340 then
-					--|#line 2045 "et_eiffel_parser.y"
+					--|#line 2057 "et_eiffel_parser.y"
 				yy_do_action_340
 			when 341 then
-					--|#line 2047 "et_eiffel_parser.y"
+					--|#line 2059 "et_eiffel_parser.y"
 				yy_do_action_341
 			when 342 then
-					--|#line 2050 "et_eiffel_parser.y"
+					--|#line 2062 "et_eiffel_parser.y"
 				yy_do_action_342
 			when 343 then
-					--|#line 2052 "et_eiffel_parser.y"
+					--|#line 2064 "et_eiffel_parser.y"
 				yy_do_action_343
 			when 344 then
-					--|#line 2054 "et_eiffel_parser.y"
+					--|#line 2066 "et_eiffel_parser.y"
 				yy_do_action_344
 			when 345 then
-					--|#line 2056 "et_eiffel_parser.y"
+					--|#line 2068 "et_eiffel_parser.y"
 				yy_do_action_345
 			when 346 then
-					--|#line 2058 "et_eiffel_parser.y"
+					--|#line 2070 "et_eiffel_parser.y"
 				yy_do_action_346
 			when 347 then
-					--|#line 2060 "et_eiffel_parser.y"
+					--|#line 2072 "et_eiffel_parser.y"
 				yy_do_action_347
 			when 348 then
-					--|#line 2062 "et_eiffel_parser.y"
+					--|#line 2074 "et_eiffel_parser.y"
 				yy_do_action_348
 			when 349 then
-					--|#line 2064 "et_eiffel_parser.y"
+					--|#line 2076 "et_eiffel_parser.y"
 				yy_do_action_349
 			when 350 then
-					--|#line 2066 "et_eiffel_parser.y"
+					--|#line 2078 "et_eiffel_parser.y"
 				yy_do_action_350
 			when 351 then
-					--|#line 2068 "et_eiffel_parser.y"
+					--|#line 2080 "et_eiffel_parser.y"
 				yy_do_action_351
 			when 352 then
-					--|#line 2070 "et_eiffel_parser.y"
+					--|#line 2082 "et_eiffel_parser.y"
 				yy_do_action_352
 			when 353 then
-					--|#line 2072 "et_eiffel_parser.y"
+					--|#line 2084 "et_eiffel_parser.y"
 				yy_do_action_353
 			when 354 then
-					--|#line 2074 "et_eiffel_parser.y"
+					--|#line 2086 "et_eiffel_parser.y"
 				yy_do_action_354
 			when 355 then
-					--|#line 2076 "et_eiffel_parser.y"
+					--|#line 2088 "et_eiffel_parser.y"
 				yy_do_action_355
 			when 356 then
-					--|#line 2078 "et_eiffel_parser.y"
+					--|#line 2090 "et_eiffel_parser.y"
 				yy_do_action_356
 			when 357 then
-					--|#line 2080 "et_eiffel_parser.y"
+					--|#line 2092 "et_eiffel_parser.y"
 				yy_do_action_357
 			when 358 then
-					--|#line 2082 "et_eiffel_parser.y"
+					--|#line 2094 "et_eiffel_parser.y"
 				yy_do_action_358
 			when 359 then
-					--|#line 2084 "et_eiffel_parser.y"
+					--|#line 2096 "et_eiffel_parser.y"
 				yy_do_action_359
 			when 360 then
-					--|#line 2088 "et_eiffel_parser.y"
+					--|#line 2100 "et_eiffel_parser.y"
 				yy_do_action_360
 			when 361 then
-					--|#line 2090 "et_eiffel_parser.y"
+					--|#line 2102 "et_eiffel_parser.y"
 				yy_do_action_361
 			when 362 then
-					--|#line 2094 "et_eiffel_parser.y"
+					--|#line 2113 "et_eiffel_parser.y"
 				yy_do_action_362
 			when 363 then
-					--|#line 2096 "et_eiffel_parser.y"
+					--|#line 2115 "et_eiffel_parser.y"
 				yy_do_action_363
 			when 364 then
-					--|#line 2098 "et_eiffel_parser.y"
+					--|#line 2117 "et_eiffel_parser.y"
 				yy_do_action_364
 			when 365 then
-					--|#line 2100 "et_eiffel_parser.y"
+					--|#line 2119 "et_eiffel_parser.y"
 				yy_do_action_365
 			when 366 then
-					--|#line 2102 "et_eiffel_parser.y"
+					--|#line 2121 "et_eiffel_parser.y"
 				yy_do_action_366
 			when 367 then
-					--|#line 2104 "et_eiffel_parser.y"
+					--|#line 2123 "et_eiffel_parser.y"
 				yy_do_action_367
 			when 368 then
-					--|#line 2106 "et_eiffel_parser.y"
+					--|#line 2125 "et_eiffel_parser.y"
 				yy_do_action_368
 			when 369 then
-					--|#line 2108 "et_eiffel_parser.y"
+					--|#line 2127 "et_eiffel_parser.y"
 				yy_do_action_369
 			when 370 then
-					--|#line 2110 "et_eiffel_parser.y"
+					--|#line 2129 "et_eiffel_parser.y"
 				yy_do_action_370
 			when 371 then
-					--|#line 2112 "et_eiffel_parser.y"
+					--|#line 2131 "et_eiffel_parser.y"
 				yy_do_action_371
 			when 372 then
-					--|#line 2114 "et_eiffel_parser.y"
+					--|#line 2133 "et_eiffel_parser.y"
 				yy_do_action_372
 			when 373 then
-					--|#line 2116 "et_eiffel_parser.y"
+					--|#line 2135 "et_eiffel_parser.y"
 				yy_do_action_373
 			when 374 then
-					--|#line 2118 "et_eiffel_parser.y"
+					--|#line 2137 "et_eiffel_parser.y"
 				yy_do_action_374
 			when 375 then
-					--|#line 2120 "et_eiffel_parser.y"
+					--|#line 2139 "et_eiffel_parser.y"
 				yy_do_action_375
 			when 376 then
-					--|#line 2122 "et_eiffel_parser.y"
+					--|#line 2141 "et_eiffel_parser.y"
 				yy_do_action_376
 			when 377 then
-					--|#line 2124 "et_eiffel_parser.y"
+					--|#line 2143 "et_eiffel_parser.y"
 				yy_do_action_377
 			when 378 then
-					--|#line 2126 "et_eiffel_parser.y"
+					--|#line 2145 "et_eiffel_parser.y"
 				yy_do_action_378
 			when 379 then
-					--|#line 2128 "et_eiffel_parser.y"
+					--|#line 2147 "et_eiffel_parser.y"
 				yy_do_action_379
 			when 380 then
-					--|#line 2130 "et_eiffel_parser.y"
+					--|#line 2149 "et_eiffel_parser.y"
 				yy_do_action_380
 			when 381 then
-					--|#line 2132 "et_eiffel_parser.y"
+					--|#line 2151 "et_eiffel_parser.y"
 				yy_do_action_381
 			when 382 then
-					--|#line 2134 "et_eiffel_parser.y"
+					--|#line 2153 "et_eiffel_parser.y"
 				yy_do_action_382
 			when 383 then
-					--|#line 2136 "et_eiffel_parser.y"
+					--|#line 2155 "et_eiffel_parser.y"
 				yy_do_action_383
 			when 384 then
-					--|#line 2138 "et_eiffel_parser.y"
+					--|#line 2157 "et_eiffel_parser.y"
 				yy_do_action_384
 			when 385 then
-					--|#line 2144 "et_eiffel_parser.y"
+					--|#line 2163 "et_eiffel_parser.y"
 				yy_do_action_385
 			when 386 then
-					--|#line 2151 "et_eiffel_parser.y"
+					--|#line 2170 "et_eiffel_parser.y"
 				yy_do_action_386
 			when 387 then
-					--|#line 2153 "et_eiffel_parser.y"
+					--|#line 2172 "et_eiffel_parser.y"
 				yy_do_action_387
 			when 388 then
-					--|#line 2161 "et_eiffel_parser.y"
+					--|#line 2180 "et_eiffel_parser.y"
 				yy_do_action_388
 			when 389 then
-					--|#line 2172 "et_eiffel_parser.y"
+					--|#line 2191 "et_eiffel_parser.y"
 				yy_do_action_389
 			when 390 then
-					--|#line 2179 "et_eiffel_parser.y"
+					--|#line 2198 "et_eiffel_parser.y"
 				yy_do_action_390
 			when 391 then
-					--|#line 2186 "et_eiffel_parser.y"
+					--|#line 2205 "et_eiffel_parser.y"
 				yy_do_action_391
 			when 392 then
-					--|#line 2196 "et_eiffel_parser.y"
+					--|#line 2215 "et_eiffel_parser.y"
 				yy_do_action_392
 			when 393 then
-					--|#line 2207 "et_eiffel_parser.y"
+					--|#line 2226 "et_eiffel_parser.y"
 				yy_do_action_393
 			when 394 then
-					--|#line 2214 "et_eiffel_parser.y"
+					--|#line 2233 "et_eiffel_parser.y"
 				yy_do_action_394
 			when 395 then
-					--|#line 2223 "et_eiffel_parser.y"
+					--|#line 2242 "et_eiffel_parser.y"
 				yy_do_action_395
 			when 396 then
-					--|#line 2232 "et_eiffel_parser.y"
+					--|#line 2251 "et_eiffel_parser.y"
 				yy_do_action_396
 			when 397 then
-					--|#line 2241 "et_eiffel_parser.y"
+					--|#line 2260 "et_eiffel_parser.y"
 				yy_do_action_397
 			when 398 then
-					--|#line 2250 "et_eiffel_parser.y"
+					--|#line 2269 "et_eiffel_parser.y"
 				yy_do_action_398
 			when 399 then
-					--|#line 2261 "et_eiffel_parser.y"
+					--|#line 2280 "et_eiffel_parser.y"
 				yy_do_action_399
 			when 400 then
-					--|#line 2263 "et_eiffel_parser.y"
+					--|#line 2282 "et_eiffel_parser.y"
 				yy_do_action_400
 			else
 				debug ("GEYACC")
@@ -2449,604 +2449,604 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 401 then
-					--|#line 2265 "et_eiffel_parser.y"
+					--|#line 2284 "et_eiffel_parser.y"
 				yy_do_action_401
 			when 402 then
-					--|#line 2265 "et_eiffel_parser.y"
+					--|#line 2284 "et_eiffel_parser.y"
 				yy_do_action_402
 			when 403 then
-					--|#line 2278 "et_eiffel_parser.y"
+					--|#line 2297 "et_eiffel_parser.y"
 				yy_do_action_403
 			when 404 then
-					--|#line 2285 "et_eiffel_parser.y"
+					--|#line 2304 "et_eiffel_parser.y"
 				yy_do_action_404
 			when 405 then
-					--|#line 2292 "et_eiffel_parser.y"
+					--|#line 2311 "et_eiffel_parser.y"
 				yy_do_action_405
 			when 406 then
-					--|#line 2302 "et_eiffel_parser.y"
+					--|#line 2321 "et_eiffel_parser.y"
 				yy_do_action_406
 			when 407 then
-					--|#line 2313 "et_eiffel_parser.y"
+					--|#line 2332 "et_eiffel_parser.y"
 				yy_do_action_407
 			when 408 then
-					--|#line 2320 "et_eiffel_parser.y"
+					--|#line 2339 "et_eiffel_parser.y"
 				yy_do_action_408
 			when 409 then
-					--|#line 2329 "et_eiffel_parser.y"
+					--|#line 2348 "et_eiffel_parser.y"
 				yy_do_action_409
 			when 410 then
-					--|#line 2338 "et_eiffel_parser.y"
+					--|#line 2357 "et_eiffel_parser.y"
 				yy_do_action_410
 			when 411 then
-					--|#line 2347 "et_eiffel_parser.y"
+					--|#line 2366 "et_eiffel_parser.y"
 				yy_do_action_411
 			when 412 then
-					--|#line 2356 "et_eiffel_parser.y"
+					--|#line 2375 "et_eiffel_parser.y"
 				yy_do_action_412
 			when 413 then
-					--|#line 2367 "et_eiffel_parser.y"
+					--|#line 2386 "et_eiffel_parser.y"
 				yy_do_action_413
 			when 414 then
-					--|#line 2369 "et_eiffel_parser.y"
+					--|#line 2388 "et_eiffel_parser.y"
 				yy_do_action_414
 			when 415 then
-					--|#line 2371 "et_eiffel_parser.y"
+					--|#line 2390 "et_eiffel_parser.y"
 				yy_do_action_415
 			when 416 then
-					--|#line 2373 "et_eiffel_parser.y"
+					--|#line 2392 "et_eiffel_parser.y"
 				yy_do_action_416
 			when 417 then
-					--|#line 2375 "et_eiffel_parser.y"
+					--|#line 2394 "et_eiffel_parser.y"
 				yy_do_action_417
 			when 418 then
-					--|#line 2377 "et_eiffel_parser.y"
+					--|#line 2396 "et_eiffel_parser.y"
 				yy_do_action_418
 			when 419 then
-					--|#line 2379 "et_eiffel_parser.y"
+					--|#line 2398 "et_eiffel_parser.y"
 				yy_do_action_419
 			when 420 then
-					--|#line 2381 "et_eiffel_parser.y"
+					--|#line 2400 "et_eiffel_parser.y"
 				yy_do_action_420
 			when 421 then
-					--|#line 2385 "et_eiffel_parser.y"
+					--|#line 2404 "et_eiffel_parser.y"
 				yy_do_action_421
 			when 422 then
-					--|#line 2389 "et_eiffel_parser.y"
+					--|#line 2408 "et_eiffel_parser.y"
 				yy_do_action_422
 			when 423 then
-					--|#line 2391 "et_eiffel_parser.y"
+					--|#line 2410 "et_eiffel_parser.y"
 				yy_do_action_423
 			when 424 then
-					--|#line 2393 "et_eiffel_parser.y"
+					--|#line 2412 "et_eiffel_parser.y"
 				yy_do_action_424
 			when 425 then
-					--|#line 2395 "et_eiffel_parser.y"
+					--|#line 2414 "et_eiffel_parser.y"
 				yy_do_action_425
 			when 426 then
-					--|#line 2397 "et_eiffel_parser.y"
+					--|#line 2416 "et_eiffel_parser.y"
 				yy_do_action_426
 			when 427 then
-					--|#line 2401 "et_eiffel_parser.y"
+					--|#line 2420 "et_eiffel_parser.y"
 				yy_do_action_427
 			when 428 then
-					--|#line 2403 "et_eiffel_parser.y"
+					--|#line 2422 "et_eiffel_parser.y"
 				yy_do_action_428
 			when 429 then
-					--|#line 2405 "et_eiffel_parser.y"
+					--|#line 2424 "et_eiffel_parser.y"
 				yy_do_action_429
 			when 430 then
-					--|#line 2407 "et_eiffel_parser.y"
+					--|#line 2426 "et_eiffel_parser.y"
 				yy_do_action_430
 			when 431 then
-					--|#line 2409 "et_eiffel_parser.y"
+					--|#line 2428 "et_eiffel_parser.y"
 				yy_do_action_431
 			when 432 then
-					--|#line 2413 "et_eiffel_parser.y"
+					--|#line 2432 "et_eiffel_parser.y"
 				yy_do_action_432
 			when 433 then
-					--|#line 2415 "et_eiffel_parser.y"
+					--|#line 2434 "et_eiffel_parser.y"
 				yy_do_action_433
 			when 434 then
-					--|#line 2419 "et_eiffel_parser.y"
+					--|#line 2438 "et_eiffel_parser.y"
 				yy_do_action_434
 			when 435 then
-					--|#line 2421 "et_eiffel_parser.y"
+					--|#line 2440 "et_eiffel_parser.y"
 				yy_do_action_435
 			when 436 then
-					--|#line 2425 "et_eiffel_parser.y"
+					--|#line 2444 "et_eiffel_parser.y"
 				yy_do_action_436
 			when 437 then
-					--|#line 2429 "et_eiffel_parser.y"
+					--|#line 2448 "et_eiffel_parser.y"
 				yy_do_action_437
 			when 438 then
-					--|#line 2431 "et_eiffel_parser.y"
+					--|#line 2450 "et_eiffel_parser.y"
 				yy_do_action_438
 			when 439 then
-					--|#line 2435 "et_eiffel_parser.y"
+					--|#line 2454 "et_eiffel_parser.y"
 				yy_do_action_439
 			when 440 then
-					--|#line 2437 "et_eiffel_parser.y"
+					--|#line 2456 "et_eiffel_parser.y"
 				yy_do_action_440
 			when 441 then
-					--|#line 2441 "et_eiffel_parser.y"
+					--|#line 2460 "et_eiffel_parser.y"
 				yy_do_action_441
 			when 442 then
-					--|#line 2443 "et_eiffel_parser.y"
+					--|#line 2462 "et_eiffel_parser.y"
 				yy_do_action_442
 			when 443 then
-					--|#line 2447 "et_eiffel_parser.y"
+					--|#line 2466 "et_eiffel_parser.y"
 				yy_do_action_443
 			when 444 then
-					--|#line 2449 "et_eiffel_parser.y"
+					--|#line 2468 "et_eiffel_parser.y"
 				yy_do_action_444
 			when 445 then
-					--|#line 2455 "et_eiffel_parser.y"
+					--|#line 2474 "et_eiffel_parser.y"
 				yy_do_action_445
 			when 446 then
-					--|#line 2457 "et_eiffel_parser.y"
+					--|#line 2476 "et_eiffel_parser.y"
 				yy_do_action_446
 			when 447 then
-					--|#line 2463 "et_eiffel_parser.y"
+					--|#line 2482 "et_eiffel_parser.y"
 				yy_do_action_447
 			when 448 then
-					--|#line 2465 "et_eiffel_parser.y"
+					--|#line 2484 "et_eiffel_parser.y"
 				yy_do_action_448
 			when 449 then
-					--|#line 2469 "et_eiffel_parser.y"
+					--|#line 2488 "et_eiffel_parser.y"
 				yy_do_action_449
 			when 450 then
-					--|#line 2471 "et_eiffel_parser.y"
+					--|#line 2490 "et_eiffel_parser.y"
 				yy_do_action_450
 			when 451 then
-					--|#line 2473 "et_eiffel_parser.y"
+					--|#line 2492 "et_eiffel_parser.y"
 				yy_do_action_451
 			when 452 then
-					--|#line 2475 "et_eiffel_parser.y"
+					--|#line 2494 "et_eiffel_parser.y"
 				yy_do_action_452
 			when 453 then
-					--|#line 2477 "et_eiffel_parser.y"
+					--|#line 2496 "et_eiffel_parser.y"
 				yy_do_action_453
 			when 454 then
-					--|#line 2479 "et_eiffel_parser.y"
+					--|#line 2498 "et_eiffel_parser.y"
 				yy_do_action_454
 			when 455 then
-					--|#line 2481 "et_eiffel_parser.y"
+					--|#line 2500 "et_eiffel_parser.y"
 				yy_do_action_455
 			when 456 then
-					--|#line 2483 "et_eiffel_parser.y"
+					--|#line 2502 "et_eiffel_parser.y"
 				yy_do_action_456
 			when 457 then
-					--|#line 2485 "et_eiffel_parser.y"
+					--|#line 2504 "et_eiffel_parser.y"
 				yy_do_action_457
 			when 458 then
-					--|#line 2487 "et_eiffel_parser.y"
+					--|#line 2506 "et_eiffel_parser.y"
 				yy_do_action_458
 			when 459 then
-					--|#line 2489 "et_eiffel_parser.y"
+					--|#line 2508 "et_eiffel_parser.y"
 				yy_do_action_459
 			when 460 then
-					--|#line 2491 "et_eiffel_parser.y"
+					--|#line 2510 "et_eiffel_parser.y"
 				yy_do_action_460
 			when 461 then
-					--|#line 2493 "et_eiffel_parser.y"
+					--|#line 2512 "et_eiffel_parser.y"
 				yy_do_action_461
 			when 462 then
-					--|#line 2495 "et_eiffel_parser.y"
+					--|#line 2514 "et_eiffel_parser.y"
 				yy_do_action_462
 			when 463 then
-					--|#line 2497 "et_eiffel_parser.y"
+					--|#line 2516 "et_eiffel_parser.y"
 				yy_do_action_463
 			when 464 then
-					--|#line 2499 "et_eiffel_parser.y"
+					--|#line 2518 "et_eiffel_parser.y"
 				yy_do_action_464
 			when 465 then
-					--|#line 2501 "et_eiffel_parser.y"
+					--|#line 2520 "et_eiffel_parser.y"
 				yy_do_action_465
 			when 466 then
-					--|#line 2503 "et_eiffel_parser.y"
+					--|#line 2522 "et_eiffel_parser.y"
 				yy_do_action_466
 			when 467 then
-					--|#line 2505 "et_eiffel_parser.y"
+					--|#line 2524 "et_eiffel_parser.y"
 				yy_do_action_467
 			when 468 then
-					--|#line 2507 "et_eiffel_parser.y"
+					--|#line 2526 "et_eiffel_parser.y"
 				yy_do_action_468
 			when 469 then
-					--|#line 2509 "et_eiffel_parser.y"
+					--|#line 2528 "et_eiffel_parser.y"
 				yy_do_action_469
 			when 470 then
-					--|#line 2511 "et_eiffel_parser.y"
+					--|#line 2530 "et_eiffel_parser.y"
 				yy_do_action_470
 			when 471 then
-					--|#line 2513 "et_eiffel_parser.y"
+					--|#line 2532 "et_eiffel_parser.y"
 				yy_do_action_471
 			when 472 then
-					--|#line 2517 "et_eiffel_parser.y"
+					--|#line 2536 "et_eiffel_parser.y"
 				yy_do_action_472
 			when 473 then
-					--|#line 2519 "et_eiffel_parser.y"
+					--|#line 2538 "et_eiffel_parser.y"
 				yy_do_action_473
 			when 474 then
-					--|#line 2521 "et_eiffel_parser.y"
+					--|#line 2540 "et_eiffel_parser.y"
 				yy_do_action_474
 			when 475 then
-					--|#line 2523 "et_eiffel_parser.y"
+					--|#line 2542 "et_eiffel_parser.y"
 				yy_do_action_475
 			when 476 then
-					--|#line 2525 "et_eiffel_parser.y"
+					--|#line 2544 "et_eiffel_parser.y"
 				yy_do_action_476
 			when 477 then
-					--|#line 2527 "et_eiffel_parser.y"
+					--|#line 2546 "et_eiffel_parser.y"
 				yy_do_action_477
 			when 478 then
-					--|#line 2529 "et_eiffel_parser.y"
+					--|#line 2548 "et_eiffel_parser.y"
 				yy_do_action_478
 			when 479 then
-					--|#line 2531 "et_eiffel_parser.y"
+					--|#line 2550 "et_eiffel_parser.y"
 				yy_do_action_479
 			when 480 then
-					--|#line 2533 "et_eiffel_parser.y"
+					--|#line 2552 "et_eiffel_parser.y"
 				yy_do_action_480
 			when 481 then
-					--|#line 2535 "et_eiffel_parser.y"
+					--|#line 2554 "et_eiffel_parser.y"
 				yy_do_action_481
 			when 482 then
-					--|#line 2537 "et_eiffel_parser.y"
+					--|#line 2556 "et_eiffel_parser.y"
 				yy_do_action_482
 			when 483 then
-					--|#line 2539 "et_eiffel_parser.y"
+					--|#line 2558 "et_eiffel_parser.y"
 				yy_do_action_483
 			when 484 then
-					--|#line 2541 "et_eiffel_parser.y"
+					--|#line 2560 "et_eiffel_parser.y"
 				yy_do_action_484
 			when 485 then
-					--|#line 2543 "et_eiffel_parser.y"
+					--|#line 2562 "et_eiffel_parser.y"
 				yy_do_action_485
 			when 486 then
-					--|#line 2545 "et_eiffel_parser.y"
+					--|#line 2564 "et_eiffel_parser.y"
 				yy_do_action_486
 			when 487 then
-					--|#line 2547 "et_eiffel_parser.y"
+					--|#line 2566 "et_eiffel_parser.y"
 				yy_do_action_487
 			when 488 then
-					--|#line 2549 "et_eiffel_parser.y"
+					--|#line 2568 "et_eiffel_parser.y"
 				yy_do_action_488
 			when 489 then
-					--|#line 2551 "et_eiffel_parser.y"
+					--|#line 2570 "et_eiffel_parser.y"
 				yy_do_action_489
 			when 490 then
-					--|#line 2553 "et_eiffel_parser.y"
+					--|#line 2572 "et_eiffel_parser.y"
 				yy_do_action_490
 			when 491 then
-					--|#line 2555 "et_eiffel_parser.y"
+					--|#line 2574 "et_eiffel_parser.y"
 				yy_do_action_491
 			when 492 then
-					--|#line 2557 "et_eiffel_parser.y"
+					--|#line 2576 "et_eiffel_parser.y"
 				yy_do_action_492
 			when 493 then
-					--|#line 2559 "et_eiffel_parser.y"
+					--|#line 2578 "et_eiffel_parser.y"
 				yy_do_action_493
 			when 494 then
-					--|#line 2561 "et_eiffel_parser.y"
+					--|#line 2580 "et_eiffel_parser.y"
 				yy_do_action_494
 			when 495 then
-					--|#line 2565 "et_eiffel_parser.y"
+					--|#line 2584 "et_eiffel_parser.y"
 				yy_do_action_495
 			when 496 then
-					--|#line 2567 "et_eiffel_parser.y"
+					--|#line 2586 "et_eiffel_parser.y"
 				yy_do_action_496
 			when 497 then
-					--|#line 2569 "et_eiffel_parser.y"
+					--|#line 2588 "et_eiffel_parser.y"
 				yy_do_action_497
 			when 498 then
-					--|#line 2571 "et_eiffel_parser.y"
+					--|#line 2590 "et_eiffel_parser.y"
 				yy_do_action_498
 			when 499 then
-					--|#line 2573 "et_eiffel_parser.y"
+					--|#line 2592 "et_eiffel_parser.y"
 				yy_do_action_499
 			when 500 then
-					--|#line 2575 "et_eiffel_parser.y"
+					--|#line 2594 "et_eiffel_parser.y"
 				yy_do_action_500
 			when 501 then
-					--|#line 2577 "et_eiffel_parser.y"
+					--|#line 2596 "et_eiffel_parser.y"
 				yy_do_action_501
 			when 502 then
-					--|#line 2579 "et_eiffel_parser.y"
+					--|#line 2598 "et_eiffel_parser.y"
 				yy_do_action_502
 			when 503 then
-					--|#line 2581 "et_eiffel_parser.y"
+					--|#line 2600 "et_eiffel_parser.y"
 				yy_do_action_503
 			when 504 then
-					--|#line 2583 "et_eiffel_parser.y"
+					--|#line 2602 "et_eiffel_parser.y"
 				yy_do_action_504
 			when 505 then
-					--|#line 2585 "et_eiffel_parser.y"
+					--|#line 2604 "et_eiffel_parser.y"
 				yy_do_action_505
 			when 506 then
-					--|#line 2587 "et_eiffel_parser.y"
+					--|#line 2606 "et_eiffel_parser.y"
 				yy_do_action_506
 			when 507 then
-					--|#line 2589 "et_eiffel_parser.y"
+					--|#line 2608 "et_eiffel_parser.y"
 				yy_do_action_507
 			when 508 then
-					--|#line 2591 "et_eiffel_parser.y"
+					--|#line 2610 "et_eiffel_parser.y"
 				yy_do_action_508
 			when 509 then
-					--|#line 2593 "et_eiffel_parser.y"
+					--|#line 2612 "et_eiffel_parser.y"
 				yy_do_action_509
 			when 510 then
-					--|#line 2595 "et_eiffel_parser.y"
+					--|#line 2614 "et_eiffel_parser.y"
 				yy_do_action_510
 			when 511 then
-					--|#line 2597 "et_eiffel_parser.y"
+					--|#line 2616 "et_eiffel_parser.y"
 				yy_do_action_511
 			when 512 then
-					--|#line 2599 "et_eiffel_parser.y"
+					--|#line 2618 "et_eiffel_parser.y"
 				yy_do_action_512
 			when 513 then
-					--|#line 2601 "et_eiffel_parser.y"
+					--|#line 2620 "et_eiffel_parser.y"
 				yy_do_action_513
 			when 514 then
-					--|#line 2603 "et_eiffel_parser.y"
+					--|#line 2622 "et_eiffel_parser.y"
 				yy_do_action_514
 			when 515 then
-					--|#line 2605 "et_eiffel_parser.y"
+					--|#line 2624 "et_eiffel_parser.y"
 				yy_do_action_515
 			when 516 then
-					--|#line 2607 "et_eiffel_parser.y"
+					--|#line 2626 "et_eiffel_parser.y"
 				yy_do_action_516
 			when 517 then
-					--|#line 2609 "et_eiffel_parser.y"
+					--|#line 2628 "et_eiffel_parser.y"
 				yy_do_action_517
 			when 518 then
-					--|#line 2611 "et_eiffel_parser.y"
+					--|#line 2630 "et_eiffel_parser.y"
 				yy_do_action_518
 			when 519 then
-					--|#line 2615 "et_eiffel_parser.y"
+					--|#line 2634 "et_eiffel_parser.y"
 				yy_do_action_519
 			when 520 then
-					--|#line 2617 "et_eiffel_parser.y"
+					--|#line 2636 "et_eiffel_parser.y"
 				yy_do_action_520
 			when 521 then
-					--|#line 2621 "et_eiffel_parser.y"
+					--|#line 2640 "et_eiffel_parser.y"
 				yy_do_action_521
 			when 522 then
-					--|#line 2623 "et_eiffel_parser.y"
+					--|#line 2642 "et_eiffel_parser.y"
 				yy_do_action_522
 			when 523 then
-					--|#line 2627 "et_eiffel_parser.y"
+					--|#line 2646 "et_eiffel_parser.y"
 				yy_do_action_523
 			when 524 then
-					--|#line 2630 "et_eiffel_parser.y"
+					--|#line 2649 "et_eiffel_parser.y"
 				yy_do_action_524
 			when 525 then
-					--|#line 2638 "et_eiffel_parser.y"
+					--|#line 2657 "et_eiffel_parser.y"
 				yy_do_action_525
 			when 526 then
-					--|#line 2645 "et_eiffel_parser.y"
+					--|#line 2664 "et_eiffel_parser.y"
 				yy_do_action_526
 			when 527 then
-					--|#line 2656 "et_eiffel_parser.y"
+					--|#line 2675 "et_eiffel_parser.y"
 				yy_do_action_527
 			when 528 then
-					--|#line 2661 "et_eiffel_parser.y"
+					--|#line 2680 "et_eiffel_parser.y"
 				yy_do_action_528
 			when 529 then
-					--|#line 2666 "et_eiffel_parser.y"
+					--|#line 2685 "et_eiffel_parser.y"
 				yy_do_action_529
 			when 530 then
-					--|#line 2671 "et_eiffel_parser.y"
+					--|#line 2690 "et_eiffel_parser.y"
 				yy_do_action_530
 			when 531 then
-					--|#line 2678 "et_eiffel_parser.y"
+					--|#line 2697 "et_eiffel_parser.y"
 				yy_do_action_531
 			when 532 then
-					--|#line 2684 "et_eiffel_parser.y"
+					--|#line 2703 "et_eiffel_parser.y"
 				yy_do_action_532
 			when 533 then
-					--|#line 2693 "et_eiffel_parser.y"
+					--|#line 2712 "et_eiffel_parser.y"
 				yy_do_action_533
 			when 534 then
-					--|#line 2695 "et_eiffel_parser.y"
+					--|#line 2714 "et_eiffel_parser.y"
 				yy_do_action_534
 			when 535 then
-					--|#line 2699 "et_eiffel_parser.y"
+					--|#line 2718 "et_eiffel_parser.y"
 				yy_do_action_535
 			when 536 then
-					--|#line 2702 "et_eiffel_parser.y"
+					--|#line 2721 "et_eiffel_parser.y"
 				yy_do_action_536
 			when 537 then
-					--|#line 2708 "et_eiffel_parser.y"
+					--|#line 2727 "et_eiffel_parser.y"
 				yy_do_action_537
 			when 538 then
-					--|#line 2716 "et_eiffel_parser.y"
+					--|#line 2735 "et_eiffel_parser.y"
 				yy_do_action_538
 			when 539 then
-					--|#line 2721 "et_eiffel_parser.y"
+					--|#line 2740 "et_eiffel_parser.y"
 				yy_do_action_539
 			when 540 then
-					--|#line 2726 "et_eiffel_parser.y"
+					--|#line 2745 "et_eiffel_parser.y"
 				yy_do_action_540
 			when 541 then
-					--|#line 2731 "et_eiffel_parser.y"
+					--|#line 2750 "et_eiffel_parser.y"
 				yy_do_action_541
 			when 542 then
-					--|#line 2742 "et_eiffel_parser.y"
+					--|#line 2761 "et_eiffel_parser.y"
 				yy_do_action_542
 			when 543 then
-					--|#line 2753 "et_eiffel_parser.y"
+					--|#line 2772 "et_eiffel_parser.y"
 				yy_do_action_543
 			when 544 then
-					--|#line 2766 "et_eiffel_parser.y"
+					--|#line 2785 "et_eiffel_parser.y"
 				yy_do_action_544
 			when 545 then
-					--|#line 2775 "et_eiffel_parser.y"
+					--|#line 2794 "et_eiffel_parser.y"
 				yy_do_action_545
 			when 546 then
-					--|#line 2784 "et_eiffel_parser.y"
+					--|#line 2803 "et_eiffel_parser.y"
 				yy_do_action_546
 			when 547 then
-					--|#line 2786 "et_eiffel_parser.y"
+					--|#line 2805 "et_eiffel_parser.y"
 				yy_do_action_547
 			when 548 then
-					--|#line 2788 "et_eiffel_parser.y"
+					--|#line 2807 "et_eiffel_parser.y"
 				yy_do_action_548
 			when 549 then
-					--|#line 2792 "et_eiffel_parser.y"
+					--|#line 2811 "et_eiffel_parser.y"
 				yy_do_action_549
 			when 550 then
-					--|#line 2794 "et_eiffel_parser.y"
+					--|#line 2813 "et_eiffel_parser.y"
 				yy_do_action_550
 			when 551 then
-					--|#line 2796 "et_eiffel_parser.y"
+					--|#line 2815 "et_eiffel_parser.y"
 				yy_do_action_551
 			when 552 then
-					--|#line 2798 "et_eiffel_parser.y"
+					--|#line 2817 "et_eiffel_parser.y"
 				yy_do_action_552
 			when 553 then
-					--|#line 2800 "et_eiffel_parser.y"
+					--|#line 2819 "et_eiffel_parser.y"
 				yy_do_action_553
 			when 554 then
-					--|#line 2802 "et_eiffel_parser.y"
+					--|#line 2821 "et_eiffel_parser.y"
 				yy_do_action_554
 			when 555 then
-					--|#line 2804 "et_eiffel_parser.y"
+					--|#line 2823 "et_eiffel_parser.y"
 				yy_do_action_555
 			when 556 then
-					--|#line 2806 "et_eiffel_parser.y"
+					--|#line 2825 "et_eiffel_parser.y"
 				yy_do_action_556
 			when 557 then
-					--|#line 2808 "et_eiffel_parser.y"
+					--|#line 2827 "et_eiffel_parser.y"
 				yy_do_action_557
 			when 558 then
-					--|#line 2810 "et_eiffel_parser.y"
+					--|#line 2829 "et_eiffel_parser.y"
 				yy_do_action_558
 			when 559 then
-					--|#line 2812 "et_eiffel_parser.y"
+					--|#line 2831 "et_eiffel_parser.y"
 				yy_do_action_559
 			when 560 then
-					--|#line 2814 "et_eiffel_parser.y"
+					--|#line 2833 "et_eiffel_parser.y"
 				yy_do_action_560
 			when 561 then
-					--|#line 2816 "et_eiffel_parser.y"
+					--|#line 2835 "et_eiffel_parser.y"
 				yy_do_action_561
 			when 562 then
-					--|#line 2818 "et_eiffel_parser.y"
+					--|#line 2837 "et_eiffel_parser.y"
 				yy_do_action_562
 			when 563 then
-					--|#line 2820 "et_eiffel_parser.y"
+					--|#line 2839 "et_eiffel_parser.y"
 				yy_do_action_563
 			when 564 then
-					--|#line 2822 "et_eiffel_parser.y"
+					--|#line 2841 "et_eiffel_parser.y"
 				yy_do_action_564
 			when 565 then
-					--|#line 2824 "et_eiffel_parser.y"
+					--|#line 2843 "et_eiffel_parser.y"
 				yy_do_action_565
 			when 566 then
-					--|#line 2826 "et_eiffel_parser.y"
+					--|#line 2845 "et_eiffel_parser.y"
 				yy_do_action_566
 			when 567 then
-					--|#line 2828 "et_eiffel_parser.y"
+					--|#line 2847 "et_eiffel_parser.y"
 				yy_do_action_567
 			when 568 then
-					--|#line 2830 "et_eiffel_parser.y"
+					--|#line 2849 "et_eiffel_parser.y"
 				yy_do_action_568
 			when 569 then
-					--|#line 2832 "et_eiffel_parser.y"
+					--|#line 2851 "et_eiffel_parser.y"
 				yy_do_action_569
 			when 570 then
-					--|#line 2836 "et_eiffel_parser.y"
+					--|#line 2855 "et_eiffel_parser.y"
 				yy_do_action_570
 			when 571 then
-					--|#line 2844 "et_eiffel_parser.y"
+					--|#line 2863 "et_eiffel_parser.y"
 				yy_do_action_571
 			when 572 then
-					--|#line 2854 "et_eiffel_parser.y"
+					--|#line 2873 "et_eiffel_parser.y"
 				yy_do_action_572
 			when 573 then
-					--|#line 2856 "et_eiffel_parser.y"
+					--|#line 2875 "et_eiffel_parser.y"
 				yy_do_action_573
 			when 574 then
-					--|#line 2864 "et_eiffel_parser.y"
+					--|#line 2883 "et_eiffel_parser.y"
 				yy_do_action_574
 			when 575 then
-					--|#line 2872 "et_eiffel_parser.y"
+					--|#line 2891 "et_eiffel_parser.y"
 				yy_do_action_575
 			when 576 then
-					--|#line 2880 "et_eiffel_parser.y"
+					--|#line 2899 "et_eiffel_parser.y"
 				yy_do_action_576
 			when 577 then
-					--|#line 2888 "et_eiffel_parser.y"
+					--|#line 2907 "et_eiffel_parser.y"
 				yy_do_action_577
 			when 578 then
-					--|#line 2896 "et_eiffel_parser.y"
+					--|#line 2915 "et_eiffel_parser.y"
 				yy_do_action_578
 			when 579 then
-					--|#line 2906 "et_eiffel_parser.y"
+					--|#line 2925 "et_eiffel_parser.y"
 				yy_do_action_579
 			when 580 then
-					--|#line 2916 "et_eiffel_parser.y"
+					--|#line 2935 "et_eiffel_parser.y"
 				yy_do_action_580
 			when 581 then
-					--|#line 2926 "et_eiffel_parser.y"
+					--|#line 2945 "et_eiffel_parser.y"
 				yy_do_action_581
 			when 582 then
-					--|#line 2936 "et_eiffel_parser.y"
+					--|#line 2955 "et_eiffel_parser.y"
 				yy_do_action_582
 			when 583 then
-					--|#line 2944 "et_eiffel_parser.y"
+					--|#line 2963 "et_eiffel_parser.y"
 				yy_do_action_583
 			when 584 then
-					--|#line 2952 "et_eiffel_parser.y"
+					--|#line 2971 "et_eiffel_parser.y"
 				yy_do_action_584
 			when 585 then
-					--|#line 2960 "et_eiffel_parser.y"
+					--|#line 2979 "et_eiffel_parser.y"
 				yy_do_action_585
 			when 586 then
-					--|#line 2968 "et_eiffel_parser.y"
+					--|#line 2987 "et_eiffel_parser.y"
 				yy_do_action_586
 			when 587 then
-					--|#line 2976 "et_eiffel_parser.y"
+					--|#line 2995 "et_eiffel_parser.y"
 				yy_do_action_587
 			when 588 then
-					--|#line 2984 "et_eiffel_parser.y"
+					--|#line 3003 "et_eiffel_parser.y"
 				yy_do_action_588
 			when 589 then
-					--|#line 2992 "et_eiffel_parser.y"
+					--|#line 3011 "et_eiffel_parser.y"
 				yy_do_action_589
 			when 590 then
-					--|#line 3000 "et_eiffel_parser.y"
+					--|#line 3019 "et_eiffel_parser.y"
 				yy_do_action_590
 			when 591 then
-					--|#line 3012 "et_eiffel_parser.y"
+					--|#line 3031 "et_eiffel_parser.y"
 				yy_do_action_591
 			when 592 then
-					--|#line 3016 "et_eiffel_parser.y"
+					--|#line 3035 "et_eiffel_parser.y"
 				yy_do_action_592
 			when 593 then
-					--|#line 3020 "et_eiffel_parser.y"
+					--|#line 3039 "et_eiffel_parser.y"
 				yy_do_action_593
 			when 594 then
-					--|#line 3024 "et_eiffel_parser.y"
+					--|#line 3043 "et_eiffel_parser.y"
 				yy_do_action_594
 			when 595 then
-					--|#line 3028 "et_eiffel_parser.y"
+					--|#line 3047 "et_eiffel_parser.y"
 				yy_do_action_595
 			when 596 then
-					--|#line 3032 "et_eiffel_parser.y"
+					--|#line 3051 "et_eiffel_parser.y"
 				yy_do_action_596
 			when 597 then
-					--|#line 3036 "et_eiffel_parser.y"
+					--|#line 3055 "et_eiffel_parser.y"
 				yy_do_action_597
 			when 598 then
-					--|#line 3040 "et_eiffel_parser.y"
+					--|#line 3059 "et_eiffel_parser.y"
 				yy_do_action_598
 			when 599 then
-					--|#line 3044 "et_eiffel_parser.y"
+					--|#line 3063 "et_eiffel_parser.y"
 				yy_do_action_599
 			when 600 then
-					--|#line 3046 "et_eiffel_parser.y"
+					--|#line 3065 "et_eiffel_parser.y"
 				yy_do_action_600
 			else
 				debug ("GEYACC")
@@ -3063,604 +3063,604 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 601 then
-					--|#line 3050 "et_eiffel_parser.y"
+					--|#line 3069 "et_eiffel_parser.y"
 				yy_do_action_601
 			when 602 then
-					--|#line 3054 "et_eiffel_parser.y"
+					--|#line 3073 "et_eiffel_parser.y"
 				yy_do_action_602
 			when 603 then
-					--|#line 3061 "et_eiffel_parser.y"
+					--|#line 3080 "et_eiffel_parser.y"
 				yy_do_action_603
 			when 604 then
-					--|#line 3063 "et_eiffel_parser.y"
+					--|#line 3082 "et_eiffel_parser.y"
 				yy_do_action_604
 			when 605 then
-					--|#line 3067 "et_eiffel_parser.y"
+					--|#line 3086 "et_eiffel_parser.y"
 				yy_do_action_605
 			when 606 then
-					--|#line 3069 "et_eiffel_parser.y"
+					--|#line 3088 "et_eiffel_parser.y"
 				yy_do_action_606
 			when 607 then
-					--|#line 3073 "et_eiffel_parser.y"
+					--|#line 3092 "et_eiffel_parser.y"
 				yy_do_action_607
 			when 608 then
-					--|#line 3084 "et_eiffel_parser.y"
+					--|#line 3103 "et_eiffel_parser.y"
 				yy_do_action_608
 			when 609 then
-					--|#line 3084 "et_eiffel_parser.y"
+					--|#line 3103 "et_eiffel_parser.y"
 				yy_do_action_609
 			when 610 then
-					--|#line 3105 "et_eiffel_parser.y"
+					--|#line 3124 "et_eiffel_parser.y"
 				yy_do_action_610
 			when 611 then
-					--|#line 3107 "et_eiffel_parser.y"
+					--|#line 3126 "et_eiffel_parser.y"
 				yy_do_action_611
 			when 612 then
-					--|#line 3109 "et_eiffel_parser.y"
+					--|#line 3128 "et_eiffel_parser.y"
 				yy_do_action_612
 			when 613 then
-					--|#line 3111 "et_eiffel_parser.y"
+					--|#line 3130 "et_eiffel_parser.y"
 				yy_do_action_613
 			when 614 then
-					--|#line 3113 "et_eiffel_parser.y"
+					--|#line 3132 "et_eiffel_parser.y"
 				yy_do_action_614
 			when 615 then
-					--|#line 3115 "et_eiffel_parser.y"
+					--|#line 3134 "et_eiffel_parser.y"
 				yy_do_action_615
 			when 616 then
-					--|#line 3117 "et_eiffel_parser.y"
+					--|#line 3136 "et_eiffel_parser.y"
 				yy_do_action_616
 			when 617 then
-					--|#line 3119 "et_eiffel_parser.y"
+					--|#line 3138 "et_eiffel_parser.y"
 				yy_do_action_617
 			when 618 then
-					--|#line 3121 "et_eiffel_parser.y"
+					--|#line 3140 "et_eiffel_parser.y"
 				yy_do_action_618
 			when 619 then
-					--|#line 3123 "et_eiffel_parser.y"
+					--|#line 3142 "et_eiffel_parser.y"
 				yy_do_action_619
 			when 620 then
-					--|#line 3125 "et_eiffel_parser.y"
+					--|#line 3144 "et_eiffel_parser.y"
 				yy_do_action_620
 			when 621 then
-					--|#line 3133 "et_eiffel_parser.y"
+					--|#line 3152 "et_eiffel_parser.y"
 				yy_do_action_621
 			when 622 then
-					--|#line 3146 "et_eiffel_parser.y"
+					--|#line 3165 "et_eiffel_parser.y"
 				yy_do_action_622
 			when 623 then
-					--|#line 3148 "et_eiffel_parser.y"
+					--|#line 3167 "et_eiffel_parser.y"
 				yy_do_action_623
 			when 624 then
-					--|#line 3150 "et_eiffel_parser.y"
+					--|#line 3169 "et_eiffel_parser.y"
 				yy_do_action_624
 			when 625 then
-					--|#line 3152 "et_eiffel_parser.y"
+					--|#line 3171 "et_eiffel_parser.y"
 				yy_do_action_625
 			when 626 then
-					--|#line 3154 "et_eiffel_parser.y"
+					--|#line 3173 "et_eiffel_parser.y"
 				yy_do_action_626
 			when 627 then
-					--|#line 3160 "et_eiffel_parser.y"
+					--|#line 3179 "et_eiffel_parser.y"
 				yy_do_action_627
 			when 628 then
-					--|#line 3162 "et_eiffel_parser.y"
+					--|#line 3181 "et_eiffel_parser.y"
 				yy_do_action_628
 			when 629 then
-					--|#line 3164 "et_eiffel_parser.y"
+					--|#line 3183 "et_eiffel_parser.y"
 				yy_do_action_629
 			when 630 then
-					--|#line 3166 "et_eiffel_parser.y"
+					--|#line 3185 "et_eiffel_parser.y"
 				yy_do_action_630
 			when 631 then
-					--|#line 3172 "et_eiffel_parser.y"
+					--|#line 3191 "et_eiffel_parser.y"
 				yy_do_action_631
 			when 632 then
-					--|#line 3174 "et_eiffel_parser.y"
+					--|#line 3193 "et_eiffel_parser.y"
 				yy_do_action_632
 			when 633 then
-					--|#line 3176 "et_eiffel_parser.y"
+					--|#line 3195 "et_eiffel_parser.y"
 				yy_do_action_633
 			when 634 then
-					--|#line 3178 "et_eiffel_parser.y"
+					--|#line 3197 "et_eiffel_parser.y"
 				yy_do_action_634
 			when 635 then
-					--|#line 3182 "et_eiffel_parser.y"
+					--|#line 3201 "et_eiffel_parser.y"
 				yy_do_action_635
 			when 636 then
-					--|#line 3184 "et_eiffel_parser.y"
+					--|#line 3203 "et_eiffel_parser.y"
 				yy_do_action_636
 			when 637 then
-					--|#line 3186 "et_eiffel_parser.y"
+					--|#line 3205 "et_eiffel_parser.y"
 				yy_do_action_637
 			when 638 then
-					--|#line 3188 "et_eiffel_parser.y"
+					--|#line 3207 "et_eiffel_parser.y"
 				yy_do_action_638
 			when 639 then
-					--|#line 3192 "et_eiffel_parser.y"
+					--|#line 3211 "et_eiffel_parser.y"
 				yy_do_action_639
 			when 640 then
-					--|#line 3194 "et_eiffel_parser.y"
+					--|#line 3213 "et_eiffel_parser.y"
 				yy_do_action_640
 			when 641 then
-					--|#line 3198 "et_eiffel_parser.y"
+					--|#line 3217 "et_eiffel_parser.y"
 				yy_do_action_641
 			when 642 then
-					--|#line 3199 "et_eiffel_parser.y"
+					--|#line 3218 "et_eiffel_parser.y"
 				yy_do_action_642
 			when 643 then
-					--|#line 3204 "et_eiffel_parser.y"
+					--|#line 3223 "et_eiffel_parser.y"
 				yy_do_action_643
 			when 644 then
-					--|#line 3206 "et_eiffel_parser.y"
+					--|#line 3225 "et_eiffel_parser.y"
 				yy_do_action_644
 			when 645 then
-					--|#line 3208 "et_eiffel_parser.y"
+					--|#line 3227 "et_eiffel_parser.y"
 				yy_do_action_645
 			when 646 then
-					--|#line 3210 "et_eiffel_parser.y"
+					--|#line 3229 "et_eiffel_parser.y"
 				yy_do_action_646
 			when 647 then
-					--|#line 3214 "et_eiffel_parser.y"
+					--|#line 3233 "et_eiffel_parser.y"
 				yy_do_action_647
 			when 648 then
-					--|#line 3221 "et_eiffel_parser.y"
+					--|#line 3240 "et_eiffel_parser.y"
 				yy_do_action_648
 			when 649 then
-					--|#line 3228 "et_eiffel_parser.y"
+					--|#line 3247 "et_eiffel_parser.y"
 				yy_do_action_649
 			when 650 then
-					--|#line 3237 "et_eiffel_parser.y"
+					--|#line 3256 "et_eiffel_parser.y"
 				yy_do_action_650
 			when 651 then
-					--|#line 3248 "et_eiffel_parser.y"
+					--|#line 3267 "et_eiffel_parser.y"
 				yy_do_action_651
 			when 652 then
-					--|#line 3250 "et_eiffel_parser.y"
+					--|#line 3269 "et_eiffel_parser.y"
 				yy_do_action_652
 			when 653 then
-					--|#line 3254 "et_eiffel_parser.y"
+					--|#line 3273 "et_eiffel_parser.y"
 				yy_do_action_653
 			when 654 then
-					--|#line 3256 "et_eiffel_parser.y"
+					--|#line 3275 "et_eiffel_parser.y"
 				yy_do_action_654
 			when 655 then
-					--|#line 3263 "et_eiffel_parser.y"
+					--|#line 3282 "et_eiffel_parser.y"
 				yy_do_action_655
 			when 656 then
-					--|#line 3270 "et_eiffel_parser.y"
+					--|#line 3289 "et_eiffel_parser.y"
 				yy_do_action_656
 			when 657 then
-					--|#line 3279 "et_eiffel_parser.y"
+					--|#line 3298 "et_eiffel_parser.y"
 				yy_do_action_657
 			when 658 then
-					--|#line 3288 "et_eiffel_parser.y"
+					--|#line 3307 "et_eiffel_parser.y"
 				yy_do_action_658
 			when 659 then
-					--|#line 3290 "et_eiffel_parser.y"
+					--|#line 3309 "et_eiffel_parser.y"
 				yy_do_action_659
 			when 660 then
-					--|#line 3290 "et_eiffel_parser.y"
+					--|#line 3309 "et_eiffel_parser.y"
 				yy_do_action_660
 			when 661 then
-					--|#line 3303 "et_eiffel_parser.y"
+					--|#line 3322 "et_eiffel_parser.y"
 				yy_do_action_661
 			when 662 then
-					--|#line 3314 "et_eiffel_parser.y"
+					--|#line 3333 "et_eiffel_parser.y"
 				yy_do_action_662
 			when 663 then
-					--|#line 3322 "et_eiffel_parser.y"
+					--|#line 3341 "et_eiffel_parser.y"
 				yy_do_action_663
 			when 664 then
-					--|#line 3331 "et_eiffel_parser.y"
+					--|#line 3350 "et_eiffel_parser.y"
 				yy_do_action_664
 			when 665 then
-					--|#line 3340 "et_eiffel_parser.y"
+					--|#line 3359 "et_eiffel_parser.y"
 				yy_do_action_665
 			when 666 then
-					--|#line 3342 "et_eiffel_parser.y"
+					--|#line 3361 "et_eiffel_parser.y"
 				yy_do_action_666
 			when 667 then
-					--|#line 3346 "et_eiffel_parser.y"
+					--|#line 3365 "et_eiffel_parser.y"
 				yy_do_action_667
 			when 668 then
-					--|#line 3348 "et_eiffel_parser.y"
+					--|#line 3367 "et_eiffel_parser.y"
 				yy_do_action_668
 			when 669 then
-					--|#line 3350 "et_eiffel_parser.y"
+					--|#line 3369 "et_eiffel_parser.y"
 				yy_do_action_669
 			when 670 then
-					--|#line 3352 "et_eiffel_parser.y"
+					--|#line 3371 "et_eiffel_parser.y"
 				yy_do_action_670
 			when 671 then
-					--|#line 3358 "et_eiffel_parser.y"
+					--|#line 3377 "et_eiffel_parser.y"
 				yy_do_action_671
 			when 672 then
-					--|#line 3362 "et_eiffel_parser.y"
+					--|#line 3381 "et_eiffel_parser.y"
 				yy_do_action_672
 			when 673 then
-					--|#line 3364 "et_eiffel_parser.y"
+					--|#line 3383 "et_eiffel_parser.y"
 				yy_do_action_673
 			when 674 then
-					--|#line 3370 "et_eiffel_parser.y"
+					--|#line 3389 "et_eiffel_parser.y"
 				yy_do_action_674
 			when 675 then
-					--|#line 3374 "et_eiffel_parser.y"
+					--|#line 3393 "et_eiffel_parser.y"
 				yy_do_action_675
 			when 676 then
-					--|#line 3376 "et_eiffel_parser.y"
+					--|#line 3395 "et_eiffel_parser.y"
 				yy_do_action_676
 			when 677 then
-					--|#line 3378 "et_eiffel_parser.y"
+					--|#line 3397 "et_eiffel_parser.y"
 				yy_do_action_677
 			when 678 then
-					--|#line 3378 "et_eiffel_parser.y"
+					--|#line 3397 "et_eiffel_parser.y"
 				yy_do_action_678
 			when 679 then
-					--|#line 3391 "et_eiffel_parser.y"
+					--|#line 3410 "et_eiffel_parser.y"
 				yy_do_action_679
 			when 680 then
-					--|#line 3402 "et_eiffel_parser.y"
+					--|#line 3421 "et_eiffel_parser.y"
 				yy_do_action_680
 			when 681 then
-					--|#line 3411 "et_eiffel_parser.y"
+					--|#line 3430 "et_eiffel_parser.y"
 				yy_do_action_681
 			when 682 then
-					--|#line 3422 "et_eiffel_parser.y"
+					--|#line 3441 "et_eiffel_parser.y"
 				yy_do_action_682
 			when 683 then
-					--|#line 3424 "et_eiffel_parser.y"
+					--|#line 3443 "et_eiffel_parser.y"
 				yy_do_action_683
 			when 684 then
-					--|#line 3426 "et_eiffel_parser.y"
+					--|#line 3445 "et_eiffel_parser.y"
 				yy_do_action_684
 			when 685 then
-					--|#line 3428 "et_eiffel_parser.y"
+					--|#line 3447 "et_eiffel_parser.y"
 				yy_do_action_685
 			when 686 then
-					--|#line 3430 "et_eiffel_parser.y"
+					--|#line 3449 "et_eiffel_parser.y"
 				yy_do_action_686
 			when 687 then
-					--|#line 3432 "et_eiffel_parser.y"
+					--|#line 3451 "et_eiffel_parser.y"
 				yy_do_action_687
 			when 688 then
-					--|#line 3434 "et_eiffel_parser.y"
+					--|#line 3453 "et_eiffel_parser.y"
 				yy_do_action_688
 			when 689 then
-					--|#line 3438 "et_eiffel_parser.y"
+					--|#line 3457 "et_eiffel_parser.y"
 				yy_do_action_689
 			when 690 then
-					--|#line 3440 "et_eiffel_parser.y"
+					--|#line 3459 "et_eiffel_parser.y"
 				yy_do_action_690
 			when 691 then
-					--|#line 3444 "et_eiffel_parser.y"
+					--|#line 3463 "et_eiffel_parser.y"
 				yy_do_action_691
 			when 692 then
-					--|#line 3448 "et_eiffel_parser.y"
+					--|#line 3467 "et_eiffel_parser.y"
 				yy_do_action_692
 			when 693 then
-					--|#line 3450 "et_eiffel_parser.y"
+					--|#line 3469 "et_eiffel_parser.y"
 				yy_do_action_693
 			when 694 then
-					--|#line 3454 "et_eiffel_parser.y"
+					--|#line 3473 "et_eiffel_parser.y"
 				yy_do_action_694
 			when 695 then
-					--|#line 3456 "et_eiffel_parser.y"
+					--|#line 3475 "et_eiffel_parser.y"
 				yy_do_action_695
 			when 696 then
-					--|#line 3460 "et_eiffel_parser.y"
+					--|#line 3479 "et_eiffel_parser.y"
 				yy_do_action_696
 			when 697 then
-					--|#line 3462 "et_eiffel_parser.y"
+					--|#line 3481 "et_eiffel_parser.y"
 				yy_do_action_697
 			when 698 then
-					--|#line 3466 "et_eiffel_parser.y"
+					--|#line 3485 "et_eiffel_parser.y"
 				yy_do_action_698
 			when 699 then
-					--|#line 3468 "et_eiffel_parser.y"
+					--|#line 3487 "et_eiffel_parser.y"
 				yy_do_action_699
 			when 700 then
-					--|#line 3470 "et_eiffel_parser.y"
+					--|#line 3489 "et_eiffel_parser.y"
 				yy_do_action_700
 			when 701 then
-					--|#line 3472 "et_eiffel_parser.y"
+					--|#line 3491 "et_eiffel_parser.y"
 				yy_do_action_701
 			when 702 then
-					--|#line 3474 "et_eiffel_parser.y"
+					--|#line 3493 "et_eiffel_parser.y"
 				yy_do_action_702
 			when 703 then
-					--|#line 3476 "et_eiffel_parser.y"
+					--|#line 3495 "et_eiffel_parser.y"
 				yy_do_action_703
 			when 704 then
-					--|#line 3484 "et_eiffel_parser.y"
+					--|#line 3503 "et_eiffel_parser.y"
 				yy_do_action_704
 			when 705 then
-					--|#line 3486 "et_eiffel_parser.y"
+					--|#line 3505 "et_eiffel_parser.y"
 				yy_do_action_705
 			when 706 then
-					--|#line 3490 "et_eiffel_parser.y"
+					--|#line 3509 "et_eiffel_parser.y"
 				yy_do_action_706
 			when 707 then
-					--|#line 3498 "et_eiffel_parser.y"
+					--|#line 3517 "et_eiffel_parser.y"
 				yy_do_action_707
 			when 708 then
-					--|#line 3504 "et_eiffel_parser.y"
+					--|#line 3523 "et_eiffel_parser.y"
 				yy_do_action_708
 			when 709 then
-					--|#line 3506 "et_eiffel_parser.y"
+					--|#line 3525 "et_eiffel_parser.y"
 				yy_do_action_709
 			when 710 then
-					--|#line 3508 "et_eiffel_parser.y"
+					--|#line 3527 "et_eiffel_parser.y"
 				yy_do_action_710
 			when 711 then
-					--|#line 3508 "et_eiffel_parser.y"
+					--|#line 3527 "et_eiffel_parser.y"
 				yy_do_action_711
 			when 712 then
-					--|#line 3521 "et_eiffel_parser.y"
+					--|#line 3540 "et_eiffel_parser.y"
 				yy_do_action_712
 			when 713 then
-					--|#line 3532 "et_eiffel_parser.y"
+					--|#line 3551 "et_eiffel_parser.y"
 				yy_do_action_713
 			when 714 then
-					--|#line 3540 "et_eiffel_parser.y"
+					--|#line 3559 "et_eiffel_parser.y"
 				yy_do_action_714
 			when 715 then
-					--|#line 3549 "et_eiffel_parser.y"
+					--|#line 3568 "et_eiffel_parser.y"
 				yy_do_action_715
 			when 716 then
-					--|#line 3558 "et_eiffel_parser.y"
+					--|#line 3577 "et_eiffel_parser.y"
 				yy_do_action_716
 			when 717 then
-					--|#line 3560 "et_eiffel_parser.y"
+					--|#line 3579 "et_eiffel_parser.y"
 				yy_do_action_717
 			when 718 then
-					--|#line 3562 "et_eiffel_parser.y"
+					--|#line 3581 "et_eiffel_parser.y"
 				yy_do_action_718
 			when 719 then
-					--|#line 3564 "et_eiffel_parser.y"
+					--|#line 3583 "et_eiffel_parser.y"
 				yy_do_action_719
 			when 720 then
-					--|#line 3571 "et_eiffel_parser.y"
+					--|#line 3590 "et_eiffel_parser.y"
 				yy_do_action_720
 			when 721 then
-					--|#line 3573 "et_eiffel_parser.y"
+					--|#line 3592 "et_eiffel_parser.y"
 				yy_do_action_721
 			when 722 then
-					--|#line 3579 "et_eiffel_parser.y"
+					--|#line 3598 "et_eiffel_parser.y"
 				yy_do_action_722
 			when 723 then
-					--|#line 3581 "et_eiffel_parser.y"
+					--|#line 3600 "et_eiffel_parser.y"
 				yy_do_action_723
 			when 724 then
-					--|#line 3585 "et_eiffel_parser.y"
+					--|#line 3604 "et_eiffel_parser.y"
 				yy_do_action_724
 			when 725 then
-					--|#line 3587 "et_eiffel_parser.y"
+					--|#line 3606 "et_eiffel_parser.y"
 				yy_do_action_725
 			when 726 then
-					--|#line 3589 "et_eiffel_parser.y"
+					--|#line 3608 "et_eiffel_parser.y"
 				yy_do_action_726
 			when 727 then
-					--|#line 3591 "et_eiffel_parser.y"
+					--|#line 3610 "et_eiffel_parser.y"
 				yy_do_action_727
 			when 728 then
-					--|#line 3593 "et_eiffel_parser.y"
+					--|#line 3612 "et_eiffel_parser.y"
 				yy_do_action_728
 			when 729 then
-					--|#line 3595 "et_eiffel_parser.y"
+					--|#line 3614 "et_eiffel_parser.y"
 				yy_do_action_729
 			when 730 then
-					--|#line 3597 "et_eiffel_parser.y"
+					--|#line 3616 "et_eiffel_parser.y"
 				yy_do_action_730
 			when 731 then
-					--|#line 3599 "et_eiffel_parser.y"
+					--|#line 3618 "et_eiffel_parser.y"
 				yy_do_action_731
 			when 732 then
-					--|#line 3601 "et_eiffel_parser.y"
+					--|#line 3620 "et_eiffel_parser.y"
 				yy_do_action_732
 			when 733 then
-					--|#line 3603 "et_eiffel_parser.y"
+					--|#line 3622 "et_eiffel_parser.y"
 				yy_do_action_733
 			when 734 then
-					--|#line 3605 "et_eiffel_parser.y"
+					--|#line 3624 "et_eiffel_parser.y"
 				yy_do_action_734
 			when 735 then
-					--|#line 3607 "et_eiffel_parser.y"
+					--|#line 3626 "et_eiffel_parser.y"
 				yy_do_action_735
 			when 736 then
-					--|#line 3609 "et_eiffel_parser.y"
+					--|#line 3628 "et_eiffel_parser.y"
 				yy_do_action_736
 			when 737 then
-					--|#line 3611 "et_eiffel_parser.y"
+					--|#line 3630 "et_eiffel_parser.y"
 				yy_do_action_737
 			when 738 then
-					--|#line 3613 "et_eiffel_parser.y"
+					--|#line 3632 "et_eiffel_parser.y"
 				yy_do_action_738
 			when 739 then
-					--|#line 3615 "et_eiffel_parser.y"
+					--|#line 3634 "et_eiffel_parser.y"
 				yy_do_action_739
 			when 740 then
-					--|#line 3617 "et_eiffel_parser.y"
+					--|#line 3636 "et_eiffel_parser.y"
 				yy_do_action_740
 			when 741 then
-					--|#line 3619 "et_eiffel_parser.y"
+					--|#line 3638 "et_eiffel_parser.y"
 				yy_do_action_741
 			when 742 then
-					--|#line 3621 "et_eiffel_parser.y"
+					--|#line 3640 "et_eiffel_parser.y"
 				yy_do_action_742
 			when 743 then
-					--|#line 3623 "et_eiffel_parser.y"
+					--|#line 3642 "et_eiffel_parser.y"
 				yy_do_action_743
 			when 744 then
-					--|#line 3625 "et_eiffel_parser.y"
+					--|#line 3644 "et_eiffel_parser.y"
 				yy_do_action_744
 			when 745 then
-					--|#line 3627 "et_eiffel_parser.y"
+					--|#line 3646 "et_eiffel_parser.y"
 				yy_do_action_745
 			when 746 then
-					--|#line 3631 "et_eiffel_parser.y"
+					--|#line 3650 "et_eiffel_parser.y"
 				yy_do_action_746
 			when 747 then
-					--|#line 3633 "et_eiffel_parser.y"
+					--|#line 3652 "et_eiffel_parser.y"
 				yy_do_action_747
 			when 748 then
-					--|#line 3635 "et_eiffel_parser.y"
+					--|#line 3654 "et_eiffel_parser.y"
 				yy_do_action_748
 			when 749 then
-					--|#line 3637 "et_eiffel_parser.y"
+					--|#line 3656 "et_eiffel_parser.y"
 				yy_do_action_749
 			when 750 then
-					--|#line 3639 "et_eiffel_parser.y"
+					--|#line 3658 "et_eiffel_parser.y"
 				yy_do_action_750
 			when 751 then
-					--|#line 3641 "et_eiffel_parser.y"
+					--|#line 3660 "et_eiffel_parser.y"
 				yy_do_action_751
 			when 752 then
-					--|#line 3645 "et_eiffel_parser.y"
+					--|#line 3664 "et_eiffel_parser.y"
 				yy_do_action_752
 			when 753 then
-					--|#line 3647 "et_eiffel_parser.y"
+					--|#line 3666 "et_eiffel_parser.y"
 				yy_do_action_753
 			when 754 then
-					--|#line 3649 "et_eiffel_parser.y"
+					--|#line 3668 "et_eiffel_parser.y"
 				yy_do_action_754
 			when 755 then
-					--|#line 3651 "et_eiffel_parser.y"
+					--|#line 3670 "et_eiffel_parser.y"
 				yy_do_action_755
 			when 756 then
-					--|#line 3653 "et_eiffel_parser.y"
+					--|#line 3672 "et_eiffel_parser.y"
 				yy_do_action_756
 			when 757 then
-					--|#line 3655 "et_eiffel_parser.y"
+					--|#line 3674 "et_eiffel_parser.y"
 				yy_do_action_757
 			when 758 then
-					--|#line 3657 "et_eiffel_parser.y"
+					--|#line 3676 "et_eiffel_parser.y"
 				yy_do_action_758
 			when 759 then
-					--|#line 3659 "et_eiffel_parser.y"
+					--|#line 3678 "et_eiffel_parser.y"
 				yy_do_action_759
 			when 760 then
-					--|#line 3661 "et_eiffel_parser.y"
+					--|#line 3680 "et_eiffel_parser.y"
 				yy_do_action_760
 			when 761 then
-					--|#line 3663 "et_eiffel_parser.y"
+					--|#line 3682 "et_eiffel_parser.y"
 				yy_do_action_761
 			when 762 then
-					--|#line 3665 "et_eiffel_parser.y"
+					--|#line 3684 "et_eiffel_parser.y"
 				yy_do_action_762
 			when 763 then
-					--|#line 3667 "et_eiffel_parser.y"
+					--|#line 3686 "et_eiffel_parser.y"
 				yy_do_action_763
 			when 764 then
-					--|#line 3669 "et_eiffel_parser.y"
+					--|#line 3688 "et_eiffel_parser.y"
 				yy_do_action_764
 			when 765 then
-					--|#line 3671 "et_eiffel_parser.y"
+					--|#line 3690 "et_eiffel_parser.y"
 				yy_do_action_765
 			when 766 then
-					--|#line 3679 "et_eiffel_parser.y"
+					--|#line 3698 "et_eiffel_parser.y"
 				yy_do_action_766
 			when 767 then
-					--|#line 3681 "et_eiffel_parser.y"
+					--|#line 3700 "et_eiffel_parser.y"
 				yy_do_action_767
 			when 768 then
-					--|#line 3683 "et_eiffel_parser.y"
+					--|#line 3702 "et_eiffel_parser.y"
 				yy_do_action_768
 			when 769 then
-					--|#line 3685 "et_eiffel_parser.y"
+					--|#line 3704 "et_eiffel_parser.y"
 				yy_do_action_769
 			when 770 then
-					--|#line 3689 "et_eiffel_parser.y"
+					--|#line 3708 "et_eiffel_parser.y"
 				yy_do_action_770
 			when 771 then
-					--|#line 3691 "et_eiffel_parser.y"
+					--|#line 3710 "et_eiffel_parser.y"
 				yy_do_action_771
 			when 772 then
-					--|#line 3693 "et_eiffel_parser.y"
+					--|#line 3712 "et_eiffel_parser.y"
 				yy_do_action_772
 			when 773 then
-					--|#line 3695 "et_eiffel_parser.y"
+					--|#line 3714 "et_eiffel_parser.y"
 				yy_do_action_773
 			when 774 then
-					--|#line 3697 "et_eiffel_parser.y"
+					--|#line 3716 "et_eiffel_parser.y"
 				yy_do_action_774
 			when 775 then
-					--|#line 3699 "et_eiffel_parser.y"
+					--|#line 3718 "et_eiffel_parser.y"
 				yy_do_action_775
 			when 776 then
-					--|#line 3701 "et_eiffel_parser.y"
+					--|#line 3720 "et_eiffel_parser.y"
 				yy_do_action_776
 			when 777 then
-					--|#line 3703 "et_eiffel_parser.y"
+					--|#line 3722 "et_eiffel_parser.y"
 				yy_do_action_777
 			when 778 then
-					--|#line 3705 "et_eiffel_parser.y"
+					--|#line 3724 "et_eiffel_parser.y"
 				yy_do_action_778
 			when 779 then
-					--|#line 3707 "et_eiffel_parser.y"
+					--|#line 3726 "et_eiffel_parser.y"
 				yy_do_action_779
 			when 780 then
-					--|#line 3709 "et_eiffel_parser.y"
+					--|#line 3728 "et_eiffel_parser.y"
 				yy_do_action_780
 			when 781 then
-					--|#line 3711 "et_eiffel_parser.y"
+					--|#line 3730 "et_eiffel_parser.y"
 				yy_do_action_781
 			when 782 then
-					--|#line 3713 "et_eiffel_parser.y"
+					--|#line 3732 "et_eiffel_parser.y"
 				yy_do_action_782
 			when 783 then
-					--|#line 3746 "et_eiffel_parser.y"
+					--|#line 3765 "et_eiffel_parser.y"
 				yy_do_action_783
 			when 784 then
-					--|#line 3748 "et_eiffel_parser.y"
+					--|#line 3767 "et_eiffel_parser.y"
 				yy_do_action_784
 			when 785 then
-					--|#line 3750 "et_eiffel_parser.y"
+					--|#line 3769 "et_eiffel_parser.y"
 				yy_do_action_785
 			when 786 then
-					--|#line 3754 "et_eiffel_parser.y"
+					--|#line 3773 "et_eiffel_parser.y"
 				yy_do_action_786
 			when 787 then
-					--|#line 3756 "et_eiffel_parser.y"
+					--|#line 3775 "et_eiffel_parser.y"
 				yy_do_action_787
 			when 788 then
-					--|#line 3758 "et_eiffel_parser.y"
+					--|#line 3777 "et_eiffel_parser.y"
 				yy_do_action_788
 			when 789 then
-					--|#line 3762 "et_eiffel_parser.y"
+					--|#line 3781 "et_eiffel_parser.y"
 				yy_do_action_789
 			when 790 then
-					--|#line 3764 "et_eiffel_parser.y"
+					--|#line 3783 "et_eiffel_parser.y"
 				yy_do_action_790
 			when 791 then
-					--|#line 3768 "et_eiffel_parser.y"
+					--|#line 3787 "et_eiffel_parser.y"
 				yy_do_action_791
 			when 792 then
-					--|#line 3768 "et_eiffel_parser.y"
+					--|#line 3787 "et_eiffel_parser.y"
 				yy_do_action_792
 			when 793 then
-					--|#line 3781 "et_eiffel_parser.y"
+					--|#line 3800 "et_eiffel_parser.y"
 				yy_do_action_793
 			when 794 then
-					--|#line 3781 "et_eiffel_parser.y"
+					--|#line 3800 "et_eiffel_parser.y"
 				yy_do_action_794
 			when 795 then
-					--|#line 3794 "et_eiffel_parser.y"
+					--|#line 3813 "et_eiffel_parser.y"
 				yy_do_action_795
 			when 796 then
-					--|#line 3805 "et_eiffel_parser.y"
+					--|#line 3824 "et_eiffel_parser.y"
 				yy_do_action_796
 			when 797 then
-					--|#line 3813 "et_eiffel_parser.y"
+					--|#line 3832 "et_eiffel_parser.y"
 				yy_do_action_797
 			when 798 then
-					--|#line 3822 "et_eiffel_parser.y"
+					--|#line 3841 "et_eiffel_parser.y"
 				yy_do_action_798
 			when 799 then
-					--|#line 3830 "et_eiffel_parser.y"
+					--|#line 3849 "et_eiffel_parser.y"
 				yy_do_action_799
 			when 800 then
-					--|#line 3832 "et_eiffel_parser.y"
+					--|#line 3851 "et_eiffel_parser.y"
 				yy_do_action_800
 			else
 				debug ("GEYACC")
@@ -3677,331 +3677,331 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 801 then
-					--|#line 3832 "et_eiffel_parser.y"
+					--|#line 3851 "et_eiffel_parser.y"
 				yy_do_action_801
 			when 802 then
-					--|#line 3845 "et_eiffel_parser.y"
+					--|#line 3864 "et_eiffel_parser.y"
 				yy_do_action_802
 			when 803 then
-					--|#line 3856 "et_eiffel_parser.y"
+					--|#line 3875 "et_eiffel_parser.y"
 				yy_do_action_803
 			when 804 then
-					--|#line 3864 "et_eiffel_parser.y"
+					--|#line 3883 "et_eiffel_parser.y"
 				yy_do_action_804
 			when 805 then
-					--|#line 3873 "et_eiffel_parser.y"
+					--|#line 3892 "et_eiffel_parser.y"
 				yy_do_action_805
 			when 806 then
-					--|#line 3875 "et_eiffel_parser.y"
+					--|#line 3894 "et_eiffel_parser.y"
 				yy_do_action_806
 			when 807 then
-					--|#line 3875 "et_eiffel_parser.y"
+					--|#line 3894 "et_eiffel_parser.y"
 				yy_do_action_807
 			when 808 then
-					--|#line 3888 "et_eiffel_parser.y"
+					--|#line 3907 "et_eiffel_parser.y"
 				yy_do_action_808
 			when 809 then
-					--|#line 3899 "et_eiffel_parser.y"
+					--|#line 3918 "et_eiffel_parser.y"
 				yy_do_action_809
 			when 810 then
-					--|#line 3907 "et_eiffel_parser.y"
+					--|#line 3926 "et_eiffel_parser.y"
 				yy_do_action_810
 			when 811 then
-					--|#line 3916 "et_eiffel_parser.y"
+					--|#line 3935 "et_eiffel_parser.y"
 				yy_do_action_811
 			when 812 then
-					--|#line 3918 "et_eiffel_parser.y"
+					--|#line 3937 "et_eiffel_parser.y"
 				yy_do_action_812
 			when 813 then
-					--|#line 3918 "et_eiffel_parser.y"
+					--|#line 3937 "et_eiffel_parser.y"
 				yy_do_action_813
 			when 814 then
-					--|#line 3933 "et_eiffel_parser.y"
+					--|#line 3952 "et_eiffel_parser.y"
 				yy_do_action_814
 			when 815 then
-					--|#line 3944 "et_eiffel_parser.y"
+					--|#line 3963 "et_eiffel_parser.y"
 				yy_do_action_815
 			when 816 then
-					--|#line 3952 "et_eiffel_parser.y"
+					--|#line 3971 "et_eiffel_parser.y"
 				yy_do_action_816
 			when 817 then
-					--|#line 3961 "et_eiffel_parser.y"
+					--|#line 3980 "et_eiffel_parser.y"
 				yy_do_action_817
 			when 818 then
-					--|#line 3963 "et_eiffel_parser.y"
+					--|#line 3982 "et_eiffel_parser.y"
 				yy_do_action_818
 			when 819 then
-					--|#line 3965 "et_eiffel_parser.y"
+					--|#line 3984 "et_eiffel_parser.y"
 				yy_do_action_819
 			when 820 then
-					--|#line 3967 "et_eiffel_parser.y"
+					--|#line 3986 "et_eiffel_parser.y"
 				yy_do_action_820
 			when 821 then
-					--|#line 3969 "et_eiffel_parser.y"
+					--|#line 3988 "et_eiffel_parser.y"
 				yy_do_action_821
 			when 822 then
-					--|#line 3973 "et_eiffel_parser.y"
+					--|#line 3992 "et_eiffel_parser.y"
 				yy_do_action_822
 			when 823 then
-					--|#line 3977 "et_eiffel_parser.y"
+					--|#line 3996 "et_eiffel_parser.y"
 				yy_do_action_823
 			when 824 then
-					--|#line 3981 "et_eiffel_parser.y"
+					--|#line 4000 "et_eiffel_parser.y"
 				yy_do_action_824
 			when 825 then
-					--|#line 3987 "et_eiffel_parser.y"
+					--|#line 4006 "et_eiffel_parser.y"
 				yy_do_action_825
 			when 826 then
-					--|#line 3989 "et_eiffel_parser.y"
+					--|#line 4008 "et_eiffel_parser.y"
 				yy_do_action_826
 			when 827 then
-					--|#line 3993 "et_eiffel_parser.y"
+					--|#line 4012 "et_eiffel_parser.y"
 				yy_do_action_827
 			when 828 then
-					--|#line 4000 "et_eiffel_parser.y"
+					--|#line 4019 "et_eiffel_parser.y"
 				yy_do_action_828
 			when 829 then
-					--|#line 4010 "et_eiffel_parser.y"
+					--|#line 4029 "et_eiffel_parser.y"
 				yy_do_action_829
 			when 830 then
-					--|#line 4016 "et_eiffel_parser.y"
+					--|#line 4035 "et_eiffel_parser.y"
 				yy_do_action_830
 			when 831 then
-					--|#line 4022 "et_eiffel_parser.y"
+					--|#line 4041 "et_eiffel_parser.y"
 				yy_do_action_831
 			when 832 then
-					--|#line 4028 "et_eiffel_parser.y"
+					--|#line 4047 "et_eiffel_parser.y"
 				yy_do_action_832
 			when 833 then
-					--|#line 4034 "et_eiffel_parser.y"
+					--|#line 4053 "et_eiffel_parser.y"
 				yy_do_action_833
 			when 834 then
-					--|#line 4040 "et_eiffel_parser.y"
+					--|#line 4059 "et_eiffel_parser.y"
 				yy_do_action_834
 			when 835 then
-					--|#line 4046 "et_eiffel_parser.y"
+					--|#line 4065 "et_eiffel_parser.y"
 				yy_do_action_835
 			when 836 then
-					--|#line 4052 "et_eiffel_parser.y"
+					--|#line 4071 "et_eiffel_parser.y"
 				yy_do_action_836
 			when 837 then
-					--|#line 4058 "et_eiffel_parser.y"
+					--|#line 4077 "et_eiffel_parser.y"
 				yy_do_action_837
 			when 838 then
-					--|#line 4063 "et_eiffel_parser.y"
+					--|#line 4082 "et_eiffel_parser.y"
 				yy_do_action_838
 			when 839 then
-					--|#line 4069 "et_eiffel_parser.y"
+					--|#line 4088 "et_eiffel_parser.y"
 				yy_do_action_839
 			when 840 then
-					--|#line 4077 "et_eiffel_parser.y"
+					--|#line 4096 "et_eiffel_parser.y"
 				yy_do_action_840
 			when 841 then
-					--|#line 4084 "et_eiffel_parser.y"
+					--|#line 4103 "et_eiffel_parser.y"
 				yy_do_action_841
 			when 842 then
-					--|#line 4088 "et_eiffel_parser.y"
+					--|#line 4107 "et_eiffel_parser.y"
 				yy_do_action_842
 			when 843 then
-					--|#line 4090 "et_eiffel_parser.y"
+					--|#line 4109 "et_eiffel_parser.y"
 				yy_do_action_843
 			when 844 then
-					--|#line 4092 "et_eiffel_parser.y"
+					--|#line 4111 "et_eiffel_parser.y"
 				yy_do_action_844
 			when 845 then
-					--|#line 4094 "et_eiffel_parser.y"
+					--|#line 4113 "et_eiffel_parser.y"
 				yy_do_action_845
 			when 846 then
-					--|#line 4096 "et_eiffel_parser.y"
+					--|#line 4115 "et_eiffel_parser.y"
 				yy_do_action_846
 			when 847 then
-					--|#line 4100 "et_eiffel_parser.y"
+					--|#line 4119 "et_eiffel_parser.y"
 				yy_do_action_847
 			when 848 then
-					--|#line 4102 "et_eiffel_parser.y"
+					--|#line 4121 "et_eiffel_parser.y"
 				yy_do_action_848
 			when 849 then
-					--|#line 4104 "et_eiffel_parser.y"
+					--|#line 4123 "et_eiffel_parser.y"
 				yy_do_action_849
 			when 850 then
-					--|#line 4104 "et_eiffel_parser.y"
+					--|#line 4123 "et_eiffel_parser.y"
 				yy_do_action_850
 			when 851 then
-					--|#line 4117 "et_eiffel_parser.y"
+					--|#line 4136 "et_eiffel_parser.y"
 				yy_do_action_851
 			when 852 then
-					--|#line 4128 "et_eiffel_parser.y"
+					--|#line 4147 "et_eiffel_parser.y"
 				yy_do_action_852
 			when 853 then
-					--|#line 4136 "et_eiffel_parser.y"
+					--|#line 4155 "et_eiffel_parser.y"
 				yy_do_action_853
 			when 854 then
-					--|#line 4145 "et_eiffel_parser.y"
+					--|#line 4164 "et_eiffel_parser.y"
 				yy_do_action_854
 			when 855 then
-					--|#line 4154 "et_eiffel_parser.y"
+					--|#line 4173 "et_eiffel_parser.y"
 				yy_do_action_855
 			when 856 then
-					--|#line 4156 "et_eiffel_parser.y"
+					--|#line 4175 "et_eiffel_parser.y"
 				yy_do_action_856
 			when 857 then
-					--|#line 4158 "et_eiffel_parser.y"
+					--|#line 4177 "et_eiffel_parser.y"
 				yy_do_action_857
 			when 858 then
-					--|#line 4164 "et_eiffel_parser.y"
+					--|#line 4183 "et_eiffel_parser.y"
 				yy_do_action_858
 			when 859 then
-					--|#line 4166 "et_eiffel_parser.y"
+					--|#line 4185 "et_eiffel_parser.y"
 				yy_do_action_859
 			when 860 then
-					--|#line 4170 "et_eiffel_parser.y"
+					--|#line 4189 "et_eiffel_parser.y"
 				yy_do_action_860
 			when 861 then
-					--|#line 4172 "et_eiffel_parser.y"
+					--|#line 4191 "et_eiffel_parser.y"
 				yy_do_action_861
 			when 862 then
-					--|#line 4174 "et_eiffel_parser.y"
+					--|#line 4193 "et_eiffel_parser.y"
 				yy_do_action_862
 			when 863 then
-					--|#line 4176 "et_eiffel_parser.y"
+					--|#line 4195 "et_eiffel_parser.y"
 				yy_do_action_863
 			when 864 then
-					--|#line 4178 "et_eiffel_parser.y"
+					--|#line 4197 "et_eiffel_parser.y"
 				yy_do_action_864
 			when 865 then
-					--|#line 4180 "et_eiffel_parser.y"
+					--|#line 4199 "et_eiffel_parser.y"
 				yy_do_action_865
 			when 866 then
-					--|#line 4182 "et_eiffel_parser.y"
+					--|#line 4201 "et_eiffel_parser.y"
 				yy_do_action_866
 			when 867 then
-					--|#line 4184 "et_eiffel_parser.y"
+					--|#line 4203 "et_eiffel_parser.y"
 				yy_do_action_867
 			when 868 then
-					--|#line 4186 "et_eiffel_parser.y"
+					--|#line 4205 "et_eiffel_parser.y"
 				yy_do_action_868
 			when 869 then
-					--|#line 4188 "et_eiffel_parser.y"
+					--|#line 4207 "et_eiffel_parser.y"
 				yy_do_action_869
 			when 870 then
-					--|#line 4190 "et_eiffel_parser.y"
+					--|#line 4209 "et_eiffel_parser.y"
 				yy_do_action_870
 			when 871 then
-					--|#line 4192 "et_eiffel_parser.y"
+					--|#line 4211 "et_eiffel_parser.y"
 				yy_do_action_871
 			when 872 then
-					--|#line 4194 "et_eiffel_parser.y"
+					--|#line 4213 "et_eiffel_parser.y"
 				yy_do_action_872
 			when 873 then
-					--|#line 4196 "et_eiffel_parser.y"
+					--|#line 4215 "et_eiffel_parser.y"
 				yy_do_action_873
 			when 874 then
-					--|#line 4198 "et_eiffel_parser.y"
+					--|#line 4217 "et_eiffel_parser.y"
 				yy_do_action_874
 			when 875 then
-					--|#line 4200 "et_eiffel_parser.y"
+					--|#line 4219 "et_eiffel_parser.y"
 				yy_do_action_875
 			when 876 then
-					--|#line 4202 "et_eiffel_parser.y"
+					--|#line 4221 "et_eiffel_parser.y"
 				yy_do_action_876
 			when 877 then
-					--|#line 4204 "et_eiffel_parser.y"
+					--|#line 4223 "et_eiffel_parser.y"
 				yy_do_action_877
 			when 878 then
-					--|#line 4206 "et_eiffel_parser.y"
+					--|#line 4225 "et_eiffel_parser.y"
 				yy_do_action_878
 			when 879 then
-					--|#line 4208 "et_eiffel_parser.y"
+					--|#line 4227 "et_eiffel_parser.y"
 				yy_do_action_879
 			when 880 then
-					--|#line 4210 "et_eiffel_parser.y"
+					--|#line 4229 "et_eiffel_parser.y"
 				yy_do_action_880
 			when 881 then
-					--|#line 4212 "et_eiffel_parser.y"
+					--|#line 4231 "et_eiffel_parser.y"
 				yy_do_action_881
 			when 882 then
-					--|#line 4214 "et_eiffel_parser.y"
+					--|#line 4233 "et_eiffel_parser.y"
 				yy_do_action_882
 			when 883 then
-					--|#line 4216 "et_eiffel_parser.y"
+					--|#line 4235 "et_eiffel_parser.y"
 				yy_do_action_883
 			when 884 then
-					--|#line 4220 "et_eiffel_parser.y"
+					--|#line 4239 "et_eiffel_parser.y"
 				yy_do_action_884
 			when 885 then
-					--|#line 4229 "et_eiffel_parser.y"
+					--|#line 4248 "et_eiffel_parser.y"
 				yy_do_action_885
 			when 886 then
-					--|#line 4231 "et_eiffel_parser.y"
+					--|#line 4250 "et_eiffel_parser.y"
 				yy_do_action_886
 			when 887 then
-					--|#line 4235 "et_eiffel_parser.y"
+					--|#line 4254 "et_eiffel_parser.y"
 				yy_do_action_887
 			when 888 then
-					--|#line 4237 "et_eiffel_parser.y"
+					--|#line 4256 "et_eiffel_parser.y"
 				yy_do_action_888
 			when 889 then
-					--|#line 4241 "et_eiffel_parser.y"
+					--|#line 4260 "et_eiffel_parser.y"
 				yy_do_action_889
 			when 890 then
-					--|#line 4250 "et_eiffel_parser.y"
+					--|#line 4269 "et_eiffel_parser.y"
 				yy_do_action_890
 			when 891 then
-					--|#line 4252 "et_eiffel_parser.y"
+					--|#line 4271 "et_eiffel_parser.y"
 				yy_do_action_891
 			when 892 then
-					--|#line 4256 "et_eiffel_parser.y"
+					--|#line 4275 "et_eiffel_parser.y"
 				yy_do_action_892
 			when 893 then
-					--|#line 4258 "et_eiffel_parser.y"
+					--|#line 4277 "et_eiffel_parser.y"
 				yy_do_action_893
 			when 894 then
-					--|#line 4262 "et_eiffel_parser.y"
+					--|#line 4281 "et_eiffel_parser.y"
 				yy_do_action_894
 			when 895 then
-					--|#line 4264 "et_eiffel_parser.y"
+					--|#line 4283 "et_eiffel_parser.y"
 				yy_do_action_895
 			when 896 then
-					--|#line 4268 "et_eiffel_parser.y"
+					--|#line 4287 "et_eiffel_parser.y"
 				yy_do_action_896
 			when 897 then
-					--|#line 4275 "et_eiffel_parser.y"
+					--|#line 4294 "et_eiffel_parser.y"
 				yy_do_action_897
 			when 898 then
-					--|#line 4284 "et_eiffel_parser.y"
+					--|#line 4303 "et_eiffel_parser.y"
 				yy_do_action_898
 			when 899 then
-					--|#line 4293 "et_eiffel_parser.y"
+					--|#line 4312 "et_eiffel_parser.y"
 				yy_do_action_899
 			when 900 then
-					--|#line 4295 "et_eiffel_parser.y"
+					--|#line 4314 "et_eiffel_parser.y"
 				yy_do_action_900
 			when 901 then
-					--|#line 4299 "et_eiffel_parser.y"
+					--|#line 4318 "et_eiffel_parser.y"
 				yy_do_action_901
 			when 902 then
-					--|#line 4301 "et_eiffel_parser.y"
+					--|#line 4320 "et_eiffel_parser.y"
 				yy_do_action_902
 			when 903 then
-					--|#line 4305 "et_eiffel_parser.y"
+					--|#line 4324 "et_eiffel_parser.y"
 				yy_do_action_903
 			when 904 then
-					--|#line 4312 "et_eiffel_parser.y"
+					--|#line 4331 "et_eiffel_parser.y"
 				yy_do_action_904
 			when 905 then
-					--|#line 4321 "et_eiffel_parser.y"
+					--|#line 4340 "et_eiffel_parser.y"
 				yy_do_action_905
 			when 906 then
-					--|#line 4330 "et_eiffel_parser.y"
+					--|#line 4349 "et_eiffel_parser.y"
 				yy_do_action_906
 			when 907 then
-					--|#line 4332 "et_eiffel_parser.y"
+					--|#line 4351 "et_eiffel_parser.y"
 				yy_do_action_907
 			when 908 then
-					--|#line 4334 "et_eiffel_parser.y"
+					--|#line 4353 "et_eiffel_parser.y"
 				yy_do_action_908
 			when 909 then
-					--|#line 4340 "et_eiffel_parser.y"
+					--|#line 4359 "et_eiffel_parser.y"
 				yy_do_action_909
 			else
 				debug ("GEYACC")
@@ -5983,6 +5983,7 @@ debug ("GEYACC")
 end
 
 			if attached yyvs12.item (yyvsp12) as l_identifier then
+				l_identifier.set_feature_name (True)
 				yyval51 := ast_factory.new_constraint_creator (last_keyword, yyvs2.item (yyvsp2), counter_value + 1)
 				if yyval51 /= Void then
 					yyval51.put_first (l_identifier)
@@ -6008,13 +6009,13 @@ end
 		end
 
 	yy_do_action_75
-			--|#line 685 "et_eiffel_parser.y"
+			--|#line 686 "et_eiffel_parser.y"
 		local
 			yyval51: detachable ET_CONSTRAINT_CREATOR
 		do
---|#line 685 "et_eiffel_parser.y"
+--|#line 686 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 685")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 686")
 end
 
 			yyval51 := ast_factory.new_constraint_creator (last_keyword, yyvs2.item (yyvsp2), counter_value)
@@ -6039,13 +6040,13 @@ end
 		end
 
 	yy_do_action_76
-			--|#line 693 "et_eiffel_parser.y"
+			--|#line 694 "et_eiffel_parser.y"
 		local
 			yyval51: detachable ET_CONSTRAINT_CREATOR
 		do
---|#line 693 "et_eiffel_parser.y"
+--|#line 694 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 693")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 694")
 end
 
 			yyval51 := yyvs51.item (yyvsp51)
@@ -6061,13 +6062,13 @@ end
 		end
 
 	yy_do_action_77
-			--|#line 702 "et_eiffel_parser.y"
+			--|#line 703 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 702 "et_eiffel_parser.y"
+--|#line 703 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 702")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 703")
 end
 
 yyval52 := new_constraint_named_type (Void, yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6088,13 +6089,13 @@ end
 		end
 
 	yy_do_action_78
-			--|#line 704 "et_eiffel_parser.y"
+			--|#line 705 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 704 "et_eiffel_parser.y"
+--|#line 705 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 704")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 705")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6116,13 +6117,13 @@ end
 		end
 
 	yy_do_action_79
-			--|#line 706 "et_eiffel_parser.y"
+			--|#line 707 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 706 "et_eiffel_parser.y"
+--|#line 707 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 706")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 707")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6144,13 +6145,13 @@ end
 		end
 
 	yy_do_action_80
-			--|#line 708 "et_eiffel_parser.y"
+			--|#line 709 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 708 "et_eiffel_parser.y"
+--|#line 709 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 708")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 709")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6172,13 +6173,13 @@ end
 		end
 
 	yy_do_action_81
-			--|#line 710 "et_eiffel_parser.y"
+			--|#line 711 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 710 "et_eiffel_parser.y"
+--|#line 711 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 710")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 711")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6200,13 +6201,13 @@ end
 		end
 
 	yy_do_action_82
-			--|#line 712 "et_eiffel_parser.y"
+			--|#line 713 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 712 "et_eiffel_parser.y"
+--|#line 713 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 712")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 713")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6228,13 +6229,13 @@ end
 		end
 
 	yy_do_action_83
-			--|#line 714 "et_eiffel_parser.y"
+			--|#line 715 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 714 "et_eiffel_parser.y"
+--|#line 715 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 714")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 715")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6256,13 +6257,13 @@ end
 		end
 
 	yy_do_action_84
-			--|#line 716 "et_eiffel_parser.y"
+			--|#line 717 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 716 "et_eiffel_parser.y"
+--|#line 717 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 716")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 717")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6284,13 +6285,13 @@ end
 		end
 
 	yy_do_action_85
-			--|#line 718 "et_eiffel_parser.y"
+			--|#line 719 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 718 "et_eiffel_parser.y"
+--|#line 719 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 718")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 719")
 end
 
 yyval52 := new_constraint_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6312,13 +6313,13 @@ end
 		end
 
 	yy_do_action_86
-			--|#line 720 "et_eiffel_parser.y"
+			--|#line 721 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 720 "et_eiffel_parser.y"
+--|#line 721 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 720")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 721")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6341,13 +6342,13 @@ end
 		end
 
 	yy_do_action_87
-			--|#line 722 "et_eiffel_parser.y"
+			--|#line 723 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 722 "et_eiffel_parser.y"
+--|#line 723 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 722")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 723")
 end
 
 yyval52 := new_constraint_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6369,13 +6370,13 @@ end
 		end
 
 	yy_do_action_88
-			--|#line 724 "et_eiffel_parser.y"
+			--|#line 725 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 724 "et_eiffel_parser.y"
+--|#line 725 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 724")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 725")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6398,13 +6399,13 @@ end
 		end
 
 	yy_do_action_89
-			--|#line 726 "et_eiffel_parser.y"
+			--|#line 727 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 726 "et_eiffel_parser.y"
+--|#line 727 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 726")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 727")
 end
 
 yyval52 := yyvs90.item (yyvsp90) 
@@ -6424,13 +6425,13 @@ end
 		end
 
 	yy_do_action_90
-			--|#line 728 "et_eiffel_parser.y"
+			--|#line 729 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 728 "et_eiffel_parser.y"
+--|#line 729 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 728")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 729")
 end
 
 yyval52 := new_constraint_named_type (Void, yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6451,13 +6452,13 @@ end
 		end
 
 	yy_do_action_91
-			--|#line 730 "et_eiffel_parser.y"
+			--|#line 731 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 730 "et_eiffel_parser.y"
+--|#line 731 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 730")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 731")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6479,13 +6480,13 @@ end
 		end
 
 	yy_do_action_92
-			--|#line 732 "et_eiffel_parser.y"
+			--|#line 733 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 732 "et_eiffel_parser.y"
+--|#line 733 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 732")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 733")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6507,13 +6508,13 @@ end
 		end
 
 	yy_do_action_93
-			--|#line 734 "et_eiffel_parser.y"
+			--|#line 735 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 734 "et_eiffel_parser.y"
+--|#line 735 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 734")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 735")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6535,13 +6536,13 @@ end
 		end
 
 	yy_do_action_94
-			--|#line 736 "et_eiffel_parser.y"
+			--|#line 737 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 736 "et_eiffel_parser.y"
+--|#line 737 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 736")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 737")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6563,13 +6564,13 @@ end
 		end
 
 	yy_do_action_95
-			--|#line 738 "et_eiffel_parser.y"
+			--|#line 739 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 738 "et_eiffel_parser.y"
+--|#line 739 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 738")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 739")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6591,13 +6592,13 @@ end
 		end
 
 	yy_do_action_96
-			--|#line 740 "et_eiffel_parser.y"
+			--|#line 741 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 740 "et_eiffel_parser.y"
+--|#line 741 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 740")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 741")
 end
 
 yyval52 := new_constraint_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6619,13 +6620,13 @@ end
 		end
 
 	yy_do_action_97
-			--|#line 742 "et_eiffel_parser.y"
+			--|#line 743 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 742 "et_eiffel_parser.y"
+--|#line 743 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 742")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 743")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6648,13 +6649,13 @@ end
 		end
 
 	yy_do_action_98
-			--|#line 744 "et_eiffel_parser.y"
+			--|#line 745 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 744 "et_eiffel_parser.y"
+--|#line 745 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 744")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 745")
 end
 
 yyval52 := new_constraint_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6676,13 +6677,13 @@ end
 		end
 
 	yy_do_action_99
-			--|#line 746 "et_eiffel_parser.y"
+			--|#line 747 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 746 "et_eiffel_parser.y"
+--|#line 747 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 746")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 747")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6705,13 +6706,13 @@ end
 		end
 
 	yy_do_action_100
-			--|#line 750 "et_eiffel_parser.y"
+			--|#line 751 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 750 "et_eiffel_parser.y"
+--|#line 751 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 750")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 751")
 end
 
 yyval52 := new_constraint_named_type (Void, yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6732,13 +6733,13 @@ end
 		end
 
 	yy_do_action_101
-			--|#line 752 "et_eiffel_parser.y"
+			--|#line 753 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 752 "et_eiffel_parser.y"
+--|#line 753 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 752")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 753")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6760,13 +6761,13 @@ end
 		end
 
 	yy_do_action_102
-			--|#line 754 "et_eiffel_parser.y"
+			--|#line 755 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 754 "et_eiffel_parser.y"
+--|#line 755 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 754")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 755")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6788,13 +6789,13 @@ end
 		end
 
 	yy_do_action_103
-			--|#line 756 "et_eiffel_parser.y"
+			--|#line 757 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 756 "et_eiffel_parser.y"
+--|#line 757 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 756")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 757")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6816,13 +6817,13 @@ end
 		end
 
 	yy_do_action_104
-			--|#line 758 "et_eiffel_parser.y"
+			--|#line 759 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 758 "et_eiffel_parser.y"
+--|#line 759 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 758")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 759")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6844,13 +6845,13 @@ end
 		end
 
 	yy_do_action_105
-			--|#line 760 "et_eiffel_parser.y"
+			--|#line 761 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 760 "et_eiffel_parser.y"
+--|#line 761 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 760")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 761")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6872,13 +6873,13 @@ end
 		end
 
 	yy_do_action_106
-			--|#line 762 "et_eiffel_parser.y"
+			--|#line 763 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 762 "et_eiffel_parser.y"
+--|#line 763 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 762")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 763")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6900,13 +6901,13 @@ end
 		end
 
 	yy_do_action_107
-			--|#line 764 "et_eiffel_parser.y"
+			--|#line 765 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 764 "et_eiffel_parser.y"
+--|#line 765 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 764")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 765")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6928,13 +6929,13 @@ end
 		end
 
 	yy_do_action_108
-			--|#line 766 "et_eiffel_parser.y"
+			--|#line 767 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 766 "et_eiffel_parser.y"
+--|#line 767 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 766")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 767")
 end
 
 yyval52 := new_constraint_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6956,13 +6957,13 @@ end
 		end
 
 	yy_do_action_109
-			--|#line 768 "et_eiffel_parser.y"
+			--|#line 769 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 768 "et_eiffel_parser.y"
+--|#line 769 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 768")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 769")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -6985,13 +6986,13 @@ end
 		end
 
 	yy_do_action_110
-			--|#line 770 "et_eiffel_parser.y"
+			--|#line 771 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 770 "et_eiffel_parser.y"
+--|#line 771 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 770")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 771")
 end
 
 yyval52 := new_constraint_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7013,13 +7014,13 @@ end
 		end
 
 	yy_do_action_111
-			--|#line 772 "et_eiffel_parser.y"
+			--|#line 773 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 772 "et_eiffel_parser.y"
+--|#line 773 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 772")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 773")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7042,13 +7043,13 @@ end
 		end
 
 	yy_do_action_112
-			--|#line 774 "et_eiffel_parser.y"
+			--|#line 775 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 774 "et_eiffel_parser.y"
+--|#line 775 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 774")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 775")
 end
 
 yyval52 := yyvs90.item (yyvsp90) 
@@ -7068,13 +7069,13 @@ end
 		end
 
 	yy_do_action_113
-			--|#line 776 "et_eiffel_parser.y"
+			--|#line 777 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 776 "et_eiffel_parser.y"
+--|#line 777 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 776")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 777")
 end
 
 yyval52 := new_constraint_named_type (Void, yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7095,13 +7096,13 @@ end
 		end
 
 	yy_do_action_114
-			--|#line 778 "et_eiffel_parser.y"
+			--|#line 779 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 778 "et_eiffel_parser.y"
+--|#line 779 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 778")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 779")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7123,13 +7124,13 @@ end
 		end
 
 	yy_do_action_115
-			--|#line 780 "et_eiffel_parser.y"
+			--|#line 781 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 780 "et_eiffel_parser.y"
+--|#line 781 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 780")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 781")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7151,13 +7152,13 @@ end
 		end
 
 	yy_do_action_116
-			--|#line 782 "et_eiffel_parser.y"
+			--|#line 783 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 782 "et_eiffel_parser.y"
+--|#line 783 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 782")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 783")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7179,13 +7180,13 @@ end
 		end
 
 	yy_do_action_117
-			--|#line 784 "et_eiffel_parser.y"
+			--|#line 785 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 784 "et_eiffel_parser.y"
+--|#line 785 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 784")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 785")
 end
 
 yyval52 := new_constraint_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7207,13 +7208,13 @@ end
 		end
 
 	yy_do_action_118
-			--|#line 786 "et_eiffel_parser.y"
+			--|#line 787 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 786 "et_eiffel_parser.y"
+--|#line 787 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 786")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 787")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7235,13 +7236,13 @@ end
 		end
 
 	yy_do_action_119
-			--|#line 788 "et_eiffel_parser.y"
+			--|#line 789 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 788 "et_eiffel_parser.y"
+--|#line 789 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 788")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 789")
 end
 
 yyval52 := new_constraint_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7263,13 +7264,13 @@ end
 		end
 
 	yy_do_action_120
-			--|#line 790 "et_eiffel_parser.y"
+			--|#line 791 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 790 "et_eiffel_parser.y"
+--|#line 791 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 790")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 791")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7292,13 +7293,13 @@ end
 		end
 
 	yy_do_action_121
-			--|#line 792 "et_eiffel_parser.y"
+			--|#line 793 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 792 "et_eiffel_parser.y"
+--|#line 793 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 792")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 793")
 end
 
 yyval52 := new_constraint_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7320,13 +7321,13 @@ end
 		end
 
 	yy_do_action_122
-			--|#line 794 "et_eiffel_parser.y"
+			--|#line 795 "et_eiffel_parser.y"
 		local
 			yyval52: detachable ET_CONSTRAINT_TYPE
 		do
---|#line 794 "et_eiffel_parser.y"
+--|#line 795 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 794")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 795")
 end
 
 yyval52 := new_constraint_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs50.item (yyvsp50)) 
@@ -7349,13 +7350,13 @@ end
 		end
 
 	yy_do_action_123
-			--|#line 798 "et_eiffel_parser.y"
+			--|#line 799 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 798 "et_eiffel_parser.y"
+--|#line 799 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 798")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 799")
 end
 
 
@@ -7374,13 +7375,13 @@ end
 		end
 
 	yy_do_action_124
-			--|#line 800 "et_eiffel_parser.y"
+			--|#line 801 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 800 "et_eiffel_parser.y"
+--|#line 801 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 800")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 801")
 end
 
 yyval50 := yyvs50.item (yyvsp50) 
@@ -7391,13 +7392,13 @@ end
 		end
 
 	yy_do_action_125
-			--|#line 804 "et_eiffel_parser.y"
+			--|#line 805 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 804 "et_eiffel_parser.y"
+--|#line 805 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 804")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 805")
 end
 
 yyval50 := ast_factory.new_constraint_actual_parameters (yyvs22.item (yyvsp22), yyvs5.item (yyvsp5), 0) 
@@ -7418,13 +7419,13 @@ end
 		end
 
 	yy_do_action_126
-			--|#line 807 "et_eiffel_parser.y"
+			--|#line 808 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 807 "et_eiffel_parser.y"
+--|#line 808 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 807")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 808")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7439,13 +7440,13 @@ end
 		end
 
 	yy_do_action_127
-			--|#line 815 "et_eiffel_parser.y"
+			--|#line 816 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 815 "et_eiffel_parser.y"
+--|#line 816 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 815")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 816")
 end
 
 			if attached yyvs52.item (yyvsp52) as l_constraint_type then
@@ -7474,13 +7475,13 @@ end
 		end
 
 	yy_do_action_128
-			--|#line 826 "et_eiffel_parser.y"
+			--|#line 827 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 826 "et_eiffel_parser.y"
+--|#line 827 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 826")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 827")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7494,13 +7495,13 @@ end
 		end
 
 	yy_do_action_129
-			--|#line 831 "et_eiffel_parser.y"
+			--|#line 832 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 831 "et_eiffel_parser.y"
+--|#line 832 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 831")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 832")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7516,13 +7517,13 @@ end
 		end
 
 	yy_do_action_130
-			--|#line 838 "et_eiffel_parser.y"
+			--|#line 839 "et_eiffel_parser.y"
 		local
 			yyval49: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
---|#line 838 "et_eiffel_parser.y"
+--|#line 839 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 838")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 839")
 end
 
 			yyval49 := ast_factory.new_constraint_actual_parameter_comma (yyvs52.item (yyvsp52), yyvs5.item (yyvsp5))
@@ -7547,13 +7548,13 @@ end
 		end
 
 	yy_do_action_131
-			--|#line 847 "et_eiffel_parser.y"
+			--|#line 848 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 847 "et_eiffel_parser.y"
+--|#line 848 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 847")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 848")
 end
 
 
@@ -7572,13 +7573,13 @@ end
 		end
 
 	yy_do_action_132
-			--|#line 849 "et_eiffel_parser.y"
+			--|#line 850 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 849 "et_eiffel_parser.y"
+--|#line 850 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 849")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 850")
 end
 
 yyval50 := yyvs50.item (yyvsp50) 
@@ -7589,13 +7590,13 @@ end
 		end
 
 	yy_do_action_133
-			--|#line 853 "et_eiffel_parser.y"
+			--|#line 854 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 853 "et_eiffel_parser.y"
+--|#line 854 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 853")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 854")
 end
 
 yyval50 := ast_factory.new_constraint_actual_parameters (yyvs22.item (yyvsp22), yyvs5.item (yyvsp5), 0) 
@@ -7616,13 +7617,13 @@ end
 		end
 
 	yy_do_action_134
-			--|#line 856 "et_eiffel_parser.y"
+			--|#line 857 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 856 "et_eiffel_parser.y"
+--|#line 857 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 856")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 857")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7637,13 +7638,13 @@ end
 		end
 
 	yy_do_action_135
-			--|#line 862 "et_eiffel_parser.y"
+			--|#line 863 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 862 "et_eiffel_parser.y"
+--|#line 863 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 862")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 863")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7658,13 +7659,13 @@ end
 		end
 
 	yy_do_action_136
-			--|#line 870 "et_eiffel_parser.y"
+			--|#line 871 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 870 "et_eiffel_parser.y"
+--|#line 871 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 870")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 871")
 end
 
 			yyval50 := ast_factory.new_constraint_actual_parameters (last_symbol, yyvs5.item (yyvsp5), counter_value + 1)
@@ -7688,13 +7689,13 @@ end
 		end
 
 	yy_do_action_137
-			--|#line 875 "et_eiffel_parser.y"
+			--|#line 876 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 875 "et_eiffel_parser.y"
+--|#line 876 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 875")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 876")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7708,13 +7709,13 @@ end
 		end
 
 	yy_do_action_138
-			--|#line 880 "et_eiffel_parser.y"
+			--|#line 881 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 880 "et_eiffel_parser.y"
+--|#line 881 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 880")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 881")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7728,13 +7729,13 @@ end
 		end
 
 	yy_do_action_139
-			--|#line 885 "et_eiffel_parser.y"
+			--|#line 886 "et_eiffel_parser.y"
 		local
 			yyval50: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_LIST
 		do
---|#line 885 "et_eiffel_parser.y"
+--|#line 886 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 885")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 886")
 end
 
 			yyval50 := yyvs50.item (yyvsp50)
@@ -7756,13 +7757,13 @@ end
 		end
 
 	yy_do_action_140
-			--|#line 898 "et_eiffel_parser.y"
+			--|#line 899 "et_eiffel_parser.y"
 		local
 			yyval49: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
---|#line 898 "et_eiffel_parser.y"
+--|#line 899 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 898")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 899")
 end
 
 			yyval49 := ast_factory.new_constraint_labeled_actual_parameter (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), yyvs52.item (yyvsp52))
@@ -7788,13 +7789,13 @@ end
 		end
 
 	yy_do_action_141
-			--|#line 907 "et_eiffel_parser.y"
+			--|#line 908 "et_eiffel_parser.y"
 		local
 			yyval49: detachable ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM
 		do
---|#line 907 "et_eiffel_parser.y"
+--|#line 908 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 907")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 908")
 end
 
 			yyval49 := ast_factory.new_constraint_labeled_actual_parameter_semicolon (ast_factory.new_constraint_labeled_actual_parameter (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), yyvs52.item (yyvsp52)), yyvs21.item (yyvsp21))
@@ -7821,13 +7822,13 @@ end
 		end
 
 	yy_do_action_142
-			--|#line 918 "et_eiffel_parser.y"
+			--|#line 919 "et_eiffel_parser.y"
 		local
 			yyval99: detachable ET_OBSOLETE
 		do
---|#line 918 "et_eiffel_parser.y"
+--|#line 919 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 918")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 919")
 end
 
 
@@ -7846,13 +7847,13 @@ end
 		end
 
 	yy_do_action_143
-			--|#line 920 "et_eiffel_parser.y"
+			--|#line 921 "et_eiffel_parser.y"
 		local
 			yyval99: detachable ET_OBSOLETE
 		do
---|#line 920 "et_eiffel_parser.y"
+--|#line 921 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 920")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 921")
 end
 
 yyval99 := ast_factory.new_obsolete_message (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -7873,13 +7874,13 @@ end
 		end
 
 	yy_do_action_144
-			--|#line 926 "et_eiffel_parser.y"
+			--|#line 927 "et_eiffel_parser.y"
 		local
 			yyval102: detachable ET_PARENT_CLAUSE_LIST
 		do
---|#line 926 "et_eiffel_parser.y"
+--|#line 927 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 926")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 927")
 end
 
 
@@ -7898,13 +7899,13 @@ end
 		end
 
 	yy_do_action_145
-			--|#line 928 "et_eiffel_parser.y"
+			--|#line 929 "et_eiffel_parser.y"
 		local
 			yyval102: detachable ET_PARENT_CLAUSE_LIST
 		do
---|#line 928 "et_eiffel_parser.y"
+--|#line 929 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 928")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 929")
 end
 
 			yyval102 := yyvs102.item (yyvsp102)
@@ -7918,13 +7919,13 @@ end
 		end
 
 	yy_do_action_146
-			--|#line 935 "et_eiffel_parser.y"
+			--|#line 936 "et_eiffel_parser.y"
 		local
 			yyval102: detachable ET_PARENT_CLAUSE_LIST
 		do
---|#line 935 "et_eiffel_parser.y"
+--|#line 936 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 935")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 936")
 end
 
 			if attached yyvs104.item (yyvsp104) as l_inheritance_clause then
@@ -7952,13 +7953,13 @@ end
 		end
 
 	yy_do_action_147
-			--|#line 946 "et_eiffel_parser.y"
+			--|#line 947 "et_eiffel_parser.y"
 		local
 			yyval102: detachable ET_PARENT_CLAUSE_LIST
 		do
---|#line 946 "et_eiffel_parser.y"
+--|#line 947 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 946")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 947")
 end
 
 			yyval102 := yyvs102.item (yyvsp102)
@@ -7975,13 +7976,13 @@ end
 		end
 
 	yy_do_action_148
-			--|#line 946 "et_eiffel_parser.y"
+			--|#line 947 "et_eiffel_parser.y"
 		local
 			yyval102: detachable ET_PARENT_CLAUSE_LIST
 		do
---|#line 946 "et_eiffel_parser.y"
+--|#line 947 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 946")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 947")
 end
 
 			if yyvs104.item (yyvsp104) /= Void then
@@ -8003,13 +8004,13 @@ end
 		end
 
 	yy_do_action_149
-			--|#line 961 "et_eiffel_parser.y"
+			--|#line 962 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 961 "et_eiffel_parser.y"
+--|#line 962 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 961")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 962")
 end
 
 			yyval104 := ast_factory.new_parents (yyvs2.item (yyvsp2), 0)
@@ -8034,13 +8035,13 @@ end
 		end
 
 	yy_do_action_150
-			--|#line 968 "et_eiffel_parser.y"
+			--|#line 969 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 968 "et_eiffel_parser.y"
+--|#line 969 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 968")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 969")
 end
 
 			yyval104 := yyvs104.item (yyvsp104)
@@ -8060,13 +8061,13 @@ end
 		end
 
 	yy_do_action_151
-			--|#line 968 "et_eiffel_parser.y"
+			--|#line 969 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 968 "et_eiffel_parser.y"
+--|#line 969 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 968")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 969")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -8087,13 +8088,13 @@ end
 		end
 
 	yy_do_action_152
-			--|#line 984 "et_eiffel_parser.y"
+			--|#line 985 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 984 "et_eiffel_parser.y"
+--|#line 985 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 984")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 985")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), Void, Void, Void, Void, Void, Void)
@@ -8118,13 +8119,13 @@ end
 		end
 
 	yy_do_action_153
-			--|#line 991 "et_eiffel_parser.y"
+			--|#line 992 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 991 "et_eiffel_parser.y"
+--|#line 992 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 991")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 992")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), yyvs111.item (yyvsp111), yyvs63.item (yyvsp63), yyvs89.item (yyvsp89 - 2), yyvs89.item (yyvsp89 - 1), yyvs89.item (yyvsp89), yyvs2.item (yyvsp2))
@@ -8153,13 +8154,13 @@ end
 		end
 
 	yy_do_action_154
-			--|#line 999 "et_eiffel_parser.y"
+			--|#line 1000 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 999 "et_eiffel_parser.y"
+--|#line 1000 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 999")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1000")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), Void, yyvs63.item (yyvsp63), yyvs89.item (yyvsp89 - 2), yyvs89.item (yyvsp89 - 1), yyvs89.item (yyvsp89), yyvs2.item (yyvsp2))
@@ -8187,13 +8188,13 @@ end
 		end
 
 	yy_do_action_155
-			--|#line 1006 "et_eiffel_parser.y"
+			--|#line 1007 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 1006 "et_eiffel_parser.y"
+--|#line 1007 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1006")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1007")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), Void, Void, yyvs89.item (yyvsp89 - 2), yyvs89.item (yyvsp89 - 1), yyvs89.item (yyvsp89), yyvs2.item (yyvsp2))
@@ -8220,13 +8221,13 @@ end
 		end
 
 	yy_do_action_156
-			--|#line 1013 "et_eiffel_parser.y"
+			--|#line 1014 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 1013 "et_eiffel_parser.y"
+--|#line 1014 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1013")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1014")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), Void, Void, Void, yyvs89.item (yyvsp89 - 1), yyvs89.item (yyvsp89), yyvs2.item (yyvsp2))
@@ -8253,13 +8254,13 @@ end
 		end
 
 	yy_do_action_157
-			--|#line 1020 "et_eiffel_parser.y"
+			--|#line 1021 "et_eiffel_parser.y"
 		local
 			yyval101: detachable ET_PARENT
 		do
---|#line 1020 "et_eiffel_parser.y"
+--|#line 1021 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1020")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1021")
 end
 
 			yyval101 := new_parent (yyvs12.item (yyvsp12), yyvs28.item (yyvsp28), Void, Void, Void, Void, yyvs89.item (yyvsp89), yyvs2.item (yyvsp2))
@@ -8286,13 +8287,13 @@ end
 		end
 
 	yy_do_action_158
-			--|#line 1029 "et_eiffel_parser.y"
+			--|#line 1030 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 1029 "et_eiffel_parser.y"
+--|#line 1030 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1029")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1030")
 end
 
 			yyval104 := ast_factory.new_parents (last_keyword, counter_value)
@@ -8316,13 +8317,13 @@ end
 		end
 
 	yy_do_action_159
-			--|#line 1036 "et_eiffel_parser.y"
+			--|#line 1037 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 1036 "et_eiffel_parser.y"
+--|#line 1037 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1036")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1037")
 end
 
 			yyval104 := ast_factory.new_parents (last_keyword, counter_value)
@@ -8346,13 +8347,13 @@ end
 		end
 
 	yy_do_action_160
-			--|#line 1043 "et_eiffel_parser.y"
+			--|#line 1044 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 1043 "et_eiffel_parser.y"
+--|#line 1044 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1043")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1044")
 end
 
 			yyval104 := yyvs104.item (yyvsp104)
@@ -8368,13 +8369,13 @@ end
 		end
 
 	yy_do_action_161
-			--|#line 1050 "et_eiffel_parser.y"
+			--|#line 1051 "et_eiffel_parser.y"
 		local
 			yyval104: detachable ET_PARENT_LIST
 		do
---|#line 1050 "et_eiffel_parser.y"
+--|#line 1051 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1050")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1051")
 end
 
 			yyval104 := yyvs104.item (yyvsp104)
@@ -8390,13 +8391,13 @@ end
 		end
 
 	yy_do_action_162
-			--|#line 1059 "et_eiffel_parser.y"
+			--|#line 1060 "et_eiffel_parser.y"
 		local
 			yyval103: detachable ET_PARENT_ITEM
 		do
---|#line 1059 "et_eiffel_parser.y"
+--|#line 1060 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1059")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1060")
 end
 
 			yyval103 := ast_factory.new_parent_semicolon (yyvs101.item (yyvsp101), yyvs21.item (yyvsp21))
@@ -8421,13 +8422,13 @@ end
 		end
 
 	yy_do_action_163
-			--|#line 1070 "et_eiffel_parser.y"
+			--|#line 1071 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1070 "et_eiffel_parser.y"
+--|#line 1071 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1070")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1071")
 end
 
 yyval111 := ast_factory.new_renames (yyvs2.item (yyvsp2), 0) 
@@ -8447,13 +8448,13 @@ end
 		end
 
 	yy_do_action_164
-			--|#line 1072 "et_eiffel_parser.y"
+			--|#line 1073 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1072 "et_eiffel_parser.y"
+--|#line 1073 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1072")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1073")
 end
 
 			yyval111 := yyvs111.item (yyvsp111)
@@ -8469,13 +8470,13 @@ end
 		end
 
 	yy_do_action_165
-			--|#line 1072 "et_eiffel_parser.y"
+			--|#line 1073 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1072 "et_eiffel_parser.y"
+--|#line 1073 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1072")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1073")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -8496,13 +8497,13 @@ end
 		end
 
 	yy_do_action_166
-			--|#line 1085 "et_eiffel_parser.y"
+			--|#line 1086 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1085 "et_eiffel_parser.y"
+--|#line 1086 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1085")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1086")
 end
 
 			yyval111 := ast_factory.new_renames (last_keyword, counter_value)
@@ -8526,13 +8527,13 @@ end
 		end
 
 	yy_do_action_167
-			--|#line 1092 "et_eiffel_parser.y"
+			--|#line 1093 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1092 "et_eiffel_parser.y"
+--|#line 1093 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1092")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1093")
 end
 
 			yyval111 := ast_factory.new_renames (last_keyword, counter_value)
@@ -8558,13 +8559,13 @@ end
 		end
 
 	yy_do_action_168
-			--|#line 1101 "et_eiffel_parser.y"
+			--|#line 1102 "et_eiffel_parser.y"
 		local
 			yyval111: detachable ET_RENAME_LIST
 		do
---|#line 1101 "et_eiffel_parser.y"
+--|#line 1102 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1101")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1102")
 end
 
 			yyval111 := yyvs111.item (yyvsp111)
@@ -8580,13 +8581,13 @@ end
 		end
 
 	yy_do_action_169
-			--|#line 1110 "et_eiffel_parser.y"
+			--|#line 1111 "et_eiffel_parser.y"
 		local
 			yyval110: detachable ET_RENAME_ITEM
 		do
---|#line 1110 "et_eiffel_parser.y"
+--|#line 1111 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1110")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1111")
 end
 
 			yyval110 := ast_factory.new_rename (yyvs71.item (yyvsp71), yyvs2.item (yyvsp2), yyvs66.item (yyvsp66))
@@ -8612,13 +8613,13 @@ end
 		end
 
 	yy_do_action_170
-			--|#line 1119 "et_eiffel_parser.y"
+			--|#line 1120 "et_eiffel_parser.y"
 		local
 			yyval110: detachable ET_RENAME_ITEM
 		do
---|#line 1119 "et_eiffel_parser.y"
+--|#line 1120 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1119")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1120")
 end
 
 			yyval110 := ast_factory.new_rename_comma (yyvs71.item (yyvsp71), yyvs2.item (yyvsp2), yyvs66.item (yyvsp66), yyvs5.item (yyvsp5))
@@ -8645,13 +8646,13 @@ end
 		end
 
 	yy_do_action_171
-			--|#line 1130 "et_eiffel_parser.y"
+			--|#line 1131 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1130 "et_eiffel_parser.y"
+--|#line 1131 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1130")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1131")
 end
 
 yyval63 := ast_factory.new_exports (yyvs2.item (yyvsp2), 0) 
@@ -8671,13 +8672,13 @@ end
 		end
 
 	yy_do_action_172
-			--|#line 1132 "et_eiffel_parser.y"
+			--|#line 1133 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1132 "et_eiffel_parser.y"
+--|#line 1133 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1132")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1133")
 end
 
 			yyval63 := yyvs63.item (yyvsp63)
@@ -8693,13 +8694,13 @@ end
 		end
 
 	yy_do_action_173
-			--|#line 1132 "et_eiffel_parser.y"
+			--|#line 1133 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1132 "et_eiffel_parser.y"
+--|#line 1133 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1132")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1133")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -8720,13 +8721,13 @@ end
 		end
 
 	yy_do_action_174
-			--|#line 1145 "et_eiffel_parser.y"
+			--|#line 1146 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1145 "et_eiffel_parser.y"
+--|#line 1146 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1145")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1146")
 end
 
 
@@ -8745,13 +8746,13 @@ end
 		end
 
 	yy_do_action_175
-			--|#line 1147 "et_eiffel_parser.y"
+			--|#line 1148 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1147 "et_eiffel_parser.y"
+--|#line 1148 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1147")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1148")
 end
 
 yyval63 := yyvs63.item (yyvsp63) 
@@ -8762,13 +8763,13 @@ end
 		end
 
 	yy_do_action_176
-			--|#line 1151 "et_eiffel_parser.y"
+			--|#line 1152 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1151 "et_eiffel_parser.y"
+--|#line 1152 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1151")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1152")
 end
 
 			if attached yyvs62.item (yyvsp62) as l_new_export then
@@ -8796,13 +8797,13 @@ end
 		end
 
 	yy_do_action_177
-			--|#line 1162 "et_eiffel_parser.y"
+			--|#line 1163 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1162 "et_eiffel_parser.y"
+--|#line 1163 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1162")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1163")
 end
 
 			yyval63 := yyvs63.item (yyvsp63)
@@ -8819,13 +8820,13 @@ end
 		end
 
 	yy_do_action_178
-			--|#line 1162 "et_eiffel_parser.y"
+			--|#line 1163 "et_eiffel_parser.y"
 		local
 			yyval63: detachable ET_EXPORT_LIST
 		do
---|#line 1162 "et_eiffel_parser.y"
+--|#line 1163 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1162")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1163")
 end
 
 			if yyvs62.item (yyvsp62) /= Void then
@@ -8847,13 +8848,13 @@ end
 		end
 
 	yy_do_action_179
-			--|#line 1177 "et_eiffel_parser.y"
+			--|#line 1178 "et_eiffel_parser.y"
 		local
 			yyval62: detachable ET_EXPORT
 		do
---|#line 1177 "et_eiffel_parser.y"
+--|#line 1178 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1177")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1178")
 end
 
 			yyval62 := ast_factory.new_all_export (yyvs45.item (yyvsp45), yyvs2.item (yyvsp2))
@@ -8875,13 +8876,13 @@ end
 		end
 
 	yy_do_action_180
-			--|#line 1181 "et_eiffel_parser.y"
+			--|#line 1182 "et_eiffel_parser.y"
 		local
 			yyval62: detachable ET_EXPORT
 		do
---|#line 1181 "et_eiffel_parser.y"
+--|#line 1182 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1181")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1182")
 end
 
 			last_export_clients := yyvs45.item (yyvsp45)
@@ -8903,13 +8904,13 @@ end
 		end
 
 	yy_do_action_181
-			--|#line 1186 "et_eiffel_parser.y"
+			--|#line 1187 "et_eiffel_parser.y"
 		local
 			yyval62: detachable ET_EXPORT
 		do
---|#line 1186 "et_eiffel_parser.y"
+--|#line 1187 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1186")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1187")
 end
 
 			yyval62 := yyvs70.item (yyvsp70)
@@ -8924,13 +8925,13 @@ end
 		end
 
 	yy_do_action_182
-			--|#line 1186 "et_eiffel_parser.y"
+			--|#line 1187 "et_eiffel_parser.y"
 		local
 			yyval62: detachable ET_EXPORT
 		do
---|#line 1186 "et_eiffel_parser.y"
+--|#line 1187 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1186")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1187")
 end
 
 			last_export_clients := yyvs45.item (yyvsp45)
@@ -8951,13 +8952,13 @@ end
 		end
 
 	yy_do_action_183
-			--|#line 1196 "et_eiffel_parser.y"
+			--|#line 1197 "et_eiffel_parser.y"
 		local
 			yyval62: detachable ET_EXPORT
 		do
---|#line 1196 "et_eiffel_parser.y"
+--|#line 1197 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1196")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1197")
 end
 
 yyval62 := ast_factory.new_null_export (yyvs21.item (yyvsp21)) 
@@ -8977,13 +8978,13 @@ end
 		end
 
 	yy_do_action_184
-			--|#line 1200 "et_eiffel_parser.y"
+			--|#line 1201 "et_eiffel_parser.y"
 		local
 			yyval70: detachable ET_FEATURE_EXPORT
 		do
---|#line 1200 "et_eiffel_parser.y"
+--|#line 1201 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1200")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1201")
 end
 
 			if attached yyvs71.item (yyvsp71) as l_feature_name then
@@ -9011,13 +9012,13 @@ end
 		end
 
 	yy_do_action_185
-			--|#line 1211 "et_eiffel_parser.y"
+			--|#line 1212 "et_eiffel_parser.y"
 		local
 			yyval70: detachable ET_FEATURE_EXPORT
 		do
---|#line 1211 "et_eiffel_parser.y"
+--|#line 1212 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1211")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1212")
 end
 
 			yyval70 := ast_factory.new_feature_export (last_export_clients, counter_value)
@@ -9041,13 +9042,13 @@ end
 		end
 
 	yy_do_action_186
-			--|#line 1219 "et_eiffel_parser.y"
+			--|#line 1220 "et_eiffel_parser.y"
 		local
 			yyval70: detachable ET_FEATURE_EXPORT
 		do
---|#line 1219 "et_eiffel_parser.y"
+--|#line 1220 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1219")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1220")
 end
 
 			yyval70 := yyvs70.item (yyvsp70)
@@ -9063,13 +9064,13 @@ end
 		end
 
 	yy_do_action_187
-			--|#line 1230 "et_eiffel_parser.y"
+			--|#line 1231 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1230 "et_eiffel_parser.y"
+--|#line 1231 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1230")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1231")
 end
 
 			yyval45 := yyvs45.item (yyvsp45)
@@ -9085,13 +9086,13 @@ end
 		end
 
 	yy_do_action_188
-			--|#line 1230 "et_eiffel_parser.y"
+			--|#line 1231 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1230 "et_eiffel_parser.y"
+--|#line 1231 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1230")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1231")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -9112,13 +9113,13 @@ end
 		end
 
 	yy_do_action_189
-			--|#line 1241 "et_eiffel_parser.y"
+			--|#line 1242 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1241 "et_eiffel_parser.y"
+--|#line 1242 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1241")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1242")
 end
 
 yyval45 := ast_factory.new_none_clients (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5)) 
@@ -9138,13 +9139,13 @@ end
 		end
 
 	yy_do_action_190
-			--|#line 1245 "et_eiffel_parser.y"
+			--|#line 1246 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1245 "et_eiffel_parser.y"
+--|#line 1246 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1245")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1246")
 end
 
 			yyval45 := ast_factory.new_clients (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -9169,13 +9170,13 @@ end
 		end
 
 	yy_do_action_191
-			--|#line 1252 "et_eiffel_parser.y"
+			--|#line 1253 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1252 "et_eiffel_parser.y"
+--|#line 1253 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1252")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1253")
 end
 
 			yyval45 := ast_factory.new_clients (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -9200,13 +9201,13 @@ end
 		end
 
 	yy_do_action_192
-			--|#line 1260 "et_eiffel_parser.y"
+			--|#line 1261 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1260 "et_eiffel_parser.y"
+--|#line 1261 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1260")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1261")
 end
 
 			yyval45 := yyvs45.item (yyvsp45)
@@ -9222,13 +9223,13 @@ end
 		end
 
 	yy_do_action_193
-			--|#line 1267 "et_eiffel_parser.y"
+			--|#line 1268 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1267 "et_eiffel_parser.y"
+--|#line 1268 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1267")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1268")
 end
 
 			yyval45 := yyvs45.item (yyvsp45)
@@ -9244,13 +9245,13 @@ end
 		end
 
 	yy_do_action_194
-			--|#line 1277 "et_eiffel_parser.y"
+			--|#line 1278 "et_eiffel_parser.y"
 		local
 			yyval44: detachable ET_CLIENT_ITEM
 		do
---|#line 1277 "et_eiffel_parser.y"
+--|#line 1278 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1277")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1278")
 end
 
 			yyval44 := new_client (yyvs12.item (yyvsp12))
@@ -9274,13 +9275,13 @@ end
 		end
 
 	yy_do_action_195
-			--|#line 1286 "et_eiffel_parser.y"
+			--|#line 1287 "et_eiffel_parser.y"
 		local
 			yyval44: detachable ET_CLIENT_ITEM
 		do
---|#line 1286 "et_eiffel_parser.y"
+--|#line 1287 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1286")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1287")
 end
 
 			yyval44 := new_client_comma (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5))
@@ -9305,13 +9306,13 @@ end
 		end
 
 	yy_do_action_196
-			--|#line 1296 "et_eiffel_parser.y"
+			--|#line 1297 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1296 "et_eiffel_parser.y"
+--|#line 1297 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1296")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1297")
 end
 
 
@@ -9330,13 +9331,13 @@ end
 		end
 
 	yy_do_action_197
-			--|#line 1298 "et_eiffel_parser.y"
+			--|#line 1299 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1298 "et_eiffel_parser.y"
+--|#line 1299 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1298")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1299")
 end
 
 yyval45 := yyvs45.item (yyvsp45) 
@@ -9347,13 +9348,13 @@ end
 		end
 
 	yy_do_action_198
-			--|#line 1302 "et_eiffel_parser.y"
+			--|#line 1303 "et_eiffel_parser.y"
 		local
 			yyval45: detachable ET_CLIENTS
 		do
---|#line 1302 "et_eiffel_parser.y"
+--|#line 1303 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1302")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1303")
 end
 
 			yyval45 := ast_factory.new_clients (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 1)
@@ -9378,13 +9379,13 @@ end
 		end
 
 	yy_do_action_199
-			--|#line 1313 "et_eiffel_parser.y"
+			--|#line 1314 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1313 "et_eiffel_parser.y"
+--|#line 1314 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1313")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1314")
 end
 
 yyval89 := ast_factory.new_keyword_feature_name_list (yyvs2.item (yyvsp2), 0) 
@@ -9404,13 +9405,13 @@ end
 		end
 
 	yy_do_action_200
-			--|#line 1315 "et_eiffel_parser.y"
+			--|#line 1316 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1315 "et_eiffel_parser.y"
+--|#line 1316 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1315")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1316")
 end
 
 			yyval89 := yyvs89.item (yyvsp89)
@@ -9426,13 +9427,13 @@ end
 		end
 
 	yy_do_action_201
-			--|#line 1315 "et_eiffel_parser.y"
+			--|#line 1316 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1315 "et_eiffel_parser.y"
+--|#line 1316 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1315")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1316")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -9453,13 +9454,13 @@ end
 		end
 
 	yy_do_action_202
-			--|#line 1328 "et_eiffel_parser.y"
+			--|#line 1329 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1328 "et_eiffel_parser.y"
+--|#line 1329 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1328")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1329")
 end
 
 
@@ -9478,13 +9479,13 @@ end
 		end
 
 	yy_do_action_203
-			--|#line 1330 "et_eiffel_parser.y"
+			--|#line 1331 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1330 "et_eiffel_parser.y"
+--|#line 1331 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1330")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1331")
 end
 
 yyval89 := yyvs89.item (yyvsp89) 
@@ -9495,13 +9496,13 @@ end
 		end
 
 	yy_do_action_204
-			--|#line 1334 "et_eiffel_parser.y"
+			--|#line 1335 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1334 "et_eiffel_parser.y"
+--|#line 1335 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1334")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1335")
 end
 
 yyval89 := ast_factory.new_keyword_feature_name_list (yyvs2.item (yyvsp2), 0) 
@@ -9521,13 +9522,13 @@ end
 		end
 
 	yy_do_action_205
-			--|#line 1336 "et_eiffel_parser.y"
+			--|#line 1337 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1336 "et_eiffel_parser.y"
+--|#line 1337 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1336")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1337")
 end
 
 			yyval89 := yyvs89.item (yyvsp89)
@@ -9543,13 +9544,13 @@ end
 		end
 
 	yy_do_action_206
-			--|#line 1336 "et_eiffel_parser.y"
+			--|#line 1337 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1336 "et_eiffel_parser.y"
+--|#line 1337 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1336")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1337")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -9570,13 +9571,13 @@ end
 		end
 
 	yy_do_action_207
-			--|#line 1349 "et_eiffel_parser.y"
+			--|#line 1350 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1349 "et_eiffel_parser.y"
+--|#line 1350 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1349")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1350")
 end
 
 
@@ -9595,13 +9596,13 @@ end
 		end
 
 	yy_do_action_208
-			--|#line 1351 "et_eiffel_parser.y"
+			--|#line 1352 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1351 "et_eiffel_parser.y"
+--|#line 1352 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1351")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1352")
 end
 
 yyval89 := yyvs89.item (yyvsp89) 
@@ -9612,13 +9613,13 @@ end
 		end
 
 	yy_do_action_209
-			--|#line 1355 "et_eiffel_parser.y"
+			--|#line 1356 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1355 "et_eiffel_parser.y"
+--|#line 1356 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1355")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1356")
 end
 
 yyval89 := ast_factory.new_keyword_feature_name_list (yyvs2.item (yyvsp2), 0) 
@@ -9638,13 +9639,13 @@ end
 		end
 
 	yy_do_action_210
-			--|#line 1357 "et_eiffel_parser.y"
+			--|#line 1358 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1357 "et_eiffel_parser.y"
+--|#line 1358 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1357")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1358")
 end
 
 			yyval89 := yyvs89.item (yyvsp89)
@@ -9660,13 +9661,13 @@ end
 		end
 
 	yy_do_action_211
-			--|#line 1357 "et_eiffel_parser.y"
+			--|#line 1358 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1357 "et_eiffel_parser.y"
+--|#line 1358 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1357")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1358")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -9687,13 +9688,13 @@ end
 		end
 
 	yy_do_action_212
-			--|#line 1370 "et_eiffel_parser.y"
+			--|#line 1371 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1370 "et_eiffel_parser.y"
+--|#line 1371 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1370")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1371")
 end
 
 
@@ -9712,13 +9713,13 @@ end
 		end
 
 	yy_do_action_213
-			--|#line 1372 "et_eiffel_parser.y"
+			--|#line 1373 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1372 "et_eiffel_parser.y"
+--|#line 1373 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1372")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1373")
 end
 
 yyval89 := yyvs89.item (yyvsp89) 
@@ -9729,13 +9730,13 @@ end
 		end
 
 	yy_do_action_214
-			--|#line 1376 "et_eiffel_parser.y"
+			--|#line 1377 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1376 "et_eiffel_parser.y"
+--|#line 1377 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1376")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1377")
 end
 
 			if attached yyvs71.item (yyvsp71) as l_feature_name then
@@ -9763,13 +9764,13 @@ end
 		end
 
 	yy_do_action_215
-			--|#line 1387 "et_eiffel_parser.y"
+			--|#line 1388 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1387 "et_eiffel_parser.y"
+--|#line 1388 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1387")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1388")
 end
 
 			yyval89 := ast_factory.new_keyword_feature_name_list (last_keyword, counter_value)
@@ -9793,13 +9794,13 @@ end
 		end
 
 	yy_do_action_216
-			--|#line 1395 "et_eiffel_parser.y"
+			--|#line 1396 "et_eiffel_parser.y"
 		local
 			yyval89: detachable ET_KEYWORD_FEATURE_NAME_LIST
 		do
---|#line 1395 "et_eiffel_parser.y"
+--|#line 1396 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1395")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1396")
 end
 
 			yyval89 := yyvs89.item (yyvsp89)
@@ -9815,13 +9816,13 @@ end
 		end
 
 	yy_do_action_217
-			--|#line 1404 "et_eiffel_parser.y"
+			--|#line 1405 "et_eiffel_parser.y"
 		local
 			yyval72: detachable ET_FEATURE_NAME_ITEM
 		do
---|#line 1404 "et_eiffel_parser.y"
+--|#line 1405 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1404")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1405")
 end
 
 			yyval72 := ast_factory.new_feature_name_comma (yyvs71.item (yyvsp71), yyvs5.item (yyvsp5))
@@ -9846,13 +9847,13 @@ end
 		end
 
 	yy_do_action_218
-			--|#line 1415 "et_eiffel_parser.y"
+			--|#line 1416 "et_eiffel_parser.y"
 		local
 			yyval58: detachable ET_CREATOR_LIST
 		do
---|#line 1415 "et_eiffel_parser.y"
+--|#line 1416 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1415")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1416")
 end
 
 
@@ -9871,13 +9872,13 @@ end
 		end
 
 	yy_do_action_219
-			--|#line 1417 "et_eiffel_parser.y"
+			--|#line 1418 "et_eiffel_parser.y"
 		local
 			yyval58: detachable ET_CREATOR_LIST
 		do
---|#line 1417 "et_eiffel_parser.y"
+--|#line 1418 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1417")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1418")
 end
 
 			yyval58 := yyvs58.item (yyvsp58)
@@ -9891,13 +9892,13 @@ end
 		end
 
 	yy_do_action_220
-			--|#line 1424 "et_eiffel_parser.y"
+			--|#line 1425 "et_eiffel_parser.y"
 		local
 			yyval58: detachable ET_CREATOR_LIST
 		do
---|#line 1424 "et_eiffel_parser.y"
+--|#line 1425 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1424")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1425")
 end
 
 			if attached yyvs57.item (yyvsp57) as l_creation_clause then
@@ -9925,13 +9926,13 @@ end
 		end
 
 	yy_do_action_221
-			--|#line 1435 "et_eiffel_parser.y"
+			--|#line 1436 "et_eiffel_parser.y"
 		local
 			yyval58: detachable ET_CREATOR_LIST
 		do
---|#line 1435 "et_eiffel_parser.y"
+--|#line 1436 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1435")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1436")
 end
 
 			yyval58 := yyvs58.item (yyvsp58)
@@ -9948,13 +9949,13 @@ end
 		end
 
 	yy_do_action_222
-			--|#line 1435 "et_eiffel_parser.y"
+			--|#line 1436 "et_eiffel_parser.y"
 		local
 			yyval58: detachable ET_CREATOR_LIST
 		do
---|#line 1435 "et_eiffel_parser.y"
+--|#line 1436 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1435")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1436")
 end
 
 			if yyvs57.item (yyvsp57) /= Void then
@@ -9976,13 +9977,13 @@ end
 		end
 
 	yy_do_action_223
-			--|#line 1450 "et_eiffel_parser.y"
+			--|#line 1451 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1450 "et_eiffel_parser.y"
+--|#line 1451 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1450")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1451")
 end
 
 yyval57 := ast_factory.new_creator (yyvs2.item (yyvsp2), yyvs45.item (yyvsp45), 0) 
@@ -10003,13 +10004,13 @@ end
 		end
 
 	yy_do_action_224
-			--|#line 1452 "et_eiffel_parser.y"
+			--|#line 1453 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1452 "et_eiffel_parser.y"
+--|#line 1453 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1452")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1453")
 end
 
 yyval57 := ast_factory.new_creator (yyvs2.item (yyvsp2), new_any_clients (yyvs2.item (yyvsp2)), 0) 
@@ -10029,13 +10030,13 @@ end
 		end
 
 	yy_do_action_225
-			--|#line 1454 "et_eiffel_parser.y"
+			--|#line 1455 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1454 "et_eiffel_parser.y"
+--|#line 1455 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1454")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1455")
 end
 
 			yyval57 := yyvs57.item (yyvsp57)
@@ -10052,13 +10053,13 @@ end
 		end
 
 	yy_do_action_226
-			--|#line 1454 "et_eiffel_parser.y"
+			--|#line 1455 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1454 "et_eiffel_parser.y"
+--|#line 1455 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1454")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1455")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -10080,13 +10081,13 @@ end
 		end
 
 	yy_do_action_227
-			--|#line 1466 "et_eiffel_parser.y"
+			--|#line 1467 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1466 "et_eiffel_parser.y"
+--|#line 1467 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1466")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1467")
 end
 
 			yyval57 := yyvs57.item (yyvsp57)
@@ -10102,13 +10103,13 @@ end
 		end
 
 	yy_do_action_228
-			--|#line 1466 "et_eiffel_parser.y"
+			--|#line 1467 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1466 "et_eiffel_parser.y"
+--|#line 1467 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1466")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1467")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -10130,13 +10131,13 @@ end
 		end
 
 	yy_do_action_229
-			--|#line 1478 "et_eiffel_parser.y"
+			--|#line 1479 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1478 "et_eiffel_parser.y"
+--|#line 1479 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1478")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1479")
 end
 
 yyval57 := ast_factory.new_creator (yyvs2.item (yyvsp2), yyvs45.item (yyvsp45), 0) 
@@ -10157,13 +10158,13 @@ end
 		end
 
 	yy_do_action_230
-			--|#line 1480 "et_eiffel_parser.y"
+			--|#line 1481 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1480 "et_eiffel_parser.y"
+--|#line 1481 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1480")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1481")
 end
 
 yyval57 := ast_factory.new_creator (yyvs2.item (yyvsp2), new_any_clients (yyvs2.item (yyvsp2)), 0) 
@@ -10183,13 +10184,13 @@ end
 		end
 
 	yy_do_action_231
-			--|#line 1482 "et_eiffel_parser.y"
+			--|#line 1483 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1482 "et_eiffel_parser.y"
+--|#line 1483 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1482")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1483")
 end
 
 			yyval57 := yyvs57.item (yyvsp57)
@@ -10206,13 +10207,13 @@ end
 		end
 
 	yy_do_action_232
-			--|#line 1482 "et_eiffel_parser.y"
+			--|#line 1483 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1482 "et_eiffel_parser.y"
+--|#line 1483 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1482")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1483")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -10234,13 +10235,13 @@ end
 		end
 
 	yy_do_action_233
-			--|#line 1494 "et_eiffel_parser.y"
+			--|#line 1495 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1494 "et_eiffel_parser.y"
+--|#line 1495 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1494")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1495")
 end
 
 			yyval57 := yyvs57.item (yyvsp57)
@@ -10256,13 +10257,13 @@ end
 		end
 
 	yy_do_action_234
-			--|#line 1494 "et_eiffel_parser.y"
+			--|#line 1495 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1494 "et_eiffel_parser.y"
+--|#line 1495 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1494")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1495")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -10284,16 +10285,17 @@ end
 		end
 
 	yy_do_action_235
-			--|#line 1508 "et_eiffel_parser.y"
+			--|#line 1509 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1508 "et_eiffel_parser.y"
+--|#line 1509 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1508")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1509")
 end
 
 			if attached yyvs12.item (yyvsp12) as l_identifier then
+				l_identifier.set_feature_name (True)
 				yyval57 := ast_factory.new_creator (last_keyword, last_clients, counter_value + 1)
 				if yyval57 /= Void then
 					yyval57.put_first (l_identifier)
@@ -10318,13 +10320,13 @@ end
 		end
 
 	yy_do_action_236
-			--|#line 1519 "et_eiffel_parser.y"
+			--|#line 1521 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1519 "et_eiffel_parser.y"
+--|#line 1521 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1519")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1521")
 end
 
 			if current_system.is_ise then
@@ -10352,13 +10354,13 @@ end
 		end
 
 	yy_do_action_237
-			--|#line 1531 "et_eiffel_parser.y"
+			--|#line 1533 "et_eiffel_parser.y"
 		local
 			yyval57: detachable ET_CREATOR
 		do
---|#line 1531 "et_eiffel_parser.y"
+--|#line 1533 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1531")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1533")
 end
 
 			yyval57 := yyvs57.item (yyvsp57)
@@ -10374,16 +10376,21 @@ end
 		end
 
 	yy_do_action_238
-			--|#line 1540 "et_eiffel_parser.y"
+			--|#line 1542 "et_eiffel_parser.y"
 		local
 			yyval72: detachable ET_FEATURE_NAME_ITEM
 		do
---|#line 1540 "et_eiffel_parser.y"
+--|#line 1542 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1540")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1542")
 end
 
-			yyval72 := ast_factory.new_feature_name_comma (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5))
+			if attached yyvs12.item (yyvsp12) as l_identifier then
+				l_identifier.set_feature_name (True)
+				yyval72 := ast_factory.new_feature_name_comma (l_identifier, yyvs5.item (yyvsp5))
+			else
+				yyval72 := ast_factory.new_feature_name_comma (Void, yyvs5.item (yyvsp5))
+			end
 			if yyval72 /= Void then
 				increment_counter
 			end
@@ -10405,13 +10412,13 @@ end
 		end
 
 	yy_do_action_239
-			--|#line 1551 "et_eiffel_parser.y"
+			--|#line 1558 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1551 "et_eiffel_parser.y"
+--|#line 1558 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1551")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1558")
 end
 
 
@@ -10430,13 +10437,13 @@ end
 		end
 
 	yy_do_action_240
-			--|#line 1553 "et_eiffel_parser.y"
+			--|#line 1560 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1553 "et_eiffel_parser.y"
+--|#line 1560 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1553")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1560")
 end
 
 yyval55 := yyvs55.item (yyvsp55) 
@@ -10447,13 +10454,13 @@ end
 		end
 
 	yy_do_action_241
-			--|#line 1557 "et_eiffel_parser.y"
+			--|#line 1564 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1557 "et_eiffel_parser.y"
+--|#line 1564 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1557")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1564")
 end
 
 			yyval55 := yyvs55.item (yyvsp55)
@@ -10469,13 +10476,13 @@ end
 		end
 
 	yy_do_action_242
-			--|#line 1557 "et_eiffel_parser.y"
+			--|#line 1564 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1557 "et_eiffel_parser.y"
+--|#line 1564 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1557")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1564")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -10496,13 +10503,13 @@ end
 		end
 
 	yy_do_action_243
-			--|#line 1570 "et_eiffel_parser.y"
+			--|#line 1577 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1570 "et_eiffel_parser.y"
+--|#line 1577 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1570")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1577")
 end
 
 			yyval55 := ast_factory.new_convert_features (last_keyword, counter_value + 1)
@@ -10526,13 +10533,13 @@ end
 		end
 
 	yy_do_action_244
-			--|#line 1577 "et_eiffel_parser.y"
+			--|#line 1584 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1577 "et_eiffel_parser.y"
+--|#line 1584 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1577")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1584")
 end
 
 			yyval55 := ast_factory.new_convert_features (last_keyword, counter_value)
@@ -10556,13 +10563,13 @@ end
 		end
 
 	yy_do_action_245
-			--|#line 1584 "et_eiffel_parser.y"
+			--|#line 1591 "et_eiffel_parser.y"
 		local
 			yyval55: detachable ET_CONVERT_FEATURE_LIST
 		do
---|#line 1584 "et_eiffel_parser.y"
+--|#line 1591 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1584")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1591")
 end
 
 			yyval55 := yyvs55.item (yyvsp55)
@@ -10578,13 +10585,13 @@ end
 		end
 
 	yy_do_action_246
-			--|#line 1593 "et_eiffel_parser.y"
+			--|#line 1600 "et_eiffel_parser.y"
 		local
 			yyval54: detachable ET_CONVERT_FEATURE_ITEM
 		do
---|#line 1593 "et_eiffel_parser.y"
+--|#line 1600 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1593")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1600")
 end
 
 			yyval54 := ast_factory.new_convert_feature_comma (yyvs53.item (yyvsp53), yyvs5.item (yyvsp5))
@@ -10609,13 +10616,13 @@ end
 		end
 
 	yy_do_action_247
-			--|#line 1602 "et_eiffel_parser.y"
+			--|#line 1609 "et_eiffel_parser.y"
 		local
 			yyval53: detachable ET_CONVERT_FEATURE
 		do
---|#line 1602 "et_eiffel_parser.y"
+--|#line 1609 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1602")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1609")
 end
 
 			yyval53 := ast_factory.new_convert_function (yyvs71.item (yyvsp71), yyvs5.item (yyvsp5), yyvs116.item (yyvsp116))
@@ -10638,13 +10645,13 @@ end
 		end
 
 	yy_do_action_248
-			--|#line 1606 "et_eiffel_parser.y"
+			--|#line 1613 "et_eiffel_parser.y"
 		local
 			yyval53: detachable ET_CONVERT_FEATURE
 		do
---|#line 1606 "et_eiffel_parser.y"
+--|#line 1613 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1606")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1613")
 end
 
 			yyval53 := ast_factory.new_convert_procedure (yyvs71.item (yyvsp71), yyvs5.item (yyvsp5 - 1), yyvs116.item (yyvsp116), yyvs5.item (yyvsp5))
@@ -10667,13 +10674,13 @@ end
 		end
 
 	yy_do_action_249
-			--|#line 1612 "et_eiffel_parser.y"
+			--|#line 1619 "et_eiffel_parser.y"
 		local
 			yyval116: detachable ET_TYPE_LIST
 		do
---|#line 1612 "et_eiffel_parser.y"
+--|#line 1619 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1612")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1619")
 end
 
 
@@ -10693,13 +10700,13 @@ end
 		end
 
 	yy_do_action_250
-			--|#line 1614 "et_eiffel_parser.y"
+			--|#line 1621 "et_eiffel_parser.y"
 		local
 			yyval116: detachable ET_TYPE_LIST
 		do
---|#line 1614 "et_eiffel_parser.y"
+--|#line 1621 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1614")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1621")
 end
 
 			yyval116 := yyvs116.item (yyvsp116)
@@ -10715,13 +10722,13 @@ end
 		end
 
 	yy_do_action_251
-			--|#line 1614 "et_eiffel_parser.y"
+			--|#line 1621 "et_eiffel_parser.y"
 		local
 			yyval116: detachable ET_TYPE_LIST
 		do
---|#line 1614 "et_eiffel_parser.y"
+--|#line 1621 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1614")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1621")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -10742,13 +10749,13 @@ end
 		end
 
 	yy_do_action_252
-			--|#line 1627 "et_eiffel_parser.y"
+			--|#line 1634 "et_eiffel_parser.y"
 		local
 			yyval116: detachable ET_TYPE_LIST
 		do
---|#line 1627 "et_eiffel_parser.y"
+--|#line 1634 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1627")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1634")
 end
 
 			if attached yyvs114.item (yyvsp114) as l_convert_type then
@@ -10777,13 +10784,13 @@ end
 		end
 
 	yy_do_action_253
-			--|#line 1638 "et_eiffel_parser.y"
+			--|#line 1645 "et_eiffel_parser.y"
 		local
 			yyval116: detachable ET_TYPE_LIST
 		do
---|#line 1638 "et_eiffel_parser.y"
+--|#line 1645 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1638")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1645")
 end
 
 			yyval116 := yyvs116.item (yyvsp116)
@@ -10799,13 +10806,13 @@ end
 		end
 
 	yy_do_action_254
-			--|#line 1647 "et_eiffel_parser.y"
+			--|#line 1654 "et_eiffel_parser.y"
 		local
 			yyval115: detachable ET_TYPE_ITEM
 		do
---|#line 1647 "et_eiffel_parser.y"
+--|#line 1654 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1647")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1654")
 end
 
 			yyval115 := ast_factory.new_type_comma (yyvs114.item (yyvsp114), yyvs5.item (yyvsp5))
@@ -10830,13 +10837,13 @@ end
 		end
 
 	yy_do_action_255
-			--|#line 1658 "et_eiffel_parser.y"
+			--|#line 1665 "et_eiffel_parser.y"
 		local
 			yyval69: detachable ET_FEATURE_CLAUSE_LIST
 		do
---|#line 1658 "et_eiffel_parser.y"
+--|#line 1665 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1658")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1665")
 end
 
 			-- $$ := Void
@@ -10857,13 +10864,13 @@ end
 		end
 
 	yy_do_action_256
-			--|#line 1663 "et_eiffel_parser.y"
+			--|#line 1670 "et_eiffel_parser.y"
 		local
 			yyval69: detachable ET_FEATURE_CLAUSE_LIST
 		do
---|#line 1663 "et_eiffel_parser.y"
+--|#line 1670 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1663")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1670")
 end
 
 yyval69 := yyvs69.item (yyvsp69) 
@@ -10874,13 +10881,13 @@ end
 		end
 
 	yy_do_action_257
-			--|#line 1667 "et_eiffel_parser.y"
+			--|#line 1674 "et_eiffel_parser.y"
 		local
 			yyval69: detachable ET_FEATURE_CLAUSE_LIST
 		do
---|#line 1667 "et_eiffel_parser.y"
+--|#line 1674 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1667")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1674")
 end
 
 			yyval69 := yyvs69.item (yyvsp69)
@@ -10895,13 +10902,13 @@ end
 		end
 
 	yy_do_action_258
-			--|#line 1675 "et_eiffel_parser.y"
+			--|#line 1682 "et_eiffel_parser.y"
 		local
 			yyval69: detachable ET_FEATURE_CLAUSE_LIST
 		do
---|#line 1675 "et_eiffel_parser.y"
+--|#line 1682 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1675")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1682")
 end
 
 			yyval69 := ast_factory.new_feature_clauses (counter_value)
@@ -10925,13 +10932,13 @@ end
 		end
 
 	yy_do_action_259
-			--|#line 1682 "et_eiffel_parser.y"
+			--|#line 1689 "et_eiffel_parser.y"
 		local
 			yyval69: detachable ET_FEATURE_CLAUSE_LIST
 		do
---|#line 1682 "et_eiffel_parser.y"
+--|#line 1689 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1682")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1689")
 end
 
 			yyval69 := yyvs69.item (yyvsp69)
@@ -10947,27 +10954,6 @@ end
 		end
 
 	yy_do_action_260
-			--|#line 1691 "et_eiffel_parser.y"
-		local
-			yyval68: detachable ET_FEATURE_CLAUSE
-		do
---|#line 1691 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1691")
-end
-
-			yyval68 := last_feature_clause
-			if yyval68 /= Void then
-				increment_counter
-			end
-		
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyspecial_routines68.force (yyvs68, yyval68, yyvsp68)
-end
-		end
-
-	yy_do_action_261
 			--|#line 1698 "et_eiffel_parser.y"
 		local
 			yyval68: detachable ET_FEATURE_CLAUSE
@@ -10983,6 +10969,27 @@ end
 			end
 		
 if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyspecial_routines68.force (yyvs68, yyval68, yyvsp68)
+end
+		end
+
+	yy_do_action_261
+			--|#line 1705 "et_eiffel_parser.y"
+		local
+			yyval68: detachable ET_FEATURE_CLAUSE
+		do
+--|#line 1705 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1705")
+end
+
+			yyval68 := last_feature_clause
+			if yyval68 /= Void then
+				increment_counter
+			end
+		
+if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyspecial_routines68.force (yyvs68, yyval68, yyvsp68)
@@ -10990,13 +10997,13 @@ end
 		end
 
 	yy_do_action_262
-			--|#line 1707 "et_eiffel_parser.y"
+			--|#line 1714 "et_eiffel_parser.y"
 		local
 			yyval68: detachable ET_FEATURE_CLAUSE
 		do
---|#line 1707 "et_eiffel_parser.y"
+--|#line 1714 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1707")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1714")
 end
 
 			last_clients := yyvs45.item (yyvsp45)
@@ -11019,13 +11026,13 @@ end
 		end
 
 	yy_do_action_263
-			--|#line 1712 "et_eiffel_parser.y"
+			--|#line 1719 "et_eiffel_parser.y"
 		local
 			yyval68: detachable ET_FEATURE_CLAUSE
 		do
---|#line 1712 "et_eiffel_parser.y"
+--|#line 1719 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1712")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1719")
 end
 
 			last_clients := new_any_clients (yyvs2.item (yyvsp2))
@@ -11047,13 +11054,13 @@ end
 		end
 
 	yy_do_action_264
-			--|#line 1719 "et_eiffel_parser.y"
+			--|#line 1726 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 1719 "et_eiffel_parser.y"
+--|#line 1726 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1719")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1726")
 end
 
 
@@ -11073,13 +11080,13 @@ end
 		end
 
 	yy_do_action_265
-			--|#line 1720 "et_eiffel_parser.y"
+			--|#line 1727 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 1720 "et_eiffel_parser.y"
+--|#line 1727 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1720")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1727")
 end
 
 
@@ -11099,13 +11106,13 @@ end
 		end
 
 	yy_do_action_266
-			--|#line 1721 "et_eiffel_parser.y"
+			--|#line 1728 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 1721 "et_eiffel_parser.y"
+--|#line 1728 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1721")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1728")
 end
 
 
@@ -11117,13 +11124,13 @@ end
 		end
 
 	yy_do_action_267
-			--|#line 1722 "et_eiffel_parser.y"
+			--|#line 1729 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 1722 "et_eiffel_parser.y"
+--|#line 1729 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1722")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1729")
 end
 
 
@@ -11135,13 +11142,13 @@ end
 		end
 
 	yy_do_action_268
-			--|#line 1727 "et_eiffel_parser.y"
+			--|#line 1734 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1727 "et_eiffel_parser.y"
+--|#line 1734 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1727")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1734")
 end
 
 			yyval109 := yyvs109.item (yyvsp109)
@@ -11154,13 +11161,13 @@ end
 		end
 
 	yy_do_action_269
-			--|#line 1732 "et_eiffel_parser.y"
+			--|#line 1739 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1732 "et_eiffel_parser.y"
+--|#line 1739 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1732")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1739")
 end
 
 			yyval109 := yyvs109.item (yyvsp109)
@@ -11177,13 +11184,13 @@ end
 		end
 
 	yy_do_action_270
-			--|#line 1740 "et_eiffel_parser.y"
+			--|#line 1747 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1740 "et_eiffel_parser.y"
+--|#line 1747 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1740")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1747")
 end
 
 			yyval109 := new_query_synonym (ast_factory.new_extended_feature_name_comma (yyvs66.item (yyvsp66), yyvs5.item (yyvsp5)), yyvs109.item (yyvsp109))
@@ -11198,13 +11205,13 @@ end
 		end
 
 	yy_do_action_271
-			--|#line 1745 "et_eiffel_parser.y"
+			--|#line 1752 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1745 "et_eiffel_parser.y"
+--|#line 1752 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1745")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1752")
 end
 
 			yyval109 := new_query_synonym (yyvs66.item (yyvsp66), yyvs109.item (yyvsp109))
@@ -11218,13 +11225,13 @@ end
 		end
 
 	yy_do_action_272
-			--|#line 1751 "et_eiffel_parser.y"
+			--|#line 1758 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1751 "et_eiffel_parser.y"
+--|#line 1758 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1751")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1758")
 end
 
 			yyval109 := new_query_synonym (ast_factory.new_extended_feature_name_comma (yyvs66.item (yyvsp66), yyvs5.item (yyvsp5)), yyvs109.item (yyvsp109))
@@ -11243,13 +11250,13 @@ end
 		end
 
 	yy_do_action_273
-			--|#line 1759 "et_eiffel_parser.y"
+			--|#line 1766 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1759 "et_eiffel_parser.y"
+--|#line 1766 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1759")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1766")
 end
 
 			yyval109 := new_query_synonym (yyvs66.item (yyvsp66), yyvs109.item (yyvsp109))
@@ -11267,13 +11274,13 @@ end
 		end
 
 	yy_do_action_274
-			--|#line 1770 "et_eiffel_parser.y"
+			--|#line 1777 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1770 "et_eiffel_parser.y"
+--|#line 1777 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1770")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1777")
 end
 
 			yyval107 := yyvs107.item (yyvsp107)
@@ -11286,13 +11293,13 @@ end
 		end
 
 	yy_do_action_275
-			--|#line 1775 "et_eiffel_parser.y"
+			--|#line 1782 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1775 "et_eiffel_parser.y"
+--|#line 1782 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1775")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1782")
 end
 
 			yyval107 := yyvs107.item (yyvsp107)
@@ -11309,13 +11316,13 @@ end
 		end
 
 	yy_do_action_276
-			--|#line 1783 "et_eiffel_parser.y"
+			--|#line 1790 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1783 "et_eiffel_parser.y"
+--|#line 1790 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1783")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1790")
 end
 
 			yyval107 := new_procedure_synonym (ast_factory.new_extended_feature_name_comma (yyvs66.item (yyvsp66), yyvs5.item (yyvsp5)), yyvs107.item (yyvsp107))
@@ -11330,13 +11337,13 @@ end
 		end
 
 	yy_do_action_277
-			--|#line 1788 "et_eiffel_parser.y"
+			--|#line 1795 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1788 "et_eiffel_parser.y"
+--|#line 1795 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1788")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1795")
 end
 
 			yyval107 := new_procedure_synonym (yyvs66.item (yyvsp66), yyvs107.item (yyvsp107))
@@ -11350,13 +11357,13 @@ end
 		end
 
 	yy_do_action_278
-			--|#line 1794 "et_eiffel_parser.y"
+			--|#line 1801 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1794 "et_eiffel_parser.y"
+--|#line 1801 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1794")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1801")
 end
 
 			yyval107 := new_procedure_synonym (ast_factory.new_extended_feature_name_comma (yyvs66.item (yyvsp66), yyvs5.item (yyvsp5)), yyvs107.item (yyvsp107))
@@ -11375,13 +11382,13 @@ end
 		end
 
 	yy_do_action_279
-			--|#line 1802 "et_eiffel_parser.y"
+			--|#line 1809 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1802 "et_eiffel_parser.y"
+--|#line 1809 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1802")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1809")
 end
 
 			yyval107 := new_procedure_synonym (yyvs66.item (yyvsp66), yyvs107.item (yyvsp107))
@@ -11399,13 +11406,13 @@ end
 		end
 
 	yy_do_action_280
-			--|#line 1813 "et_eiffel_parser.y"
+			--|#line 1820 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1813 "et_eiffel_parser.y"
+--|#line 1820 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1813")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1820")
 end
 
 yyval109 := ast_factory.new_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), Void, last_clients, last_feature_clause, last_class) 
@@ -11428,13 +11435,13 @@ end
 		end
 
 	yy_do_action_281
-			--|#line 1815 "et_eiffel_parser.y"
+			--|#line 1822 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1815 "et_eiffel_parser.y"
+--|#line 1822 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1815")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1822")
 end
 
 yyval109 := ast_factory.new_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11458,13 +11465,13 @@ end
 		end
 
 	yy_do_action_282
-			--|#line 1817 "et_eiffel_parser.y"
+			--|#line 1824 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1817 "et_eiffel_parser.y"
+--|#line 1824 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1817")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1824")
 end
 
 			yyval109 := ast_factory.new_extended_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class)
@@ -11496,13 +11503,13 @@ end
 		end
 
 	yy_do_action_283
-			--|#line 1821 "et_eiffel_parser.y"
+			--|#line 1828 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1821 "et_eiffel_parser.y"
+--|#line 1828 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1821")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1828")
 end
 
 yyval109 := ast_factory.new_constant_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2), yyvs48.item (yyvsp48), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11528,13 +11535,13 @@ end
 		end
 
 	yy_do_action_284
-			--|#line 1823 "et_eiffel_parser.y"
+			--|#line 1830 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1823 "et_eiffel_parser.y"
+--|#line 1830 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1823")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1830")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11564,13 +11571,13 @@ end
 		end
 
 	yy_do_action_285
-			--|#line 1831 "et_eiffel_parser.y"
+			--|#line 1838 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1831 "et_eiffel_parser.y"
+--|#line 1838 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1831")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1838")
 end
 
 yyval109 := ast_factory.new_unique_attribute (yyvs66.item (yyvsp66), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11595,13 +11602,13 @@ end
 		end
 
 	yy_do_action_286
-			--|#line 1833 "et_eiffel_parser.y"
+			--|#line 1840 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1833 "et_eiffel_parser.y"
+--|#line 1840 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1833")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1840")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11631,13 +11638,13 @@ end
 		end
 
 	yy_do_action_287
-			--|#line 1841 "et_eiffel_parser.y"
+			--|#line 1848 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1841 "et_eiffel_parser.y"
+--|#line 1848 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1841")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1848")
 end
 
 yyval109 := ast_factory.new_do_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 1), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11668,13 +11675,13 @@ end
 		end
 
 	yy_do_action_288
-			--|#line 1844 "et_eiffel_parser.y"
+			--|#line 1851 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1844 "et_eiffel_parser.y"
+--|#line 1851 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1844")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1851")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11710,13 +11717,13 @@ end
 		end
 
 	yy_do_action_289
-			--|#line 1853 "et_eiffel_parser.y"
+			--|#line 1860 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1853 "et_eiffel_parser.y"
+--|#line 1860 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1853")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1860")
 end
 
 yyval109 := ast_factory.new_do_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 1), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11748,13 +11755,13 @@ end
 		end
 
 	yy_do_action_290
-			--|#line 1857 "et_eiffel_parser.y"
+			--|#line 1864 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1857 "et_eiffel_parser.y"
+--|#line 1864 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1857")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1864")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11791,13 +11798,13 @@ end
 		end
 
 	yy_do_action_291
-			--|#line 1867 "et_eiffel_parser.y"
+			--|#line 1874 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1867 "et_eiffel_parser.y"
+--|#line 1874 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1867")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1874")
 end
 
 yyval109 := ast_factory.new_once_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11829,13 +11836,13 @@ end
 		end
 
 	yy_do_action_292
-			--|#line 1870 "et_eiffel_parser.y"
+			--|#line 1877 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1870 "et_eiffel_parser.y"
+--|#line 1877 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1870")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1877")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11872,13 +11879,13 @@ end
 		end
 
 	yy_do_action_293
-			--|#line 1879 "et_eiffel_parser.y"
+			--|#line 1886 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1879 "et_eiffel_parser.y"
+--|#line 1886 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1879")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1886")
 end
 
 yyval109 := ast_factory.new_once_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11911,13 +11918,13 @@ end
 		end
 
 	yy_do_action_294
-			--|#line 1883 "et_eiffel_parser.y"
+			--|#line 1890 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1883 "et_eiffel_parser.y"
+--|#line 1890 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1883")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1890")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -11955,13 +11962,13 @@ end
 		end
 
 	yy_do_action_295
-			--|#line 1893 "et_eiffel_parser.y"
+			--|#line 1900 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1893 "et_eiffel_parser.y"
+--|#line 1900 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1893")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1900")
 end
 
 yyval109 := ast_factory.new_deferred_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -11990,13 +11997,13 @@ end
 		end
 
 	yy_do_action_296
-			--|#line 1895 "et_eiffel_parser.y"
+			--|#line 1902 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1895 "et_eiffel_parser.y"
+--|#line 1902 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1895")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1902")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -12030,13 +12037,13 @@ end
 		end
 
 	yy_do_action_297
-			--|#line 1903 "et_eiffel_parser.y"
+			--|#line 1910 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1903 "et_eiffel_parser.y"
+--|#line 1910 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1903")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1910")
 end
 
 yyval109 := ast_factory.new_deferred_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12066,13 +12073,13 @@ end
 		end
 
 	yy_do_action_298
-			--|#line 1906 "et_eiffel_parser.y"
+			--|#line 1913 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1906 "et_eiffel_parser.y"
+--|#line 1913 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1906")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1913")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -12107,13 +12114,13 @@ end
 		end
 
 	yy_do_action_299
-			--|#line 1915 "et_eiffel_parser.y"
+			--|#line 1922 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1915 "et_eiffel_parser.y"
+--|#line 1922 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1915")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1922")
 end
 
 yyval109 := new_external_function (yyvs66.item (yyvsp66), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12144,13 +12151,13 @@ end
 		end
 
 	yy_do_action_300
-			--|#line 1918 "et_eiffel_parser.y"
+			--|#line 1925 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1918 "et_eiffel_parser.y"
+--|#line 1925 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1918")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1925")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -12186,13 +12193,13 @@ end
 		end
 
 	yy_do_action_301
-			--|#line 1927 "et_eiffel_parser.y"
+			--|#line 1934 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1927 "et_eiffel_parser.y"
+--|#line 1934 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1927")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1934")
 end
 
 yyval109 := new_external_function (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs34.item (yyvsp34), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12224,13 +12231,13 @@ end
 		end
 
 	yy_do_action_302
-			--|#line 1931 "et_eiffel_parser.y"
+			--|#line 1938 "et_eiffel_parser.y"
 		local
 			yyval109: detachable ET_QUERY
 		do
---|#line 1931 "et_eiffel_parser.y"
+--|#line 1938 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1931")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1938")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -12267,13 +12274,13 @@ end
 		end
 
 	yy_do_action_303
-			--|#line 1943 "et_eiffel_parser.y"
+			--|#line 1950 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1943 "et_eiffel_parser.y"
+--|#line 1950 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1943")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1950")
 end
 
 yyval107 := ast_factory.new_do_procedure (yyvs66.item (yyvsp66), Void, yyvs2.item (yyvsp2 - 1), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12301,13 +12308,13 @@ end
 		end
 
 	yy_do_action_304
-			--|#line 1946 "et_eiffel_parser.y"
+			--|#line 1953 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1946 "et_eiffel_parser.y"
+--|#line 1953 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1946")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1953")
 end
 
 yyval107 := ast_factory.new_do_procedure (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), yyvs2.item (yyvsp2 - 1), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12336,13 +12343,13 @@ end
 		end
 
 	yy_do_action_305
-			--|#line 1950 "et_eiffel_parser.y"
+			--|#line 1957 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1950 "et_eiffel_parser.y"
+--|#line 1957 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1950")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1957")
 end
 
 yyval107 := ast_factory.new_once_procedure (yyvs66.item (yyvsp66), Void, yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12371,13 +12378,13 @@ end
 		end
 
 	yy_do_action_306
-			--|#line 1953 "et_eiffel_parser.y"
+			--|#line 1960 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1953 "et_eiffel_parser.y"
+--|#line 1960 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1953")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1960")
 end
 
 yyval107 := ast_factory.new_once_procedure (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12407,13 +12414,13 @@ end
 		end
 
 	yy_do_action_307
-			--|#line 1957 "et_eiffel_parser.y"
+			--|#line 1964 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1957 "et_eiffel_parser.y"
+--|#line 1964 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1957")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1964")
 end
 
 yyval107 := ast_factory.new_deferred_procedure (yyvs66.item (yyvsp66), Void, yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12439,13 +12446,13 @@ end
 		end
 
 	yy_do_action_308
-			--|#line 1959 "et_eiffel_parser.y"
+			--|#line 1966 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1959 "et_eiffel_parser.y"
+--|#line 1966 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1959")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1966")
 end
 
 yyval107 := ast_factory.new_deferred_procedure (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), yyvs2.item (yyvsp2 - 1), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12472,13 +12479,13 @@ end
 		end
 
 	yy_do_action_309
-			--|#line 1962 "et_eiffel_parser.y"
+			--|#line 1969 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1962 "et_eiffel_parser.y"
+--|#line 1969 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1962")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1969")
 end
 
 yyval107 := new_external_procedure (yyvs66.item (yyvsp66), Void, yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12506,13 +12513,13 @@ end
 		end
 
 	yy_do_action_310
-			--|#line 1965 "et_eiffel_parser.y"
+			--|#line 1972 "et_eiffel_parser.y"
 		local
 			yyval107: detachable ET_PROCEDURE
 		do
---|#line 1965 "et_eiffel_parser.y"
+--|#line 1972 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1965")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1972")
 end
 
 yyval107 := new_external_procedure (yyvs66.item (yyvsp66), yyvs75.item (yyvsp75), yyvs2.item (yyvsp2 - 2), yyvs80.item (yyvsp80), yyvs99.item (yyvsp99), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), yyvs21.item (yyvsp21), last_clients, last_feature_clause, last_class) 
@@ -12541,13 +12548,13 @@ end
 		end
 
 	yy_do_action_311
-			--|#line 1971 "et_eiffel_parser.y"
+			--|#line 1978 "et_eiffel_parser.y"
 		local
 			yyval2: detachable ET_KEYWORD
 		do
---|#line 1971 "et_eiffel_parser.y"
+--|#line 1978 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1971")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1978")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -12571,13 +12578,13 @@ end
 		end
 
 	yy_do_action_312
-			--|#line 1979 "et_eiffel_parser.y"
+			--|#line 1986 "et_eiffel_parser.y"
 		local
 			yyval2: detachable ET_KEYWORD
 		do
---|#line 1979 "et_eiffel_parser.y"
+--|#line 1986 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1979")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1986")
 end
 
 yyval2 := yyvs2.item (yyvsp2) 
@@ -12588,13 +12595,13 @@ end
 		end
 
 	yy_do_action_313
-			--|#line 1983 "et_eiffel_parser.y"
+			--|#line 1990 "et_eiffel_parser.y"
 		local
 			yyval21: detachable ET_SEMICOLON_SYMBOL
 		do
---|#line 1983 "et_eiffel_parser.y"
+--|#line 1990 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1983")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1990")
 end
 
 
@@ -12613,13 +12620,13 @@ end
 		end
 
 	yy_do_action_314
-			--|#line 1985 "et_eiffel_parser.y"
+			--|#line 1992 "et_eiffel_parser.y"
 		local
 			yyval21: detachable ET_SEMICOLON_SYMBOL
 		do
---|#line 1985 "et_eiffel_parser.y"
+--|#line 1992 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1985")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1992")
 end
 
 yyval21 := yyvs21.item (yyvsp21) 
@@ -12630,13 +12637,13 @@ end
 		end
 
 	yy_do_action_315
-			--|#line 1989 "et_eiffel_parser.y"
+			--|#line 1996 "et_eiffel_parser.y"
 		local
 			yyval67: detachable ET_EXTERNAL_ALIAS
 		do
---|#line 1989 "et_eiffel_parser.y"
+--|#line 1996 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1989")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1996")
 end
 
 
@@ -12655,13 +12662,13 @@ end
 		end
 
 	yy_do_action_316
-			--|#line 1991 "et_eiffel_parser.y"
+			--|#line 1998 "et_eiffel_parser.y"
 		local
 			yyval67: detachable ET_EXTERNAL_ALIAS
 		do
---|#line 1991 "et_eiffel_parser.y"
+--|#line 1998 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1991")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1998")
 end
 
 yyval67 := ast_factory.new_external_alias (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12682,13 +12689,13 @@ end
 		end
 
 	yy_do_action_317
-			--|#line 1995 "et_eiffel_parser.y"
+			--|#line 2002 "et_eiffel_parser.y"
 		local
 			yyval34: detachable ET_ASSIGNER
 		do
---|#line 1995 "et_eiffel_parser.y"
+--|#line 2002 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1995")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2002")
 end
 
 
@@ -12707,13 +12714,13 @@ end
 		end
 
 	yy_do_action_318
-			--|#line 1997 "et_eiffel_parser.y"
+			--|#line 2004 "et_eiffel_parser.y"
 		local
 			yyval34: detachable ET_ASSIGNER
 		do
---|#line 1997 "et_eiffel_parser.y"
+--|#line 2004 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 1997")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2004")
 end
 
 yyval34 := ast_factory.new_assigner (yyvs2.item (yyvsp2), yyvs71.item (yyvsp71)) 
@@ -12734,16 +12741,20 @@ end
 		end
 
 	yy_do_action_319
-			--|#line 2003 "et_eiffel_parser.y"
+			--|#line 2010 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2003 "et_eiffel_parser.y"
+--|#line 2010 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2003")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2010")
 end
 
-yyval71 := yyvs12.item (yyvsp12) 
+			if attached yyvs12.item (yyvsp12) as l_identifier then
+				l_identifier.set_feature_name (True)
+				yyval71 := l_identifier 
+			end
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp71 := yyvsp71 + 1
@@ -12760,13 +12771,13 @@ end
 		end
 
 	yy_do_action_320
-			--|#line 2005 "et_eiffel_parser.y"
+			--|#line 2017 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2005 "et_eiffel_parser.y"
+--|#line 2017 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2005")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2017")
 end
 
 yyval71 := ast_factory.new_prefix_not_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12787,13 +12798,13 @@ end
 		end
 
 	yy_do_action_321
-			--|#line 2007 "et_eiffel_parser.y"
+			--|#line 2019 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2007 "et_eiffel_parser.y"
+--|#line 2019 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2007")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2019")
 end
 
 yyval71 := ast_factory.new_prefix_plus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12814,13 +12825,13 @@ end
 		end
 
 	yy_do_action_322
-			--|#line 2009 "et_eiffel_parser.y"
+			--|#line 2021 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2009 "et_eiffel_parser.y"
+--|#line 2021 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2009")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2021")
 end
 
 yyval71 := ast_factory.new_prefix_minus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12841,13 +12852,13 @@ end
 		end
 
 	yy_do_action_323
-			--|#line 2011 "et_eiffel_parser.y"
+			--|#line 2023 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2011 "et_eiffel_parser.y"
+--|#line 2023 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2011")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2023")
 end
 
 yyval71 := ast_factory.new_prefix_free_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12868,13 +12879,13 @@ end
 		end
 
 	yy_do_action_324
-			--|#line 2013 "et_eiffel_parser.y"
+			--|#line 2025 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2013 "et_eiffel_parser.y"
+--|#line 2025 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2013")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2025")
 end
 
 yyval71 := ast_factory.new_infix_plus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12895,13 +12906,13 @@ end
 		end
 
 	yy_do_action_325
-			--|#line 2015 "et_eiffel_parser.y"
+			--|#line 2027 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2015 "et_eiffel_parser.y"
+--|#line 2027 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2015")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2027")
 end
 
 yyval71 := ast_factory.new_infix_minus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12922,13 +12933,13 @@ end
 		end
 
 	yy_do_action_326
-			--|#line 2017 "et_eiffel_parser.y"
+			--|#line 2029 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2017 "et_eiffel_parser.y"
+--|#line 2029 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2017")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2029")
 end
 
 yyval71 := ast_factory.new_infix_times_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12949,13 +12960,13 @@ end
 		end
 
 	yy_do_action_327
-			--|#line 2019 "et_eiffel_parser.y"
+			--|#line 2031 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2019 "et_eiffel_parser.y"
+--|#line 2031 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2019")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2031")
 end
 
 yyval71 := ast_factory.new_infix_divide_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -12976,13 +12987,13 @@ end
 		end
 
 	yy_do_action_328
-			--|#line 2021 "et_eiffel_parser.y"
+			--|#line 2033 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2021 "et_eiffel_parser.y"
+--|#line 2033 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2021")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2033")
 end
 
 yyval71 := ast_factory.new_infix_div_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13003,13 +13014,13 @@ end
 		end
 
 	yy_do_action_329
-			--|#line 2023 "et_eiffel_parser.y"
+			--|#line 2035 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2023 "et_eiffel_parser.y"
+--|#line 2035 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2023")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2035")
 end
 
 yyval71 := ast_factory.new_infix_mod_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13030,13 +13041,13 @@ end
 		end
 
 	yy_do_action_330
-			--|#line 2025 "et_eiffel_parser.y"
+			--|#line 2037 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2025 "et_eiffel_parser.y"
+--|#line 2037 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2025")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2037")
 end
 
 yyval71 := ast_factory.new_infix_power_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13057,13 +13068,13 @@ end
 		end
 
 	yy_do_action_331
-			--|#line 2027 "et_eiffel_parser.y"
+			--|#line 2039 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2027 "et_eiffel_parser.y"
+--|#line 2039 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2027")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2039")
 end
 
 yyval71 := ast_factory.new_infix_lt_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13084,13 +13095,13 @@ end
 		end
 
 	yy_do_action_332
-			--|#line 2029 "et_eiffel_parser.y"
+			--|#line 2041 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2029 "et_eiffel_parser.y"
+--|#line 2041 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2029")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2041")
 end
 
 yyval71 := ast_factory.new_infix_le_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13111,13 +13122,13 @@ end
 		end
 
 	yy_do_action_333
-			--|#line 2031 "et_eiffel_parser.y"
+			--|#line 2043 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2031 "et_eiffel_parser.y"
+--|#line 2043 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2031")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2043")
 end
 
 yyval71 := ast_factory.new_infix_gt_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13138,13 +13149,13 @@ end
 		end
 
 	yy_do_action_334
-			--|#line 2033 "et_eiffel_parser.y"
+			--|#line 2045 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2033 "et_eiffel_parser.y"
+--|#line 2045 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2033")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2045")
 end
 
 yyval71 := ast_factory.new_infix_ge_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13165,13 +13176,13 @@ end
 		end
 
 	yy_do_action_335
-			--|#line 2035 "et_eiffel_parser.y"
+			--|#line 2047 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2035 "et_eiffel_parser.y"
+--|#line 2047 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2035")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2047")
 end
 
 yyval71 := ast_factory.new_infix_and_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13192,13 +13203,13 @@ end
 		end
 
 	yy_do_action_336
-			--|#line 2037 "et_eiffel_parser.y"
+			--|#line 2049 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2037 "et_eiffel_parser.y"
+--|#line 2049 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2037")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2049")
 end
 
 yyval71 := ast_factory.new_infix_and_then_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13219,13 +13230,13 @@ end
 		end
 
 	yy_do_action_337
-			--|#line 2039 "et_eiffel_parser.y"
+			--|#line 2051 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2039 "et_eiffel_parser.y"
+--|#line 2051 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2039")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2051")
 end
 
 yyval71 := ast_factory.new_infix_or_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13246,13 +13257,13 @@ end
 		end
 
 	yy_do_action_338
-			--|#line 2041 "et_eiffel_parser.y"
+			--|#line 2053 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2041 "et_eiffel_parser.y"
+--|#line 2053 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2041")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2053")
 end
 
 yyval71 := ast_factory.new_infix_or_else_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13273,13 +13284,13 @@ end
 		end
 
 	yy_do_action_339
-			--|#line 2043 "et_eiffel_parser.y"
+			--|#line 2055 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2043 "et_eiffel_parser.y"
+--|#line 2055 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2043")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2055")
 end
 
 yyval71 := ast_factory.new_infix_implies_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13300,13 +13311,13 @@ end
 		end
 
 	yy_do_action_340
-			--|#line 2045 "et_eiffel_parser.y"
+			--|#line 2057 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2045 "et_eiffel_parser.y"
+--|#line 2057 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2045")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2057")
 end
 
 yyval71 := ast_factory.new_infix_xor_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13327,13 +13338,13 @@ end
 		end
 
 	yy_do_action_341
-			--|#line 2047 "et_eiffel_parser.y"
+			--|#line 2059 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2047 "et_eiffel_parser.y"
+--|#line 2059 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2047")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2059")
 end
 
 yyval71 := ast_factory.new_infix_free_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13354,168 +13365,6 @@ end
 		end
 
 	yy_do_action_342
-			--|#line 2050 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2050 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2050")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_343
-			--|#line 2052 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2052 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2052")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_344
-			--|#line 2054 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2054 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2054")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_345
-			--|#line 2056 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2056 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2056")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_346
-			--|#line 2058 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2058 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2058")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_347
-			--|#line 2060 "et_eiffel_parser.y"
-		local
-			yyval71: detachable ET_FEATURE_NAME
-		do
---|#line 2060 "et_eiffel_parser.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2060")
-end
-
-yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 2
-	yyvsp71 := yyvsp71 + 1
-	yyvsp2 := yyvsp2 -1
-	yyvsp15 := yyvsp15 -1
-	if yyvsp71 >= yyvsc71 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs71")
-		end
-		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
-		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
-	end
-	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
-end
-		end
-
-	yy_do_action_348
 			--|#line 2062 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13542,7 +13391,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_349
+	yy_do_action_343
 			--|#line 2064 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13569,7 +13418,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_350
+	yy_do_action_344
 			--|#line 2066 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13596,7 +13445,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_351
+	yy_do_action_345
 			--|#line 2068 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13623,7 +13472,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_352
+	yy_do_action_346
 			--|#line 2070 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13650,7 +13499,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_353
+	yy_do_action_347
 			--|#line 2072 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13677,7 +13526,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_354
+	yy_do_action_348
 			--|#line 2074 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13704,7 +13553,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_355
+	yy_do_action_349
 			--|#line 2076 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13731,7 +13580,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_356
+	yy_do_action_350
 			--|#line 2078 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13758,7 +13607,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_357
+	yy_do_action_351
 			--|#line 2080 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13785,7 +13634,7 @@ if yy_parsing_status >= yyContinue then
 end
 		end
 
-	yy_do_action_358
+	yy_do_action_352
 			--|#line 2082 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
@@ -13793,6 +13642,168 @@ end
 --|#line 2082 "et_eiffel_parser.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2082")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_353
+			--|#line 2084 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2084 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2084")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_354
+			--|#line 2086 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2086 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2086")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_355
+			--|#line 2088 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2088 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2088")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_356
+			--|#line 2090 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2090 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2090")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_357
+			--|#line 2092 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2092 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2092")
+end
+
+yyval71 := new_invalid_prefix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 2
+	yyvsp71 := yyvsp71 + 1
+	yyvsp2 := yyvsp2 -1
+	yyvsp15 := yyvsp15 -1
+	if yyvsp71 >= yyvsc71 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs71")
+		end
+		yyvsc71 := yyvsc71 + yyInitial_yyvs_size
+		yyvs71 := yyspecial_routines71.aliased_resized_area (yyvs71, yyvsc71)
+	end
+	yyspecial_routines71.force (yyvs71, yyval71, yyvsp71)
+end
+		end
+
+	yy_do_action_358
+			--|#line 2094 "et_eiffel_parser.y"
+		local
+			yyval71: detachable ET_FEATURE_NAME
+		do
+--|#line 2094 "et_eiffel_parser.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2094")
 end
 
 yyval71 := new_invalid_infix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13813,13 +13824,13 @@ end
 		end
 
 	yy_do_action_359
-			--|#line 2084 "et_eiffel_parser.y"
+			--|#line 2096 "et_eiffel_parser.y"
 		local
 			yyval71: detachable ET_FEATURE_NAME
 		do
---|#line 2084 "et_eiffel_parser.y"
+--|#line 2096 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2084")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2096")
 end
 
 yyval71 := new_invalid_infix_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13840,13 +13851,13 @@ end
 		end
 
 	yy_do_action_360
-			--|#line 2088 "et_eiffel_parser.y"
+			--|#line 2100 "et_eiffel_parser.y"
 		local
 			yyval66: detachable ET_EXTENDED_FEATURE_NAME
 		do
---|#line 2088 "et_eiffel_parser.y"
+--|#line 2100 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2088")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2100")
 end
 
 yyval66 := yyvs71.item (yyvsp71) 
@@ -13866,16 +13877,22 @@ end
 		end
 
 	yy_do_action_361
-			--|#line 2090 "et_eiffel_parser.y"
+			--|#line 2102 "et_eiffel_parser.y"
 		local
 			yyval66: detachable ET_EXTENDED_FEATURE_NAME
 		do
---|#line 2090 "et_eiffel_parser.y"
+--|#line 2102 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2090")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2102")
 end
 
-yyval66 := ast_factory.new_aliased_feature_name (yyvs12.item (yyvsp12), yyvs33.item (yyvsp33)) 
+			if attached yyvs12.item (yyvsp12) as l_identifier then
+				l_identifier.set_feature_name (True)
+				yyval66 := ast_factory.new_aliased_feature_name (l_identifier, yyvs33.item (yyvsp33))
+			else
+				yyval66 := ast_factory.new_aliased_feature_name (Void, yyvs33.item (yyvsp33))
+			end
+		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp66 := yyvsp66 + 1
@@ -13893,13 +13910,13 @@ end
 		end
 
 	yy_do_action_362
-			--|#line 2094 "et_eiffel_parser.y"
+			--|#line 2113 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2094 "et_eiffel_parser.y"
+--|#line 2113 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2094")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2113")
 end
 
 yyval33 := ast_factory.new_alias_not_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13920,13 +13937,13 @@ end
 		end
 
 	yy_do_action_363
-			--|#line 2096 "et_eiffel_parser.y"
+			--|#line 2115 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2096 "et_eiffel_parser.y"
+--|#line 2115 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2096")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2115")
 end
 
 yyval33 := ast_factory.new_alias_plus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13947,13 +13964,13 @@ end
 		end
 
 	yy_do_action_364
-			--|#line 2098 "et_eiffel_parser.y"
+			--|#line 2117 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2098 "et_eiffel_parser.y"
+--|#line 2117 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2098")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2117")
 end
 
 yyval33 := ast_factory.new_alias_minus_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -13974,13 +13991,13 @@ end
 		end
 
 	yy_do_action_365
-			--|#line 2100 "et_eiffel_parser.y"
+			--|#line 2119 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2100 "et_eiffel_parser.y"
+--|#line 2119 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2100")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2119")
 end
 
 yyval33 := ast_factory.new_alias_times_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14001,13 +14018,13 @@ end
 		end
 
 	yy_do_action_366
-			--|#line 2102 "et_eiffel_parser.y"
+			--|#line 2121 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2102 "et_eiffel_parser.y"
+--|#line 2121 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2102")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2121")
 end
 
 yyval33 := ast_factory.new_alias_divide_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14028,13 +14045,13 @@ end
 		end
 
 	yy_do_action_367
-			--|#line 2104 "et_eiffel_parser.y"
+			--|#line 2123 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2104 "et_eiffel_parser.y"
+--|#line 2123 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2104")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2123")
 end
 
 yyval33 := ast_factory.new_alias_div_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14055,13 +14072,13 @@ end
 		end
 
 	yy_do_action_368
-			--|#line 2106 "et_eiffel_parser.y"
+			--|#line 2125 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2106 "et_eiffel_parser.y"
+--|#line 2125 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2106")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2125")
 end
 
 yyval33 := ast_factory.new_alias_mod_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14082,13 +14099,13 @@ end
 		end
 
 	yy_do_action_369
-			--|#line 2108 "et_eiffel_parser.y"
+			--|#line 2127 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2108 "et_eiffel_parser.y"
+--|#line 2127 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2108")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2127")
 end
 
 yyval33 := ast_factory.new_alias_power_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14109,13 +14126,13 @@ end
 		end
 
 	yy_do_action_370
-			--|#line 2110 "et_eiffel_parser.y"
+			--|#line 2129 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2110 "et_eiffel_parser.y"
+--|#line 2129 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2110")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2129")
 end
 
 yyval33 := ast_factory.new_alias_lt_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14136,13 +14153,13 @@ end
 		end
 
 	yy_do_action_371
-			--|#line 2112 "et_eiffel_parser.y"
+			--|#line 2131 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2112 "et_eiffel_parser.y"
+--|#line 2131 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2112")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2131")
 end
 
 yyval33 := ast_factory.new_alias_le_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14163,13 +14180,13 @@ end
 		end
 
 	yy_do_action_372
-			--|#line 2114 "et_eiffel_parser.y"
+			--|#line 2133 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2114 "et_eiffel_parser.y"
+--|#line 2133 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2114")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2133")
 end
 
 yyval33 := ast_factory.new_alias_gt_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14190,13 +14207,13 @@ end
 		end
 
 	yy_do_action_373
-			--|#line 2116 "et_eiffel_parser.y"
+			--|#line 2135 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2116 "et_eiffel_parser.y"
+--|#line 2135 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2116")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2135")
 end
 
 yyval33 := ast_factory.new_alias_ge_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14217,13 +14234,13 @@ end
 		end
 
 	yy_do_action_374
-			--|#line 2118 "et_eiffel_parser.y"
+			--|#line 2137 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2118 "et_eiffel_parser.y"
+--|#line 2137 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2118")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2137")
 end
 
 yyval33 := ast_factory.new_alias_and_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14244,13 +14261,13 @@ end
 		end
 
 	yy_do_action_375
-			--|#line 2120 "et_eiffel_parser.y"
+			--|#line 2139 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2120 "et_eiffel_parser.y"
+--|#line 2139 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2120")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2139")
 end
 
 yyval33 := ast_factory.new_alias_and_then_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14271,13 +14288,13 @@ end
 		end
 
 	yy_do_action_376
-			--|#line 2122 "et_eiffel_parser.y"
+			--|#line 2141 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2122 "et_eiffel_parser.y"
+--|#line 2141 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2122")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2141")
 end
 
 yyval33 := ast_factory.new_alias_or_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14298,13 +14315,13 @@ end
 		end
 
 	yy_do_action_377
-			--|#line 2124 "et_eiffel_parser.y"
+			--|#line 2143 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2124 "et_eiffel_parser.y"
+--|#line 2143 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2124")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2143")
 end
 
 yyval33 := ast_factory.new_alias_or_else_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14325,13 +14342,13 @@ end
 		end
 
 	yy_do_action_378
-			--|#line 2126 "et_eiffel_parser.y"
+			--|#line 2145 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2126 "et_eiffel_parser.y"
+--|#line 2145 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2126")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2145")
 end
 
 yyval33 := ast_factory.new_alias_implies_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14352,13 +14369,13 @@ end
 		end
 
 	yy_do_action_379
-			--|#line 2128 "et_eiffel_parser.y"
+			--|#line 2147 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2128 "et_eiffel_parser.y"
+--|#line 2147 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2128")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2147")
 end
 
 yyval33 := ast_factory.new_alias_xor_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14379,13 +14396,13 @@ end
 		end
 
 	yy_do_action_380
-			--|#line 2130 "et_eiffel_parser.y"
+			--|#line 2149 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2130 "et_eiffel_parser.y"
+--|#line 2149 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2130")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2149")
 end
 
 yyval33 := ast_factory.new_alias_dotdot_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14406,13 +14423,13 @@ end
 		end
 
 	yy_do_action_381
-			--|#line 2132 "et_eiffel_parser.y"
+			--|#line 2151 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2132 "et_eiffel_parser.y"
+--|#line 2151 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2132")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2151")
 end
 
 yyval33 := ast_factory.new_alias_free_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14433,13 +14450,13 @@ end
 		end
 
 	yy_do_action_382
-			--|#line 2134 "et_eiffel_parser.y"
+			--|#line 2153 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2134 "et_eiffel_parser.y"
+--|#line 2153 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2134")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2153")
 end
 
 yyval33 := ast_factory.new_alias_bracket_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14460,13 +14477,13 @@ end
 		end
 
 	yy_do_action_383
-			--|#line 2136 "et_eiffel_parser.y"
+			--|#line 2155 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2136 "et_eiffel_parser.y"
+--|#line 2155 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2136")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2155")
 end
 
 yyval33 := ast_factory.new_alias_parenthesis_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14487,13 +14504,13 @@ end
 		end
 
 	yy_do_action_384
-			--|#line 2138 "et_eiffel_parser.y"
+			--|#line 2157 "et_eiffel_parser.y"
 		local
 			yyval33: detachable ET_ALIAS_NAME
 		do
---|#line 2138 "et_eiffel_parser.y"
+--|#line 2157 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2138")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2157")
 end
 
 yyval33 := new_invalid_alias_name (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -14514,13 +14531,13 @@ end
 		end
 
 	yy_do_action_385
-			--|#line 2144 "et_eiffel_parser.y"
+			--|#line 2163 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2144 "et_eiffel_parser.y"
+--|#line 2163 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2144")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2163")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -14533,13 +14550,13 @@ end
 		end
 
 	yy_do_action_386
-			--|#line 2151 "et_eiffel_parser.y"
+			--|#line 2170 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2151 "et_eiffel_parser.y"
+--|#line 2170 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2151")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2170")
 end
 
 yyval75 := new_formal_arguments (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -14559,13 +14576,13 @@ end
 		end
 
 	yy_do_action_387
-			--|#line 2153 "et_eiffel_parser.y"
+			--|#line 2172 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2153 "et_eiffel_parser.y"
+--|#line 2172 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2153")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2172")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -14580,13 +14597,13 @@ end
 		end
 
 	yy_do_action_388
-			--|#line 2161 "et_eiffel_parser.y"
+			--|#line 2180 "et_eiffel_parser.y"
 		local
 			yyval5: detachable ET_SYMBOL
 		do
---|#line 2161 "et_eiffel_parser.y"
+--|#line 2180 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2161")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2180")
 end
 
 			-- Needed to solve ambiguity when parsing:
@@ -14603,13 +14620,13 @@ end
 		end
 
 	yy_do_action_389
-			--|#line 2172 "et_eiffel_parser.y"
+			--|#line 2191 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2172 "et_eiffel_parser.y"
+--|#line 2191 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2172")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2191")
 end
 
 			yyval75 := new_formal_arguments (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -14634,13 +14651,13 @@ end
 		end
 
 	yy_do_action_390
-			--|#line 2179 "et_eiffel_parser.y"
+			--|#line 2198 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2179 "et_eiffel_parser.y"
+--|#line 2198 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2179")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2198")
 end
 
 			yyval75 := new_formal_arguments (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -14665,13 +14682,13 @@ end
 		end
 
 	yy_do_action_391
-			--|#line 2186 "et_eiffel_parser.y"
+			--|#line 2205 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2186 "et_eiffel_parser.y"
+--|#line 2205 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2186")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2205")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -14690,13 +14707,13 @@ end
 		end
 
 	yy_do_action_392
-			--|#line 2196 "et_eiffel_parser.y"
+			--|#line 2215 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2196 "et_eiffel_parser.y"
+--|#line 2215 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2196")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2215")
 end
 
 			-- TODO: Syntax error
@@ -14716,13 +14733,13 @@ end
 		end
 
 	yy_do_action_393
-			--|#line 2207 "et_eiffel_parser.y"
+			--|#line 2226 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2207 "et_eiffel_parser.y"
+--|#line 2226 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2207")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2226")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -14738,13 +14755,13 @@ end
 		end
 
 	yy_do_action_394
-			--|#line 2214 "et_eiffel_parser.y"
+			--|#line 2233 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 2214 "et_eiffel_parser.y"
+--|#line 2233 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2214")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2233")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -14760,13 +14777,13 @@ end
 		end
 
 	yy_do_action_395
-			--|#line 2223 "et_eiffel_parser.y"
+			--|#line 2242 "et_eiffel_parser.y"
 		local
 			yyval73: detachable ET_FORMAL_ARGUMENT
 		do
---|#line 2223 "et_eiffel_parser.y"
+--|#line 2242 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2223")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2242")
 end
 
 			yyval73 := ast_factory.new_formal_comma_argument (ast_factory.new_argument_name_comma (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5)), dummy_type)
@@ -14791,13 +14808,13 @@ end
 		end
 
 	yy_do_action_396
-			--|#line 2232 "et_eiffel_parser.y"
+			--|#line 2251 "et_eiffel_parser.y"
 		local
 			yyval73: detachable ET_FORMAL_ARGUMENT
 		do
---|#line 2232 "et_eiffel_parser.y"
+--|#line 2251 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2232")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2251")
 end
 
 			yyval73 := ast_factory.new_formal_comma_argument (yyvs12.item (yyvsp12), dummy_type)
@@ -14821,13 +14838,13 @@ end
 		end
 
 	yy_do_action_397
-			--|#line 2241 "et_eiffel_parser.y"
+			--|#line 2260 "et_eiffel_parser.y"
 		local
 			yyval74: detachable ET_FORMAL_ARGUMENT_ITEM
 		do
---|#line 2241 "et_eiffel_parser.y"
+--|#line 2260 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2241")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2260")
 end
 
 			yyval74 := ast_factory.new_formal_argument (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)))
@@ -14853,13 +14870,13 @@ end
 		end
 
 	yy_do_action_398
-			--|#line 2250 "et_eiffel_parser.y"
+			--|#line 2269 "et_eiffel_parser.y"
 		local
 			yyval74: detachable ET_FORMAL_ARGUMENT_ITEM
 		do
---|#line 2250 "et_eiffel_parser.y"
+--|#line 2269 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2250")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2269")
 end
 
 			yyval74 := ast_factory.new_formal_argument_semicolon (ast_factory.new_formal_argument (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114))), yyvs21.item (yyvsp21))
@@ -14886,13 +14903,13 @@ end
 		end
 
 	yy_do_action_399
-			--|#line 2261 "et_eiffel_parser.y"
+			--|#line 2280 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2261 "et_eiffel_parser.y"
+--|#line 2280 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2261")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2280")
 end
 
 yyval93 := Void 
@@ -14911,13 +14928,13 @@ end
 		end
 
 	yy_do_action_400
-			--|#line 2263 "et_eiffel_parser.y"
+			--|#line 2282 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2263 "et_eiffel_parser.y"
+--|#line 2282 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2263")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2282")
 end
 
 yyval93 := new_local_variables (yyvs2.item (yyvsp2), 0) 
@@ -14937,13 +14954,13 @@ end
 		end
 
 	yy_do_action_401
-			--|#line 2265 "et_eiffel_parser.y"
+			--|#line 2284 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2265 "et_eiffel_parser.y"
+--|#line 2284 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2265")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2284")
 end
 
 			yyval93 := yyvs93.item (yyvsp93)
@@ -14959,13 +14976,13 @@ end
 		end
 
 	yy_do_action_402
-			--|#line 2265 "et_eiffel_parser.y"
+			--|#line 2284 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2265 "et_eiffel_parser.y"
+--|#line 2284 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2265")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2284")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -14986,13 +15003,13 @@ end
 		end
 
 	yy_do_action_403
-			--|#line 2278 "et_eiffel_parser.y"
+			--|#line 2297 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2278 "et_eiffel_parser.y"
+--|#line 2297 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2278")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2297")
 end
 
 			yyval93 := new_local_variables (last_keyword, counter_value)
@@ -15016,13 +15033,13 @@ end
 		end
 
 	yy_do_action_404
-			--|#line 2285 "et_eiffel_parser.y"
+			--|#line 2304 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2285 "et_eiffel_parser.y"
+--|#line 2304 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2285")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2304")
 end
 
 			yyval93 := new_local_variables (last_keyword, counter_value)
@@ -15046,13 +15063,13 @@ end
 		end
 
 	yy_do_action_405
-			--|#line 2292 "et_eiffel_parser.y"
+			--|#line 2311 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2292 "et_eiffel_parser.y"
+--|#line 2311 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2292")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2311")
 end
 
 			yyval93 := yyvs93.item (yyvsp93)
@@ -15071,13 +15088,13 @@ end
 		end
 
 	yy_do_action_406
-			--|#line 2302 "et_eiffel_parser.y"
+			--|#line 2321 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2302 "et_eiffel_parser.y"
+--|#line 2321 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2302")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2321")
 end
 
 			-- TODO: Syntax error
@@ -15097,13 +15114,13 @@ end
 		end
 
 	yy_do_action_407
-			--|#line 2313 "et_eiffel_parser.y"
+			--|#line 2332 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2313 "et_eiffel_parser.y"
+--|#line 2332 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2313")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2332")
 end
 
 			yyval93 := yyvs93.item (yyvsp93)
@@ -15119,13 +15136,13 @@ end
 		end
 
 	yy_do_action_408
-			--|#line 2320 "et_eiffel_parser.y"
+			--|#line 2339 "et_eiffel_parser.y"
 		local
 			yyval93: detachable ET_LOCAL_VARIABLE_LIST
 		do
---|#line 2320 "et_eiffel_parser.y"
+--|#line 2339 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2320")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2339")
 end
 
 			yyval93 := yyvs93.item (yyvsp93)
@@ -15141,13 +15158,13 @@ end
 		end
 
 	yy_do_action_409
-			--|#line 2329 "et_eiffel_parser.y"
+			--|#line 2348 "et_eiffel_parser.y"
 		local
 			yyval91: detachable ET_LOCAL_VARIABLE
 		do
---|#line 2329 "et_eiffel_parser.y"
+--|#line 2348 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2329")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2348")
 end
 
 			yyval91 := ast_factory.new_local_comma_variable (ast_factory.new_local_name_comma (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5)), dummy_type)
@@ -15172,13 +15189,13 @@ end
 		end
 
 	yy_do_action_410
-			--|#line 2338 "et_eiffel_parser.y"
+			--|#line 2357 "et_eiffel_parser.y"
 		local
 			yyval91: detachable ET_LOCAL_VARIABLE
 		do
---|#line 2338 "et_eiffel_parser.y"
+--|#line 2357 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2338")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2357")
 end
 
 			yyval91 := ast_factory.new_local_comma_variable (yyvs12.item (yyvsp12), dummy_type)
@@ -15202,13 +15219,13 @@ end
 		end
 
 	yy_do_action_411
-			--|#line 2347 "et_eiffel_parser.y"
+			--|#line 2366 "et_eiffel_parser.y"
 		local
 			yyval92: detachable ET_LOCAL_VARIABLE_ITEM
 		do
---|#line 2347 "et_eiffel_parser.y"
+--|#line 2366 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2347")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2366")
 end
 
 			yyval92 := ast_factory.new_local_variable (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)))
@@ -15234,13 +15251,13 @@ end
 		end
 
 	yy_do_action_412
-			--|#line 2356 "et_eiffel_parser.y"
+			--|#line 2375 "et_eiffel_parser.y"
 		local
 			yyval92: detachable ET_LOCAL_VARIABLE_ITEM
 		do
---|#line 2356 "et_eiffel_parser.y"
+--|#line 2375 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2356")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2375")
 end
 
 			yyval92 := ast_factory.new_local_variable_semicolon (ast_factory.new_local_variable (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114))), yyvs21.item (yyvsp21))
@@ -15267,13 +15284,13 @@ end
 		end
 
 	yy_do_action_413
-			--|#line 2367 "et_eiffel_parser.y"
+			--|#line 2386 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2367 "et_eiffel_parser.y"
+--|#line 2386 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2367")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2386")
 end
 
 add_expression_assertion (yyvs64.item (yyvsp64), Void) 
@@ -15293,13 +15310,13 @@ end
 		end
 
 	yy_do_action_414
-			--|#line 2369 "et_eiffel_parser.y"
+			--|#line 2388 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2369 "et_eiffel_parser.y"
+--|#line 2388 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2369")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2388")
 end
 
 add_expression_assertion (yyvs64.item (yyvsp64), yyvs21.item (yyvsp21)) 
@@ -15320,13 +15337,13 @@ end
 		end
 
 	yy_do_action_415
-			--|#line 2371 "et_eiffel_parser.y"
+			--|#line 2390 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2371 "et_eiffel_parser.y"
+--|#line 2390 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2371")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2390")
 end
 
 add_tagged_assertion (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), Void) 
@@ -15347,13 +15364,13 @@ end
 		end
 
 	yy_do_action_416
-			--|#line 2373 "et_eiffel_parser.y"
+			--|#line 2392 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2373 "et_eiffel_parser.y"
+--|#line 2392 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2373")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2392")
 end
 
 add_tagged_assertion (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), yyvs21.item (yyvsp21)) 
@@ -15375,13 +15392,13 @@ end
 		end
 
 	yy_do_action_417
-			--|#line 2375 "et_eiffel_parser.y"
+			--|#line 2394 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2375 "et_eiffel_parser.y"
+--|#line 2394 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2375")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2394")
 end
 
 add_expression_assertion (yyvs64.item (yyvsp64), Void) 
@@ -15393,13 +15410,13 @@ end
 		end
 
 	yy_do_action_418
-			--|#line 2377 "et_eiffel_parser.y"
+			--|#line 2396 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2377 "et_eiffel_parser.y"
+--|#line 2396 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2377")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2396")
 end
 
 add_expression_assertion (yyvs64.item (yyvsp64), yyvs21.item (yyvsp21)) 
@@ -15412,13 +15429,13 @@ end
 		end
 
 	yy_do_action_419
-			--|#line 2379 "et_eiffel_parser.y"
+			--|#line 2398 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2379 "et_eiffel_parser.y"
+--|#line 2398 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2379")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2398")
 end
 
 add_tagged_assertion (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), Void) 
@@ -15431,13 +15448,13 @@ end
 		end
 
 	yy_do_action_420
-			--|#line 2381 "et_eiffel_parser.y"
+			--|#line 2400 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2381 "et_eiffel_parser.y"
+--|#line 2400 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2381")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2400")
 end
 
 add_tagged_assertion (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5), yyvs21.item (yyvsp21)) 
@@ -15451,13 +15468,13 @@ end
 		end
 
 	yy_do_action_421
-			--|#line 2385 "et_eiffel_parser.y"
+			--|#line 2404 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2385 "et_eiffel_parser.y"
+--|#line 2404 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2385")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2404")
 end
 
 start_assertions 
@@ -15476,13 +15493,13 @@ end
 		end
 
 	yy_do_action_422
-			--|#line 2389 "et_eiffel_parser.y"
+			--|#line 2408 "et_eiffel_parser.y"
 		local
 			yyval106: detachable ET_PRECONDITIONS
 		do
---|#line 2389 "et_eiffel_parser.y"
+--|#line 2408 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2389")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2408")
 end
 
 
@@ -15501,13 +15518,13 @@ end
 		end
 
 	yy_do_action_423
-			--|#line 2391 "et_eiffel_parser.y"
+			--|#line 2410 "et_eiffel_parser.y"
 		local
 			yyval106: detachable ET_PRECONDITIONS
 		do
---|#line 2391 "et_eiffel_parser.y"
+--|#line 2410 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2391")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2410")
 end
 
 yyval106 := new_preconditions (yyvs2.item (yyvsp2), Void) 
@@ -15528,13 +15545,13 @@ end
 		end
 
 	yy_do_action_424
-			--|#line 2393 "et_eiffel_parser.y"
+			--|#line 2412 "et_eiffel_parser.y"
 		local
 			yyval106: detachable ET_PRECONDITIONS
 		do
---|#line 2393 "et_eiffel_parser.y"
+--|#line 2412 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2393")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2412")
 end
 
 yyval106 := new_preconditions (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -15555,13 +15572,13 @@ end
 		end
 
 	yy_do_action_425
-			--|#line 2395 "et_eiffel_parser.y"
+			--|#line 2414 "et_eiffel_parser.y"
 		local
 			yyval106: detachable ET_PRECONDITIONS
 		do
---|#line 2395 "et_eiffel_parser.y"
+--|#line 2414 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2395")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2414")
 end
 
 yyval106 := new_preconditions (yyvs2.item (yyvsp2), Void) 
@@ -15582,13 +15599,13 @@ end
 		end
 
 	yy_do_action_426
-			--|#line 2397 "et_eiffel_parser.y"
+			--|#line 2416 "et_eiffel_parser.y"
 		local
 			yyval106: detachable ET_PRECONDITIONS
 		do
---|#line 2397 "et_eiffel_parser.y"
+--|#line 2416 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2397")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2416")
 end
 
 yyval106 := new_preconditions (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -15609,13 +15626,13 @@ end
 		end
 
 	yy_do_action_427
-			--|#line 2401 "et_eiffel_parser.y"
+			--|#line 2420 "et_eiffel_parser.y"
 		local
 			yyval105: detachable ET_POSTCONDITIONS
 		do
---|#line 2401 "et_eiffel_parser.y"
+--|#line 2420 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2401")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2420")
 end
 
 
@@ -15634,13 +15651,13 @@ end
 		end
 
 	yy_do_action_428
-			--|#line 2403 "et_eiffel_parser.y"
+			--|#line 2422 "et_eiffel_parser.y"
 		local
 			yyval105: detachable ET_POSTCONDITIONS
 		do
---|#line 2403 "et_eiffel_parser.y"
+--|#line 2422 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2403")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2422")
 end
 
 yyval105 := new_postconditions (yyvs2.item (yyvsp2), Void) 
@@ -15661,13 +15678,13 @@ end
 		end
 
 	yy_do_action_429
-			--|#line 2405 "et_eiffel_parser.y"
+			--|#line 2424 "et_eiffel_parser.y"
 		local
 			yyval105: detachable ET_POSTCONDITIONS
 		do
---|#line 2405 "et_eiffel_parser.y"
+--|#line 2424 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2405")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2424")
 end
 
 yyval105 := new_postconditions (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -15688,13 +15705,13 @@ end
 		end
 
 	yy_do_action_430
-			--|#line 2407 "et_eiffel_parser.y"
+			--|#line 2426 "et_eiffel_parser.y"
 		local
 			yyval105: detachable ET_POSTCONDITIONS
 		do
---|#line 2407 "et_eiffel_parser.y"
+--|#line 2426 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2407")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2426")
 end
 
 yyval105 := new_postconditions (yyvs2.item (yyvsp2), Void) 
@@ -15715,13 +15732,13 @@ end
 		end
 
 	yy_do_action_431
-			--|#line 2409 "et_eiffel_parser.y"
+			--|#line 2428 "et_eiffel_parser.y"
 		local
 			yyval105: detachable ET_POSTCONDITIONS
 		do
---|#line 2409 "et_eiffel_parser.y"
+--|#line 2428 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2409")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2428")
 end
 
 yyval105 := new_postconditions (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)) 
@@ -15742,13 +15759,13 @@ end
 		end
 
 	yy_do_action_432
-			--|#line 2413 "et_eiffel_parser.y"
+			--|#line 2432 "et_eiffel_parser.y"
 		local
 			yyval88: detachable ET_INVARIANTS
 		do
---|#line 2413 "et_eiffel_parser.y"
+--|#line 2432 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2413")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2432")
 end
 
 
@@ -15767,13 +15784,13 @@ end
 		end
 
 	yy_do_action_433
-			--|#line 2415 "et_eiffel_parser.y"
+			--|#line 2434 "et_eiffel_parser.y"
 		local
 			yyval88: detachable ET_INVARIANTS
 		do
---|#line 2415 "et_eiffel_parser.y"
+--|#line 2434 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2415")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2434")
 end
 
 yyval88 := yyvs88.item (yyvsp88) 
@@ -15784,13 +15801,13 @@ end
 		end
 
 	yy_do_action_434
-			--|#line 2419 "et_eiffel_parser.y"
+			--|#line 2438 "et_eiffel_parser.y"
 		local
 			yyval88: detachable ET_INVARIANTS
 		do
---|#line 2419 "et_eiffel_parser.y"
+--|#line 2438 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2419")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2438")
 end
 
 yyval88 := new_invariants (yyvs2.item (yyvsp2)) 
@@ -15811,13 +15828,13 @@ end
 		end
 
 	yy_do_action_435
-			--|#line 2421 "et_eiffel_parser.y"
+			--|#line 2440 "et_eiffel_parser.y"
 		local
 			yyval88: detachable ET_INVARIANTS
 		do
---|#line 2421 "et_eiffel_parser.y"
+--|#line 2440 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2421")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2440")
 end
 
 yyval88 := new_invariants (yyvs2.item (yyvsp2)) 
@@ -15838,13 +15855,13 @@ end
 		end
 
 	yy_do_action_436
-			--|#line 2425 "et_eiffel_parser.y"
+			--|#line 2444 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2425 "et_eiffel_parser.y"
+--|#line 2444 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2425")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2444")
 end
 
 set_start_closure (Void) 
@@ -15863,13 +15880,13 @@ end
 		end
 
 	yy_do_action_437
-			--|#line 2429 "et_eiffel_parser.y"
+			--|#line 2448 "et_eiffel_parser.y"
 		local
 			yyval94: detachable ET_LOOP_INVARIANTS
 		do
---|#line 2429 "et_eiffel_parser.y"
+--|#line 2448 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2429")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2448")
 end
 
 
@@ -15888,13 +15905,13 @@ end
 		end
 
 	yy_do_action_438
-			--|#line 2431 "et_eiffel_parser.y"
+			--|#line 2450 "et_eiffel_parser.y"
 		local
 			yyval94: detachable ET_LOOP_INVARIANTS
 		do
---|#line 2431 "et_eiffel_parser.y"
+--|#line 2450 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2431")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2450")
 end
 
 yyval94 := yyvs94.item (yyvsp94) 
@@ -15905,13 +15922,13 @@ end
 		end
 
 	yy_do_action_439
-			--|#line 2435 "et_eiffel_parser.y"
+			--|#line 2454 "et_eiffel_parser.y"
 		local
 			yyval94: detachable ET_LOOP_INVARIANTS
 		do
---|#line 2435 "et_eiffel_parser.y"
+--|#line 2454 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2435")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2454")
 end
 
 yyval94 := new_loop_invariants (yyvs2.item (yyvsp2)) 
@@ -15932,13 +15949,13 @@ end
 		end
 
 	yy_do_action_440
-			--|#line 2437 "et_eiffel_parser.y"
+			--|#line 2456 "et_eiffel_parser.y"
 		local
 			yyval94: detachable ET_LOOP_INVARIANTS
 		do
---|#line 2437 "et_eiffel_parser.y"
+--|#line 2456 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2437")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2456")
 end
 
 yyval94 := new_loop_invariants (yyvs2.item (yyvsp2)) 
@@ -15959,13 +15976,13 @@ end
 		end
 
 	yy_do_action_441
-			--|#line 2441 "et_eiffel_parser.y"
+			--|#line 2460 "et_eiffel_parser.y"
 		local
 			yyval117: detachable ET_VARIANT
 		do
---|#line 2441 "et_eiffel_parser.y"
+--|#line 2460 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2441")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2460")
 end
 
 yyval117 := ast_factory.new_variant (yyvs2.item (yyvsp2), Void, yyvs64.item (yyvsp64)) 
@@ -15986,13 +16003,13 @@ end
 		end
 
 	yy_do_action_442
-			--|#line 2443 "et_eiffel_parser.y"
+			--|#line 2462 "et_eiffel_parser.y"
 		local
 			yyval117: detachable ET_VARIANT
 		do
---|#line 2443 "et_eiffel_parser.y"
+--|#line 2462 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2443")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2462")
 end
 
 yyval117 := ast_factory.new_variant (yyvs2.item (yyvsp2), ast_factory.new_tag (yyvs12.item (yyvsp12), yyvs5.item (yyvsp5)), yyvs64.item (yyvsp64)) 
@@ -16015,13 +16032,13 @@ end
 		end
 
 	yy_do_action_443
-			--|#line 2447 "et_eiffel_parser.y"
+			--|#line 2466 "et_eiffel_parser.y"
 		local
 			yyval117: detachable ET_VARIANT
 		do
---|#line 2447 "et_eiffel_parser.y"
+--|#line 2466 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2447")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2466")
 end
 
 
@@ -16040,13 +16057,13 @@ end
 		end
 
 	yy_do_action_444
-			--|#line 2449 "et_eiffel_parser.y"
+			--|#line 2468 "et_eiffel_parser.y"
 		local
 			yyval117: detachable ET_VARIANT
 		do
---|#line 2449 "et_eiffel_parser.y"
+--|#line 2468 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2449")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2468")
 end
 
 yyval117 := yyvs117.item (yyvsp117) 
@@ -16057,13 +16074,13 @@ end
 		end
 
 	yy_do_action_445
-			--|#line 2455 "et_eiffel_parser.y"
+			--|#line 2474 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 2455 "et_eiffel_parser.y"
+--|#line 2474 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2455")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2474")
 end
 
 
@@ -16082,13 +16099,13 @@ end
 		end
 
 	yy_do_action_446
-			--|#line 2457 "et_eiffel_parser.y"
+			--|#line 2476 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 2457 "et_eiffel_parser.y"
+--|#line 2476 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2457")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2476")
 end
 
 yyval46 := yyvs46.item (yyvsp46) 
@@ -16099,13 +16116,13 @@ end
 		end
 
 	yy_do_action_447
-			--|#line 2463 "et_eiffel_parser.y"
+			--|#line 2482 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2463 "et_eiffel_parser.y"
+--|#line 2482 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2463")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2482")
 end
 
 yyval114 := new_named_type (Void, yyvs12.item (yyvsp12), Void) 
@@ -16125,13 +16142,13 @@ end
 		end
 
 	yy_do_action_448
-			--|#line 2465 "et_eiffel_parser.y"
+			--|#line 2484 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2465 "et_eiffel_parser.y"
+--|#line 2484 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2465")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2484")
 end
 
 yyval114 := yyvs114.item (yyvsp114) 
@@ -16142,13 +16159,13 @@ end
 		end
 
 	yy_do_action_449
-			--|#line 2469 "et_eiffel_parser.y"
+			--|#line 2488 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2469 "et_eiffel_parser.y"
+--|#line 2488 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2469")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2488")
 end
 
 yyval114 := new_named_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16169,13 +16186,13 @@ end
 		end
 
 	yy_do_action_450
-			--|#line 2471 "et_eiffel_parser.y"
+			--|#line 2490 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2471 "et_eiffel_parser.y"
+--|#line 2490 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2471")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2490")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16197,13 +16214,13 @@ end
 		end
 
 	yy_do_action_451
-			--|#line 2473 "et_eiffel_parser.y"
+			--|#line 2492 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2473 "et_eiffel_parser.y"
+--|#line 2492 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2473")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2492")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16225,13 +16242,13 @@ end
 		end
 
 	yy_do_action_452
-			--|#line 2475 "et_eiffel_parser.y"
+			--|#line 2494 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2475 "et_eiffel_parser.y"
+--|#line 2494 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2475")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2494")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16253,13 +16270,13 @@ end
 		end
 
 	yy_do_action_453
-			--|#line 2477 "et_eiffel_parser.y"
+			--|#line 2496 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2477 "et_eiffel_parser.y"
+--|#line 2496 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2477")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2496")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16281,13 +16298,13 @@ end
 		end
 
 	yy_do_action_454
-			--|#line 2479 "et_eiffel_parser.y"
+			--|#line 2498 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2479 "et_eiffel_parser.y"
+--|#line 2498 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2479")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2498")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16309,13 +16326,13 @@ end
 		end
 
 	yy_do_action_455
-			--|#line 2481 "et_eiffel_parser.y"
+			--|#line 2500 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2481 "et_eiffel_parser.y"
+--|#line 2500 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2481")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2500")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16337,13 +16354,13 @@ end
 		end
 
 	yy_do_action_456
-			--|#line 2483 "et_eiffel_parser.y"
+			--|#line 2502 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2483 "et_eiffel_parser.y"
+--|#line 2502 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2483")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2502")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16365,13 +16382,13 @@ end
 		end
 
 	yy_do_action_457
-			--|#line 2485 "et_eiffel_parser.y"
+			--|#line 2504 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2485 "et_eiffel_parser.y"
+--|#line 2504 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2485")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2504")
 end
 
 yyval114 := new_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16393,13 +16410,13 @@ end
 		end
 
 	yy_do_action_458
-			--|#line 2487 "et_eiffel_parser.y"
+			--|#line 2506 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2487 "et_eiffel_parser.y"
+--|#line 2506 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2487")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2506")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16422,13 +16439,13 @@ end
 		end
 
 	yy_do_action_459
-			--|#line 2489 "et_eiffel_parser.y"
+			--|#line 2508 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2489 "et_eiffel_parser.y"
+--|#line 2508 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2489")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2508")
 end
 
 yyval114 := new_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16450,13 +16467,13 @@ end
 		end
 
 	yy_do_action_460
-			--|#line 2491 "et_eiffel_parser.y"
+			--|#line 2510 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2491 "et_eiffel_parser.y"
+--|#line 2510 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2491")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2510")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16479,13 +16496,13 @@ end
 		end
 
 	yy_do_action_461
-			--|#line 2493 "et_eiffel_parser.y"
+			--|#line 2512 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2493 "et_eiffel_parser.y"
+--|#line 2512 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2493")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2512")
 end
 
 yyval114 := yyvs90.item (yyvsp90) 
@@ -16505,13 +16522,13 @@ end
 		end
 
 	yy_do_action_462
-			--|#line 2495 "et_eiffel_parser.y"
+			--|#line 2514 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2495 "et_eiffel_parser.y"
+--|#line 2514 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2495")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2514")
 end
 
 yyval114 := new_tuple_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16532,13 +16549,13 @@ end
 		end
 
 	yy_do_action_463
-			--|#line 2497 "et_eiffel_parser.y"
+			--|#line 2516 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2497 "et_eiffel_parser.y"
+--|#line 2516 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2497")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2516")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16560,13 +16577,13 @@ end
 		end
 
 	yy_do_action_464
-			--|#line 2499 "et_eiffel_parser.y"
+			--|#line 2518 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2499 "et_eiffel_parser.y"
+--|#line 2518 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2499")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2518")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16588,13 +16605,13 @@ end
 		end
 
 	yy_do_action_465
-			--|#line 2501 "et_eiffel_parser.y"
+			--|#line 2520 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2501 "et_eiffel_parser.y"
+--|#line 2520 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2501")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2520")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16616,13 +16633,13 @@ end
 		end
 
 	yy_do_action_466
-			--|#line 2503 "et_eiffel_parser.y"
+			--|#line 2522 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2503 "et_eiffel_parser.y"
+--|#line 2522 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2503")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2522")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16644,13 +16661,13 @@ end
 		end
 
 	yy_do_action_467
-			--|#line 2505 "et_eiffel_parser.y"
+			--|#line 2524 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2505 "et_eiffel_parser.y"
+--|#line 2524 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2505")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2524")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16672,13 +16689,13 @@ end
 		end
 
 	yy_do_action_468
-			--|#line 2507 "et_eiffel_parser.y"
+			--|#line 2526 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2507 "et_eiffel_parser.y"
+--|#line 2526 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2507")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2526")
 end
 
 yyval114 := new_tuple_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16700,13 +16717,13 @@ end
 		end
 
 	yy_do_action_469
-			--|#line 2509 "et_eiffel_parser.y"
+			--|#line 2528 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2509 "et_eiffel_parser.y"
+--|#line 2528 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2509")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2528")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16729,13 +16746,13 @@ end
 		end
 
 	yy_do_action_470
-			--|#line 2511 "et_eiffel_parser.y"
+			--|#line 2530 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2511 "et_eiffel_parser.y"
+--|#line 2530 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2511")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2530")
 end
 
 yyval114 := new_tuple_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16757,13 +16774,13 @@ end
 		end
 
 	yy_do_action_471
-			--|#line 2513 "et_eiffel_parser.y"
+			--|#line 2532 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2513 "et_eiffel_parser.y"
+--|#line 2532 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2513")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2532")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16786,13 +16803,13 @@ end
 		end
 
 	yy_do_action_472
-			--|#line 2517 "et_eiffel_parser.y"
+			--|#line 2536 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2517 "et_eiffel_parser.y"
+--|#line 2536 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2517")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2536")
 end
 
 yyval114 := new_named_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16813,13 +16830,13 @@ end
 		end
 
 	yy_do_action_473
-			--|#line 2519 "et_eiffel_parser.y"
+			--|#line 2538 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2519 "et_eiffel_parser.y"
+--|#line 2538 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2519")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2538")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16841,13 +16858,13 @@ end
 		end
 
 	yy_do_action_474
-			--|#line 2521 "et_eiffel_parser.y"
+			--|#line 2540 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2521 "et_eiffel_parser.y"
+--|#line 2540 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2521")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2540")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16869,13 +16886,13 @@ end
 		end
 
 	yy_do_action_475
-			--|#line 2523 "et_eiffel_parser.y"
+			--|#line 2542 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2523 "et_eiffel_parser.y"
+--|#line 2542 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2523")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2542")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16897,13 +16914,13 @@ end
 		end
 
 	yy_do_action_476
-			--|#line 2525 "et_eiffel_parser.y"
+			--|#line 2544 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2525 "et_eiffel_parser.y"
+--|#line 2544 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2525")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2544")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16925,13 +16942,13 @@ end
 		end
 
 	yy_do_action_477
-			--|#line 2527 "et_eiffel_parser.y"
+			--|#line 2546 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2527 "et_eiffel_parser.y"
+--|#line 2546 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2527")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2546")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16953,13 +16970,13 @@ end
 		end
 
 	yy_do_action_478
-			--|#line 2529 "et_eiffel_parser.y"
+			--|#line 2548 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2529 "et_eiffel_parser.y"
+--|#line 2548 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2529")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2548")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -16981,13 +16998,13 @@ end
 		end
 
 	yy_do_action_479
-			--|#line 2531 "et_eiffel_parser.y"
+			--|#line 2550 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2531 "et_eiffel_parser.y"
+--|#line 2550 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2531")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2550")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17009,13 +17026,13 @@ end
 		end
 
 	yy_do_action_480
-			--|#line 2533 "et_eiffel_parser.y"
+			--|#line 2552 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2533 "et_eiffel_parser.y"
+--|#line 2552 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2533")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2552")
 end
 
 yyval114 := new_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17037,13 +17054,13 @@ end
 		end
 
 	yy_do_action_481
-			--|#line 2535 "et_eiffel_parser.y"
+			--|#line 2554 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2535 "et_eiffel_parser.y"
+--|#line 2554 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2535")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2554")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17066,13 +17083,13 @@ end
 		end
 
 	yy_do_action_482
-			--|#line 2537 "et_eiffel_parser.y"
+			--|#line 2556 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2537 "et_eiffel_parser.y"
+--|#line 2556 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2537")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2556")
 end
 
 yyval114 := new_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17094,13 +17111,13 @@ end
 		end
 
 	yy_do_action_483
-			--|#line 2539 "et_eiffel_parser.y"
+			--|#line 2558 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2539 "et_eiffel_parser.y"
+--|#line 2558 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2539")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2558")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17123,13 +17140,13 @@ end
 		end
 
 	yy_do_action_484
-			--|#line 2541 "et_eiffel_parser.y"
+			--|#line 2560 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2541 "et_eiffel_parser.y"
+--|#line 2560 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2541")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2560")
 end
 
 yyval114 := yyvs90.item (yyvsp90) 
@@ -17149,13 +17166,13 @@ end
 		end
 
 	yy_do_action_485
-			--|#line 2543 "et_eiffel_parser.y"
+			--|#line 2562 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2543 "et_eiffel_parser.y"
+--|#line 2562 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2543")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2562")
 end
 
 yyval114 := new_tuple_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17176,13 +17193,13 @@ end
 		end
 
 	yy_do_action_486
-			--|#line 2545 "et_eiffel_parser.y"
+			--|#line 2564 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2545 "et_eiffel_parser.y"
+--|#line 2564 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2545")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2564")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17204,13 +17221,13 @@ end
 		end
 
 	yy_do_action_487
-			--|#line 2547 "et_eiffel_parser.y"
+			--|#line 2566 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2547 "et_eiffel_parser.y"
+--|#line 2566 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2547")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2566")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17232,13 +17249,13 @@ end
 		end
 
 	yy_do_action_488
-			--|#line 2549 "et_eiffel_parser.y"
+			--|#line 2568 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2549 "et_eiffel_parser.y"
+--|#line 2568 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2549")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2568")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17260,13 +17277,13 @@ end
 		end
 
 	yy_do_action_489
-			--|#line 2551 "et_eiffel_parser.y"
+			--|#line 2570 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2551 "et_eiffel_parser.y"
+--|#line 2570 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2551")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2570")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17288,13 +17305,13 @@ end
 		end
 
 	yy_do_action_490
-			--|#line 2553 "et_eiffel_parser.y"
+			--|#line 2572 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2553 "et_eiffel_parser.y"
+--|#line 2572 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2553")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2572")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17316,13 +17333,13 @@ end
 		end
 
 	yy_do_action_491
-			--|#line 2555 "et_eiffel_parser.y"
+			--|#line 2574 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2555 "et_eiffel_parser.y"
+--|#line 2574 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2555")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2574")
 end
 
 yyval114 := new_tuple_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17344,13 +17361,13 @@ end
 		end
 
 	yy_do_action_492
-			--|#line 2557 "et_eiffel_parser.y"
+			--|#line 2576 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2557 "et_eiffel_parser.y"
+--|#line 2576 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2557")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2576")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17373,13 +17390,13 @@ end
 		end
 
 	yy_do_action_493
-			--|#line 2559 "et_eiffel_parser.y"
+			--|#line 2578 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2559 "et_eiffel_parser.y"
+--|#line 2578 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2559")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2578")
 end
 
 yyval114 := new_tuple_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17401,13 +17418,13 @@ end
 		end
 
 	yy_do_action_494
-			--|#line 2561 "et_eiffel_parser.y"
+			--|#line 2580 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2561 "et_eiffel_parser.y"
+--|#line 2580 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2561")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2580")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17430,13 +17447,13 @@ end
 		end
 
 	yy_do_action_495
-			--|#line 2565 "et_eiffel_parser.y"
+			--|#line 2584 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2565 "et_eiffel_parser.y"
+--|#line 2584 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2565")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2584")
 end
 
 yyval114 := new_named_type (Void, yyvs12.item (yyvsp12), Void) 
@@ -17456,13 +17473,13 @@ end
 		end
 
 	yy_do_action_496
-			--|#line 2567 "et_eiffel_parser.y"
+			--|#line 2586 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2567 "et_eiffel_parser.y"
+--|#line 2586 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2567")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2586")
 end
 
 yyval114 := new_named_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17483,13 +17500,13 @@ end
 		end
 
 	yy_do_action_497
-			--|#line 2569 "et_eiffel_parser.y"
+			--|#line 2588 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2569 "et_eiffel_parser.y"
+--|#line 2588 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2569")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2588")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17511,13 +17528,13 @@ end
 		end
 
 	yy_do_action_498
-			--|#line 2571 "et_eiffel_parser.y"
+			--|#line 2590 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2571 "et_eiffel_parser.y"
+--|#line 2590 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2571")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2590")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17539,13 +17556,13 @@ end
 		end
 
 	yy_do_action_499
-			--|#line 2573 "et_eiffel_parser.y"
+			--|#line 2592 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2573 "et_eiffel_parser.y"
+--|#line 2592 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2573")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2592")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17567,13 +17584,13 @@ end
 		end
 
 	yy_do_action_500
-			--|#line 2575 "et_eiffel_parser.y"
+			--|#line 2594 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2575 "et_eiffel_parser.y"
+--|#line 2594 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2575")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2594")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17595,13 +17612,13 @@ end
 		end
 
 	yy_do_action_501
-			--|#line 2577 "et_eiffel_parser.y"
+			--|#line 2596 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2577 "et_eiffel_parser.y"
+--|#line 2596 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2577")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2596")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17623,13 +17640,13 @@ end
 		end
 
 	yy_do_action_502
-			--|#line 2579 "et_eiffel_parser.y"
+			--|#line 2598 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2579 "et_eiffel_parser.y"
+--|#line 2598 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2579")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2598")
 end
 
 yyval114 := new_named_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17651,13 +17668,13 @@ end
 		end
 
 	yy_do_action_503
-			--|#line 2581 "et_eiffel_parser.y"
+			--|#line 2600 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2581 "et_eiffel_parser.y"
+--|#line 2600 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2581")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2600")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17679,13 +17696,13 @@ end
 		end
 
 	yy_do_action_504
-			--|#line 2583 "et_eiffel_parser.y"
+			--|#line 2602 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2583 "et_eiffel_parser.y"
+--|#line 2602 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2583")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2602")
 end
 
 yyval114 := new_named_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17707,13 +17724,13 @@ end
 		end
 
 	yy_do_action_505
-			--|#line 2585 "et_eiffel_parser.y"
+			--|#line 2604 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2585 "et_eiffel_parser.y"
+--|#line 2604 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2585")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2604")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17736,13 +17753,13 @@ end
 		end
 
 	yy_do_action_506
-			--|#line 2587 "et_eiffel_parser.y"
+			--|#line 2606 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2587 "et_eiffel_parser.y"
+--|#line 2606 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2587")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2606")
 end
 
 yyval114 := new_named_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17764,13 +17781,13 @@ end
 		end
 
 	yy_do_action_507
-			--|#line 2589 "et_eiffel_parser.y"
+			--|#line 2608 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2589 "et_eiffel_parser.y"
+--|#line 2608 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2589")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2608")
 end
 
 yyval114 := new_named_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17793,13 +17810,13 @@ end
 		end
 
 	yy_do_action_508
-			--|#line 2591 "et_eiffel_parser.y"
+			--|#line 2610 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2591 "et_eiffel_parser.y"
+--|#line 2610 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2591")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2610")
 end
 
 yyval114 := yyvs90.item (yyvsp90) 
@@ -17819,13 +17836,13 @@ end
 		end
 
 	yy_do_action_509
-			--|#line 2593 "et_eiffel_parser.y"
+			--|#line 2612 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2593 "et_eiffel_parser.y"
+--|#line 2612 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2593")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2612")
 end
 
 yyval114 := new_tuple_type (Void, yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17846,13 +17863,13 @@ end
 		end
 
 	yy_do_action_510
-			--|#line 2595 "et_eiffel_parser.y"
+			--|#line 2614 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2595 "et_eiffel_parser.y"
+--|#line 2614 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2595")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2614")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17874,13 +17891,13 @@ end
 		end
 
 	yy_do_action_511
-			--|#line 2597 "et_eiffel_parser.y"
+			--|#line 2616 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2597 "et_eiffel_parser.y"
+--|#line 2616 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2597")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2616")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17902,13 +17919,13 @@ end
 		end
 
 	yy_do_action_512
-			--|#line 2599 "et_eiffel_parser.y"
+			--|#line 2618 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2599 "et_eiffel_parser.y"
+--|#line 2618 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2599")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2618")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17930,13 +17947,13 @@ end
 		end
 
 	yy_do_action_513
-			--|#line 2601 "et_eiffel_parser.y"
+			--|#line 2620 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2601 "et_eiffel_parser.y"
+--|#line 2620 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2601")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2620")
 end
 
 yyval114 := new_tuple_type (yyvs2.item (yyvsp2), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17958,13 +17975,13 @@ end
 		end
 
 	yy_do_action_514
-			--|#line 2603 "et_eiffel_parser.y"
+			--|#line 2622 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2603 "et_eiffel_parser.y"
+--|#line 2622 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2603")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2622")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -17986,13 +18003,13 @@ end
 		end
 
 	yy_do_action_515
-			--|#line 2605 "et_eiffel_parser.y"
+			--|#line 2624 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2605 "et_eiffel_parser.y"
+--|#line 2624 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2605")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2624")
 end
 
 yyval114 := new_tuple_type (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -18014,13 +18031,13 @@ end
 		end
 
 	yy_do_action_516
-			--|#line 2607 "et_eiffel_parser.y"
+			--|#line 2626 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2607 "et_eiffel_parser.y"
+--|#line 2626 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2607")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2626")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -18043,13 +18060,13 @@ end
 		end
 
 	yy_do_action_517
-			--|#line 2609 "et_eiffel_parser.y"
+			--|#line 2628 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2609 "et_eiffel_parser.y"
+--|#line 2628 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2609")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2628")
 end
 
 yyval114 := new_tuple_type (yyvs23.item (yyvsp23), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -18071,13 +18088,13 @@ end
 		end
 
 	yy_do_action_518
-			--|#line 2611 "et_eiffel_parser.y"
+			--|#line 2630 "et_eiffel_parser.y"
 		local
 			yyval114: detachable ET_TYPE
 		do
---|#line 2611 "et_eiffel_parser.y"
+--|#line 2630 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2611")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2630")
 end
 
 yyval114 := new_tuple_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs12.item (yyvsp12), yyvs28.item (yyvsp28)) 
@@ -18100,13 +18117,13 @@ end
 		end
 
 	yy_do_action_519
-			--|#line 2615 "et_eiffel_parser.y"
+			--|#line 2634 "et_eiffel_parser.y"
 		local
 			yyval12: detachable ET_IDENTIFIER
 		do
---|#line 2615 "et_eiffel_parser.y"
+--|#line 2634 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2615")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2634")
 end
 
 yyval12 := yyvs12.item (yyvsp12) 
@@ -18117,13 +18134,13 @@ end
 		end
 
 	yy_do_action_520
-			--|#line 2617 "et_eiffel_parser.y"
+			--|#line 2636 "et_eiffel_parser.y"
 		local
 			yyval12: detachable ET_IDENTIFIER
 		do
---|#line 2617 "et_eiffel_parser.y"
+--|#line 2636 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2617")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2636")
 end
 
 yyval12 := yyvs12.item (yyvsp12) 
@@ -18134,13 +18151,13 @@ end
 		end
 
 	yy_do_action_521
-			--|#line 2621 "et_eiffel_parser.y"
+			--|#line 2640 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2621 "et_eiffel_parser.y"
+--|#line 2640 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2621")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2640")
 end
 
 
@@ -18159,13 +18176,13 @@ end
 		end
 
 	yy_do_action_522
-			--|#line 2623 "et_eiffel_parser.y"
+			--|#line 2642 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2623 "et_eiffel_parser.y"
+--|#line 2642 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2623")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2642")
 end
 
 yyval28 := yyvs28.item (yyvsp28) 
@@ -18176,13 +18193,13 @@ end
 		end
 
 	yy_do_action_523
-			--|#line 2627 "et_eiffel_parser.y"
+			--|#line 2646 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2627 "et_eiffel_parser.y"
+--|#line 2646 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2627")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2646")
 end
 
 yyval28 := ast_factory.new_actual_parameters (yyvs22.item (yyvsp22), yyvs5.item (yyvsp5), 0) 
@@ -18203,13 +18220,13 @@ end
 		end
 
 	yy_do_action_524
-			--|#line 2630 "et_eiffel_parser.y"
+			--|#line 2649 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2630 "et_eiffel_parser.y"
+--|#line 2649 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2630")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2649")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18224,13 +18241,13 @@ end
 		end
 
 	yy_do_action_525
-			--|#line 2638 "et_eiffel_parser.y"
+			--|#line 2657 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2638 "et_eiffel_parser.y"
+--|#line 2657 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2638")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2657")
 end
 
 			add_symbol (yyvs22.item (yyvsp22))
@@ -18252,13 +18269,13 @@ end
 		end
 
 	yy_do_action_526
-			--|#line 2645 "et_eiffel_parser.y"
+			--|#line 2664 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2645 "et_eiffel_parser.y"
+--|#line 2664 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2645")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2664")
 end
 
 			if attached yyvs114.item (yyvsp114) as l_type then
@@ -18287,13 +18304,13 @@ end
 		end
 
 	yy_do_action_527
-			--|#line 2656 "et_eiffel_parser.y"
+			--|#line 2675 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2656 "et_eiffel_parser.y"
+--|#line 2675 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2656")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2675")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18307,13 +18324,13 @@ end
 		end
 
 	yy_do_action_528
-			--|#line 2661 "et_eiffel_parser.y"
+			--|#line 2680 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2661 "et_eiffel_parser.y"
+--|#line 2680 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2661")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2680")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18329,13 +18346,13 @@ end
 		end
 
 	yy_do_action_529
-			--|#line 2666 "et_eiffel_parser.y"
+			--|#line 2685 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2666 "et_eiffel_parser.y"
+--|#line 2685 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2666")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2685")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18351,13 +18368,13 @@ end
 		end
 
 	yy_do_action_530
-			--|#line 2671 "et_eiffel_parser.y"
+			--|#line 2690 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2671 "et_eiffel_parser.y"
+--|#line 2690 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2671")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2690")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18373,13 +18390,13 @@ end
 		end
 
 	yy_do_action_531
-			--|#line 2678 "et_eiffel_parser.y"
+			--|#line 2697 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 2678 "et_eiffel_parser.y"
+--|#line 2697 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2678")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2697")
 end
 
 			increment_counter
@@ -18399,13 +18416,13 @@ end
 		end
 
 	yy_do_action_532
-			--|#line 2684 "et_eiffel_parser.y"
+			--|#line 2703 "et_eiffel_parser.y"
 		local
 			yyval27: detachable ET_ACTUAL_PARAMETER_ITEM
 		do
---|#line 2684 "et_eiffel_parser.y"
+--|#line 2703 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2684")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2703")
 end
 
 			yyval27 := ast_factory.new_actual_parameter_comma (yyvs114.item (yyvsp114), yyvs5.item (yyvsp5))
@@ -18430,13 +18447,13 @@ end
 		end
 
 	yy_do_action_533
-			--|#line 2693 "et_eiffel_parser.y"
+			--|#line 2712 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2693 "et_eiffel_parser.y"
+--|#line 2712 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2693")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2712")
 end
 
 
@@ -18455,13 +18472,13 @@ end
 		end
 
 	yy_do_action_534
-			--|#line 2695 "et_eiffel_parser.y"
+			--|#line 2714 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2695 "et_eiffel_parser.y"
+--|#line 2714 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2695")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2714")
 end
 
 yyval28 := yyvs28.item (yyvsp28) 
@@ -18472,13 +18489,13 @@ end
 		end
 
 	yy_do_action_535
-			--|#line 2699 "et_eiffel_parser.y"
+			--|#line 2718 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2699 "et_eiffel_parser.y"
+--|#line 2718 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2699")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2718")
 end
 
 yyval28 := ast_factory.new_actual_parameters (yyvs22.item (yyvsp22), yyvs5.item (yyvsp5), 0) 
@@ -18499,13 +18516,13 @@ end
 		end
 
 	yy_do_action_536
-			--|#line 2702 "et_eiffel_parser.y"
+			--|#line 2721 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2702 "et_eiffel_parser.y"
+--|#line 2721 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2702")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2721")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18520,13 +18537,13 @@ end
 		end
 
 	yy_do_action_537
-			--|#line 2708 "et_eiffel_parser.y"
+			--|#line 2727 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2708 "et_eiffel_parser.y"
+--|#line 2727 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2708")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2727")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18541,13 +18558,13 @@ end
 		end
 
 	yy_do_action_538
-			--|#line 2716 "et_eiffel_parser.y"
+			--|#line 2735 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2716 "et_eiffel_parser.y"
+--|#line 2735 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2716")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2735")
 end
 
 			yyval28 := ast_factory.new_actual_parameters (last_symbol, yyvs5.item (yyvsp5), counter_value + 1)
@@ -18571,13 +18588,13 @@ end
 		end
 
 	yy_do_action_539
-			--|#line 2721 "et_eiffel_parser.y"
+			--|#line 2740 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2721 "et_eiffel_parser.y"
+--|#line 2740 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2721")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2740")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18591,13 +18608,13 @@ end
 		end
 
 	yy_do_action_540
-			--|#line 2726 "et_eiffel_parser.y"
+			--|#line 2745 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2726 "et_eiffel_parser.y"
+--|#line 2745 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2726")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2745")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18611,13 +18628,13 @@ end
 		end
 
 	yy_do_action_541
-			--|#line 2731 "et_eiffel_parser.y"
+			--|#line 2750 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2731 "et_eiffel_parser.y"
+--|#line 2750 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2731")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2750")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18639,13 +18656,13 @@ end
 		end
 
 	yy_do_action_542
-			--|#line 2742 "et_eiffel_parser.y"
+			--|#line 2761 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2742 "et_eiffel_parser.y"
+--|#line 2761 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2742")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2761")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18667,13 +18684,13 @@ end
 		end
 
 	yy_do_action_543
-			--|#line 2753 "et_eiffel_parser.y"
+			--|#line 2772 "et_eiffel_parser.y"
 		local
 			yyval28: detachable ET_ACTUAL_PARAMETER_LIST
 		do
---|#line 2753 "et_eiffel_parser.y"
+--|#line 2772 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2753")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2772")
 end
 
 			yyval28 := yyvs28.item (yyvsp28)
@@ -18695,13 +18712,13 @@ end
 		end
 
 	yy_do_action_544
-			--|#line 2766 "et_eiffel_parser.y"
+			--|#line 2785 "et_eiffel_parser.y"
 		local
 			yyval27: detachable ET_ACTUAL_PARAMETER_ITEM
 		do
---|#line 2766 "et_eiffel_parser.y"
+--|#line 2785 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2766")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2785")
 end
 
 			yyval27 := ast_factory.new_labeled_actual_parameter (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)))
@@ -18727,13 +18744,13 @@ end
 		end
 
 	yy_do_action_545
-			--|#line 2775 "et_eiffel_parser.y"
+			--|#line 2794 "et_eiffel_parser.y"
 		local
 			yyval27: detachable ET_ACTUAL_PARAMETER_ITEM
 		do
---|#line 2775 "et_eiffel_parser.y"
+--|#line 2794 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2775")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2794")
 end
 
 			yyval27 := ast_factory.new_labeled_actual_parameter_semicolon (ast_factory.new_labeled_actual_parameter (yyvs12.item (yyvsp12), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114))), yyvs21.item (yyvsp21))
@@ -18760,16 +18777,16 @@ end
 		end
 
 	yy_do_action_546
-			--|#line 2784 "et_eiffel_parser.y"
+			--|#line 2803 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2784 "et_eiffel_parser.y"
+--|#line 2803 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2784")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2803")
 end
 
-yyval90 := ast_factory.new_like_feature (Void, yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (Void, yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp90 := yyvsp90 + 1
@@ -18787,13 +18804,13 @@ end
 		end
 
 	yy_do_action_547
-			--|#line 2786 "et_eiffel_parser.y"
+			--|#line 2805 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2786 "et_eiffel_parser.y"
+--|#line 2805 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2786")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2805")
 end
 
 yyval90 := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -18814,13 +18831,13 @@ end
 		end
 
 	yy_do_action_548
-			--|#line 2788 "et_eiffel_parser.y"
+			--|#line 2807 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2788 "et_eiffel_parser.y"
+--|#line 2807 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2788")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2807")
 end
 
 yyval90 := yyvs108.item (yyvsp108) 
@@ -18840,16 +18857,16 @@ end
 		end
 
 	yy_do_action_549
-			--|#line 2792 "et_eiffel_parser.y"
+			--|#line 2811 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2792 "et_eiffel_parser.y"
+--|#line 2811 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2792")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2811")
 end
 
-yyval90 := ast_factory.new_like_feature (Void, yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (Void, yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp90 := yyvsp90 + 1
@@ -18867,16 +18884,16 @@ end
 		end
 
 	yy_do_action_550
-			--|#line 2794 "et_eiffel_parser.y"
+			--|#line 2813 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2794 "et_eiffel_parser.y"
+--|#line 2813 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2794")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2813")
 end
 
-yyval90 := ast_factory.new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp90 := yyvsp90 + 1
@@ -18894,16 +18911,16 @@ end
 		end
 
 	yy_do_action_551
-			--|#line 2796 "et_eiffel_parser.y"
+			--|#line 2815 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2796 "et_eiffel_parser.y"
+--|#line 2815 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2796")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2815")
 end
 
-yyval90 := ast_factory.new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp90 := yyvsp90 + 1
@@ -18921,16 +18938,16 @@ end
 		end
 
 	yy_do_action_552
-			--|#line 2798 "et_eiffel_parser.y"
+			--|#line 2817 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2798 "et_eiffel_parser.y"
+--|#line 2817 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2798")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2817")
 end
 
-yyval90 := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp90 := yyvsp90 + 1
@@ -18948,16 +18965,16 @@ end
 		end
 
 	yy_do_action_553
-			--|#line 2800 "et_eiffel_parser.y"
+			--|#line 2819 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2800 "et_eiffel_parser.y"
+--|#line 2819 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2800")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2819")
 end
 
-yyval90 := ast_factory.new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp90 := yyvsp90 + 1
@@ -18975,16 +18992,16 @@ end
 		end
 
 	yy_do_action_554
-			--|#line 2802 "et_eiffel_parser.y"
+			--|#line 2821 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2802 "et_eiffel_parser.y"
+--|#line 2821 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2802")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2821")
 end
 
-yyval90 := ast_factory.new_like_feature (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp90 := yyvsp90 + 1
@@ -19002,16 +19019,16 @@ end
 		end
 
 	yy_do_action_555
-			--|#line 2804 "et_eiffel_parser.y"
+			--|#line 2823 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2804 "et_eiffel_parser.y"
+--|#line 2823 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2804")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2823")
 end
 
-yyval90 := ast_factory.new_like_feature (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp90 := yyvsp90 + 1
@@ -19030,16 +19047,16 @@ end
 		end
 
 	yy_do_action_556
-			--|#line 2806 "et_eiffel_parser.y"
+			--|#line 2825 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2806 "et_eiffel_parser.y"
+--|#line 2825 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2806")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2825")
 end
 
-yyval90 := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp90 := yyvsp90 + 1
@@ -19058,16 +19075,16 @@ end
 		end
 
 	yy_do_action_557
-			--|#line 2808 "et_eiffel_parser.y"
+			--|#line 2827 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2808 "et_eiffel_parser.y"
+--|#line 2827 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2808")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2827")
 end
 
-yyval90 := ast_factory.new_like_feature (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp90 := yyvsp90 + 1
@@ -19086,16 +19103,16 @@ end
 		end
 
 	yy_do_action_558
-			--|#line 2810 "et_eiffel_parser.y"
+			--|#line 2829 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2810 "et_eiffel_parser.y"
+--|#line 2829 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2810")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2829")
 end
 
-yyval90 := ast_factory.new_like_feature (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
+yyval90 := new_like_feature (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp90 := yyvsp90 + 1
@@ -19114,13 +19131,13 @@ end
 		end
 
 	yy_do_action_559
-			--|#line 2812 "et_eiffel_parser.y"
+			--|#line 2831 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2812 "et_eiffel_parser.y"
+--|#line 2831 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2812")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2831")
 end
 
 yyval90 := ast_factory.new_like_current (current_universe.implicit_attachment_type_mark, yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19141,13 +19158,13 @@ end
 		end
 
 	yy_do_action_560
-			--|#line 2814 "et_eiffel_parser.y"
+			--|#line 2833 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2814 "et_eiffel_parser.y"
+--|#line 2833 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2814")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2833")
 end
 
 yyval90 := ast_factory.new_like_current (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19168,13 +19185,13 @@ end
 		end
 
 	yy_do_action_561
-			--|#line 2816 "et_eiffel_parser.y"
+			--|#line 2835 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2816 "et_eiffel_parser.y"
+--|#line 2835 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2816")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2835")
 end
 
 yyval90 := ast_factory.new_like_current (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19195,13 +19212,13 @@ end
 		end
 
 	yy_do_action_562
-			--|#line 2818 "et_eiffel_parser.y"
+			--|#line 2837 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2818 "et_eiffel_parser.y"
+--|#line 2837 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2818")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2837")
 end
 
 yyval90 := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19222,13 +19239,13 @@ end
 		end
 
 	yy_do_action_563
-			--|#line 2820 "et_eiffel_parser.y"
+			--|#line 2839 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2820 "et_eiffel_parser.y"
+--|#line 2839 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2820")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2839")
 end
 
 yyval90 := ast_factory.new_like_current (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19249,13 +19266,13 @@ end
 		end
 
 	yy_do_action_564
-			--|#line 2822 "et_eiffel_parser.y"
+			--|#line 2841 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2822 "et_eiffel_parser.y"
+--|#line 2841 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2822")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2841")
 end
 
 yyval90 := ast_factory.new_like_current (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19276,13 +19293,13 @@ end
 		end
 
 	yy_do_action_565
-			--|#line 2824 "et_eiffel_parser.y"
+			--|#line 2843 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2824 "et_eiffel_parser.y"
+--|#line 2843 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2824")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2843")
 end
 
 yyval90 := ast_factory.new_like_current (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19304,13 +19321,13 @@ end
 		end
 
 	yy_do_action_566
-			--|#line 2826 "et_eiffel_parser.y"
+			--|#line 2845 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2826 "et_eiffel_parser.y"
+--|#line 2845 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2826")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2845")
 end
 
 yyval90 := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19332,13 +19349,13 @@ end
 		end
 
 	yy_do_action_567
-			--|#line 2828 "et_eiffel_parser.y"
+			--|#line 2847 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2828 "et_eiffel_parser.y"
+--|#line 2847 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2828")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2847")
 end
 
 yyval90 := ast_factory.new_like_current (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19360,13 +19377,13 @@ end
 		end
 
 	yy_do_action_568
-			--|#line 2830 "et_eiffel_parser.y"
+			--|#line 2849 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2830 "et_eiffel_parser.y"
+--|#line 2849 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2830")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2849")
 end
 
 yyval90 := ast_factory.new_like_current (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs10.item (yyvsp10)) 
@@ -19388,13 +19405,13 @@ end
 		end
 
 	yy_do_action_569
-			--|#line 2832 "et_eiffel_parser.y"
+			--|#line 2851 "et_eiffel_parser.y"
 		local
 			yyval90: detachable ET_LIKE_TYPE
 		do
---|#line 2832 "et_eiffel_parser.y"
+--|#line 2851 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2832")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2851")
 end
 
 yyval90 := yyvs108.item (yyvsp108) 
@@ -19414,19 +19431,19 @@ end
 		end
 
 	yy_do_action_570
-			--|#line 2836 "et_eiffel_parser.y"
+			--|#line 2855 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2836 "et_eiffel_parser.y"
+--|#line 2855 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2836")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2855")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (Void, yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (Void, yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19448,19 +19465,19 @@ end
 		end
 
 	yy_do_action_571
-			--|#line 2844 "et_eiffel_parser.y"
+			--|#line 2863 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2844 "et_eiffel_parser.y"
+--|#line 2863 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2844")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2863")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (Void, yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (Void, yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19481,13 +19498,13 @@ end
 		end
 
 	yy_do_action_572
-			--|#line 2854 "et_eiffel_parser.y"
+			--|#line 2873 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2854 "et_eiffel_parser.y"
+--|#line 2873 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2854")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2873")
 end
 
 yyval108 := yyvs108.item (yyvsp108) 
@@ -19498,19 +19515,19 @@ end
 		end
 
 	yy_do_action_573
-			--|#line 2856 "et_eiffel_parser.y"
+			--|#line 2875 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2856 "et_eiffel_parser.y"
+--|#line 2875 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2856")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2875")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19532,19 +19549,19 @@ end
 		end
 
 	yy_do_action_574
-			--|#line 2864 "et_eiffel_parser.y"
+			--|#line 2883 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2864 "et_eiffel_parser.y"
+--|#line 2883 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2864")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2883")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19566,19 +19583,19 @@ end
 		end
 
 	yy_do_action_575
-			--|#line 2872 "et_eiffel_parser.y"
+			--|#line 2891 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2872 "et_eiffel_parser.y"
+--|#line 2891 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2872")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2891")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19600,19 +19617,19 @@ end
 		end
 
 	yy_do_action_576
-			--|#line 2880 "et_eiffel_parser.y"
+			--|#line 2899 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2880 "et_eiffel_parser.y"
+--|#line 2899 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2880")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2899")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19634,19 +19651,19 @@ end
 		end
 
 	yy_do_action_577
-			--|#line 2888 "et_eiffel_parser.y"
+			--|#line 2907 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2888 "et_eiffel_parser.y"
+--|#line 2907 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2888")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2907")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 2), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19668,13 +19685,13 @@ end
 		end
 
 	yy_do_action_578
-			--|#line 2896 "et_eiffel_parser.y"
+			--|#line 2915 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2896 "et_eiffel_parser.y"
+--|#line 2915 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2896")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2915")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
@@ -19682,7 +19699,7 @@ end
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19704,13 +19721,13 @@ end
 		end
 
 	yy_do_action_579
-			--|#line 2906 "et_eiffel_parser.y"
+			--|#line 2925 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2906 "et_eiffel_parser.y"
+--|#line 2925 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2906")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2925")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
@@ -19718,7 +19735,7 @@ end
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5 - 3), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19740,13 +19757,13 @@ end
 		end
 
 	yy_do_action_580
-			--|#line 2916 "et_eiffel_parser.y"
+			--|#line 2935 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2916 "et_eiffel_parser.y"
+--|#line 2935 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2916")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2935")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
@@ -19754,7 +19771,7 @@ end
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19777,13 +19794,13 @@ end
 		end
 
 	yy_do_action_581
-			--|#line 2926 "et_eiffel_parser.y"
+			--|#line 2945 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2926 "et_eiffel_parser.y"
+--|#line 2945 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2926")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2945")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
@@ -19791,7 +19808,7 @@ end
 			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2 - 1)), yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19814,19 +19831,19 @@ end
 		end
 
 	yy_do_action_582
-			--|#line 2936 "et_eiffel_parser.y"
+			--|#line 2955 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2936 "et_eiffel_parser.y"
+--|#line 2955 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2936")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2955")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19848,19 +19865,19 @@ end
 		end
 
 	yy_do_action_583
-			--|#line 2944 "et_eiffel_parser.y"
+			--|#line 2963 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2944 "et_eiffel_parser.y"
+--|#line 2963 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2944")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2963")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19882,19 +19899,19 @@ end
 		end
 
 	yy_do_action_584
-			--|#line 2952 "et_eiffel_parser.y"
+			--|#line 2971 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2952 "et_eiffel_parser.y"
+--|#line 2971 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2952")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2971")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19916,19 +19933,19 @@ end
 		end
 
 	yy_do_action_585
-			--|#line 2960 "et_eiffel_parser.y"
+			--|#line 2979 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2960 "et_eiffel_parser.y"
+--|#line 2979 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2960")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2979")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (yyvs2.item (yyvsp2), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19950,19 +19967,19 @@ end
 		end
 
 	yy_do_action_586
-			--|#line 2968 "et_eiffel_parser.y"
+			--|#line 2987 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2968 "et_eiffel_parser.y"
+--|#line 2987 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2968")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2987")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords (yyvs2.item (yyvsp2 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -19984,19 +20001,19 @@ end
 		end
 
 	yy_do_action_587
-			--|#line 2976 "et_eiffel_parser.y"
+			--|#line 2995 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2976 "et_eiffel_parser.y"
+--|#line 2995 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2976")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2995")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (yyvs5.item (yyvsp5 - 1), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (yyvs5.item (yyvsp5 - 1), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20017,19 +20034,19 @@ end
 		end
 
 	yy_do_action_588
-			--|#line 2984 "et_eiffel_parser.y"
+			--|#line 3003 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2984 "et_eiffel_parser.y"
+--|#line 3003 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2984")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3003")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs5.item (yyvsp5 - 1), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20051,19 +20068,19 @@ end
 		end
 
 	yy_do_action_589
-			--|#line 2992 "et_eiffel_parser.y"
+			--|#line 3011 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 2992 "et_eiffel_parser.y"
+--|#line 3011 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 2992")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3011")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (yyvs23.item (yyvsp23), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (yyvs23.item (yyvsp23), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20085,19 +20102,19 @@ end
 		end
 
 	yy_do_action_590
-			--|#line 3000 "et_eiffel_parser.y"
+			--|#line 3019 "et_eiffel_parser.y"
 		local
 			yyval108: detachable ET_QUALIFIED_LIKE_IDENTIFIER
 		do
---|#line 3000 "et_eiffel_parser.y"
+--|#line 3019 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3000")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3019")
 end
 
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
+				yyval108 := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword (yyvs23.item (yyvsp23), yyvs2.item (yyvsp2)), yyvs90.item (yyvsp90), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)))
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -20120,13 +20137,13 @@ end
 		end
 
 	yy_do_action_591
-			--|#line 3012 "et_eiffel_parser.y"
+			--|#line 3031 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3012 "et_eiffel_parser.y"
+--|#line 3031 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3012")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3031")
 end
 
 yyval46 := ast_factory.new_do_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20138,13 +20155,13 @@ end
 		end
 
 	yy_do_action_592
-			--|#line 3016 "et_eiffel_parser.y"
+			--|#line 3035 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3016 "et_eiffel_parser.y"
+--|#line 3035 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3016")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3035")
 end
 
 yyval46 := ast_factory.new_attribute_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20156,13 +20173,13 @@ end
 		end
 
 	yy_do_action_593
-			--|#line 3020 "et_eiffel_parser.y"
+			--|#line 3039 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3020 "et_eiffel_parser.y"
+--|#line 3039 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3020")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3039")
 end
 
 yyval46 := ast_factory.new_then_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20174,13 +20191,13 @@ end
 		end
 
 	yy_do_action_594
-			--|#line 3024 "et_eiffel_parser.y"
+			--|#line 3043 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3024 "et_eiffel_parser.y"
+--|#line 3043 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3024")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3043")
 end
 
 yyval46 := ast_factory.new_then_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20192,13 +20209,13 @@ end
 		end
 
 	yy_do_action_595
-			--|#line 3028 "et_eiffel_parser.y"
+			--|#line 3047 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3028 "et_eiffel_parser.y"
+--|#line 3047 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3028")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3047")
 end
 
 yyval46 := ast_factory.new_else_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20210,13 +20227,13 @@ end
 		end
 
 	yy_do_action_596
-			--|#line 3032 "et_eiffel_parser.y"
+			--|#line 3051 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3032 "et_eiffel_parser.y"
+--|#line 3051 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3032")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3051")
 end
 
 yyval46 := ast_factory.new_else_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20228,13 +20245,13 @@ end
 		end
 
 	yy_do_action_597
-			--|#line 3036 "et_eiffel_parser.y"
+			--|#line 3055 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3036 "et_eiffel_parser.y"
+--|#line 3055 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3036")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3055")
 end
 
 yyval46 := ast_factory.new_rescue_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20246,13 +20263,13 @@ end
 		end
 
 	yy_do_action_598
-			--|#line 3040 "et_eiffel_parser.y"
+			--|#line 3059 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3040 "et_eiffel_parser.y"
+--|#line 3059 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3040")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3059")
 end
 
 yyval46 := ast_factory.new_from_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20264,13 +20281,13 @@ end
 		end
 
 	yy_do_action_599
-			--|#line 3044 "et_eiffel_parser.y"
+			--|#line 3063 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3044 "et_eiffel_parser.y"
+--|#line 3063 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3044")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3063")
 end
 
 
@@ -20289,13 +20306,13 @@ end
 		end
 
 	yy_do_action_600
-			--|#line 3046 "et_eiffel_parser.y"
+			--|#line 3065 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3046 "et_eiffel_parser.y"
+--|#line 3065 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3046")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3065")
 end
 
 yyval46 := yyvs46.item (yyvsp46) 
@@ -20306,13 +20323,13 @@ end
 		end
 
 	yy_do_action_601
-			--|#line 3050 "et_eiffel_parser.y"
+			--|#line 3069 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3050 "et_eiffel_parser.y"
+--|#line 3069 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3050")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3069")
 end
 
 yyval46 := ast_factory.new_loop_compound (yyvs2.item (yyvsp2), yyvs46.item (yyvsp46)) 
@@ -20324,13 +20341,13 @@ end
 		end
 
 	yy_do_action_602
-			--|#line 3054 "et_eiffel_parser.y"
+			--|#line 3073 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3054 "et_eiffel_parser.y"
+--|#line 3073 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3054")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3073")
 end
 
 			yyval46 := yyvs46.item (yyvsp46)
@@ -20344,13 +20361,13 @@ end
 		end
 
 	yy_do_action_603
-			--|#line 3061 "et_eiffel_parser.y"
+			--|#line 3080 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3061 "et_eiffel_parser.y"
+--|#line 3080 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3061")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3080")
 end
 
 yyval46 := ast_factory.new_empty_compound 
@@ -20369,13 +20386,13 @@ end
 		end
 
 	yy_do_action_604
-			--|#line 3063 "et_eiffel_parser.y"
+			--|#line 3082 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3063 "et_eiffel_parser.y"
+--|#line 3082 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3063")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3082")
 end
 
 yyval46 := yyvs46.item (yyvsp46) 
@@ -20386,13 +20403,13 @@ end
 		end
 
 	yy_do_action_605
-			--|#line 3067 "et_eiffel_parser.y"
+			--|#line 3086 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3067 "et_eiffel_parser.y"
+--|#line 3086 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3067")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3086")
 end
 
 yyval46 := ast_factory.new_compound (0) 
@@ -20411,13 +20428,13 @@ end
 		end
 
 	yy_do_action_606
-			--|#line 3069 "et_eiffel_parser.y"
+			--|#line 3088 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3069 "et_eiffel_parser.y"
+--|#line 3088 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3069")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3088")
 end
 
 yyval46 := yyvs46.item (yyvsp46) 
@@ -20428,13 +20445,13 @@ end
 		end
 
 	yy_do_action_607
-			--|#line 3073 "et_eiffel_parser.y"
+			--|#line 3092 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3073 "et_eiffel_parser.y"
+--|#line 3092 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3073")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3092")
 end
 
 			if attached yyvs87.item (yyvsp87) as l_instruction then
@@ -20462,13 +20479,13 @@ end
 		end
 
 	yy_do_action_608
-			--|#line 3084 "et_eiffel_parser.y"
+			--|#line 3103 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3084 "et_eiffel_parser.y"
+--|#line 3103 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3084")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3103")
 end
 
 			yyval46 := yyvs46.item (yyvsp46)
@@ -20485,13 +20502,13 @@ end
 		end
 
 	yy_do_action_609
-			--|#line 3084 "et_eiffel_parser.y"
+			--|#line 3103 "et_eiffel_parser.y"
 		local
 			yyval46: detachable ET_COMPOUND
 		do
---|#line 3084 "et_eiffel_parser.y"
+--|#line 3103 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3084")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3103")
 end
 
 			if yyvs87.item (yyvsp87) /= Void then
@@ -20513,13 +20530,13 @@ end
 		end
 
 	yy_do_action_610
-			--|#line 3105 "et_eiffel_parser.y"
+			--|#line 3124 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3105 "et_eiffel_parser.y"
+--|#line 3124 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3105")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3124")
 end
 
 yyval87 := yyvs87.item (yyvsp87) 
@@ -20530,13 +20547,13 @@ end
 		end
 
 	yy_do_action_611
-			--|#line 3107 "et_eiffel_parser.y"
+			--|#line 3126 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3107 "et_eiffel_parser.y"
+--|#line 3126 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3107")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3126")
 end
 
 yyval87 := yyvs87.item (yyvsp87) 
@@ -20547,13 +20564,13 @@ end
 		end
 
 	yy_do_action_612
-			--|#line 3109 "et_eiffel_parser.y"
+			--|#line 3128 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3109 "et_eiffel_parser.y"
+--|#line 3128 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3109")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3128")
 end
 
 yyval87 := yyvs87.item (yyvsp87) 
@@ -20564,13 +20581,13 @@ end
 		end
 
 	yy_do_action_613
-			--|#line 3111 "et_eiffel_parser.y"
+			--|#line 3130 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3111 "et_eiffel_parser.y"
+--|#line 3130 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3111")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3130")
 end
 
 yyval87 := ast_factory.new_assigner_instruction (yyvs37.item (yyvsp37), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -20592,13 +20609,13 @@ end
 		end
 
 	yy_do_action_614
-			--|#line 3113 "et_eiffel_parser.y"
+			--|#line 3132 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3113 "et_eiffel_parser.y"
+--|#line 3132 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3113")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3132")
 end
 
 yyval87 := ast_factory.new_assigner_instruction (yyvs35.item (yyvsp35), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -20620,13 +20637,13 @@ end
 		end
 
 	yy_do_action_615
-			--|#line 3115 "et_eiffel_parser.y"
+			--|#line 3134 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3115 "et_eiffel_parser.y"
+--|#line 3134 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3115")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3134")
 end
 
 yyval87 := ast_factory.new_assignment (yyvs120.item (yyvsp120), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -20648,13 +20665,13 @@ end
 		end
 
 	yy_do_action_616
-			--|#line 3117 "et_eiffel_parser.y"
+			--|#line 3136 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3117 "et_eiffel_parser.y"
+--|#line 3136 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3117")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3136")
 end
 
 yyval87 := ast_factory.new_assignment_attempt (yyvs120.item (yyvsp120), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -20676,13 +20693,13 @@ end
 		end
 
 	yy_do_action_617
-			--|#line 3119 "et_eiffel_parser.y"
+			--|#line 3138 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3119 "et_eiffel_parser.y"
+--|#line 3138 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3119")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3138")
 end
 
 yyval87 := yyvs79.item (yyvsp79) 
@@ -20702,13 +20719,13 @@ end
 		end
 
 	yy_do_action_618
-			--|#line 3121 "et_eiffel_parser.y"
+			--|#line 3140 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3121 "et_eiffel_parser.y"
+--|#line 3140 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3121")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3140")
 end
 
 yyval87 := yyvs86.item (yyvsp86) 
@@ -20728,13 +20745,13 @@ end
 		end
 
 	yy_do_action_619
-			--|#line 3123 "et_eiffel_parser.y"
+			--|#line 3142 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3123 "et_eiffel_parser.y"
+--|#line 3142 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3123")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3142")
 end
 
 yyval87 := ast_factory.new_loop_instruction_old_syntax (yyvs46.item (yyvsp46 - 1), yyvs94.item (yyvsp94), yyvs117.item (yyvsp117), ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -20758,13 +20775,13 @@ end
 		end
 
 	yy_do_action_620
-			--|#line 3125 "et_eiffel_parser.y"
+			--|#line 3144 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3125 "et_eiffel_parser.y"
+--|#line 3144 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3125")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3144")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
@@ -20792,13 +20809,13 @@ end
 		end
 
 	yy_do_action_621
-			--|#line 3133 "et_eiffel_parser.y"
+			--|#line 3152 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3133 "et_eiffel_parser.y"
+--|#line 3152 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3133")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3152")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
@@ -20827,13 +20844,13 @@ end
 		end
 
 	yy_do_action_622
-			--|#line 3146 "et_eiffel_parser.y"
+			--|#line 3165 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3146 "et_eiffel_parser.y"
+--|#line 3165 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3146")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3165")
 end
 
 yyval87 := new_across_instruction (yyvs25.item (yyvsp25), yyvs46.item (yyvsp46 - 1), yyvs94.item (yyvsp94), yyvs47.item (yyvsp47), yyvs46.item (yyvsp46), yyvs117.item (yyvsp117), yyvs2.item (yyvsp2)) 
@@ -20858,13 +20875,13 @@ end
 		end
 
 	yy_do_action_623
-			--|#line 3148 "et_eiffel_parser.y"
+			--|#line 3167 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3148 "et_eiffel_parser.y"
+--|#line 3167 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3148")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3167")
 end
 
 yyval87 := yyvs59.item (yyvsp59) 
@@ -20884,13 +20901,13 @@ end
 		end
 
 	yy_do_action_624
-			--|#line 3150 "et_eiffel_parser.y"
+			--|#line 3169 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3150 "et_eiffel_parser.y"
+--|#line 3169 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3150")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3169")
 end
 
 yyval87 := yyvs38.item (yyvsp38) 
@@ -20910,13 +20927,13 @@ end
 		end
 
 	yy_do_action_625
-			--|#line 3152 "et_eiffel_parser.y"
+			--|#line 3171 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3152 "et_eiffel_parser.y"
+--|#line 3171 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3152")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3171")
 end
 
 yyval87 := yyvs18.item (yyvsp18) 
@@ -20936,13 +20953,13 @@ end
 		end
 
 	yy_do_action_626
-			--|#line 3154 "et_eiffel_parser.y"
+			--|#line 3173 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3154 "et_eiffel_parser.y"
+--|#line 3173 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3154")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3173")
 end
 
 yyval87 := ast_factory.new_null_instruction (yyvs21.item (yyvsp21)) 
@@ -20962,13 +20979,13 @@ end
 		end
 
 	yy_do_action_627
-			--|#line 3160 "et_eiffel_parser.y"
+			--|#line 3179 "et_eiffel_parser.y"
 		local
 			yyval38: detachable ET_CHECK_INSTRUCTION
 		do
---|#line 3160 "et_eiffel_parser.y"
+--|#line 3179 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3160")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3179")
 end
 
 yyval38 := new_check_instruction (yyvs2.item (yyvsp2 - 1), Void, yyvs2.item (yyvsp2)) 
@@ -20989,13 +21006,13 @@ end
 		end
 
 	yy_do_action_628
-			--|#line 3162 "et_eiffel_parser.y"
+			--|#line 3181 "et_eiffel_parser.y"
 		local
 			yyval38: detachable ET_CHECK_INSTRUCTION
 		do
---|#line 3162 "et_eiffel_parser.y"
+--|#line 3181 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3162")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3181")
 end
 
 yyval38 := new_check_instruction (yyvs2.item (yyvsp2 - 1), Void, yyvs2.item (yyvsp2)) 
@@ -21016,13 +21033,13 @@ end
 		end
 
 	yy_do_action_629
-			--|#line 3164 "et_eiffel_parser.y"
+			--|#line 3183 "et_eiffel_parser.y"
 		local
 			yyval38: detachable ET_CHECK_INSTRUCTION
 		do
---|#line 3164 "et_eiffel_parser.y"
+--|#line 3183 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3164")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3183")
 end
 
 yyval38 := new_check_instruction (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -21044,13 +21061,13 @@ end
 		end
 
 	yy_do_action_630
-			--|#line 3166 "et_eiffel_parser.y"
+			--|#line 3185 "et_eiffel_parser.y"
 		local
 			yyval38: detachable ET_CHECK_INSTRUCTION
 		do
---|#line 3166 "et_eiffel_parser.y"
+--|#line 3185 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3166")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3185")
 end
 
 yyval38 := new_check_instruction (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -21072,13 +21089,13 @@ end
 		end
 
 	yy_do_action_631
-			--|#line 3172 "et_eiffel_parser.y"
+			--|#line 3191 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3172 "et_eiffel_parser.y"
+--|#line 3191 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3172")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3191")
 end
 
 yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5), yyvs120.item (yyvsp120), Void) 
@@ -21100,16 +21117,16 @@ end
 		end
 
 	yy_do_action_632
-			--|#line 3174 "et_eiffel_parser.y"
+			--|#line 3193 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3174 "et_eiffel_parser.y"
+--|#line 3193 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3174")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3193")
 end
 
-yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
+yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp87 := yyvsp87 + 1
@@ -21130,13 +21147,13 @@ end
 		end
 
 	yy_do_action_633
-			--|#line 3176 "et_eiffel_parser.y"
+			--|#line 3195 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3176 "et_eiffel_parser.y"
+--|#line 3195 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3176")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3195")
 end
 
 yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 1), Void, yyvs5.item (yyvsp5), yyvs120.item (yyvsp120), Void) 
@@ -21157,16 +21174,16 @@ end
 		end
 
 	yy_do_action_634
-			--|#line 3178 "et_eiffel_parser.y"
+			--|#line 3197 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3178 "et_eiffel_parser.y"
+--|#line 3197 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3178")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3197")
 end
 
-yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 2), Void, yyvs5.item (yyvsp5 - 1), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
+yyval87 := ast_factory.new_bang_instruction (yyvs5.item (yyvsp5 - 2), Void, yyvs5.item (yyvsp5 - 1), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp87 := yyvsp87 + 1
@@ -21186,13 +21203,13 @@ end
 		end
 
 	yy_do_action_635
-			--|#line 3182 "et_eiffel_parser.y"
+			--|#line 3201 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3182 "et_eiffel_parser.y"
+--|#line 3201 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3182")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3201")
 end
 
 yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)), yyvs120.item (yyvsp120), Void) 
@@ -21216,16 +21233,16 @@ end
 		end
 
 	yy_do_action_636
-			--|#line 3184 "et_eiffel_parser.y"
+			--|#line 3203 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3184 "et_eiffel_parser.y"
+--|#line 3203 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3184")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3203")
 end
 
-yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
+yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), yyvs120.item (yyvsp120), ast_factory.new_qualified_call (new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 9
 	yyvsp87 := yyvsp87 + 1
@@ -21248,13 +21265,13 @@ end
 		end
 
 	yy_do_action_637
-			--|#line 3186 "et_eiffel_parser.y"
+			--|#line 3205 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3186 "et_eiffel_parser.y"
+--|#line 3205 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3186")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3205")
 end
 
 yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), Void, yyvs120.item (yyvsp120), Void) 
@@ -21276,16 +21293,16 @@ end
 		end
 
 	yy_do_action_638
-			--|#line 3188 "et_eiffel_parser.y"
+			--|#line 3207 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3188 "et_eiffel_parser.y"
+--|#line 3207 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3188")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3207")
 end
 
-yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), Void, yyvs120.item (yyvsp120), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
+yyval87 := ast_factory.new_create_instruction (yyvs2.item (yyvsp2), Void, yyvs120.item (yyvsp120), ast_factory.new_qualified_call (new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp87 := yyvsp87 + 1
@@ -21307,13 +21324,13 @@ end
 		end
 
 	yy_do_action_639
-			--|#line 3192 "et_eiffel_parser.y"
+			--|#line 3211 "et_eiffel_parser.y"
 		local
 			yyval56: detachable ET_CREATE_EXPRESSION
 		do
---|#line 3192 "et_eiffel_parser.y"
+--|#line 3211 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3192")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3211")
 end
 
 yyval56 := ast_factory.new_create_expression (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)), Void) 
@@ -21336,16 +21353,16 @@ end
 		end
 
 	yy_do_action_640
-			--|#line 3194 "et_eiffel_parser.y"
+			--|#line 3213 "et_eiffel_parser.y"
 		local
 			yyval56: detachable ET_CREATE_EXPRESSION
 		do
---|#line 3194 "et_eiffel_parser.y"
+--|#line 3213 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3194")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3213")
 end
 
-yyval56 := ast_factory.new_create_expression (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
+yyval56 := ast_factory.new_create_expression (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_qualified_call (new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 8
 	yyvsp56 := yyvsp56 + 1
@@ -21367,13 +21384,13 @@ end
 		end
 
 	yy_do_action_641
-			--|#line 3198 "et_eiffel_parser.y"
+			--|#line 3217 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 3198 "et_eiffel_parser.y"
+--|#line 3217 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3198")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3217")
 end
 
 
@@ -21392,13 +21409,13 @@ end
 		end
 
 	yy_do_action_642
-			--|#line 3199 "et_eiffel_parser.y"
+			--|#line 3218 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 3199 "et_eiffel_parser.y"
+--|#line 3218 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3199")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3218")
 end
 
 
@@ -21419,13 +21436,13 @@ end
 		end
 
 	yy_do_action_643
-			--|#line 3204 "et_eiffel_parser.y"
+			--|#line 3223 "et_eiffel_parser.y"
 		local
 			yyval79: detachable ET_IF_INSTRUCTION
 		do
---|#line 3204 "et_eiffel_parser.y"
+--|#line 3223 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3204")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3223")
 end
 
 yyval79 := ast_factory.new_if_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), Void, Void, yyvs2.item (yyvsp2)) 
@@ -21447,13 +21464,13 @@ end
 		end
 
 	yy_do_action_644
-			--|#line 3206 "et_eiffel_parser.y"
+			--|#line 3225 "et_eiffel_parser.y"
 		local
 			yyval79: detachable ET_IF_INSTRUCTION
 		do
---|#line 3206 "et_eiffel_parser.y"
+--|#line 3225 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3206")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3225")
 end
 
 yyval79 := ast_factory.new_if_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46 - 1), Void, yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -21475,13 +21492,13 @@ end
 		end
 
 	yy_do_action_645
-			--|#line 3208 "et_eiffel_parser.y"
+			--|#line 3227 "et_eiffel_parser.y"
 		local
 			yyval79: detachable ET_IF_INSTRUCTION
 		do
---|#line 3208 "et_eiffel_parser.y"
+--|#line 3227 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3208")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3227")
 end
 
 yyval79 := ast_factory.new_if_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46), yyvs61.item (yyvsp61), Void, yyvs2.item (yyvsp2)) 
@@ -21504,13 +21521,13 @@ end
 		end
 
 	yy_do_action_646
-			--|#line 3210 "et_eiffel_parser.y"
+			--|#line 3229 "et_eiffel_parser.y"
 		local
 			yyval79: detachable ET_IF_INSTRUCTION
 		do
---|#line 3210 "et_eiffel_parser.y"
+--|#line 3229 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3210")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3229")
 end
 
 yyval79 := ast_factory.new_if_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46 - 1), yyvs61.item (yyvsp61), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -21533,13 +21550,13 @@ end
 		end
 
 	yy_do_action_647
-			--|#line 3214 "et_eiffel_parser.y"
+			--|#line 3233 "et_eiffel_parser.y"
 		local
 			yyval61: detachable ET_ELSEIF_PART_LIST
 		do
---|#line 3214 "et_eiffel_parser.y"
+--|#line 3233 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3214")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3233")
 end
 
 			yyval61 := yyvs61.item (yyvsp61)
@@ -21553,13 +21570,13 @@ end
 		end
 
 	yy_do_action_648
-			--|#line 3221 "et_eiffel_parser.y"
+			--|#line 3240 "et_eiffel_parser.y"
 		local
 			yyval61: detachable ET_ELSEIF_PART_LIST
 		do
---|#line 3221 "et_eiffel_parser.y"
+--|#line 3240 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3221")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3240")
 end
 
 			yyval61 := ast_factory.new_elseif_part_list (counter_value)
@@ -21583,13 +21600,13 @@ end
 		end
 
 	yy_do_action_649
-			--|#line 3228 "et_eiffel_parser.y"
+			--|#line 3247 "et_eiffel_parser.y"
 		local
 			yyval61: detachable ET_ELSEIF_PART_LIST
 		do
---|#line 3228 "et_eiffel_parser.y"
+--|#line 3247 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3228")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3247")
 end
 
 			yyval61 := yyvs61.item (yyvsp61)
@@ -21605,13 +21622,13 @@ end
 		end
 
 	yy_do_action_650
-			--|#line 3237 "et_eiffel_parser.y"
+			--|#line 3256 "et_eiffel_parser.y"
 		local
 			yyval60: detachable ET_ELSEIF_PART
 		do
---|#line 3237 "et_eiffel_parser.y"
+--|#line 3256 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3237")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3256")
 end
 
 			yyval60 := ast_factory.new_elseif_part (ast_factory.new_conditional (yyvs2.item (yyvsp2), yyvs64.item (yyvsp64)), yyvs46.item (yyvsp46))
@@ -21637,13 +21654,13 @@ end
 		end
 
 	yy_do_action_651
-			--|#line 3248 "et_eiffel_parser.y"
+			--|#line 3267 "et_eiffel_parser.y"
 		local
 			yyval86: detachable ET_INSPECT_INSTRUCTION
 		do
---|#line 3248 "et_eiffel_parser.y"
+--|#line 3267 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3248")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3267")
 end
 
 yyval86 := ast_factory.new_inspect_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs119.item (yyvsp119), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2)) 
@@ -21666,13 +21683,13 @@ end
 		end
 
 	yy_do_action_652
-			--|#line 3250 "et_eiffel_parser.y"
+			--|#line 3269 "et_eiffel_parser.y"
 		local
 			yyval86: detachable ET_INSPECT_INSTRUCTION
 		do
---|#line 3250 "et_eiffel_parser.y"
+--|#line 3269 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3250")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3269")
 end
 
 yyval86 := ast_factory.new_inspect_instruction (ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs119.item (yyvsp119), Void, yyvs2.item (yyvsp2)) 
@@ -21694,13 +21711,13 @@ end
 		end
 
 	yy_do_action_653
-			--|#line 3254 "et_eiffel_parser.y"
+			--|#line 3273 "et_eiffel_parser.y"
 		local
 			yyval119: detachable ET_WHEN_PART_LIST
 		do
---|#line 3254 "et_eiffel_parser.y"
+--|#line 3273 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3254")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3273")
 end
 
 
@@ -21719,13 +21736,13 @@ end
 		end
 
 	yy_do_action_654
-			--|#line 3256 "et_eiffel_parser.y"
+			--|#line 3275 "et_eiffel_parser.y"
 		local
 			yyval119: detachable ET_WHEN_PART_LIST
 		do
---|#line 3256 "et_eiffel_parser.y"
+--|#line 3275 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3256")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3275")
 end
 
 			yyval119 := yyvs119.item (yyvsp119)
@@ -21739,13 +21756,13 @@ end
 		end
 
 	yy_do_action_655
-			--|#line 3263 "et_eiffel_parser.y"
+			--|#line 3282 "et_eiffel_parser.y"
 		local
 			yyval119: detachable ET_WHEN_PART_LIST
 		do
---|#line 3263 "et_eiffel_parser.y"
+--|#line 3282 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3263")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3282")
 end
 
 			yyval119 := ast_factory.new_when_part_list (counter_value)
@@ -21769,13 +21786,13 @@ end
 		end
 
 	yy_do_action_656
-			--|#line 3270 "et_eiffel_parser.y"
+			--|#line 3289 "et_eiffel_parser.y"
 		local
 			yyval119: detachable ET_WHEN_PART_LIST
 		do
---|#line 3270 "et_eiffel_parser.y"
+--|#line 3289 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3270")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3289")
 end
 
 			yyval119 := yyvs119.item (yyvsp119)
@@ -21791,13 +21808,13 @@ end
 		end
 
 	yy_do_action_657
-			--|#line 3279 "et_eiffel_parser.y"
+			--|#line 3298 "et_eiffel_parser.y"
 		local
 			yyval118: detachable ET_WHEN_PART
 		do
---|#line 3279 "et_eiffel_parser.y"
+--|#line 3298 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3279")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3298")
 end
 
 			yyval118 := ast_factory.new_when_part (yyvs42.item (yyvsp42), yyvs46.item (yyvsp46))
@@ -21822,13 +21839,13 @@ end
 		end
 
 	yy_do_action_658
-			--|#line 3288 "et_eiffel_parser.y"
+			--|#line 3307 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3288 "et_eiffel_parser.y"
+--|#line 3307 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3288")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3307")
 end
 
 yyval42 := ast_factory.new_choice_list (yyvs2.item (yyvsp2), 0) 
@@ -21848,13 +21865,13 @@ end
 		end
 
 	yy_do_action_659
-			--|#line 3290 "et_eiffel_parser.y"
+			--|#line 3309 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3290 "et_eiffel_parser.y"
+--|#line 3309 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3290")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3309")
 end
 
 			yyval42 := yyvs42.item (yyvsp42)
@@ -21870,13 +21887,13 @@ end
 		end
 
 	yy_do_action_660
-			--|#line 3290 "et_eiffel_parser.y"
+			--|#line 3309 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3290 "et_eiffel_parser.y"
+--|#line 3309 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3290")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3309")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -21897,13 +21914,13 @@ end
 		end
 
 	yy_do_action_661
-			--|#line 3303 "et_eiffel_parser.y"
+			--|#line 3322 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3303 "et_eiffel_parser.y"
+--|#line 3322 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3303")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3322")
 end
 
 			if attached yyvs39.item (yyvsp39) as l_choice then
@@ -21931,13 +21948,13 @@ end
 		end
 
 	yy_do_action_662
-			--|#line 3314 "et_eiffel_parser.y"
+			--|#line 3333 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3314 "et_eiffel_parser.y"
+--|#line 3333 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3314")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3333")
 end
 
 			yyval42 := ast_factory.new_choice_list (last_keyword, counter_value)
@@ -21961,13 +21978,13 @@ end
 		end
 
 	yy_do_action_663
-			--|#line 3322 "et_eiffel_parser.y"
+			--|#line 3341 "et_eiffel_parser.y"
 		local
 			yyval42: detachable ET_CHOICE_LIST
 		do
---|#line 3322 "et_eiffel_parser.y"
+--|#line 3341 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3322")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3341")
 end
 
 			yyval42 := yyvs42.item (yyvsp42)
@@ -21983,13 +22000,13 @@ end
 		end
 
 	yy_do_action_664
-			--|#line 3331 "et_eiffel_parser.y"
+			--|#line 3350 "et_eiffel_parser.y"
 		local
 			yyval41: detachable ET_CHOICE_ITEM
 		do
---|#line 3331 "et_eiffel_parser.y"
+--|#line 3350 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3331")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3350")
 end
 
 			yyval41 := ast_factory.new_choice_comma (yyvs39.item (yyvsp39), yyvs5.item (yyvsp5))
@@ -22014,13 +22031,13 @@ end
 		end
 
 	yy_do_action_665
-			--|#line 3340 "et_eiffel_parser.y"
+			--|#line 3359 "et_eiffel_parser.y"
 		local
 			yyval39: detachable ET_CHOICE
 		do
---|#line 3340 "et_eiffel_parser.y"
+--|#line 3359 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3340")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3359")
 end
 
 yyval39 := yyvs40.item (yyvsp40) 
@@ -22040,13 +22057,13 @@ end
 		end
 
 	yy_do_action_666
-			--|#line 3342 "et_eiffel_parser.y"
+			--|#line 3361 "et_eiffel_parser.y"
 		local
 			yyval39: detachable ET_CHOICE
 		do
---|#line 3342 "et_eiffel_parser.y"
+--|#line 3361 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3342")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3361")
 end
 
 yyval39 := ast_factory.new_choice_range (yyvs40.item (yyvsp40 - 1), yyvs5.item (yyvsp5), yyvs40.item (yyvsp40)) 
@@ -22067,13 +22084,13 @@ end
 		end
 
 	yy_do_action_667
-			--|#line 3346 "et_eiffel_parser.y"
+			--|#line 3365 "et_eiffel_parser.y"
 		local
 			yyval40: detachable ET_CHOICE_CONSTANT
 		do
---|#line 3346 "et_eiffel_parser.y"
+--|#line 3365 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3346")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3365")
 end
 
 yyval40 := yyvs13.item (yyvsp13) 
@@ -22093,13 +22110,13 @@ end
 		end
 
 	yy_do_action_668
-			--|#line 3348 "et_eiffel_parser.y"
+			--|#line 3367 "et_eiffel_parser.y"
 		local
 			yyval40: detachable ET_CHOICE_CONSTANT
 		do
---|#line 3348 "et_eiffel_parser.y"
+--|#line 3367 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3348")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3367")
 end
 
 yyval40 := yyvs9.item (yyvsp9) 
@@ -22119,13 +22136,13 @@ end
 		end
 
 	yy_do_action_669
-			--|#line 3350 "et_eiffel_parser.y"
+			--|#line 3369 "et_eiffel_parser.y"
 		local
 			yyval40: detachable ET_CHOICE_CONSTANT
 		do
---|#line 3350 "et_eiffel_parser.y"
+--|#line 3369 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3350")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3369")
 end
 
 yyval40 := new_choice_attribute_constant (yyvs12.item (yyvsp12)) 
@@ -22145,13 +22162,13 @@ end
 		end
 
 	yy_do_action_670
-			--|#line 3352 "et_eiffel_parser.y"
+			--|#line 3371 "et_eiffel_parser.y"
 		local
 			yyval40: detachable ET_CHOICE_CONSTANT
 		do
---|#line 3352 "et_eiffel_parser.y"
+--|#line 3371 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3352")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3371")
 end
 
 yyval40 := yyvs112.item (yyvsp112) 
@@ -22171,13 +22188,13 @@ end
 		end
 
 	yy_do_action_671
-			--|#line 3358 "et_eiffel_parser.y"
+			--|#line 3377 "et_eiffel_parser.y"
 		local
 			yyval25: detachable ET_ACROSS_INSTRUCTION
 		do
---|#line 3358 "et_eiffel_parser.y"
+--|#line 3377 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3358")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3377")
 end
 
 yyval25 := new_across_instruction_header (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
@@ -22199,13 +22216,13 @@ end
 		end
 
 	yy_do_action_672
-			--|#line 3362 "et_eiffel_parser.y"
+			--|#line 3381 "et_eiffel_parser.y"
 		local
 			yyval47: detachable ET_CONDITIONAL
 		do
---|#line 3362 "et_eiffel_parser.y"
+--|#line 3381 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3362")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3381")
 end
 
 
@@ -22224,13 +22241,13 @@ end
 		end
 
 	yy_do_action_673
-			--|#line 3364 "et_eiffel_parser.y"
+			--|#line 3383 "et_eiffel_parser.y"
 		local
 			yyval47: detachable ET_CONDITIONAL
 		do
---|#line 3364 "et_eiffel_parser.y"
+--|#line 3383 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3364")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3383")
 end
 
 yyval47 := ast_factory.new_conditional (yyvs2.item (yyvsp2), yyvs64.item (yyvsp64)) 
@@ -22251,13 +22268,13 @@ end
 		end
 
 	yy_do_action_674
-			--|#line 3370 "et_eiffel_parser.y"
+			--|#line 3389 "et_eiffel_parser.y"
 		local
 			yyval59: detachable ET_DEBUG_INSTRUCTION
 		do
---|#line 3370 "et_eiffel_parser.y"
+--|#line 3389 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3370")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3389")
 end
 
 yyval59 := ast_factory.new_debug_instruction (yyvs97.item (yyvsp97), ast_factory.new_debug_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46)), yyvs2.item (yyvsp2)) 
@@ -22279,13 +22296,13 @@ end
 		end
 
 	yy_do_action_675
-			--|#line 3374 "et_eiffel_parser.y"
+			--|#line 3393 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3374 "et_eiffel_parser.y"
+--|#line 3393 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3374")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3393")
 end
 
 
@@ -22304,13 +22321,13 @@ end
 		end
 
 	yy_do_action_676
-			--|#line 3376 "et_eiffel_parser.y"
+			--|#line 3395 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3376 "et_eiffel_parser.y"
+--|#line 3395 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3376")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3395")
 end
 
 yyval97 := ast_factory.new_manifest_string_list (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -22330,13 +22347,13 @@ end
 		end
 
 	yy_do_action_677
-			--|#line 3378 "et_eiffel_parser.y"
+			--|#line 3397 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3378 "et_eiffel_parser.y"
+--|#line 3397 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3378")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3397")
 end
 
 			yyval97 := yyvs97.item (yyvsp97)
@@ -22352,13 +22369,13 @@ end
 		end
 
 	yy_do_action_678
-			--|#line 3378 "et_eiffel_parser.y"
+			--|#line 3397 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3378 "et_eiffel_parser.y"
+--|#line 3397 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3378")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3397")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -22379,13 +22396,13 @@ end
 		end
 
 	yy_do_action_679
-			--|#line 3391 "et_eiffel_parser.y"
+			--|#line 3410 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3391 "et_eiffel_parser.y"
+--|#line 3410 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3391")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3410")
 end
 
 			if attached yyvs15.item (yyvsp15) as l_manifest_string then
@@ -22414,13 +22431,13 @@ end
 		end
 
 	yy_do_action_680
-			--|#line 3402 "et_eiffel_parser.y"
+			--|#line 3421 "et_eiffel_parser.y"
 		local
 			yyval97: detachable ET_MANIFEST_STRING_LIST
 		do
---|#line 3402 "et_eiffel_parser.y"
+--|#line 3421 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3402")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3421")
 end
 
 			yyval97 := yyvs97.item (yyvsp97)
@@ -22436,13 +22453,13 @@ end
 		end
 
 	yy_do_action_681
-			--|#line 3411 "et_eiffel_parser.y"
+			--|#line 3430 "et_eiffel_parser.y"
 		local
 			yyval96: detachable ET_MANIFEST_STRING_ITEM
 		do
---|#line 3411 "et_eiffel_parser.y"
+--|#line 3430 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3411")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3430")
 end
 
 			yyval96 := ast_factory.new_manifest_string_comma (yyvs15.item (yyvsp15), yyvs5.item (yyvsp5))
@@ -22467,13 +22484,13 @@ end
 		end
 
 	yy_do_action_682
-			--|#line 3422 "et_eiffel_parser.y"
+			--|#line 3441 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3422 "et_eiffel_parser.y"
+--|#line 3441 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3422")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3441")
 end
 
 yyval87 := new_unqualified_call_instruction (yyvs12.item (yyvsp12), yyvs26.item (yyvsp26)) 
@@ -22494,16 +22511,16 @@ end
 		end
 
 	yy_do_action_683
-			--|#line 3424 "et_eiffel_parser.y"
+			--|#line 3443 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3424 "et_eiffel_parser.y"
+--|#line 3443 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3424")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3443")
 end
 
-yyval87 := ast_factory.new_qualified_call_instruction (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval87 := ast_factory.new_qualified_call_instruction (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp87 := yyvsp87 + 1
@@ -22523,16 +22540,16 @@ end
 		end
 
 	yy_do_action_684
-			--|#line 3426 "et_eiffel_parser.y"
+			--|#line 3445 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3426 "et_eiffel_parser.y"
+--|#line 3445 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3426")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3445")
 end
 
-yyval87 := ast_factory.new_qualified_call_instruction (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval87 := ast_factory.new_qualified_call_instruction (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp87 := yyvsp87 + 1
@@ -22552,13 +22569,13 @@ end
 		end
 
 	yy_do_action_685
-			--|#line 3428 "et_eiffel_parser.y"
+			--|#line 3447 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3428 "et_eiffel_parser.y"
+--|#line 3447 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3428")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3447")
 end
 
 yyval87 := ast_factory.new_precursor_instruction (False, yyvs4.item (yyvsp4), Void, yyvs26.item (yyvsp26)) 
@@ -22579,13 +22596,13 @@ end
 		end
 
 	yy_do_action_686
-			--|#line 3430 "et_eiffel_parser.y"
+			--|#line 3449 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3430 "et_eiffel_parser.y"
+--|#line 3449 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3430")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3449")
 end
 
 yyval87 := ast_factory.new_precursor_instruction (False, yyvs4.item (yyvsp4), ast_factory.new_precursor_class_name (yyvs5.item (yyvsp5 - 1), yyvs12.item (yyvsp12), yyvs5.item (yyvsp5)), yyvs26.item (yyvsp26)) 
@@ -22608,16 +22625,16 @@ end
 		end
 
 	yy_do_action_687
-			--|#line 3432 "et_eiffel_parser.y"
+			--|#line 3451 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3432 "et_eiffel_parser.y"
+--|#line 3451 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3432")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3451")
 end
 
-yyval87 := ast_factory.new_static_call_instruction (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval87 := ast_factory.new_static_call_instruction (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp87 := yyvsp87 + 1
@@ -22638,16 +22655,16 @@ end
 		end
 
 	yy_do_action_688
-			--|#line 3434 "et_eiffel_parser.y"
+			--|#line 3453 "et_eiffel_parser.y"
 		local
 			yyval87: detachable ET_INSTRUCTION
 		do
---|#line 3434 "et_eiffel_parser.y"
+--|#line 3453 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3434")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3453")
 end
 
-yyval87 := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval87 := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp87 := yyvsp87 + 1
@@ -22667,13 +22684,13 @@ end
 		end
 
 	yy_do_action_689
-			--|#line 3438 "et_eiffel_parser.y"
+			--|#line 3457 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3438 "et_eiffel_parser.y"
+--|#line 3457 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3438")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3457")
 end
 
 yyval64 := new_unqualified_call_expression (yyvs12.item (yyvsp12), yyvs26.item (yyvsp26)) 
@@ -22694,16 +22711,16 @@ end
 		end
 
 	yy_do_action_690
-			--|#line 3440 "et_eiffel_parser.y"
+			--|#line 3459 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3440 "et_eiffel_parser.y"
+--|#line 3459 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3440")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3459")
 end
 
-yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 -1
@@ -22714,16 +22731,16 @@ end
 		end
 
 	yy_do_action_691
-			--|#line 3444 "et_eiffel_parser.y"
+			--|#line 3463 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3444 "et_eiffel_parser.y"
+--|#line 3463 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3444")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3463")
 end
 
-yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 -1
@@ -22734,16 +22751,16 @@ end
 		end
 
 	yy_do_action_692
-			--|#line 3448 "et_eiffel_parser.y"
+			--|#line 3467 "et_eiffel_parser.y"
 		local
 			yyval37: detachable ET_QUALIFIED_CALL_EXPRESSION
 		do
---|#line 3448 "et_eiffel_parser.y"
+--|#line 3467 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3448")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3467")
 end
 
-yyval37 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval37 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp37 := yyvsp37 + 1
@@ -22763,16 +22780,16 @@ end
 		end
 
 	yy_do_action_693
-			--|#line 3450 "et_eiffel_parser.y"
+			--|#line 3469 "et_eiffel_parser.y"
 		local
 			yyval37: detachable ET_QUALIFIED_CALL_EXPRESSION
 		do
---|#line 3450 "et_eiffel_parser.y"
+--|#line 3469 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3450")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3469")
 end
 
-yyval37 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval37 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp37 := yyvsp37 + 1
@@ -22792,16 +22809,16 @@ end
 		end
 
 	yy_do_action_694
-			--|#line 3454 "et_eiffel_parser.y"
+			--|#line 3473 "et_eiffel_parser.y"
 		local
 			yyval112: detachable ET_STATIC_CALL_EXPRESSION
 		do
---|#line 3454 "et_eiffel_parser.y"
+--|#line 3473 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3454")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3473")
 end
 
-yyval112 := ast_factory.new_static_call_expression (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval112 := ast_factory.new_static_call_expression (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp112 := yyvsp112 + 1
@@ -22822,16 +22839,16 @@ end
 		end
 
 	yy_do_action_695
-			--|#line 3456 "et_eiffel_parser.y"
+			--|#line 3475 "et_eiffel_parser.y"
 		local
 			yyval112: detachable ET_STATIC_CALL_EXPRESSION
 		do
---|#line 3456 "et_eiffel_parser.y"
+--|#line 3475 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3456")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3475")
 end
 
-yyval112 := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval112 := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type (yyvs5.item (yyvsp5 - 2), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5 - 1)), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
 	yyvsp112 := yyvsp112 + 1
@@ -22851,13 +22868,13 @@ end
 		end
 
 	yy_do_action_696
-			--|#line 3460 "et_eiffel_parser.y"
+			--|#line 3479 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3460 "et_eiffel_parser.y"
+--|#line 3479 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3460")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3479")
 end
 
 yyval64 := ast_factory.new_precursor_expression (False, yyvs4.item (yyvsp4), Void, yyvs26.item (yyvsp26)) 
@@ -22878,13 +22895,13 @@ end
 		end
 
 	yy_do_action_697
-			--|#line 3462 "et_eiffel_parser.y"
+			--|#line 3481 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3462 "et_eiffel_parser.y"
+--|#line 3481 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3462")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3481")
 end
 
 yyval64 := ast_factory.new_precursor_expression (False, yyvs4.item (yyvsp4), ast_factory.new_precursor_class_name (yyvs5.item (yyvsp5 - 1), yyvs12.item (yyvsp12), yyvs5.item (yyvsp5)), yyvs26.item (yyvsp26)) 
@@ -22907,13 +22924,13 @@ end
 		end
 
 	yy_do_action_698
-			--|#line 3466 "et_eiffel_parser.y"
+			--|#line 3485 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3466 "et_eiffel_parser.y"
+--|#line 3485 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3466")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3485")
 end
 
 yyval64 := new_unqualified_call_expression (yyvs12.item (yyvsp12), yyvs26.item (yyvsp26)) 
@@ -22934,13 +22951,13 @@ end
 		end
 
 	yy_do_action_699
-			--|#line 3468 "et_eiffel_parser.y"
+			--|#line 3487 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3468 "et_eiffel_parser.y"
+--|#line 3487 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3468")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3487")
 end
 
 yyval64 := yyvs17.item (yyvsp17) 
@@ -22960,13 +22977,13 @@ end
 		end
 
 	yy_do_action_700
-			--|#line 3470 "et_eiffel_parser.y"
+			--|#line 3489 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3470 "et_eiffel_parser.y"
+--|#line 3489 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3470")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3489")
 end
 
 yyval64 := yyvs10.item (yyvsp10) 
@@ -22986,13 +23003,13 @@ end
 		end
 
 	yy_do_action_701
-			--|#line 3472 "et_eiffel_parser.y"
+			--|#line 3491 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3472 "et_eiffel_parser.y"
+--|#line 3491 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3472")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3491")
 end
 
 yyval64 := yyvs100.item (yyvsp100) 
@@ -23012,13 +23029,13 @@ end
 		end
 
 	yy_do_action_702
-			--|#line 3474 "et_eiffel_parser.y"
+			--|#line 3493 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3474 "et_eiffel_parser.y"
+--|#line 3493 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3474")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3493")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -23029,13 +23046,13 @@ end
 		end
 
 	yy_do_action_703
-			--|#line 3476 "et_eiffel_parser.y"
+			--|#line 3495 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3476 "et_eiffel_parser.y"
+--|#line 3495 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3476")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3495")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -23060,13 +23077,13 @@ end
 		end
 
 	yy_do_action_704
-			--|#line 3484 "et_eiffel_parser.y"
+			--|#line 3503 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3484 "et_eiffel_parser.y"
+--|#line 3503 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3484")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3503")
 end
 
 yyval64 := yyvs112.item (yyvsp112) 
@@ -23086,16 +23103,16 @@ end
 		end
 
 	yy_do_action_705
-			--|#line 3486 "et_eiffel_parser.y"
+			--|#line 3505 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3486 "et_eiffel_parser.y"
+--|#line 3505 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3486")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3505")
 end
 
-yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 -1
@@ -23106,13 +23123,13 @@ end
 		end
 
 	yy_do_action_706
-			--|#line 3490 "et_eiffel_parser.y"
+			--|#line 3509 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3490 "et_eiffel_parser.y"
+--|#line 3509 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3490")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3509")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
@@ -23137,16 +23154,16 @@ end
 		end
 
 	yy_do_action_707
-			--|#line 3498 "et_eiffel_parser.y"
+			--|#line 3517 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3498 "et_eiffel_parser.y"
+--|#line 3517 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3498")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3517")
 end
 
-yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
+yyval64 := ast_factory.new_qualified_call_expression (yyvs64.item (yyvsp64), new_dot_feature_name (yyvs5.item (yyvsp5), yyvs12.item (yyvsp12)), yyvs26.item (yyvsp26)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 4
 	yyvsp5 := yyvsp5 -1
@@ -23157,13 +23174,13 @@ end
 		end
 
 	yy_do_action_708
-			--|#line 3504 "et_eiffel_parser.y"
+			--|#line 3523 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3504 "et_eiffel_parser.y"
+--|#line 3523 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3504")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3523")
 end
 
 
@@ -23182,13 +23199,13 @@ end
 		end
 
 	yy_do_action_709
-			--|#line 3506 "et_eiffel_parser.y"
+			--|#line 3525 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3506 "et_eiffel_parser.y"
+--|#line 3525 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3506")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3525")
 end
 
 yyval26 := ast_factory.new_actual_arguments (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -23208,13 +23225,13 @@ end
 		end
 
 	yy_do_action_710
-			--|#line 3508 "et_eiffel_parser.y"
+			--|#line 3527 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3508 "et_eiffel_parser.y"
+--|#line 3527 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3508")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3527")
 end
 
 			yyval26 := yyvs26.item (yyvsp26)
@@ -23230,13 +23247,13 @@ end
 		end
 
 	yy_do_action_711
-			--|#line 3508 "et_eiffel_parser.y"
+			--|#line 3527 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3508 "et_eiffel_parser.y"
+--|#line 3527 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3508")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3527")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -23257,13 +23274,13 @@ end
 		end
 
 	yy_do_action_712
-			--|#line 3521 "et_eiffel_parser.y"
+			--|#line 3540 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3521 "et_eiffel_parser.y"
+--|#line 3540 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3521")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3540")
 end
 
 			if attached yyvs64.item (yyvsp64) as l_expression then
@@ -23292,13 +23309,13 @@ end
 		end
 
 	yy_do_action_713
-			--|#line 3532 "et_eiffel_parser.y"
+			--|#line 3551 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3532 "et_eiffel_parser.y"
+--|#line 3551 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3532")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3551")
 end
 
 			yyval26 := ast_factory.new_actual_arguments (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -23323,13 +23340,13 @@ end
 		end
 
 	yy_do_action_714
-			--|#line 3540 "et_eiffel_parser.y"
+			--|#line 3559 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3540 "et_eiffel_parser.y"
+--|#line 3559 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3540")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3559")
 end
 
 			yyval26 := yyvs26.item (yyvsp26)
@@ -23345,13 +23362,13 @@ end
 		end
 
 	yy_do_action_715
-			--|#line 3549 "et_eiffel_parser.y"
+			--|#line 3568 "et_eiffel_parser.y"
 		local
 			yyval65: detachable ET_EXPRESSION_ITEM
 		do
---|#line 3549 "et_eiffel_parser.y"
+--|#line 3568 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3549")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3568")
 end
 
 			yyval65 := ast_factory.new_expression_comma (yyvs64.item (yyvsp64), yyvs5.item (yyvsp5))
@@ -23376,13 +23393,13 @@ end
 		end
 
 	yy_do_action_716
-			--|#line 3558 "et_eiffel_parser.y"
+			--|#line 3577 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3558 "et_eiffel_parser.y"
+--|#line 3577 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3558")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3577")
 end
 
 yyval64 := new_feature_address (yyvs5.item (yyvsp5), yyvs71.item (yyvsp71)) 
@@ -23403,13 +23420,13 @@ end
 		end
 
 	yy_do_action_717
-			--|#line 3560 "et_eiffel_parser.y"
+			--|#line 3579 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3560 "et_eiffel_parser.y"
+--|#line 3579 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3560")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3579")
 end
 
 yyval64 := ast_factory.new_current_address (yyvs5.item (yyvsp5), yyvs10.item (yyvsp10)) 
@@ -23430,13 +23447,13 @@ end
 		end
 
 	yy_do_action_718
-			--|#line 3562 "et_eiffel_parser.y"
+			--|#line 3581 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3562 "et_eiffel_parser.y"
+--|#line 3581 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3562")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3581")
 end
 
 yyval64 := ast_factory.new_result_address (yyvs5.item (yyvsp5), yyvs17.item (yyvsp17)) 
@@ -23457,13 +23474,13 @@ end
 		end
 
 	yy_do_action_719
-			--|#line 3564 "et_eiffel_parser.y"
+			--|#line 3583 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3564 "et_eiffel_parser.y"
+--|#line 3583 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3564")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3583")
 end
 
 yyval64 := ast_factory.new_expression_address (yyvs5.item (yyvsp5), yyvs100.item (yyvsp100)) 
@@ -23484,13 +23501,13 @@ end
 		end
 
 	yy_do_action_720
-			--|#line 3571 "et_eiffel_parser.y"
+			--|#line 3590 "et_eiffel_parser.y"
 		local
 			yyval120: detachable ET_WRITABLE
 		do
---|#line 3571 "et_eiffel_parser.y"
+--|#line 3590 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3571")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3590")
 end
 
 yyval120 := new_writable (yyvs12.item (yyvsp12)) 
@@ -23510,13 +23527,13 @@ end
 		end
 
 	yy_do_action_721
-			--|#line 3573 "et_eiffel_parser.y"
+			--|#line 3592 "et_eiffel_parser.y"
 		local
 			yyval120: detachable ET_WRITABLE
 		do
---|#line 3573 "et_eiffel_parser.y"
+--|#line 3592 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3573")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3592")
 end
 
 yyval120 := yyvs17.item (yyvsp17) 
@@ -23536,13 +23553,13 @@ end
 		end
 
 	yy_do_action_722
-			--|#line 3579 "et_eiffel_parser.y"
+			--|#line 3598 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3579 "et_eiffel_parser.y"
+--|#line 3598 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3579")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3598")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -23553,13 +23570,13 @@ end
 		end
 
 	yy_do_action_723
-			--|#line 3581 "et_eiffel_parser.y"
+			--|#line 3600 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3581 "et_eiffel_parser.y"
+--|#line 3600 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3581")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3600")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -23570,13 +23587,13 @@ end
 		end
 
 	yy_do_action_724
-			--|#line 3585 "et_eiffel_parser.y"
+			--|#line 3604 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3585 "et_eiffel_parser.y"
+--|#line 3604 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3585")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3604")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), ast_factory.new_infix_free_operator (yyvs11.item (yyvsp11)), yyvs64.item (yyvsp64)) 
@@ -23589,13 +23606,13 @@ end
 		end
 
 	yy_do_action_725
-			--|#line 3587 "et_eiffel_parser.y"
+			--|#line 3606 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3587 "et_eiffel_parser.y"
+--|#line 3606 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3587")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3606")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), ast_factory.new_infix_plus_operator (yyvs19.item (yyvsp19)), yyvs64.item (yyvsp64)) 
@@ -23608,13 +23625,13 @@ end
 		end
 
 	yy_do_action_726
-			--|#line 3589 "et_eiffel_parser.y"
+			--|#line 3608 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3589 "et_eiffel_parser.y"
+--|#line 3608 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3589")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3608")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), ast_factory.new_infix_minus_operator (yyvs19.item (yyvsp19)), yyvs64.item (yyvsp64)) 
@@ -23627,13 +23644,13 @@ end
 		end
 
 	yy_do_action_727
-			--|#line 3591 "et_eiffel_parser.y"
+			--|#line 3610 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3591 "et_eiffel_parser.y"
+--|#line 3610 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3591")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3610")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23646,13 +23663,13 @@ end
 		end
 
 	yy_do_action_728
-			--|#line 3593 "et_eiffel_parser.y"
+			--|#line 3612 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3593 "et_eiffel_parser.y"
+--|#line 3612 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3593")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3612")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23665,13 +23682,13 @@ end
 		end
 
 	yy_do_action_729
-			--|#line 3595 "et_eiffel_parser.y"
+			--|#line 3614 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3595 "et_eiffel_parser.y"
+--|#line 3614 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3595")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3614")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23684,13 +23701,13 @@ end
 		end
 
 	yy_do_action_730
-			--|#line 3597 "et_eiffel_parser.y"
+			--|#line 3616 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3597 "et_eiffel_parser.y"
+--|#line 3616 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3597")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3616")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23703,13 +23720,13 @@ end
 		end
 
 	yy_do_action_731
-			--|#line 3599 "et_eiffel_parser.y"
+			--|#line 3618 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3599 "et_eiffel_parser.y"
+--|#line 3618 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3599")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3618")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23722,13 +23739,13 @@ end
 		end
 
 	yy_do_action_732
-			--|#line 3601 "et_eiffel_parser.y"
+			--|#line 3620 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3601 "et_eiffel_parser.y"
+--|#line 3620 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3601")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3620")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23741,13 +23758,13 @@ end
 		end
 
 	yy_do_action_733
-			--|#line 3603 "et_eiffel_parser.y"
+			--|#line 3622 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3603 "et_eiffel_parser.y"
+--|#line 3622 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3603")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3622")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23760,13 +23777,13 @@ end
 		end
 
 	yy_do_action_734
-			--|#line 3605 "et_eiffel_parser.y"
+			--|#line 3624 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3605 "et_eiffel_parser.y"
+--|#line 3624 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3605")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3624")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23779,13 +23796,13 @@ end
 		end
 
 	yy_do_action_735
-			--|#line 3607 "et_eiffel_parser.y"
+			--|#line 3626 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3607 "et_eiffel_parser.y"
+--|#line 3626 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3607")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3626")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -23798,13 +23815,13 @@ end
 		end
 
 	yy_do_action_736
-			--|#line 3609 "et_eiffel_parser.y"
+			--|#line 3628 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3609 "et_eiffel_parser.y"
+--|#line 3628 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3609")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3628")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs14.item (yyvsp14), yyvs64.item (yyvsp64)) 
@@ -23817,13 +23834,13 @@ end
 		end
 
 	yy_do_action_737
-			--|#line 3611 "et_eiffel_parser.y"
+			--|#line 3630 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3611 "et_eiffel_parser.y"
+--|#line 3630 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3611")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3630")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs14.item (yyvsp14), yyvs64.item (yyvsp64)) 
@@ -23836,13 +23853,13 @@ end
 		end
 
 	yy_do_action_738
-			--|#line 3613 "et_eiffel_parser.y"
+			--|#line 3632 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3613 "et_eiffel_parser.y"
+--|#line 3632 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3613")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3632")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs14.item (yyvsp14), yyvs64.item (yyvsp64)) 
@@ -23855,13 +23872,13 @@ end
 		end
 
 	yy_do_action_739
-			--|#line 3615 "et_eiffel_parser.y"
+			--|#line 3634 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3615 "et_eiffel_parser.y"
+--|#line 3634 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3615")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3634")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), ast_factory.new_infix_and_then_operator (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2)), yyvs64.item (yyvsp64)) 
@@ -23875,13 +23892,13 @@ end
 		end
 
 	yy_do_action_740
-			--|#line 3617 "et_eiffel_parser.y"
+			--|#line 3636 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3617 "et_eiffel_parser.y"
+--|#line 3636 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3617")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3636")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), ast_factory.new_infix_or_else_operator (yyvs14.item (yyvsp14), yyvs2.item (yyvsp2)), yyvs64.item (yyvsp64)) 
@@ -23895,13 +23912,13 @@ end
 		end
 
 	yy_do_action_741
-			--|#line 3619 "et_eiffel_parser.y"
+			--|#line 3638 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3619 "et_eiffel_parser.y"
+--|#line 3638 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3619")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3638")
 end
 
 yyval64 := ast_factory.new_infix_expression (yyvs64.item (yyvsp64 - 1), yyvs14.item (yyvsp14), yyvs64.item (yyvsp64)) 
@@ -23914,13 +23931,13 @@ end
 		end
 
 	yy_do_action_742
-			--|#line 3621 "et_eiffel_parser.y"
+			--|#line 3640 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3621 "et_eiffel_parser.y"
+--|#line 3640 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3621")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3640")
 end
 
 yyval64 := ast_factory.new_equality_expression (yyvs64.item (yyvsp64 - 1), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -23933,13 +23950,13 @@ end
 		end
 
 	yy_do_action_743
-			--|#line 3623 "et_eiffel_parser.y"
+			--|#line 3642 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3623 "et_eiffel_parser.y"
+--|#line 3642 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3623")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3642")
 end
 
 yyval64 := ast_factory.new_equality_expression (yyvs64.item (yyvsp64 - 1), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -23952,13 +23969,13 @@ end
 		end
 
 	yy_do_action_744
-			--|#line 3625 "et_eiffel_parser.y"
+			--|#line 3644 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3625 "et_eiffel_parser.y"
+--|#line 3644 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3625")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3644")
 end
 
 yyval64 := ast_factory.new_object_equality_expression (yyvs64.item (yyvsp64 - 1), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -23971,13 +23988,13 @@ end
 		end
 
 	yy_do_action_745
-			--|#line 3627 "et_eiffel_parser.y"
+			--|#line 3646 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3627 "et_eiffel_parser.y"
+--|#line 3646 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3627")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3646")
 end
 
 yyval64 := ast_factory.new_object_equality_expression (yyvs64.item (yyvsp64 - 1), yyvs5.item (yyvsp5), yyvs64.item (yyvsp64)) 
@@ -23990,13 +24007,13 @@ end
 		end
 
 	yy_do_action_746
-			--|#line 3631 "et_eiffel_parser.y"
+			--|#line 3650 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3631 "et_eiffel_parser.y"
+--|#line 3650 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3631")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3650")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24007,13 +24024,13 @@ end
 		end
 
 	yy_do_action_747
-			--|#line 3633 "et_eiffel_parser.y"
+			--|#line 3652 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3633 "et_eiffel_parser.y"
+--|#line 3652 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3633")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3652")
 end
 
 yyval64 := yyvs13.item (yyvsp13) 
@@ -24033,13 +24050,13 @@ end
 		end
 
 	yy_do_action_748
-			--|#line 3635 "et_eiffel_parser.y"
+			--|#line 3654 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3635 "et_eiffel_parser.y"
+--|#line 3654 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3635")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3654")
 end
 
 yyval64 := yyvs16.item (yyvsp16) 
@@ -24059,13 +24076,13 @@ end
 		end
 
 	yy_do_action_749
-			--|#line 3637 "et_eiffel_parser.y"
+			--|#line 3656 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3637 "et_eiffel_parser.y"
+--|#line 3656 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3637")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3656")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24076,13 +24093,13 @@ end
 		end
 
 	yy_do_action_750
-			--|#line 3639 "et_eiffel_parser.y"
+			--|#line 3658 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3639 "et_eiffel_parser.y"
+--|#line 3658 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3639")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3658")
 end
 
 yyval64 := yyvs35.item (yyvsp35) 
@@ -24102,13 +24119,13 @@ end
 		end
 
 	yy_do_action_751
-			--|#line 3641 "et_eiffel_parser.y"
+			--|#line 3660 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3641 "et_eiffel_parser.y"
+--|#line 3660 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3641")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3660")
 end
 
 yyval64 := ast_factory.new_manifest_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)) 
@@ -24129,13 +24146,13 @@ end
 		end
 
 	yy_do_action_752
-			--|#line 3645 "et_eiffel_parser.y"
+			--|#line 3664 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3645 "et_eiffel_parser.y"
+--|#line 3664 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3645")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3664")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24146,13 +24163,13 @@ end
 		end
 
 	yy_do_action_753
-			--|#line 3647 "et_eiffel_parser.y"
+			--|#line 3666 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3647 "et_eiffel_parser.y"
+--|#line 3666 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3647")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3666")
 end
 
 yyval64 := yyvs35.item (yyvsp35) 
@@ -24172,13 +24189,13 @@ end
 		end
 
 	yy_do_action_754
-			--|#line 3649 "et_eiffel_parser.y"
+			--|#line 3668 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3649 "et_eiffel_parser.y"
+--|#line 3668 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3649")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3668")
 end
 
 yyval64 := yyvs56.item (yyvsp56) 
@@ -24198,13 +24215,13 @@ end
 		end
 
 	yy_do_action_755
-			--|#line 3651 "et_eiffel_parser.y"
+			--|#line 3670 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3651 "et_eiffel_parser.y"
+--|#line 3670 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3651")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3670")
 end
 
 yyval64 := yyvs24.item (yyvsp24) 
@@ -24224,13 +24241,13 @@ end
 		end
 
 	yy_do_action_756
-			--|#line 3653 "et_eiffel_parser.y"
+			--|#line 3672 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3653 "et_eiffel_parser.y"
+--|#line 3672 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3653")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3672")
 end
 
 yyval64 := yyvs24.item (yyvsp24) 
@@ -24250,13 +24267,13 @@ end
 		end
 
 	yy_do_action_757
-			--|#line 3655 "et_eiffel_parser.y"
+			--|#line 3674 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3655 "et_eiffel_parser.y"
+--|#line 3674 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3655")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3674")
 end
 
 yyval64 := yyvs98.item (yyvsp98) 
@@ -24276,13 +24293,13 @@ end
 		end
 
 	yy_do_action_758
-			--|#line 3657 "et_eiffel_parser.y"
+			--|#line 3676 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3657 "et_eiffel_parser.y"
+--|#line 3676 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3657")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3676")
 end
 
 yyval64 := yyvs13.item (yyvsp13) 
@@ -24302,13 +24319,13 @@ end
 		end
 
 	yy_do_action_759
-			--|#line 3659 "et_eiffel_parser.y"
+			--|#line 3678 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3659 "et_eiffel_parser.y"
+--|#line 3678 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3659")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3678")
 end
 
 yyval64 := yyvs16.item (yyvsp16) 
@@ -24328,13 +24345,13 @@ end
 		end
 
 	yy_do_action_760
-			--|#line 3661 "et_eiffel_parser.y"
+			--|#line 3680 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3661 "et_eiffel_parser.y"
+--|#line 3680 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3661")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3680")
 end
 
 yyval64 := new_prefix_plus_expression (yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -24346,13 +24363,13 @@ end
 		end
 
 	yy_do_action_761
-			--|#line 3663 "et_eiffel_parser.y"
+			--|#line 3682 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3663 "et_eiffel_parser.y"
+--|#line 3682 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3663")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3682")
 end
 
 yyval64 := new_prefix_minus_expression (yyvs19.item (yyvsp19), yyvs64.item (yyvsp64)) 
@@ -24364,13 +24381,13 @@ end
 		end
 
 	yy_do_action_762
-			--|#line 3665 "et_eiffel_parser.y"
+			--|#line 3684 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3665 "et_eiffel_parser.y"
+--|#line 3684 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3665")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3684")
 end
 
 yyval64 := ast_factory.new_prefix_expression (yyvs14.item (yyvsp14), yyvs64.item (yyvsp64)) 
@@ -24382,13 +24399,13 @@ end
 		end
 
 	yy_do_action_763
-			--|#line 3667 "et_eiffel_parser.y"
+			--|#line 3686 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3667 "et_eiffel_parser.y"
+--|#line 3686 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3667")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3686")
 end
 
 yyval64 := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator (yyvs11.item (yyvsp11)), yyvs64.item (yyvsp64)) 
@@ -24400,13 +24417,13 @@ end
 		end
 
 	yy_do_action_764
-			--|#line 3669 "et_eiffel_parser.y"
+			--|#line 3688 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3669 "et_eiffel_parser.y"
+--|#line 3688 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3669")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3688")
 end
 
 yyval64 := ast_factory.new_old_expression (yyvs2.item (yyvsp2), yyvs64.item (yyvsp64)) 
@@ -24418,13 +24435,13 @@ end
 		end
 
 	yy_do_action_765
-			--|#line 3671 "et_eiffel_parser.y"
+			--|#line 3690 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3671 "et_eiffel_parser.y"
+--|#line 3690 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3671")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3690")
 end
 
 			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
@@ -24443,13 +24460,13 @@ end
 		end
 
 	yy_do_action_766
-			--|#line 3679 "et_eiffel_parser.y"
+			--|#line 3698 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3679 "et_eiffel_parser.y"
+--|#line 3698 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3679")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3698")
 end
 
 yyval64 := ast_factory.new_object_test (yyvs2.item (yyvsp2), Void, yyvs64.item (yyvsp64)) 
@@ -24461,13 +24478,13 @@ end
 		end
 
 	yy_do_action_767
-			--|#line 3681 "et_eiffel_parser.y"
+			--|#line 3700 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3681 "et_eiffel_parser.y"
+--|#line 3700 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3681")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3700")
 end
 
 yyval64 := ast_factory.new_object_test (yyvs2.item (yyvsp2), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)), yyvs64.item (yyvsp64)) 
@@ -24481,13 +24498,13 @@ end
 		end
 
 	yy_do_action_768
-			--|#line 3683 "et_eiffel_parser.y"
+			--|#line 3702 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3683 "et_eiffel_parser.y"
+--|#line 3702 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3683")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3702")
 end
 
 yyval64 := new_named_object_test (yyvs2.item (yyvsp2 - 1), Void, yyvs64.item (yyvsp64), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
@@ -24500,13 +24517,13 @@ end
 		end
 
 	yy_do_action_769
-			--|#line 3685 "et_eiffel_parser.y"
+			--|#line 3704 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3685 "et_eiffel_parser.y"
+--|#line 3704 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3685")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3704")
 end
 
 yyval64 := new_named_object_test (yyvs2.item (yyvsp2 - 1), ast_factory.new_target_type (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)), yyvs64.item (yyvsp64), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
@@ -24521,13 +24538,13 @@ end
 		end
 
 	yy_do_action_770
-			--|#line 3689 "et_eiffel_parser.y"
+			--|#line 3708 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3689 "et_eiffel_parser.y"
+--|#line 3708 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3689")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3708")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24538,13 +24555,13 @@ end
 		end
 
 	yy_do_action_771
-			--|#line 3691 "et_eiffel_parser.y"
+			--|#line 3710 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3691 "et_eiffel_parser.y"
+--|#line 3710 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3691")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3710")
 end
 
 yyval64 := yyvs112.item (yyvsp112) 
@@ -24564,13 +24581,13 @@ end
 		end
 
 	yy_do_action_772
-			--|#line 3693 "et_eiffel_parser.y"
+			--|#line 3712 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3693 "et_eiffel_parser.y"
+--|#line 3712 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3693")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3712")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24581,13 +24598,13 @@ end
 		end
 
 	yy_do_action_773
-			--|#line 3695 "et_eiffel_parser.y"
+			--|#line 3714 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3695 "et_eiffel_parser.y"
+--|#line 3714 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3695")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3714")
 end
 
 yyval64 := yyvs17.item (yyvsp17) 
@@ -24607,13 +24624,13 @@ end
 		end
 
 	yy_do_action_774
-			--|#line 3697 "et_eiffel_parser.y"
+			--|#line 3716 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3697 "et_eiffel_parser.y"
+--|#line 3716 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3697")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3716")
 end
 
 yyval64 := yyvs10.item (yyvsp10) 
@@ -24633,13 +24650,13 @@ end
 		end
 
 	yy_do_action_775
-			--|#line 3699 "et_eiffel_parser.y"
+			--|#line 3718 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3699 "et_eiffel_parser.y"
+--|#line 3718 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3699")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3718")
 end
 
 yyval64 := yyvs100.item (yyvsp100) 
@@ -24659,13 +24676,13 @@ end
 		end
 
 	yy_do_action_776
-			--|#line 3701 "et_eiffel_parser.y"
+			--|#line 3720 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3701 "et_eiffel_parser.y"
+--|#line 3720 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3701")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3720")
 end
 
 yyval64 := yyvs7.item (yyvsp7) 
@@ -24685,13 +24702,13 @@ end
 		end
 
 	yy_do_action_777
-			--|#line 3703 "et_eiffel_parser.y"
+			--|#line 3722 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3703 "et_eiffel_parser.y"
+--|#line 3722 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3703")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3722")
 end
 
 yyval64 := yyvs36.item (yyvsp36) 
@@ -24711,13 +24728,13 @@ end
 		end
 
 	yy_do_action_778
-			--|#line 3705 "et_eiffel_parser.y"
+			--|#line 3724 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3705 "et_eiffel_parser.y"
+--|#line 3724 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3705")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3724")
 end
 
 yyval64 := yyvs85.item (yyvsp85) 
@@ -24737,13 +24754,13 @@ end
 		end
 
 	yy_do_action_779
-			--|#line 3707 "et_eiffel_parser.y"
+			--|#line 3726 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3707 "et_eiffel_parser.y"
+--|#line 3726 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3707")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3726")
 end
 
 yyval64 := yyvs20.item (yyvsp20) 
@@ -24763,13 +24780,13 @@ end
 		end
 
 	yy_do_action_780
-			--|#line 3709 "et_eiffel_parser.y"
+			--|#line 3728 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3709 "et_eiffel_parser.y"
+--|#line 3728 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3709")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3728")
 end
 
 yyval64 := yyvs9.item (yyvsp9) 
@@ -24789,13 +24806,13 @@ end
 		end
 
 	yy_do_action_781
-			--|#line 3711 "et_eiffel_parser.y"
+			--|#line 3730 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3711 "et_eiffel_parser.y"
+--|#line 3730 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3711")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3730")
 end
 
 yyval64 := yyvs15.item (yyvsp15) 
@@ -24815,13 +24832,13 @@ end
 		end
 
 	yy_do_action_782
-			--|#line 3713 "et_eiffel_parser.y"
+			--|#line 3732 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3713 "et_eiffel_parser.y"
+--|#line 3732 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3713")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3732")
 end
 
 yyval64 := new_once_manifest_string (yyvs2.item (yyvsp2), yyvs15.item (yyvsp15)) 
@@ -24842,13 +24859,13 @@ end
 		end
 
 	yy_do_action_783
-			--|#line 3746 "et_eiffel_parser.y"
+			--|#line 3765 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3746 "et_eiffel_parser.y"
+--|#line 3765 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3746")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3765")
 end
 
 yyval64 := yyvs95.item (yyvsp95) 
@@ -24868,13 +24885,13 @@ end
 		end
 
 	yy_do_action_784
-			--|#line 3748 "et_eiffel_parser.y"
+			--|#line 3767 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3748 "et_eiffel_parser.y"
+--|#line 3767 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3748")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3767")
 end
 
 yyval64 := yyvs113.item (yyvsp113) 
@@ -24894,13 +24911,13 @@ end
 		end
 
 	yy_do_action_785
-			--|#line 3750 "et_eiffel_parser.y"
+			--|#line 3769 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3750 "et_eiffel_parser.y"
+--|#line 3769 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3750")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3769")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24911,13 +24928,13 @@ end
 		end
 
 	yy_do_action_786
-			--|#line 3754 "et_eiffel_parser.y"
+			--|#line 3773 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3754 "et_eiffel_parser.y"
+--|#line 3773 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3754")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3773")
 end
 
 yyval64 := yyvs64.item (yyvsp64) 
@@ -24928,13 +24945,13 @@ end
 		end
 
 	yy_do_action_787
-			--|#line 3756 "et_eiffel_parser.y"
+			--|#line 3775 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3756 "et_eiffel_parser.y"
+--|#line 3775 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3756")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3775")
 end
 
 yyval64 := yyvs15.item (yyvsp15) 
@@ -24954,13 +24971,13 @@ end
 		end
 
 	yy_do_action_788
-			--|#line 3758 "et_eiffel_parser.y"
+			--|#line 3777 "et_eiffel_parser.y"
 		local
 			yyval64: detachable ET_EXPRESSION
 		do
---|#line 3758 "et_eiffel_parser.y"
+--|#line 3777 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3758")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3777")
 end
 
 yyval64 := yyvs9.item (yyvsp9) 
@@ -24980,13 +24997,13 @@ end
 		end
 
 	yy_do_action_789
-			--|#line 3762 "et_eiffel_parser.y"
+			--|#line 3781 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3762 "et_eiffel_parser.y"
+--|#line 3781 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3762")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3781")
 end
 
 yyval35 := yyvs35.item (yyvsp35) 
@@ -24997,13 +25014,13 @@ end
 		end
 
 	yy_do_action_790
-			--|#line 3764 "et_eiffel_parser.y"
+			--|#line 3783 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3764 "et_eiffel_parser.y"
+--|#line 3783 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3764")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3783")
 end
 
 yyval35 := yyvs35.item (yyvsp35) 
@@ -25014,13 +25031,13 @@ end
 		end
 
 	yy_do_action_791
-			--|#line 3768 "et_eiffel_parser.y"
+			--|#line 3787 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3768 "et_eiffel_parser.y"
+--|#line 3787 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3768")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3787")
 end
 
 			yyval35 := ast_factory.new_bracket_expression (yyvs64.item (yyvsp64), yyvs22.item (yyvsp22), yyvs26.item (yyvsp26))
@@ -25037,13 +25054,13 @@ end
 		end
 
 	yy_do_action_792
-			--|#line 3768 "et_eiffel_parser.y"
+			--|#line 3787 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3768 "et_eiffel_parser.y"
+--|#line 3787 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3768")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3787")
 end
 
 			add_symbol (yyvs22.item (yyvsp22))
@@ -25064,13 +25081,13 @@ end
 		end
 
 	yy_do_action_793
-			--|#line 3781 "et_eiffel_parser.y"
+			--|#line 3800 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3781 "et_eiffel_parser.y"
+--|#line 3800 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3781")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3800")
 end
 
 			yyval35 := ast_factory.new_bracket_expression (yyvs64.item (yyvsp64), yyvs22.item (yyvsp22), yyvs26.item (yyvsp26))
@@ -25087,13 +25104,13 @@ end
 		end
 
 	yy_do_action_794
-			--|#line 3781 "et_eiffel_parser.y"
+			--|#line 3800 "et_eiffel_parser.y"
 		local
 			yyval35: detachable ET_BRACKET_EXPRESSION
 		do
---|#line 3781 "et_eiffel_parser.y"
+--|#line 3800 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3781")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3800")
 end
 
 			add_symbol (yyvs22.item (yyvsp22))
@@ -25114,13 +25131,13 @@ end
 		end
 
 	yy_do_action_795
-			--|#line 3794 "et_eiffel_parser.y"
+			--|#line 3813 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3794 "et_eiffel_parser.y"
+--|#line 3813 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3794")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3813")
 end
 
 			if attached yyvs64.item (yyvsp64) as l_expression then
@@ -25149,13 +25166,13 @@ end
 		end
 
 	yy_do_action_796
-			--|#line 3805 "et_eiffel_parser.y"
+			--|#line 3824 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3805 "et_eiffel_parser.y"
+--|#line 3824 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3805")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3824")
 end
 
 			yyval26 := ast_factory.new_bracket_arguments (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -25180,13 +25197,13 @@ end
 		end
 
 	yy_do_action_797
-			--|#line 3813 "et_eiffel_parser.y"
+			--|#line 3832 "et_eiffel_parser.y"
 		local
 			yyval26: detachable ET_ACTUAL_ARGUMENT_LIST
 		do
---|#line 3813 "et_eiffel_parser.y"
+--|#line 3832 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3813")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3832")
 end
 
 			yyval26 := yyvs26.item (yyvsp26)
@@ -25202,13 +25219,13 @@ end
 		end
 
 	yy_do_action_798
-			--|#line 3822 "et_eiffel_parser.y"
+			--|#line 3841 "et_eiffel_parser.y"
 		local
 			yyval100: detachable ET_PARENTHESIZED_EXPRESSION
 		do
---|#line 3822 "et_eiffel_parser.y"
+--|#line 3841 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3822")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3841")
 end
 
 			remove_symbol
@@ -25232,13 +25249,13 @@ end
 		end
 
 	yy_do_action_799
-			--|#line 3830 "et_eiffel_parser.y"
+			--|#line 3849 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3830 "et_eiffel_parser.y"
+--|#line 3849 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3830")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3849")
 end
 
 yyval95 := ast_factory.new_manifest_array (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -25258,13 +25275,13 @@ end
 		end
 
 	yy_do_action_800
-			--|#line 3832 "et_eiffel_parser.y"
+			--|#line 3851 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3832 "et_eiffel_parser.y"
+--|#line 3851 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3832")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3851")
 end
 
 			yyval95 := yyvs95.item (yyvsp95)
@@ -25280,13 +25297,13 @@ end
 		end
 
 	yy_do_action_801
-			--|#line 3832 "et_eiffel_parser.y"
+			--|#line 3851 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3832 "et_eiffel_parser.y"
+--|#line 3851 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3832")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3851")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -25307,13 +25324,13 @@ end
 		end
 
 	yy_do_action_802
-			--|#line 3845 "et_eiffel_parser.y"
+			--|#line 3864 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3845 "et_eiffel_parser.y"
+--|#line 3864 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3845")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3864")
 end
 
 			if attached yyvs64.item (yyvsp64) as l_expression then
@@ -25342,13 +25359,13 @@ end
 		end
 
 	yy_do_action_803
-			--|#line 3856 "et_eiffel_parser.y"
+			--|#line 3875 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3856 "et_eiffel_parser.y"
+--|#line 3875 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3856")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3875")
 end
 
 			yyval95 := ast_factory.new_manifest_array (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -25373,13 +25390,13 @@ end
 		end
 
 	yy_do_action_804
-			--|#line 3864 "et_eiffel_parser.y"
+			--|#line 3883 "et_eiffel_parser.y"
 		local
 			yyval95: detachable ET_MANIFEST_ARRAY
 		do
---|#line 3864 "et_eiffel_parser.y"
+--|#line 3883 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3864")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3883")
 end
 
 			yyval95 := yyvs95.item (yyvsp95)
@@ -25395,13 +25412,13 @@ end
 		end
 
 	yy_do_action_805
-			--|#line 3873 "et_eiffel_parser.y"
+			--|#line 3892 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3873 "et_eiffel_parser.y"
+--|#line 3892 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3873")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3892")
 end
 
 yyval98 := ast_factory.new_manifest_tuple (yyvs22.item (yyvsp22), yyvs5.item (yyvsp5), 0) 
@@ -25422,13 +25439,13 @@ end
 		end
 
 	yy_do_action_806
-			--|#line 3875 "et_eiffel_parser.y"
+			--|#line 3894 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3875 "et_eiffel_parser.y"
+--|#line 3894 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3875")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3894")
 end
 
 			yyval98 := yyvs98.item (yyvsp98)
@@ -25444,13 +25461,13 @@ end
 		end
 
 	yy_do_action_807
-			--|#line 3875 "et_eiffel_parser.y"
+			--|#line 3894 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3875 "et_eiffel_parser.y"
+--|#line 3894 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3875")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3894")
 end
 
 			add_symbol (yyvs22.item (yyvsp22))
@@ -25471,13 +25488,13 @@ end
 		end
 
 	yy_do_action_808
-			--|#line 3888 "et_eiffel_parser.y"
+			--|#line 3907 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3888 "et_eiffel_parser.y"
+--|#line 3907 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3888")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3907")
 end
 
 			if attached yyvs64.item (yyvsp64) as l_expression then
@@ -25506,13 +25523,13 @@ end
 		end
 
 	yy_do_action_809
-			--|#line 3899 "et_eiffel_parser.y"
+			--|#line 3918 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3899 "et_eiffel_parser.y"
+--|#line 3918 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3899")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3918")
 end
 
 			yyval98 := ast_factory.new_manifest_tuple (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -25537,13 +25554,13 @@ end
 		end
 
 	yy_do_action_810
-			--|#line 3907 "et_eiffel_parser.y"
+			--|#line 3926 "et_eiffel_parser.y"
 		local
 			yyval98: detachable ET_MANIFEST_TUPLE
 		do
---|#line 3907 "et_eiffel_parser.y"
+--|#line 3926 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3907")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3926")
 end
 
 			yyval98 := yyvs98.item (yyvsp98)
@@ -25559,13 +25576,13 @@ end
 		end
 
 	yy_do_action_811
-			--|#line 3916 "et_eiffel_parser.y"
+			--|#line 3935 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3916 "et_eiffel_parser.y"
+--|#line 3935 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3916")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3935")
 end
 
 yyval113 := ast_factory.new_strip_expression (yyvs2.item (yyvsp2), yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -25586,13 +25603,13 @@ end
 		end
 
 	yy_do_action_812
-			--|#line 3918 "et_eiffel_parser.y"
+			--|#line 3937 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3918 "et_eiffel_parser.y"
+--|#line 3937 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3918")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3937")
 end
 
 			yyval113 := yyvs113.item (yyvsp113)
@@ -25610,13 +25627,13 @@ end
 		end
 
 	yy_do_action_813
-			--|#line 3918 "et_eiffel_parser.y"
+			--|#line 3937 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3918 "et_eiffel_parser.y"
+--|#line 3937 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3918")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3937")
 end
 
 			add_keyword (yyvs2.item (yyvsp2))
@@ -25638,13 +25655,13 @@ end
 		end
 
 	yy_do_action_814
-			--|#line 3933 "et_eiffel_parser.y"
+			--|#line 3952 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3933 "et_eiffel_parser.y"
+--|#line 3952 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3933")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3952")
 end
 
 			if attached yyvs71.item (yyvsp71) as l_feature_name then
@@ -25673,13 +25690,13 @@ end
 		end
 
 	yy_do_action_815
-			--|#line 3944 "et_eiffel_parser.y"
+			--|#line 3963 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3944 "et_eiffel_parser.y"
+--|#line 3963 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3944")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3963")
 end
 
 			yyval113 := ast_factory.new_strip_expression (last_keyword, last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -25704,13 +25721,13 @@ end
 		end
 
 	yy_do_action_816
-			--|#line 3952 "et_eiffel_parser.y"
+			--|#line 3971 "et_eiffel_parser.y"
 		local
 			yyval113: detachable ET_STRIP_EXPRESSION
 		do
---|#line 3952 "et_eiffel_parser.y"
+--|#line 3971 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3952")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3971")
 end
 
 			yyval113 := yyvs113.item (yyvsp113)
@@ -25726,13 +25743,13 @@ end
 		end
 
 	yy_do_action_817
-			--|#line 3961 "et_eiffel_parser.y"
+			--|#line 3980 "et_eiffel_parser.y"
 		local
 			yyval48: detachable ET_CONSTANT
 		do
---|#line 3961 "et_eiffel_parser.y"
+--|#line 3980 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3961")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3980")
 end
 
 yyval48 := yyvs7.item (yyvsp7) 
@@ -25752,13 +25769,13 @@ end
 		end
 
 	yy_do_action_818
-			--|#line 3963 "et_eiffel_parser.y"
+			--|#line 3982 "et_eiffel_parser.y"
 		local
 			yyval48: detachable ET_CONSTANT
 		do
---|#line 3963 "et_eiffel_parser.y"
+--|#line 3982 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3963")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3982")
 end
 
 yyval48 := yyvs9.item (yyvsp9) 
@@ -25778,13 +25795,13 @@ end
 		end
 
 	yy_do_action_819
-			--|#line 3965 "et_eiffel_parser.y"
+			--|#line 3984 "et_eiffel_parser.y"
 		local
 			yyval48: detachable ET_CONSTANT
 		do
---|#line 3965 "et_eiffel_parser.y"
+--|#line 3984 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3965")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3984")
 end
 
 yyval48 := yyvs13.item (yyvsp13) 
@@ -25804,13 +25821,13 @@ end
 		end
 
 	yy_do_action_820
-			--|#line 3967 "et_eiffel_parser.y"
+			--|#line 3986 "et_eiffel_parser.y"
 		local
 			yyval48: detachable ET_CONSTANT
 		do
---|#line 3967 "et_eiffel_parser.y"
+--|#line 3986 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3967")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3986")
 end
 
 yyval48 := yyvs16.item (yyvsp16) 
@@ -25830,13 +25847,13 @@ end
 		end
 
 	yy_do_action_821
-			--|#line 3969 "et_eiffel_parser.y"
+			--|#line 3988 "et_eiffel_parser.y"
 		local
 			yyval48: detachable ET_CONSTANT
 		do
---|#line 3969 "et_eiffel_parser.y"
+--|#line 3988 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3969")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3988")
 end
 
 yyval48 := yyvs15.item (yyvsp15) 
@@ -25856,13 +25873,13 @@ end
 		end
 
 	yy_do_action_822
-			--|#line 3973 "et_eiffel_parser.y"
+			--|#line 3992 "et_eiffel_parser.y"
 		local
 			yyval24: detachable ET_ACROSS_EXPRESSION
 		do
---|#line 3973 "et_eiffel_parser.y"
+--|#line 3992 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3973")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3992")
 end
 
 yyval24 := new_across_some_expression (yyvs24.item (yyvsp24), yyvs94.item (yyvsp94), yyvs47.item (yyvsp47), ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs117.item (yyvsp117), yyvs2.item (yyvsp2)) 
@@ -25878,13 +25895,13 @@ end
 		end
 
 	yy_do_action_823
-			--|#line 3977 "et_eiffel_parser.y"
+			--|#line 3996 "et_eiffel_parser.y"
 		local
 			yyval24: detachable ET_ACROSS_EXPRESSION
 		do
---|#line 3977 "et_eiffel_parser.y"
+--|#line 3996 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3977")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3996")
 end
 
 yyval24 := new_across_all_expression (yyvs24.item (yyvsp24), yyvs94.item (yyvsp94), yyvs47.item (yyvsp47), ast_factory.new_conditional (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64)), yyvs117.item (yyvsp117), yyvs2.item (yyvsp2)) 
@@ -25900,13 +25917,13 @@ end
 		end
 
 	yy_do_action_824
-			--|#line 3981 "et_eiffel_parser.y"
+			--|#line 4000 "et_eiffel_parser.y"
 		local
 			yyval24: detachable ET_ACROSS_EXPRESSION
 		do
---|#line 3981 "et_eiffel_parser.y"
+--|#line 4000 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3981")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4000")
 end
 
 yyval24 := new_across_expression_header (yyvs2.item (yyvsp2 - 1), yyvs64.item (yyvsp64), yyvs2.item (yyvsp2), yyvs12.item (yyvsp12)) 
@@ -25928,13 +25945,13 @@ end
 		end
 
 	yy_do_action_825
-			--|#line 3987 "et_eiffel_parser.y"
+			--|#line 4006 "et_eiffel_parser.y"
 		local
 			yyval36: detachable ET_CALL_AGENT
 		do
---|#line 3987 "et_eiffel_parser.y"
+--|#line 4006 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3987")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4006")
 end
 
 yyval36 := ast_factory.new_call_agent (yyvs3.item (yyvsp3), Void, yyvs71.item (yyvsp71), yyvs31.item (yyvsp31)) 
@@ -25956,13 +25973,13 @@ end
 		end
 
 	yy_do_action_826
-			--|#line 3989 "et_eiffel_parser.y"
+			--|#line 4008 "et_eiffel_parser.y"
 		local
 			yyval36: detachable ET_CALL_AGENT
 		do
---|#line 3989 "et_eiffel_parser.y"
+--|#line 4008 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3989")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4008")
 end
 
 yyval36 := ast_factory.new_call_agent (yyvs3.item (yyvsp3), yyvs32.item (yyvsp32), ast_factory.new_dot_feature_name (yyvs5.item (yyvsp5), yyvs71.item (yyvsp71)), yyvs31.item (yyvsp31)) 
@@ -25986,13 +26003,13 @@ end
 		end
 
 	yy_do_action_827
-			--|#line 3993 "et_eiffel_parser.y"
+			--|#line 4012 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 3993 "et_eiffel_parser.y"
+--|#line 4012 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 3993")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4012")
 end
 
 			set_inline_agent_actual_arguments (yyvs85.item (yyvsp85), yyvs31.item (yyvsp31))
@@ -26006,13 +26023,13 @@ end
 		end
 
 	yy_do_action_828
-			--|#line 4000 "et_eiffel_parser.y"
+			--|#line 4019 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4000 "et_eiffel_parser.y"
+--|#line 4019 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4000")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4019")
 end
 
 			yyval85 := ast_factory.new_do_function_inline_agent (yyvs3.item (yyvsp3), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26042,13 +26059,13 @@ end
 		end
 
 	yy_do_action_829
-			--|#line 4010 "et_eiffel_parser.y"
+			--|#line 4029 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4010 "et_eiffel_parser.y"
+--|#line 4029 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4010")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4029")
 end
 
 			yyval85 := ast_factory.new_do_function_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26078,13 +26095,13 @@ end
 		end
 
 	yy_do_action_830
-			--|#line 4016 "et_eiffel_parser.y"
+			--|#line 4035 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4016 "et_eiffel_parser.y"
+--|#line 4035 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4016")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4035")
 end
 
 			yyval85 := ast_factory.new_once_function_inline_agent (yyvs3.item (yyvsp3), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26115,13 +26132,13 @@ end
 		end
 
 	yy_do_action_831
-			--|#line 4022 "et_eiffel_parser.y"
+			--|#line 4041 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4022 "et_eiffel_parser.y"
+--|#line 4041 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4022")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4041")
 end
 
 			yyval85 := ast_factory.new_once_function_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26152,13 +26169,13 @@ end
 		end
 
 	yy_do_action_832
-			--|#line 4028 "et_eiffel_parser.y"
+			--|#line 4047 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4028 "et_eiffel_parser.y"
+--|#line 4047 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4028")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4047")
 end
 
 			yyval85 := ast_factory.new_external_function_inline_agent (yyvs3.item (yyvsp3), Void, ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), Void)
@@ -26188,13 +26205,13 @@ end
 		end
 
 	yy_do_action_833
-			--|#line 4034 "et_eiffel_parser.y"
+			--|#line 4053 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4034 "et_eiffel_parser.y"
+--|#line 4053 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4034")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4053")
 end
 
 			yyval85 := ast_factory.new_external_function_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), ast_factory.new_colon_type (yyvs5.item (yyvsp5), yyvs114.item (yyvsp114)), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), Void)
@@ -26224,13 +26241,13 @@ end
 		end
 
 	yy_do_action_834
-			--|#line 4040 "et_eiffel_parser.y"
+			--|#line 4059 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4040 "et_eiffel_parser.y"
+--|#line 4059 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4040")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4059")
 end
 
 			yyval85 := ast_factory.new_do_procedure_inline_agent (yyvs3.item (yyvsp3), Void, yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26258,13 +26275,13 @@ end
 		end
 
 	yy_do_action_835
-			--|#line 4046 "et_eiffel_parser.y"
+			--|#line 4065 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4046 "et_eiffel_parser.y"
+--|#line 4065 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4046")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4065")
 end
 
 			yyval85 := ast_factory.new_do_procedure_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs46.item (yyvsp46 - 1), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26292,13 +26309,13 @@ end
 		end
 
 	yy_do_action_836
-			--|#line 4052 "et_eiffel_parser.y"
+			--|#line 4071 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4052 "et_eiffel_parser.y"
+--|#line 4071 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4052")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4071")
 end
 
 			yyval85 := ast_factory.new_once_procedure_inline_agent (yyvs3.item (yyvsp3), Void, yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26327,13 +26344,13 @@ end
 		end
 
 	yy_do_action_837
-			--|#line 4058 "et_eiffel_parser.y"
+			--|#line 4077 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4058 "et_eiffel_parser.y"
+--|#line 4077 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4058")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4077")
 end
 
 			yyval85 := ast_factory.new_once_procedure_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), yyvs106.item (yyvsp106), yyvs93.item (yyvsp93), yyvs97.item (yyvsp97), ast_factory.new_once_compound (yyvs2.item (yyvsp2 - 1), yyvs46.item (yyvsp46 - 1)), yyvs105.item (yyvsp105), yyvs46.item (yyvsp46), yyvs2.item (yyvsp2), Void)
@@ -26361,13 +26378,13 @@ end
 		end
 
 	yy_do_action_838
-			--|#line 4063 "et_eiffel_parser.y"
+			--|#line 4082 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4063 "et_eiffel_parser.y"
+--|#line 4082 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4063")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4082")
 end
 
 			yyval85 := ast_factory.new_external_procedure_inline_agent (yyvs3.item (yyvsp3), Void, yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), Void)
@@ -26395,13 +26412,13 @@ end
 		end
 
 	yy_do_action_839
-			--|#line 4069 "et_eiffel_parser.y"
+			--|#line 4088 "et_eiffel_parser.y"
 		local
 			yyval85: detachable ET_INLINE_AGENT
 		do
---|#line 4069 "et_eiffel_parser.y"
+--|#line 4088 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4069")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4088")
 end
 
 			yyval85 := ast_factory.new_external_procedure_inline_agent (yyvs3.item (yyvsp3), yyvs75.item (yyvsp75), yyvs106.item (yyvsp106), ast_factory.new_external_language (yyvs2.item (yyvsp2 - 1), yyvs15.item (yyvsp15)), yyvs67.item (yyvsp67), yyvs105.item (yyvsp105), yyvs2.item (yyvsp2), Void)
@@ -26429,13 +26446,13 @@ end
 		end
 
 	yy_do_action_840
-			--|#line 4077 "et_eiffel_parser.y"
+			--|#line 4096 "et_eiffel_parser.y"
 		local
 			yyval75: detachable ET_FORMAL_ARGUMENT_LIST
 		do
---|#line 4077 "et_eiffel_parser.y"
+--|#line 4096 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4077")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4096")
 end
 
 			yyval75 := yyvs75.item (yyvsp75)
@@ -26448,13 +26465,13 @@ end
 		end
 
 	yy_do_action_841
-			--|#line 4084 "et_eiffel_parser.y"
+			--|#line 4103 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 4084 "et_eiffel_parser.y"
+--|#line 4103 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4084")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4103")
 end
 
 set_start_closure (Void) 
@@ -26473,13 +26490,13 @@ end
 		end
 
 	yy_do_action_842
-			--|#line 4088 "et_eiffel_parser.y"
+			--|#line 4107 "et_eiffel_parser.y"
 		local
 			yyval32: detachable ET_AGENT_TARGET
 		do
---|#line 4088 "et_eiffel_parser.y"
+--|#line 4107 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4088")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4107")
 end
 
 yyval32 := new_agent_identifier_target (yyvs12.item (yyvsp12)) 
@@ -26499,13 +26516,13 @@ end
 		end
 
 	yy_do_action_843
-			--|#line 4090 "et_eiffel_parser.y"
+			--|#line 4109 "et_eiffel_parser.y"
 		local
 			yyval32: detachable ET_AGENT_TARGET
 		do
---|#line 4090 "et_eiffel_parser.y"
+--|#line 4109 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4090")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4109")
 end
 
 yyval32 := yyvs100.item (yyvsp100) 
@@ -26525,13 +26542,13 @@ end
 		end
 
 	yy_do_action_844
-			--|#line 4092 "et_eiffel_parser.y"
+			--|#line 4111 "et_eiffel_parser.y"
 		local
 			yyval32: detachable ET_AGENT_TARGET
 		do
---|#line 4092 "et_eiffel_parser.y"
+--|#line 4111 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4092")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4111")
 end
 
 yyval32 := yyvs17.item (yyvsp17) 
@@ -26551,13 +26568,13 @@ end
 		end
 
 	yy_do_action_845
-			--|#line 4094 "et_eiffel_parser.y"
+			--|#line 4113 "et_eiffel_parser.y"
 		local
 			yyval32: detachable ET_AGENT_TARGET
 		do
---|#line 4094 "et_eiffel_parser.y"
+--|#line 4113 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4094")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4113")
 end
 
 yyval32 := yyvs10.item (yyvsp10) 
@@ -26577,13 +26594,13 @@ end
 		end
 
 	yy_do_action_846
-			--|#line 4096 "et_eiffel_parser.y"
+			--|#line 4115 "et_eiffel_parser.y"
 		local
 			yyval32: detachable ET_AGENT_TARGET
 		do
---|#line 4096 "et_eiffel_parser.y"
+--|#line 4115 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4096")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4115")
 end
 
 yyval32 := ast_factory.new_agent_open_target (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5)) 
@@ -26604,13 +26621,13 @@ end
 		end
 
 	yy_do_action_847
-			--|#line 4100 "et_eiffel_parser.y"
+			--|#line 4119 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4100 "et_eiffel_parser.y"
+--|#line 4119 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4100")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4119")
 end
 
 
@@ -26629,13 +26646,13 @@ end
 		end
 
 	yy_do_action_848
-			--|#line 4102 "et_eiffel_parser.y"
+			--|#line 4121 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4102 "et_eiffel_parser.y"
+--|#line 4121 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4102")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4121")
 end
 
 yyval31 := ast_factory.new_agent_argument_operands (yyvs5.item (yyvsp5 - 1), yyvs5.item (yyvsp5), 0) 
@@ -26655,13 +26672,13 @@ end
 		end
 
 	yy_do_action_849
-			--|#line 4104 "et_eiffel_parser.y"
+			--|#line 4123 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4104 "et_eiffel_parser.y"
+--|#line 4123 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4104")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4123")
 end
 
 			yyval31 := yyvs31.item (yyvsp31)
@@ -26677,13 +26694,13 @@ end
 		end
 
 	yy_do_action_850
-			--|#line 4104 "et_eiffel_parser.y"
+			--|#line 4123 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4104 "et_eiffel_parser.y"
+--|#line 4123 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4104")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4123")
 end
 
 			add_symbol (yyvs5.item (yyvsp5))
@@ -26704,13 +26721,13 @@ end
 		end
 
 	yy_do_action_851
-			--|#line 4117 "et_eiffel_parser.y"
+			--|#line 4136 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4117 "et_eiffel_parser.y"
+--|#line 4136 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4117")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4136")
 end
 
 			if attached yyvs29.item (yyvsp29) as l_agent_actual then
@@ -26739,13 +26756,13 @@ end
 		end
 
 	yy_do_action_852
-			--|#line 4128 "et_eiffel_parser.y"
+			--|#line 4147 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4128 "et_eiffel_parser.y"
+--|#line 4147 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4128")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4147")
 end
 
 			yyval31 := ast_factory.new_agent_argument_operands (last_symbol, yyvs5.item (yyvsp5), counter_value)
@@ -26770,13 +26787,13 @@ end
 		end
 
 	yy_do_action_853
-			--|#line 4136 "et_eiffel_parser.y"
+			--|#line 4155 "et_eiffel_parser.y"
 		local
 			yyval31: detachable ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
---|#line 4136 "et_eiffel_parser.y"
+--|#line 4155 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4136")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4155")
 end
 
 			yyval31 := yyvs31.item (yyvsp31)
@@ -26792,13 +26809,13 @@ end
 		end
 
 	yy_do_action_854
-			--|#line 4145 "et_eiffel_parser.y"
+			--|#line 4164 "et_eiffel_parser.y"
 		local
 			yyval30: detachable ET_AGENT_ARGUMENT_OPERAND_ITEM
 		do
---|#line 4145 "et_eiffel_parser.y"
+--|#line 4164 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4145")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4164")
 end
 
 			yyval30 := ast_factory.new_agent_argument_operand_comma (yyvs29.item (yyvsp29), yyvs5.item (yyvsp5))
@@ -26823,13 +26840,13 @@ end
 		end
 
 	yy_do_action_855
-			--|#line 4154 "et_eiffel_parser.y"
+			--|#line 4173 "et_eiffel_parser.y"
 		local
 			yyval29: detachable ET_AGENT_ARGUMENT_OPERAND
 		do
---|#line 4154 "et_eiffel_parser.y"
+--|#line 4173 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4154")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4173")
 end
 
 yyval29 := yyvs64.item (yyvsp64) 
@@ -26849,13 +26866,13 @@ end
 		end
 
 	yy_do_action_856
-			--|#line 4156 "et_eiffel_parser.y"
+			--|#line 4175 "et_eiffel_parser.y"
 		local
 			yyval29: detachable ET_AGENT_ARGUMENT_OPERAND
 		do
---|#line 4156 "et_eiffel_parser.y"
+--|#line 4175 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4156")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4175")
 end
 
 yyval29 := yyvs23.item (yyvsp23) 
@@ -26875,13 +26892,13 @@ end
 		end
 
 	yy_do_action_857
-			--|#line 4158 "et_eiffel_parser.y"
+			--|#line 4177 "et_eiffel_parser.y"
 		local
 			yyval29: detachable ET_AGENT_ARGUMENT_OPERAND
 		do
---|#line 4158 "et_eiffel_parser.y"
+--|#line 4177 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4158")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4177")
 end
 
 yyval29 := ast_factory.new_agent_typed_open_argument (yyvs5.item (yyvsp5 - 1), yyvs114.item (yyvsp114), yyvs5.item (yyvsp5), yyvs23.item (yyvsp23)) 
@@ -26903,13 +26920,13 @@ end
 		end
 
 	yy_do_action_858
-			--|#line 4164 "et_eiffel_parser.y"
+			--|#line 4183 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4164 "et_eiffel_parser.y"
+--|#line 4183 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4164")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4183")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -26920,13 +26937,13 @@ end
 		end
 
 	yy_do_action_859
-			--|#line 4166 "et_eiffel_parser.y"
+			--|#line 4185 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4166 "et_eiffel_parser.y"
+--|#line 4185 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4166")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4185")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -26937,13 +26954,13 @@ end
 		end
 
 	yy_do_action_860
-			--|#line 4170 "et_eiffel_parser.y"
+			--|#line 4189 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4170 "et_eiffel_parser.y"
+--|#line 4189 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4170")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4189")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -26954,13 +26971,13 @@ end
 		end
 
 	yy_do_action_861
-			--|#line 4172 "et_eiffel_parser.y"
+			--|#line 4191 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4172 "et_eiffel_parser.y"
+--|#line 4191 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4172")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4191")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -26971,13 +26988,13 @@ end
 		end
 
 	yy_do_action_862
-			--|#line 4174 "et_eiffel_parser.y"
+			--|#line 4193 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4174 "et_eiffel_parser.y"
+--|#line 4193 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4174")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4193")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -26988,13 +27005,13 @@ end
 		end
 
 	yy_do_action_863
-			--|#line 4176 "et_eiffel_parser.y"
+			--|#line 4195 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4176 "et_eiffel_parser.y"
+--|#line 4195 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4176")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4195")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27005,13 +27022,13 @@ end
 		end
 
 	yy_do_action_864
-			--|#line 4178 "et_eiffel_parser.y"
+			--|#line 4197 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4178 "et_eiffel_parser.y"
+--|#line 4197 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4178")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4197")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27022,13 +27039,13 @@ end
 		end
 
 	yy_do_action_865
-			--|#line 4180 "et_eiffel_parser.y"
+			--|#line 4199 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4180 "et_eiffel_parser.y"
+--|#line 4199 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4180")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4199")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27039,13 +27056,13 @@ end
 		end
 
 	yy_do_action_866
-			--|#line 4182 "et_eiffel_parser.y"
+			--|#line 4201 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4182 "et_eiffel_parser.y"
+--|#line 4201 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4182")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4201")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27056,13 +27073,13 @@ end
 		end
 
 	yy_do_action_867
-			--|#line 4184 "et_eiffel_parser.y"
+			--|#line 4203 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4184 "et_eiffel_parser.y"
+--|#line 4203 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4184")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4203")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27073,13 +27090,13 @@ end
 		end
 
 	yy_do_action_868
-			--|#line 4186 "et_eiffel_parser.y"
+			--|#line 4205 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4186 "et_eiffel_parser.y"
+--|#line 4205 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4186")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4205")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27090,13 +27107,13 @@ end
 		end
 
 	yy_do_action_869
-			--|#line 4188 "et_eiffel_parser.y"
+			--|#line 4207 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4188 "et_eiffel_parser.y"
+--|#line 4207 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4188")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4207")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27107,13 +27124,13 @@ end
 		end
 
 	yy_do_action_870
-			--|#line 4190 "et_eiffel_parser.y"
+			--|#line 4209 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4190 "et_eiffel_parser.y"
+--|#line 4209 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4190")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4209")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27124,13 +27141,13 @@ end
 		end
 
 	yy_do_action_871
-			--|#line 4192 "et_eiffel_parser.y"
+			--|#line 4211 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4192 "et_eiffel_parser.y"
+--|#line 4211 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4192")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4211")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27141,13 +27158,13 @@ end
 		end
 
 	yy_do_action_872
-			--|#line 4194 "et_eiffel_parser.y"
+			--|#line 4213 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4194 "et_eiffel_parser.y"
+--|#line 4213 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4194")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4213")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27158,13 +27175,13 @@ end
 		end
 
 	yy_do_action_873
-			--|#line 4196 "et_eiffel_parser.y"
+			--|#line 4215 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4196 "et_eiffel_parser.y"
+--|#line 4215 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4196")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4215")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27175,13 +27192,13 @@ end
 		end
 
 	yy_do_action_874
-			--|#line 4198 "et_eiffel_parser.y"
+			--|#line 4217 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4198 "et_eiffel_parser.y"
+--|#line 4217 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4198")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4217")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27192,13 +27209,13 @@ end
 		end
 
 	yy_do_action_875
-			--|#line 4200 "et_eiffel_parser.y"
+			--|#line 4219 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4200 "et_eiffel_parser.y"
+--|#line 4219 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4200")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4219")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27209,13 +27226,13 @@ end
 		end
 
 	yy_do_action_876
-			--|#line 4202 "et_eiffel_parser.y"
+			--|#line 4221 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4202 "et_eiffel_parser.y"
+--|#line 4221 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4202")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4221")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27226,13 +27243,13 @@ end
 		end
 
 	yy_do_action_877
-			--|#line 4204 "et_eiffel_parser.y"
+			--|#line 4223 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4204 "et_eiffel_parser.y"
+--|#line 4223 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4204")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4223")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27243,13 +27260,13 @@ end
 		end
 
 	yy_do_action_878
-			--|#line 4206 "et_eiffel_parser.y"
+			--|#line 4225 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4206 "et_eiffel_parser.y"
+--|#line 4225 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4206")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4225")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27260,13 +27277,13 @@ end
 		end
 
 	yy_do_action_879
-			--|#line 4208 "et_eiffel_parser.y"
+			--|#line 4227 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4208 "et_eiffel_parser.y"
+--|#line 4227 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4208")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4227")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27277,13 +27294,13 @@ end
 		end
 
 	yy_do_action_880
-			--|#line 4210 "et_eiffel_parser.y"
+			--|#line 4229 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4210 "et_eiffel_parser.y"
+--|#line 4229 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4210")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4229")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27294,13 +27311,13 @@ end
 		end
 
 	yy_do_action_881
-			--|#line 4212 "et_eiffel_parser.y"
+			--|#line 4231 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4212 "et_eiffel_parser.y"
+--|#line 4231 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4212")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4231")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27311,13 +27328,13 @@ end
 		end
 
 	yy_do_action_882
-			--|#line 4214 "et_eiffel_parser.y"
+			--|#line 4233 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4214 "et_eiffel_parser.y"
+--|#line 4233 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4214")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4233")
 end
 
 yyval15 := yyvs15.item (yyvsp15) 
@@ -27328,13 +27345,13 @@ end
 		end
 
 	yy_do_action_883
-			--|#line 4216 "et_eiffel_parser.y"
+			--|#line 4235 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4216 "et_eiffel_parser.y"
+--|#line 4235 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4216")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4235")
 end
 
 abort 
@@ -27354,13 +27371,13 @@ end
 		end
 
 	yy_do_action_884
-			--|#line 4220 "et_eiffel_parser.y"
+			--|#line 4239 "et_eiffel_parser.y"
 		local
 			yyval15: detachable ET_MANIFEST_STRING
 		do
---|#line 4220 "et_eiffel_parser.y"
+--|#line 4239 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4220")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4239")
 end
 
 			yyval15 := yyvs15.item (yyvsp15)
@@ -27377,13 +27394,13 @@ end
 		end
 
 	yy_do_action_885
-			--|#line 4229 "et_eiffel_parser.y"
+			--|#line 4248 "et_eiffel_parser.y"
 		local
 			yyval9: detachable ET_CHARACTER_CONSTANT
 		do
---|#line 4229 "et_eiffel_parser.y"
+--|#line 4248 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4229")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4248")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
@@ -27394,13 +27411,13 @@ end
 		end
 
 	yy_do_action_886
-			--|#line 4231 "et_eiffel_parser.y"
+			--|#line 4250 "et_eiffel_parser.y"
 		local
 			yyval9: detachable ET_CHARACTER_CONSTANT
 		do
---|#line 4231 "et_eiffel_parser.y"
+--|#line 4250 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4231")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4250")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
@@ -27411,13 +27428,13 @@ end
 		end
 
 	yy_do_action_887
-			--|#line 4235 "et_eiffel_parser.y"
+			--|#line 4254 "et_eiffel_parser.y"
 		local
 			yyval9: detachable ET_CHARACTER_CONSTANT
 		do
---|#line 4235 "et_eiffel_parser.y"
+--|#line 4254 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4235")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4254")
 end
 
 yyval9 := yyvs9.item (yyvsp9) 
@@ -27428,13 +27445,13 @@ end
 		end
 
 	yy_do_action_888
-			--|#line 4237 "et_eiffel_parser.y"
+			--|#line 4256 "et_eiffel_parser.y"
 		local
 			yyval9: detachable ET_CHARACTER_CONSTANT
 		do
---|#line 4237 "et_eiffel_parser.y"
+--|#line 4256 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4237")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4256")
 end
 
 abort 
@@ -27454,13 +27471,13 @@ end
 		end
 
 	yy_do_action_889
-			--|#line 4241 "et_eiffel_parser.y"
+			--|#line 4260 "et_eiffel_parser.y"
 		local
 			yyval9: detachable ET_CHARACTER_CONSTANT
 		do
---|#line 4241 "et_eiffel_parser.y"
+--|#line 4260 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4241")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4260")
 end
 
 			yyval9 := yyvs9.item (yyvsp9)
@@ -27477,13 +27494,13 @@ end
 		end
 
 	yy_do_action_890
-			--|#line 4250 "et_eiffel_parser.y"
+			--|#line 4269 "et_eiffel_parser.y"
 		local
 			yyval7: detachable ET_BOOLEAN_CONSTANT
 		do
---|#line 4250 "et_eiffel_parser.y"
+--|#line 4269 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4250")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4269")
 end
 
 yyval7 := yyvs7.item (yyvsp7) 
@@ -27494,13 +27511,13 @@ end
 		end
 
 	yy_do_action_891
-			--|#line 4252 "et_eiffel_parser.y"
+			--|#line 4271 "et_eiffel_parser.y"
 		local
 			yyval7: detachable ET_BOOLEAN_CONSTANT
 		do
---|#line 4252 "et_eiffel_parser.y"
+--|#line 4271 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4252")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4271")
 end
 
 yyval7 := yyvs7.item (yyvsp7) 
@@ -27511,13 +27528,13 @@ end
 		end
 
 	yy_do_action_892
-			--|#line 4256 "et_eiffel_parser.y"
+			--|#line 4275 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4256 "et_eiffel_parser.y"
+--|#line 4275 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4256")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4275")
 end
 
 yyval13 := yyvs13.item (yyvsp13) 
@@ -27528,13 +27545,13 @@ end
 		end
 
 	yy_do_action_893
-			--|#line 4258 "et_eiffel_parser.y"
+			--|#line 4277 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4258 "et_eiffel_parser.y"
+--|#line 4277 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4258")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4277")
 end
 
 yyval13 := yyvs13.item (yyvsp13) 
@@ -27545,13 +27562,13 @@ end
 		end
 
 	yy_do_action_894
-			--|#line 4262 "et_eiffel_parser.y"
+			--|#line 4281 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4262 "et_eiffel_parser.y"
+--|#line 4281 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4262")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4281")
 end
 
 yyval13 := yyvs13.item (yyvsp13) 
@@ -27562,13 +27579,13 @@ end
 		end
 
 	yy_do_action_895
-			--|#line 4264 "et_eiffel_parser.y"
+			--|#line 4283 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4264 "et_eiffel_parser.y"
+--|#line 4283 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4264")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4283")
 end
 
 yyval13 := yyvs13.item (yyvsp13) 
@@ -27579,13 +27596,13 @@ end
 		end
 
 	yy_do_action_896
-			--|#line 4268 "et_eiffel_parser.y"
+			--|#line 4287 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4268 "et_eiffel_parser.y"
+--|#line 4287 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4268")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4287")
 end
 
 			yyval13 := yyvs13.item (yyvsp13)
@@ -27601,13 +27618,13 @@ end
 		end
 
 	yy_do_action_897
-			--|#line 4275 "et_eiffel_parser.y"
+			--|#line 4294 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4275 "et_eiffel_parser.y"
+--|#line 4294 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4275")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4294")
 end
 
 			yyval13 := yyvs13.item (yyvsp13)
@@ -27623,13 +27640,13 @@ end
 		end
 
 	yy_do_action_898
-			--|#line 4284 "et_eiffel_parser.y"
+			--|#line 4303 "et_eiffel_parser.y"
 		local
 			yyval13: detachable ET_INTEGER_CONSTANT
 		do
---|#line 4284 "et_eiffel_parser.y"
+--|#line 4303 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4284")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4303")
 end
 
 			yyval13 := yyvs13.item (yyvsp13)
@@ -27646,13 +27663,13 @@ end
 		end
 
 	yy_do_action_899
-			--|#line 4293 "et_eiffel_parser.y"
+			--|#line 4312 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4293 "et_eiffel_parser.y"
+--|#line 4312 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4293")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4312")
 end
 
 yyval16 := yyvs16.item (yyvsp16) 
@@ -27663,13 +27680,13 @@ end
 		end
 
 	yy_do_action_900
-			--|#line 4295 "et_eiffel_parser.y"
+			--|#line 4314 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4295 "et_eiffel_parser.y"
+--|#line 4314 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4295")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4314")
 end
 
 yyval16 := yyvs16.item (yyvsp16) 
@@ -27680,13 +27697,13 @@ end
 		end
 
 	yy_do_action_901
-			--|#line 4299 "et_eiffel_parser.y"
+			--|#line 4318 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4299 "et_eiffel_parser.y"
+--|#line 4318 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4299")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4318")
 end
 
 yyval16 := yyvs16.item (yyvsp16) 
@@ -27697,13 +27714,13 @@ end
 		end
 
 	yy_do_action_902
-			--|#line 4301 "et_eiffel_parser.y"
+			--|#line 4320 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4301 "et_eiffel_parser.y"
+--|#line 4320 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4301")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4320")
 end
 
 yyval16 := yyvs16.item (yyvsp16) 
@@ -27714,13 +27731,13 @@ end
 		end
 
 	yy_do_action_903
-			--|#line 4305 "et_eiffel_parser.y"
+			--|#line 4324 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4305 "et_eiffel_parser.y"
+--|#line 4324 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4305")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4324")
 end
 
 			yyval16 := yyvs16.item (yyvsp16)
@@ -27736,13 +27753,13 @@ end
 		end
 
 	yy_do_action_904
-			--|#line 4312 "et_eiffel_parser.y"
+			--|#line 4331 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4312 "et_eiffel_parser.y"
+--|#line 4331 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4312")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4331")
 end
 
 			yyval16 := yyvs16.item (yyvsp16)
@@ -27758,13 +27775,13 @@ end
 		end
 
 	yy_do_action_905
-			--|#line 4321 "et_eiffel_parser.y"
+			--|#line 4340 "et_eiffel_parser.y"
 		local
 			yyval16: detachable ET_REAL_CONSTANT
 		do
---|#line 4321 "et_eiffel_parser.y"
+--|#line 4340 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4321")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4340")
 end
 
 			yyval16 := yyvs16.item (yyvsp16)
@@ -27781,13 +27798,13 @@ end
 		end
 
 	yy_do_action_906
-			--|#line 4330 "et_eiffel_parser.y"
+			--|#line 4349 "et_eiffel_parser.y"
 		local
 			yyval12: detachable ET_IDENTIFIER
 		do
---|#line 4330 "et_eiffel_parser.y"
+--|#line 4349 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4330")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4349")
 end
 
 yyval12 := yyvs12.item (yyvsp12) 
@@ -27798,13 +27815,13 @@ end
 		end
 
 	yy_do_action_907
-			--|#line 4332 "et_eiffel_parser.y"
+			--|#line 4351 "et_eiffel_parser.y"
 		local
 			yyval12: detachable ET_IDENTIFIER
 		do
---|#line 4332 "et_eiffel_parser.y"
+--|#line 4351 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4332")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4351")
 end
 
 yyval12 := yyvs12.item (yyvsp12) 
@@ -27815,13 +27832,13 @@ end
 		end
 
 	yy_do_action_908
-			--|#line 4334 "et_eiffel_parser.y"
+			--|#line 4353 "et_eiffel_parser.y"
 		local
 			yyval12: detachable ET_IDENTIFIER
 		do
---|#line 4334 "et_eiffel_parser.y"
+--|#line 4353 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4334")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4353")
 end
 
 yyval12 := yyvs12.item (yyvsp12) 
@@ -27832,13 +27849,13 @@ end
 		end
 
 	yy_do_action_909
-			--|#line 4340 "et_eiffel_parser.y"
+			--|#line 4359 "et_eiffel_parser.y"
 		local
 			yyval1: detachable ANY
 		do
---|#line 4340 "et_eiffel_parser.y"
+--|#line 4359 "et_eiffel_parser.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4340")
+	std.error.put_line ("Executing parser user-code from file 'et_eiffel_parser.y' at line 4359")
 end
 
 add_counter 

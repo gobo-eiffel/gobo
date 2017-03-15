@@ -5,7 +5,7 @@ note
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -203,6 +203,7 @@ feature {NONE} -- Feature recording
 			a_rename: ET_RENAME
 			i, nb, nb2, nb3: INTEGER
 			l_alias_name: detachable ET_ALIAS_NAME
+			l_feature_name: ET_FEATURE_NAME
 		do
 			if a_parent.renames /= Void then
 				fill_rename_table (a_parent)
@@ -253,7 +254,9 @@ feature {NONE} -- Feature recording
 						rename_table.remove_found_item
 						has_rename := not rename_table.is_empty
 						a_parent_feature.set_new_name (a_rename)
+						a_rename.old_name.set_seed (l_query.first_seed)
 						a_name := a_rename.new_name.feature_name
+						a_name.set_seed (l_query.first_seed)
 						l_alias_name := a_rename.new_name.alias_name
 						if l_alias_name /= Void then
 							if l_query.is_infixable then
@@ -276,6 +279,8 @@ feature {NONE} -- Feature recording
 						end
 					end
 					if export_table.found then
+						l_feature_name := export_table.found_item.feature_name
+						l_feature_name.set_seed (l_query.first_seed)
 						export_table.remove_found_item
 						has_export := not export_table.is_empty
 					end
@@ -288,7 +293,9 @@ feature {NONE} -- Feature recording
 						end
 					end
 					if undefine_table.found then
-						a_parent_feature.set_undefine_name (undefine_table.found_key.feature_name)
+						l_feature_name := undefine_table.found_key.feature_name
+						l_feature_name.set_seed (l_query.first_seed)
+						a_parent_feature.set_undefine_name (l_feature_name)
 						if not undefine_table.found_item then
 							undefine_table.replace_found_item (True)
 							nb_undefine := nb_undefine - 1
@@ -303,7 +310,9 @@ feature {NONE} -- Feature recording
 						end
 					end
 					if redefine_table.found then
-						a_parent_feature.set_redefine_name (redefine_table.found_key.feature_name)
+						l_feature_name := redefine_table.found_key.feature_name
+						l_feature_name.set_seed (l_query.first_seed)
+						a_parent_feature.set_redefine_name (l_feature_name)
 						if not redefine_table.found_item then
 							redefine_table.replace_found_item (True)
 							nb_redefine := nb_redefine - 1
@@ -318,7 +327,9 @@ feature {NONE} -- Feature recording
 						end
 					end
 					if select_table.found then
-						a_parent_feature.set_select_name (select_table.found_key.feature_name)
+						l_feature_name := select_table.found_key.feature_name
+						l_feature_name.set_seed (l_query.first_seed)
+						a_parent_feature.set_select_name (l_feature_name)
 						if not select_table.found_item then
 							select_table.replace_found_item (True)
 							nb_select := nb_select - 1
@@ -369,12 +380,16 @@ feature {NONE} -- Feature recording
 						rename_table.remove_found_item
 						has_rename := not rename_table.is_empty
 						a_parent_feature.set_new_name (a_rename)
+						a_rename.old_name.set_seed (l_procedure.first_seed)
 						a_name := a_rename.new_name.feature_name
+						a_name.set_seed (l_procedure.first_seed)
 					end
 				end
 				if has_export then
 					export_table.search (a_name)
 					if export_table.found then
+						l_feature_name := export_table.found_item.feature_name
+						l_feature_name.set_seed (l_procedure.first_seed)
 						export_table.remove_found_item
 						has_export := not export_table.is_empty
 					end
@@ -382,7 +397,9 @@ feature {NONE} -- Feature recording
 				if has_undefine then
 					undefine_table.search (a_name)
 					if undefine_table.found then
-						a_parent_feature.set_undefine_name (undefine_table.found_key.feature_name)
+						l_feature_name := undefine_table.found_key.feature_name
+						l_feature_name.set_seed (l_procedure.first_seed)
+						a_parent_feature.set_undefine_name (l_feature_name)
 						if not undefine_table.found_item then
 							undefine_table.replace_found_item (True)
 							nb_undefine := nb_undefine - 1
@@ -392,7 +409,9 @@ feature {NONE} -- Feature recording
 				if has_redefine then
 					redefine_table.search (a_name)
 					if redefine_table.found then
-						a_parent_feature.set_redefine_name (redefine_table.found_key.feature_name)
+						l_feature_name := redefine_table.found_key.feature_name
+						l_feature_name.set_seed (l_procedure.first_seed)
+						a_parent_feature.set_redefine_name (l_feature_name)
 						if not redefine_table.found_item then
 							redefine_table.replace_found_item (True)
 							nb_redefine := nb_redefine - 1
@@ -402,7 +421,9 @@ feature {NONE} -- Feature recording
 				if has_select then
 					select_table.search (a_name)
 					if select_table.found then
-						a_parent_feature.set_select_name (select_table.found_key.feature_name)
+						l_feature_name := select_table.found_key.feature_name
+						l_feature_name.set_seed (l_procedure.first_seed)
+						a_parent_feature.set_select_name (l_feature_name)
 						if not select_table.found_item then
 							select_table.replace_found_item (True)
 							nb_select := nb_select - 1

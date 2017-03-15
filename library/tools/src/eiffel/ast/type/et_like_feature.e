@@ -5,7 +5,7 @@ note
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,7 +63,7 @@ feature -- Initialization
 		do
 			if is_like_argument then
 				if attached {ET_IDENTIFIER} name as l_identifier then
-					l_identifier.set_argument (False)
+					l_identifier.set_feature_name (True)
 				end
 			end
 			name.reset

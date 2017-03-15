@@ -5,7 +5,7 @@ note
 		"Feature comparators by name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Status report
 	less_than (u, v: ET_FEATURE): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
-			Result := (STRING_.three_way_case_insensitive_comparison (u.name.name, v.name.name) = -1)
+			Result := (STRING_.three_way_lower_case_comparison (u.name.name, v.name.name) = -1)
 		end
 
 end

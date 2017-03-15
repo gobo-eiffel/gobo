@@ -5,7 +5,7 @@ note
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ inherit
 	ET_TOKEN
 		rename
 			make as make_token,
-			text as free_operator_name
+			text as operator_name
 		end
 
 create
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_infix (a_free_op: like free_operator_name)
+	make_infix (a_free_op: like operator_name)
 			-- Create a new infix free operator.
 		do
 			code := tokens.infix_freeop_code
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			is_infix_freeop: is_infix_freeop
 		end
 
-	make_prefix (a_free_op: like free_operator_name)
+	make_prefix (a_free_op: like operator_name)
 			-- Create a new prefix free operator.
 		do
 			code := tokens.prefix_freeop_code
@@ -101,13 +101,13 @@ feature -- Access
 			-- Name of feature
 		do
 			if is_infix_freeop then
-				create Result.make (free_operator_name.count + 8)
+				create Result.make (operator_name.count + 8)
 				Result.append_string (infix_double_quote)
 			else
-				create Result.make (free_operator_name.count + 9)
+				create Result.make (operator_name.count + 9)
 				Result.append_string (prefix_double_quote)
 			end
-			Result.append_string (free_operator_name)
+			Result.append_string (operator_name)
 			Result.append_character ('%"')
 		end
 

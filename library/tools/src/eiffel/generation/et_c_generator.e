@@ -5,7 +5,7 @@ note
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7743,18 +7743,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			end
 		end
 
-	print_unqualified_identifier_call_instruction (an_identifier: ET_IDENTIFIER)
-			-- Print unqualified identifier call instruction.
-		require
-			an_identifier_not_void: an_identifier /= Void
-			instruction: an_identifier.is_instruction
-		do
-			call_operands.wipe_out
-			call_operands.force_last (tokens.current_keyword)
-			print_named_procedure_call (an_identifier, current_type, False)
-			call_operands.wipe_out
-		end
-
 feature {NONE} -- Procedure call generation
 
 	print_named_procedure_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -12414,165 +12402,6 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 							-- because it could have still been used in `call_operands'.
 						l_temp.set_index (l_temp_index)
 					end
-				end
-			end
-		end
-
-	print_unqualified_identifier_call_expression (an_identifier: ET_IDENTIFIER)
-			-- Print unqualified identifier call expression.
-		require
-			an_identifier_not_void: an_identifier /= Void
-			expression: not an_identifier.is_instruction
-			not_local: not an_identifier.is_local
-			not_temporary: not an_identifier.is_temporary
-			not_argument: not an_identifier.is_argument
-		local
-			l_call_type_set: ET_DYNAMIC_TYPE_SET
-			l_call_type: ET_DYNAMIC_TYPE
-			l_temp: ET_IDENTIFIER
-			l_assignment_target: like assignment_target
-			l_dynamic_feature: detachable ET_DYNAMIC_FEATURE
-			l_once_feature: ET_FEATURE
-			l_old_call_target: detachable ET_EXPRESSION
-			old_index: INTEGER
-			l_constant: ET_CONSTANT
-		do
-			l_assignment_target := assignment_target
-			assignment_target := Void
-			l_call_type_set := dynamic_type_set (an_identifier)
-			l_dynamic_feature := current_type.seeded_dynamic_query (an_identifier.seed, current_dynamic_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a query for that seed.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				l_call_type := l_call_type_set.static_type
-				if l_dynamic_feature.is_attribute then
-					if in_operand then
-						operand_stack.force (an_identifier)
-					elseif l_dynamic_feature.is_builtin then
-							-- This is a built-in attribute (such as feature 'item' in 'INTEGER_REF').
-							-- The call might be the operand (target or argument) of another call.
-							-- Therefore we need to take some care when dealing with `call_operands'.
-							-- We need to keek track of the operands of this possible other call
-							-- while processing the current call to the built-in attribute, for
-							-- which only the target ('Current') needs to be on `call_operands'.
-						if call_operands.is_empty then
-							call_operands.force_last (tokens.current_keyword)
-						else
-							l_old_call_target := call_operands.first
-							call_operands.replace (tokens.current_keyword, 1)
-						end
-						if in_target and l_call_type.is_expanded then
-								-- Pass the address of the built-in attribute expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-							current_file.put_character (')')
-						else
-								-- No need to call `print_adapted_query_call' here because an
-								-- unqualified call is not polymorphic, and therefore the type
-								-- of the query is exactly the type expected by the caller.
-							print_query_call (l_dynamic_feature, current_type, False)
-						end
-						if l_old_call_target /= Void then
-							call_operands.replace (l_old_call_target, 1)
-							l_old_call_target := Void
-						else
-							call_operands.wipe_out
-						end
-					elseif attached call_target_type as l_call_target_type then
-						check in_target: in_target end
-						if l_call_type.is_expanded then
-								-- Pass the address of the expanded object.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-							current_file.put_character (')')
-						elseif l_call_target_type.is_expanded then
-								-- We need to unbox the object and then pass its address.
-							current_file.put_character ('&')
-							current_file.put_character ('(')
-							print_boxed_attribute_item_access (an_identifier, l_call_target_type, call_target_check_void)
-							current_file.put_character (')')
-						else
-							print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-						end
-					else
-						print_attribute_access (l_dynamic_feature, tokens.current_keyword, current_type, False)
-					end
-				elseif l_dynamic_feature.is_constant_attribute then
-					if in_operand then
-						if in_target then
-							if l_call_type.is_expanded then
-								in_operand := False
-								l_temp := new_temp_variable (l_call_type)
-								print_indentation
-								print_temp_name (l_temp, current_file)
-								current_file.put_character (' ')
-								current_file.put_character ('=')
-								current_file.put_character (' ')
-								print_unqualified_identifier_call_expression (an_identifier)
-								current_file.put_character (';')
-								current_file.put_new_line
-								l_temp.set_index (an_identifier.index)
-								operand_stack.force (l_temp)
-								in_operand := True
-							else
-								operand_stack.force (an_identifier)
-							end
-						else
-							operand_stack.force (an_identifier)
-						end
-					elseif attached {ET_CONSTANT_ATTRIBUTE} l_dynamic_feature.static_feature as l_constant_attribute then
-						if attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
-							l_once_feature := l_constant_attribute.implementation_feature
-							constant_features.force_last (l_string_constant, l_once_feature)
-							print_once_value_name (l_once_feature, current_file)
-						else
-							l_constant := l_constant_attribute.constant
-							old_index := l_constant.index
-							l_constant.set_index (an_identifier.index)
-							print_expression (l_constant)
-							l_constant.set_index (old_index)
-						end
-					end
-				else
-					call_operands.wipe_out
-					call_operands.force_last (tokens.current_keyword)
-					if in_operand then
-						if l_assignment_target /= Void then
-							operand_stack.force (l_assignment_target)
-							print_indentation
-							print_writable (l_assignment_target)
-						else
-							l_temp := new_temp_variable (l_call_type)
-							l_temp.set_index (an_identifier.index)
-							operand_stack.force (l_temp)
-							print_indentation
-							print_temp_name (l_temp, current_file)
-						end
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-							-- No need to call `print_adapted_query_call' here because an
-							-- unqualified call is not polymorphic, and therefore the type
-							-- of the query is exactly the type expected by the caller.
-						print_query_call (l_dynamic_feature, current_type, False)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-					else
-							-- No need to call `print_adapted_query_call' here because an
-							-- unqualified call is not polymorphic, and therefore the type
-							-- of the query is exactly the type expected by the caller.
-						print_query_call (l_dynamic_feature, current_type, False)
-					end
-					call_operands.wipe_out
 				end
 			end
 		end
@@ -32779,10 +32608,6 @@ feature {ET_AST_NODE} -- Processing
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
 				print_agent_closed_operand (an_identifier)
-			elseif an_identifier.is_instruction then
-				print_unqualified_identifier_call_instruction (an_identifier)
-			else
-				print_unqualified_identifier_call_expression (an_identifier)
 			end
 		end
 

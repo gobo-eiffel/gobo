@@ -251,7 +251,7 @@ feature -- Access
 			-- (use `a_separator' as separator between parents' and universes' names)
 			--
 			-- If `a_universe' is `universe' then return the name relative to its
-			-- parents only. Otherwise Use one of the shortest paths between
+			-- parents only. Otherwise use one of the shortest paths between
 			-- `a_universe' and `universe', and if no such path exists then return
 			-- the name relative to its parents only.
 		local
