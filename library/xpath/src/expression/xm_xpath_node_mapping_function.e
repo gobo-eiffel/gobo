@@ -2,13 +2,13 @@ note
 
 	description:
 
-	"Objects that can be passed to an XM_XPATH_NODE_MAPPING_ITERATOR.%
-	%Such objects, when given an XM_XPATH_NODE, can generate an%
-	%XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] which delivers%
+	"Objects that can be passed to an XM_XPATH_NODE_MAPPING_ITERATOR. %
+	%Such objects, when given an XM_XPATH_NODE, can generate an %
+	%XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] which delivers %
 	%a series of such items."
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

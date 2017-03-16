@@ -2,10 +2,10 @@ note
 
 	description:
 
-		"Objects that can be returned from {XM_XSLT_MODE}.rule"
+		"Objects that can be returned from {XM_XSLT_MODE}.last_matched_rule"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

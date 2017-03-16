@@ -2,11 +2,11 @@ note
 
 	description:
 
-	"Objects representing an XPath variable for use in the standalone XPath API.%
-	%Only create by calling {XM_XPATH_STAND_ALONE_CONTEXT}declare_variable"
+	"Objects representing an XPath variable for use in the standalone XPath API. %
+	%Only create by calling {XM_XPATH_STAND_ALONE_CONTEXT}.declare_variable"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
