@@ -64,9 +64,28 @@ feature {NONE} -- Processing
 			l_suppliers_classes: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]
 			nb: INTEGER
 			l_root_path: STRING
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: detachable DT_DATE_TIME
 		do
+			if not a_system.stop_requested and then a_system.error_handler.benchmark_shown then
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
+			end
 			a_system.parse_all_recursive
-			a_system.classes_do_recursive (agent {ET_CLASS}.process (a_system.implementation_checker))
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Degree 5")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			a_system.compile_degree_4
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Degree 4")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			a_system.compile_degree_3
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Degree 3")
+				dt1 := l_clock.system_clock.date_time_now
+			end
 			l_class_mapping := class_mapping ("", a_system, input_classes)
 			l_class_chart_mapping := class_mapping ("_chart", a_system, input_classes)
 			l_class_links_mapping := class_mapping ("_links", a_system, input_classes)
@@ -90,15 +109,30 @@ feature {NONE} -- Processing
 					l_mapping.replace (l_root_path + l_mapping.item)
 				end
 			end
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Cluster Charts")
+				dt1 := l_clock.system_clock.date_time_now
+			end
 			nb := a_system.class_count_recursive
 			create l_parent_classes.make_map (nb)
 			create l_heir_classes.make_map (nb)
 			create l_client_classes.make_map (nb)
 			create l_suppliers_classes.make_map (nb)
 			a_system.classes_do_recursive (agent build_class_relations (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes))
-			l_class_mapping.keys.do_all (agent print_class_chart (?, l_parent_classes, l_class_chart_mapping, l_feature_mapping, l_root_path))
 			l_class_mapping.keys.do_all (agent print_class_links (?, l_parent_classes, l_heir_classes, l_client_classes, l_suppliers_classes, l_class_links_mapping, l_feature_mapping, l_root_path))
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Class Relations")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			l_class_mapping.keys.do_all (agent print_class_chart (?, l_parent_classes, l_class_chart_mapping, l_feature_mapping, l_root_path))
+			if not a_system.stop_requested and then dt1 /= Void and l_clock /= Void then
+				a_system.print_time (dt1, "Class Charts")
+				dt1 := l_clock.system_clock.date_time_now
+			end
 			l_class_mapping.keys.do_all (agent print_class_text (?, l_class_mapping, l_feature_mapping, l_root_path))
+			if not a_system.stop_requested and then dt1 /= Void then
+				a_system.print_time (dt1, "Class Texts")
+			end
 		end
 
 feature {NONE} -- Output
@@ -1309,5 +1343,5 @@ A:hover {
 }
 ]"
 			-- Content of css file
-		
+
 end

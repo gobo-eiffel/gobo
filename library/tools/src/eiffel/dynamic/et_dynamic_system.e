@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1030,7 +1030,7 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			current_system.preparse_recursive
-			if error_handler.benchmark_shown and then dt1 /= Void then
+			if dt1 /= Void then
 				current_system.print_time (dt1, "Degree 6")
 			end
 			compile_kernel
@@ -1139,7 +1139,7 @@ feature -- Compilation
 			compile_kernel
 			current_system.classes_do_recursive_until (agent compile_all_features, current_system.stop_request)
 			build_dynamic_type_sets
-			if not current_system.stop_requested and then error_handler.benchmark_shown and then dt1 /= Void then
+			if not current_system.stop_requested and then dt1 /= Void then
 				current_system.print_time (dt1, "Degree Dynamic Type Set")
 			end
 		end
@@ -1168,7 +1168,7 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			current_system.preparse_recursive
-			if error_handler.benchmark_shown and then dt1 /= Void then
+			if dt1 /= Void then
 				current_system.print_time (dt1, "Degree 6")
 			end
 			compile_kernel

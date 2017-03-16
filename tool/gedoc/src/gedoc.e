@@ -86,6 +86,12 @@ feature -- Argument parsing
 	interactive_flag: AP_FLAG
 			-- Flag for '--interactive'
 
+	verbose_flag: AP_FLAG
+			-- Flag for '--verbose'
+
+	silent_flag: AP_FLAG
+			-- Flag for '--silent'
+
 	ise_option: AP_STRING_OPTION
 			-- Option for '--ise[=major[.minor[.revision[.build]]]]'
 
@@ -134,6 +140,14 @@ feature -- Argument parsing
 			create interactive_flag.make ('i', "interactive")
 			interactive_flag.set_description ("Ask before overwriting a file, unless --force is specified.")
 			l_parser.options.force_last (interactive_flag)
+				-- verbose.
+			create verbose_flag.make_with_long_form ("verbose")
+			verbose_flag.set_description ("Should detailed informative messages be displayed?")
+			l_parser.options.force_last (verbose_flag)
+				-- silent.
+			create silent_flag.make_with_long_form ("silent")
+			silent_flag.set_description ("Should no informative messages be displayed?")
+			l_parser.options.force_last (silent_flag)
 				-- ise.
 			create ise_option.make_with_long_form ("ise")
 			ise_option.set_description ("Version of Eiffel whose semantics should be used during code analysis. (default: latest version)")
@@ -171,6 +185,8 @@ feature -- Argument parsing
 				l_format.set_force_flag (force_flag.was_found)
 				l_format.set_interactive_flag (interactive_flag.was_found)
 				l_format.set_library_prefix_flag (library_prefix_flag.was_found)
+				l_format.set_verbose_flag (verbose_flag.was_found)
+				l_format.set_silent_flag (silent_flag.was_found)
 				format := l_format
 			end
 		ensure
@@ -180,6 +196,8 @@ feature -- Argument parsing
 			library_prefix_flag_not_void: library_prefix_flag /= Void
 			force_flag_not_void: force_flag /= Void
 			interactive_flag_not_void: interactive_flag /= Void
+			verbose_flag_not_void: verbose_flag /= Void
+			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
 			define_option_not_void: define_option /= Void
 			version_flag_not_void: version_flag /= Void
@@ -372,6 +390,8 @@ invariant
 	library_prefix_flag_not_void: library_prefix_flag /= Void
 	force_flag_not_void: force_flag /= Void
 	interactive_flag_not_void: interactive_flag /= Void
+	verbose_flag_not_void: verbose_flag /= Void
+	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void
 	define_option_not_void: define_option /= Void
 	version_flag_not_void: version_flag /= Void

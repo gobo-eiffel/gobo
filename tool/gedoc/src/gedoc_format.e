@@ -103,6 +103,12 @@ feature -- Access
 	interactive_flag: BOOLEAN
 			-- Should ask before overwriting a file, unless `force_flag' is True?
 
+	verbose_flag: BOOLEAN
+			-- Should detailed informative messages be displayed?
+
+	silent_flag: BOOLEAN
+			-- Should no informative messages be displayed?
+
 feature -- Setting
 
 	set_defined_variables (a_variables: like defined_variables)
@@ -163,6 +169,22 @@ feature -- Setting
 			interactive_flag := b
 		ensure
 			interactive_flag_set: interactive_flag = b
+		end
+
+	set_verbose_flag (b: BOOLEAN)
+			-- Set `verbose_flag' to `b'.
+		do
+			verbose_flag := b
+		ensure
+			verbose_flag_set: verbose_flag = b
+		end
+
+	set_silent_flag (b: BOOLEAN)
+			-- Set `silent_flag' to `b'.
+		do
+			silent_flag := b
+		ensure
+			silent_flag_set: silent_flag = b
 		end
 
 feature {NONE} -- Eiffel config file parsing
@@ -321,6 +343,8 @@ feature {NONE} -- Processing
 			l_ast_factory: ET_DECORATED_AST_FACTORY
 		do
 			a_system.error_handler.set_ise
+			a_system.error_handler.set_verbose (verbose_flag)
+			a_system.error_handler.set_benchmark_shown (not silent_flag or verbose_flag)
 			a_system.set_ise_version (ise_version)
 			a_system.set_unknown_builtin_reported (False)
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_attachment_type_conformance_mode (False))
