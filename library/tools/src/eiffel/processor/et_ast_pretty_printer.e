@@ -472,6 +472,23 @@ feature {ET_AST_NODE} -- Processing
 			a_list.right_bracket.process (Current)
 		end
 
+	process_agent_arguments (a_agent: ET_AGENT)
+			-- Process arguments of `a_agent'.
+		require
+			a_agent_not_void: a_agent /= Void
+		do
+			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} a_agent.arguments as l_arguments then
+					-- Do not print implicit argument operands (they were not in the original class text anyway).
+				if l_arguments.is_empty then
+						-- Do not print empty parentheses, but keep the comments if any.
+					comment_finder.find_comments (l_arguments, comment_list)
+				else
+					print_space
+					l_arguments.process (Current)
+				end
+			end
+		end
+
 	process_agent_argument_operand_list (a_list: ET_AGENT_ARGUMENT_OPERAND_LIST)
 			-- Process `a_list'.
 		local
@@ -859,16 +876,7 @@ feature {ET_AST_NODE} -- Processing
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (l_qualified_feature_name, comment_list)
 			comment_finder.reset_excluded_nodes
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.arguments as l_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_arguments, comment_list)
-				else
-					print_space
-					l_arguments.process (Current)
-				end
-			end
+			process_agent_arguments (an_expression)
 		end
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION)
@@ -1736,6 +1744,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
+		do
+			process_do_function_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+	process_do_function_inline_agent_declaration (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
@@ -1787,16 +1804,6 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_do_procedure (a_feature: ET_DO_PROCEDURE)
@@ -1896,6 +1903,16 @@ feature {ET_AST_NODE} -- Processing
 	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
 		do
+			process_do_procedure_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+
+	process_do_procedure_inline_agent_declaration (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
 			an_expression.agent_keyword.process (Current)
 			if attached an_expression.formal_arguments as l_formal_arguments then
 				if l_formal_arguments.is_empty then
@@ -1933,16 +1950,6 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_dotnet_function (a_feature: ET_DOTNET_FUNCTION)
@@ -2436,6 +2443,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
+		do
+			process_external_function_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+	process_external_function_inline_agent_declaration (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_declared_type: ET_DECLARED_TYPE
 			l_type: ET_TYPE
@@ -2502,16 +2518,6 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE)
@@ -2623,6 +2629,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
+		do
+			process_external_procedure_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+	process_external_procedure_inline_agent_declaration (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_external_language: ET_EXTERNAL_LANGUAGE
 			l_manifest_string: ET_MANIFEST_STRING
@@ -2677,16 +2692,6 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE)
@@ -3884,6 +3889,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
 			-- Process `an_expression'.
+		do
+			process_once_function_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+	process_once_function_inline_agent_declaration (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_compound: detachable ET_COMPOUND
 			l_declared_type: ET_DECLARED_TYPE
@@ -3951,16 +3965,6 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING)
@@ -4083,6 +4087,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
 			-- Process `an_expression'.
+		do
+			process_once_procedure_inline_agent_declaration (an_expression)
+			process_agent_arguments (an_expression)
+		end
+
+	process_once_procedure_inline_agent_declaration (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_compound: detachable ET_COMPOUND
 		do
@@ -4138,16 +4151,6 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
-			if attached {ET_AGENT_ARGUMENT_OPERAND_LIST} an_expression.actual_arguments as l_actual_arguments then
-					-- Do not print implicit argument operands (they were not in the original class text anyway).
-				if l_actual_arguments.is_empty then
-						-- Do not print empty parentheses, but keep the comments if any.
-					comment_finder.find_comments (l_actual_arguments, comment_list)
-				else
-					print_space
-					l_actual_arguments.process (Current)
-				end
-			end
 		end
 
 	process_parent (a_parent: ET_PARENT)

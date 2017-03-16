@@ -24,6 +24,7 @@ inherit
 			{ANY} print_new_line
 		redefine
 			make,
+			reset,
 			process_attribute,
 			process_break,
 			process_c1_character_constant_without_cast_type,
@@ -35,17 +36,17 @@ inherit
 			process_deferred_function,
 			process_deferred_procedure,
 			process_do_function,
-			process_do_function_inline_agent,
+			process_do_function_inline_agent_declaration,
 			process_do_procedure,
-			process_do_procedure_inline_agent,
+			process_do_procedure_inline_agent_declaration,
 			process_dotnet_function,
 			process_dotnet_procedure,
 			process_extended_attribute,
 			process_extended_feature_name_of_feature,
 			process_external_function,
-			process_external_function_inline_agent,
+			process_external_function_inline_agent_declaration,
 			process_external_procedure,
-			process_external_procedure_inline_agent,
+			process_external_procedure_inline_agent_declaration,
 			process_feature_name,
 			process_formal_parameter_type,
 			process_identifier,
@@ -57,9 +58,9 @@ inherit
 			process_name_of_named_class,
 			process_new_name_of_rename,
 			process_once_function,
-			process_once_function_inline_agent,
+			process_once_function_inline_agent_declaration,
 			process_once_procedure,
-			process_once_procedure_inline_agent,
+			process_once_procedure_inline_agent_declaration,
 			process_precursor_keyword,
 			process_real_constant_without_cast_type,
 			process_regular_manifest_string_without_cast_type,
@@ -100,6 +101,20 @@ feature {NONE} -- Initialization
 			create expression_type_finder.make
 			precursor (a_file)
 			create internal_type_context.make_with_capacity (current_class, 15)
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset for another pretty-printing.
+		do
+			precursor
+			comments_ignored := False
+			target_class := Void
+			current_feature := Void
+			current_invariant := Void
+			current_inline_agent := Void
+			current_class := tokens.unknown_class
 		end
 
 feature -- Class mapping
@@ -664,8 +679,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_do_function_inline_agent_declaration (an_expression: ET_DO_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
@@ -686,8 +701,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_do_procedure_inline_agent (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_do_procedure_inline_agent_declaration (an_expression: ET_DO_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
@@ -776,8 +791,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_external_function_inline_agent (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_external_function_inline_agent_declaration (an_expression: ET_EXTERNAL_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
@@ -798,8 +813,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_external_procedure_inline_agent (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_external_procedure_inline_agent_declaration (an_expression: ET_EXTERNAL_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
@@ -1008,8 +1023,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_once_function_inline_agent_declaration (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
@@ -1030,8 +1045,8 @@ feature {ET_AST_PROCESSOR} -- Processing
 			current_feature := l_old_feature
 		end
 
-	process_once_procedure_inline_agent (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
-			-- Process `an_expression'.
+	process_once_procedure_inline_agent_declaration (an_expression: ET_ONCE_PROCEDURE_INLINE_AGENT)
+			-- Process declaration of inline agent `an_expression'.
 		local
 			l_old_agent: like current_inline_agent
 		do
