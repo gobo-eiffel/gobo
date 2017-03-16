@@ -5,7 +5,7 @@ note
 		"Comma-separated-value file handlers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,19 +21,53 @@ inherit
 
 create
 
-	make
+	make,
+	make_with_separator
 
 feature {NONE} -- Initialization
 
 	make
 			-- Create a new csv handler.
+			-- Use comma as separator.
 		do
+			make_with_separator (',')
+		ensure
+			separator_set: separator = ','
+		end
+
+	make_with_separator (a_separator: like separator)
+			-- Create a new csv handler.
+			-- Use `a_separator' as separator.
+		require
+			valid_separator: a_separator /= '%"'
+		do
+			separator := a_separator
+		ensure
+			separator_set: separator = a_separator
+		end
+
+feature -- Access
+
+	separator: CHARACTER
+			-- Separator used between cells
+
+feature -- Setting
+
+	set_separator (a_separator: like separator)
+			-- Set `separator' to `a_separator'.
+		require
+			valid_separator: a_separator /= '%"'
+		do
+			separator := a_separator
+		ensure
+			separator_set: separator = a_separator
 		end
 
 feature -- Input
 
 	read_row (a_row: STRING; a_cells: DS_ARRAYED_LIST [STRING])
-			-- Split `a_row' into cells and append them at the end of `a_cells'.
+			-- Split `a_row' into cells using `separator' as separator,
+			-- and append them at the end of `a_cells'.
 			-- The cell strings added to `a_cells' are not shared objects and
 			-- can be kept without the need to clone them.
 		require
@@ -63,9 +97,9 @@ feature -- Input
 					else
 						l_cell.append_character ('%"')
 					end
-				elseif c = ',' then
+				elseif c = separator then
 					if has_quote then
-						l_cell.append_character (',')
+						l_cell.append_character (c)
 					else
 						a_cells.force_last (l_cell.substring (1, l_cell.count))
 						STRING_.wipe_out (l_cell)
@@ -82,11 +116,11 @@ feature -- Input
 
 	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [DS_ARRAYED_LIST [STRING]])
 			-- Read csv file `a_file' and for each row, call `a_action' where the list
-			-- passed as argument is the list of cells making up this row. The list
-			-- passed as argument is supposed to be non-void and contains no void
-			-- strings. This list object is reused (and hence altered) between each
-			-- call. The cell strings it contains are not altered and can be kept
-			-- without the need to clone them.
+			-- passed as argument is the list of cells making up this row (using
+			-- `separator' as separator). The list passed as argument is supposed to
+			-- be non-void and contains no void strings. This list object is reused
+			-- (and hence altered) between each call. The cell strings it contains
+			-- are not altered and can be kept without the need to clone them.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -113,7 +147,7 @@ feature -- Output
 
 	put_cell (a_cell: STRING; a_row: STRING)
 			-- Append `a_cell' to `a_row'. Add escape characters if needed.
-			-- Do not add the comma separator character.
+			-- Do not add the separator character.
 		require
 			a_cell_not_void: a_cell /= Void
 			a_row_not_void: a_row /= Void
@@ -121,7 +155,7 @@ feature -- Output
 			i, nb: INTEGER
 			c: CHARACTER
 		do
-			if not (a_cell.has (',') or a_cell.has ('%N') or a_cell.has ('%"')) then
+			if not (a_cell.has (separator) or a_cell.has ('%N') or a_cell.has ('%"')) then
 				a_row.append_string (a_cell)
 			else
 				a_row.append_character ('%"')
@@ -137,5 +171,9 @@ feature -- Output
 				a_row.append_character ('%"')
 			end
 		end
+
+invariant
+
+	valid_separator: separator /= '%"'
 
 end
