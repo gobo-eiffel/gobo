@@ -217,11 +217,11 @@ feature -- Printing
 			print_unescaped_string (html_start_span_title)
 			print_unescaped_character ('%"')
 			print_unescaped_character ('`')
-			print_string (a_feature.lower_name)
+			print_string_lower_case (a_feature.name.name)
 			print_unescaped_character ('%'')
 			if a_feature.implementation_class /= current_class then
 				print_string (string_was_declared_in)
-				print_string (a_feature.implementation_class.upper_name)
+				print_string_upper_case (a_feature.implementation_class.name.name)
 			else
 				print_string (string_is_declared_in_current)
 			end
@@ -260,7 +260,7 @@ feature -- Printing
 				l_cluster := a_clusters.cluster (i)
 				if not l_cluster.is_implicit then
 					print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
-					print_string (l_cluster.lower_name)
+					print_string_lower_case (l_cluster.name)
 					print_end_span
 					print_new_line
 					if attached l_cluster.subclusters as l_subclusters then
@@ -344,7 +344,7 @@ feature -- Printing
 							indentation_printed := True
 						end
 						print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
-						print_string ("--")
+						print_string (empty_comment)
 						print_end_span
 						l_in_comment := True
 						i := i + 1
@@ -485,18 +485,11 @@ feature -- Printing
 			-- Print character `c', or its escaped version if it's a special HTML character.
 			-- Print indentation first if not done yet.
 		do
-			inspect c
-			when '<' then
-				print_unescaped_string (html_lt)
-			when '>' then
-				print_unescaped_string (html_gt)
-			when '%"' then
-				print_unescaped_string (html_quot)
-			when '&' then
-				print_unescaped_string (html_ampersand)
-			else
-				print_unescaped_character (c)
+			if not indentation_printed then
+				print_indentation
 			end
+			put_character (c)
+			comment_printed := False
 		end
 
 	print_string (s: STRING)
@@ -505,11 +498,49 @@ feature -- Printing
 		local
 			i, nb: INTEGER
 		do
+			if not indentation_printed then
+				print_indentation
+			end
 			nb := s.count
 			from i := 1 until i > nb loop
-				print_character (s.item (i))
+				put_character (s.item (i))
 				i := i + 1
 			end
+			comment_printed := False
+		end
+
+	print_string_lower_case (s: STRING)
+			-- Print lower-case version of string `s', or its escaped version if it contains special HTML characters.
+			-- Print indentation first if not done yet.
+		local
+			i, nb: INTEGER
+		do
+			if not indentation_printed then
+				print_indentation
+			end
+			nb := s.count
+			from i := 1 until i > nb loop
+				put_character (s.item (i).as_lower)
+				i := i + 1
+			end
+			comment_printed := False
+		end
+
+	print_string_upper_case (s: STRING)
+			-- Print upper-case version of string `s', or its escaped version if it contains special HTML characters.
+			-- Print indentation first if not done yet.
+		local
+			i, nb: INTEGER
+		do
+			if not indentation_printed then
+				print_indentation
+			end
+			nb := s.count
+			from i := 1 until i > nb loop
+				put_character (s.item (i).as_upper)
+				i := i + 1
+			end
+			comment_printed := False
 		end
 
 	print_unescaped_character (c: CHARACTER)
@@ -603,7 +634,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			else
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol, a_href)
 			end
-			print_string (a_alias_name.operator_lower_name)
+			print_string_lower_case (a_alias_name.operator_name)
 			print_end_a
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			print_character ('"')
@@ -804,7 +835,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			print_unescaped_character ('%"')
 			print_character ('f')
 			print_character ('_')
-			print_string (l_feature_name.lower_name)
+			print_string_lower_case (l_feature_name.name)
 			print_unescaped_character ('%"')
 			print_unescaped_character ('>')
 			print_end_a
@@ -910,7 +941,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			if attached {ET_IDENTIFIER} a_feature_name as l_identifier then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, a_href)
-				print_string (l_identifier.lower_name)
+				print_string_lower_case (l_identifier.name)
 				process_break (l_identifier.break)
 				print_end_a
 			elseif attached {ET_INFIX_NAME} a_feature_name as l_infix_name then
@@ -957,7 +988,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			l_identifier := a_tag.identifier
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
-			print_string (l_identifier.lower_name)
+			print_string_lower_case (l_identifier.name)
 			print_end_span
 				-- The AST may or may not contain the colon.
 				-- So we have to print it explicitly here.
@@ -1000,7 +1031,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			l_name := a_parameter.name
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_egeneric)
-			print_string (l_name.upper_name)
+			print_string_upper_case (l_name.name)
 			print_end_span
 			process_break (l_name.break)
 		end
@@ -1022,7 +1053,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			end
 			if l_href /= Void then
 				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eclass, l_href)
-				print_string (a_class_name.upper_name)
+				print_string_upper_case (a_class_name.name)
 				process_break (a_class_name.break)
 				print_end_a
 			else
@@ -1123,7 +1154,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 				process_break (a_keyword.break)
 				print_end_a
 			else
-				a_keyword.process (Current)
+				precursor (a_keyword)
 			end
 		end
 
@@ -1171,7 +1202,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			l_identifier := a_tag.identifier
 			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_etag)
-			print_string (l_identifier.lower_name)
+			print_string_lower_case (l_identifier.name)
 			print_end_span
 				-- The AST may or may not contain the colon.
 				-- So we have to print it explicitly here.
@@ -1219,6 +1250,25 @@ feature {ET_AST_PROCESSOR} -- Processing
 				end
 			else
 				a_writable.process (Current)
+			end
+		end
+
+feature {NONE} -- Printing
+
+	put_character (c: CHARACTER)
+			-- Print character `c', or its escaped version if it's a special HTML character.
+		do
+			inspect c
+			when '<' then
+				file.put_string (html_lt)
+			when '>' then
+				file.put_string (html_gt)
+			when '%"' then
+				file.put_string (html_quot)
+			when '&' then
+				file.put_string (html_ampersand)
+			else
+				file.put_character (c)
 			end
 		end
 
@@ -1474,6 +1524,9 @@ feature {NONE} -- Constants
 	string_is_declared_in_current: STRING = " is declared in `Current'"
 			-- String constant
 
+	empty_comment: STRING = "--"
+			-- Empty comment
+			
 invariant
 
 	expression_type_finder_not_void: expression_type_finder /= Void
