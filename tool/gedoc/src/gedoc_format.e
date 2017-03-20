@@ -351,7 +351,7 @@ feature {NONE} -- Processing
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_target_type_attachment_mode (False))
 			a_system.universes_do_all (agent {ET_UNIVERSE}.set_implicit_attachment_type_mark (tokens.implicit_detachable_type_mark))
 			create l_ast_factory.make
-			l_ast_factory.set_keep_all_breaks (True)
+			l_ast_factory.set_keep_all_comments (True)
 			a_system.set_ast_factory (l_ast_factory)
 		end
 

@@ -5,7 +5,7 @@ note
 		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,8 @@ inherit
 			current_system, hash_code,
 			dotnet_assembly, lower_name,
 			full_name, full_lower_name,
-			relative_name, relative_lower_name
+			relative_name, relative_lower_name,
+			kind_capitalized_name
 		redefine
 			is_dotnet_assembly,
 			kind_name,

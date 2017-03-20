@@ -5,7 +5,7 @@ note
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -349,6 +349,22 @@ feature -- Statut setting
 			keep_all_breaks := b
 		ensure
 			keep_all_breaks_set: keep_all_breaks = b
+		end
+
+	set_keep_all_comments (b: BOOLEAN)
+			-- Set `keep_all_comments' to `b'.
+		do
+			keep_all_comments := b
+		ensure
+			keep_all_comments_set: keep_all_comments = b
+		end
+
+	set_keep_header_comments (b: BOOLEAN)
+			-- Set `keep_header_comments' to `b'.
+		do
+			keep_header_comments := b
+		ensure
+			keep_header_comments_set: keep_header_comments = b
 		end
 
 feature -- Eiffel keywords

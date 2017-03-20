@@ -5,7 +5,7 @@ note
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2010/09/15 $"
 	revision: "$Revision: #22 $"
@@ -19,7 +19,8 @@ inherit
 			preparse_recursive,
 			parse_all_recursive,
 			set_none_type,
-			default_read_only_value
+			default_read_only_value,
+			kind_name
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -99,6 +100,12 @@ feature -- Access
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
+
+	kind_name: STRING
+			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
+		once
+			Result := "system"
+		end
 
 feature -- Kernel types
 

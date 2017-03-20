@@ -5,7 +5,7 @@ note
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,7 +36,8 @@ inherit
 			relative_lower_name,
 			class_count,
 			classes_do_all,
-			classes_do_if
+			classes_do_if,
+			kind_capitalized_name
 		redefine
 			is_library,
 			kind_name,

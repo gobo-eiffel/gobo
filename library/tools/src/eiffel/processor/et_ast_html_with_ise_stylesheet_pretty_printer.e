@@ -21,7 +21,7 @@ inherit
 
 	ET_AST_PRETTY_PRINTER
 		export
-			{ANY} print_new_line
+			{ANY} print_new_line, print_indentation
 		redefine
 			make,
 			reset,
@@ -117,10 +117,17 @@ feature -- Initialization
 			current_class := tokens.unknown_class
 		end
 
-feature -- Class mapping
+feature -- Mapping
 
 	class_mapping: detachable DS_HASH_TABLE [STRING, ET_CLASS]
 			-- Mapping between classes and the href for these classes
+
+	feature_mapping: detachable DS_HASH_TABLE [STRING, ET_FEATURE]
+			-- Mapping between features and the href for these features
+
+	root_path: detachable STRING
+			-- Path from which href in `class_mapping' and `fetaure_mapping'
+			-- are retalive
 
 	set_class_mapping (a_class_mapping: like class_mapping)
 			-- Set `class_mapping' to `a_class_mapping'.
@@ -130,17 +137,20 @@ feature -- Class mapping
 			class_mapping_set: class_mapping = a_class_mapping
 		end
 
-feature -- Feature mapping
-
-	feature_mapping: detachable DS_HASH_TABLE [STRING, ET_FEATURE]
-			-- Mapping between features and the href for these features
-
 	set_feature_mapping (a_feature_mapping: like feature_mapping)
 			-- Set `feature_mapping' to `a_feature_mapping'.
 		do
 			feature_mapping := a_feature_mapping
 		ensure
 			feature_mapping_set: feature_mapping = a_feature_mapping
+		end
+
+	set_root_path (a_root_path: like root_path)
+			-- Set `root_path' to `a_root_path'.
+		do
+			root_path := a_root_path
+		ensure
+			root_path_set: root_path = a_root_path
 		end
 
 feature -- Printing
@@ -162,7 +172,7 @@ feature -- Printing
 			set_current_class (a_class)
 			process_name_of_named_class (a_class.name, a_class)
 			if a_with_deferred_info and then a_class.is_deferred then
-				print_start_span_class (css_echar)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_echar)
 				print_character ('*')
 				print_end_span
 			end
@@ -232,6 +242,38 @@ feature -- Printing
 			current_feature := l_old_feature
 		end
 
+	print_cluster_names_recursive (a_clusters: ET_CLUSTERS)
+			-- Print names of `a_clusters' (one per line), and recursively
+			-- of their explicit subclusters (indented).
+			-- Do not print comments.
+		require
+			a_clusters_not_void: a_clusters /= Void
+		local
+			l_old_comments_ignored: BOOLEAN
+			i, nb: INTEGER
+			l_cluster: ET_CLUSTER
+		do
+			l_old_comments_ignored := comments_ignored
+			set_comments_ignored (True)
+			nb := a_clusters.count
+			from i := 1 until i > nb loop
+				l_cluster := a_clusters.cluster (i)
+				if not l_cluster.is_implicit then
+					print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_necluster)
+					print_string (l_cluster.lower_name)
+					print_end_span
+					print_new_line
+					if attached l_cluster.subclusters as l_subclusters then
+						indent
+						print_cluster_names_recursive (l_subclusters)
+						dedent
+					end
+				end
+				i := i + 1
+			end
+			set_comments_ignored (l_old_comments_ignored)
+		end
+
 	print_comment_text (a_comment: STRING)
 			-- Print comment held in `a_comment', followed by a new-line.
 		local
@@ -257,7 +299,7 @@ feature -- Printing
 							l_quoted_class_name.append_character (c)
 						else
 							if not l_open_span then
-								print_start_span_class (css_ecomment)
+								print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 								l_open_span := True
 							end
 							print_character (c)
@@ -267,7 +309,7 @@ feature -- Printing
 					if l_in_comment then
 						if l_quoted_name /= Void then
 							if not l_open_span then
-								print_start_span_class (css_ecomment)
+								print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 								l_open_span := True
 							end
 							print_character ('`')
@@ -275,7 +317,7 @@ feature -- Printing
 							l_quoted_name := Void
 						elseif l_quoted_class_name /= Void then
 							if not l_open_span then
-								print_start_span_class (css_ecomment)
+								print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 								l_open_span := True
 							end
 							print_character ('{')
@@ -301,7 +343,7 @@ feature -- Printing
 								-- Do not indent this comment.
 							indentation_printed := True
 						end
-						print_start_span_class (css_ecomment)
+						print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						print_string ("--")
 						print_end_span
 						l_in_comment := True
@@ -312,7 +354,7 @@ feature -- Printing
 						l_quoted_class_name.append_character (c)
 					else
 						if not l_open_span then
-							print_start_span_class (css_ecomment)
+							print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 							l_open_span := True
 						end
 						print_character (c)
@@ -323,7 +365,7 @@ feature -- Printing
 							print_end_span
 							l_open_span := False
 						end
-						print_quoted_name (l_quoted_name, c, css_ecomment)
+						print_quoted_name (l_quoted_name, c, {ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						l_quoted_name := Void
 					elseif l_quoted_class_name /= Void then
 						l_quoted_class_name.append_character (c)
@@ -337,13 +379,13 @@ feature -- Printing
 							print_end_span
 							l_open_span := False
 						end
-						print_quoted_name (l_quoted_name, c, css_ecomment)
+						print_quoted_name (l_quoted_name, c, {ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						l_quoted_name := Void
 					elseif l_quoted_class_name /= Void then
 						l_quoted_class_name.append_character (c)
 					else
 						if not l_open_span then
-							print_start_span_class (css_ecomment)
+							print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 							l_open_span := True
 						end
 						print_character (c)
@@ -382,14 +424,14 @@ feature -- Printing
 							end
 							i := i - 1
 						end
-						print_quoted_class_name (l_quoted_class_name, l_feature_name, css_ecomment)
+						print_quoted_class_name (l_quoted_class_name, l_feature_name, {ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						l_quoted_class_name := Void
 						l_feature_name := Void
 					elseif l_quoted_name /= Void then
 						l_quoted_name.append_character (c)
 					else
 						if not l_open_span then
-							print_start_span_class (css_ecomment)
+							print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 							l_open_span := True
 						end
 						print_character (c)
@@ -401,7 +443,7 @@ feature -- Printing
 						l_quoted_class_name.append_character (c)
 					else
 						if not l_open_span then
-							print_start_span_class (css_ecomment)
+							print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 							l_open_span := True
 						end
 						print_character (c)
@@ -412,7 +454,7 @@ feature -- Printing
 			if l_in_comment then
 				if l_quoted_name /= Void then
 					if not l_open_span then
-						print_start_span_class (css_ecomment)
+						print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						l_open_span := True
 					end
 					print_character ('`')
@@ -420,7 +462,7 @@ feature -- Printing
 					l_quoted_name := Void
 				elseif l_quoted_class_name /= Void then
 					if not l_open_span then
-						print_start_span_class (css_ecomment)
+						print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecomment)
 						l_open_span := True
 					end
 					print_character ('{')
@@ -495,7 +537,7 @@ feature -- Printing
 		end
 
 	print_start_span_class (a_css_class: STRING)
-			-- Print <SPAN CLASS="`a_css_class'">
+			-- Print <SPAN CLASS="`a_css_class'">.
 		require
 			a_css_class_not_void: a_css_class /= Void
 			a_css_class_not_empty: not a_css_class.is_empty
@@ -508,13 +550,14 @@ feature -- Printing
 		end
 
 	print_end_span
-			-- Print </SPAN>
+			-- Print </SPAN>.
 		do
 			print_unescaped_string (html_end_span)
 		end
 
 	print_start_a_class (a_css_class, a_href: STRING)
-			-- Print <A CLASS="`a_css_class'" HREF="`a_href'">
+			-- Print <A CLASS="`a_css_class'" HREF="`a_href'">.
+			-- Note that `a_href' is prefixed by `root_path' if not Void.
 		require
 			a_css_class_not_void: a_css_class /= Void
 			a_css_class_not_empty: not a_css_class.is_empty
@@ -526,13 +569,16 @@ feature -- Printing
 			print_unescaped_character (' ')
 			print_unescaped_string (html_href)
 			print_unescaped_character ('%"')
+			if attached root_path as l_root_path then
+				print_string (l_root_path)
+			end
 			print_string (a_href)
 			print_unescaped_character ('%"')
 			print_unescaped_character ('>')
 		end
 
 	print_end_a
-			-- Print </A>
+			-- Print </A>.
 		do
 			print_unescaped_string (html_end_a)
 		end
@@ -549,17 +595,17 @@ feature {ET_AST_PROCESSOR} -- Processing
 		do
 			a_keyword.process (Current)
 			print_space
-			print_start_span_class (css_esymbol)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			print_character ('"')
 			print_end_span
 			if a_alias_name.is_keyword then
-				print_start_a_class (css_ekeyword, a_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword, a_href)
 			else
-				print_start_a_class (css_esymbol, a_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol, a_href)
 			end
 			print_string (a_alias_name.operator_lower_name)
 			print_end_a
-			print_start_span_class (css_esymbol)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			print_character ('"')
 			print_end_span
 			comment_finder.find_comments (a_alias_name, comment_list)
@@ -587,7 +633,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_c1_character_constant_without_cast_type (a_constant: ET_C1_CHARACTER_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
-			print_start_span_class (css_echar)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_echar)
 			precursor (a_constant)
 			print_end_span
 		end
@@ -595,7 +641,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_c2_character_constant_without_cast_type (a_constant: ET_C2_CHARACTER_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
-			print_start_span_class (css_echar)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_echar)
 			precursor (a_constant)
 			print_end_span
 		end
@@ -603,7 +649,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_c3_character_constant_without_cast_type (a_constant: ET_C3_CHARACTER_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
-			print_start_span_class (css_echar)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_echar)
 			precursor (a_constant)
 			print_end_span
 		end
@@ -863,7 +909,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			a_href_not_void: a_href /= Void
 		do
 			if attached {ET_IDENTIFIER} a_feature_name as l_identifier then
-				print_start_a_class (css_efeature, a_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, a_href)
 				print_string (l_identifier.lower_name)
 				process_break (l_identifier.break)
 				print_end_a
@@ -895,7 +941,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 				an_identifier.is_object_test_local or
 				an_identifier.is_across_cursor
 			then
-				print_start_span_class (css_elocal)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_elocal)
 				print_string (an_identifier.name)
 				print_end_span
 				process_break (an_identifier.break)
@@ -910,7 +956,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_identifier: ET_IDENTIFIER
 		do
 			l_identifier := a_tag.identifier
-			print_start_span_class (css_eitag)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
 			print_string (l_identifier.lower_name)
 			print_end_span
 				-- The AST may or may not contain the colon.
@@ -922,7 +968,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_integer_constant_without_cast_type (a_constant: ET_INTEGER_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
-			print_start_span_class (css_enumber)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_enumber)
 			precursor (a_constant)
 			print_end_span
 		end
@@ -941,7 +987,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_keyword (a_keyword: ET_KEYWORD)
 			-- Process `a_keyword'.
 		do
-			print_start_span_class (css_ekeyword)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
 			print_string (a_keyword.text)
 			print_end_span
 			process_break (a_keyword.break)
@@ -953,7 +999,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_name: ET_IDENTIFIER
 		do
 			l_name := a_parameter.name
-			print_start_span_class (css_egeneric)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_egeneric)
 			print_string (l_name.upper_name)
 			print_end_span
 			process_break (l_name.break)
@@ -975,7 +1021,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 				end
 			end
 			if l_href /= Void then
-				print_start_a_class (css_eclass, l_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eclass, l_href)
 				print_string (a_class_name.upper_name)
 				process_break (a_class_name.break)
 				print_end_a
@@ -1072,7 +1118,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 				end
 			end
 			if l_href /= Void then
-				print_start_a_class (css_ekeyword, l_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword, l_href)
 				print_string (a_keyword.name)
 				process_break (a_keyword.break)
 				print_end_a
@@ -1084,7 +1130,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_real_constant_without_cast_type (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant' without cast type.
 		do
-			print_start_span_class (css_enumber)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_enumber)
 			precursor (a_constant)
 			print_end_span
 		end
@@ -1092,7 +1138,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_regular_manifest_string_without_cast_type (a_string: ET_REGULAR_MANIFEST_STRING)
 			-- Process `a_string' without cast type.
 		do
-			print_start_span_class (css_estring)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_estring)
 			precursor (a_string)
 			print_end_span
 		end
@@ -1100,7 +1146,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_special_manifest_string_without_cast_type (a_string: ET_SPECIAL_MANIFEST_STRING)
 			-- Process `a_string' without cast type.
 		do
-			print_start_span_class (css_estring)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_estring)
 			precursor (a_string)
 			print_end_span
 		end
@@ -1109,9 +1155,9 @@ feature {ET_AST_PROCESSOR} -- Processing
 			-- Process `a_symbol'.
 		do
 			if a_symbol.is_dot then
-				print_start_span_class (css_edot)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_edot)
 			else
-				print_start_span_class (css_esymbol)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 			end
 			print_string (a_symbol.text)
 			print_end_span
@@ -1124,7 +1170,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 			l_identifier: ET_IDENTIFIER
 		do
 			l_identifier := a_tag.identifier
-			print_start_span_class (css_etag)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_etag)
 			print_string (l_identifier.lower_name)
 			print_end_span
 				-- The AST may or may not contain the colon.
@@ -1147,7 +1193,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 	process_verbatim_string_without_cast_type (a_string: ET_VERBATIM_STRING)
 			-- Process `a_string' without cast type.
 		do
-			print_start_span_class (css_estring)
+			print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_estring)
 			precursor (a_string)
 			print_end_span
 		end
@@ -1201,7 +1247,7 @@ feature {NONE} -- Comments
 			l_feature_name: ET_IDENTIFIER
 		do
 			if not a_quoted_name.is_empty then
-				print_start_span_class (css_esymbol)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 				print_character ('`')
 				print_end_span
 				if attached feature_mapping as l_feature_mapping then
@@ -1215,15 +1261,15 @@ feature {NONE} -- Comments
 					end
 				end
 				if l_href /= Void then
-					print_start_a_class (css_efeature, l_href)
+					print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, l_href)
 					print_string (a_quoted_name)
 					print_end_a
 				else
-					print_start_span_class (css_equoted)
+					print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_equoted)
 					print_string (a_quoted_name)
 					print_end_span
 				end
-				print_start_span_class (css_esymbol)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 				print_character (a_end_quote)
 				print_end_span
 			else
@@ -1258,13 +1304,13 @@ feature {NONE} -- Comments
 				end
 			end
 			if l_href /= Void then
-				print_start_span_class (css_esymbol)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 				print_character ('{')
 				print_end_span
-				print_start_a_class (css_eclass, l_href)
+				print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eclass, l_href)
 				print_string (a_quoted_class_name)
 				print_end_a
-				print_start_span_class (css_esymbol)
+				print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_esymbol)
 				print_character ('}')
 				print_end_span
 			else
@@ -1288,10 +1334,10 @@ feature {NONE} -- Comments
 						end
 					end
 					if l_href /= Void then
-						print_start_span_class (css_edot)
+						print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_edot)
 						print_character ('.')
 						print_end_span
-						print_start_a_class (css_efeature, l_href)
+						print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_efeature, l_href)
 						print_string (a_feature_name)
 						print_end_a
 					else
@@ -1386,53 +1432,6 @@ feature {NONE} -- Implementation
 
 	quoted_class_name_buffer: STRING
 			-- Buffer for quoted class names in comments
-
-feature -- Constants
-
-	css_echar: STRING = "echar"
-			-- CSS class "echar"
-
-	css_eclass: STRING = "eclass"
-			-- CSS class "eclass"
-
-	css_ecomment: STRING = "ecomment"
-			-- CSS class "ecomment"
-
-	css_edot: STRING = "edot"
-			-- CSS class "edot"
-
-	css_efeature: STRING = "efeature"
-			-- CSS class "efeature"
-
-	css_egeneric: STRING = "egeneric"
-			-- CSS class "egeneric"
-
-	css_eitag: STRING = "eitag"
-			-- CSS class "eitag"
-
-	css_ekeyword: STRING = "ekeyword"
-			-- CSS class "ekeyword"
-
-	css_elocal: STRING = "elocal"
-			-- CSS class "elocal"
-
-	css_enumber: STRING = "enumber"
-			-- CSS class "enumber"
-
-	css_equoted: STRING = "equoted"
-			-- CSS class "equoted"
-
-	css_estring: STRING = "estring"
-			-- CSS class "estring"
-
-	css_esymbol: STRING = "esymbol"
-			-- CSS class "esymbol"
-
-	css_etag: STRING = "etag"
-			-- CSS class "etag"
-
-	css_nescluster: STRING = "nescluster"
-			-- CSS class "nescluster"	
 
 feature {NONE} -- Constants
 

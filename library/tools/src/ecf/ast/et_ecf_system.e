@@ -5,7 +5,7 @@ note
 		"ECF Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,8 @@ inherit
 			preparse,
 			parse_all,
 			set_none_type,
-			default_read_only_value
+			default_read_only_value,
+			kind_name
 		redefine
 			make, name
 		end

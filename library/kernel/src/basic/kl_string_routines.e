@@ -799,6 +799,15 @@ feature -- Comparison
 			end
 		end
 
+	is_less (a_string, other: STRING): BOOLEAN
+			-- Is `a_string' considered less than `other'?
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		do
+			Result := three_way_comparison (a_string, other) = - 1
+		end
+
 	three_way_comparison (a_string, other: STRING): INTEGER
 			-- If `a_string' equal to `other', 0;
 			-- if smaller, -1; if greater, 1

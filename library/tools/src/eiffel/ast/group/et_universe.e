@@ -696,6 +696,35 @@ feature -- Access
 			kind_name_not_void: Result /= Void
 		end
 
+	kind_capitalized_name: STRING
+			-- Capitalized name of the kind of group (e.g. "Library", "Assembly", etc.)
+			-- (May return the same object as `kind_name' if already capitalized.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := kind_name
+			nb := Result.count
+			c := Result.item (1)
+			if c >= 'a' and c <= 'z' then
+				Result := Result.as_lower
+				Result.put (c.as_upper, 1)
+			else
+				from i := 2 until i > nb loop
+					c := Result.item (i)
+					if c >= 'A' and c <= 'Z' then
+						Result := Result.as_lower
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			kind_capitalized_name_not_void: Result /= Void
+			kind_capitalized_name_not_empty: Result.count > 0
+		end
+
 feature -- Measurement
 
 	class_count: INTEGER
