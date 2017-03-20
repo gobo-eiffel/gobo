@@ -2,6 +2,13 @@
 
 ## Version 4.1 - ??
 
+### gec
+
+* Fixed bug when calling constant attributes of type STRING in a
+  Non-object call (of the form `{FOO}.string_constant`). A new
+  string object was created at each call, instead of returning
+  the same string object.
+
 ### gedoc
 
 * New tool which is able to generate documentation from Eiffel classes

@@ -11858,6 +11858,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
+			l_once_feature: ET_FEATURE
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -11905,11 +11906,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif l_query.is_constant_attribute then
--- TODO: make the difference between expanded and reference "constants".
 				if not attached {ET_CONSTANT_ATTRIBUTE} l_query as l_constant_attribute then
 						-- Internal error.
 					set_fatal_error
 					error_handler.report_giaaa_error
+				elseif attached {ET_MANIFEST_STRING} l_constant_attribute.constant as l_string_constant then
+					l_once_feature := l_constant_attribute.implementation_feature
+					constant_features.force_last (l_string_constant, l_once_feature)
+					print_once_value_name (l_once_feature, current_file)
 				else
 					l_constant := l_constant_attribute.constant
 					old_index := l_constant.index
