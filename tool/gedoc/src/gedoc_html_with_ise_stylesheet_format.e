@@ -257,7 +257,7 @@ feature {NONE} -- Output
 						l_printer.set_class_mapping (a_class_mapping)
 						l_printer.set_feature_mapping (a_feature_mapping)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " documentation", Void, Void, keyword_eiffel_system, a_root_path, l_file)
+						print_header (universe_name (a_system) + " documentation", keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
 							-- General.
@@ -345,7 +345,7 @@ feature {NONE} -- Output
 						l_printer.set_feature_mapping (a_feature_mapping)
 						l_printer.set_root_path (a_root_path)
 						l_line_splitter := line_splitter
-						print_header (universe_name (a_system) + " class dictionary", Void, Void, keyword_eiffel_system, a_root_path, l_file)
+						print_header (universe_name (a_system) + " class dictionary", keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -364,6 +364,7 @@ feature {NONE} -- Output
 								across l_line_splitter.split_greedy (l_description) as l_lines loop
 									l_printer.print_indentation
 									l_printer.print_comment_text ("-- " + l_lines.item)
+									l_printer.print_new_line
 								end
 								l_printer.dedent
 								l_printer.dedent
@@ -407,7 +408,7 @@ feature {NONE} -- Output
 						l_printer.reset
 						l_printer.set_file (l_file)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " alphabetical group list", Void, Void, keyword_eiffel_system, a_root_path, l_file)
+						print_header (universe_name (a_system) + " alphabetical group list", keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -459,7 +460,7 @@ feature {NONE} -- Output
 						l_printer.reset
 						l_printer.set_file (l_file)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " group hierarchy", Void, Void, keyword_eiffel_system, a_root_path, l_file)
+						print_header (universe_name (a_system) + " group hierarchy", keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -532,7 +533,7 @@ feature {NONE} -- Output
 						l_printer.set_feature_mapping (a_feature_mapping)
 						l_printer.set_root_path (a_root_path)
 							-- Header.
-						print_header (a_universe.kind_capitalized_name + " " + l_universe_name, Void, Void, keyword_eiffel_group, a_root_path, l_file)
+						print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
 							-- Universe name.
@@ -618,7 +619,7 @@ feature {NONE} -- Output
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
 						-- Header.
-					print_header (a_class.lower_name + " Chart", a_class.first_indexing, a_class.second_indexing, keyword_eiffel_class, a_root_path, l_file)
+					print_header (a_class.lower_name + " Chart", keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (a_class.lower_name, True, True, True, False, True, True, a_root_path, l_file)
 						-- Content.
@@ -671,7 +672,7 @@ feature {NONE} -- Output
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
 						-- Header.
-					print_header (a_class.lower_name + " Relations", a_class.first_indexing, a_class.second_indexing, keyword_eiffel_class, a_root_path, l_file)
+					print_header (a_class.lower_name + " Relations", keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (a_class.lower_name, True, True, True, True, False, True, a_root_path, l_file)
 						-- Content.
@@ -719,7 +720,7 @@ feature {NONE} -- Output
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
-					print_header (a_class.lower_name + " Text", a_class.first_indexing, a_class.second_indexing, keyword_eiffel_class, a_root_path, l_file)
+					print_header (a_class.lower_name + " Text", keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
 					print_navigation_bar (a_class.lower_name, True, True, True, True, True, False, a_root_path, l_file)
 					a_class.process (l_printer)
@@ -928,7 +929,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_header (a_title: STRING; a_first_indexing_clause, a_second_indexing_clause: detachable ET_INDEXING_LIST; a_keywords: STRING; a_root_path: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_header (a_title: STRING; a_keywords: STRING; a_root_path: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print HTML header to `a_file'.
 		require
 			a_title_not_void: a_title /= Void
