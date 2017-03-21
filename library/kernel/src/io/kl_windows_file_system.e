@@ -5,7 +5,7 @@ note
 		"Windows-like file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -415,6 +415,27 @@ feature -- Pathname handling
 					Result.append_character (directory_separator)
 				end
 				Result := STRING_.appended_string (Result, a_pathname)
+			end
+		end
+
+	append_pathname_to_string (a_dirname, a_pathname, a_string: STRING)
+			-- Append to `a_string' the pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the pathname convention
+			-- of current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
+		local
+			nb: INTEGER
+		do
+			a_string.append_string (a_dirname)
+			if a_pathname.count > 0 then
+				nb := a_string.count
+				if nb > 0 and then not is_directory_separator (a_string.item (nb)) then
+					a_string.append_character (directory_separator)
+				end
+				a_string.append_string (a_pathname)
 			end
 		end
 

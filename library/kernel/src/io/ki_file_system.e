@@ -5,7 +5,7 @@ note
 		"Interface for file systems"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -565,6 +565,26 @@ feature -- Pathname handling
 			pathname_not_void: Result /= Void
 			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_dirname)
 			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
+		end
+
+	append_pathname_to_string (a_dirname, a_pathname, a_string: STRING)
+			-- Append to `a_string' the pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the pathname convention
+			-- of current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_relative: is_relative_pathname (a_pathname)
+			a_string_not_void: a_string /= Void
+			a_dirname_same_type: a_dirname.same_type (a_string)
+			a_pathname_same_type: a_pathname.same_type (a_string)
+		deferred
+		ensure
+			definition: a_string ~ old a_string + pathname (a_dirname, a_pathname)
 		end
 
 	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING

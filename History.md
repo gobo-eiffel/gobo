@@ -14,6 +14,10 @@
 * New tool which is able to generate documentation from Eiffel classes
   or Eiffel libraries. This first version pretty-prints Eiffel classes.
 
+### Gobo Eiffel Kernel Library
+
+* Added feature `append_pathname_to_string` to class `KI_FILE_SYSTEM`.
+
 ### Gobo Eiffel Tools Library
 
 * Fixed bug when a feature has an `across` construct followed by an
