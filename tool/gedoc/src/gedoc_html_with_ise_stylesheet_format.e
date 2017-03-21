@@ -50,6 +50,9 @@ feature {NONE} -- Initialization
 			precursor (a_input_filename, a_error_handler)
 			create html_printer.make_null
 			create line_splitter.make_with_separators ("%R%N")
+			create class_name_buffer.make (80)
+			create filename_buffer.make (200)
+			create concat_buffer.make (100)
 		end
 
 feature {NONE} -- Processing
@@ -150,11 +153,11 @@ feature {NONE} -- Output
 			l_filename: STRING
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "default.css")
+				l_filename := filename (l_output_directory, filename_default_css)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_file.put_string ({ET_ISE_STYLESHEET_CONSTANTS}.css_file_content)
@@ -173,11 +176,11 @@ feature {NONE} -- Output
 			l_filename: STRING
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "goto.html")
+				l_filename := filename (l_output_directory, filename_goto)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_file.put_line ("<!--")
@@ -240,15 +243,16 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 			l_root_type: ET_BASE_TYPE
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "index.html")
+				l_filename := filename (l_output_directory, filename_index)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_printer := html_printer
@@ -257,7 +261,8 @@ feature {NONE} -- Output
 						l_printer.set_class_mapping (a_class_mapping)
 						l_printer.set_feature_mapping (a_feature_mapping)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " documentation", keyword_eiffel_system, a_root_path, l_file)
+						l_title := concat (universe_name (a_system), titla_suffix_documentation)
+						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
 							-- General.
@@ -326,16 +331,17 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_title: STRING
 			l_class: ET_CLASS
 			l_line_splitter: ST_SPLITTER
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "class_list.html")
+				l_filename := filename (l_output_directory, filename_class_list)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_printer := html_printer
@@ -345,7 +351,8 @@ feature {NONE} -- Output
 						l_printer.set_feature_mapping (a_feature_mapping)
 						l_printer.set_root_path (a_root_path)
 						l_line_splitter := line_splitter
-						print_header (universe_name (a_system) + " class dictionary", keyword_eiffel_system, a_root_path, l_file)
+						l_title := concat (universe_name (a_system), title_suffix_class_dictionary)
+						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -394,21 +401,23 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "group_list.html")
+				l_filename := filename (l_output_directory, filename_group_list)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_printer := html_printer
 						l_printer.reset
 						l_printer.set_file (l_file)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " alphabetical group list", keyword_eiffel_system, a_root_path, l_file)
+						l_title := concat (universe_name (a_system), title_suffix_alphabetical_group_list)
+						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -446,21 +455,23 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
 			if attached output_directory as l_output_directory then
-				l_filename := file_system.pathname (l_output_directory, "group_hierarchy.html")
+				l_filename := filename (l_output_directory, filename_group_hierarchy)
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_printer := html_printer
 						l_printer.reset
 						l_printer.set_file (l_file)
 						l_printer.set_root_path (a_root_path)
-						print_header (universe_name (a_system) + " group hierarchy", keyword_eiffel_system, a_root_path, l_file)
+						l_title := concat (universe_name (a_system), title_suffix_group_hierarchy)
+						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
 						l_file.put_string (html_start_pre)
 						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
@@ -511,19 +522,18 @@ feature {NONE} -- Output
 		do
 			if attached output_directory as l_output_directory then
 				l_universe_name := universe_name (a_universe)
-				l_filename := file_system.pathname (l_output_directory, l_universe_name)
 				if library_prefix_flag then
-					l_base_name := "index.html"
+					l_base_name := filename_index
 					l_filename := file_system.pathname (l_output_directory, l_universe_name)
 					l_filename := file_system.pathname (l_filename, l_base_name)
 				else
-					l_base_name := l_universe_name + "_index.html"
+					l_base_name := l_universe_name + filename_suffix_index
 					l_filename := file_system.pathname (l_output_directory, l_base_name)
 				end
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						l_printer := html_printer
@@ -602,13 +612,16 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
-			l_filename := file_system.pathname (class_output_directory (a_class), a_class.lower_name + "_chart.html")
+			l_class_name := class_lower_name (a_class)
+			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_chart))
 			if not is_file_overwritable (l_filename) then
 				report_file_already_exists_error (l_filename)
 			else
-				create l_file.make (l_filename)
+				l_file := new_output_file (l_filename)
 				l_file.recursive_open_write
 				if l_file.is_open_write then
 					l_printer := html_printer
@@ -619,9 +632,10 @@ feature {NONE} -- Output
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
 						-- Header.
-					print_header (a_class.lower_name + " Chart", keyword_eiffel_class, a_root_path, l_file)
+					l_title := concat (l_class_name, title_suffix_chart)
+					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
-					print_navigation_bar (a_class.lower_name, True, True, True, False, True, True, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
 						-- Content.
 					print_class_header (a_class, l_printer)
 					print_class_general (a_class, a_universe_mapping, l_printer)
@@ -629,7 +643,7 @@ feature {NONE} -- Output
 					print_feature_signatures (a_class.queries, title_queries, l_printer)
 					print_feature_signatures (a_class.procedures, title_commands, l_printer)
 						-- Footer.
-					print_navigation_bar (a_class.lower_name, True, True, True, False, True, True, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, False, True, True, a_root_path, l_file)
 					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
@@ -655,13 +669,16 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
-			l_filename := file_system.pathname (class_output_directory (a_class), a_class.lower_name + "_links.html")
+			l_class_name := class_lower_name (a_class)
+			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_links))
 			if not is_file_overwritable (l_filename) then
 				report_file_already_exists_error (l_filename)
 			else
-				create l_file.make (l_filename)
+				l_file := new_output_file (l_filename)
 				l_file.recursive_open_write
 				if l_file.is_open_write then
 					l_printer := html_printer
@@ -672,9 +689,10 @@ feature {NONE} -- Output
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
 						-- Header.
-					print_header (a_class.lower_name + " Relations", keyword_eiffel_class, a_root_path, l_file)
+					l_title := concat (l_class_name, title_suffix_relations)
+					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
-					print_navigation_bar (a_class.lower_name, True, True, True, True, False, True, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
 						-- Content.
 					print_class_header (a_class, l_printer)
 					print_class_relation (a_class, title_parents, a_parent_classes, l_printer)
@@ -682,7 +700,7 @@ feature {NONE} -- Output
 					print_class_relation (a_class, title_clients, a_client_classes, l_printer)
 					print_class_relation (a_class, title_suppliers, a_suppliers_classes, l_printer)
 						-- Footer.
-					print_navigation_bar (a_class.lower_name, True, True, True, True, False, True, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, True, False, True, a_root_path, l_file)
 					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
@@ -704,13 +722,16 @@ feature {NONE} -- Output
 		local
 			l_file: KL_TEXT_OUTPUT_FILE
 			l_filename: STRING
+			l_class_name: STRING
+			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 		do
-			l_filename := file_system.pathname (class_output_directory (a_class), a_class.lower_name + ".html")
+			l_class_name := class_lower_name (a_class)
+			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_text))
 			if not is_file_overwritable (l_filename) then
 				report_file_already_exists_error (l_filename)
 			else
-				create l_file.make (l_filename)
+				l_file := new_output_file (l_filename)
 				l_file.recursive_open_write
 				if l_file.is_open_write then
 					l_printer := html_printer
@@ -720,11 +741,12 @@ feature {NONE} -- Output
 					l_printer.set_feature_mapping (a_feature_mapping)
 					l_printer.set_root_path (a_root_path)
 					l_printer.set_current_class (a_class)
-					print_header (a_class.lower_name + " Text", keyword_eiffel_class, a_root_path, l_file)
+					l_title := concat (l_class_name, title_suffix_text)
+					print_header (l_title, keyword_eiffel_class, a_root_path, l_file)
 					l_file.put_string (html_start_pre)
-					print_navigation_bar (a_class.lower_name, True, True, True, True, True, False, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
 					a_class.process (l_printer)
-					print_navigation_bar (a_class.lower_name, True, True, True, True, True, False, a_root_path, l_file)
+					print_navigation_bar (l_class_name, True, True, True, True, True, False, a_root_path, l_file)
 					l_file.put_line (html_end_pre)
 					print_footer (l_file)
 					l_printer.set_null_file
@@ -1423,8 +1445,31 @@ feature {NONE} -- Implementation
 	line_splitter: ST_SPLITTER
 			-- Line splitter
 
+	new_output_file (a_filename: STRING): KL_TEXT_OUTPUT_FILE
+			-- File named `a_filename'
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			if attached cached_output_file as l_output_file then
+				Result := l_output_file
+				Result.reset (a_filename)
+			else
+				create Result.make (a_filename)
+				cached_output_file := Result
+			end
+		ensure
+			new_output_file_not_void: Result /= Void
+		end
+
+	cached_output_file: detachable KL_TEXT_OUTPUT_FILE
+			-- Cached file object used to write generated HTML text
+
 	new_class_list (nb: INTEGER): DS_ARRAYED_LIST [ET_CLASS]
 			-- Empty list of classes which can contain at least `nb' classes
+			--
+			-- Note that this routine always returns the same object.
 		require
 			nb_not_negative: nb >= 0
 		do
@@ -1446,6 +1491,8 @@ feature {NONE} -- Implementation
 
 	new_class_set (nb: INTEGER): DS_HASH_SET [ET_CLASS]
 			-- Empty set of classes which can contain at least `nb' classes
+			--
+			-- Note that this routine always returns the same object.
 		require
 			nb_not_negative: nb >= 0
 		do
@@ -1467,6 +1514,8 @@ feature {NONE} -- Implementation
 
 	new_feature_list (nb: INTEGER): DS_ARRAYED_LIST [ET_FEATURE]
 			-- Empty list of features which can contain at least `nb' features
+			--
+			-- Note that this routine always returns the same object.
 		require
 			nb_not_negative: nb >= 0
 		do
@@ -1488,6 +1537,8 @@ feature {NONE} -- Implementation
 
 	new_feature_name_list (nb: INTEGER): DS_ARRAYED_LIST [ET_FEATURE_NAME]
 			-- Empty list of feature names which can contain at least `nb' names
+			--
+			-- Note that this routine always returns the same object.
 		require
 			nb_not_negative: nb >= 0
 		do
@@ -1509,6 +1560,8 @@ feature {NONE} -- Implementation
 
 	new_feature_name_set (nb: INTEGER): DS_HASH_SET [ET_FEATURE_NAME]
 			-- Empty set of feature names which can contain at least `nb' names
+			--
+			-- Note that this routine always returns the same object.
 		require
 			nb_not_negative: nb >= 0
 		do
@@ -1543,6 +1596,67 @@ feature {NONE} -- Implementation
 
 	cached_feature_name_set: detachable DS_HASH_SET [ET_FEATURE_NAME]
 			-- Cached set of feature names
+
+	class_lower_name (a_class: ET_CLASS): STRING
+			-- Name of `a_class' in lower-case
+			--
+			-- Note that this routine always returns the same object.
+		do
+			Result := class_name_buffer
+			Result.wipe_out
+			Result.append_string (a_class.name.name)
+			Result.to_lower
+		ensure
+			class_lower_name_not_void: Result /= Void
+			definition: Result ~ a_class.lower_name
+		end
+
+	class_name_buffer: STRING
+			-- Buffer for class names
+
+	filename (a_dirname, a_pathname: STRING): STRING
+			-- Pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the pathname convention
+			-- of `file_system.'. The result also follows this pathname convention.)
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_relative: file_system.is_relative_pathname (a_pathname)
+		do
+			Result := filename_buffer
+			Result.wipe_out
+			file_system.append_pathname_to_string (a_dirname, a_pathname, Result)
+		ensure
+			pathname_not_void: Result /= Void
+			same_relative: file_system.is_relative_pathname (Result) = file_system.is_relative_pathname (a_dirname)
+			same_absolute: file_system.is_absolute_pathname (Result) = file_system.is_absolute_pathname (a_dirname)
+		end
+
+	filename_buffer: STRING
+			-- Buffer for filenames
+
+	concat (a_first_part, a_second_part: STRING): STRING
+			-- String made up of `a_first_part' and `a_second_part'
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_first_part_not_void: a_first_part /= Void
+			a_second_part_not_void: a_second_part /= Void
+		do
+			Result := concat_buffer
+			Result.wipe_out
+			Result.append_string (a_first_part)
+			Result.append_string (a_second_part)
+		ensure
+			concat_not_void: Result /= Void
+			definition: Result ~ a_first_part + a_second_part
+		end
+
+	concat_buffer: STRING
+			-- Buffer for concat
 
 feature {NONE} -- Constants
 
@@ -1602,6 +1716,27 @@ feature {NONE} -- Constants
 
 	title_system: STRING = "System"
 			-- Title "System"
+
+	title_suffix_alphabetical_group_list: STRING = " alphabetical group list"
+			-- Title suffix " alphabetical group list"
+
+	title_suffix_chart: STRING = " Chart"
+			-- Title suffix " Chart"
+
+	title_suffix_class_dictionary: STRING = " class dictionary"
+			-- Title suffix " class dictionary"
+
+	titla_suffix_documentation: STRING = " documentation"
+			-- Title suffix " documentation"
+
+	title_suffix_group_hierarchy: STRING = " group hierarchy"
+			-- Title suffix " group hierarchy"
+
+	title_suffix_relations: STRING = " Relations"
+			-- Title suffix " Relations"
+
+	title_suffix_text: STRING = " Text"
+			-- Title suffix " Text"
 
 	html_start_pre: STRING = "<pre>"
 			-- <pre>
@@ -1738,9 +1873,42 @@ feature {NONE} -- Constants
 	navigation_line_17: STRING = "</TR></TABLE></FORM>"
 			-- 17th line in HTML navigation bar
 
+	filename_class_list: STRING = "class_list.html"
+			-- Filename "class_list.html"
+
+	filename_default_css: STRING = "default.css"
+			-- Filename "default.css"
+
+	filename_goto: STRING = "goto.html"
+			-- Filename "goto.html"
+
+	filename_group_hierarchy: STRING = "group_hierarchy.html"
+			-- Filename "group_hierarchy.html"
+
+	filename_group_list: STRING = "group_list.html"
+			-- Filename "group_list.html"
+
+	filename_index: STRING = "index.html"
+			-- Filename "index.html"
+
+	filename_suffix_chart: STRING = "_chart.html"
+			-- Filename suffix "_chart.html"
+
+	filename_suffix_index: STRING = "_index.html"
+			-- Filename suffix "_index.html"
+
+	filename_suffix_links: STRING = "_links.html"
+			-- Filename suffix "_links.html"
+
+	filename_suffix_text: STRING = ".html"
+			-- Filename suffix ".html"
+
 invariant
 
 	html_printer_not_void: html_printer /= Void
 	line_splitter_not_void: line_splitter /= Void
+	class_name_buffer_not_void: class_name_buffer /= Void
+	filename_buffer_not_void: filename_buffer /= Void
+	concat_buffer_not_void: concat_buffer /= Void
 
 end
