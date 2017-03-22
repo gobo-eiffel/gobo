@@ -41,7 +41,7 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			l_printer: ET_AST_PRETTY_PRINTER
-			l_file: KL_TEXT_OUTPUT_FILE
+			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
 			l_filename: STRING
 		do
 			if not a_class.is_parsed then
@@ -51,11 +51,11 @@ feature {NONE} -- Processing
 			elseif not attached class_output_directory (a_class) as l_directory then
 				report_no_output_directory_for_class_error (a_class)
 			else
-				l_filename := file_system.pathname (l_directory, a_class.lower_name + ".e")
+				l_filename := filename (l_directory, concat (class_lower_name (a_class), eiffel_file_extension))
 				if not is_file_overwritable (l_filename) then
 					report_file_already_exists_error (l_filename)
 				else
-					create l_file.make (l_filename)
+					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
 						create l_printer.make_null
@@ -69,5 +69,10 @@ feature {NONE} -- Processing
 				end
 			end
 		end
+
+feature {NONE} -- Constants
+
+	eiffel_file_extension: STRING = ".e"
+			-- Extension for Eiffel files
 
 end

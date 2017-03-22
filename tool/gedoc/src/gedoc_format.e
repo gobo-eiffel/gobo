@@ -48,6 +48,9 @@ feature {NONE} -- Initialization
 			input_filename := a_input_filename
 			error_handler := a_error_handler
 			ise_version := ise_latest
+			create class_name_buffer.make (80)
+			create filename_buffer.make (200)
+			create concat_buffer.make (100)
 		ensure
 			input_filename_set: input_filename = a_input_filename
 			error_handler_set: error_handler = a_error_handler
@@ -491,6 +494,88 @@ feature {NONE} -- Implementation
 	universe_names: detachable DS_HASH_TABLE [STRING, ET_UNIVERSE]
 			-- Unique name of universes, indexed by universe
 
+	new_output_file (a_filename: STRING): KL_BUFFERED_TEXT_OUTPUT_FILE
+			-- File named `a_filename'
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_filename_not_void: a_filename /= Void
+		do
+			if attached cached_output_file as l_output_file then
+				Result := l_output_file
+				Result.reset (a_filename)
+			else
+				create Result.make_with_buffer_size (a_filename, 1_000_000)
+				cached_output_file := Result
+			end
+		ensure
+			new_output_file_not_void: Result /= Void
+		end
+
+	cached_output_file: detachable KL_BUFFERED_TEXT_OUTPUT_FILE
+			-- Cached file object used to write generated HTML text
+
+	class_lower_name (a_class: ET_CLASS): STRING
+			-- Name of `a_class' in lower-case
+			--
+			-- Note that this routine always returns the same object.
+		do
+			Result := class_name_buffer
+			Result.wipe_out
+			Result.append_string (a_class.name.name)
+			Result.to_lower
+		ensure
+			class_lower_name_not_void: Result /= Void
+			definition: Result ~ a_class.lower_name
+		end
+
+	class_name_buffer: STRING
+			-- Buffer for class names
+
+	filename (a_dirname, a_pathname: STRING): STRING
+			-- Pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the pathname convention
+			-- of `file_system.'. The result also follows this pathname convention.)
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_relative: file_system.is_relative_pathname (a_pathname)
+		do
+			Result := filename_buffer
+			Result.wipe_out
+			file_system.append_pathname_to_string (a_dirname, a_pathname, Result)
+		ensure
+			pathname_not_void: Result /= Void
+			same_relative: file_system.is_relative_pathname (Result) = file_system.is_relative_pathname (a_dirname)
+			same_absolute: file_system.is_absolute_pathname (Result) = file_system.is_absolute_pathname (a_dirname)
+		end
+
+	filename_buffer: STRING
+			-- Buffer for filenames
+
+	concat (a_first_part, a_second_part: STRING): STRING
+			-- String made up of `a_first_part' and `a_second_part'
+			--
+			-- Note that this routine always returns the same object.
+		require
+			a_first_part_not_void: a_first_part /= Void
+			a_second_part_not_void: a_second_part /= Void
+		do
+			Result := concat_buffer
+			Result.wipe_out
+			Result.append_string (a_first_part)
+			Result.append_string (a_second_part)
+		ensure
+			concat_not_void: Result /= Void
+			definition: Result ~ a_first_part + a_second_part
+		end
+
+	concat_buffer: STRING
+			-- Buffer for concat
+
 feature -- Error handling
 
 	error_handler: UT_ERROR_HANDLER
@@ -610,5 +695,8 @@ invariant
 	input_filename_not_void: input_filename /= Void
 	ise_version_not_void: ise_version /= Void
 	class_filters_compiled: attached class_filters as l_class_filters implies l_class_filters.for_all (agent {LX_DFA_WILDCARD}.is_compiled)
+	class_name_buffer_not_void: class_name_buffer /= Void
+	filename_buffer_not_void: filename_buffer /= Void
+	concat_buffer_not_void: concat_buffer /= Void
 
 end
