@@ -17,6 +17,8 @@
 ### Gobo Eiffel Kernel Library
 
 * Added feature `append_pathname_to_string` to class `KI_FILE_SYSTEM`.
+* Added buffered version of output file classes (`KL_BUFFERED_OUTPUT_FILE`
+  and descendants).
 
 ### Gobo Eiffel Tools Library
 
