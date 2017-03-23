@@ -103,15 +103,17 @@ feature -- Output
 			-- Write `c' to output file, or to its buffer if not full yet.
 		local
 			l_buffer: like buffer
+			l_capacity: INTEGER
 		do
 			l_buffer := buffer
-			if l_buffer.count >= l_buffer.capacity then
-				old_put_string (l_buffer)
-				l_buffer.wipe_out
-			end
-			if l_buffer.capacity = 0 then
+			l_capacity := l_buffer.capacity
+			if l_capacity = 0 then
 				old_put_character (c)
 			else
+				if l_buffer.count = l_capacity then
+					old_put_string (l_buffer)
+					l_buffer.wipe_out
+				end
 				l_buffer.append_character (c)
 			end
 		end
@@ -123,17 +125,21 @@ feature -- Output
 		local
 			l_string: STRING
 			l_buffer: like buffer
+			l_capacity: INTEGER
+			l_string_count: INTEGER
 		do
 			l_buffer := buffer
+			l_capacity := l_buffer.capacity
 			l_string := STRING_.as_string (a_string)
-			if l_buffer.capacity < l_buffer.count + l_string.count then
+			l_string_count := l_string.count
+			if l_capacity < l_buffer.count + l_string_count then
 				old_put_string (l_buffer)
 				l_buffer.wipe_out
 			end
-			if l_string.count >= l_buffer.capacity then
-				old_put_string (l_string)
-			else
+			if l_string_count < l_capacity then
 				l_buffer.append_string (l_string)
+			else
+				old_put_string (l_string)
 			end
 		end
 
