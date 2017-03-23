@@ -41,7 +41,7 @@ feature {NONE} -- Processing
 			a_class_not_void: a_class /= Void
 		local
 			l_printer: ET_AST_PRETTY_PRINTER
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 		do
 			if not a_class.is_parsed then

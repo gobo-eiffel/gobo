@@ -146,7 +146,7 @@ feature {NONE} -- Output
 	print_css_file
 			-- Print file "default.css".
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 		do
 			if attached output_directory as l_output_directory then
@@ -169,7 +169,7 @@ feature {NONE} -- Output
 		require
 			a_class_chart_mapping_not_void: a_class_chart_mapping /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 		do
 			if attached output_directory as l_output_directory then
@@ -238,7 +238,7 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
@@ -326,7 +326,7 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
 			l_class: ET_CLASS
@@ -396,7 +396,7 @@ feature {NONE} -- Output
 			a_universe_mapping_not_void: a_universe_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
@@ -450,7 +450,7 @@ feature {NONE} -- Output
 			a_universe_mapping_not_void: a_universe_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
@@ -510,7 +510,7 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
 			l_universe_name: STRING
@@ -607,7 +607,7 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_class_name: STRING
 			l_title: STRING
@@ -664,7 +664,7 @@ feature {NONE} -- Output
 			a_feature_mapping_not_void: a_feature_mapping /= Void
 			a_root_path_not_void: a_root_path /= Void
 		local
-			l_file: KL_BUFFERED_TEXT_OUTPUT_FILE
+			l_file: like new_output_file
 			l_filename: STRING
 			l_class_name: STRING
 			l_title: STRING
