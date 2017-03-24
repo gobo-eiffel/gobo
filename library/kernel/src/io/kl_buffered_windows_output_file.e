@@ -20,6 +20,7 @@ inherit
 	KL_WINDOWS_OUTPUT_FILE
 		undefine
 			make,
+			reset,
 			put_character,
 			put_string,
 			open_write,

@@ -20,6 +20,7 @@ inherit
 	KL_MACOS_OUTPUT_FILE
 		undefine
 			make,
+			reset,
 			put_character,
 			put_string,
 			open_write,

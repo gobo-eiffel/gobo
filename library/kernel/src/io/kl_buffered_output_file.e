@@ -20,6 +20,7 @@ inherit
 	KL_OUTPUT_FILE
 		redefine
 			make,
+			reset,
 			put_character,
 			put_string,
 			open_write,
@@ -38,6 +39,7 @@ inherit
 		export
 			{NONE} all
 		redefine
+			reset,
 			put_character,
 			put_string,
 			open_write,
@@ -95,6 +97,18 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 			buffer_set: buffer = a_buffer
 			is_closed: is_closed
+		end
+
+feature -- Initialization
+
+	reset (a_name: STRING)
+			-- Reuse current Eiffel object memory to
+			-- represent a new file system entry.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		do
+			make_with_buffer (a_name, buffer)
 		end
 
 feature -- Output
