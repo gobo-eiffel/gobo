@@ -6,7 +6,7 @@
 	<option name="console_application" value="true"/>
 	<option name="finalize" value="true"/>
 	<option name="garbage_collector" value="none"/>
-	<cluster name="gelint" location="${GOBO}/tool/gedoc/src"/>
+	<cluster name="gedoc" location="${GOBO}/tool/gedoc/src"/>
 	<cluster name="argument" location="${GOBO}/library/argument/src" prefix="ap_"/>
 	<cluster name="lexical" location="${GOBO}/library/lexical/src" prefix="lx_">
 		<option name="abstract" value="true"/>

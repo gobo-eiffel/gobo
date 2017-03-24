@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
-		<cluster name="gelint" location="${GOBO}/tool/gedoc/src">
+		<cluster name="gedoc" location="${GOBO}/tool/gedoc/src">
 			<option void_safety="none"/>
 		</cluster>
 		<cluster name="ap_argument" location="${GOBO}/library/argument/src">
