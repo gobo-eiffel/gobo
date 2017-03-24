@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			create internal_feature_name.make ("dummy")
 			create expression_type_finder.make
 			precursor (a_file)
-			create internal_type_context.make_with_capacity (current_class, 15)
+			create internal_type_context.make_with_capacity (current_class, 100)
 		end
 
 feature -- Initialization
@@ -1526,7 +1526,7 @@ feature {NONE} -- Constants
 
 	empty_comment: STRING = "--"
 			-- Empty comment
-			
+
 invariant
 
 	expression_type_finder_not_void: expression_type_finder /= Void
