@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>Using gedoc</title>
+ </head>
+ <body bgcolor="#FFFFFF">
+  <table border="0" width="100%">
+   <tr>
+    <td><font size="6"><strong>Using gedoc</strong></font></td>
+    <td align="right"><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="pretty_printer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+  <hr size="1" />
+  <div>
+   <h2>Command-line options</h2>
+   
+   <p>
+    The usual way to invoke <i>gedoc</i> is as follows:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gedoc --format=&lt;output_format&gt; --output=&lt;output_directory&gt; &lt;input_filename&gt;</tt></i></font>
+     
+    </blockquote>
+    This will read the description of your Eiffel project from the Xace or 
+    ECF file <font color="#800000"><i><tt>input_filename</tt></i></font>, analyze it, and generate
+    the documentation files in directory <font color="#800000"><i><tt>output_directory</tt></i></font>
+    using the format <font color="#800000"><i><tt>output_format</tt></i></font>. Note that in addition
+    to Xace and ECF, the file <font color="#800000"><i><tt>input_filename</tt></i></font> can also
+    be an Eiffel class file. In that case, your Eiffel project will be considered
+    to be made up of only one Eiffel class. This is useful when we just want to
+    pretty-print one Eiffel file.
+    
+   </p>
+   <p>
+    Here is the list of options that can be used with <i>gedoc</i>:
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-h</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--help</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print a summary of the command-line options of <i>gedoc</i> and exit.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--format=&lt;pretty_print|html_ise_stylesheet&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Format for the output. (default: <font color="#800000"><i><tt>pretty_print</tt></i></font>) The formats currently supported are
+      			<font color="#800000"><i><tt>pretty_print</tt></i></font> to use <i>gedoc</i> as an 
+      			<a href="pretty_printer.html">Eiffel pretty-printer</a>, and 
+      			<font color="#800000"><i><tt>html_ise_stylesheet</tt></i></font> to generate
+      			<a href="html_ise_stylesheet.html">HTML documentation using
+       			ISE's stylesheet</a>.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-c &lt;class_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--class=&lt;class_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Name of classes to be processed. (default: process all classes
+      			in the Eiffel project) The name can contain wildcards such as
+      			<font color="#800000"><i><tt>FOO*</tt></i></font> or <font color="#800000"><i><tt>@(FOO|BAR)</tt></i></font>.
+      			This option can be used several times to specify several class
+      			names.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-o &lt;directory_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--output=&lt;directory_name&gt;</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Directory for generated files. (default: next to each class file)
+      		
+     </dd>
+     
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--library-prefix</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Add subfolders with library names in the output directory.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-f</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--force</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Overwrite existing files without asking.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-i</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--interactive</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Ask before overwriting a file, unless <font color="#800000"><i><tt>--force</tt></i></font> is specified.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--ise[=major[.minor[.revision[.build]]]]</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Version of Eiffel whose semantics should be used during code analysis. (default: latest version)
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--define=NAME=VALUE</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Define variables to be used when reading Xace files. This option can be used several
+      			times to define several variables.
+      		
+     </dd>		
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--silent</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Run <i>gedoc</i> in silent mode.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--verbose</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Run <i>gedoc</i> in verbose mode.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-V</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--version</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print the version number of <i>gedoc</i> and exit.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
+  <hr size="1" />
+  <table border="0" width="100%">
+   <tr>
+    <td>
+     <address><font size="2"><b>Copyright © 2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>25 March 2017</font></address>
+    </td>
+    <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="pretty_printer.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
+   </tr>
+  </table>
+ </body>
+</html>

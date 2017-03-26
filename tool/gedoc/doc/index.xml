@@ -1,0 +1,87 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Gobo Eiffel Doc"
+
+	tool: "Gobo Eiffel Doc"
+	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/index">
+<chapterinfo>
+	<copyright>
+		<year>2017</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>25 March 2017</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Doc</title>
+
+<para>
+<projectname>Gobo Eiffel Doc</projectname>, or <projectname>gedoc</projectname>
+for short, is an open source command-line Eiffel documentation generator. Among other
+things, it is able to produce HTML documentation from Eiffel classes or Eiffel libraries.
+It can also be used as an Eiffel pretty-printer.
+</para>
+<para>
+This documentation of <projectname>gedoc</projectname> is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="usage">Using <projectname>gedoc</projectname></link>
+		</term>
+		<listitem><para>
+			Command-line options, supported formats.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="pretty_printer">Pretty-Printer</link>
+		</term>
+		<listitem><para>
+			Using <projectname>gedoc</projectname> as an Eiffel pretty-printer.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="html_with_ise_stylesheet">HTML Format</link>
+		</term>
+		<listitem><para>
+			Generating HTML files using ISE's stylesheet.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			Related resources and acknowledgments.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>

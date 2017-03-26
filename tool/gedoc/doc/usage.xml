@@ -1,0 +1,176 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Using gedoc"
+
+	tool: "Gobo Eiffel Doc"
+	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
+<chapterinfo>
+	<copyright>
+		<year>2017</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>25 March 2017</date>
+</chapterinfo>
+
+<title>Using gedoc</title>
+
+<section><title>Command-line options</title>
+<para>
+The usual way to invoke <projectname>gedoc</projectname> is as follows:
+<blockquote>
+	<filename>gedoc --format=&lt;output_format&gt; --output=&lt;output_directory&gt; &lt;input_filename&gt;</filename>
+</blockquote>
+This will read the description of your Eiffel project from the Xace or 
+ECF file <filename>input_filename</filename>, analyze it, and generate
+the documentation files in directory <filename>output_directory</filename>
+using the format <filename>output_format</filename>. Note that in addition
+to Xace and ECF, the file <filename>input_filename</filename> can also
+be an Eiffel class file. In that case, your Eiffel project will be considered
+to be made up of only one Eiffel class. This is useful when we just want to
+pretty-print one Eiffel file.
+</para><para>
+Here is the list of options that can be used with <projectname>gedoc</projectname>:
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>-h</filename>
+		</term>
+		<term>
+			<filename>--help</filename>
+		</term>
+		<listitem><para>
+			Print a summary of the command-line options of <projectname>gedoc</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--format=&lt;pretty_print|html_ise_stylesheet&gt;</filename>
+		</term>
+		<listitem><para>
+			Format for the output. (default: <filename>pretty_print</filename>) The formats currently supported are
+			<filename>pretty_print</filename> to use <projectname>gedoc</projectname> as an 
+			<link linkend="pretty_printer">Eiffel pretty-printer</link>, and 
+			<filename>html_ise_stylesheet</filename> to generate
+			<link linkend="html_ise_stylesheet">HTML documentation using
+			ISE's stylesheet</link>.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-c &lt;class_name&gt;</filename>
+		</term>
+		<term>
+			<filename>--class=&lt;class_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of classes to be processed. (default: process all classes
+			in the Eiffel project) The name can contain wildcards such as
+			<filename>FOO*</filename> or <filename>@(FOO|BAR)</filename>.
+			This option can be used several times to specify several class
+			names.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-o &lt;directory_name&gt;</filename>
+		</term>
+		<term>
+			<filename>--output=&lt;directory_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Directory for generated files. (default: next to each class file)
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<filename>--library-prefix</filename>
+		</term>
+		<listitem><para>
+			Add subfolders with library names in the output directory.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-f</filename>
+		</term>
+		<term>
+			<filename>--force</filename>
+		</term>
+		<listitem><para>
+			Overwrite existing files without asking.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-i</filename>
+		</term>
+		<term>
+			<filename>--interactive</filename>
+		</term>
+		<listitem><para>
+			Ask before overwriting a file, unless <filename>--force</filename> is specified.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--ise[=major[.minor[.revision[.build]]]]</filename>
+		</term>
+		<listitem><para>
+			Version of Eiffel whose semantics should be used during code analysis. (default: latest version)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--define=NAME=VALUE</filename>
+		</term>
+		<listitem><para>
+			Define variables to be used when reading Xace files. This option can be used several
+			times to define several variables.
+		</para></listitem>
+	</varlistentry>		
+	<varlistentry>
+		<term>
+			<filename>--silent</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gedoc</projectname> in silent mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--verbose</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gedoc</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-V</filename>
+		</term>
+		<term>
+			<filename>--version</filename>
+		</term>
+		<listitem><para>
+			Print the version number of <projectname>gedoc</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</para>
+</section>
+
+</chapter>

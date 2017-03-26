@@ -36,7 +36,7 @@ The usual way to invoke <projectname>gec</projectname> is as follows:
 This will read the description of your program in the Ace file
 <filename>ace_filename</filename>, compile it and invoke the
 back-end C compiler on the generated C code as explained
-below. Here is a list of options that can be
+below. Here is the list of options that can be
 used with <projectname>gec</projectname>:
 <variablelist>
 	<varlistentry>

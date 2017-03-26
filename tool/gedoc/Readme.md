@@ -9,6 +9,8 @@ Library* (`$GOBO/library/tools`).
 
 **Included in this folder:**
 
+* `doc`: this folder contains the documentation for this tool,
+  in HTML format. Start with `index.html`.
 * `src`: this folder contains the classes necessary to compile this tool.
 * `test`: this folder contains tests to exercise this tool.
 
@@ -26,7 +28,7 @@ Library* (`$GOBO/library/tools`).
 
 3. Run `gedoc` using:
 
-        gedoc <xace_or_ecf_file>
+        gedoc --format=<output_format> --output=<output_directory> <xace_or_ecf_file>
 
     where `<xace_or_ecf_file>` is either an Xace or ECF file.
 

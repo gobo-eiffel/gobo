@@ -1,0 +1,53 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"See Also"
+
+	tool: "Gobo Eiffel Doc"
+	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/see_also">
+<chapterinfo>
+	<copyright>
+		<year>2017</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>25 March 2017</date>
+</chapterinfo>
+
+<title>See Also</title>
+
+<section><title>Related Resources</title>
+<para>
+There are several Eiffel tools which are able to generate HTML documentation.
+</para>
+<para>
+ISE EiffelStudio has a documentation filter named <filename>html-stylesheet</filename>.
+See <ulink url="https://www.eiffel.org/doc/eiffelstudio/Producing%20and%20Exporting%20Documentation">
+Producing and Exporting Documentation</ulink> for more details. The 
+<filename>html_ise_stylesheet</filename> format of <projectname>gedoc</projectname>
+has been implemented on the model of its 
+<ulink url="https://www.eiffel.org/doc/eiffelstudio/EiffelStudio%3A%20Using%20command%20line%20options#Commands_for_generating_documentation">
+command-line version</ulink>.
+</para>
+<para>
+Eiffel Liberty is also equiped with a HTML documentation generator named 
+<ulink url="http://wiki.liberty-eiffel.org/index.php/Eiffeldoc">Eiffeldoc</ulink>.
+</para>
+<para>
+Eiffel-Loop has a tool named 
+<ulink url="http://www.eiffel-loop.com/tool/toolkit/source/applications/eiffel-dev/eiffel_repository_publisher_app.html">
+Eiffel-View</ulink> to publish an Eiffel repository to a website.
+</para>
+</section>
+</chapter>
