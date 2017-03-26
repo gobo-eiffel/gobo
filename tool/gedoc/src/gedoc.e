@@ -69,7 +69,7 @@ feature -- Access
 feature -- Argument parsing
 
 	format_option: AP_ENUMERATION_OPTION
-			-- Option for '--format=<pretty|html_with_ise_stylesheet>'
+			-- Option for '--format=<pretty_print|html_ise_stylesheet>'
 
 	class_option: AP_STRING_OPTION
 			-- Option for '--class=<class_name>'
@@ -113,14 +113,14 @@ feature -- Argument parsing
 			l_parser.set_parameters_description ("filename")
 				-- format.
 			create format_option.make_with_long_form ("format")
-			format_option.set_description ("Format for the output. (default: pretty)")
-			format_option.extend ("pretty")
-			format_option.extend ("html_with_ise_stylesheet")
-			format_option.set_parameter_description ("pretty|html_with_ise_stylesheet")
+			format_option.set_description ("Format for the output. (default: pretty_print)")
+			format_option.extend ("pretty_print")
+			format_option.extend ("html_ise_stylesheet")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
-			class_option.set_description ("Name or class (or wildcard) to be processed.")
+			class_option.set_description ("Name (with wildcards) of classes to be processed.")
 			class_option.set_parameter_description ("class_name")
 			l_parser.options.force_last (class_option)
 				-- output_directory.
@@ -130,7 +130,7 @@ feature -- Argument parsing
 			l_parser.options.force_last (output_option)
 				-- library-prefix.
 			create library_prefix_flag.make_with_long_form ("library-prefix")
-			library_prefix_flag.set_description ("Add subfolder with library name in the output directory.")
+			library_prefix_flag.set_description ("Add subfolders with library names in the output directory.")
 			l_parser.options.force_last (library_prefix_flag)
 				-- force.
 			create force_flag.make ('f', "force")
@@ -157,7 +157,7 @@ feature -- Argument parsing
 				-- define.
 			create define_option.make_with_long_form ("define")
 			define_option.set_description ("Define variables to be used when reading Xace files.")
-			define_option.set_parameter_description ("FOO=BAR")
+			define_option.set_parameter_description ("NAME=VALUE")
 			l_parser.options.force_last (define_option)
 				-- version.
 			create version_flag.make ('V', "version")
@@ -172,10 +172,10 @@ feature -- Argument parsing
 			elseif l_parser.parameters.count /= 1 or else not attached l_parser.parameters.first as l_input_filename then
 				report_usage_message (l_parser)
 				Exceptions.die (1)
-			elseif not format_option.was_found or format_option.parameter ~ "pretty" then
+			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
 				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, error_handler)
-			elseif format_option.parameter ~ "html_with_ise_stylesheet" then
-				create {GEDOC_HTML_WITH_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, error_handler)
+			elseif format_option.parameter ~ "html_ise_stylesheet" then
+				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, error_handler)
 			end
 			if l_format /= Void then
 				set_ise_version (ise_option, l_parser, l_format)

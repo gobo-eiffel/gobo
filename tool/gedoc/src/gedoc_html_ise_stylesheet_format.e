@@ -2,14 +2,19 @@ note
 
 	description:
 
-		"Gobo Eiffel Documentation HTML Format with ISE stylesheet"
+	"[
+		Gobo Eiffel Documentation HTML Format with ISE stylesheet
+		which mimics the output of ISE EiffelStudio filter:
+		
+			ec -filter html-stylesheet -all -config project.ecf
+	]"
 
 	copyright: "Copyright (c) 2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class GEDOC_HTML_WITH_ISE_STYLESHEET_FORMAT
+class GEDOC_HTML_ISE_STYLESHEET_FORMAT
 
 inherit
 
@@ -241,7 +246,7 @@ feature {NONE} -- Output
 			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 			l_root_type: ET_BASE_TYPE
 		do
 			if attached output_directory as l_output_directory then
@@ -331,7 +336,7 @@ feature {NONE} -- Output
 			l_title: STRING
 			l_class: ET_CLASS
 			l_line_splitter: ST_SPLITTER
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			if attached output_directory as l_output_directory then
 				l_filename := filename (l_output_directory, filename_class_list)
@@ -399,7 +404,7 @@ feature {NONE} -- Output
 			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			if attached output_directory as l_output_directory then
 				l_filename := filename (l_output_directory, filename_group_list)
@@ -453,7 +458,7 @@ feature {NONE} -- Output
 			l_file: like new_output_file
 			l_filename: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			if attached output_directory as l_output_directory then
 				l_filename := filename (l_output_directory, filename_group_hierarchy)
@@ -512,7 +517,7 @@ feature {NONE} -- Output
 		local
 			l_file: like new_output_file
 			l_filename: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 			l_universe_name: STRING
 			l_base_name: STRING
 			l_class: ET_CLASS
@@ -611,7 +616,7 @@ feature {NONE} -- Output
 			l_filename: STRING
 			l_class_name: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			l_class_name := class_lower_name (a_class)
 			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_chart))
@@ -668,7 +673,7 @@ feature {NONE} -- Output
 			l_filename: STRING
 			l_class_name: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			l_class_name := class_lower_name (a_class)
 			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_links))
@@ -721,7 +726,7 @@ feature {NONE} -- Output
 			l_filename: STRING
 			l_class_name: STRING
 			l_title: STRING
-			l_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
 			l_class_name := class_lower_name (a_class)
 			l_filename := filename (class_output_directory (a_class), concat (l_class_name, filename_suffix_text))
@@ -755,7 +760,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_class_header (a_class: ET_CLASS; a_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER)
+	print_class_header (a_class: ET_CLASS; a_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER)
 			-- Printer header of `a_class' with `a_printer'.
 		require
 			a_class_not_void: a_class /= Void
@@ -776,7 +781,7 @@ feature {NONE} -- Output
 			a_printer.print_new_line
 		end
 
-	print_class_general (a_class: ET_CLASS; a_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]; a_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER)
+	print_class_general (a_class: ET_CLASS; a_universe_mapping: DS_HASH_TABLE [STRING, ET_UNIVERSE]; a_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER)
 			-- Print general section of `a_class' with `a_printer'.
 		require
 			a_class_not_void: a_class /= Void
@@ -877,7 +882,7 @@ feature {NONE} -- Output
 			a_printer.print_new_line
 		end
 
-	print_class_relation (a_class: ET_CLASS; a_title: STRING; a_relation: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER)
+	print_class_relation (a_class: ET_CLASS; a_title: STRING; a_relation: DS_HASH_TABLE [DS_HASH_SET [ET_CLASS], ET_CLASS]; a_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER)
 			-- Print relation section `a_title' of `a_class' with `a_printer'.
 		require
 			a_class_not_void: a_class /= Void
@@ -913,7 +918,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_feature_signatures (a_features: ET_FEATURE_LIST; a_title: STRING; a_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER)
+	print_feature_signatures (a_features: ET_FEATURE_LIST; a_title: STRING; a_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER)
 			-- Print signatures of `a_features' in section `a_title' with `a_printer'.
 		require
 			a_features_not_void: a_features /= Void
@@ -1436,7 +1441,7 @@ feature {NONE} -- Indexing clause
 
 feature {NONE} -- Implementation
 
-	html_printer: ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+	html_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 			-- HTML printer
 
 	line_splitter: ST_SPLITTER

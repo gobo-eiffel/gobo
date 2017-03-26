@@ -3,7 +3,10 @@ note
 	description:
 
 	"[
-		Eiffel AST pretty printers to HTML with ISE stylesheet.
+		Eiffel AST printers to HTML with ISE stylesheet
+		which mimics the output of ISE EiffelStudio filter:
+				
+			ec -filter html-stylesheet -all -config project.ecf
 		
 		Note that it is recommended that the code being printed has been successfully checked
 		through ET_IMPLEMENTATION_CHECKER in order to get better hyper-text results.
@@ -15,7 +18,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_AST_HTML_WITH_ISE_STYLESHEET_PRETTY_PRINTER
+class ET_AST_HTML_ISE_STYLESHEET_PRINTER
 
 inherit
 
