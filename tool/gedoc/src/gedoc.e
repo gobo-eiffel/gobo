@@ -330,6 +330,9 @@ feature -- Argument parsing
 		do
 			if a_option.was_found and then attached a_option.parameter as l_output_directory then
 				a_format.set_output_directory (Execution_environment.interpreted_string (l_output_directory))
+			elseif a_format.is_output_directory_required then
+				report_missing_output_option_error
+				Exceptions.die (1)
 			end
 		end
 
@@ -358,6 +361,16 @@ feature -- Error handling
 			l_error: UT_MESSAGE
 		do
 			create l_error.make ("Invalid wildcard '" + a_wildcard + "' in option '--class'.")
+			report_error (l_error)
+		end
+
+	report_missing_output_option_error
+			-- Report that the specified format requires an output directory
+			-- but none was provided.
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Missing option '--output'. This option is required for the specified format.")
 			report_error (l_error)
 		end
 

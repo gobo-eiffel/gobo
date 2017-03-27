@@ -21,6 +21,8 @@ inherit
 	GEDOC_FORMAT
 		redefine
 			make,
+			output_directory,
+			is_output_directory_required,
 			prepare_system
 		end
 
@@ -53,8 +55,22 @@ feature {NONE} -- Initialization
 			-- Use error handler `a_error_handler'.
 		do
 			precursor (a_input_filename, a_error_handler)
+			output_directory := "."
 			create html_printer.make_null
 			create line_splitter.make_with_separators ("%R%N")
+		end
+
+feature -- Access
+
+	output_directory: STRING
+			-- Directory for the generated files.
+
+feature -- Status report
+
+	is_output_directory_required: BOOLEAN
+			-- Is `output_directory' required by the current format?
+		do
+			Result := True
 		end
 
 feature {NONE} -- Processing
@@ -154,17 +170,15 @@ feature {NONE} -- Output
 			l_file: like new_output_file
 			l_filename: STRING
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_default_css)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_file.put_string ({ET_ISE_STYLESHEET_CONSTANTS}.css_file_content)
-						l_file.close
-					end
+			l_filename := filename (output_directory, filename_default_css)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_file.put_string ({ET_ISE_STYLESHEET_CONSTANTS}.css_file_content)
+					l_file.close
 				end
 			end
 		end
@@ -177,57 +191,55 @@ feature {NONE} -- Output
 			l_file: like new_output_file
 			l_filename: STRING
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_goto)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_file.put_line ("classList = new Array (")
-						across a_class_chart_mapping as l_mapping loop
-							l_file.put_string ("%T%"")
-							l_file.put_string (l_mapping.key.upper_name)
-							l_file.put_character ('%"')
-							if not l_mapping.is_last then
-								l_file.put_character (',')
-							end
-							l_file.put_new_line
+			l_filename := filename (output_directory, filename_goto)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_file.put_line ("classList = new Array (")
+					across a_class_chart_mapping as l_mapping loop
+						l_file.put_string ("%T%"")
+						l_file.put_string (l_mapping.key.upper_name)
+						l_file.put_character ('%"')
+						if not l_mapping.is_last then
+							l_file.put_character (',')
 						end
-						l_file.put_line (");")
 						l_file.put_new_line
-						l_file.put_line ("locationList = new Array (")
-						across a_class_chart_mapping as l_mapping loop
-							l_file.put_string ("%T%"")
-							l_file.put_string (l_mapping.item)
-							l_file.put_character ('%"')
-							if not l_mapping.is_last then
-								l_file.put_character (',')
-							end
-							l_file.put_new_line
-						end
-						l_file.put_line (");")
-						l_file.put_new_line
-						l_file.put_line ("function indexOfClass (name) {")
-						l_file.put_line ("%Tfor (i = 0; i < classList.length; i++) {")
-						l_file.put_line ("%T%Tif (name == classList[i]) return i;")
-						l_file.put_line ("%T}")
-						l_file.put_line ("%Treturn -1;")
-						l_file.put_line ("};")
-						l_file.put_new_line
-						l_file.put_line ("function go_to (baseLocation, className) {")
-						l_file.put_line ("%Tvar index = indexOfClass (className.toUpperCase ());")
-						l_file.put_line ("%Tif (index >= 0) {")
-						l_file.put_line ("%T%Twindow.location = baseLocation + locationList[index];")
-						l_file.put_line ("%T} else {")
-						l_file.put_line ("%T%Talert (%"Class %" + className.toUpperCase () + %" does not exist in system%");")
-						l_file.put_line ("%T}")
-						l_file.put_line ("}")
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
 					end
+					l_file.put_line (");")
+					l_file.put_new_line
+					l_file.put_line ("locationList = new Array (")
+					across a_class_chart_mapping as l_mapping loop
+						l_file.put_string ("%T%"")
+						l_file.put_string (l_mapping.item)
+						l_file.put_character ('%"')
+						if not l_mapping.is_last then
+							l_file.put_character (',')
+						end
+						l_file.put_new_line
+					end
+					l_file.put_line (");")
+					l_file.put_new_line
+					l_file.put_line ("function indexOfClass (name) {")
+					l_file.put_line ("%Tfor (i = 0; i < classList.length; i++) {")
+					l_file.put_line ("%T%Tif (name == classList[i]) return i;")
+					l_file.put_line ("%T}")
+					l_file.put_line ("%Treturn -1;")
+					l_file.put_line ("};")
+					l_file.put_new_line
+					l_file.put_line ("function go_to (baseLocation, className) {")
+					l_file.put_line ("%Tvar index = indexOfClass (className.toUpperCase ());")
+					l_file.put_line ("%Tif (index >= 0) {")
+					l_file.put_line ("%T%Twindow.location = baseLocation + locationList[index];")
+					l_file.put_line ("%T} else {")
+					l_file.put_line ("%T%Talert (%"Class %" + className.toUpperCase () + %" does not exist in system%");")
+					l_file.put_line ("%T}")
+					l_file.put_line ("}")
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -247,76 +259,74 @@ feature {NONE} -- Output
 			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 			l_root_type: ET_BASE_TYPE
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_index)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_printer := html_printer
-						l_printer.reset
-						l_printer.set_file (l_file)
-						l_printer.set_class_mapping (a_class_mapping)
-						l_printer.set_feature_mapping (a_feature_mapping)
-						l_printer.set_root_path (a_root_path)
-						l_title := concat (universe_name (a_system), titla_suffix_documentation)
-						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-						l_file.put_string (html_start_pre)
-						print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
-							-- General.
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_system)
-						l_printer.print_end_span
-						l_printer.print_new_line
-						l_printer.indent
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
-						l_printer.print_string (tag_name)
-						l_printer.print_end_span
-						tokens.colon_symbol.process (l_printer)
-						l_printer.print_character (' ')
-						l_printer.print_string (a_system.lower_name)
-						l_printer.print_new_line
-						l_printer.dedent
-						l_printer.print_new_line
-							-- Root class.
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_root_class)
-						l_printer.print_end_span
-						l_printer.print_new_line
-						l_printer.indent
-						l_root_type := a_system.root_type
-						if l_root_type = Void then
-							l_root_type := a_system.any_type
-						end
-						l_printer.print_class_header (l_root_type.base_class, False)
-						l_printer.print_new_line
-						l_printer.dedent
-						l_printer.print_new_line
-							-- Groups.
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_groups)
-						l_printer.print_end_span
-						l_printer.print_new_line
-						l_printer.indent
-						across a_universe_mapping as l_mapping loop
-							l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-							l_printer.print_string (universe_name (l_mapping.key))
-							l_printer.print_end_a
-							l_printer.print_new_line
-						end
-						l_printer.dedent
-						l_printer.print_new_line
-						print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
-						l_file.put_line (html_end_pre)
-						print_footer (l_file)
-						l_printer.set_null_file
-						l_printer.reset
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
+			l_filename := filename (output_directory, filename_index)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_printer := html_printer
+					l_printer.reset
+					l_printer.set_file (l_file)
+					l_printer.set_class_mapping (a_class_mapping)
+					l_printer.set_feature_mapping (a_feature_mapping)
+					l_printer.set_root_path (a_root_path)
+					l_title := concat (universe_name (a_system), titla_suffix_documentation)
+					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
+					print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
+						-- General.
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_system)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_eitag)
+					l_printer.print_string (tag_name)
+					l_printer.print_end_span
+					tokens.colon_symbol.process (l_printer)
+					l_printer.print_character (' ')
+					l_printer.print_string (a_system.lower_name)
+					l_printer.print_new_line
+					l_printer.dedent
+					l_printer.print_new_line
+						-- Root class.
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_root_class)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					l_root_type := a_system.root_type
+					if l_root_type = Void then
+						l_root_type := a_system.any_type
 					end
+					l_printer.print_class_header (l_root_type.base_class, False)
+					l_printer.print_new_line
+					l_printer.dedent
+					l_printer.print_new_line
+						-- Groups.
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_groups)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					across a_universe_mapping as l_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
+						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_end_a
+						l_printer.print_new_line
+					end
+					l_printer.dedent
+					l_printer.print_new_line
+					print_navigation_bar (Void, True, True, True, False, False, False, a_root_path, l_file)
+					l_file.put_line (html_end_pre)
+					print_footer (l_file)
+					l_printer.set_null_file
+					l_printer.reset
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -336,58 +346,56 @@ feature {NONE} -- Output
 			l_line_splitter: ST_SPLITTER
 			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_class_list)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_printer := html_printer
-						l_printer.reset
-						l_printer.set_file (l_file)
-						l_printer.set_class_mapping (a_class_mapping)
-						l_printer.set_feature_mapping (a_feature_mapping)
-						l_printer.set_root_path (a_root_path)
-						l_line_splitter := line_splitter
-						l_title := concat (universe_name (a_system), title_suffix_class_dictionary)
-						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-						l_file.put_string (html_start_pre)
-						print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_classes)
-						l_printer.print_end_span
+			l_filename := filename (output_directory, filename_class_list)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_printer := html_printer
+					l_printer.reset
+					l_printer.set_file (l_file)
+					l_printer.set_class_mapping (a_class_mapping)
+					l_printer.set_feature_mapping (a_feature_mapping)
+					l_printer.set_root_path (a_root_path)
+					l_line_splitter := line_splitter
+					l_title := concat (universe_name (a_system), title_suffix_class_dictionary)
+					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
+					print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_classes)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					across a_class_mapping as l_mapping loop
+						l_class := l_mapping.key
+						l_printer.set_current_class (l_class)
+						l_printer.print_class_header (l_class, True)
 						l_printer.print_new_line
-						l_printer.indent
-						across a_class_mapping as l_mapping loop
-							l_class := l_mapping.key
-							l_printer.set_current_class (l_class)
-							l_printer.print_class_header (l_class, True)
-							l_printer.print_new_line
-							if attached class_description (l_class) as l_description then
-								l_printer.indent
-								l_printer.indent
-								across l_line_splitter.split_greedy (l_description) as l_lines loop
-									l_printer.print_indentation
-									l_printer.print_comment_text ("-- " + l_lines.item)
-									l_printer.print_new_line
-								end
-								l_printer.dedent
-								l_printer.dedent
+						if attached class_description (l_class) as l_description then
+							l_printer.indent
+							l_printer.indent
+							across l_line_splitter.split_greedy (l_description) as l_lines loop
+								l_printer.print_indentation
+								l_printer.print_comment_text ("-- " + l_lines.item)
+								l_printer.print_new_line
 							end
-							l_printer.print_new_line
+							l_printer.dedent
+							l_printer.dedent
 						end
-						l_printer.dedent
-						print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
-						l_file.put_line (html_end_pre)
-						print_footer (l_file)
-						l_printer.set_null_file
-						l_printer.reset
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
+						l_printer.print_new_line
 					end
+					l_printer.dedent
+					print_navigation_bar (Void, False, True, True, False, False, False, a_root_path, l_file)
+					l_file.put_line (html_end_pre)
+					print_footer (l_file)
+					l_printer.set_null_file
+					l_printer.reset
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -404,44 +412,42 @@ feature {NONE} -- Output
 			l_title: STRING
 			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_group_list)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_printer := html_printer
-						l_printer.reset
-						l_printer.set_file (l_file)
-						l_printer.set_root_path (a_root_path)
-						l_title := concat (universe_name (a_system), title_suffix_alphabetical_group_list)
-						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-						l_file.put_string (html_start_pre)
-						print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_groups)
-						l_printer.print_end_span
+			l_filename := filename (output_directory, filename_group_list)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_printer := html_printer
+					l_printer.reset
+					l_printer.set_file (l_file)
+					l_printer.set_root_path (a_root_path)
+					l_title := concat (universe_name (a_system), title_suffix_alphabetical_group_list)
+					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
+					print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_groups)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					across a_universe_mapping as l_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
+						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_end_a
 						l_printer.print_new_line
-						l_printer.indent
-						across a_universe_mapping as l_mapping loop
-							l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-							l_printer.print_string (universe_name (l_mapping.key))
-							l_printer.print_end_a
-							l_printer.print_new_line
-						end
-						l_printer.dedent
-						l_printer.print_new_line
-						print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
-						l_file.put_line (html_end_pre)
-						print_footer (l_file)
-						l_printer.set_null_file
-						l_printer.reset
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
 					end
+					l_printer.dedent
+					l_printer.print_new_line
+					print_navigation_bar (Void, True, False, True, False, False, False, a_root_path, l_file)
+					l_file.put_line (html_end_pre)
+					print_footer (l_file)
+					l_printer.set_null_file
+					l_printer.reset
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -458,49 +464,47 @@ feature {NONE} -- Output
 			l_title: STRING
 			l_printer: ET_AST_HTML_ISE_STYLESHEET_PRINTER
 		do
-			if attached output_directory as l_output_directory then
-				l_filename := filename (l_output_directory, filename_group_hierarchy)
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_printer := html_printer
-						l_printer.reset
-						l_printer.set_file (l_file)
-						l_printer.set_root_path (a_root_path)
-						l_title := concat (universe_name (a_system), title_suffix_group_hierarchy)
-						print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
-						l_file.put_string (html_start_pre)
-						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_groups)
-						l_printer.print_end_span
+			l_filename := filename (output_directory, filename_group_hierarchy)
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_printer := html_printer
+					l_printer.reset
+					l_printer.set_file (l_file)
+					l_printer.set_root_path (a_root_path)
+					l_title := concat (universe_name (a_system), title_suffix_group_hierarchy)
+					print_header (l_title, keyword_eiffel_system, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
+					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_groups)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					across a_universe_mapping as l_mapping loop
+						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
+						l_printer.print_string (universe_name (l_mapping.key))
+						l_printer.print_end_a
 						l_printer.print_new_line
-						l_printer.indent
-						across a_universe_mapping as l_mapping loop
-							l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_mapping.item)
-							l_printer.print_string (universe_name (l_mapping.key))
-							l_printer.print_end_a
-							l_printer.print_new_line
-							if attached {ET_INTERNAL_UNIVERSE} l_mapping.key as l_internal_universe then
-								l_printer.indent
-								l_printer.print_cluster_names_recursive (l_internal_universe.clusters)
-								l_printer.dedent
-							end
+						if attached {ET_INTERNAL_UNIVERSE} l_mapping.key as l_internal_universe then
+							l_printer.indent
+							l_printer.print_cluster_names_recursive (l_internal_universe.clusters)
+							l_printer.dedent
 						end
-						l_printer.dedent
-						l_printer.print_new_line
-						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-						l_file.put_line (html_end_pre)
-						print_footer (l_file)
-						l_printer.set_null_file
-						l_printer.reset
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
 					end
+					l_printer.dedent
+					l_printer.print_new_line
+					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
+					l_file.put_line (html_end_pre)
+					print_footer (l_file)
+					l_printer.set_null_file
+					l_printer.reset
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -520,82 +524,80 @@ feature {NONE} -- Output
 			l_base_name: STRING
 			l_class: ET_CLASS
 		do
-			if attached output_directory as l_output_directory then
-				l_universe_name := universe_name (a_universe)
-				if library_prefix_flag then
-					l_base_name := filename_index
-					l_filename := file_system.pathname (l_output_directory, l_universe_name)
-					l_filename := file_system.pathname (l_filename, l_base_name)
-				else
-					l_base_name := l_universe_name + filename_suffix_index
-					l_filename := file_system.pathname (l_output_directory, l_base_name)
-				end
-				if not is_file_overwritable (l_filename) then
-					report_file_already_exists_error (l_filename)
-				else
-					l_file := new_output_file (l_filename)
-					l_file.recursive_open_write
-					if l_file.is_open_write then
-						l_printer := html_printer
-						l_printer.reset
-						l_printer.set_file (l_file)
-						l_printer.set_class_mapping (a_class_mapping)
-						l_printer.set_feature_mapping (a_feature_mapping)
-						l_printer.set_root_path (a_root_path)
-							-- Header.
-						print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
-						l_file.put_string (html_start_pre)
-						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-							-- Universe name.
+			l_universe_name := universe_name (a_universe)
+			if library_prefix_flag then
+				l_base_name := filename_index
+				l_filename := file_system.pathname (output_directory, l_universe_name)
+				l_filename := file_system.pathname (l_filename, l_base_name)
+			else
+				l_base_name := l_universe_name + filename_suffix_index
+				l_filename := file_system.pathname (output_directory, l_base_name)
+			end
+			if not is_file_overwritable (l_filename) then
+				report_file_already_exists_error (l_filename)
+			else
+				l_file := new_output_file (l_filename)
+				l_file.recursive_open_write
+				if l_file.is_open_write then
+					l_printer := html_printer
+					l_printer.reset
+					l_printer.set_file (l_file)
+					l_printer.set_class_mapping (a_class_mapping)
+					l_printer.set_feature_mapping (a_feature_mapping)
+					l_printer.set_root_path (a_root_path)
+						-- Header.
+					print_header (a_universe.kind_capitalized_name + " " + l_universe_name, keyword_eiffel_group, a_root_path, l_file)
+					l_file.put_string (html_start_pre)
+					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
+						-- Universe name.
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (a_universe.kind_capitalized_name)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					l_printer.set_root_path (Void)
+					l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_base_name)
+					l_printer.set_root_path (a_root_path)
+					l_printer.print_string (l_universe_name)
+					l_printer.print_end_a
+					l_printer.print_new_line
+					l_printer.dedent
+					l_printer.print_new_line
+						-- Clusters.
+					if attached {ET_INTERNAL_UNIVERSE} a_universe as l_internal_universe and then l_internal_universe.clusters.count > 0 then
 						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (a_universe.kind_capitalized_name)
+						l_printer.print_string (title_clusters)
 						l_printer.print_end_span
 						l_printer.print_new_line
 						l_printer.indent
-						l_printer.set_root_path (Void)
-						l_printer.print_start_a_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ecluster, l_base_name)
-						l_printer.set_root_path (a_root_path)
-						l_printer.print_string (l_universe_name)
-						l_printer.print_end_a
-						l_printer.print_new_line
+						l_printer.print_cluster_names_recursive (l_internal_universe.clusters)
 						l_printer.dedent
 						l_printer.print_new_line
-							-- Clusters.
-						if attached {ET_INTERNAL_UNIVERSE} a_universe as l_internal_universe and then l_internal_universe.clusters.count > 0 then
-							l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-							l_printer.print_string (title_clusters)
-							l_printer.print_end_span
-							l_printer.print_new_line
-							l_printer.indent
-							l_printer.print_cluster_names_recursive (l_internal_universe.clusters)
-							l_printer.dedent
-							l_printer.print_new_line
-						end
-							-- Classes.
-						l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
-						l_printer.print_string (title_classes)
-						l_printer.print_end_span
-						l_printer.print_new_line
-						l_printer.indent
-						across a_class_mapping as l_mapping loop
-							l_class := l_mapping.key
-							if l_class.universe = a_universe then
-								l_printer.print_class_header (l_class, True)
-								l_printer.print_new_line
-							end
-						end
-						l_printer.dedent
-						l_printer.print_new_line
-							-- Footer.
-						print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
-						l_file.put_line (html_end_pre)
-						print_footer (l_file)
-						l_printer.set_null_file
-						l_printer.reset
-						l_file.close
-					else
-						report_cannot_write_error (l_filename)
 					end
+						-- Classes.
+					l_printer.print_start_span_class ({ET_ISE_STYLESHEET_CONSTANTS}.css_ekeyword)
+					l_printer.print_string (title_classes)
+					l_printer.print_end_span
+					l_printer.print_new_line
+					l_printer.indent
+					across a_class_mapping as l_mapping loop
+						l_class := l_mapping.key
+						if l_class.universe = a_universe then
+							l_printer.print_class_header (l_class, True)
+							l_printer.print_new_line
+						end
+					end
+					l_printer.dedent
+					l_printer.print_new_line
+						-- Footer.
+					print_navigation_bar (Void, True, True, False, False, False, False, a_root_path, l_file)
+					l_file.put_line (html_end_pre)
+					print_footer (l_file)
+					l_printer.set_null_file
+					l_printer.reset
+					l_file.close
+				else
+					report_cannot_write_error (l_filename)
 				end
 			end
 		end
@@ -1823,6 +1825,7 @@ feature {NONE} -- Constants
 
 invariant
 
+	output_directory_not_void: output_directory /= Void
 	html_printer_not_void: html_printer /= Void
 	line_splitter_not_void: line_splitter /= Void
 

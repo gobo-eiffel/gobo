@@ -190,6 +190,14 @@ feature -- Setting
 			silent_flag_set: silent_flag = b
 		end
 
+feature -- Status report
+
+	is_output_directory_required: BOOLEAN
+			-- Is `output_directory' required by the current format?
+		do
+			Result := False
+		end
+
 feature {NONE} -- Eiffel config file parsing
 
 	parse_input_file (a_input_filename: STRING)
