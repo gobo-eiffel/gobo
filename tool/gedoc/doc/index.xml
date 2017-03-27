@@ -56,7 +56,7 @@ This documentation of <projectname>gedoc</projectname> is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<link linkend="html_with_ise_stylesheet">HTML Format</link>
+			<link linkend="html_ise_stylesheet">HTML Format</link>
 		</term>
 		<listitem><para>
 			Generating HTML files using ISE's stylesheet.
