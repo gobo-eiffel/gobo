@@ -170,7 +170,7 @@ feature {NONE} -- Output
 		end
 
 	print_goto_file (a_class_chart_mapping: DS_HASH_TABLE [STRING, ET_CLASS])
-			-- Print file "goto.html".
+			-- Print file "goto.js".
 		require
 			a_class_chart_mapping_not_void: a_class_chart_mapping /= Void
 		local
@@ -185,10 +185,9 @@ feature {NONE} -- Output
 					l_file := new_output_file (l_filename)
 					l_file.recursive_open_write
 					if l_file.is_open_write then
-						l_file.put_line ("<!--")
-						l_file.put_line ("%TclassList = new Array (")
+						l_file.put_line ("classList = new Array (")
 						across a_class_chart_mapping as l_mapping loop
-							l_file.put_string ("%T%T%"")
+							l_file.put_string ("%T%"")
 							l_file.put_string (l_mapping.key.upper_name)
 							l_file.put_character ('%"')
 							if not l_mapping.is_last then
@@ -196,11 +195,11 @@ feature {NONE} -- Output
 							end
 							l_file.put_new_line
 						end
-						l_file.put_line ("%T);")
+						l_file.put_line (");")
 						l_file.put_new_line
-						l_file.put_line ("%TlocationList = new Array (")
+						l_file.put_line ("locationList = new Array (")
 						across a_class_chart_mapping as l_mapping loop
-							l_file.put_string ("%T%T%"")
+							l_file.put_string ("%T%"")
 							l_file.put_string (l_mapping.item)
 							l_file.put_character ('%"')
 							if not l_mapping.is_last then
@@ -208,24 +207,23 @@ feature {NONE} -- Output
 							end
 							l_file.put_new_line
 						end
-						l_file.put_line ("%T);")
+						l_file.put_line (");")
 						l_file.put_new_line
-						l_file.put_line ("%Tfunction indexOfClass (name) {")
-						l_file.put_line ("%T%Tfor (i = 0; i < classList.length; i++) {")
-						l_file.put_line ("%T%T%Tif (name == classList[i]) return i;")
-						l_file.put_line ("%T%T}")
-						l_file.put_line ("%T%Treturn -1;")
-						l_file.put_line ("%T};")
-						l_file.put_new_line
-						l_file.put_line ("%Tfunction go_to (baseLocation, className) {")
-						l_file.put_line ("%T%Tvar index = indexOfClass (className.toUpperCase ());")
-						l_file.put_line ("%T%Tif (index >= 0) {")
-						l_file.put_line ("%T%T%Twindow.location = baseLocation + locationList[index];")
-						l_file.put_line ("%T%T} else {")
-						l_file.put_line ("%T%T%Talert (%"Class %" + className.toUpperCase () + %" does not exist in system%");")
-						l_file.put_line ("%T%T}")
+						l_file.put_line ("function indexOfClass (name) {")
+						l_file.put_line ("%Tfor (i = 0; i < classList.length; i++) {")
+						l_file.put_line ("%T%Tif (name == classList[i]) return i;")
 						l_file.put_line ("%T}")
-						l_file.put_line ("// -->")
+						l_file.put_line ("%Treturn -1;")
+						l_file.put_line ("};")
+						l_file.put_new_line
+						l_file.put_line ("function go_to (baseLocation, className) {")
+						l_file.put_line ("%Tvar index = indexOfClass (className.toUpperCase ());")
+						l_file.put_line ("%Tif (index >= 0) {")
+						l_file.put_line ("%T%Twindow.location = baseLocation + locationList[index];")
+						l_file.put_line ("%T} else {")
+						l_file.put_line ("%T%Talert (%"Class %" + className.toUpperCase () + %" does not exist in system%");")
+						l_file.put_line ("%T}")
+						l_file.put_line ("}")
 						l_file.close
 					else
 						report_cannot_write_error (l_filename)
@@ -930,7 +928,7 @@ feature {NONE} -- Output
 			l_any: ET_CLASS
 		do
 			nb := a_features.count
-			if nb > 0  then
+			if nb > 0 then
 				l_any := a_features.first.implementation_class.current_system.any_type.base_class
 				l_feature_list := new_feature_list (nb)
 				a_features.add_user_defined_features_exported_to (l_any, l_feature_list)
@@ -1694,7 +1692,7 @@ feature {NONE} -- Constants
 	header_line_7a: STRING = "<SCRIPT TYPE=%"text/javascript%" SRC=%""
 			-- 7th line in HTML header, first part
 
-	header_line_7b: STRING = "goto.html%"></SCRIPT>"
+	header_line_7b: STRING = "goto.js%"></SCRIPT>"
 			-- 7th line in HTML header, second part
 
 	header_line_8: STRING = "</HEAD>"
@@ -1799,8 +1797,8 @@ feature {NONE} -- Constants
 	filename_default_css: STRING = "default.css"
 			-- Filename "default.css"
 
-	filename_goto: STRING = "goto.html"
-			-- Filename "goto.html"
+	filename_goto: STRING = "goto.js"
+			-- Filename "goto.js"
 
 	filename_group_hierarchy: STRING = "group_hierarchy.html"
 			-- Filename "group_hierarchy.html"
