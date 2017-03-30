@@ -5,7 +5,7 @@ note
 		"Total order comparators"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,37 +23,37 @@ inherit
 
 feature -- Status report
 
-	order_equal (u, v: G): BOOLEAN
+	attached_order_equal (u, v: attached G): BOOLEAN
 			-- Are `u' and `v' considered equal?
 		require
 			u_not_void: u /= Void
 			v_not_void: v /= Void
 		do
-			Result := not less_than (u, v) and not less_than (v, u)
+			Result := not attached_less_than (u, v) and not attached_less_than (v, u)
 		ensure
-			definition: Result = (not less_than (u, v) and not greater_than (u, v))
+			definition: Result = (not attached_less_than (u, v) and not attached_greater_than (u, v))
 		end
 
-	less_equal (u, v: G): BOOLEAN
+	attached_less_equal (u, v: attached G): BOOLEAN
 			-- Is `u' considered less than or equal to `v'?
 		require
 			u_not_void: u /= Void
 			v_not_void: v /= Void
 		do
-			Result := not less_than (v, u)
+			Result := not attached_less_than (v, u)
 		ensure
-			definition: Result = (less_than (u, v) or order_equal (u, v))
+			definition: Result = (attached_less_than (u, v) or attached_order_equal (u, v))
 		end
 
-	greater_equal (u, v: G): BOOLEAN
+	attached_greater_equal (u, v: attached G): BOOLEAN
 			-- Is `u' considered greater than or equal to `v'?
 		require
 			u_not_void: u /= Void
 			v_not_void: v /= Void
 		do
-			Result := not less_than (u, v)
+			Result := not attached_less_than (u, v)
 		ensure
-			definition: Result = (greater_than (u, v) or order_equal (u, v))
+			definition: Result = (attached_greater_than (u, v) or attached_order_equal (u, v))
 		end
 
 	test (v, u: detachable G): BOOLEAN
@@ -66,7 +66,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := order_equal (u, v)
+				Result := attached_order_equal (u, v)
 			end
 		end
 

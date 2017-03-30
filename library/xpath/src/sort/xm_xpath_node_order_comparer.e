@@ -5,7 +5,7 @@ note
 		"Objects that compare two nodes to determine document order"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ deferred class	XM_XPATH_NODE_ORDER_COMPARER
 inherit
 
 	KL_PART_COMPARATOR [XM_XPATH_NODE]
+		redefine
+			less_than
+		end
 
 feature -- Comparison
 
@@ -29,7 +32,7 @@ feature -- Comparison
 			valid_result: -1 <= Result and then Result <= 1
 		end
 
-	less_than (u, v: XM_XPATH_NODE): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XPATH_NODE): BOOLEAN
         -- Is u considered less than v?
 		do
 			Result := three_way_comparison (u, v) = -1

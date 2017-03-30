@@ -5,7 +5,7 @@ note
 		"Comparators for ordering options"
 
 	library: "Gobo Eiffel Argument Library"
-	copyright: "Copyright (c) 2006-2013, Bernd Schoeller and others"
+	copyright: "Copyright (c) 2006-2017, Bernd Schoeller and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,12 +15,15 @@ class AP_OPTION_COMPARATOR
 inherit
 
 	KL_COMPARATOR [AP_OPTION]
+		redefine
+			less_than
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
 
-	less_than (u, v: AP_OPTION): BOOLEAN
+	less_than, attached_less_than (u, v: AP_OPTION): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			u_string, v_string: STRING

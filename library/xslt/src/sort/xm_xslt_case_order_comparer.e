@@ -5,7 +5,7 @@ note
 		"Objects that compare text strings according to case order"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2007, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_XSLT_CASE_ORDER_COMPARER
 inherit
 
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
+		redefine
+			less_than
+		end
 
 	ST_UNICODE_CHARACTER_CLASS_ROUTINES
 		export {NONE} all end
@@ -44,7 +47,7 @@ feature -- Access
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 			-- Not efficient.
 		local

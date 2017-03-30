@@ -5,7 +5,7 @@ note
 		"Objects that render a sorted iteration of items."
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 		end
 
 	KL_PART_COMPARATOR [XM_XSLT_SORT_RECORD]
+		redefine
+			less_than
+		end
 
 	XM_XPATH_EXCEPTION_ROUTINES
 		export {NONE} all end
@@ -118,7 +121,7 @@ feature -- Status report
 
 feature -- Status report
 
-	less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XSLT_SORT_RECORD): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			l_sort_key, l_other_sort_key: detachable XM_XPATH_ITEM

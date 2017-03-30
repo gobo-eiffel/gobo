@@ -5,7 +5,7 @@ note
 		"Objects that compare two atomic values"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,10 @@ class XM_XPATH_ATOMIC_COMPARER
 
 inherit
 
-	KL_PART_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
+	KL_PART_COMPARATOR [XM_XPATH_ATOMIC_VALUE]
+		redefine
+			less_than
+		end
 
 	XM_XPATH_EXCEPTION_ROUTINES
 		export {NONE} all end
@@ -80,7 +83,7 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
-	less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			if are_comparable (u, v) then

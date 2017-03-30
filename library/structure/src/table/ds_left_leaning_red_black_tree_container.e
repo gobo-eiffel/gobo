@@ -8,7 +8,7 @@ note
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2017, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -126,8 +126,8 @@ feature {NONE} -- Basic operation
 					loop
 						l_node := l_found_node.left_child
 						if
-							l_found_node.key /= Void and then
-							key_comparator.less_than (a_key, l_found_node.key)
+							attached l_found_node.key as l_found_node_key and then
+							key_comparator.attached_less_than (a_key, l_found_node_key)
 						then
 							if
 								l_node /= Void and then not l_node.is_red and then
@@ -150,8 +150,8 @@ feature {NONE} -- Basic operation
 							end
 							l_node := l_found_node.right_child
 							if
-								l_found_node.key /= Void and then
-								key_comparator.order_equal (a_key, l_found_node.key) and
+								attached l_found_node.key as l_found_node_key and then
+								key_comparator.attached_order_equal (a_key, l_found_node_key) and
 								l_node = Void
 							then
 								l_equality := True
@@ -164,8 +164,8 @@ feature {NONE} -- Basic operation
 									l_found_node := move_red_right (l_found_node)
 								end
 								if
-									l_found_node.key /= Void and then
-									key_comparator.order_equal (l_found_node.key, a_key) then
+									attached l_found_node.key as l_found_node_key and then
+									key_comparator.attached_order_equal (l_found_node_key, a_key) then
 									l_equality := True
 								else
 									l_previous_node := l_found_node

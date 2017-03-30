@@ -19,7 +19,7 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2016, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2017, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date: 2010/10/06 $"
 	revision: "$Revision: #11 $"
@@ -720,7 +720,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 				search_insert_position (k)
 				check found: attached found_node as l_found_node then
 					a_cursor.set_position (l_found_node)
-					if l_found_node.key = Void or else key_comparator.less_than (k, l_found_node.key) then
+					if not attached l_found_node.key as l_found_node_key or else key_comparator.attached_less_than (k, l_found_node_key) then
 						a_cursor.back
 					end
 				end
@@ -728,10 +728,10 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 		ensure
 			has_key_k_implies_a_cursor_points_to_it:
 				has_key (k) and k /= Void and attached a_cursor.position as l_position and then attached l_position.key as l_key implies
-					key_comparator.order_equal (l_key, k)
+					key_comparator.attached_order_equal (l_key, k)
 			k_greater_equal_cursor_positions_key:
 				not a_cursor.off and then attached a_cursor.position as l_position and then attached l_position.key as l_key and then k /= Void implies
-					key_comparator.greater_equal (k, l_key)
+					key_comparator.attached_greater_equal (k, l_key)
 			a_cursor_not_after: not a_cursor.after
 		end
 
@@ -751,7 +751,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 				search_insert_position (k)
 				check found: attached found_node as l_found_node then
 					a_cursor.set_position (l_found_node)
-					if l_found_node.key = Void or else key_comparator.greater_than (k, l_found_node.key) then
+					if not attached l_found_node.key as l_found_node_key or else key_comparator.attached_greater_than (k, l_found_node_key) then
 						a_cursor.forth
 					end
 				end
@@ -759,10 +759,10 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 		ensure
 			has_key_k_implies_a_cursor_points_to_it:
 				has_key (k) and k /= Void and attached a_cursor.position as l_position and then attached l_position.key as l_key implies
-					key_comparator.order_equal (l_key, k)
+					key_comparator.attached_order_equal (l_key, k)
 			k_less_equal_cursors_key:
 				not a_cursor.off and then attached a_cursor.position as l_position and then attached l_position.key as l_key and then k /= Void implies
-					key_comparator.less_equal (k, l_key)
+					key_comparator.attached_less_equal (k, l_key)
 			a_cursor_not_before: not a_cursor.before
 		end
 
@@ -1873,17 +1873,17 @@ feature {NONE} -- Basic operation
 					l_found_node := Void
 				end
 			else
-				if l_found_node = Void or else (l_found_node.key = Void) or else not l_key_comparator.order_equal (a_key, l_found_node.key) then
+				if l_found_node = Void or else (not attached l_found_node.key as l_found_node_key) or else not l_key_comparator.attached_order_equal (a_key, l_found_node_key) then
 					from
 						l_found_node := root_node
 					until
 						l_found_node = Void or else l_equality
 					loop
-						if l_found_node.key = Void then
+						if not attached l_found_node.key as l_found_node_key then
 							l_found_node := l_found_node.right_child
-						elseif l_key_comparator.less_than (a_key, l_found_node.key) then
+						elseif l_key_comparator.attached_less_than (a_key, l_found_node_key) then
 							l_found_node := l_found_node.left_child
-						elseif l_key_comparator.greater_than (a_key, l_found_node.key) then
+						elseif l_key_comparator.attached_greater_than (a_key, l_found_node_key) then
 							l_found_node := l_found_node.right_child
 						else
 							l_equality := True
@@ -1937,21 +1937,21 @@ feature {NONE} -- Basic operation
 					until
 						l_stop
 					loop
-						if l_node.key = Void then
+						if not attached l_node.key as l_node_key then
 							if attached l_node.right_child as l_right_child then
 								l_node := l_right_child
 							else
 								insert_position_is_left := False
 								l_stop := True
 							end
-						elseif l_key_comparator.less_than (a_key, l_node.key) then
+						elseif l_key_comparator.attached_less_than (a_key, l_node_key) then
 							if not attached l_node.left_child as l_left_child then
 								insert_position_is_left := True
 								l_stop := True
 							else
 								l_node := l_left_child
 							end
-						elseif l_key_comparator.greater_than (a_key, l_node.key) then
+						elseif l_key_comparator.attached_greater_than (a_key, l_node_key) then
 							if not attached l_node.right_child as l_right_child then
 								insert_position_is_left := False
 								l_stop := True

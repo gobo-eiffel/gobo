@@ -5,7 +5,7 @@ note
 		"Objects that compare numeric strings"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,13 @@ class XM_XSLT_NUMERIC_COMPARER
 inherit
 
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
+		redefine
+			less_than
+		end
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 		local
 			l_string: STRING

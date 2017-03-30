@@ -5,18 +5,18 @@ note
 		"Reverse comparators based on COMPARABLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2000-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class KL_REVERSE_COMPARABLE_COMPARATOR [G -> COMPARABLE]
+class KL_REVERSE_COMPARABLE_COMPARATOR [G -> detachable COMPARABLE]
 
 inherit
 
 	KL_COMPARABLE_COMPARATOR [G]
 		redefine
-			less_than
+			attached_less_than
 		end
 
 create
@@ -25,7 +25,7 @@ create
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN
+	attached_less_than (u, v: attached G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (v < u)

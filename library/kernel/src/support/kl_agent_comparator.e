@@ -5,7 +5,7 @@ note
 		"Total order comparators implemented using an agent"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN
+	attached_less_than (u, v: attached G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := less_than_agent.item ([u, v])
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	less_than_agent: FUNCTION [G, G, BOOLEAN]
+	less_than_agent: FUNCTION [attached G, attached G, BOOLEAN]
 			-- Agent used to compare objects
 
 invariant

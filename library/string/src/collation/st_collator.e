@@ -5,7 +5,7 @@ note
 		"Objects that collate strings"
 
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,9 @@ inherit
 	ANY
 
 	KL_COMPARATOR [STRING]
+		redefine
+			less_than
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -49,7 +52,7 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
-	less_than (u, v: STRING): BOOLEAN
+	less_than, attached_less_than (u, v: STRING): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := three_way_comparison (u, v) = -1

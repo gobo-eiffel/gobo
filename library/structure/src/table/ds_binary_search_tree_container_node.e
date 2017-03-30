@@ -6,7 +6,7 @@ note
 		Nodes may be linked to other binary search tree nodes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2013, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2017, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 				Result := Void
 			end
 		end
-		
+
 	parent_left_child: like left_child
 			-- Left child of `parent'
 			-- May be Void
@@ -98,7 +98,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 				Result := l_right_child.right_child
 			end
 		end
-		
+
 feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} -- Measurement
 
 	count: INTEGER
@@ -158,7 +158,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 		local
 			l_left_child_key: like key
 		do
-			if key = Void then
+			if not attached key as l_key then
 				if left_child = Void then
 					if attached right_child as l_right_child then
 						Result := l_right_child.sorted (a_comparator)
@@ -170,7 +170,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 				if attached left_child as l_left_child then
 					l_left_child_key := l_left_child.key
 					if l_left_child_key /= Void then
-						Result := a_comparator.less_than (l_left_child_key, key)
+						Result := a_comparator.attached_less_than (l_left_child_key, l_key)
 					else
 						Result := True
 					end
@@ -179,8 +179,8 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 					Result := True
 				end
 				if Result then
-					if attached right_child as l_right_child then
-						Result := a_comparator.greater_than (l_right_child.key, key) and then l_right_child.sorted (a_comparator)
+					if attached right_child as l_right_child and then attached l_right_child.key as l_right_child_key then
+						Result := a_comparator.attached_greater_than (l_right_child_key, l_key) and then l_right_child.sorted (a_comparator)
 					else
 						Result := True
 					end

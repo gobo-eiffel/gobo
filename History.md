@@ -22,6 +22,9 @@
 * Added feature `append_pathname_to_string` to class `KI_FILE_SYSTEM`.
 * Added buffered version of output file classes (`KL_BUFFERED_OUTPUT_FILE`
   and descendants).
+* Changed feature names and signatures in classes `KL_PART_COMPARATOR`
+  and `KL_COMPARATOR` in order to compile in void-safe mode with 
+  ISE 17.05.
 
 ### Gobo Eiffel Tools Library
 

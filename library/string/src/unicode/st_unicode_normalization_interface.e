@@ -9,7 +9,7 @@ note
 		need a few modifications to account of surrogates.
 	]"
 	library: "Gobo Eiffel String Library"
-	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,11 @@ inherit
 		export {NONE} all end
 
 	KL_COMPARATOR [INTEGER]
-		export {NONE} all end
+		export
+			{NONE} all
+		redefine
+			less_than
+		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
@@ -249,7 +253,7 @@ feature -- Status report
 			Result := unicode.valid_code (a_code)
 		end
 
-	frozen less_than (u, v: INTEGER): BOOLEAN
+	frozen less_than, attached_less_than (u, v: INTEGER): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 				-- This will fail to meet the post-conditions

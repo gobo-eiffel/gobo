@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN
+	attached_less_than (u, v: attached G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := (u < v)

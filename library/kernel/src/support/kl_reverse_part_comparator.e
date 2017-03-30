@@ -5,7 +5,7 @@ note
 		"Reverse partial order comparators"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	less_than (u, v: G): BOOLEAN
+	attached_less_than (u, v: attached G): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := comparator.less_than (v, u)

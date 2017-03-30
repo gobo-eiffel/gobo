@@ -5,7 +5,7 @@ note
 		"Objects that compare in descending order"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class XM_XPATH_DESCENDING_COMPARER
 inherit
 
 	KL_PART_COMPARATOR [XM_XPATH_ITEM]
+		redefine
+			less_than
+		end
 
 create
 
@@ -38,7 +41,7 @@ feature -- Access
 
 feature -- Comparison
 
-	less_than (u, v: XM_XPATH_ITEM): BOOLEAN
+	less_than, attached_less_than (u, v: XM_XPATH_ITEM): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := base_comparer.less_than (v, u)
