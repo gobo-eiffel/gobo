@@ -589,7 +589,7 @@ feature -- Input
 				end_of_input := True
 			else
 				readentry
-				l_last_entry := lastentry
+				l_last_entry := last_entry_8
 				if l_last_entry /= Void then
 					last_entry := l_last_entry
 				else
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
 		do
-			Result := (lastentry = Void)
+			Result := (last_entry_8 = Void)
 		end
 
 	string_name: STRING_8
