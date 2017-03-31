@@ -350,7 +350,7 @@ feature -- Status setting
 				status_code := no_code
 			end
 		ensure
-			feature_name_set: is_local = b
+			feature_name_set: is_feature_name = b
 		end
 
 	set_local (b: BOOLEAN)
