@@ -253,7 +253,7 @@ feature -- Basic operations
 					end_of_input := False
 					if old_exists and then old_is_readable then
 						old_open_read
-						lastentry := Dummy_entry
+						old_end_of_input := False
 					end
 				end
 			elseif not is_closed then
@@ -274,7 +274,8 @@ feature -- Basic operations
 		do
 			if not rescued then
 				old_close
-				lastentry := Void
+				old_end_of_input := True
+				last_entry_pointer := default_pointer
 				entry_buffer := Void
 				last_entry := Dummy_entry
 			end
@@ -591,8 +592,10 @@ feature -- Input
 				readentry
 				l_last_entry := last_entry_8
 				if l_last_entry /= Void then
+					old_end_of_input := False
 					last_entry := l_last_entry
 				else
+					old_end_of_input := True
 					last_entry := Dummy_entry
 				end
 				end_of_input := old_end_of_input
@@ -633,9 +636,6 @@ feature {NONE} -- Implementation
 	old_end_of_input: BOOLEAN
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
-		do
-			Result := (last_entry_8 = Void)
-		end
 
 	string_name: STRING_8
 			-- File name as a STRING_8 instance. The value might be truncated
