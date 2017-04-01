@@ -2853,70 +2853,26 @@ Anchored_type: E_LIKE Identifier
 	;
 
 Qualified_anchored_type_with_no_type_mark: E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, new_dot_feature_name ($5, $6))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, new_dot_feature_name ($5, $6))}
 	| Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type (Void, $1, new_dot_feature_name ($2, $3))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type (Void, $1, new_dot_feature_name ($2, $3))}
 	;
 	
 Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{ $$ := $1 }
 	| E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))}
 	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))}
 	| E_ATTACHED E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))}
 	| E_DETACHABLE E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2924,9 +2880,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '!' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
@@ -2934,9 +2888,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2944,86 +2896,30 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			elseif current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
 			end
 		}
 	| E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| E_ATTACHED Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| E_ATTACHED E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| E_DETACHABLE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| E_DETACHABLE E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| '!' Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| '!' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	| '?' Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type ($1, $2, new_dot_feature_name ($3, $4))}
 	| '?' E_SEPARATE Anchored_type_with_no_type_mark '.' Identifier
-		{
-			if not current_system.qualified_anchored_types_enabled then
-				raise_error
-			else
-				$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))
-			end
-		}
+		{$$ := ast_factory.new_qualified_like_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, new_dot_feature_name ($4, $5))}
 	;
 	
 ------------------------------------------------------------------------------------

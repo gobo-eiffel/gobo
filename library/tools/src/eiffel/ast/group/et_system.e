@@ -54,7 +54,6 @@ feature {NONE} -- Initialization
 			console_application_mode := True
 			alias_transition_mode := True
 			unknown_builtin_reported := True
-			qualified_anchored_types_enabled := True
 			qualified_anchored_types_cycle_detection_enabled := False
 			create null_processor.make
 			eiffel_preparser := null_processor
@@ -526,11 +525,6 @@ feature -- Parser status report
 			-- (possibly with wildcards)? Otherwise they are considered as
 			-- group names.
 
-	qualified_anchored_types_enabled: BOOLEAN
-			-- Are types of the form 'like a.b' or 'like {A}.b'
-			-- (also known as qualified anchored types or remote
-			-- anchored types) accepted?
-
 	qualified_anchored_types_cycle_detection_enabled: BOOLEAN
 			-- Should an error be reported (VTAT-2) when the type of
 			-- the anchor appearing in a qualified anchored type
@@ -643,14 +637,6 @@ feature -- Parser setting
 			use_cluster_dependence_pathnames := b
 		ensure
 			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
-		end
-
-	set_qualified_anchored_types_enabled (b: BOOLEAN)
-			-- Set `qualified_anchored_types_enabled' to `b'.
-		do
-			qualified_anchored_types_enabled := b
-		ensure
-			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
 		end
 
 	set_qualified_anchored_types_cycle_detection_enabled (b: BOOLEAN)
