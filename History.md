@@ -1,6 +1,6 @@
 # Release History
 
-## Version 4.1 - ??
+## Version 4.1 - 2 April 2017
 
 ### gec
 

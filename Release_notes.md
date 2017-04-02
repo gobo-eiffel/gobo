@@ -1,17 +1,15 @@
-# Release notes - Gobo Eiffel 4.0
+# Release notes - Gobo Eiffel 4.1
 
-During the past years, this package was available from the Git repository
-only. But a lot of improvements and bug fixes have been made since the
-last release, hence this new release. In particular:
+The focus of this release has been put on Continuous Integration
+and Continuous Delivery. Indeed the technology behind the tools
+of the Gobo package makes them very suitable for this kind of
+tasks, complementary to your favorite Eiffel development tools
+such as ISE EiffelStudio. Therefore:
 
-* All libraries can now be compiled in void-safe mode. 
-* The folders have been reorganized so that everything
-  related to a library (source, examples, tests, documentation, ...)
-  is self-contained in `$GOBO/library/<library-name>`, and
-  likewise for utilities in `$GOBO/tool/<tool-name>`.
-* No bootstrap is necessary anymore when getting the library classes
-  from the Git repository. Just check out the classes and use them.
-* Container classes can be used with the `across` construct.
+* The documentation of `gelint`, a useful tool to check the validity
+  rules in your Eiffel system, has been added.
+* A new tool, `gedoc`, for pretty-printing and generation of
+  HTML documentation out of Eiffel classes, has been implemented.
 
 For more details, see [History.md](History.md).
 
@@ -28,14 +26,6 @@ For more details, see [History.md](History.md).
 		cd %GOBO%
 		geant clobber
 		geant install
-
-### SE (SmartEiffel)
-
-* The SmartEiffel compiler is not supported anymore.
-
-### VE (Visual Eiffel)
-
-* The Visual Eiffel compiler is not supported anymore.
 
 ## Authors
 
