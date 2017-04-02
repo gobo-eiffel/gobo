@@ -12,14 +12,111 @@
   </table>
   <hr size="1" />
   <p>
-   Under construction
+   <i>Gobo Eiffel Lint</i> is specially designed 
+   to be used in Continuous Integration cycles. For example, each time
+   a developer commits some changes in the Source Control repository,
+   we want to be sure that no Eiffel compilation error has been 
+   introduced. And this has to run fast in order to get feedback
+   as soon as possible, before someone else commits other changes.
+   Most of us will use our favorite Eiffel compiler and try to compile
+   our Eiffel system in order to figure out whether our code still
+   compiles correctly or not. But some Eiffel compilers do not check
+   the validity of dead code (Eiffel code which is not reachable from
+   the root creation procedure). Some other Eiffel compilers just
+   take too long to compile the Eiffel system and therefore are not
+   suitable as a Continuous Integration job. For example, at work
+   we have to deal with 20,000 Eiffel classes. Following are benchmarks
+   when using <font color="#800000"><i><tt>ec.exe</tt></i></font> or <font color="#800000"><i><tt>ecb.exe</tt></i></font>
+   from ISE to check the validity of our Eiffel classes
+   (in non-void-safe mode and non-full-class-checking mode):
+   <pre>
+	<font color="#800000"><i><tt>ec.exe -config integration.ecf</tt></i></font>
+		21 minutes
+		RAM: 3.6 GB
+		EIFGEN: 1.8 GB
+</pre>
+   <pre>
+ 	<font color="#800000"><i><tt>ecb.exe -config integration.ecf</tt></i></font>
+ 		16 minutes
+ 		RAM: 3.5 GB
+ 		EIFGEN: 1.8 GB
+</pre>
+   It's way too slow when part of a Continuous Integration cycle.
+   <i>gelint</i> has been designed with this
+   constraint in mind. First, it keeps all data about the Eiffel
+   system in memory. No temporary files are written to disk. This
+   makes the process run faster since memory accesses are much
+   faster than disk accesses. In order to fit everything in 
+   memory, <i>gelint</i> only keeps track
+   of what is strictly necessary in order to analyze the Eiffel
+   code and to report useful messages in case of validity errors.
+   For example the Gobo Eiffel parser can be configured to ignore
+   comments, indexing clauses, etc. which are Eiffel constructs
+   with no validity rules associated with them. Furthermore,
+   the AST (Abstract Syntax Tree) is built in such a way that 
+   whenever an object can be shared, it will not be duplicated.
+   After all these data fit into memory, the next design goal
+   of <i>gelint</i> is to avoid the best that
+   it can to create temporary objects. This avoids having a
+   garbage collector which spends too much time reclaiming the
+   memory for these objects instead of using these CPU cycles to
+   actually analyze the Eiffel system under inspection. To achieve
+   that, <i>gelint</i> uses extensively the
+   Visitor Pattern, having objects traversing the AST to perfom
+   some specific tasks rather than having each node in the AST
+   perform these tasks themselves. That way these visitor objects
+   can reuse the same intermediate objects when performing these
+   tasks on the various nodes of the AST rather than having these
+   intermediate objects being created by each AST node. Following
+   are the benchmarks when using this technology:
+   <pre>
+ 	<font color="#800000"><i><tt>gelint.exe integration.ecf</tt></i></font>
+		41 seconds
+		RAM: 2.0 GB
+		No disk usage
+</pre>
+   This is much more acceptable for a Continuous Integration job.
+   In this benchmarks <font color="#800000"><i><tt>gelint.exe</tt></i></font> is almost
+   25 times faster than <font color="#800000"><i><tt>ecb.exe</tt></i></font>. In fact at
+   work we are using <i>gelint</i> in 
+   full-class-checking mode, with the following results:
+   <pre>
+ 	<font color="#800000"><i><tt>gelint.exe --flat integration.ecf</tt></i></font>
+		1 minute 32 seconds
+		RAM: 2.0 GB
+		No disk usage
+</pre>
+   which is still acceptable in our Continuous Integration cycle.
+   Note that these benchmarks are when <font color="#800000"><i><tt>gelint.exe</tt></i></font>
+   has been compiled with <i>gec</i> (the 
+   <i>Gobo Eiffel Compiler</i>) and executed
+   with no GC. When using the Boehm GC, it will be slower by about
+   1 or 2 seconds and the memory usage will go down to 1.7 GB.
+   
+  </p>
+  <p>
+   At work we have been using <i>gelint</i>
+   for more than 10 years, and it was very successful at finding
+   Eiffel validity rule violations with clear error messages.
+   Some of my colleagues sometimes tell me that they better understand
+   the error messages from <i>gelint</i> than
+   those from ISE <i>EiffelStudio</i>.
+   Apart from that, <i>gelint</i> and 
+   <i>EiffelStudio</i> will catch the
+   same errors most of the time. It is even possible that from
+   time to time <i>gelint</i> will report
+   validity errors that <i>EiffelStudio</i>
+   would have missed. On the other hand, if you find cases
+   where <i>gelint</i> would have missed
+   a validity error, please report it to me so that I can fix
+   this issue.
    
   </p>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>5 March 2006</font></address>
+     <address><font size="2"><b>Copyright © 2006-2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>2 April 2017</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="usage.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="limitations.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

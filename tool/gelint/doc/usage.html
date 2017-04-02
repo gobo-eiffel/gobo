@@ -11,15 +11,142 @@
    </tr>
   </table>
   <hr size="1" />
-  <p>
-   Under construction
+  <div>
+   <h2>Command-line options</h2>
    
-  </p>
+   <p>
+    The usual way to invoke <i>gelint</i> is as follows:
+    
+    <blockquote>
+     	<font color="#800000"><i><tt>gelint ecf_filename</tt></i></font>
+     
+    </blockquote>
+    This will read the description of your Eiffel system in the ECF file
+    <font color="#800000"><i><tt>ecf_filename</tt></i></font>, perform code analysis on the
+    corresponding Eiffel classes and report any syntax or validity
+    errors. Note that an Xace file can also be used in place of the
+    ECF file. Your Eiffel system can be an Eiffel project or an 
+    Eiffel library. Here is the list of options that can be used with 
+    <i>gelint</i>:
+    
+    <dl>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-?</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>-h</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--help</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print a summary of the command-line options of <i>gelint</i> and exit.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--flat</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			For each class, not only check the validity of the features
+      			declared in this class, but also of those inherited from 
+      			its parent classes.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--noflatdbc</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Do not check the validity of inherited pre- and postconditions
+      			when a feature is redeclared.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--catcall</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Report possible CAT-call errors, based on the statically computed
+      			dynamic type sets of each variables in the Eiffel code.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--ecma</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Strictly follow the ECMA Eiffel standard during code analysis.
+      		
+     </dd>	
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--ise[=major[.minor[.revision[.build]]]]</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Version of ISE Eiffel whose semantics should be used during code analysis.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--define=NAME[=VALUE][ NAME[=VALUE]]*</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Define variables to be used when reading Xace files.
+      		
+     </dd>			
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--silent</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Run <i>gelint</i> in silent mode.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>--verbose</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Run <i>gelint</i> in verbose mode.
+      		
+     </dd>
+     	
+     <dt>
+      			<font color="#800000"><i><tt>-V</tt></i></font>
+      		
+     </dt>
+     <dt>
+      			<font color="#800000"><i><tt>--version</tt></i></font>
+      		
+     </dt>
+     <dd>
+      			Print the version number of <i>gelint</i> and exit.
+      		
+     </dd>
+     
+    </dl>
+    
+   </p>
+   
+  </div>
   <hr size="1" />
   <table border="0" width="100%">
    <tr>
     <td>
-     <address><font size="2"><b>Copyright © 2006, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>5 March 2006</font></address>
+     <address><font size="2"><b>Copyright © 2006-2017, Eric Bezault</b><br /><b>mailto:</b><a href="mailto:ericb@gobosoft.com">ericb@gobosoft.com</a><br /><b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a><br /><b>Last Updated: </b>1 April 2017</font></address>
     </td>
     <td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="image/home.gif" alt="Home" border="0" /></a><a href="index.html"><img src="image/toc.gif" alt="Toc" border="0" /></a><a href="index.html"><img src="image/previous.gif" alt="Previous" border="0" /></a><a href="technology.html"><img src="image/next.gif" alt="Next" border="0" /></a></td>
    </tr>

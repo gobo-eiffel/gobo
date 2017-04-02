@@ -6,7 +6,7 @@
 		"Limitations"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,20 +15,38 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/limitations">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2017</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>2 April 2017</date>
 </chapterinfo>
 
-<title>Limitations</title>
+<title>Gelint Limitations</title>
 
 <para>
-Under construction
+The following Eiffel constructs are not supported yet:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>Eiffel for .Net</term>
+		<listitem><para>
+			Only Eiffel classic systems are supported. It is possible
+			to plug to <projectname>gelint</projectname> the code used
+			by ISE <projectname>EiffelStudio</projectname> to read
+			the .Net assemblies and generate AST of the corresponding
+			Eiffel classes out of them. I did that a few years ago 
+			at work, and it worked. This is subject to ISE's licensing
+			policy of course. Please contact me if you need 
+			some help.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
 </para>
 
 </chapter>

@@ -22,6 +22,7 @@
 * Removed command-line option `--qat`. Qualified anchored types
   (types of the form `like a.b` or `like {A}.b`) are always
   accepted.
+* Wrote documentation of `gelint`.
 
 ### Gobo Eiffel Kernel Library
 

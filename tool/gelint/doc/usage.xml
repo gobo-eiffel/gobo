@@ -6,7 +6,7 @@
 		"Using gelint"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,20 +15,127 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/usage">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2017</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>1 April 2017</date>
 </chapterinfo>
 
 <title>Using gelint</title>
 
+<section><title>Command-line options</title>
 <para>
-Under construction
+The usual way to invoke <projectname>gelint</projectname> is as follows:
+<blockquote>
+	<filename>gelint ecf_filename</filename>
+</blockquote>
+This will read the description of your Eiffel system in the ECF file
+<filename>ecf_filename</filename>, perform code analysis on the
+corresponding Eiffel classes and report any syntax or validity
+errors. Note that an Xace file can also be used in place of the
+ECF file. Your Eiffel system can be an Eiffel project or an 
+Eiffel library. Here is the list of options that can be used with 
+<projectname>gelint</projectname>:
+<variablelist>
+	<varlistentry>
+		<term>
+			<filename>-?</filename>
+		</term>
+		<term>
+			<filename>-h</filename>
+		</term>
+		<term>
+			<filename>--help</filename>
+		</term>
+		<listitem><para>
+			Print a summary of the command-line options of <projectname>gelint</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--flat</filename>
+		</term>
+		<listitem><para>
+			For each class, not only check the validity of the features
+			declared in this class, but also of those inherited from 
+			its parent classes.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--noflatdbc</filename>
+		</term>
+		<listitem><para>
+			Do not check the validity of inherited pre- and postconditions
+			when a feature is redeclared.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--catcall</filename>
+		</term>
+		<listitem><para>
+			Report possible CAT-call errors, based on the statically computed
+			dynamic type sets of each variables in the Eiffel code.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--ecma</filename>
+		</term>
+		<listitem><para>
+			Strictly follow the ECMA Eiffel standard during code analysis.
+		</para></listitem>
+	</varlistentry>	
+	<varlistentry>
+		<term>
+			<filename>--ise[=major[.minor[.revision[.build]]]]</filename>
+		</term>
+		<listitem><para>
+			Version of ISE Eiffel whose semantics should be used during code analysis.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--define=NAME[=VALUE][ NAME[=VALUE]]*</filename>
+		</term>
+		<listitem><para>
+			Define variables to be used when reading Xace files.
+		</para></listitem>
+	</varlistentry>			
+	<varlistentry>
+		<term>
+			<filename>--silent</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gelint</projectname> in silent mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--verbose</filename>
+		</term>
+		<listitem><para>
+			Run <projectname>gelint</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>-V</filename>
+		</term>
+		<term>
+			<filename>--version</filename>
+		</term>
+		<listitem><para>
+			Print the version number of <projectname>gelint</projectname> and exit.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
 </para>
+</section>
 
 </chapter>

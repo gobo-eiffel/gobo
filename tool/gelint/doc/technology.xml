@@ -6,7 +6,7 @@
 		"Code Analysis Technology"
 
 	tool: "Gobo Eiffel Lint"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,20 +15,116 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelint/technology">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2017</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>2 April 2017</date>
 </chapterinfo>
 
 <title>Code Analysis Technology</title>
 
 <para>
-Under construction
+<projectname>Gobo Eiffel Lint</projectname> is specially designed 
+to be used in Continuous Integration cycles. For example, each time
+a developer commits some changes in the Source Control repository,
+we want to be sure that no Eiffel compilation error has been 
+introduced. And this has to run fast in order to get feedback
+as soon as possible, before someone else commits other changes.
+Most of us will use our favorite Eiffel compiler and try to compile
+our Eiffel system in order to figure out whether our code still
+compiles correctly or not. But some Eiffel compilers do not check
+the validity of dead code (Eiffel code which is not reachable from
+the root creation procedure). Some other Eiffel compilers just
+take too long to compile the Eiffel system and therefore are not
+suitable as a Continuous Integration job. For example, at work
+we have to deal with 20,000 Eiffel classes. Following are benchmarks
+when using <filename>ec.exe</filename> or <filename>ecb.exe</filename>
+from ISE to check the validity of our Eiffel classes
+(in non-void-safe mode and non-full-class-checking mode):
+<programlisting>
+	<filename>ec.exe -config integration.ecf</filename>
+		21 minutes
+		RAM: 3.6 GB
+		EIFGEN: 1.8 GB
+</programlisting>
+<programlisting>
+ 	<filename>ecb.exe -config integration.ecf</filename>
+ 		16 minutes
+ 		RAM: 3.5 GB
+ 		EIFGEN: 1.8 GB
+</programlisting>
+It's way too slow when part of a Continuous Integration cycle.
+<projectname>gelint</projectname> has been designed with this
+constraint in mind. First, it keeps all data about the Eiffel
+system in memory. No temporary files are written to disk. This
+makes the process run faster since memory accesses are much
+faster than disk accesses. In order to fit everything in 
+memory, <projectname>gelint</projectname> only keeps track
+of what is strictly necessary in order to analyze the Eiffel
+code and to report useful messages in case of validity errors.
+For example the Gobo Eiffel parser can be configured to ignore
+comments, indexing clauses, etc. which are Eiffel constructs
+with no validity rules associated with them. Furthermore,
+the AST (Abstract Syntax Tree) is built in such a way that 
+whenever an object can be shared, it will not be duplicated.
+After all these data fit into memory, the next design goal
+of <projectname>gelint</projectname> is to avoid the best that
+it can to create temporary objects. This avoids having a
+garbage collector which spends too much time reclaiming the
+memory for these objects instead of using these CPU cycles to
+actually analyze the Eiffel system under inspection. To achieve
+that, <projectname>gelint</projectname> uses extensively the
+Visitor Pattern, having objects traversing the AST to perfom
+some specific tasks rather than having each node in the AST
+perform these tasks themselves. That way these visitor objects
+can reuse the same intermediate objects when performing these
+tasks on the various nodes of the AST rather than having these
+intermediate objects being created by each AST node. Following
+are the benchmarks when using this technology:
+<programlisting>
+ 	<filename>gelint.exe integration.ecf</filename>
+		41 seconds
+		RAM: 2.0 GB
+		No disk usage
+</programlisting>
+This is much more acceptable for a Continuous Integration job.
+In this benchmarks <filename>gelint.exe</filename> is almost
+25 times faster than <filename>ecb.exe</filename>. In fact at
+work we are using <projectname>gelint</projectname> in 
+full-class-checking mode, with the following results:
+<programlisting>
+ 	<filename>gelint.exe --flat integration.ecf</filename>
+		1 minute 32 seconds
+		RAM: 2.0 GB
+		No disk usage
+</programlisting>
+which is still acceptable in our Continuous Integration cycle.
+Note that these benchmarks are when <filename>gelint.exe</filename>
+has been compiled with <projectname>gec</projectname> (the 
+<projectname>Gobo Eiffel Compiler</projectname>) and executed
+with no GC. When using the Boehm GC, it will be slower by about
+1 or 2 seconds and the memory usage will go down to 1.7 GB.
+</para>
+<para>
+At work we have been using <projectname>gelint</projectname>
+for more than 10 years, and it was very successful at finding
+Eiffel validity rule violations with clear error messages.
+Some of my colleagues sometimes tell me that they better understand
+the error messages from <projectname>gelint</projectname> than
+those from ISE <projectname>EiffelStudio</projectname>.
+Apart from that, <projectname>gelint</projectname> and 
+<projectname>EiffelStudio</projectname> will catch the
+same errors most of the time. It is even possible that from
+time to time <projectname>gelint</projectname> will report
+validity errors that <projectname>EiffelStudio</projectname>
+would have missed. On the other hand, if you find cases
+where <projectname>gelint</projectname> would have missed
+a validity error, please report it to me so that I can fix
+this issue.
 </para>
 
 </chapter>
