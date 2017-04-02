@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -226,7 +226,6 @@ feature {NONE} -- Processing
 			end
 			a_system.error_handler.set_ise
 			a_system.set_ise_version (ise_latest)
-			a_system.set_qualified_anchored_types_enabled (qualified_anchored_types_enabled)
 			if is_verbose then
 -- TODO.
 			end
@@ -366,12 +365,6 @@ feature -- Status report
 			Result := not catcall_option.was_found or else STRING_.same_string (catcall_option.parameter, "warning")
 		end
 
-	qualified_anchored_types_enabled: BOOLEAN
-			-- Are Qualified Anchored Types allowed?
-		do
-			Result := not qat_option.was_found or else qat_option.parameter
-		end
-
 	no_c_compile: BOOLEAN
 			-- Should the back-end C compiler not be invoked on the generated C code?
 		do
@@ -412,9 +405,6 @@ feature -- Argument parsing
 
 	catcall_option: AP_ENUMERATION_OPTION
 			-- Option for '--catcall=<no|error|warning>'
-
-	qat_option: AP_BOOLEAN_OPTION
-			-- Option for '--qat=<no|yes>'
 
 	finalize_flag: AP_FLAG
 			-- Flag for '--finalize'
@@ -472,11 +462,6 @@ feature -- Argument parsing
 			catcall_option.extend ("warning")
 			catcall_option.set_parameter_description ("no|error|warning")
 			a_parser.options.force_last (catcall_option)
-				-- qat
-			create qat_option.make_with_long_form ("qat")
-			qat_option.set_description ("Are Qualified Anchored Types allowed? (default: yes)")
-			qat_option.set_parameter_description ("no|yes")
-			a_parser.options.force_last (qat_option)
 				-- cc
 			create c_compile_option.make_with_long_form ("cc")
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
@@ -540,7 +525,6 @@ feature -- Argument parsing
 		ensure
 			ace_filename_not_void: ace_filename /= Void
 			catcall_option_not_void: catcall_option /= Void
-			qat_option_not_void: qat_option /= Void
 			finalize_flag_not_void: finalize_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
@@ -555,7 +539,6 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	ace_filename_not_void: ace_filename /= Void
 	catcall_option_not_void: catcall_option /= Void
-	qat_option_not_void: qat_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void

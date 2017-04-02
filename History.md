@@ -8,6 +8,9 @@
   Non-object call (of the form `{FOO}.string_constant`). A new
   string object was created at each call, instead of returning
   the same string object.
+* Removed command-line option `--qat`. Qualified anchored types
+  (types of the form `like a.b` or `like {A}.b`) are always
+  accepted.
 
 ### gedoc
 
