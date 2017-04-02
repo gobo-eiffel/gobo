@@ -6,7 +6,7 @@
 		"Limitations"
 
 	tool: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec/limitations">
 <chapterinfo>
 	<copyright>
-		<year>2006-2016</year>
+		<year>2006-2017</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>4 December 2016</date>
+	<date>2 April 2017</date>
 </chapterinfo>
 
 <title>Gec Limitations</title>
@@ -33,31 +33,45 @@ The following Eiffel constructs have not been implemented yet:
 <blockquote>
 <variablelist>
 	<varlistentry>
-		<term>Assertions: not monitored at runtime</term>
-		<listitem>f</listitem>
+		<term>Assertions</term>
+		<listitem><para>
+			not monitored at runtime
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Garbage Collection: no internal GC, the Boehm GC can be plugged instead</term>
-		<listitem></listitem>
+		<term>Garbage Collection</term>
+		<listitem><para>
+			no internal GC, the Boehm GC can be plugged instead
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>Storable</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>User-defined expanded classes: semantics of attachement and comparison not fully implemented</term>
-		<listitem></listitem>
+		<term>User-defined expanded classes</term>
+		<listitem><para>
+			semantics of attachement and comparison not fully implemented
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
 		<term>Unique constants</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Non-conforming inheritance: feature replication still uses the pre-ECMA semantics of 'select'</term>
-		<listitem></listitem>
+		<term>Non-conforming inheritance</term>
+		<listitem><para>
+			feature replication still uses the pre-ECMA semantics of 'select'
+		</para></listitem>
 	</varlistentry>
 	<varlistentry>
-		<term>Multithreading: partially implemented</term>
+		<term>Multithreading</term>
+		<listitem><para>
+			partially implemented
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>SCOOP</term>
 		<listitem></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -70,6 +84,10 @@ The following Eiffel constructs have not been implemented yet:
 	</varlistentry>
 	<varlistentry>
 		<term>Cecil (C to Eiffel interface)</term>
+		<listitem></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>Eiffel for .Net</term>
 		<listitem></listitem>
 	</varlistentry>
 </variablelist>
