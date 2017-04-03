@@ -29,7 +29,7 @@ feature -- Status report
 			if u = Void then
 				Result := v /= Void
 			elseif v = Void then
-				Result := True
+				Result := False
 			else
 				Result := attached_less_than (u, v)
 			end

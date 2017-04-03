@@ -1,5 +1,12 @@
 # Release History
 
+## Version 4.2 - ??
+
+### Gobo Eiffel Kernel Library
+
+* Fixed bug in feature `detachable_less_than` in class
+  `KL_PART_COMPARATOR` when comparing a non-void with a void.
+
 ## Version 4.1 - 2 April 2017
 
 ### gec
