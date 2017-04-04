@@ -1237,7 +1237,7 @@ feature {ET_AST_PROCESSOR} -- Processing
 		local
 			l_href: detachable STRING
 		do
-			if attached {ET_IDENTIFIER} a_writable as l_identifier then
+			if attached {ET_IDENTIFIER} a_writable as l_identifier and then l_identifier.is_feature_name then
 				if attached feature_mapping as l_feature_mapping then
 					if attached current_class.seeded_feature (l_identifier.seed) as l_feature then
 						l_feature_mapping.search (l_feature.implementation_feature)
