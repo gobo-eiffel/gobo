@@ -2,6 +2,11 @@
 
 ## Version 4.2 - ??
 
+### gedoc
+
+* Fixed bug in the html format when the target of an assignment 
+  is a local variable. It was sometimes shown as a feature name.
+
 ### Gobo Eiffel Kernel Library
 
 * Fixed bug in feature `detachable_less_than` in class
