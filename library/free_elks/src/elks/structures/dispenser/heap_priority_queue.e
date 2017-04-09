@@ -214,6 +214,41 @@ feature -- Duplication
 			end
 		end
 
+	duplicate (n: INTEGER): like Current
+			-- New priority queue containing `n' greatest items of Current.
+		require
+			n_positive: n >= 0
+			n_in_bounds: n <= count
+		local
+			l_current: like Current
+			l_tmp: ARRAYED_LIST [G]
+			i: INTEGER
+		do
+				--| Extract `n' greatest items of Current.
+			from
+				l_current := twin
+				create l_tmp.make (n)
+				i := 1
+			until
+				i > n
+			loop
+				l_tmp.extend (l_current.item)
+				l_current.remove
+				i := i + 1
+			end
+
+				--| Insert `n' greatest items into new queue.
+			from
+				create Result.make (n)
+				l_tmp.start
+			until
+				l_tmp.after
+			loop
+				Result.put (l_tmp.item)
+				l_tmp.forth
+			end
+		end
+
 feature -- Removal
 
 	remove
@@ -353,43 +388,6 @@ feature -- Conversion
 			end
 		end
 
-feature -- Duplication
-
-	duplicate (n: INTEGER): like Current
-			-- New priority queue containing `n' greatest items of Current.
-		require
-			n_positive: n >= 0
-			n_in_bounds: n <= count
-		local
-			l_current: like Current
-			l_tmp: ARRAYED_LIST [G]
-			i: INTEGER
-		do
-				--| Extract `n' greatest items of Current.
-			from
-				l_current := twin
-				create l_tmp.make (n)
-				i := 1
-			until
-				i > n
-			loop
-				l_tmp.extend (l_current.item)
-				l_current.remove
-				i := i + 1
-			end
-
-				--| Insert `n' greatest items into new queue.
-			from
-				create Result.make (n)
-				l_tmp.start
-			until
-				l_tmp.after
-			loop
-				Result.put (l_tmp.item)
-				l_tmp.forth
-			end
-		end
-
 feature {HEAP_PRIORITY_QUEUE} -- Implementation
 
 	lower: INTEGER = 1
@@ -445,7 +443,7 @@ feature {NONE} -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

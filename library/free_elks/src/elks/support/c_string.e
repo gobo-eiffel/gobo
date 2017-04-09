@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			a_length_non_negative: a_length >= 0
 		do
 			count := a_length
-			create managed_data.make ((a_length + 1))
+			create managed_data.make (a_length + 1)
 			managed_data.item.memory_copy (a_ptr, a_length)
 		end
 
@@ -130,7 +130,7 @@ feature -- Initialization
 	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
 		obsolete
-			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it."
+			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it. [2017-05-31]"
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 		do
@@ -140,7 +140,7 @@ feature -- Initialization
 	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
 		obsolete
-			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it."
+			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it. [2017-05-31]"
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
@@ -406,7 +406,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -46,7 +46,7 @@ feature -- Initialization
 			-- rows and `nb_columns' columns,
 			-- with lower bounds starting at 1.
 		obsolete
-			"`make' is not void-safe statically. Use `make_filled' instead. [07-2010]"
+			"`make' is not void-safe statically. Use `make_filled' instead. [2017-05-31]"
 		require
 			nb_rows_non_negative: nb_rows >= 0
 			nb_columns_non_negative: nb_columns >= 0
@@ -144,7 +144,7 @@ feature -- Resizing
 			-- entered items, nor changing their coordinates;
 			-- do nothing if new values are smaller.
 		obsolete
-			"`resize' is not void-safe statically. Use `resize_with_default' instead. [07-2010]"
+			"`resize' is not void-safe statically. Use `resize_with_default' instead. [2017-05-31]"
 		require
 			valid_row: nb_rows >= 1
 			valid_column: nb_columns >= 1
@@ -204,7 +204,7 @@ invariant
 	items_number: count = width * height
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

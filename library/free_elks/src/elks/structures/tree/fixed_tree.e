@@ -80,10 +80,10 @@ feature -- Initialization
 feature -- Access
 
 	parent: detachable like Current
-			-- Parent of current node
+			-- Parent of current node.
 
 	child_item: like item
-			-- Item of active child
+			-- Item of active child.
 		do
 			check attached child as c then
 				Result := c.item
@@ -91,7 +91,7 @@ feature -- Access
 		end
 
 	left_sibling: like parent
-			-- Left neighbor, if any
+			-- Left neighbor, if any.
 		do
 			if position_in_parent > 1 and then attached parent as p then
 				Result := p.array_item (position_in_parent - 1)
@@ -99,7 +99,7 @@ feature -- Access
 		end
 
 	right_sibling: like parent
-			-- Right neighbor, if any
+			-- Right neighbor, if any.
 		do
 			if attached parent as p and then position_in_parent < p.arity then
 				Result := p.array_item (position_in_parent + 1)
@@ -321,6 +321,22 @@ feature -- Duplication
 			child_go_to (pos)
 		end
 
+feature {NONE} -- Implementation
+
+	position_in_parent: INTEGER
+			-- Position of current node in parent
+
+	extendible: BOOLEAN = False;
+			-- May new items be added?
+
+feature -- Redefinition
+
+	child_capacity: INTEGER
+			-- Maximal number of children
+		do
+			Result := fixed_list.count
+		end
+
 feature {FIXED_TREE} -- Implementation
 
 	new_node: like Current
@@ -390,16 +406,6 @@ feature {FIXED_TREE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	position_in_parent: INTEGER
-			-- Position of current node in parent
-
-	extendible: BOOLEAN = False;
-			-- May new items be added?
-
-feature {FIXED_TREE} -- Implementation
-
 	fixed_list: FIXED_LIST [detachable like Current]
 
 	set_fixed_list (a_list: like fixed_list)
@@ -411,16 +417,6 @@ feature {FIXED_TREE} -- Implementation
 		ensure
 			fixed_list_set: fixed_list = a_list
 		end
-
-feature -- Redefinition
-
-	child_capacity: INTEGER
-			-- Maximal number of children
-		do
-			Result := fixed_list.count
-		end
-
-feature {FIXED_TREE} -- Implementation
 
 	clone_node (n: like Current): like Current
 			-- Clone node `n'.
@@ -445,7 +441,7 @@ feature {FIXED_TREE} -- Implementation
 			parent := Void
 		end
 
-feature -- Access
+feature -- Access: chilldren
 
 	child: like parent
 		do
@@ -550,7 +546,7 @@ feature -- Access
 
 	array_make (min_index: INTEGER; max_index: INTEGER)
 		obsolete
-			"Should not be used."
+			"Should not be used. [2017-05-31]"
 		do
 			fixed_list.make (max_index - min_index + 1)
 		end
@@ -628,7 +624,7 @@ feature {NONE} -- private access fixed_list
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

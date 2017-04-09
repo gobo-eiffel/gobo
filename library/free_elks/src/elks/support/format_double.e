@@ -176,13 +176,13 @@ feature -- Status setting
 
 feature -- Conversion
 
-	formatted (d: DOUBLE): STRING
+	formatted (d: REAL_64): STRING
 			-- Format `d'.
 		local
 			sign: INTEGER
-			integral, fraction: DOUBLE
+			integral, fraction: REAL_64
 			ints, fracs: STRING
-			value: DOUBLE
+			value: REAL_64
 		do
 			value := d
 			sign := 1
@@ -231,7 +231,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	pad_fraction (f: DOUBLE): STRING
+	pad_fraction (f: REAL_64): STRING
 			-- Stretch or shrink `f' to length `decimals' .
 		local
 			i: INTEGER

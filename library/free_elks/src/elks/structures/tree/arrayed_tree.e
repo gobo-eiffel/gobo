@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature -- Access
+feature -- Access: children
 
 	child: attached like parent
 		do
@@ -611,7 +611,7 @@ feature -- Access
 	move (i: INTEGER)
 			-- Move child
 		obsolete
-			"Use feature `child_move' instead"
+			"Use feature `child_move' instead. [2017-05-31]"
 		do
 			child_move (i)
 		end
@@ -720,7 +720,7 @@ feature {NONE} -- private access arrayed_list
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

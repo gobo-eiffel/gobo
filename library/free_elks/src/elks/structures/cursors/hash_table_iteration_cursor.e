@@ -1,12 +1,10 @@
 ﻿note
-	description: "Concrete of an external iteration cursor for {HASH_TABLE}."
+	description: "An external iteration cursor for {HASH_TABLE}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	HASH_TABLE_ITERATION_CURSOR [G, K -> detachable HASHABLE]
@@ -17,6 +15,7 @@ inherit
 			target_index as iteration_position
 		redefine
 			after,
+			cursor_index,
 			forth,
 			item,
 			target
@@ -39,6 +38,48 @@ feature -- Access
 			-- Key at current cursor position
 		do
 			Result := target.keys [iteration_position]
+		end
+
+	cursor_index: INTEGER
+			-- <Precursor>
+		local
+			p: like iteration_position
+			n: like step
+			i: like iteration_position
+		do
+			i := iteration_position
+			n := 1
+			if is_reversed then
+				from
+					p := target.keys.count
+				until
+					p <= i
+				loop
+					p := target.previous_iteration_position (p)
+					n := n - 1
+					if n = 0 then
+						Result := Result + 1
+						n := step
+					end
+				end
+			else
+				from
+					p := -1
+				until
+					p >= i
+				loop
+					p := target.next_iteration_position (p)
+					n := n - 1
+					if n = 0 then
+						Result := Result + 1
+						n := step
+					end
+				end
+			end
+			if 0 < n and then n < step then
+					-- `iteration_position` is `before` or `after`, so the cursor index has to be increased.
+				Result := Result + 1
+			end
 		end
 
 feature -- Status report
@@ -90,7 +131,7 @@ feature {ITERABLE, ITERATION_CURSOR} -- Access
 			-- <Precursor>
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -102,14 +102,9 @@ feature -- Access
 			-- Go before if unsuccessful.
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
-		local
-			str_mirrored: like Current
-			s_mirrored: STRING
 		do
 			if not off then
-				str_mirrored := mirrored
-				s_mirrored := s.mirrored
-				index := count - str_mirrored.fuzzy_index (s_mirrored, count - index, fuzzy) + 1
+				index := count - mirrored.fuzzy_index (s.mirrored, count - index, fuzzy) + 1
 				if index = count + 1 then
 					index := 0
 				else
@@ -141,15 +136,15 @@ feature -- Access
 						occur := 1
 					end
 				until
-					(Result = 0) or else (occur = i)
+					Result = 0 or else occur = i
 				loop
-					if Result /= count then
+					if Result = count then
+						Result := 0
+					else
 						Result := index_of (c, Result + 1)
 						if Result /= 0 then
 							occur := occur + 1
 						end
-					else
-						Result := 0
 					end
 				end
 			end
@@ -163,7 +158,7 @@ feature -- Access
 			-- Does string include `c'?
 		do
 			if not is_empty then
-				Result := (index_of (c, 1) /= 0)
+				Result := index_of (c, 1) /= 0
 			end
 		end
 
@@ -352,7 +347,7 @@ feature {NONE} -- Inapplicable
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

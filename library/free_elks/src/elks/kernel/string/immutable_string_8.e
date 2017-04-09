@@ -43,6 +43,7 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c,
+	make_from_c_substring,
 	make_from_cil,
 	make_from_separate
 
@@ -272,7 +273,7 @@ feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 			-- Index where current string starts in `area'
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

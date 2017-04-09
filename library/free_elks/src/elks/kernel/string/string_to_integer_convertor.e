@@ -42,12 +42,12 @@ feature	-- State machine setting
 			conversion_type := type
 			internal_overflowed := False
 		ensure then
-			internal_overflowed_set: internal_overflowed = False
+			internal_overflowed_set: not internal_overflowed
 			part1_set: part1 = 0
 			part2_set: part2 = 0
 		end
 
-feature -- Status reporting
+feature -- Status report
 
 	separators_valid (separators: STRING): BOOLEAN
 			-- Are separators contained in `separators' valid?
@@ -76,13 +76,13 @@ feature -- Status reporting
 	overflowed: BOOLEAN
 			-- Is integer parsed so far overflowed?
 		do
-			Result := (internal_overflowed and then sign = 0)
+			Result := internal_overflowed and then sign = 0
 		end
 
 	underflowed: BOOLEAN
 			-- Is integer parsed so fa underflowed?
 		do
-			Result := (internal_overflowed and then sign = 1)
+			Result := internal_overflowed and then sign = 1
 		end
 
 	parse_successful: BOOLEAN
@@ -90,9 +90,29 @@ feature -- Status reporting
 			-- it doesn't mean that we have got an valid integer.
 			-- You need to check `is_integral_integer' or `is_part_of_integer'.
 		do
-			Result := (last_state /=4) and (last_state /=5)
+			Result := last_state /= 4 and last_state /= 5
 		end
 
+	conversion_type_valid (type: INTEGER): BOOLEAN
+			-- If conversion `type' valid?
+		do
+			Result := integer_natural_type_valid (type)
+		end
+
+	is_part_of_integer: BOOLEAN
+			-- Is character sequence that has been parsed so far a valid start part of an integer?
+		do
+			Result := ((last_state = 0) or (last_state = 1) or
+					  (last_state = 2) or (last_state = 3)) and
+					  (not internal_overflowed)
+		end
+
+	is_integral_integer: BOOLEAN
+			-- Is character sequence that has been parsed so far a valid integral integer?
+		do
+			Result := ((last_state = 2) or (last_state = 3)) and
+					  (not internal_overflowed)
+		end
 
 feature -- String parsing
 
@@ -198,13 +218,14 @@ feature -- String parsing
 						part1 := 0
 						part2 := (c.code - 48).to_natural_64
 						l_state := 2
-						if conversion_type /= type_no_limitation then
-							if overflow_checker.will_overflow (part1, part2, conversion_type, sign) then
-								internal_overflowed := True
-								part1 := temp_p1
-								part2 := temp_p2
-								l_state := 5
-							end
+						if
+							conversion_type /= type_no_limitation and then
+							overflow_checker.will_overflow (part1, part2, conversion_type, sign)
+						then
+							internal_overflowed := True
+							part1 := temp_p1
+							part2 := temp_p2
+							l_state := 5
 						end
 					else
 						l_state := 4
@@ -232,6 +253,7 @@ feature -- String parsing
 				when 3 then
 						-- Consume remaining separators.
 					if trailing_separators_acceptable and then trailing_separators.has (c) then
+							-- Keep the same state.
 					else
 						l_state := 4
 					end
@@ -240,28 +262,7 @@ feature -- String parsing
 			last_state := l_state
 		end
 
-feature -- Status reporting
-
-	conversion_type_valid (type: INTEGER): BOOLEAN
-			-- If conversion `type' valid?
-		do
-			Result := integer_natural_type_valid (type)
-		end
-
-	is_part_of_integer: BOOLEAN
-			-- Is character sequence that has been parsed so far a valid start part of an integer?
-		do
-			Result := ((last_state = 0) or (last_state = 1) or
-					  (last_state = 2) or (last_state = 3)) and
-					  (not internal_overflowed)
-		end
-
-	is_integral_integer: BOOLEAN
-			-- Is character sequence that has been parsed so far a valid integral integer?
-		do
-			Result := ((last_state = 2) or (last_state = 3)) and
-					  (not internal_overflowed)
-		end
+feature -- Access
 
 	parsed_integer_8: INTEGER_8
 			-- INTEGER_8 representation of parsed string
@@ -344,7 +345,7 @@ feature{NONE} -- Implementation
 			-- Internal overflow flag
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

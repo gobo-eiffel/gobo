@@ -235,7 +235,6 @@ feature -- Element change
 			l_count := count
 			if l_count >= l_capacity then
 				grow (l_capacity + additional_space)
-				l_capacity := capacity
 			end
 			area.force (v, in_index - lower)
 			count := l_count + 1
@@ -451,7 +450,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

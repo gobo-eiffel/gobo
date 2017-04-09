@@ -305,34 +305,20 @@ feature -- Status report
 				i > nb
 			loop
 				inspect item_code (i)
-				when boolean_code then
-					l_hash := boolean_item (i).hash_code
-				when character_8_code then
-					l_hash := character_8_item (i).hash_code
-				when character_32_code then
-					l_hash := character_32_item (i).hash_code
-				when real_64_code then
-					l_hash := real_64_item (i).hash_code
-				when real_32_code then
-					l_hash := real_32_item (i).hash_code
-				when pointer_code then
-					l_hash := pointer_item (i).hash_code
-				when natural_8_code then
-					l_hash := natural_8_item (i).hash_code
-				when natural_16_code then
-					l_hash := natural_16_item (i).hash_code
-				when natural_32_code then
-					l_hash := natural_32_item (i).hash_code
-				when natural_64_code then
-					l_hash := natural_64_item (i).hash_code
-				when integer_8_code then
-					l_hash := integer_8_item (i).hash_code
-				when integer_16_code then
-					l_hash := integer_16_item (i).hash_code
-				when integer_32_code then
-					l_hash := integer_32_item (i).hash_code
-				when integer_64_code then
-					l_hash := integer_64_item (i).hash_code
+				when boolean_code then l_hash := boolean_item (i).hash_code
+				when character_8_code then l_hash := character_8_item (i).hash_code
+				when character_32_code then l_hash := character_32_item (i).hash_code
+				when real_64_code then l_hash := real_64_item (i).hash_code
+				when real_32_code then l_hash := real_32_item (i).hash_code
+				when pointer_code then l_hash := pointer_item (i).hash_code
+				when natural_8_code then l_hash := natural_8_item (i).hash_code
+				when natural_16_code then l_hash := natural_16_item (i).hash_code
+				when natural_32_code then l_hash := natural_32_item (i).hash_code
+				when natural_64_code then l_hash := natural_64_item (i).hash_code
+				when integer_8_code then l_hash := integer_8_item (i).hash_code
+				when integer_16_code then l_hash := integer_16_item (i).hash_code
+				when integer_32_code then l_hash := integer_32_item (i).hash_code
+				when integer_64_code then l_hash := integer_64_item (i).hash_code
 				when reference_code then
 					if attached {HASHABLE} reference_item (i) as l_key then
 						l_hash := l_key.hash_code
@@ -369,34 +355,20 @@ feature -- Status report
 				end
 			else
 				inspect item_code (index)
-				when boolean_code then
-					Result := attached {BOOLEAN_REF} v
-				when character_8_code then
-					Result := attached {CHARACTER_8_REF} v
-				when character_32_code then
-					Result := attached {CHARACTER_32_REF} v
-				when real_64_code then
-					Result := attached {REAL_64_REF} v
-				when real_32_code then
-					Result := attached {REAL_32_REF} v
-				when pointer_code then
-					Result := attached {POINTER_REF} v
-				when natural_8_code then
-					Result := attached {NATURAL_8_REF} v
-				when natural_16_code then
-					Result := attached {NATURAL_16_REF} v
-				when natural_32_code then
-					Result := attached {NATURAL_32_REF} v
-				when natural_64_code then
-					Result := attached {NATURAL_64_REF} v
-				when integer_8_code then
-					Result := attached {INTEGER_8_REF} v
-				when integer_16_code then
-					Result := attached {INTEGER_16_REF} v
-				when integer_32_code then
-					Result := attached {INTEGER_32_REF} v
-				when integer_64_code then
-					Result := attached {INTEGER_64_REF} v
+				when boolean_code then Result := attached {BOOLEAN_REF} v
+				when character_8_code then Result := attached {CHARACTER_8_REF} v
+				when character_32_code then Result := attached {CHARACTER_32_REF} v
+				when real_64_code then Result := attached {REAL_64_REF} v
+				when real_32_code then Result := attached {REAL_32_REF} v
+				when pointer_code then Result := attached {POINTER_REF} v
+				when natural_8_code then Result := attached {NATURAL_8_REF} v
+				when natural_16_code then Result := attached {NATURAL_16_REF} v
+				when natural_32_code then Result := attached {NATURAL_32_REF} v
+				when natural_64_code then Result := attached {NATURAL_64_REF} v
+				when integer_8_code then Result := attached {INTEGER_8_REF} v
+				when integer_16_code then Result := attached {INTEGER_16_REF} v
+				when integer_32_code then Result := attached {INTEGER_32_REF} v
+				when integer_64_code then Result := attached {INTEGER_64_REF} v
 				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
@@ -445,59 +417,59 @@ feature -- Element change
 		do
 			inspect item_code (index)
 			when boolean_code then
-				check valid_type_for_index: attached {BOOLEAN_REF} v as l_b then
+				if attached {BOOLEAN_REF} v as l_b then
 					put_boolean (l_b.item, index)
 				end
 			when character_8_code then
-				check valid_type_for_index: attached {CHARACTER_8_REF} v as l_c then
+				if attached {CHARACTER_8_REF} v as l_c then
 					put_character_8 (l_c.item, index)
 				end
 			when character_32_code then
-				check valid_type_for_index: attached {CHARACTER_32_REF} v as l_wc then
+				if attached {CHARACTER_32_REF} v as l_wc then
 					put_character_32 (l_wc.item, index)
 				end
 			when real_64_code then
-				check valid_type_for_index: attached {REAL_64_REF} v as l_d then
+				if attached {REAL_64_REF} v as l_d then
 					put_real_64 (l_d.item, index)
 				end
 			when real_32_code then
-				check valid_type_for_index: attached {REAL_32_REF} v as l_r then
+				if attached {REAL_32_REF} v as l_r then
 					put_real_32 (l_r.item, index)
 				end
 			when pointer_code then
-				check valid_type_for_index: attached {POINTER_REF} v as l_p then
+				if attached {POINTER_REF} v as l_p then
 					put_pointer (l_p.item, index)
 				end
 			when natural_8_code then
-				check valid_type_for_index: attached {NATURAL_8_REF} v as l_ui8 then
+				if attached {NATURAL_8_REF} v as l_ui8 then
 					put_natural_8 (l_ui8.item, index)
 				end
 			when natural_16_code then
-				check valid_type_for_index: attached {NATURAL_16_REF} v as l_ui16 then
+				if attached {NATURAL_16_REF} v as l_ui16 then
 					put_natural_16 (l_ui16.item, index)
 				end
 			when natural_32_code then
-				check valid_type_for_index: attached {NATURAL_32_REF} v as l_ui32 then
+				if attached {NATURAL_32_REF} v as l_ui32 then
 					put_natural_32 (l_ui32.item, index)
 				end
 			when natural_64_code then
-				check valid_type_for_index: attached {NATURAL_64_REF} v as l_ui64 then
+				if attached {NATURAL_64_REF} v as l_ui64 then
 					put_natural_64 (l_ui64.item, index)
 				end
 			when integer_8_code then
-				check valid_type_for_index: attached {INTEGER_8_REF} v as l_i8 then
+				if attached {INTEGER_8_REF} v as l_i8 then
 					put_integer_8 (l_i8.item, index)
 				end
 			when integer_16_code then
-				check valid_type_for_index: attached {INTEGER_16_REF} v as l_i16 then
+				if attached {INTEGER_16_REF} v as l_i16 then
 					put_integer_16 (l_i16.item, index)
 				end
 			when integer_32_code then
-				check valid_type_for_index: attached {INTEGER_32_REF} v as l_i32 then
+				if attached {INTEGER_32_REF} v as l_i32 then
 					put_integer_32 (l_i32.item, index)
 				end
 			when integer_64_code then
-				check valid_type_for_index: attached {INTEGER_64_REF} v as l_i64 then
+				if attached {INTEGER_64_REF} v as l_i64 then
 					put_integer_64 (l_i64.item, index)
 				end
 			when reference_code then
@@ -693,7 +665,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = boolean_code)
+			Result := item_code (index) = boolean_code
 		end
 
 	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN
@@ -701,7 +673,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = character_8_code)
+			Result := item_code (index) = character_8_code
 		end
 
 	is_character_32_item, is_wide_character_item (index: INTEGER): BOOLEAN
@@ -709,7 +681,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = character_32_code)
+			Result := item_code (index) = character_32_code
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN
@@ -717,7 +689,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = real_64_code)
+			Result := item_code (index) = real_64_code
 		end
 
 	is_natural_8_item (index: INTEGER): BOOLEAN
@@ -725,7 +697,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = natural_8_code)
+			Result := item_code (index) = natural_8_code
 		end
 
 	is_natural_16_item (index: INTEGER): BOOLEAN
@@ -733,7 +705,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = natural_16_code)
+			Result := item_code (index) = natural_16_code
 		end
 
 	is_natural_32_item (index: INTEGER): BOOLEAN
@@ -741,7 +713,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = natural_32_code)
+			Result := item_code (index) = natural_32_code
 		end
 
 	is_natural_64_item (index: INTEGER): BOOLEAN
@@ -749,7 +721,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = natural_64_code)
+			Result := item_code (index) = natural_64_code
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN
@@ -757,7 +729,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = integer_8_code)
+			Result := item_code (index) = integer_8_code
 		end
 
 	is_integer_16_item (index: INTEGER): BOOLEAN
@@ -765,7 +737,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = integer_16_code)
+			Result := item_code (index) = integer_16_code
 		end
 
 	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN
@@ -773,7 +745,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = integer_32_code)
+			Result := item_code (index) = integer_32_code
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN
@@ -781,7 +753,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = integer_64_code)
+			Result := item_code (index) = integer_64_code
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN
@@ -789,7 +761,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = pointer_code)
+			Result := item_code (index) = pointer_code
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN
@@ -797,7 +769,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = real_32_code)
+			Result := item_code (index) = real_32_code
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN
@@ -805,13 +777,13 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (item_code (index) = reference_code)
+			Result := item_code (index) = reference_code
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN
 			-- Is item at `index' a number?
 		obsolete
-			"Use the precise type query instead."
+			"Use the precise type query instead. [2017-05-31]"
 		require
 			valid_index: valid_index (index)
 		local
@@ -957,10 +929,10 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-feature -- Access
+feature -- Concatenation
 
 	plus alias "+" (a_other: TUPLE): detachable like Current
-			-- Concatenation of `Current' with `a_other'
+			-- Concatenation of `Current' with `a_other'.
 			--| note: it may be Void if the result exceeds the allowed capacity for a tuple.
 			--| warning: this function has poor performance, use it with parsimony.
 		local
@@ -1042,7 +1014,7 @@ feature -- Type conversion queries
 	convertible_to_double: BOOLEAN
 			-- Is current convertible to an array of doubles?
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 			tcode: like item_code
@@ -1073,7 +1045,7 @@ feature -- Type conversion queries
 	convertible_to_real: BOOLEAN
 			-- Is current convertible to an array of reals?
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 			tcode: like item_code
@@ -1106,7 +1078,7 @@ feature -- Conversion
 	arrayed: ARRAY [detachable separate ANY]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 		do
@@ -1129,7 +1101,7 @@ feature -- Conversion
 	boolean_arrayed: ARRAY [BOOLEAN]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_boolean: is_uniform_boolean
 		local
@@ -1154,7 +1126,7 @@ feature -- Conversion
 	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_character: is_uniform_character
 		local
@@ -1179,7 +1151,7 @@ feature -- Conversion
 	double_arrayed: ARRAY [REAL_64]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			convertible: convertible_to_double
 		local
@@ -1204,7 +1176,7 @@ feature -- Conversion
 	integer_arrayed: ARRAY [INTEGER]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_integer: is_uniform_integer
 		local
@@ -1229,7 +1201,7 @@ feature -- Conversion
 	pointer_arrayed: ARRAY [POINTER]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			is_uniform_pointer: is_uniform_pointer
 		local
@@ -1254,7 +1226,7 @@ feature -- Conversion
 	real_arrayed: ARRAY [REAL_32]
 			-- Items of Current as array
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		require
 			convertible: convertible_to_real
 		local
@@ -1281,7 +1253,7 @@ feature -- Conversion
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
 		obsolete
-			"Will be removed in future releases"
+			"Will be removed in future releases. [2017-05-31]"
 		local
 			i, cnt: INTEGER
 		do
@@ -1334,7 +1306,7 @@ feature -- Retrieval
 			end
 		end
 
-feature -- Access
+feature -- Access: lower level
 
 	item_code (index: INTEGER): NATURAL_8
 			-- Type code of item at `index'. Used for
@@ -1411,7 +1383,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

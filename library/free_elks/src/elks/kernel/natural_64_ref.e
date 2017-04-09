@@ -71,7 +71,7 @@ feature -- Access
 	ascii_char: CHARACTER_8
 			-- ASCII character corresponding to `item' value.
 		obsolete
-			"Use `to_character_8' instead."
+			"Use `to_character_8' instead. [2017-05-31]"
 		require
 			valid_character_code: is_valid_character_8_code
 		do
@@ -142,7 +142,7 @@ feature -- Status report
 	is_valid_character_code: BOOLEAN
 			-- Does current object represent a {CHARACTER_8}?
 		obsolete
-			"Use `is_valid_character_8_code' instead."
+			"Use `is_valid_character_8_code' instead. [2017-05-31]"
 		do
 			Result := is_valid_character_8_code
 		end
@@ -393,24 +393,22 @@ feature -- Conversion
 		local
 			i: INTEGER
 			val: NATURAL_64
-			a_digit: INTEGER
 		do
 			from
-				i := (create {PLATFORM}).Integer_64_bits // 4
+				i := {PLATFORM}.Integer_64_bits // 4
 				create Result.make (i)
 				Result.fill_blank
 				val := item
 			until
 				i = 0
 			loop
-				a_digit := (val & 0x0F).to_integer_32
-				Result.put (a_digit.to_hex_character, i)
+				Result.put ((val & 0x0F).to_integer_32.to_hex_character, i)
 				val := val |>> 4
 				i := i - 1
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_valid_count: Result.count = (create {PLATFORM}).Integer_64_bits // 4
+			Result_valid_count: Result.count = {PLATFORM}.Integer_64_bits // 4
 		end
 
 	to_hex_character: CHARACTER
@@ -433,7 +431,7 @@ feature -- Conversion
 	to_character: CHARACTER
 			-- ASCII character corresponding to `item' value.
 		obsolete
-			"Use `to_character_8' instead."
+			"Use `to_character_8' instead. [2017-05-31]"
 		require
 			valid_character: is_valid_character_8_code
 		do
@@ -582,7 +580,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

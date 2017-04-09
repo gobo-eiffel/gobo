@@ -19,21 +19,6 @@ convert
 	as_string_32: {READABLE_STRING_32, STRING_32},
 	to_cil: {SYSTEM_STRING}
 
-feature -- Settings
-
-	put_code (v: like code; i: INTEGER)
-			-- Put code `v' at position `i'.
-		require
-			valid_code: valid_code (v)
-			valid_index: valid_index (i)
-		deferred
-		ensure
-			inserted: code (i) = v
-			stable_count: count = old count
-			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
-			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i + 1, count))
-		end
-
 feature {STRING_HANDLER} -- Settings
 
 	set_count (number: INTEGER)
@@ -48,7 +33,7 @@ feature {STRING_HANDLER} -- Settings
 	set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
 		obsolete
-			"Use `reset_hash_codes` instead."
+			"Use `reset_hash_codes` instead. [2017-05-31]"
 		require
 			v_nonnegative: v >= 0
 		do
@@ -65,6 +50,19 @@ feature {STRING_HANDLER} -- Settings
 		end
 
 feature -- Element change
+
+	put_code (v: like code; i: INTEGER)
+			-- Put code `v' at position `i'.
+		require
+			valid_code: valid_code (v)
+			valid_index: valid_index (i)
+		deferred
+		ensure
+			inserted: code (i) = v
+			stable_count: count = old count
+			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i + 1, count))
+		end
 
 	append_code (c: like code)
 			-- Append `c' at end.
@@ -85,19 +83,68 @@ feature -- Element change
 			stable_before: elks_checking implies substring (1, count - 1) ~ (old twin)
 		end
 
+	append_integer_8 (i: INTEGER_8)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_integer_16 (i: INTEGER_16)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_integer (i: INTEGER)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_integer_64 (i: INTEGER_64)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_natural_8 (i: NATURAL_8)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_natural_16 (i: NATURAL_16)
+			-- Append the string representation of `i' at end.
+		deferred
+		end
+
+	append_natural_32 (i: NATURAL_32)
+			-- Append the string representation of `i' at end.	
+		deferred
+		end
+
+	append_real (r: REAL_32)
+			-- Append the string representation of `r' at end.
+		deferred
+		end
+
+	append_double (d: REAL_64)
+			-- Append the string representation of `d' at end.
+		deferred
+		end
+
+	append_boolean (b: BOOLEAN)
+			-- Append the string representation of `b' at end.
+		deferred
+		end
+
 	append (s: READABLE_STRING_GENERAL)
 			-- Append characters of `s' at end.
 		require
 			argument_not_void: s /= Void
 			compatible_strings: is_string_8 implies s.is_valid_as_string_8
 		local
-			l_count, l_s_count, l_new_size: INTEGER
+			l_s_count, l_new_size: INTEGER
 			i: INTEGER
 		do
 			l_s_count := s.count
 			if l_s_count > 0 then
-				l_count := count
-				l_new_size := l_s_count + l_count
+				l_new_size := l_s_count + count
 				if l_new_size > capacity then
 					resize (l_new_size)
 				end
@@ -126,13 +173,12 @@ feature -- Element change
 			end_index_valid: end_index <= s.count
 			valid_bounds: start_index <= end_index + 1
 		local
-			l_count, l_s_count, l_new_size: INTEGER
+			l_s_count, l_new_size: INTEGER
 			i: INTEGER
 		do
 			l_s_count := end_index - start_index + 1
 			if l_s_count > 0 then
-				l_count := count
-				l_new_size := l_s_count + l_count
+				l_new_size := l_s_count + count
 				if l_new_size > capacity then
 					resize (l_new_size)
 				end
@@ -241,6 +287,26 @@ feature -- Element change
 			inserted: elks_checking implies same_string (old (s.substring (start_index, end_index).to_string_32 + Current))
 		end
 
+	prepend_integer (i: INTEGER)
+			-- Prepend the string representation of `i' at front.
+		deferred
+		end
+
+	prepend_double (d: REAL_64)
+			-- Prepend the string representation of `d' at front.
+		deferred
+		end
+
+	prepend_real (r: REAL_32)
+			-- Prepend the string representation of `r' at front.
+		deferred
+		end
+
+	prepend_boolean (b: BOOLEAN)
+			-- Prepend the string representation of `b' at front.
+		deferred
+		end
+
 	keep_head (n: INTEGER)
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
@@ -269,7 +335,7 @@ feature -- Element change
 		ensure
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (1).is_space
-			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
+			kept: elks_checking implies Current ~ (old twin).substring (old count - count + 1, old count)
 			only_spaces_removed_before: elks_checking implies (old twin).is_substring_whitespace (1, (old twin).substring_index (Current, 1) - 1)
 		end
 
@@ -279,7 +345,7 @@ feature -- Element change
 		ensure
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (count).is_space
-			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
+			kept: elks_checking implies Current ~ (old twin).substring (1, count)
 			only_spaces_removed_after: elks_checking implies (old twin).is_substring_whitespace ((old twin).substring_index (Current, 1) + count, old count)
 		end
 
@@ -310,6 +376,46 @@ feature -- Removal
 				to_string_32 ~ (old substring (1, i - 1).to_string_32 + old substring (i + 1, count).to_string_32)
 		end
 
+	remove_head (n: INTEGER)
+			-- Remove first `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		deferred
+		ensure
+			removed: elks_checking implies Current ~ (old substring (n.min (count) + 1, count))
+		end
+
+	remove_substring (start_index, end_index: INTEGER)
+			-- Remove all characters from `start_index'
+			-- to `end_index' inclusive.
+		require
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= count
+			meaningful_interval: start_index <= end_index + 1
+		deferred
+		ensure
+			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
+		end
+
+	remove_tail (n: INTEGER)
+			-- Remove last `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		deferred
+		ensure
+			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
+		end
+
+	wipe_out
+			-- Remove all characters.
+		deferred
+		ensure
+			is_empty: count = 0
+			same_capacity: capacity = old capacity
+		end
+
 feature -- Resizing
 
 	resize (newsize: INTEGER)
@@ -329,7 +435,7 @@ invariant
 	mutable: not is_immutable
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

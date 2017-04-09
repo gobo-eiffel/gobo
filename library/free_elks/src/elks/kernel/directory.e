@@ -104,13 +104,8 @@ feature -- Creation
 				end
 
 					-- Recursively create the directory.
-				l_directories_to_build.finish
 				from
-						-- Make sure we start from somewhere. If `l_path' is Void,
-						-- it means we were trying to create a path without a root such as "abc/def".
-					if l_path = Void then
-						create l_path.make_empty
-					end
+					l_directories_to_build.finish
 				until
 					l_directories_to_build.before
 				loop
@@ -148,13 +143,13 @@ feature -- Access
 			is_opened: not is_closed
 		do
 			last_entry_pointer := eif_dir_next (directory_pointer)
-			if last_entry_pointer /= default_pointer then
+			if last_entry_pointer = default_pointer then
+					-- We reached the end of our iteration.
+				lastentry := Void
+			else
 					-- For backward compatibility, we had to leave `lastentry' as an attribute
 					-- which is being updated at each `readentry' call.
 				lastentry := file_info.pointer_to_file_name_8 (last_entry_pointer)
-			else
-					-- We reached the end of our iteration.
-				lastentry := Void
 			end
 		end
 
@@ -162,7 +157,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `path' to ensure you can retrieve all kind of names."
+			"Use `path' to ensure you can retrieve all kind of names. [2017-05-31]"
 		do
 			Result := internal_name.as_string_8
 		ensure then
@@ -264,7 +259,6 @@ feature -- Measurement
 			directory_exists: exists
 		local
 			dir_temp: DIRECTORY
-			counter: INTEGER
 		do
 			create dir_temp.make_open_read (internal_name)
 			from
@@ -273,10 +267,9 @@ feature -- Measurement
 			until
 				dir_temp.last_entry_pointer = default_pointer
 			loop
-				counter := counter + 1
+				Result := Result + 1
 				dir_temp.readentry
 			end
-			Result := counter
 			dir_temp.close
 		end
 
@@ -346,7 +339,7 @@ feature -- Conversion
 			-- Use `entries' or `linear_representation_32' to get a readable version
 			-- of the Unicode entries.
 		obsolete
-			"Use `entries' instead if your application is using Unicode file names."
+			"Use `entries' instead if your application is using Unicode file names. [2017-05-31]"
 		local
 			dir_temp: DIRECTORY
 			e: like last_entry_pointer
@@ -422,7 +415,7 @@ feature -- Status report
 	lastentry: detachable STRING_8
 			-- Last entry read by `readentry'.
 		obsolete
-			"Use `last_entry_32' for Unicode file names, or `last_entry_8' otherwise."
+			"Use `last_entry_32' for Unicode file names, or `last_entry_8' otherwise. [2017-05-31]"
 		attribute
 		end
 
@@ -439,7 +432,7 @@ feature -- Status report
 		do
 				-- count = 2, since there are "." and ".." which
 				-- are symbolic representations but not effective directories.
-			Result := (count = 2)
+			Result := count = 2
 		end
 
 	exists: BOOLEAN
@@ -522,7 +515,7 @@ feature -- Removal
 			directory_exists: exists
 			valid_file_number: file_number >= 0
 		local
-			l_path, l_file_name: PATH
+			l_file_name: PATH
 			file: RAW_FILE
 			l_info: like file_info
 			dir: DIRECTORY
@@ -545,7 +538,6 @@ feature -- Removal
 				dir_temp.start
 				dir_temp.readentry
 				l_last_entry_pointer := dir_temp.last_entry_pointer
-				l_path := path
 			until
 				l_last_entry_pointer = default_pointer or requested_cancel
 			loop
@@ -785,7 +777,7 @@ invariant
 	name_attached: attached internal_name
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

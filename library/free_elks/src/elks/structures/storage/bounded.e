@@ -25,7 +25,7 @@ feature -- Status report
 	full: BOOLEAN
 			-- Is structure full?
 		do
-			Result := (count = capacity)
+			Result := count = capacity
 		end
 
 	resizable: BOOLEAN
@@ -39,7 +39,7 @@ invariant
 	full_definition: full = (count = capacity)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

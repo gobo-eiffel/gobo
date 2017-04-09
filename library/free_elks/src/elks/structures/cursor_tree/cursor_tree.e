@@ -179,7 +179,7 @@ feature -- Status report
 			-- Is cursor on a leaf?
 		do
 			if not off then
-				Result := (arity = 0)
+				Result := arity = 0
 			end
 		end
 
@@ -187,7 +187,7 @@ feature -- Status report
 			-- Is there no current item?
 			-- (True if `is_empty')
 		do
-			Result := (after or before or below or above)
+			Result := after or before or below or above
 		end
 
 	after: BOOLEAN
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation
 			loop
 				forth
 			end
-			if (l > 2) then
+			if l > 2 then
 				start_on_level_from_active (l - 1)
 			end
 		end
@@ -700,7 +700,7 @@ invariant
 	empty_below_constraint: (is_empty and (after or before)) implies below
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -168,12 +168,14 @@ feature {NONE} -- Accesss
 		require
 			a_code_non_negative: a_code >= 0
 		local
-			l_ptr, l_null: POINTER
+			l_ptr: POINTER
 			l_mptr: MANAGED_POINTER
 			i, n: INTEGER
 		do
 			l_ptr := cwin_error_text (a_code)
-			if l_ptr /= l_null then
+			if l_ptr = default_pointer then
+				Result := {STRING_32} ""
+			else
 				from
 					i := 0
 					n := c_strlen (l_ptr)
@@ -186,15 +188,13 @@ feature {NONE} -- Accesss
 					i := i + 1
 				end
 				cwin_local_free (l_ptr)
-			else
-				Result := {STRING_32} ""
 			end
 		ensure
 			error_message_not_void: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

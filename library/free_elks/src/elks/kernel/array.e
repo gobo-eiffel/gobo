@@ -2,7 +2,7 @@
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -85,7 +85,7 @@ feature -- Initialization
 			-- `min_index' .. `max_index'; set all values to default.
 			-- (Make array empty if `min_index' = `max_index' + 1).
 		obsolete
-			" `make' is not void-safe statically. Use `make_empty' or `make_filled' instead. [07-2010]"
+			" `make' is not void-safe statically. Use `make_empty' or `make_filled' instead. [2017-05-31]"
 		require
 			valid_bounds: min_index <= max_index + 1
 			has_default: min_index <= max_index implies ({G}).has_default
@@ -147,13 +147,13 @@ feature -- Initialization
 feature -- Access
 
 	item alias "[]", at alias "@" (i: INTEGER): G assign put
-			-- Entry at index `i', if in index interval
+			-- Entry at index `i', if in index interval.
 		do
 			Result := area.item (i - lower)
 		end
 
 	entry (i: INTEGER): G
-			-- Entry at index `i', if in index interval
+			-- Entry at index `i', if in index interval.
 		require
 			valid_key: valid_index (i)
 		do
@@ -198,13 +198,13 @@ feature -- Access
 feature -- Measurement
 
 	lower: INTEGER
-			-- Minimum index
+			-- Minimum index.
 
 	upper: INTEGER
-			-- Maximum index
+			-- Maximum index.
 
 	count, capacity: INTEGER
-			-- Number of available indices
+			-- Number of available indices.
 		do
 			Result := upper - lower + 1
 		ensure then
@@ -212,7 +212,7 @@ feature -- Measurement
 		end
 
 	occurrences (v: G): INTEGER
-			-- Number of times `v' appears in structure
+			-- Number of times `v' appears in structure.
 		local
 			i: INTEGER
 		do
@@ -295,7 +295,8 @@ feature -- Status report
 		end
 
 	full: BOOLEAN
-			-- Is structure filled to capacity? (Answer: yes)
+			-- Is structure filled to capacity?
+			-- (Answer: yes)
 		do
 			Result := True
 		end
@@ -329,7 +330,8 @@ feature -- Status report
 		end
 
 	prunable: BOOLEAN
-			-- May items be removed? (Answer: no.)
+			-- May items be removed?
+			-- (Answer: no.)
 		do
 			Result := False
 		end
@@ -377,13 +379,23 @@ feature -- Element change
 			new_size := new_upper - new_lower + 1
 			l_increased_by_one := (i = upper + 1) or (i = lower - 1)
 			if empty_area then
-					-- List is empty. First we create an empty SPECIAL of the right capacity.
+					-- The array is empty. First we create an empty SPECIAL of the right capacity.
 				make_empty_area (new_size.max (additional_space))
-				if not l_increased_by_one then
-						-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
-					area.fill_with (({G}).default, 0, new_size - 2)
+				if new_lower < lower then
+						-- The array is extended below lower.
+					area.extend (v)
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `1' to `new_size - 1' with the default value.
+						area.fill_with (({G}).default, 1, new_size - 1)
+					end
+				else
+						-- The array is extended above upper.
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
+						area.fill_with (({G}).default, 0, new_size - 2)
+					end
+					area.extend (v)
 				end
-				area.extend (v)
 			else
 				old_size := area.capacity
 				if new_size > old_size then
@@ -552,7 +564,7 @@ feature -- Removal
 	wipe_out
 			-- Make array empty.
 		obsolete
-			"Not applicable since not `prunable'. Use `discard_items' instead."
+			"Not applicable since not `prunable'. Use `discard_items' instead. [2017-05-31]"
 		do
 			discard_items
 		end
@@ -620,7 +632,7 @@ feature -- Removal
 			n_non_negative: n >= 0
 		do
 			if n > count then
-				upper := lower - 1
+				lower := upper + 1
 				area := area.aliased_resized_area (0)
 			else
 				keep_tail (count - n)
@@ -662,7 +674,7 @@ feature -- Resizing
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
 		obsolete
-			" `conservative_resize' is not void-safe statically. Use `conservative_resize_with_default' instead. [07-2010]"
+			" `conservative_resize' is not void-safe statically. Use `conservative_resize_with_default' instead. [2017-05-31]"
 		require
 			good_indices: min_index <= max_index
 			has_default: ({G}).has_default
@@ -713,7 +725,7 @@ feature -- Resizing
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
 		obsolete
-			"Use `conservative_resize_with_default' instead as future versions will implement `resize' as specified in ELKS."
+			"Use `conservative_resize_with_default' instead as future versions will implement `resize' as specified in ELKS. [2017-05-31]"
 		require
 			good_indices: min_index <= max_index
 			has_default: ({G}).has_default
@@ -782,7 +794,7 @@ feature -- Conversion
 		end
 
 	linear_representation: LINEAR [G]
-			-- Representation as a linear structure
+			-- Representation as a linear structure.
 		local
 			temp: ARRAYED_LIST [G]
 			i: INTEGER
@@ -869,7 +881,7 @@ invariant
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

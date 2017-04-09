@@ -486,7 +486,7 @@ feature -- Element change
 					i := source_index + n - 1
 					nb := source_index - 1
 					l_offset := destination_index - source_index
-					if (destination_index + n >= count) then
+					if destination_index + n >= count then
 							-- Initialize elements above `count' to a dummy item.
 						fill_with (item (source_index), count, destination_index + n - 1)
 					end
@@ -700,7 +700,7 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		obsolete
-			"Because of the new precondition, it is recommended to use `fill_with' instead."
+			"Because of the new precondition, it is recommended to use `fill_with' instead. [2017-05-31]"
 		require
 			has_default: ({T}).has_default
 		do
@@ -878,7 +878,7 @@ invariant
 	consistent_index_boundaries: lower <= upper + 1
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

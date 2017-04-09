@@ -105,11 +105,31 @@ feature {NONE} -- Initialization
 			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
 		end
 
+	make_from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
+			-- Initialize from substring of `c_string',
+			-- between `start_pos' and `end_pos',
+			-- `c_string' created by some C function.
+		require
+			c_string_exists: c_string /= default_pointer
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+		local
+			l_count: INTEGER
+		do
+			l_count := end_pos - start_pos + 1
+			c_string_provider.set_shared_from_pointer_and_count (c_string + (start_pos - 1), l_count)
+			create area.make_filled ('%/000/', l_count + 1)
+			count := l_count
+			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
+			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
+		end
+
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function
 		obsolete
-			"Use `make_from_c' instead."
+			"Use `make_from_c' instead. [2017-05-31]"
 		require
 			c_string_exists: c_string /= default_pointer
 		do
@@ -157,7 +177,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'.
 		obsolete
-			"For consistency with Unicode string handling, use `code (i)' instead."
+			"For consistency with Unicode string handling, use `code (i)' instead. [2017-05-31]"
 		require
 			index_small_enough: i <= count
 			index_large_enough: i > 0
@@ -521,7 +541,7 @@ feature -- Status report
 				loop
 					i := i + 1
 				end
-				Result := (i < nb)
+				Result := i < nb
 			end
 		ensure
 			false_if_empty: count = 0 implies not Result
@@ -853,7 +873,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

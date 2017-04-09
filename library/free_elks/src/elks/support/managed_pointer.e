@@ -291,9 +291,9 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Character_8_bytes)
 		end
 
-	read_real (pos: INTEGER): REAL
+	read_real (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
-		obsolete "Use read_real_32 instead."
+		obsolete "Use read_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -301,7 +301,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Real_32_bytes)
 		end
 
-	read_real_32 (pos: INTEGER): REAL
+	read_real_32 (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -310,9 +310,9 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Real_32_bytes)
 		end
 
-	read_double (pos: INTEGER): DOUBLE
+	read_double (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
-		obsolete "Use read_real_64 instead."
+		obsolete "Use read_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -320,7 +320,7 @@ feature -- Access: Platform specific
 			($Result).memory_copy (item + pos, Real_64_bytes)
 		end
 
-	read_real_64 (pos: INTEGER): DOUBLE
+	read_real_64 (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -519,9 +519,9 @@ feature -- Element change: Platform specific
 			inserted: c = read_character (pos)
 		end
 
-	put_real (r: REAL; pos: INTEGER)
+	put_real (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
-		obsolete "Use put_real_32 instead."
+		obsolete "Use put_real_32 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_32_bytes) <= count
@@ -531,7 +531,7 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_real_32 (r: REAL; pos: INTEGER)
+	put_real_32 (r: REAL_32; pos: INTEGER)
 			-- Insert `r' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -542,9 +542,9 @@ feature -- Element change: Platform specific
 			inserted: r = read_real_32 (pos)
 		end
 
-	put_double (d: DOUBLE; pos: INTEGER)
+	put_double (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
-		obsolete "Use put_real_64 instead."
+		obsolete "Use put_real_64 instead. [2017-05-31]"
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Real_64_bytes) <= count
@@ -554,7 +554,7 @@ feature -- Element change: Platform specific
 			inserted: d = read_real_64 (pos)
 		end
 
-	put_real_64 (d: DOUBLE; pos: INTEGER)
+	put_real_64 (d: REAL_64; pos: INTEGER)
 			-- Insert `d' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -629,14 +629,13 @@ feature -- Access: Little-endian format
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + natural_16_bytes) <= count
 		local
-			l_high, l_low: NATURAL_16
+			l_low: NATURAL_16
 		do
 			if is_little_endian then
 				Result := read_natural_16 (pos)
 			else
 				l_low := {NATURAL_16} 0x00FF & read_natural_8 (pos)
-				l_high := read_natural_8 (pos + natural_8_bytes)
-				Result := (l_high.to_natural_16 |<< 8) | l_low
+				Result := (read_natural_8 (pos + natural_8_bytes).to_natural_16 |<< 8) | l_low
 			end
 		end
 
@@ -710,7 +709,7 @@ feature -- Access: Little-endian format
 			Result := read_natural_64_le (pos).as_integer_64
 		end
 
-	read_real_32_le (pos: INTEGER): REAL
+	read_real_32_le (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -725,7 +724,7 @@ feature -- Access: Little-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_le (pos: INTEGER): DOUBLE
+	read_real_64_le (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -847,7 +846,7 @@ feature -- Element change: Little-endian format
 			inserted: i = read_integer_64_le (pos)
 		end
 
-	put_real_32_le (v: REAL; pos: INTEGER_32)
+	put_real_32_le (v: REAL_32; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -864,7 +863,7 @@ feature -- Element change: Little-endian format
 			inserted: v = read_real_32_le (pos)
 		end
 
-	put_real_64_le (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_le (v: REAL_64; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in little-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -979,7 +978,7 @@ feature -- Access: Big-endian format
 			Result := read_natural_64_be (pos).as_integer_64
 		end
 
-	read_real_32_be (pos: INTEGER): REAL
+	read_real_32_be (pos: INTEGER): REAL_32
 			-- Read REAL_32 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -994,7 +993,7 @@ feature -- Access: Big-endian format
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
-	read_real_64_be (pos: INTEGER): DOUBLE
+	read_real_64_be (pos: INTEGER): REAL_64
 			-- Read REAL_64 at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
@@ -1116,7 +1115,7 @@ feature -- Element change: Big-endian format
 			inserted: i = read_integer_64_be (pos)
 		end
 
-	put_real_32_be (v: REAL; pos: INTEGER_32)
+	put_real_32_be (v: REAL_32; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1133,7 +1132,7 @@ feature -- Element change: Big-endian format
 			inserted: v = read_real_32_be (pos)
 		end
 
-	put_real_64_be (v: DOUBLE; pos: INTEGER_32)
+	put_real_64_be (v: REAL_64; pos: INTEGER_32)
 			-- Insert `v' at position `pos' in big-endian format.
 		require
 			pos_nonnegative: pos >= 0
@@ -1234,7 +1233,7 @@ invariant
 	valid_count: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

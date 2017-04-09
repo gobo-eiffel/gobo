@@ -134,43 +134,43 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end
 
-	real_item: REAL
+	real_item: REAL_32
 			-- The current random number as a real between 0 and 1
 		local
-			r1, r2: REAL
+			r1, r2: REAL_32
 		do
 			r1 := item
 			r2 := modulus
 			Result := r1 / r2
 		end
 
-	double_item: DOUBLE
+	double_item: REAL_64
 			-- The current random number as a double between 0 and 1
 		local
-			d: DOUBLE
+			d: REAL_64
 		do
 			d := item
 			Result := d / dmod
 		end
 
-	real_i_th (i: INTEGER): REAL
+	real_i_th (i: INTEGER): REAL_32
 			-- The `i'-th random number as a real between 0 and 1
 		require
 			positive_argument: i > 0
 		local
-			r1, r2: REAL
+			r1, r2: REAL_32
 		do
 			r1 := i_th (i)
 			r2 := modulus
 			Result := r1 / r2
 		end
 
-	double_i_th (i: INTEGER): DOUBLE
+	double_i_th (i: INTEGER): REAL_64
 			-- The `i'-th random number as a double between 0 and 1
 		require
 			positive_argument: i > 0
 		local
-			d: DOUBLE
+			d: REAL_64
 		do
 			d := i_th (i)
 			Result := d / dmod
@@ -181,13 +181,13 @@ feature {NONE} -- Implementation
 	randomize (xn: INTEGER): INTEGER
 			-- Next item
 		local
-			x: DOUBLE
+			x: REAL_64
 		do
 			x := double_mod (dmul * xn + dinc, dmod)
 			Result := x.truncated_to_integer
 		end
 
-	double_mod (x, m: DOUBLE): DOUBLE
+	double_mod (x, m: REAL_64): REAL_64
 			-- `x' modulo `m'
 		do
 			Result := x - (floor (x / m) * m)
@@ -201,19 +201,19 @@ feature {NONE} -- Implementation
 	last_result: INTEGER
 			-- Value from last call to `item'
 
-	dmod: DOUBLE
+	dmod: REAL_64
 			-- Double value for modulus
 		once
 			Result := modulus
 		end
 
-	dmul: DOUBLE
+	dmul: REAL_64
 			-- Double value for multiplier
 		once
 			Result := multiplier
 		end
 
-	dinc: DOUBLE
+	dinc: REAL_64
 			-- Double value for increment
 		once
 			Result := increment

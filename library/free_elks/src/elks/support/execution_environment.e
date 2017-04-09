@@ -23,7 +23,7 @@ feature -- Access
 	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
 		obsolete
-			"Use `arguments' instead for handling Unicode command lines."
+			"Use `arguments' instead for handling Unicode command lines. [2017-05-31]"
 		once
 			create Result
 		end
@@ -65,7 +65,7 @@ feature -- Access
 			-- Execution of this query on concurrent threads will result in
 			-- an unspecified behavior.
 		obsolete
-			"Use `current_working_path' instead to support Unicode path."
+			"Use `current_working_path' instead to support Unicode path. [2017-05-31]"
 		local
 			l_count, l_nbytes: INTEGER
 			l_managed: MANAGED_POINTER
@@ -111,7 +111,7 @@ feature -- Access
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		obsolete
-			"Use `item' instead to retrieve Unicode environment variables."
+			"Use `item' instead to retrieve Unicode environment variables. [2017-05-31]"
 		require
 			s_exists: s /= Void
 			not_has_null_character: not s.has ('%U')
@@ -199,7 +199,7 @@ feature -- Access
 	home_directory_name: detachable STRING
 			-- Directory name corresponding to the home directory.
 		obsolete
-			"Use `home_directory_path' instead to support Unicode path."
+			"Use `home_directory_path' instead to support Unicode path. [2017-05-31]"
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		local
@@ -225,7 +225,7 @@ feature -- Access
 			-- On Unix & Mac: $HOME
 			-- Otherwise Void
 		obsolete
-			"Use `user_directory_path' instead to support Unicode paths."
+			"Use `user_directory_path' instead to support Unicode paths. [2017-05-31]"
 		local
 			l_count, l_nbytes: INTEGER
 			l_managed: MANAGED_POINTER
@@ -275,7 +275,7 @@ feature -- Access
 			-- Table of environment variables when current process starts,
 			-- indexed by variable name
 		obsolete
-			"Use starting_environment which support unicode. [dec/2012]"
+			"Use starting_environment which support unicode. [2017-05-31]"
 		local
 			l_ptr: POINTER
 			i: INTEGER
@@ -337,7 +337,7 @@ feature -- Status setting
 	change_working_directory (path: READABLE_STRING_GENERAL)
 			-- Set the current directory to `path'
 		obsolete
-			"Use `change_working_path' instead to support Unicode path."
+			"Use `change_working_path' instead to support Unicode path. [2017-05-31]"
 		local
 			l_ptr: MANAGED_POINTER
 		do
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 	file_info: FILE_INFO
 			-- Platform specific helper of filenames.
 		obsolete
-			"Remove when all obsolete routines using it will be removed."
+			"Remove when all obsolete routines using it will be removed.  [2017-05-31]"
 		once
 			create Result.make
 		end
@@ -580,7 +580,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

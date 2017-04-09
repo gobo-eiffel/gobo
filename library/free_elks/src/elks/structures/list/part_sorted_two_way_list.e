@@ -85,7 +85,7 @@ feature -- Status report
 				until
 					after or not Result
 				loop
-					Result := (prev <= item)
+					Result := prev <= item
 					prev := item
 					forth
 				end
@@ -154,7 +154,7 @@ feature {PART_SORTED_TWO_WAY_LIST} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

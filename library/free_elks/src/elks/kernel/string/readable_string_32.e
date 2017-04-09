@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function
 		obsolete
-			"Use `make_from_c'."
+			"Use `make_from_c'. [2017-05-31]"
 		require
 			c_string_exists: c_string /= default_pointer
 		do
@@ -159,7 +159,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'
 		obsolete
-			"Due to potential truncation it is recommended to use `code (i)' instead."
+			"Due to potential truncation it is recommended to use `code (i)' instead. [2017-05-31]"
 		require
 			index_small_enough: i <= count
 			index_large_enough: i > 0
@@ -522,11 +522,11 @@ feature -- Status report
 					l_area := area
 					nb := nb + i
 				until
-					i = nb or else (l_area.item (i) = c)
+					i = nb or else l_area.item (i) = c
 				loop
 					i := i + 1
 				end
-				Result := (i < nb)
+				Result := i < nb
 			end
 		end
 
@@ -709,8 +709,6 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-feature {NONE} -- Implementation
-
 	str_strict_cmp (this, other: like area; this_index, other_index, n: INTEGER): INTEGER
 			-- Compare `n' characters from `this' starting at `this_index' with
 			-- `n' characters from and `other' starting at `other_index'.
@@ -856,7 +854,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -2,7 +2,7 @@ note
 	description: "[
 		Objects to which numerical operations are applicable
 		Note: The model is that of a commutative ring.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -47,7 +47,7 @@ feature -- Status report
 	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		obsolete
-			"[2008_04_01] Will be removed since not used."
+			"Will be removed since not used. [2017-05-31]"
 		require
 			other_exists: other /= Void
 		deferred
@@ -115,7 +115,7 @@ invariant
 --	self_division: divisible (Current) implies equal (Current / Current, one)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

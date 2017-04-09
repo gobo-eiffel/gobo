@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			n_positive: n > 0
 		local
 			l_double_math: DOUBLE_MATH
-			ln_n, ln_ln_n: DOUBLE
+			ln_n, ln_ln_n: REAL_64
 		do
 			if n >= 13 then
 					-- Using math formula from J. Massias and G. Robin,

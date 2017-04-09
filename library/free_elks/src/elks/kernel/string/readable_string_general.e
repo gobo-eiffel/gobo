@@ -293,7 +293,7 @@ feature -- Status report
 				loop
 					i := i + 1
 				end
-				Result := (i <= nb)
+				Result := i <= nb
 			end
 		ensure then
 			false_if_empty: count = 0 implies not Result
@@ -316,7 +316,7 @@ feature -- Status report
 				loop
 					i := i + 1
 				end
-				Result := (i <= nb)
+				Result := i <= nb
 			end
 		ensure then
 			false_if_empty: count = 0 implies not Result
@@ -401,7 +401,7 @@ feature -- Status report
 				--
 				-- 2. The numerical value represented by 'Current'
 				--	is within the range that can be represented
-				--	by an instance of type REAL.
+				--	by an instance of type REAL_32.
 		end
 
 	is_double, is_real_64: BOOLEAN
@@ -433,7 +433,7 @@ feature -- Status report
 				--
 				-- 2. The numerical value represented by 'Current'
 				--	is within the range that can be represented
-				--	by an instance of type DOUBLE.
+				--	by an instance of type REAL_64.
 		end
 
 	is_boolean: BOOLEAN
@@ -812,7 +812,7 @@ feature -- Conversion
 			-- the time yet to address the target recipient of the string to be
 			-- a READABLE_STRING_32 or descendants.
 		obsolete
-			"Update recipient of call to use READABLE_STRING_32 and descendants instead."
+			"Update recipient of call to use READABLE_STRING_32 and descendants instead. [2017-05-31]"
 		do
 			Result := as_string_8
 		end
@@ -820,7 +820,7 @@ feature -- Conversion
 	as_readable_string_8: READABLE_STRING_8
 			--
 		obsolete
-			"Use explicit conversion `to_string_8' instead."
+			"Use explicit conversion `to_string_8' instead. [2017-05-31]"
 		do
 			Result := as_string_8
 		end
@@ -865,7 +865,7 @@ feature -- Conversion
 			-- the time yet to address the source of the string to be
 			-- a READABLE_STRING_32 or descendants.
 		obsolete
-			"Update target of call to use READABLE_STRING_32 and descendants instead."
+			"Update target of call to use READABLE_STRING_32 and descendants instead. [2017-05-31]"
 		do
 			Result := as_string_32
 		end
@@ -873,7 +873,7 @@ feature -- Conversion
 	as_readable_string_32: READABLE_STRING_32
 			--
 		obsolete
-			"Use explicit conversion `to_string_32' instead."
+			"Use explicit conversion `to_string_32' instead. [2017-05-31]"
 		do
 			Result := as_string_32
 		end
@@ -1019,7 +1019,7 @@ feature -- Conversion
 			Result := l_convertor.parsed_natural_64
 		end
 
-	to_real, to_real_32: REAL
+	to_real, to_real_32: REAL_32
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0
 		require
@@ -1028,7 +1028,7 @@ feature -- Conversion
 			Result := to_double.truncated_to_real
 		end
 
-	to_double, to_real_64: DOUBLE
+	to_double, to_real_64: REAL_64
 			-- "Double" value;
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require
@@ -1057,13 +1057,10 @@ feature -- Conversion
 				(not Result = as_lower.same_string (false_constant))
 		end
 
-feature -- Conversion
-
 	split (a_separator: CHARACTER_32): LIST [like Current]
 			-- Split on `a_separator'.
 		local
 			l_list: ARRAYED_LIST [like Current]
-			part: like Current
 			i, j, c: INTEGER
 		do
 			c := count
@@ -1082,8 +1079,7 @@ feature -- Conversion
 							-- Current in it.
 						j := c + 1
 					end
-					part := substring (i, j - 1)
-					l_list.extend (part)
+					l_list.extend (substring (i, j - 1))
 					i := j + 1
 				end
 				if j = c then
@@ -1144,7 +1140,7 @@ feature -- Duplication
 				Result := substring (1, n)
 			end
 		ensure
-			same_count: count = old (count)
+			same_count: count = old count
 			new_count: Result.count = n.min (count)
 		end
 
@@ -1159,7 +1155,7 @@ feature -- Duplication
 				Result := substring (count - n + 1, count)
 			end
 		ensure
-			same_count: count = old (count)
+			same_count: count = old count
 			new_count: Result.count = n.min (count)
 		end
 
@@ -1264,7 +1260,7 @@ feature -- Access: Cursor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

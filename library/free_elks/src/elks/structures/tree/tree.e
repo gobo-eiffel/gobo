@@ -555,6 +555,16 @@ feature {TREE} -- Implementation
 			new_parent: parent = n
 		end
 
+	clone_node (n: like Current): like Current
+			-- Clone node `n'.
+		require
+			not_void: n /= Void
+		deferred
+		ensure
+			result_is_root: Result.is_root
+			result_is_leaf: Result.is_leaf
+		end
+
 feature {NONE} -- Implementation
 
 	fill_subtree (s: TREE [G])
@@ -868,18 +878,6 @@ feature {NONE} -- Implementation
 			result_is_leaf: is_leaf
 		end
 
-feature {TREE} -- Implementation
-
-	clone_node (n: like Current): like Current
-			-- Clone node `n'.
-		require
-			not_void: n /= Void
-		deferred
-		ensure
-			result_is_root: Result.is_root
-			result_is_leaf: Result.is_leaf
-		end
-
 invariant
 
 	tree_consistency: child_readable implies (attached child as c and then c.parent = Current)
@@ -892,7 +890,7 @@ invariant
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

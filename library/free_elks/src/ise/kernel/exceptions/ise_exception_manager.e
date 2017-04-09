@@ -2,7 +2,7 @@ note
 	description: "[
 		Exception manager. 
 		The manager handles all common operations of exception mechanism and interaction with the ISE runtime.
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date: 2013-05-20 16:15:17 -0700 (Mon, 20 May 2013) $"
@@ -75,11 +75,8 @@ feature -- Status setting
 
 	catch (a_exception: TYPE [detachable EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
-		local
-			l_type: INTEGER
 		do
-			l_type := a_exception.type_id
-			ignored_exceptions.remove (l_type)
+			ignored_exceptions.remove (a_exception.type_id)
 		end
 
 	set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)
@@ -361,18 +358,6 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 		end
 
-feature {NONE} -- Implementation
-
-	is_code_ignored (a_code: INTEGER): BOOLEAN
-			-- Is exception of `a_code' ignored?
-		do
-			if attached {TYPE [detachable EXCEPTION]} type_of_code (a_code) as l_type then
-				Result := is_ignored (l_type)
-			else
-				Result := True
-			end
-		end
-
 feature {NONE} -- Cells
 
 	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
@@ -399,6 +384,16 @@ feature {NONE} -- Cells
 		end
 
 feature {NONE} -- Implementation
+
+	is_code_ignored (a_code: INTEGER): BOOLEAN
+			-- Is exception of `a_code' ignored?
+		do
+			if attached {TYPE [detachable EXCEPTION]} type_of_code (a_code) as l_type then
+				Result := is_ignored (l_type)
+			else
+				Result := True
+			end
+		end
 
 	exception_from_data: detachable EXCEPTION
 			-- Create an exception object `exception_data'
@@ -479,19 +474,14 @@ feature {NONE} -- Implementation
 			-- Call once routines to create objects beforehand,
 			-- in case it goes into critical session (Stack overflow, no memory etc.)
 			-- The creations doesn't fail.
-		local
-			arr: like ignored_exceptions
-			l_data: like exception_data_cell
-			l_ex: like last_exception_cell
-			l_nomem: like no_memory_exception_object_cell
 		do
-			arr := ignored_exceptions
-			arr := unignorable_exceptions
-			arr := unraisable_exceptions
-			l_data := exception_data_cell
-			l_ex := last_exception_cell
+			ignored_exceptions.do_nothing
+			unignorable_exceptions.do_nothing
+			unraisable_exceptions.do_nothing
+			exception_data_cell.do_nothing
+			last_exception_cell.do_nothing
 				-- Reserve memory for no more memory exception object.
-			l_nomem := no_memory_exception_object_cell
+			no_memory_exception_object_cell.do_nothing
 		end
 
 	frozen free_preallocated_trace
@@ -520,14 +510,14 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

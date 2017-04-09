@@ -204,7 +204,7 @@ feature -- Access
 			-- Class name associated with the `i'-th
 			-- expanded field of `object'
 		obsolete
-			"Use `class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))' instead."
+			"Use `class_name_of_type (field_static_type_of_type (i, dynamic_type (object)))' instead. [2017-05-31]"
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -348,7 +348,7 @@ feature -- Access
 			Result := reflected_object.integer_64_field (i)
 		end
 
-	real_32_field, real_field (i: INTEGER; object: ANY): REAL
+	real_32_field, real_field (i: INTEGER; object: ANY): REAL_32
 			-- Real value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
@@ -372,7 +372,7 @@ feature -- Access
 			Result := reflected_object.pointer_field (i)
 		end
 
-	real_64_field, double_field (i: INTEGER; object: ANY): DOUBLE
+	real_64_field, double_field (i: INTEGER; object: ANY): REAL_64
 			-- Double precision value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
@@ -400,7 +400,7 @@ feature -- Element change
 			reflected_object.set_reference_field (i, value)
 		end
 
-	set_real_64_field, set_double_field (i: INTEGER; object: ANY; value: DOUBLE)
+	set_real_64_field, set_double_field (i: INTEGER; object: ANY; value: REAL_64)
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -532,7 +532,7 @@ feature -- Element change
 			reflected_object.set_integer_64_field (i, value)
 		end
 
-	set_real_32_field, set_real_field (i: INTEGER; object: ANY; value: REAL)
+	set_real_32_field, set_real_field (i: INTEGER; object: ANY; value: REAL_32)
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

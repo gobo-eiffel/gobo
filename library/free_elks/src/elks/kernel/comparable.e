@@ -57,7 +57,7 @@ feature -- Comparison
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
-			Result := (not (Current < other) and not (other < Current))
+			Result := not (Current < other) and not (other < Current)
 		ensure then
 			trichotomy: Result = (not (Current < other) and not (other < Current))
 		end
@@ -114,7 +114,7 @@ invariant
 	irreflexive_comparison: not (Current < Current)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

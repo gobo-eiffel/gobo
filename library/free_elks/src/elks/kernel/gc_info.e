@@ -119,27 +119,27 @@ feature -- Access
 			Result := c_real_iavg (item)
 		end
 
-	cpu_total_time: DOUBLE
+	cpu_total_time: REAL_64
 			-- Amount of application CPU time, in seconds, for `type' before last call to `update'
 		do
 			Result := c_cpu_total_time (item)
 		end
 
-	cpu_time: DOUBLE
+	cpu_time: REAL_64
 			-- Amount of CPU time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
 		do
 			Result := c_cpu_time (item)
 		end
 
-	cpu_time_average: DOUBLE
+	cpu_time_average: REAL_64
 			-- Average amount of CPU time spent in cycle,
 			-- in seconds, for `type' before last call to `update'
 		do
 			Result := c_cpu_avg (item)
 		end
 
-	cpu_interval_time: DOUBLE
+	cpu_interval_time: REAL_64
 			-- Amount of CPU time elapsed since between last
 			-- and penultimate cycles for `type' before
 			-- last call to `update'
@@ -147,34 +147,34 @@ feature -- Access
 			Result := c_cpu_itime (item)
 		end
 
-	cpu_interval_time_average: DOUBLE
+	cpu_interval_time_average: REAL_64
 			-- Average amount of CPU time between two cycles,
 			-- for `type' before last call to `update'
 		do
 			Result := c_cpu_iavg (item)
 		end
 
-	sys_total_time: DOUBLE
+	sys_total_time: REAL_64
 			-- Amount of application kernel time, in seconds, for `type' before last call to `update'
 		do
 			Result := c_sys_total_time (item)
 		end
 
-	sys_time: DOUBLE
+	sys_time: REAL_64
 			-- Amount of kernel time, in seconds, spent in cycle,
 			-- for `type' before last call to `update'
 		do
 			Result := c_sys_time (item)
 		end
 
-	sys_time_average: DOUBLE
+	sys_time_average: REAL_64
 			-- Average amount of kernel time spent in cycle,
 			-- for `type' before last call to `update'
 		do
 			Result := c_sys_avg (item)
 		end
 
-	sys_interval_time: DOUBLE
+	sys_interval_time: REAL_64
 			-- Amount of kernel time elapsed since between
 			-- the last and the penultimate cycle,
 			-- for `type' before last call to `update'
@@ -182,7 +182,7 @@ feature -- Access
 			Result := c_sys_itime (item)
 		end
 
-	sys_interval_time_average: DOUBLE
+	sys_interval_time_average: REAL_64
 			-- Average amount of kernel time between two cycles,
 			-- for `type' before last call to `update'
 		do
@@ -280,7 +280,7 @@ feature {NONE} -- C externals
 			"return (EIF_INTEGER) ((struct gacstat *) $a_ptr)->real_iavg;"
 		end
 
-	c_cpu_total_time (a_ptr: POINTER): DOUBLE
+	c_cpu_total_time (a_ptr: POINTER): REAL_64
 			-- Access `cpu_total_time' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -288,7 +288,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->cpu_total_time;"
 		end
 
-	c_cpu_time (a_ptr: POINTER): DOUBLE
+	c_cpu_time (a_ptr: POINTER): REAL_64
 			-- Access `cpu_time' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -296,7 +296,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->cpu_time;"
 		end
 
-	c_cpu_avg (a_ptr: POINTER): DOUBLE
+	c_cpu_avg (a_ptr: POINTER): REAL_64
 			-- Access `cpu_avg' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -304,7 +304,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->cpu_avg;"
 		end
 
-	c_cpu_itime (a_ptr: POINTER): DOUBLE
+	c_cpu_itime (a_ptr: POINTER): REAL_64
 			-- Access `cpu_itime' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -312,7 +312,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->cpu_itime;"
 		end
 
-	c_cpu_iavg (a_ptr: POINTER): DOUBLE
+	c_cpu_iavg (a_ptr: POINTER): REAL_64
 			-- Access `cpu_iavg' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -320,7 +320,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->cpu_iavg;"
 		end
 
-	c_sys_total_time (a_ptr: POINTER): DOUBLE
+	c_sys_total_time (a_ptr: POINTER): REAL_64
 			-- Access `sys_total_time' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -328,7 +328,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->sys_total_time;"
 		end
 
-	c_sys_time (a_ptr: POINTER): DOUBLE
+	c_sys_time (a_ptr: POINTER): REAL_64
 			-- Access `sys_time' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -336,7 +336,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->sys_time;"
 		end
 
-	c_sys_avg (a_ptr: POINTER): DOUBLE
+	c_sys_avg (a_ptr: POINTER): REAL_64
 			-- Access `sys_avg' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -344,7 +344,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->sys_avg;"
 		end
 
-	c_sys_itime (a_ptr: POINTER): DOUBLE
+	c_sys_itime (a_ptr: POINTER): REAL_64
 			-- Access `sys_itime' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
@@ -352,7 +352,7 @@ feature {NONE} -- C externals
 			"return ((struct gacstat *) $a_ptr)->sys_itime;"
 		end
 
-	c_sys_iavg (a_ptr: POINTER): DOUBLE
+	c_sys_iavg (a_ptr: POINTER): REAL_64
 			-- Access `sys_iavg' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""

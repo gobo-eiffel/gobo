@@ -94,13 +94,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write binary value of `r' at current position.
 		do
 			file_prb (file_pointer, r)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write binary value `d' at current position.
 		do
 			file_pdb (file_pointer, d)
@@ -110,7 +110,7 @@ feature -- Output
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
 		obsolete
-			"Use `put_managed_pointer' instead."
+			"Use `put_managed_pointer' instead. [2017-05-31]"
 		require
 			p_not_null: p /= default_pointer
 			extendible: extendible
@@ -203,7 +203,7 @@ feature -- Input
 			-- or until end of file.
 			-- Make result available in `p'.
 		obsolete
-			"Use `read_to_managed_pointer' instead."
+			"Use `read_to_managed_pointer' instead. [2017-05-31]"
 		require
 			p_not_null: p /= default_pointer
 			is_readable: file_readable
@@ -232,15 +232,12 @@ feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
-		local
-			r: detachable MANAGED_POINTER
 		do
-			r := internal_integer_buffer
-			if r = Void then
-				create r.make (16)
-				internal_integer_buffer := r
+			Result := internal_integer_buffer
+			if Result = Void then
+				create Result.make (16)
+				internal_integer_buffer := Result
 			end
-			Result := r
 		end
 
 	internal_integer_buffer: detachable MANAGED_POINTER
@@ -254,7 +251,7 @@ feature {NONE} -- Implementation
 			"eif_file_gib"
 		end
 
-	file_grb (file: POINTER): REAL
+	file_grb (file: POINTER): REAL_32
 			-- Read a real from `file'
 		external
 			"C signature (FILE *): EIF_REAL_32 use %"eif_file.h%""
@@ -262,7 +259,7 @@ feature {NONE} -- Implementation
 			"eif_file_grb"
 		end
 
-	file_gdb (file: POINTER): DOUBLE
+	file_gdb (file: POINTER): REAL_64
 			-- Read a double from `file'
 		external
 			"C signature (FILE *): EIF_REAL_64 use %"eif_file.h%""
@@ -304,7 +301,7 @@ feature {NONE} -- Implementation
 			"eif_file_pib"
 		end
 
-	file_prb (file: POINTER; r: REAL)
+	file_prb (file: POINTER; r: REAL_32)
 			-- Put `r' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_32) use %"eif_file.h%""
@@ -312,7 +309,7 @@ feature {NONE} -- Implementation
 			"eif_file_prb"
 		end
 
-	file_pdb (file: POINTER; d: DOUBLE)
+	file_pdb (file: POINTER; d: REAL_64)
 			-- Put `d' to end of `file'.
 		external
 			"C signature (FILE *, EIF_REAL_64) use %"eif_file.h%""
@@ -334,7 +331,7 @@ invariant
 	not_plain_text: not is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

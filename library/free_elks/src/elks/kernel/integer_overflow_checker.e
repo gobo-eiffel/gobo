@@ -68,28 +68,24 @@ feature -- Overflow checking
 		local
 			l_index: INTEGER
 		do
-			Result := type /= type_no_limitation
-			if Result then
-				if (type = type_integer_8) or (type = type_integer_16) or
-				   (type = type_integer_32) or (type = type_integer_64)
+			if type /= type_no_limitation then
+				if type = type_integer_8 or type = type_integer_16 or
+				   type = type_integer_32 or type = type_integer_64
 				then
 					l_index := sign * 4 + type
-					Result := (part1 > integer_overflow_state1.item (l_index)) or
-							  ((part1 = integer_overflow_state1.item (l_index)) and
-	  				          (part2 > integer_overflow_state2.item (l_index)))
+					Result := part1 > integer_overflow_state1.item (l_index) or
+							  (part1 = integer_overflow_state1.item (l_index) and
+	  				          part2 > integer_overflow_state2.item (l_index))
+				elseif sign = 1 then
+					Result := part1 > 0 or part2 > 0
 				else
 					l_index := type - type_integer_natural_separator
-					if sign = 1 then
-						Result := (part1 > 0) or (part2 > 0)
-					else
-
-						Result := (part1 > natural_overflow_state1.item (l_index)) or
-								  ((part1 = natural_overflow_state1.item (l_index)) and
-								  (part2 > natural_overflow_state2.item (l_index)))
+					Result := part1 > natural_overflow_state1.item (l_index) or
+							  (part1 = natural_overflow_state1.item (l_index) and
+							  part2 > natural_overflow_state2.item (l_index))
 				end
 			end
 		end
-	end
 
 feature{NONE} -- Implementation
 
@@ -97,10 +93,10 @@ feature{NONE} -- Implementation
 	integer_overflow_state2: SPECIAL [like max_natural_type]
 	natural_overflow_state1: SPECIAL [like max_natural_type]
 	natural_overflow_state2: SPECIAL [like max_natural_type];
-			-- Arrays to check conversion overflow
+			-- Arrays to check conversion overflow.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

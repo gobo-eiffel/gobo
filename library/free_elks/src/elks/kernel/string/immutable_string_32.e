@@ -2,7 +2,7 @@ note
 	description: "[
 		Sequences of immutable 32-bit characters, accessible through integer indices
 		in a contiguous range.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -185,7 +185,7 @@ feature -- Access
 	item_code (i: INTEGER): INTEGER
 			-- Numeric code of character at position `i'
 		obsolete
-			"Due to potential truncation it is recommended to use `code (i)' instead."
+			"Due to potential truncation it is recommended to use `code (i)' instead. [2017-05-31]"
 		do
 			Result := area.item (i + area_lower - 1).natural_32_code.as_integer_32
 		end
@@ -342,7 +342,7 @@ feature -- Transformation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

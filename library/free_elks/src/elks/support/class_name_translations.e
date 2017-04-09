@@ -4,7 +4,7 @@ note
 		system. Values in this table are names of classes in the retrieving
 		system, indexed by names of generating classes in the storing
 		system (i.e. with no generic arguments). Values may have generic
-		arguments (e.g. "MY_CLASS [DOUBLE]"), thus allowing a very simple
+		arguments (e.g. "MY_CLASS [REAL_64]"), thus allowing a very simple
 		conversion of a non-generic class into a generic class. The
 		presence of entries in this table affects all retrieve operations
 		for objects stored using `independent_store'.

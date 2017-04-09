@@ -1009,7 +1009,7 @@ feature {PATH} -- Implementation
 						(is_character (l_storage, 1, unix_separator) and (is_character (l_storage, 3, unix_separator) or is_character (l_storage, 3, windows_separator))) or
 						(is_character (l_storage, 1, windows_separator) and (is_character (l_storage, 3, windows_separator) or is_character (l_storage, 3, unix_separator)))
 					then
-						if (not is_character (l_storage, 5, unix_separator) and not is_character (l_storage, 5, windows_separator)) then
+						if not is_character (l_storage, 5, unix_separator) and not is_character (l_storage, 5, windows_separator) then
 								-- Simply "\\a", so we keep the leading redundant directory separator.
 							i := 5
 							l_has_unc := True
@@ -1090,11 +1090,12 @@ feature {PATH} -- Implementation
 			end
 				-- Remove the trailing directory separators when the path is
 				-- not just made of the root.
-			if is_character (l_storage, l_storage.count - unit_size + 1, directory_separator) then
-				if root_end_position < l_storage.count then
-						-- We have a path of the form `root/X/' so we can safely remove the trailing directory separator
-					l_storage.remove_tail (unit_size)
-				end
+			if
+				is_character (l_storage, l_storage.count - unit_size + 1, directory_separator) and then
+				root_end_position < l_storage.count
+			then
+					-- We have a path of the form `root/X/' so we can safely remove the trailing directory separator
+				l_storage.remove_tail (unit_size)
 			end
 		ensure
 			is_normalized: is_normalized
@@ -1253,18 +1254,21 @@ feature {NONE} -- Implementation
 		do
 			if not other.is_empty then
 					-- Add a separator if needed.
-				if a_separator /= '%U' and not a_storage.is_empty then
+				if
+					a_separator /= '%U' and
+					not a_storage.is_empty and then
 						-- Only add a terminator if `a_storage' does not already have one at the end, or if `other' does not already
 						-- have one at the beginning.
-					if not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and other.item (1) /= unix_separator then
-						if {PLATFORM}.is_windows then
-							if other.item (1) /= windows_separator then
-								a_storage.append_character (a_separator)
-								a_storage.append_character ('%U')
-							end
-						else
+					not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and
+					other.item (1) /= unix_separator
+				then
+					if {PLATFORM}.is_windows then
+						if other.item (1) /= windows_separator then
 							a_storage.append_character (a_separator)
+							a_storage.append_character ('%U')
 						end
+					else
+						a_storage.append_character (a_separator)
 					end
 				end
 					-- Take `other' and add it to `a_storage'.
@@ -1283,17 +1287,17 @@ feature {NONE} -- Implementation
 			other_not_void: other /= Void
 			other_not_empty: not other.is_empty
 		do
-			if a_separator /= '%U' and not a_storage.is_empty then
+			if
+				a_separator /= '%U' and
+				not a_storage.is_empty and then
+				not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and
+				not is_character (other, 1, a_separator)
+			then
 					-- Only add a terminator if `a_storage' does not already have one at the end, or if `other' does not already
 					-- have one at the beginning.
-				if
-					not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and
-					not is_character (other, 1, a_separator)
-				then
-					a_storage.append_character (a_separator)
-					if {PLATFORM}.is_windows then
-						a_storage.append_character ('%U')
-					end
+				a_storage.append_character (a_separator)
+				if {PLATFORM}.is_windows then
+					a_storage.append_character ('%U')
 				end
 			end
 			a_storage.append (other)
@@ -1307,17 +1311,17 @@ feature {NONE} -- Implementation
 			other_not_empty: not other.is_empty
 			other_has_not_trailing_directory_separator: not is_character (other, other.count - unit_size + 1, directory_separator)
 		do
-			if a_separator /= '%U' and not a_storage.is_empty then
+			if
+				a_separator /= '%U' and
+				not a_storage.is_empty and then
+				not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and
+				not is_character (other, other_start_index, a_separator)
+			then
 					-- Only add a terminator if `a_storage' does not already have one at the end, or if `other' doest not already
 					-- have one at the beginning.
-				if
-					not is_character (a_storage, a_storage.count - unit_size + 1, a_separator) and
-					not is_character (other, other_start_index, a_separator)
-				then
-					a_storage.append_character (a_separator)
-					if {PLATFORM}.is_windows then
-						a_storage.append_character ('%U')
-					end
+				a_storage.append_character (a_separator)
+				if {PLATFORM}.is_windows then
+					a_storage.append_character ('%U')
 				end
 			end
 			a_storage.append_substring (other, other_start_index, other_end_index)
@@ -1445,7 +1449,7 @@ invariant
 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

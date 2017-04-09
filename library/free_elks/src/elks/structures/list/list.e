@@ -31,8 +31,8 @@ feature -- Comparison
 						(count = other.count)
 				if Result and not is_empty then
 					if
-						attached {CURSOR} cursor as c1 and then
-						attached {CURSOR} other.cursor as c2
+						attached cursor as c1 and then
+						attached other.cursor as c2
 					then
 						from
 							start
@@ -72,13 +72,13 @@ feature -- Status report
 	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
-			Result := (index = count + 1)
+			Result := index = count + 1
 		end
 
 	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
-			Result := (index = 0)
+			Result := index = 0
 		end
 
 feature -- Cursor movement
@@ -97,7 +97,7 @@ invariant
 	after_definition: after = (index = count + 1)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

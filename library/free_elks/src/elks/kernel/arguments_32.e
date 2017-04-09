@@ -228,10 +228,10 @@ feature -- Status report
 			p := index_of_character_option (o)
 			if p /= 0 then
 				Result := internal_argument_array.item (p)
-				if option_sign.item /= '%U' then
-					Result := Result.shared_substring (Result.index_of (o, 1) + 2, Result.count)
-				else
+				if option_sign.item = '%U' then
 					Result := Result.shared_substring (Result.index_of (o, 1) + 1, Result.count)
+				else
+					Result := Result.shared_substring (Result.index_of (o, 1) + 2, Result.count)
 				end
 			end
 		end
@@ -252,10 +252,10 @@ feature -- Status report
 			p := index_of_beginning_with_word_option (opt)
 			if p /= 0 then
 				Result := internal_argument_array.item (p)
-				if option_sign.item /= '%U' then
-					Result := Result.shared_substring (opt.count + 2, Result.count)
-				else
+				if option_sign.item = '%U' then
 					Result := Result.shared_substring (opt.count + 1, Result.count)
+				else
+					Result := Result.shared_substring (opt.count + 2, Result.count)
 				end
 			end
 		end
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 
 	i_th_argument_pointer (i: INTEGER): POINTER
 			-- Underlying pointer holding the argument at position `i'.
-			--| For implementers, if `i_th_argument_string' is implemented you do not need 
+			--| For implementers, if `i_th_argument_string' is implemented you do not need
 			--| to implement this one.
 		require
 			index_large_enough: i >= 0
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

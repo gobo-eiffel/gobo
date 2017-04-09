@@ -56,7 +56,7 @@ feature -- Status reporting
 			-- it doesn't mean that we have got an valid double/real number.
 			-- You need to check `is_double' or `is_real'.
 		do
-			Result := (last_state /= 9)
+			Result := last_state /= 9
 		end
 
 	separators_valid (separators: STRING): BOOLEAN
@@ -108,7 +108,7 @@ feature -- Status reporting
 			Result := is_part_of_double
 		end
 
-	parsed_double: DOUBLE
+	parsed_double: REAL_64
 			-- Parsed double value
 		do
 			if has_negative_exponent then
@@ -124,7 +124,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_real: REAL
+	parsed_real: REAL_32
 			-- Parsed real value
 		do
 			Result := parsed_double.truncated_to_real
@@ -152,10 +152,10 @@ feature -- Status setting
 			fractional_part_set: fractional_part = 0
 			fractional_divider_set: fractional_divider = 0
 			exponent_set: exponent = 0
-			is_negative_set: is_negative = False
-			has_negative_exponent_set: has_negative_exponent = False
-			has_fractional_part_set: has_fractional_part = False
-			needs_digit_set: needs_digit = False
+			is_negative_set: not is_negative
+			has_negative_exponent_set: not has_negative_exponent
+			has_fractional_part_set: not has_fractional_part
+			needs_digit_set: not needs_digit
 		end
 
 feature -- Parse
@@ -253,7 +253,7 @@ feature -- Parse
 					elseif c = '-' then
 						last_state := 1
 						is_negative := True
-					elseif (leading_separators_acceptable and then leading_separators.has (c)) then
+					elseif leading_separators_acceptable and then leading_separators.has (c) then
 							-- Do nothing.
 					elseif c = '.' then
 						last_state := 3
@@ -279,7 +279,7 @@ feature -- Parse
 					elseif c = '.' then
 						last_state := 3
 						needs_digit := False
-					elseif (trailing_separators_acceptable and then trailing_separators.has (c)) then
+					elseif trailing_separators_acceptable and then trailing_separators.has (c) then
 						last_state := 8
 					elseif c.as_lower = 'e' then
 							-- Not conform to ECMA standard, just for backward compatibility.
@@ -298,7 +298,7 @@ feature -- Parse
 					elseif c.as_lower = 'e' and not needs_digit then
 						needs_digit := True
 						last_state := 5
-					elseif (trailing_separators_acceptable and then trailing_separators.has (c)) then
+					elseif trailing_separators_acceptable and then trailing_separators.has (c) then
 						last_state := 8
 					else
 						last_state := 9
@@ -311,7 +311,7 @@ feature -- Parse
 					elseif c.as_lower = 'e' then
 						needs_digit := True
 						last_state := 5
-					elseif (trailing_separators_acceptable and then trailing_separators.has (c)) then
+					elseif trailing_separators_acceptable and then trailing_separators.has (c) then
 						last_state := 8
 					else
 						last_state := 9
@@ -346,7 +346,7 @@ feature -- Parse
 						-- Continue reading exponent
 					if c.is_digit then
 							exponent := exponent * 10 + c.code - 48
-					elseif (trailing_separators_acceptable and then trailing_separators.has (c)) then
+					elseif trailing_separators_acceptable and then trailing_separators.has (c) then
 						last_state := 8
 					else
 						last_state := 9
@@ -361,9 +361,9 @@ feature -- Parse
 
 feature{NONE} -- Implementation
 
-	natural_part: DOUBLE
-	fractional_part: DOUBLE
-	fractional_divider: DOUBLE
+	natural_part: REAL_64
+	fractional_part: REAL_64
+	fractional_divider: REAL_64
 	exponent: INTEGER
 	is_negative: BOOLEAN
 	has_negative_exponent: BOOLEAN
@@ -372,7 +372,7 @@ feature{NONE} -- Implementation
 			-- Used to calculate real/double value
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

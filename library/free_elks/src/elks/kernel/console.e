@@ -258,13 +258,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' at end of default output.
 		do
 			console_pr (file_pointer, r)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' at end of default output.
 		do
 			console_pd (file_pointer, d)
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_console.h%""
 		end
 
-	console_pr (file: POINTER; r: REAL)
+	console_pr (file: POINTER; r: REAL_32)
 			-- Write real `r' at end of `file'
 		external
 			"C signature (FILE *, EIF_REAL) use %"eif_console.h%""
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			"C signature (FILE *, EIF_CHARACTER) use %"eif_console.h%""
 		end
 
-	console_pd (file: POINTER; d: DOUBLE)
+	console_pd (file: POINTER; d: REAL_64)
 			-- Write double `d' at end of `file'
 		external
 			"C signature (FILE *, EIF_DOUBLE) use %"eif_console.h%""
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			"C signature (FILE *) use %"eif_console.h%""
 		end
 
-	console_readreal (file: POINTER): REAL
+	console_readreal (file: POINTER): REAL_32
 			-- Read a real number from the console
 		external
 			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 			"C blocking signature (FILE *): EIF_INTEGER use %"eif_console.h%""
 		end
 
-	console_readdouble (file: POINTER): DOUBLE
+	console_readdouble (file: POINTER): REAL_64
 			-- Read a double from the console
 		external
 			"C blocking signature (FILE *): EIF_DOUBLE use %"eif_console.h%""

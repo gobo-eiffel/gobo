@@ -86,8 +86,6 @@ feature -- Access
 	physical_offset: INTEGER
 			-- Actual offset in bytes of `object' in `enclosing_object'.
 
-feature -- Access
-
 	copy_semantics_field (i: INTEGER): REFLECTED_COPY_SEMANTICS_OBJECT
 			-- <Precursor>
 		do
@@ -118,7 +116,7 @@ feature -- Settings
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

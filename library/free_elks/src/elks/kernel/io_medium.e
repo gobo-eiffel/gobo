@@ -137,10 +137,10 @@ feature -- Status report
 	last_natural_8: NATURAL_8
 			-- Last 8-bit natural read by `read_natural_8'
 
-	last_real: REAL
+	last_real: REAL_32
 			-- Last real read by `read_real'
 
-	last_double: DOUBLE
+	last_double: REAL_64
 			-- Last double read by `read_double'
 
 	bytes_read: INTEGER
@@ -247,7 +247,7 @@ feature -- Output
 		deferred
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' to medium.
 		require
 			extendible: extendible
@@ -317,7 +317,7 @@ feature -- Output
 		deferred
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' to medium.
 		require
 			extendible: extendible
@@ -513,13 +513,13 @@ feature -- Obsolete
 			Result := last_integer
 		end
 
-	lastreal: REAL
+	lastreal: REAL_32
 			-- Last real read by `read_real'
 		do
 			Result := last_real
 		end
 
-	lastdouble: DOUBLE
+	lastdouble: REAL_64
 			-- Last double read by `read_double'
 		do
 			Result := last_double

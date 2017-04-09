@@ -77,25 +77,26 @@ feature -- Type checking
 	real_double_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' a valid real/double type?
 		do
-			Result := (type = type_no_limitation) or
-					  (type = type_real) or
-					  (type = type_double)
+			Result :=
+				type = type_no_limitation or
+				  type = type_real or
+				  type = type_double
 		end
 
 	real_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' a valid real type?
 		do
-			Result := (type = type_real)
+			Result := type = type_real
 		end
 
 	double_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' a valid double type?
 		do
-			Result := (type = type_double)
+			Result := type = type_double
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

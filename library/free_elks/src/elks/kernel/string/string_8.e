@@ -15,7 +15,8 @@ class
 inherit
 	READABLE_STRING_8
 		export
-			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
+			{ANY} make, make_empty, make_filled, make_from_c, make_from_c_substring,
+					make_from_string, fill_character
 		redefine
 			area
 		end
@@ -84,6 +85,7 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c,
+	make_from_c_substring,
 	make_from_c_pointer,
 	make_from_cil,
 	make_from_separate
@@ -135,7 +137,8 @@ feature -- Initialization
 
 	from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
 			-- Reset contents of string from substring of `c_string',
-			-- a string created by some C function.
+			-- between `start_pos' and `end_pos',
+			-- and `c_string' created by some C function.
 		require
 			c_string_exists: c_string /= default_pointer
 			start_position_big_enough: start_pos >= 1
@@ -170,7 +173,7 @@ feature -- Initialization
 	remake (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		obsolete
-			"Use `make' instead"
+			"Use `make' instead. [2017-05-31]"
 		require
 			non_negative_size: n >= 0
 		do
@@ -264,11 +267,11 @@ feature -- Element change
 			if end_pos >= start_pos then
 				l_other_area := other.area
 				l_area := area
-				if l_area /= l_other_area then
-					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
+				if l_area = l_other_area then
+					l_area.overlapping_move (start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
 				else
-					l_area.overlapping_move (start_pos - 1, index_pos - 1,
+					l_area.copy_data (l_other_area, start_pos - 1, index_pos - 1,
 						end_pos - start_pos + 1)
 				end
 				reset_hash_codes
@@ -475,7 +478,7 @@ feature -- Element change
 	replace_character (c: CHARACTER_8)
 			-- Replace every character with `c'.
 		obsolete
-			"ELKS 2001: use `fill_with' instead'"
+			"ELKS 2001: use `fill_with' instead'. [2017-05-31]"
 		do
 			fill_with (c)
 		ensure
@@ -675,7 +678,7 @@ feature -- Element change
 			prepend (b.out)
 		end
 
-	prepend_double (d: DOUBLE)
+	prepend_double (d: REAL_64)
 			-- Prepend the string representation of `d' at front.
 		do
 			prepend (d.out)
@@ -687,7 +690,7 @@ feature -- Element change
 			prepend (i.out)
 		end
 
-	prepend_real (r: REAL)
+	prepend_real (r: REAL_32)
 			-- Prepend the string representation of `r' at front.
 		do
 			prepend (r.out)
@@ -1135,13 +1138,13 @@ feature -- Element change
 			end
 		end
 
-	append_real (r: REAL)
+	append_real (r: REAL_32)
 			-- Append the string representation of `r' at end.
 		do
 			append (r.out)
 		end
 
-	append_double (d: DOUBLE)
+	append_double (d: REAL_64)
 			-- Append the string representation of `d' at end.
 		do
 			append (d.out)
@@ -1174,7 +1177,7 @@ feature -- Element change
 	insert (s: READABLE_STRING_8; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
-			"ELKS 2001: use `insert_string' instead"
+			"ELKS 2001: use `insert_string' instead. [2017-05-31]"
 		require
 			string_exists: s /= Void
 			index_small_enough: i <= count + 1
@@ -1275,8 +1278,6 @@ feature -- Removal
 	remove_head (n: INTEGER)
 			-- Remove first `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		do
 			if n > count then
 				count := 0
@@ -1284,17 +1285,11 @@ feature -- Removal
 			else
 				keep_tail (count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (n.min (count) + 1, count))
 		end
 
 	remove_substring (start_index, end_index: INTEGER)
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
-		require
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index + 1
 		local
 			l_count, nb_removed: INTEGER
 		do
@@ -1305,15 +1300,11 @@ feature -- Removal
 				count := l_count - nb_removed
 				reset_hash_codes
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER)
 			-- Remove last `n' characters;
 			-- if `n' > `count', remove all.
-		require
-			n_non_negative: n >= 0
 		local
 			l_count: INTEGER
 		do
@@ -1324,8 +1315,6 @@ feature -- Removal
 			else
 				keep_head (l_count - n)
 			end
-		ensure
-			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER_8)
@@ -1405,15 +1394,12 @@ feature -- Removal
 		do
 			count := 0
 			reset_hash_codes
-		ensure then
-			is_empty: count = 0
-			same_capacity: capacity = old capacity
 		end
 
 	clear_all
 			-- Reset all characters.
 		obsolete
-			"Use `wipe_out' instead."
+			"Use `wipe_out' instead. [2017-05-31]"
 		do
 			count := 0
 			reset_hash_codes
@@ -1766,14 +1752,6 @@ feature {STRING_HANDLER} -- Implementation
 			reset_hash_codes
 		end
 
-feature {NONE} -- Implementation
-
-	new_string (n: INTEGER): like Current
-			-- New instance of current with space for at least `n' characters.
-		do
-			create Result.make (n)
-		end
-
 feature -- Transformation
 
 	correct_mismatch
@@ -1786,10 +1764,16 @@ feature -- Transformation
 
 feature {NONE} -- Implementation
 
+	new_string (n: INTEGER): like Current
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.make (n)
+		end
+
 	empty_area: SPECIAL [CHARACTER_8]
 			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
 		obsolete
-			"Simply create `area' directly."
+			"Simply create `area' directly. [2017-05-31]"
 		do
 			create Result.make_empty (1)
 			Result.extend ('%U')
@@ -1802,7 +1786,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

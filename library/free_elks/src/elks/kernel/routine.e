@@ -2,7 +2,7 @@ note
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -93,7 +93,7 @@ feature -- Access
 
 	empty_operands: attached OPEN_ARGS
 			-- Empty tuple matching open operands.
-		obsolete "This function will be removed as non-void-safe. [22.07.2013]"
+		obsolete "This function will be removed as non-void-safe. [2017-05-31]"
 		do
 			create Result
 		ensure
@@ -294,19 +294,6 @@ feature -- Extended operations
 			end
 		end
 
-feature -- Obsolete
-
-	adapt_from (other: like Current)
-			-- Adapt from `other'. Useful in descendants.
-		obsolete
-			"Please use `adapt' instead (it's also a creation procedure)"
-		require
-			other_exists: other /= Void
-			conforming: conforms_to (other)
-		do
-			adapt (other)
-		end
-
 feature {ROUTINE} -- Implementation
 
 	frozen closed_operands: detachable TUPLE
@@ -439,29 +426,40 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
+	adapt_from (other: like Current)
+			-- Adapt from `other'. Useful in descendants.
+		obsolete
+			"Please use `adapt' instead (it's also a creation procedure).  [2017-05-31]"
+		require
+			other_exists: other /= Void
+			conforming: conforms_to (other)
+		do
+			adapt (other)
+		end
+
 	arguments: detachable OPEN_ARGS
 		obsolete
-			"use operands"
+			"Use `operands`. [2017-05-31]"
 		do
 			Result := operands
 		end
 
 	set_arguments (args: detachable OPEN_ARGS)
 		obsolete
-			"use set_operands"
+			"Use `set_operands`. [2017-05-31]"
 		do
 			set_operands (args)
 		end
 
 	valid_arguments (args: detachable OPEN_ARGS): BOOLEAN
 		obsolete
-			"use valid_operands"
+			"Use `valid_operands`. [2017-05-31]"
 		do
 			Result := valid_operands (args)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

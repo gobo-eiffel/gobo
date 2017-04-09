@@ -1,7 +1,7 @@
 note
 	description: "[
 		Ancestor of all exception classes.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	make_with_tag_and_trace (a_tag, a_trace_string: STRING)
 			-- Make `Current' with `description' set to `a_tag'.
 		obsolete
-			"Use `default_create' and `set_description' instead."
+			"Use `default_create' and `set_description' instead. [2017-05-31]"
 		require
 			tag_not_void: a_tag /= Void
 			trace_string_not_void: a_trace_string /= Void
@@ -51,7 +51,7 @@ feature -- Access
 	meaning: STRING
 			-- A short message describing what current exception is
 		obsolete
-			"Use `tag' instead."
+			"Use `tag' instead. [2017-05-31]"
 		do
 			Result := tag.as_string_8
 		end
@@ -65,7 +65,7 @@ feature -- Access
 	message: detachable STRING
 			-- Message of current exception
 		obsolete
-			"Use `description' instead."
+			"Use `description' instead. [2017-05-31]"
 		do
 			if attached c_description as l_m then
 				Result := l_m.substring (1, l_m.count)
@@ -89,7 +89,7 @@ feature -- Access
 	exception_trace: detachable STRING
 			-- String representation of current exception trace
 		obsolete
-			"Use `trace' instead."
+			"Use `trace' instead. [2017-05-31]"
 		do
 			Result := internal_trace
 		end
@@ -154,7 +154,7 @@ feature -- Access obselete
 	trace_as_string: detachable STRING
 			-- Exception trace represented as a string
 		obsolete
-			"Use `trace' instead."
+			"Use `trace' instead. [2017-05-31]"
 		do
 			Result := exception_trace
 		end
@@ -164,7 +164,7 @@ feature -- Status settings
 	set_message (a_message: like message)
 			-- Set `message' with `a_message'.
 		obsolete
-			"Use `set_description' instead."
+			"Use `set_description' instead. [2017-05-31]"
 		do
 			set_description (a_message)
 		ensure
@@ -299,7 +299,7 @@ feature {EXCEPTION_MANAGER} -- Implementation
 			-- String representation of the exception trace
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -210,7 +210,7 @@ feature -- Status setting
 			False
 		end
 
-	new_die (code: INTEGER) obsolete "Use ``die''"
+	new_die (code: INTEGER) obsolete "Use ``die''. [2017-05-31]"
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

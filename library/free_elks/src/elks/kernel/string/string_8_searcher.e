@@ -42,7 +42,6 @@ feature -- Search
 			i, j, l_end_pos: INTEGER
 			l_pattern_count: INTEGER
 			l_matched: BOOLEAN
-			l_char_code: INTEGER
 			l_deltas: like deltas
 			l_area: SPECIAL [CHARACTER_8]
 			l_area_lower: INTEGER
@@ -84,8 +83,7 @@ feature -- Search
 					else
 							-- Pattern was not found, shift to next location
 						if i + l_pattern_count <= end_pos then
-							l_char_code := l_area.item (i + l_pattern_count - 1).code
-							i := i + l_deltas.item (l_char_code)
+							i := i + l_deltas.item (l_area.item (i + l_pattern_count - 1).code)
 						else
 							i := i + 1
 						end
@@ -174,7 +172,7 @@ feature -- Search
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

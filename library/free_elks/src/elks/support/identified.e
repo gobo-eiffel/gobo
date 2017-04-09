@@ -37,10 +37,11 @@ feature -- Access
 	frozen id_object (an_id: INTEGER): detachable IDENTIFIED
 			-- Object associated with `an_id' (void if no such object)
 		do
-			if an_id > 0 then
-				if attached {IDENTIFIED} eif_id_object (an_id) as l_result then
-					Result := l_result
-				end
+			if
+				an_id > 0 and then
+				attached {IDENTIFIED} eif_id_object (an_id) as l_result
+			then
+				Result := l_result
 			end
 		ensure
 			consistent: Result = Void or else Result.object_id = an_id
@@ -124,7 +125,7 @@ feature {IDENTIFIED} -- Implementation
 			-- Internal representation of `object_id'
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

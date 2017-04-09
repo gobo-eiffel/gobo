@@ -363,9 +363,9 @@ feature -- Cursor movement
 			-- Move cursor `i' positions.
 		do
 			index := index + i
-			if (index > count + 1) then
+			if index > count + 1 then
 				index := count + 1
-			elseif (index < 0) then
+			elseif index < 0 then
 				index := 0
 			end
 		end
@@ -540,11 +540,10 @@ feature -- Element change
 	merge_right (other: ARRAYED_LIST [G])
 			-- Merge `other' into current structure after cursor.
 		local
-			l_new_count, l_old_count: INTEGER
+			l_new_count: INTEGER
 		do
 			if not other.is_empty then
-				l_old_count := count
-				l_new_count := l_old_count + other.count
+				l_new_count := count + other.count
 				if l_new_count > area_v2.capacity then
 					area_v2 := area_v2.aliased_resized_area (l_new_count)
 				end
@@ -621,6 +620,21 @@ feature -- Duplication
 			end
 		ensure then
 			equal_areas: area_v2 ~ other.area_v2
+		end
+
+	duplicate (n: INTEGER): like Current
+			-- Copy of sub-list beginning at current position
+			-- and having min (`n', `count' - `index' + 1) items.
+		local
+			end_pos: INTEGER
+		do
+			if after then
+				Result := new_filled_list (0)
+			else
+				end_pos := count.min (index + n - 1)
+				Result := new_filled_list (end_pos - index + 1)
+				Result.area_v2.copy_data (area_v2, index - 1, 0, end_pos - index + 1)
+			end
 		end
 
 feature -- Removal
@@ -776,23 +790,6 @@ feature -- Retrieval
 			end
 		end
 
-feature -- Duplication
-
-	duplicate (n: INTEGER): like Current
-			-- Copy of sub-list beginning at current position
-			-- and having min (`n', `count' - `index' + 1) items.
-		local
-			end_pos: INTEGER
-		do
-			if after then
-				Result := new_filled_list (0)
-			else
-				end_pos := count.min (index + n - 1)
-				Result := new_filled_list (end_pos - index + 1)
-				Result.area_v2.copy_data (area_v2, index - 1, 0, end_pos - index + 1)
-			end
-		end
-
 feature {NONE} -- Inapplicable
 
 	new_chain: like Current
@@ -837,7 +834,7 @@ feature {NONE} -- Implementation
 			create Result.make (n)
 		ensure
 			new_filled_list_not_void: Result /= Void
-			new_filled_list_count_set: Result.count = 0
+			new_filled_list_count_set: Result.is_empty
 			new_filled_list_before: Result.before
 		end
 
@@ -846,7 +843,7 @@ invariant
 	starts_from_one: lower = 1
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

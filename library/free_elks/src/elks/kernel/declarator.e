@@ -28,9 +28,9 @@ feature {NONE} -- Implementation
 
 	s1_4: detachable SPECIAL [INTEGER_64]
 
-	s2: detachable SPECIAL [REAL]
+	s2: detachable SPECIAL [REAL_32]
 
-	s3: detachable SPECIAL [DOUBLE]
+	s3: detachable SPECIAL [REAL_64]
 
 	s4: detachable SPECIAL [BOOLEAN]
 

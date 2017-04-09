@@ -2,7 +2,7 @@ note
 	description: "[
 		Facilities for tuning up the garbage collection mechanism.
 		This class may be used as ancestor by classes needing its facilities.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -147,8 +147,6 @@ feature -- Status report
 		alias
 			"eif_scavenge_zone_size"
 		end
-
-feature -- Status report
 
 	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
@@ -486,7 +484,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

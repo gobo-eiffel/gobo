@@ -477,8 +477,6 @@ feature {BINARY_TREE} -- Implementation
 			end
 		end
 
-feature {BINARY_TREE} -- Implementation
-
 	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
@@ -563,7 +561,7 @@ invariant
 	tree_is_binary: child_capacity = 2
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

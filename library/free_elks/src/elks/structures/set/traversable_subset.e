@@ -37,12 +37,9 @@ feature -- Comparison
 	disjoint (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Do current set and `other' have no
 			-- items in common?
-		local
-			s: SUBSET_STRATEGY [G]
 		do
 			if not is_empty and not other.is_empty then
-				s := subset_strategy (other)
-				Result := s.disjoint (Current, other)
+				Result := subset_strategy (other).disjoint (Current, other)
 			else
 				Result := True
 			end
@@ -134,8 +131,6 @@ feature -- Basic operations
 	symdif (other: TRAVERSABLE_SUBSET [G])
 			-- Remove all items also in `other', and add all
 			-- items of `other' not already present.
-		local
-			s: SUBSET_STRATEGY [G]
 		do
 			if not other.is_empty then
 				if is_empty then
@@ -147,8 +142,7 @@ feature -- Basic operations
 						extend (other.item)
 					end
 				else
-					s := subset_strategy (other)
-					s.symdif (Current, other)
+					subset_strategy (other).symdif (Current, other)
 				end
 			end
 		end
@@ -228,7 +222,7 @@ invariant
 	count_range: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

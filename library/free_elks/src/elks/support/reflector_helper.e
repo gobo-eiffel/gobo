@@ -80,19 +80,17 @@ feature -- Status report
 			a_type_not_void: a_type /= Void
 		local
 			l_table: like pre_ecma_type_mapping
-			r: detachable READABLE_STRING_GENERAL
 		do
 			if not is_pre_ecma_mapping_disabled then
 				l_table := pre_ecma_type_mapping
 				l_table.search (a_type)
 				if l_table.found then
-					r := l_table.found_item
+					Result := l_table.found_item
 				end
 			end
-			if r = Void then
-				r := a_type
+			if Result = Void then
+				Result := a_type
 			end
-			Result := r
 		ensure
 			mapped_type_not_void: Result /= Void
 		end
@@ -226,7 +224,7 @@ feature {NONE} -- Type creation
 	type_keyword: STRING = "TYPE";
 			-- Used for creating type objects.
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

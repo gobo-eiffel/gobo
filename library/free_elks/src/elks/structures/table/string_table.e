@@ -1,14 +1,14 @@
 note
 	description: "[
-		Hash tables, used to store items identified by string keys that are compared with or without case sensitivity.
+			Hash tables, used to store items identified by string keys that are compared with or without case sensitivity.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	warning: "[
-		Modifying an object used as a key by an item present in a table will
-		cause incorrect behavior. If you will be modifying key objects,
-		pass a clone, not the object itself, or an immutable object, as key argument to
-		`put' and `replace_key'.
+			Modifying an object used as a key by an item present in a table will
+			cause incorrect behavior. If you will be modifying key objects,
+			pass a clone, not the object itself, or an immutable object, as key argument to
+			`put' and `replace_key'.
 		]"
 	date: "$Date: 2013-01-24 23:33:34 +0100 (Thu, 24 Jan 2013) $"
 	revision: "$Revision: 711 $"
@@ -116,16 +116,8 @@ feature {NONE} -- Duplication
 			end
 		end
 
-feature {NONE} -- Helper
-
-	character_properties: CHARACTER_PROPERTY
-			-- Helper for efficient case conversions.
-		once
-			create Result.make
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

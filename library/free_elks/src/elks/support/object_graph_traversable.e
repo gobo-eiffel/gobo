@@ -150,7 +150,7 @@ feature -- Element change
 	set_object_action (an_object_action: like object_action)
 			-- Set `object_action' with `an_object_action'.
 		obsolete
-			"Use set_on_processing_object_action to read and manipulate objects via REFLECTED_OBJECT"
+			"Use set_on_processing_object_action to read and manipulate objects via REFLECTED_OBJECT. [2017-05-31]"
 		require
 			an_object_action_not_void: an_object_action /= Void
 		do
@@ -275,7 +275,6 @@ feature {NONE} -- Implementation
 			from
 				create l_marker
 				create l_reflected_reference_object.make (a_root_object)
-				l_reflected_object := l_reflected_reference_object
 				l_marker.mark (a_root_object)
 				create l_visited.make (default_size)
 				create l_visited_types.make (default_size)
@@ -285,8 +284,6 @@ feature {NONE} -- Implementation
 				l_on_processing_object_action := on_processing_object_action
 				l_on_processing_reference_action := on_processing_reference_action
 				create l_referee_object_cache.make (a_root_object)
-				l_referee_object := l_referee_object_cache
-				l_referee_object := l_referee_object_cache
 			until
 				l_objects_to_visit.is_empty
 			loop
@@ -527,7 +524,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -131,46 +131,42 @@ feature {NONE} -- Implementation
 
 	internal_put (value: ANY; ckey: POINTER)
 			-- Allows run-time to insert items into table
-		local
-			l_key: STRING
 		do
-			create l_key.make_from_c (ckey)
-			put (value, l_key)
+			put (value, create {STRING}.make_from_c (ckey))
 		end
 
 	set_string_versions (a_stored_version, a_current_version: POINTER)
 			-- Set `stored_version' with `a_stored_version'.
 			-- Set `current_version' with `a_current_version'.
 		local
-			l_null: POINTER
 			l_imm: IMMUTABLE_STRING_8
 		do
-			if a_stored_version /= l_null then
+			if a_stored_version = default_pointer then
+				stored_version := Void
+			else
 				create l_imm.make_from_c (a_stored_version)
 				if l_imm.is_empty then
 					stored_version := Void
 				else
 					stored_version := l_imm
 				end
-			else
-				stored_version := Void
 			end
-			if a_current_version /= l_null then
+			if a_current_version = default_pointer then
+				current_version := Void
+			else
 				create l_imm.make_from_c (a_current_version)
 				if l_imm.is_empty then
 					current_version := Void
 				else
 					current_version := l_imm
 				end
-			else
-				current_version := Void
 			end
 		end
 
 	set_callback_pointers
 			-- Sets call-back pointers in the run-time
 		once
-			set_mismatch_information_access (Current, $clear_all, $internal_put, $set_string_versions)
+			set_mismatch_information_access (Current, $wipe_out, $internal_put, $set_string_versions)
 		end
 
 feature {NONE} -- Externals
@@ -181,7 +177,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

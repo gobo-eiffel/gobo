@@ -25,14 +25,14 @@ feature -- Status report
 	is_empty: BOOLEAN
 			-- Is structure empty?
 		do
-			Result := (count = 0)
+			Result := count = 0
 		end
 
 invariant
 	empty_definition: is_empty = (count = 0)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

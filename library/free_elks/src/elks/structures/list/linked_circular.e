@@ -162,7 +162,7 @@ feature -- Status report
 				if starter = 0 then
 					Result := list.isfirst
 				else
-					Result := (standard_index = starter)
+					Result := standard_index = starter
 				end
 			end
 		end
@@ -171,10 +171,10 @@ feature -- Status report
 			-- Is cursor on last item?
 		do
 			if not is_empty then
-				if (starter = 0) or (starter = 1) then
+				if starter = 0 or starter = 1 then
 					Result := standard_islast
 				else
-					Result := (standard_index = starter - 1)
+					Result := standard_index = starter - 1
 				end
 			end
 		end
@@ -357,7 +357,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

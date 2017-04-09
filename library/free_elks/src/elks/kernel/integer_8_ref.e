@@ -70,7 +70,7 @@ feature -- Access
 	ascii_char: CHARACTER_8
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
-			"Use to_character_8 instead"
+			"Use to_character_8 instead. [2017-05-31]"
 		require
 			valid_character_code: is_valid_character_8_code
 		do
@@ -141,7 +141,7 @@ feature -- Status report
 	is_valid_character_code: BOOLEAN
 			-- Does current object represent a CHARACTER_8?
 		obsolete
-			"Use `is_valid_character_8_code' instead."
+			"Use `is_valid_character_8_code' instead. [2017-05-31]"
 		do
 			Result := is_valid_character_8_code
 		end
@@ -400,7 +400,6 @@ feature -- Conversion
 			-- Convert `item' into an hexadecimal string.
 		local
 			i, val: INTEGER
-			a_digit: INTEGER
 		do
 			from
 				i := 2
@@ -410,8 +409,7 @@ feature -- Conversion
 			until
 				i = 0
 			loop
-				a_digit := (val & 15)
-				Result.put (a_digit.to_hex_character, i)
+				Result.put ((val & 15).to_hex_character, i)
 				val := val |>> 4
 				i := i - 1
 			end
@@ -424,11 +422,8 @@ feature -- Conversion
 			-- Convert `item' into an hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15
-		local
-			tmp: INTEGER
 		do
-			tmp := item
-			Result := tmp.to_hex_character
+			Result := item.to_integer_32.to_hex_character
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
@@ -436,7 +431,7 @@ feature -- Conversion
 	to_character: CHARACTER
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
-			"Use `to_character_8' instead."
+			"Use `to_character_8' instead. [2017-05-31]"
 		require
 			valid_character: is_valid_character_8_code
 		do
@@ -604,7 +599,7 @@ invariant
 	sign_times_abs: sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

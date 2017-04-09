@@ -37,14 +37,13 @@ feature -- Access
 			-- Current cursor index, with respect to position
 			-- currently defined as first
 		local
-			first_ind, std_ind: INTEGER
+			std_ind: INTEGER
 			p: CURSOR
 		do
 			p := cursor
 			std_ind := standard_index
 			start
-			first_ind := standard_index
-			Result := std_ind - first_ind + 1
+			Result := std_ind - standard_index + 1
 			if Result < 0 then
 				Result := count + Result
 			end
@@ -275,7 +274,7 @@ invariant
 	not_off_unless_empty: off implies is_empty
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -40,15 +40,15 @@ feature -- Basic operations
 			if n < 0 then
 				Result := -1
 			elseif n > 0 then
-				Result := +1
+				Result := 1
 			end
 		ensure
 			correct_negative: (n < 0) = (Result = -1)
 			correct_zero: (n = 0) = (Result = 0)
-			correct_positive: (n > 0) = (Result = +1)
+			correct_positive: (n > 0) = (Result = 1)
 		end
 
-	rsign (r: REAL): INTEGER
+	rsign (r: REAL_32): INTEGER
 			-- Sign of `r':
 			-- -1 if `r' < 0
 			--  0 if `r' = 0
@@ -57,22 +57,23 @@ feature -- Basic operations
 			if r < 0 then
 				Result := -1
 			elseif r > 0 then
-				Result := +1
+				Result := 1
 			end
 		ensure
 			correct_negative: (r < 0) = (Result = -1)
 			correct_zero: (r = 0) = (Result = 0)
-			correct_positive: (r > 0) = (Result = +1)
+			correct_positive: (r > 0) = (Result = 1)
 		end
 
 	bottom_int_div (n1, n2: INTEGER): INTEGER
 			-- Greatest lower bound of the integer division of `n1' by `n2'
 		do
 			Result := n1 // n2
-			if n1 >= 0 xor n2 > 0 then
-				if (n1 \\ n2) /= 0 then
-					Result := Result - 1
-				end
+			if
+				(n1 >= 0 xor n2 > 0) and then
+				n1 \\ n2 /= 0
+			then
+				Result := Result - 1
 			end
 		end
 
@@ -81,15 +82,16 @@ feature -- Basic operations
 			-- of `n1' by `n2'
 		do
 			Result := n1 // n2
-			if not (n1 >= 0 xor n2 > 0) then
-				if (n1 \\ n2) /= 0 then
-					Result := Result + 1
-				end
+			if
+				not (n1 >= 0 xor n2 > 0) and then
+				n1 \\ n2 /= 0
+			then
+				Result := Result + 1
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

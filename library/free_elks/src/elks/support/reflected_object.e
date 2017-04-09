@@ -385,7 +385,7 @@ feature -- Status report
 			Result := {ISE_RUNTIME}.integer_64_field (i, object_address, 0)
 		end
 
-	real_32_field (i: INTEGER): REAL
+	real_32_field (i: INTEGER): REAL_32
 			-- Real value of `i'-th field of `object'
 		require
 			index_large_enough: i >= 1
@@ -539,7 +539,7 @@ feature -- Element change
 			{ISE_RUNTIME}.set_integer_64_field (i, object_address, 0, value)
 		end
 
-	set_real_32_field, set_real_field (i: INTEGER; value: REAL)
+	set_real_32_field, set_real_field (i: INTEGER; value: REAL_32)
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count

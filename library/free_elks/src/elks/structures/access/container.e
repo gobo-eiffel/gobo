@@ -36,7 +36,7 @@ feature -- Status report
 	empty: BOOLEAN
 			-- Is there no element?
 		obsolete
-			"ELKS 2000: Use `is_empty' instead"
+			"ELKS 2000: Use `is_empty' instead. [2017-05-31]"
 		do
 			Result := is_empty
 		end
@@ -84,7 +84,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

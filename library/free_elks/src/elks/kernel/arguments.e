@@ -80,7 +80,7 @@ feature -- Access: Cursor
 feature -- Status report
 
 	has_word_option (opt: STRING): INTEGER
-		obsolete "Use index_of_word_option instead."
+		obsolete "Use index_of_word_option instead. [2017-05-31]"
 		do
 			Result := index_of_word_option (opt)
 		end
@@ -139,7 +139,7 @@ feature -- Status report
 		end
 
 	has_character_option (o: CHARACTER): INTEGER
-		obsolete "Use index_of_character_option instead."
+		obsolete "Use index_of_character_option instead. [2017-05-31]"
 		do
 			Result := index_of_character_option (o)
 		end
@@ -224,7 +224,7 @@ feature -- Status report
 		end
 
 	coalesced_option_character_value (o: CHARACTER): detachable STRING
-		obsolete "Use coalesced_character_option_value instead."
+		obsolete "Use coalesced_character_option_value instead. [2017-05-31]"
 		do
 			Result := coalesced_character_option_value (o)
 		end
@@ -254,7 +254,7 @@ feature -- Status report
 		end
 
 	coalesced_option_word_value (opt: STRING): detachable STRING
-		obsolete "Use coalesced_word_option_value instead."
+		obsolete "Use coalesced_word_option_value instead. [2017-05-31]"
 		do
 			Result := coalesced_word_option_value (opt)
 		end
@@ -383,7 +383,7 @@ invariant
 	argument_array_consistent: argument_array ~ internal_argument_array
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

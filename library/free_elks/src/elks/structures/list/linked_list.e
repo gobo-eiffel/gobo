@@ -156,7 +156,7 @@ feature -- Status report
 				until
 					Result or else temp = Void
 				loop
-					Result := (temp = sought)
+					Result := temp = sought
 					temp := temp.right
 				end
 			end
@@ -214,7 +214,7 @@ feature -- Cursor movement
 				p := p.right
 			end
 			after := False
-			before := (active = Void)
+			before := active = Void
 		ensure then
 			Empty_convention: is_empty implies before
 		end
@@ -283,7 +283,7 @@ feature -- Cursor movement
 				before := True
 				after := False
 				active := first_element
-				if (new_index > 0) then
+				if new_index > 0 then
 					move (new_index)
 				end
 			end
@@ -740,7 +740,7 @@ invariant
 	after_constraint: after implies (active = last_element)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -3,7 +3,7 @@ note
 		Lists implemented as sequences of arrays, the last of which may
 		be non-full. No limit on size (a new array is allocated if list
 		outgrows its initial allocation).
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -141,14 +141,15 @@ feature -- Cursor movement
 			if not is_empty then
 				current_array := active.item
 				current_array.forth
-				if current_array.after then
-					if active /= last_element then
-						a := active.right
-						if a /= Void then
-							active := a
-						end
-						active.item.start
+				if
+					current_array.after and then
+					active /= last_element
+				then
+					a := active.right
+					if a /= Void then
+						active := a
 					end
+					active.item.start
 				end
 			end
 			index := index + 1
@@ -163,14 +164,15 @@ feature -- Cursor movement
 			if not is_empty then
 				current_array := active.item
 				current_array.back
-				if current_array.before then
-					if active /= first_element then
-						a := active.left
-						if a /= Void then
-							active := a
-						end
-						active.item.finish
+				if
+					current_array.before and then
+					active /= first_element
+				then
+					a := active.left
+					if a /= Void then
+						active := a
 					end
+					active.item.finish
 				end
 			end
 			index := index - 1
@@ -199,7 +201,6 @@ feature -- Cursor movement
 					end
 				end
 				if cell = Void then
-					cell := last_element
 					current_array.finish
 					current_array.forth
 				else
@@ -228,7 +229,6 @@ feature -- Cursor movement
 					end
 				end
 				if cell = Void then
-					cell := first_element
 					current_array.go_i_th (0)
 				else
 					active := cell
@@ -502,9 +502,8 @@ feature -- Removal
 	prune_all (v: like item)
 		local
 			cell: detachable like active
-			new_active: detachable like active
+			new_active: like active
 			array: ARRAYED_LIST [G]
-			e: detachable like first_element
 		do
 			from
 				cell := first_element
@@ -522,19 +521,17 @@ feature -- Removal
 				count := count + array.count
 				if array.is_empty then
 					if cell = first_element then
-						if cell /= last_element then
-							e := cell.right
-							if e /= Void then
+						if cell = last_element then
+							cell := Void
+						else
+							if attached cell.right as e then
 								first_element := e
 							end
 							cell := first_element
 							cell.forget_left
-						else
-							cell := Void
 						end
 					elseif cell = last_element then
-						e := cell.left
-						if e /= Void then
+						if attached cell.left as e then
 							last_element := e
 						end
 						last_element.forget_right
@@ -543,11 +540,11 @@ feature -- Removal
 							-- `put_left' modifies `cell.right', so we need to remeber it
 							-- as it will become the new value for `cell'.
 						new_active := cell.right
-						if new_active /= Void then
-							e := cell.left
-							if e /= Void then
-								new_active.put_left (e)
-							end
+						if
+							attached new_active and then
+							attached cell.left as e
+						then
+							new_active.put_left (e)
 						end
 						cell := new_active
 					end
@@ -617,7 +614,7 @@ invariant
 	extendible_definition: extendible
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

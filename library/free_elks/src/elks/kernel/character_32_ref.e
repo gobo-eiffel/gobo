@@ -31,7 +31,7 @@ feature -- Access
 	code: INTEGER
 			-- Associated integer value
 		obsolete
-			"Use `natural_32_code' instead."
+			"Use `natural_32_code' instead. [2017-05-31]"
 		do
 			Result := natural_32_code.as_integer_32
 		end
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

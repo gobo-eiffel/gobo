@@ -7,7 +7,7 @@
 		cause incorrect behavior. If you will be modifying key objects,
 		pass a clone, not the object itself, as key argument to
 		`put' and `replace_key'.
-		]"
+	]"
 
 class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
@@ -320,7 +320,7 @@ feature -- Access
 			l_content: like content
 		do
 			if has_default then
-				Result := (v = content.item (indexes_map.item (capacity)))
+				Result := v = content.item (indexes_map.item (capacity))
 			end
 			if not Result then
 				l_content := content
@@ -538,37 +538,37 @@ feature -- Status report
 	conflict: BOOLEAN
 			-- Did last operation cause a conflict?
 		do
-			Result := (control = conflict_constant)
+			Result := control = conflict_constant
 		end
 
 	inserted: BOOLEAN
 			-- Did last operation insert an item?
 		do
-			Result := (control = inserted_constant)
+			Result := control = inserted_constant
 		end
 
 	replaced: BOOLEAN
 			-- Did last operation replace an item?
 		do
-			Result := (control = replaced_constant)
+			Result := control = replaced_constant
 		end
 
 	removed: BOOLEAN
 			-- Did last operation remove an item?
 		do
-			Result := (control = removed_constant)
+			Result := control = removed_constant
 		end
 
 	found: BOOLEAN
 			-- Did last operation find the item sought?
 		do
-			Result := (control = found_constant)
+			Result := control = found_constant
 		end
 
 	not_found: BOOLEAN
 			-- Did last operation fail to find the item sought?
 		do
-			Result := (control = not_found_constant)
+			Result := control = not_found_constant
 		end
 
 	after, off: BOOLEAN
@@ -662,7 +662,7 @@ feature -- Cursor movement
 
 	search_item: detachable G
 		obsolete
-			"Use found_item instead."
+			"Use `found_item` instead. [2017-05-31]"
 		do
 			Result := found_item
 		end
@@ -679,15 +679,18 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			l_deleted_marks: like deleted_marks
 			l_table_size: INTEGER
 		do
-			Result := a_position + 1
 			l_deleted_marks := deleted_marks
 			l_table_size := content.count
 			from
+				Result := a_position + 1
 			until
 				Result >= l_table_size or else not l_deleted_marks.item (Result)
 			loop
 				Result := Result + 1
 			end
+		ensure
+			is_increased: Result > a_position
+			is_below_upper_bound: Result <= keys.count
 		end
 
 	previous_iteration_position (a_position: like iteration_position): like iteration_position
@@ -703,10 +706,13 @@ feature {HASH_TABLE_ITERATION_CURSOR} -- Cursor movement
 			from
 				Result := a_position - 1
 			until
-				Result <= 0 or else not l_deleted_marks.item (Result)
+				Result <= -1 or else not l_deleted_marks.item (Result)
 			loop
 				Result := Result - 1
 			end
+		ensure
+			is_decreased: Result < a_position
+			is_above_lower_bound: Result >= -1
 		end
 
 feature -- Element change
@@ -741,13 +747,13 @@ feature -- Element change
 						not_present: not found
 					end
 				end
-				if deleted_item_position /= ht_impossible_position then
+				if deleted_item_position = ht_impossible_position then
+					l_new_pos := keys.count
+					l_new_index_pos := item_position
+				else
 					l_new_pos := deleted_position (deleted_item_position)
 					l_new_index_pos := deleted_item_position
 					deleted_marks.force (False, l_new_pos)
-				else
-					l_new_pos := keys.count
-					l_new_index_pos := item_position
 				end
 				indexes_map.put (l_new_pos, l_new_index_pos)
 				content.force (new, l_new_pos)
@@ -797,13 +803,13 @@ feature -- Element change
 					add_space
 					internal_search (key)
 				end
-				if deleted_item_position /= ht_impossible_position then
+				if deleted_item_position = ht_impossible_position then
+					l_new_pos := keys.count
+					l_new_index_pos := item_position
+				else
 					l_new_pos := deleted_position (deleted_item_position)
 					l_new_index_pos := deleted_item_position
 					deleted_marks.force (False, l_new_pos)
-				else
-					l_new_pos := keys.count
-					l_new_index_pos := item_position
 				end
 				indexes_map.put (l_new_pos, l_new_index_pos)
 				keys.force (key, l_new_pos)
@@ -853,13 +859,13 @@ feature -- Element change
 				add_space
 				search_for_insertion (key)
 			end
-			if deleted_item_position /= ht_impossible_position then
+			if deleted_item_position = ht_impossible_position then
+				l_new_pos := keys.count
+				l_new_index_pos := item_position
+			else
 				l_new_pos := deleted_position (deleted_item_position)
 				l_new_index_pos := deleted_item_position
 				deleted_marks.force (False, l_new_pos)
-			else
-				l_new_pos := keys.count
-				l_new_index_pos := item_position
 			end
 			indexes_map.put (l_new_pos, l_new_index_pos)
 			content.force (new, l_new_pos)
@@ -903,8 +909,8 @@ feature -- Element change
 			replaced_or_not_found: replaced or not_found
 			insertion_done: replaced implies item (key) = new
 			no_change_if_not_found: not_found implies
-						item (key) = old (item (key))
-			found_item_is_old_item: found_item = old (item (key))
+						item (key) = old item (key)
+			found_item_is_old_item: found_item = old item (key)
 		end
 
 	replace_key (new_key: K; old_key: K)
@@ -941,9 +947,9 @@ feature -- Element change
 			new_present: (replaced or conflict) = has (new_key)
 			new_item: replaced implies (item (new_key) = old (item (old_key)))
 			not_found_implies_no_old_key: not_found implies old (not has (old_key))
-			conflict_iff_already_present: conflict = old (has (new_key))
+			conflict_iff_already_present: conflict = old has (new_key)
 			not_inserted_if_conflict: conflict implies
-						(item (new_key) = old (item (new_key)))
+						(item (new_key) = old item (new_key))
 		end
 
 	merge (other: HASH_TABLE [G, K])
@@ -996,7 +1002,7 @@ feature -- Removal
 					-- we set all deleted positions to the same item and key when removing
 					-- on the inside of the SPECIALs, otherwise we simply shrink the SPECIALs.
 				ht_lowest_deleted_position := l_pos.min (ht_lowest_deleted_position)
-				if (ht_lowest_deleted_position = count) then
+				if ht_lowest_deleted_position = count then
 						-- We have removed all elements above `ht_lowest_deleted_position', we can
 						-- shrink our SPECIALs.
 					l_nb_removed_items := content.count - ht_lowest_deleted_position
@@ -1086,7 +1092,7 @@ feature -- Removal
 
 	clear_all
 		obsolete
-			"Use `wipe_out' instead."
+			"Use `wipe_out' instead. [2017-05-31]"
 		do
 			wipe_out
 		end
@@ -1178,19 +1184,20 @@ feature {NONE} -- Transformation
 					-- In version 5.5 and later, `deleted_marks' had its size increased by 1 to take
 					-- into account removal of default key, and therefore if we hit a 5.4 or earlier
 					-- version, we need to resize `deleted_marks' to the new expected size.
-				if deleted_marks /= Void and keys /= Void then
-					if not mismatch_information.has ("hash_table_version_57") then
-							-- Unfortunately this handling of the mismatch was added in 5.7 and
-							-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
-							-- Fortunately enough we can simply compare the counts of
-							-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
-							-- otherwise it is 5.4 or older.
-						if deleted_marks.count /= keys.count then
-							l_old_deleted_marks := deleted_marks
-							create deleted_marks.make_empty (keys.count)
-							deleted_marks.copy_data (l_old_deleted_marks, 0, 0, l_old_deleted_marks.count)
-						end
-					end
+				if
+					deleted_marks /= Void and
+					keys /= Void and then
+					not mismatch_information.has ("hash_table_version_57") and then
+						-- Unfortunately this handling of the mismatch was added in 5.7 and
+						-- therefore we might have stored a valid HASH_TABLE using 5.5 or 5.6.
+						-- Fortunately enough we can simply compare the counts of
+						-- `deleted_marks' and `keys'. If they are the same it is 5.5 or 5.6,
+						-- otherwise it is 5.4 or older.
+					deleted_marks.count /= keys.count
+				then
+					l_old_deleted_marks := deleted_marks
+					create deleted_marks.make_empty (keys.count)
+					deleted_marks.copy_data (l_old_deleted_marks, 0, 0, l_old_deleted_marks.count)
 				end
 
 				if attached {INTEGER} mismatch_information.item ("count") as l_retrieved_count then
@@ -1498,7 +1505,7 @@ feature {NONE} -- Implementation
 		ensure
 			found_or_not_found: found or not_found
 			deleted_item_at_deleted_position:
-				(deleted_item_position /= ht_impossible_position) implies (deleted (deleted_item_position))
+				(deleted_item_position /= ht_impossible_position) implies deleted (deleted_item_position)
 			default_iff_at_capacity: (item_position = capacity) = (key = computed_default_key)
 		end
 
@@ -1557,7 +1564,7 @@ feature {NONE} -- Implementation
 			deleted_item_position := l_first_deleted_position
 		ensure
 			deleted_item_at_deleted_position:
-				(deleted_item_position /= ht_impossible_position) implies (deleted (deleted_item_position))
+				(deleted_item_position /= ht_impossible_position) implies deleted (deleted_item_position)
 			default_iff_at_capacity: (item_position = capacity) = (key = computed_default_key)
 		end
 
@@ -1572,7 +1579,7 @@ feature {NONE} -- Implementation
 	initial_position (hash_value: INTEGER): INTEGER
 			-- Initial position for an item of hash code `hash_value'
 		do
-			Result := (hash_value \\ capacity)
+			Result := hash_value \\ capacity
 		end
 
 	position_increment (hash_value: INTEGER): INTEGER
@@ -1659,7 +1666,7 @@ feature {NONE} -- Implementation
 	special_status: BOOLEAN
 			-- Has status been set to some non-default value?
 		do
-			Result := (control > 0)
+			Result := control > 0
 		ensure
 			Result = (control > 0)
 		end
@@ -1744,9 +1751,9 @@ note
 				... No item was present for `your_key' ...
 			end
 		]"
-	date: "$Date: 2016-03-02 10:03:36 -0800 (Wed, 02 Mar 2016) $"
-	revision: "$Revision: 98555 $"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
