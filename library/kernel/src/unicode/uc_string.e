@@ -2385,7 +2385,7 @@ feature -- Element change
 	insert (s: STRING; i: INTEGER)
 			-- Add `s' to left of position `i' in current string.
 		obsolete
-			"ELKS 2001: use `insert_string' instead"
+			"ELKS 2001: use `insert_string' instead. [2017-04-09]"
 		do
 			insert_string (s, i)
 		end

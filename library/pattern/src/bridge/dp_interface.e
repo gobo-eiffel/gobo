@@ -14,7 +14,7 @@ deferred class DP_INTERFACE
 
 obsolete
 
-	"[090423] This class does not work well in void-safe mode. Please stop using it."
+	"This class does not work well in void-safe mode. Please stop using it. [2009-04-23]"
 
 feature {NONE} -- Initialization
 

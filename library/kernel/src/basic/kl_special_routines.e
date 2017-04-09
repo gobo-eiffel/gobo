@@ -131,7 +131,7 @@ feature -- Resizing
 			-- or a newly created special object where items from
 			-- `an_array' have been copied to.
 		obsolete
-			"[20130823] Use `aliased_resized_area' instead."
+			"Use `aliased_resized_area' instead. [2013-08-23]"
 		require
 			an_array_not_void: an_array /= Void
 			n_large_enough: n >= an_array.capacity

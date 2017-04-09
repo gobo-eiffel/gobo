@@ -12,7 +12,9 @@ note
 
 deferred class XM_STREAM_POSITION
 
-obsolete "Use XM_POSITION directly"
+obsolete
+
+	"Use XM_POSITION directly. [2017-04-09]"
 
 inherit
 

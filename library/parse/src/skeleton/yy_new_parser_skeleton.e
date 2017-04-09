@@ -14,7 +14,7 @@ deferred class YY_NEW_PARSER_SKELETON
 
 obsolete
 
-	"[050311] Use YY_PARSER_SKELETON instead."
+	"Use YY_PARSER_SKELETON instead. [2005-03-11]"
 
 inherit
 

@@ -91,7 +91,8 @@ feature -- Access
 
 	source: XM_SOURCE
 			-- Source of the XML document beeing parsed
-		obsolete "Use position.source_name"
+		obsolete
+			"Use position.source_name. [2017-04-09]"
 		do
 			create {XM_FILE_SOURCE} Result.make (position.source_name)
 		end

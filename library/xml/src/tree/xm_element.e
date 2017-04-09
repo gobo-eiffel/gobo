@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 	make_child (a_parent: like parent; a_name: like name; a_ns: like namespace)
 			-- Create a new child element.
 		obsolete
-			"Use make"
+			"Use make. [2017-04-09]"
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void

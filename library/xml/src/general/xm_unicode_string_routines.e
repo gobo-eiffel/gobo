@@ -12,7 +12,9 @@ note
 
 class XM_UNICODE_STRING_ROUTINES
 
-obsolete "Use XM_UNICODE_CHARACTERS and descendant classes"
+obsolete
+
+	"Use XM_UNICODE_CHARACTERS and descendant classes. [2017-04-09]"
 
 inherit
 

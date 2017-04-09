@@ -12,7 +12,9 @@ note
 
 class XM_RESOLVED_FORMATTER
 
-obsolete "Use XM_XMLNS_GENERATOR and XM_NAMESPACE_PRETTY_PRINT_FILTER directly"
+obsolete
+
+	"Use XM_XMLNS_GENERATOR and XM_NAMESPACE_PRETTY_PRINT_FILTER directly. [2017-04-09]"
 
 inherit
 

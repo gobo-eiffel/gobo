@@ -12,7 +12,9 @@ note
 
 class XM_FILE_SOURCE
 
-obsolete "Use XM_POSITION instead"
+obsolete
+
+	"Use XM_POSITION instead. [2017-04-09]"
 
 inherit
 

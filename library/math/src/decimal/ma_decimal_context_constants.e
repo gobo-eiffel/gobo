@@ -107,7 +107,7 @@ feature -- Constants: limits
 	Minimum_integer_as_decimal: MA_DECIMAL
 			-- Minimum value convertible to integer
 		obsolete
-			"[050911] Use MA_DECIMAL_CONSTANTS.minimum_integer instead."
+			"Use MA_DECIMAL_CONSTANTS.minimum_integer instead. [2005-09-11]"
 		once
 			Result := decimal.minimum_integer
 		ensure
@@ -117,7 +117,7 @@ feature -- Constants: limits
 	Maximum_integer_as_decimal: MA_DECIMAL
 			-- Maximum value convertible to integer
 		obsolete
-			"[050911] Use MA_DECIMAL_CONSTANTS.maximum_integer instead."
+			"Use MA_DECIMAL_CONSTANTS.maximum_integer instead. [2005-09-11]"
 		once
 			Result := decimal.maximum_integer
 		ensure

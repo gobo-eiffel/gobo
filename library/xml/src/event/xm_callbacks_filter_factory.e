@@ -48,7 +48,8 @@ feature -- Filters
 
 	new_end_tag_checker: XM_END_TAG_CHECKER
 			-- New end tag checker filter
-		obsolete "End tag checking is built into parser"
+		obsolete 
+			"End tag checking is built into parser. [2017-04-09]"
 		do
 			create Result.make_null
 		ensure
@@ -113,7 +114,8 @@ feature -- Filters
 
 	new_tree_builder: XM_CALLBACKS_TO_TREE_FILTER
 			-- New tree construction filter
-		obsolete "See tree cluster, e.g. XM_TREE_CALLBACKS_PIPE"
+		obsolete 
+			"See tree cluster, e.g. XM_TREE_CALLBACKS_PIPE. [2017-04-09]"
 		do
 			create Result.make_null
 		ensure

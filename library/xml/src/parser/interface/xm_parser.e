@@ -93,7 +93,8 @@ feature -- Incremental parsing
 
 	set_end_of_document
 			-- Old name for `finish_incremental'.
-		obsolete "Use finish_incremental instead."
+		obsolete
+			"Use finish_incremental instead. [2017-04-09]"
 		do
 			finish_incremental
 		end

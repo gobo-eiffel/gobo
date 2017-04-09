@@ -177,7 +177,7 @@ feature -- Access
 	default_context: MA_DECIMAL_CONTEXT
 			-- Default context for general purpose arithmetic
 		obsolete
-			"[050911] Use MA_SHARED_DECIMAL_CONTEXT instead."
+			"Use MA_SHARED_DECIMAL_CONTEXT instead. [2005-09-11]"
 		once
 			create Result.make_default
 		ensure

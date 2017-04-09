@@ -14,7 +14,7 @@ class MA_DECIMAL_MATH
 
 obsolete
 
-	"[050911] Use MA_DECIMAL_CONSTANTS instead."
+	"Use MA_DECIMAL_CONSTANTS instead. [2005-09-11]"
 
 inherit
 

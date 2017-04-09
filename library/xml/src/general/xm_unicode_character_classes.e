@@ -12,7 +12,9 @@ note
 
 class XM_UNICODE_CHARACTER_CLASSES
 
-obsolete "Use XM_UNICODE_CHARACTERS_1_0"
+obsolete
+
+	"Use XM_UNICODE_CHARACTERS_1_0. [2017-04-09]"
 
 inherit
 

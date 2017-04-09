@@ -54,7 +54,8 @@ feature -- Initialization
 
 	wipe_out
 			-- Clear `last_string'.
-		obsolete "Not meaningful now that streams are used"
+		obsolete 
+			"Not meaningful now that streams are used. [2017-04-09]"
 		do
 		end
 
@@ -77,7 +78,7 @@ feature -- Debugging options
 	include_position (a_pos_table: XM_POSITION_TABLE)
 			-- Specify that node positions will be kept in `a_pos_table'.
 		obsolete
-			"position not supported in filters"
+			"position not supported in filters. [2017-04-09]"
 		require
 			a_pos_table_not_void: a_pos_table /= Void
 		do
@@ -88,7 +89,7 @@ feature -- Debugging options
 	exclude_position
 			-- Specify that node positions will not be kept.
 		obsolete
-			"position not supported in filters"
+			"position not supported in filters. [2017-04-09]"
 		do
 		ensure
 			position_included: not is_position_included

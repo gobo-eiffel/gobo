@@ -68,7 +68,8 @@ feature -- Obsolete
 
 	source: XM_SOURCE
 			-- Source from where position is taken
-		obsolete "Use source_name"
+		obsolete
+			"Use source_name. [2017-04-09]"
 		do
 				-- The ID is likely to be only a relative id or '-',
 				-- but should be sufficient for an obsolete routine.
