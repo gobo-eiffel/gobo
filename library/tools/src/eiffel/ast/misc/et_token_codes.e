@@ -358,19 +358,20 @@ feature -- Built-in codes
 	builtin_platform_class: INTEGER = 18
 	builtin_platform_boolean_bytes: INTEGER = 1
 	builtin_platform_character_bytes: INTEGER = 2
-	builtin_platform_integer_bytes: INTEGER = 3
-	builtin_platform_is_dotnet: INTEGER = 4
-	builtin_platform_is_mac: INTEGER = 5
-	builtin_platform_is_scoop_capable: INTEGER = 6
-	builtin_platform_is_thread_capable: INTEGER = 7
-	builtin_platform_is_unix: INTEGER = 8
-	builtin_platform_is_vms: INTEGER = 9
-	builtin_platform_is_windows: INTEGER = 10
-	builtin_platform_pointer_bytes: INTEGER = 11
-	builtin_platform_real_bytes: INTEGER = 12
-	builtin_platform_wide_character_bytes: INTEGER = 13
-	builtin_platform_double_bytes: INTEGER = 14
-	builtin_platform_is_vxworks: INTEGER = 15
+	builtin_platform_double_bytes: INTEGER = 3
+	builtin_platform_integer_bytes: INTEGER = 4
+	builtin_platform_is_64_bits: INTEGER = 5
+	builtin_platform_is_dotnet: INTEGER = 6
+	builtin_platform_is_mac: INTEGER = 7
+	builtin_platform_is_scoop_capable: INTEGER = 8
+	builtin_platform_is_thread_capable: INTEGER = 9
+	builtin_platform_is_unix: INTEGER = 10
+	builtin_platform_is_vms: INTEGER = 11
+	builtin_platform_is_vxworks: INTEGER = 12
+	builtin_platform_is_windows: INTEGER = 13
+	builtin_platform_pointer_bytes: INTEGER = 14
+	builtin_platform_real_bytes: INTEGER = 15
+	builtin_platform_wide_character_bytes: INTEGER = 16
 			-- Codes for built-in features from class "PLATFORM"
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER

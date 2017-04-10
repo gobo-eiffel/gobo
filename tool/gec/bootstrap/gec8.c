@@ -22,7 +22,7 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 	GE_init_exception(ac);
 	GE_init_identified();
 	GE_init_const();
-	t1 = T23c42(ac);
+	t1 = T23c40(ac);
 	return 0;
 }
 

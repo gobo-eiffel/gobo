@@ -2963,6 +2963,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_platform_integer_bytes_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_platform_is_64_bits then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_platform_is_64_bits_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_platform_is_dotnet then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -14200,6 +14206,8 @@ feature {NONE} -- Query call generation
 				print_builtin_platform_double_bytes_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_integer_bytes then
 				print_builtin_platform_integer_bytes_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_platform_is_64_bits then
+				print_builtin_platform_is_64_bits_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_dotnet then
 				print_builtin_platform_is_dotnet_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_mac then
@@ -21751,6 +21759,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
+		end
+
+	print_builtin_platform_is_64_bits_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PLATFORM.s_64_bits'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_ge_is_64_bits)
 		end
 
 	print_builtin_platform_is_dotnet_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -34057,6 +34079,7 @@ feature {NONE} -- Constants
 	c_ge_integer_32_field_at: STRING = "GE_integer_32_field_at"
 	c_ge_integer_64_field: STRING = "GE_integer_8_field"
 	c_ge_integer_64_field_at: STRING = "GE_integer_64_field_at"
+	c_ge_is_64_bits: STRING = "GE_IS_64_BITS"
 	c_ge_is_attached_encoded_type: STRING = "GE_is_attached_encoded_type"
 	c_ge_is_copy_semantics_field: STRING = "GE_is_copy_semantics_field"
 	c_ge_is_expanded_object: STRING = "GE_is_expanded_object"

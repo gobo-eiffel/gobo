@@ -71,6 +71,12 @@ feature -- Platform
 			Result := l_first = l_nat8
 		end
 
+	is_64_bits: BOOLEAN
+			-- Is the current process runing in 64-bit mode
+		external
+			"built_in static"
+		end
+
 feature -- Access bytes size
 
 	boolean_bytes: INTEGER

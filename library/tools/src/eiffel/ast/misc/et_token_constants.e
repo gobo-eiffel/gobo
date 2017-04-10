@@ -1772,6 +1772,14 @@ feature -- Feature names
 			invariant_feature_name_not_void: Result /= Void
 		end
 
+	is_64_bits_feature_name: ET_FEATURE_NAME
+			-- 'is_64_bits' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_64_bits_name)
+		ensure
+			is_64_bits_feature_name_not_void: Result /= Void
+		end
+
 	is_attached_feature_name: ET_FEATURE_NAME
 			-- 'is_attached' feature name
 		once
@@ -4720,6 +4728,9 @@ feature -- Keyword and symbol names
 
 	integer_remainder_name: STRING = "integer_remainder"
 			-- Name of Eiffel feature 'integer_remainder'
+
+	is_64_bits_name: STRING = "is_64_bits"
+			-- Name of Eiffel feature 'is_64_bits'
 
 	is_attached_name: STRING = "is_attached"
 			-- Name of Eiffel feature 'is_attached'

@@ -5,7 +5,7 @@ note
 		"Test features of class PLATFORM"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -175,4 +175,13 @@ feature -- Test
 			assert ("natural_64_bits", p.natural_64_bits = 64)
 		end
 
+	test_is_64_bits
+			-- Test feature 'is_64_bits'.
+		local
+			p: PLATFORM
+		do
+			create p
+			assert ("64_bits_definition", p.is_64_bits = (p.pointer_bits = 64))
+		end
+		
 end

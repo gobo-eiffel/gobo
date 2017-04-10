@@ -215,6 +215,12 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #endif
 #endif
 
+#ifdef _WIN64
+#define GE_IS_64_BITS EIF_TRUE
+#else
+#define GE_IS_64_BITS EIF_TEST(sizeof(void*)==64)
+#endif
+
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
 #define snprintf(a,b,c,d) sprintf(a,c,d)

@@ -5,7 +5,7 @@ note
 		"Eiffel built-in feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -1105,7 +1105,19 @@ feature {NONE} -- Built-in validity
 			l_formals: detachable ET_FORMAL_ARGUMENT_LIST
 		do
 				-- List function names first, then procedure names.
-			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
+			if a_feature.name.same_feature_name (tokens.is_64_bits_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_64_bits))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_64_bits: BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
+				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
+						-- The signature should be 'is_64_bits: BOOLEAN'.
+					set_fatal_error
+					error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_dotnet))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
@@ -2959,7 +2971,12 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		do
 				-- List procedure names first, then function names.
-			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
+			if a_feature.name.same_feature_name (tokens.is_64_bits_feature_name) then
+					-- 'PLATFORM.is_64_bits' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_64_bits))
+				set_fatal_error
+				error_handler.report_gvkbs0a_error (current_class, a_feature, Void, current_universe.boolean_type)
+			elseif a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
 					-- 'PLATFORM.is_dotnet' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_dotnet))
 				set_fatal_error
