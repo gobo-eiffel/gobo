@@ -44,18 +44,31 @@ convert
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	to_string_8: {STRING_8, STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_8},
-	to_string_32: {STRING_32, READABLE_STRING_32}
+	to_string_8: {STRING_8, READABLE_STRING_8},
+	to_string_32: {STRING_32, READABLE_STRING_32, STRING_GENERAL, READABLE_STRING_GENERAL}
 
 feature -- Access
+
+	name_32: IMMUTABLE_STRING_32
+			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
+			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+		do
+			Result := internal_name_32
+			if not attached Result then
+				create Result.make_from_string_general (runtime_name)
+				internal_name_32 := Result
+			end
+		ensure
+			name_32_attached: attached Result
+		end
 
 	name: IMMUTABLE_STRING_8
 			-- Name of Eiffel type represented by `Current', using Eiffel style guidelines
 			-- as specified in OOSC2 (e.g. COMPARABLE, HASH_TABLE [FOO, BAR], ...)
+			-- Consider using `name_32` instead.
 		do
-			if attached internal_name as l_name then
-				Result := l_name
-			else
+			Result := internal_name
+			if not attached Result then
 				create Result.make_from_string (runtime_name)
 				internal_name := Result
 			end
@@ -199,10 +212,10 @@ feature -- Output
 			create Result.make_from_string (name)
 		end
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_32
 			-- <Precursor>
 		do
-			create Result.make_from_string (name)
+			Result := name_32
 		end
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
@@ -213,7 +226,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name + other' instead (or 'out + other' during the transition period). [2017-05-31]"
+			"Use 'name_32 + other' instead. [2017-05-31]"
 		require
 			argument_not_void: other /= Void
 		do
@@ -231,7 +244,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name.same_string (other)' instead (or 'out.same_string (other)' during the transition period). [2017-05-31]"
+			"Use 'name_32.same_string (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -247,7 +260,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name.is_case_insensitive_equal (other)' instead (or 'out.is_case_insensitive_equal (other)' during the transition period). [2017-05-31]"
+			"Use 'name_32.is_case_insensitive_equal (other)' instead. [2017-05-31]"
 		require
 			other_not_void: other /= Void
 		do
@@ -262,7 +275,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name.as_lower' instead (or 'out.as_lower' during the transition period). [2017-05-31]"
+			"Use 'name_32.as_lower' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_lower
@@ -277,7 +290,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 			-- This feature from STRING is needed here for the
 			-- transition period (see convert clause).
 		obsolete
-			"Use 'name.as_upper' instead (or 'out.as_upper' during the transition period). [2017-05-31]"
+			"Use 'name_32.as_upper' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 			Result.to_upper
@@ -288,7 +301,7 @@ feature -- Features from STRING needed here for the transition period (see conve
 
 	to_string_8: STRING_8
 		obsolete
-			"Use `name' instead (or `out' during the transition period). [2017-05-31]"
+			"Use `name_32' instead. [2017-05-31]"
 		do
 			create Result.make_from_string (name)
 		ensure
@@ -298,17 +311,22 @@ feature -- Features from STRING needed here for the transition period (see conve
 	to_string_32: STRING_32
 			-- Name of type
 		obsolete
-			"Use 'name' instead (or 'out' during the transition period). [2017-05-31]"
+			"Use 'name_32' instead. [2017-05-31]"
 		do
-			create Result.make_from_string_general (name)
+			create Result.make_from_string (name_32)
 		ensure
 			to_string_32_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Access
 
+	internal_name_32: detachable IMMUTABLE_STRING_32
+			-- Storage for once per object `name_32`.
+		note option: stable, transient attribute end
+
 	internal_name: detachable IMMUTABLE_STRING_8
-			-- Storage for once per object `name'
+			-- Storage for once per object `name`.
+		note option: stable, transient attribute end
 
 feature {NONE} -- Implementation
 
@@ -323,7 +341,7 @@ feature {NONE} -- Implementation
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

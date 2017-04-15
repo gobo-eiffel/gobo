@@ -25,7 +25,7 @@ feature -- Correction
 				-- If it is not redefined then we raise an exception.
 			create l_msg.make_from_string ("Mismatch: ")
 			create l_exc
-			l_msg.append (generating_type)
+			l_msg.append (generating_type.name)
 			l_exc.raise_retrieval_exception (l_msg)
 		end
 
@@ -36,7 +36,7 @@ feature -- Correction
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

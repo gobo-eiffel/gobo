@@ -100,7 +100,7 @@ feature -- Access
 		require
 			object_not_void: object /= Void
 		do
-			Result := object.generating_type
+			Result := object.generating_type.name
 		end
 
 	dynamic_type (object: separate ANY): INTEGER

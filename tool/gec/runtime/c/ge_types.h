@@ -153,7 +153,8 @@ typedef struct {
 	EIF_INTEGER type_id; /* Type id of the type "X" */
 	EIF_BOOLEAN is_special;
 	void (*dispose)(GE_context*, EIF_REFERENCE);
-	EIF_REFERENCE a1; /* runtime_name */
+	EIF_REFERENCE a1; /* internal_name */
+	EIF_REFERENCE a2; /* internal_name_32 */
 } EIF_TYPE_OBJ;
 
 /*

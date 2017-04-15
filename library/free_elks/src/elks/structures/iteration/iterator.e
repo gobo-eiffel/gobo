@@ -2,8 +2,8 @@ note
 	description: "[
 		Objects that are able to iterate over traversable structures,
 		on which they can perform repeated actions and tests according
-		to a number of predefined control structures such as ``if'',
-		``until'' and others.
+		to a number of predefined control structures such as `if',
+		`until' and others.
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."

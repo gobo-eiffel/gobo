@@ -1,7 +1,7 @@
 note
 	description: "[
-		``Active'' data structures, which at every stage have
-		a possibly undefined ``current item''.
+		`Active' data structures, which at every stage have
+		a possibly undefined `current item'.
 		Basic access and modification operations apply to the current item.
 		]"
 	library: "Free implementation of ELKS library"
@@ -72,7 +72,7 @@ invariant
 	empty_constraint: is_empty implies (not readable) and (not writable)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

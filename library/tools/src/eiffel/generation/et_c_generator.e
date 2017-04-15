@@ -30413,6 +30413,9 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_integer (0)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_integer (0)
 			current_file.put_character ('}')
 			current_file.put_character (',')
 			current_file.put_new_line
@@ -30453,7 +30456,11 @@ print ("Extended attribute " + a_type.base_class.upper_name + "." + l_query.stat
 				else
 					current_file.put_integer (0)
 				end
-					-- Attribute `runtime_name'.
+					-- Attribute `internal_name'.
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (0)
+					-- Attribute `internal_name_32'.
 				current_file.put_character (',')
 				current_file.put_character (' ')
 				current_file.put_integer (0)

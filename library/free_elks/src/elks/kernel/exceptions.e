@@ -210,7 +210,7 @@ feature -- Status setting
 			False
 		end
 
-	new_die (code: INTEGER) obsolete "Use ``die''. [2017-05-31]"
+	new_die (code: INTEGER) obsolete "Use `die'. [2017-05-31]"
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external

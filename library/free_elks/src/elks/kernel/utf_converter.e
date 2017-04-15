@@ -1217,7 +1217,7 @@ feature -- UTF-32 to UTF-16
 		ensure
 			roundtrip: attached utf_32_string_to_utf_16le_string_8 (s) as l_ref and then
 				across Result.resized_area_with_default (0, Result.count - 1) as l_spec all
-					l_spec.item = (l_ref.code ((l_spec.target_index + 1) * 2 - 1) | (l_ref.code ((l_spec.target_index + 1) * 2) |<< 8))
+					l_spec.item = (l_ref.code (l_spec.target_index * 2 + 1) | ((l_ref.code ((l_spec.target_index + 1) * 2)) |<< 8))
 				end
 		end
 
