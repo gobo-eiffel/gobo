@@ -1060,7 +1060,7 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type)
+				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type.name)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			else
@@ -1099,7 +1099,7 @@ feature {TS_TEST_HANDLER} -- Exception
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached {DEVELOPER_EXCEPTION} l_exception as l_developer_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type)
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type.name)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached l_developer_exception.description as l_description then

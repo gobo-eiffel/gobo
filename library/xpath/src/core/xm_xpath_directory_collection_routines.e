@@ -5,7 +5,7 @@ note
 		"Objects that support the default collection and file: collections"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2005-2016, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2017, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			a_builder_not_void: a_builder /= Void
 		local
 			l_file: RAW_FILE
-			l_info: UNIX_FILE_INFO
+			l_info: FILE_INFO
 		do
 			a_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, a_uri.full_uri, 0)
 			check attached File_uri.uri_to_filename (a_uri) as l_uri_to_filename then
