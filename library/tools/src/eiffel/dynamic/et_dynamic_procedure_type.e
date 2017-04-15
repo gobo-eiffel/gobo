@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic PROCEDURE types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			-- Create a new object at each call.
 		do
 			Result := precursor (a_procedure, a_system)
-			if Result.builtin_code = tokens.builtin_procedure_feature (tokens.builtin_procedure_call) then
+			if Result.builtin_class_code = tokens.builtin_procedure_class and then Result.builtin_feature_code = tokens.builtin_procedure_call then
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end

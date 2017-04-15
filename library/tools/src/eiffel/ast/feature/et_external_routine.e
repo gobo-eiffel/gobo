@@ -5,10 +5,10 @@ note
 		"Eiffel external routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2008/12/01 $"
-	revision: "$Revision: #8 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class ET_EXTERNAL_ROUTINE
 
@@ -36,7 +36,7 @@ feature -- Built-in
 	is_builtin: BOOLEAN
 			-- Is current feature built-in?
 		do
-			Result := (builtin_code /= tokens.builtin_not_builtin)
+			Result := (builtin_class_code /= tokens.builtin_not_builtin)
 		end
 
 	is_builtin_unknown: BOOLEAN
@@ -44,18 +44,24 @@ feature -- Built-in
 		require
 			is_builtin: is_builtin
 		do
-			Result := (builtin_code = tokens.builtin_unknown)
+			Result := (builtin_class_code = tokens.builtin_unknown)
 		end
 
-	builtin_code: INTEGER
+	builtin_class_code: NATURAL_8
+			-- Built-in class code
+
+	builtin_feature_code: NATURAL_8
 			-- Built-in feature code
 
-	set_builtin_code (a_code: INTEGER)
-			-- Set `builtin_code' to `a_code'.
+	set_builtin_code (a_class_code, a_feature_code: NATURAL_8)
+			-- Set `builtin_class_code' to `a_class_code'
+			-- and `builtin_feature_code' to `a_feature_code'.
 		do
-			builtin_code := a_code
+			builtin_class_code := a_class_code
+			builtin_feature_code := a_feature_code
 		ensure
-			builtin_code_set: builtin_code = a_code
+			builtin_class_code_set: builtin_class_code = a_class_code
+			builtin_feature_code_set: builtin_feature_code = a_feature_code
 		end
 
 end

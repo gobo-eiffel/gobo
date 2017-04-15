@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,9 +26,6 @@ inherit
 	HASHABLE
 
 	DEBUG_OUTPUT
-
-	ET_TOKEN_CODES
-		export {NONE} all end
 
 create
 
@@ -578,7 +575,7 @@ feature -- Features
 					l_dynamic_feature := dynamic_query (l_query, a_system)
 				else
 						-- Check if we have built-in attributes.
-					if attached {ET_EXTERNAL_FUNCTION} l_query as l_external_function and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_code) then
+					if attached {ET_EXTERNAL_FUNCTION} l_query as l_external_function and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_class_code, l_external_function.builtin_feature_code) then
 						l_dynamic_feature := dynamic_query (l_external_function, a_system)
 					end
 				end
@@ -586,77 +583,78 @@ feature -- Features
 			end
 		end
 
-	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_code: INTEGER): BOOLEAN
-			-- Is built-in feature `a_feature' with code `a_built_code'
-			-- considered as an attribute or not in the current type?
+	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_class_code, a_builtin_feature_code: NATURAL_8): BOOLEAN
+			-- Is built-in feature `a_feature' with code `a_built_class_code'
+			-- and `a_builtin_feature_code' considered as an attribute or not
+			-- in the current type?
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			inspect a_builtin_code // builtin_capacity
-			when builtin_boolean_ref_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_boolean_ref_item then
+			inspect a_builtin_class_code
+			when {ET_TOKEN_CODES}.builtin_boolean_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_boolean_ref_item then
 					Result := True
 				end
-			when builtin_character_8_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
+			when {ET_TOKEN_CODES}.builtin_character_8_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_character_n_ref_item then
 					Result := True
 				end
-			when builtin_character_32_class then
-				 if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
+			when {ET_TOKEN_CODES}.builtin_character_32_ref_class then
+				 if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_character_n_ref_item then
 					Result := True
 				end
-			when builtin_pointer_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_pointer_item then
+			when {ET_TOKEN_CODES}.builtin_integer_8_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_integer_8_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_integer_16_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_integer_16_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_integer_32_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_integer_32_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_integer_64_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_integer_64_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_natural_8_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_natural_8_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_natural_16_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_natural_16_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_natural_32_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_natural_32_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_natural_64_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_integer_n_ref_item then
 					Result := True
 				end
-			when builtin_natural_64_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
+			when {ET_TOKEN_CODES}.builtin_pointer_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_pointer_ref_item then
 					Result := True
 				end
-			when builtin_real_32_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
+			when {ET_TOKEN_CODES}.builtin_real_32_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_real_n_ref_item then
 					Result := True
 				end
-			when builtin_real_64_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
+			when {ET_TOKEN_CODES}.builtin_real_64_ref_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_real_n_ref_item then
 					Result := True
 				end
-			when builtin_tuple_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_tuple_object_comparison then
+			when {ET_TOKEN_CODES}.builtin_special_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_count then
+					Result := True
+				elseif a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_special_capacity then
 					Result := True
 				end
-			when builtin_special_class then
-				if (a_builtin_code \\ builtin_capacity) = builtin_special_count then
-					Result := True
-				elseif (a_builtin_code \\ builtin_capacity) = builtin_special_capacity then
+			when {ET_TOKEN_CODES}.builtin_tuple_class then
+				if a_builtin_feature_code = {ET_TOKEN_CODES}.builtin_tuple_object_comparison then
 					Result := True
 				end
 			else

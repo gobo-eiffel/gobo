@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -106,9 +106,6 @@ inherit
 			report_void_constant,
 			feature_checker
 		end
-
-	ET_TOKEN_CODES
-		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -948,102 +945,99 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
 			builtin_feature_known: not a_feature.is_builtin_unknown
-		local
-			l_builtin_class: INTEGER
 		do
-			l_builtin_class := a_feature.builtin_code // builtin_capacity
-			inspect l_builtin_class
-			when builtin_any_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_any_twin then
+			inspect a_feature.builtin_class_code
+			when {ET_TOKEN_CODES}.builtin_any_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_any_twin then
 					report_builtin_any_twin (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_function_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_function_item then
-					report_builtin_function_item (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_identified_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_identified_eif_id_object then
-					report_builtin_identified_eif_id_object (a_feature)
-				when builtin_identified_eif_object_id then
-					report_builtin_identified_eif_object_id (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_ise_runtime_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_ise_runtime_new_instance_of then
-					report_builtin_ise_runtime_new_instance_of (a_feature)
-				when builtin_ise_runtime_new_special_of_reference_instance_of then
-					report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature)
-				when builtin_ise_runtime_new_tuple_instance_of then
-					report_builtin_ise_runtime_new_tuple_instance_of (a_feature)
-				when builtin_ise_runtime_new_type_instance_of then
-					report_builtin_ise_runtime_new_type_instance_of (a_feature)
-				when builtin_ise_runtime_reference_field then
-					report_builtin_ise_runtime_reference_field (a_feature)
-				when builtin_ise_runtime_reference_field_at then
-					report_builtin_ise_runtime_reference_field_at (a_feature)
-				when builtin_ise_runtime_reference_field_at_offset then
-					report_builtin_ise_runtime_reference_field_at_offset (a_feature)
-				when builtin_ise_runtime_storable_version_of_type then
-					report_builtin_ise_runtime_storable_version_of_type (a_feature)
-				when builtin_ise_runtime_type_conforms_to then
-					report_builtin_ise_runtime_type_conforms_to (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_exception_manager_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_exception_from_code then
+			when {ET_TOKEN_CODES}.builtin_exception_manager_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_exception_from_code then
 					report_builtin_exception_manager_exception_from_code (a_feature)
-				when builtin_exception_manager_is_caught then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_caught then
 					report_builtin_exception_manager_is_caught (a_feature)
-				when builtin_exception_manager_is_ignorable then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_ignorable then
 					report_builtin_exception_manager_is_ignorable (a_feature)
-				when builtin_exception_manager_is_ignored then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_ignored then
 					report_builtin_exception_manager_is_ignored (a_feature)
-				when builtin_exception_manager_is_raisable then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_raisable then
 					report_builtin_exception_manager_is_raisable (a_feature)
-				when builtin_exception_manager_last_exception then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_last_exception then
 					report_builtin_exception_manager_last_exception (a_feature)
-				when builtin_exception_manager_type_of_code then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_type_of_code then
 					report_builtin_exception_manager_type_of_code (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_exception_manager_factory_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_factory_exception_manager then
+			when {ET_TOKEN_CODES}.builtin_exception_manager_factory_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_factory_exception_manager then
 					report_builtin_exception_manager_factory_exception_manager (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_special_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_special_item then
+			when {ET_TOKEN_CODES}.builtin_function_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_function_item then
+					report_builtin_function_item (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_id_object then
+					report_builtin_identified_routines_eif_id_object (a_feature)
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_object_id then
+					report_builtin_identified_routines_eif_object_id (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_instance_of then
+					report_builtin_ise_runtime_new_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_special_of_reference_instance_of then
+					report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of then
+					report_builtin_ise_runtime_new_tuple_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_type_instance_of then
+					report_builtin_ise_runtime_new_type_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field then
+					report_builtin_ise_runtime_reference_field (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field_at then
+					report_builtin_ise_runtime_reference_field_at (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field_at_offset then
+					report_builtin_ise_runtime_reference_field_at_offset (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_storable_version_of_type then
+					report_builtin_ise_runtime_storable_version_of_type (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_type_conforms_to then
+					report_builtin_ise_runtime_type_conforms_to (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_special_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_special_item then
 					report_builtin_special_item (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_tuple_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_tuple_reference_item then
+			when {ET_TOKEN_CODES}.builtin_tuple_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_tuple_reference_item then
 					report_builtin_tuple_reference_item (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_type_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_type_default then
+			when {ET_TOKEN_CODES}.builtin_type_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_type_default then
 					report_builtin_type_default (a_feature)
-				when builtin_type_generic_parameter_type then
+				when {ET_TOKEN_CODES}.builtin_type_generic_parameter_type then
 					report_builtin_type_generic_parameter_type (a_feature)
 				else
 					report_builtin_function (a_feature)
@@ -1073,27 +1067,24 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
 			builtin_feature_known: not a_feature.is_builtin_unknown
-		local
-			l_builtin_class: INTEGER
 		do
-			l_builtin_class := a_feature.builtin_code // builtin_capacity
-			inspect l_builtin_class
-			when builtin_exception_manager_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_catch then
+			inspect a_feature.builtin_class_code
+			when {ET_TOKEN_CODES}.builtin_exception_manager_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_catch then
 					report_builtin_exception_manager_catch (a_feature)
-				when builtin_exception_manager_ignore then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_ignore then
 					report_builtin_exception_manager_ignore (a_feature)
-				when builtin_exception_manager_raise then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_raise then
 					report_builtin_exception_manager_raise (a_feature)
-				when builtin_exception_manager_set_is_ignored then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_set_is_ignored then
 					report_builtin_exception_manager_set_is_ignored (a_feature)
 				else
 					report_builtin_procedure (a_feature)
 				end
-			when builtin_tuple_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_tuple_put_reference then
+			when {ET_TOKEN_CODES}.builtin_tuple_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_tuple_put_reference then
 					report_builtin_tuple_put_reference (a_feature)
 				else
 					report_builtin_procedure (a_feature)
@@ -3188,8 +3179,8 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_identified_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Report that built-in feature 'IDENTIFIED.eif_id_object' is being analyzed.
+	report_builtin_identified_routines_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_id_object' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -3197,8 +3188,8 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_identified_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Report that built-in feature 'IDENTIFIED.eif_object_id' is being analyzed.
+	report_builtin_identified_routines_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_object_id' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

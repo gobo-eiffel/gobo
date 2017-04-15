@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1633,7 +1633,7 @@ feature {NONE} -- Built-in feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			builtin_feature_checker.check_builtin_feature_validity (a_feature)
+			builtin_feature_checker.check_feature_validity (a_feature)
 			if builtin_feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end

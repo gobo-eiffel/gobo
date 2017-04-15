@@ -1683,7 +1683,10 @@ feature {NONE} -- Compilation
 							error_handler.report_gvkfe3a_error (l_class, l_typed_pointer_to_pointer_feature, current_system.pointer_type)
 							typed_pointer_to_pointer_feature := Void
 						elseif not l_typed_pointer_to_pointer_feature.is_attribute then
-							if not attached {ET_EXTERNAL_FUNCTION} l_typed_pointer_to_pointer_feature as l_external_function or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
+							if
+								not attached {ET_EXTERNAL_FUNCTION} l_typed_pointer_to_pointer_feature as l_external_function or else
+								not (l_external_function.builtin_class_code = tokens.builtin_pointer_ref_class and then l_external_function.builtin_feature_code = tokens.builtin_pointer_ref_item)
+							then
 								set_fatal_error
 								error_handler.report_gvkfe2a_error (l_class, l_typed_pointer_to_pointer_feature)
 								typed_pointer_to_pointer_feature := Void

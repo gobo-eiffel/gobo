@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,9 +15,6 @@ class ET_DYNAMIC_FEATURE
 inherit
 
 	DEBUG_OUTPUT
-
-	ET_TOKEN_CODES
-		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -50,9 +47,11 @@ feature {NONE} -- Initialization
 			target_type := a_target_type
 			dynamic_type_sets := empty_dynamic_type_sets
 			if attached {ET_EXTERNAL_ROUTINE} a_feature as l_external_routine then
-				builtin_code := l_external_routine.builtin_code
+				builtin_class_code := l_external_routine.builtin_class_code
+				builtin_feature_code := l_external_routine.builtin_feature_code
 			else
-				builtin_code := builtin_not_builtin
+				builtin_class_code := tokens.builtin_not_builtin
+				builtin_feature_code := tokens.builtin_not_builtin
 			end
 			l_type := a_feature.type
 			if l_type /= Void then
@@ -60,33 +59,35 @@ feature {NONE} -- Initialization
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type
 					l_dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
-				elseif builtin_code = builtin_identified_feature (builtin_identified_eif_id_object) then
+				elseif builtin_class_code = tokens.builtin_identified_routines_class and then builtin_feature_code = tokens.builtin_identified_routines_eif_id_object then
 						-- Note that the 'object_id' mechanism is some kind of
 						-- weak reference implementation. Therefore, by nature,
 						-- it is likely that the 'Result' will be Void at some
 						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 				elseif
-					(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)) and then
+					(builtin_class_code = tokens.builtin_ise_runtime_class and then
+					builtin_feature_code = tokens.builtin_ise_runtime_new_type_instance_of) and then
 					attached a_system.ise_runtime_new_type_instance_of_feature as l_ise_runtime_new_type_instance_of_feature
 				then
 					result_type_set := l_ise_runtime_new_type_instance_of_feature.result_type_set
 				elseif
-					(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field) or
-					builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at)) and then
+					(builtin_class_code = tokens.builtin_ise_runtime_class and then
+					(builtin_feature_code = tokens.builtin_ise_runtime_reference_field or
+					builtin_feature_code = tokens.builtin_ise_runtime_reference_field_at)) and then
 					attached a_system.ise_runtime_reference_field_feature as l_reference_field_feature
 				then
 					result_type_set := l_reference_field_feature.result_type_set
-				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at_offset) then
+				elseif builtin_class_code = tokens.builtin_ise_runtime_class and then builtin_feature_code = tokens.builtin_ise_runtime_reference_field_at_offset then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
-				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_instance_of) then
+				elseif builtin_class_code = tokens.builtin_ise_runtime_class and then builtin_feature_code = tokens.builtin_ise_runtime_new_instance_of then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
-				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_special_of_reference_instance_of) then
+				elseif builtin_class_code = tokens.builtin_ise_runtime_class and then builtin_feature_code = tokens.builtin_ise_runtime_new_special_of_reference_instance_of then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
-				elseif builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_tuple_instance_of) then
+				elseif builtin_class_code = tokens.builtin_ise_runtime_class and then builtin_feature_code = tokens.builtin_ise_runtime_new_tuple_instance_of then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.alive_conforming_descendants (l_dynamic_type)
 				else
@@ -105,12 +106,13 @@ feature {NONE} -- Initialization
 					dynamic_type_sets := l_dynamic_type_sets
 					from i := 1 until i > nb loop
 						arg := args.formal_argument (i)
-						if i = 1 and then builtin_code = builtin_identified_feature (builtin_identified_eif_object_id) then
+						if i = 1 and then (builtin_class_code = tokens.builtin_identified_routines_class and then builtin_feature_code = tokens.builtin_identified_routines_eif_object_id) then
 							l_dynamic_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 						elseif
 							i = 4 and then
-							(builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field) or
-							builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field_at)) and then
+							(builtin_class_code = tokens.builtin_ise_runtime_class and then
+							(builtin_feature_code = tokens.builtin_ise_runtime_set_reference_field or
+							builtin_feature_code = tokens.builtin_ise_runtime_set_reference_field_at)) and then
 							attached a_system.ise_runtime_set_reference_field_feature as l_set_reference_field_feature and then
 							attached l_set_reference_field_feature.argument_type_set (4) as l_argument_type_set
 						then
@@ -130,21 +132,24 @@ feature {NONE} -- Initialization
 				end
 			end
 			if
-				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_new_type_instance_of)
+				builtin_class_code = tokens.builtin_ise_runtime_class and then
+				builtin_feature_code = tokens.builtin_ise_runtime_new_type_instance_of
 			then
 				if a_system.ise_runtime_new_type_instance_of_feature = Void then
 					a_system.set_ise_runtime_new_type_instance_of_feature (Current)
 				end
 			elseif
-				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field) or
-				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_reference_field_at)
+				builtin_class_code = tokens.builtin_ise_runtime_class and then
+				(builtin_feature_code = tokens.builtin_ise_runtime_reference_field or
+				builtin_feature_code = tokens.builtin_ise_runtime_reference_field_at)
 			then
 				if a_system.ise_runtime_reference_field_feature = Void then
 					a_system.set_ise_runtime_reference_field_feature (Current)
 				end
 			elseif
-				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field) or
-				builtin_code = builtin_ise_runtime_feature (builtin_ise_runtime_set_reference_field_at)
+				builtin_class_code = tokens.builtin_ise_runtime_class and then
+				(builtin_feature_code = tokens.builtin_ise_runtime_set_reference_field or
+				builtin_feature_code = tokens.builtin_ise_runtime_set_reference_field_at)
 			then
 				if a_system.ise_runtime_set_reference_field_feature = Void then
 					a_system.set_ise_runtime_set_reference_field_feature (Current)
@@ -312,7 +317,7 @@ feature -- Status report
 			if static_feature.is_function then
 				if is_builtin then
 						-- The function should not be a built-in attribute.
-					Result := not target_type.is_builtin_attribute (static_feature, builtin_code)
+					Result := not target_type.is_builtin_attribute (static_feature, builtin_class_code, builtin_feature_code)
 				else
 					Result := True
 				end
@@ -327,7 +332,7 @@ feature -- Status report
 			if not is_builtin then
 				Result := static_feature.is_attribute
 			else
-				Result := target_type.is_builtin_attribute (static_feature, builtin_code)
+				Result := target_type.is_builtin_attribute (static_feature, builtin_class_code, builtin_feature_code)
 			end
 		ensure
 			query: Result implies is_query
@@ -386,13 +391,13 @@ feature -- Status report
 		do
 			if not is_builtin then
 				-- Result := False
-			elseif (builtin_code // builtin_capacity) = builtin_boolean_class then
-				inspect builtin_code \\ builtin_capacity
-				when builtin_boolean_and_then then
+			elseif builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_class then
+				inspect builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_boolean_and_then then
 					Result := target_type = a_system.boolean_type
-				when builtin_boolean_or_else then
+				when {ET_TOKEN_CODES}.builtin_boolean_or_else then
 					Result := target_type = a_system.boolean_type
-				when builtin_boolean_implies then
+				when {ET_TOKEN_CODES}.builtin_boolean_implies then
 					Result := target_type = a_system.boolean_type
 				else
 					Result := False
@@ -400,34 +405,292 @@ feature -- Status report
 			end
 		end
 
-	is_builtin: BOOLEAN
-			-- Is current feature built-in?
-		do
-			Result := (builtin_code /= builtin_not_builtin)
-		end
-
 	is_current_type_needed: BOOLEAN
 			-- Is current type is needed to execute current feature?
 			-- (This might be needed for optimization purposes.)
 
-	builtin_code: INTEGER
-			-- Built-in code of current feature
+	is_builtin: BOOLEAN
+			-- Is current feature built-in?
+		do
+			Result := builtin_class_code /= {ET_TOKEN_CODES}.builtin_not_builtin
+		end
+
+	is_builtin_any_class: BOOLEAN
+			-- Is current feature the built-in feature of class "ANY"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_any_class)
+		end
+
+	is_builtin_arguments_32_class: BOOLEAN
+			-- Is current feature the built-in feature of class "ARGUMENTS_32"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_arguments_32_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_arguments_32_class)
+		end
+
+	is_builtin_boolean_class: BOOLEAN
+			-- Is current feature the built-in feature of class "BOOLEAN"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_class)
+		end
+
+	is_builtin_boolean_ref_class: BOOLEAN
+			-- Is current feature the built-in feature of class "BOOLEAN_REF"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_ref_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_boolean_ref_class)
+		end
+
+	is_builtin_character_n_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "CHARACTER_N"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_class)
+		end
+
+	is_builtin_character_n_ref_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "CHARACTER_N_REF"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_ref_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_character_8_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_character_32_ref_class)
+		end
+
+	is_builtin_com_failure_class: BOOLEAN
+			-- Is current feature the built-in feature of class "COM_FAILURE"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_com_failure_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_com_failure_class)
+		end
+
+	is_builtin_exception_manager_class: BOOLEAN
+			-- Is current feature the built-in feature of class "EXCEPTION_MANAGER"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_class)
+		end
+
+	is_builtin_exception_manager_factory_class: BOOLEAN
+			-- Is current feature the built-in feature of class "EXCEPTION_MANAGER_FACTORY"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_factory_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_exception_manager_factory_class)
+		end
+
+	is_builtin_function_class: BOOLEAN
+			-- Is current feature the built-in feature of class "FUNCTION"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class)
+		end
+
+	is_builtin_identified_routines_class: BOOLEAN
+			-- Is current feature the built-in feature of class "IDENTIFIED_ROUTINES"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_identified_routines_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_identified_routines_class)
+		end
+
+	is_builtin_integer_n_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "INTEGER_N" or "NATURAL_N"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_32_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_64_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_8_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_16_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_32_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_64_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_32_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_64_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_8_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_16_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_32_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_64_class)
+		end
+
+	is_builtin_integer_n_ref_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "INTEGER_N_REF" or "NATURAL_N_REF"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_32_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_64_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_8_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_16_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_32_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_64_ref_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_8_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_16_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_32_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_integer_64_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_8_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_16_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_32_ref_class or
+				builtin_class_code = {ET_TOKEN_CODES}.builtin_natural_64_ref_class)
+		end
+
+	is_builtin_ise_exception_manager_class: BOOLEAN
+			-- Is current feature the built-in feature of class "ISE_EXCEPTION_MANAGER"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_exception_manager_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_exception_manager_class)
+		end
+
+	is_builtin_ise_runtime_class: BOOLEAN
+			-- Is current feature the built-in feature of class "ISE_RUNTIME"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_ise_runtime_class)
+		end
+
+	is_builtin_memory_class: BOOLEAN
+			-- Is current feature the built-in feature of class "MEMORY"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_memory_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_memory_class)
+		end
+
+	is_builtin_platform_class: BOOLEAN
+			-- Is current feature the built-in feature of class "PLATFORM"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_platform_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_platform_class)
+		end
+
+	is_builtin_pointer_class: BOOLEAN
+			-- Is current feature the built-in feature of class "POINTER"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_class)
+		end
+
+	is_builtin_pointer_ref_class: BOOLEAN
+			-- Is current feature the built-in feature of class "POINTER_REF"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_ref_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_pointer_ref_class)
+		end
+
+	is_builtin_procedure_class: BOOLEAN
+			-- Is current feature the built-in feature of class "PROCEDURE"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class)
+		end
+
+	is_builtin_real_n_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "REAL_N"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_class)
+		end
+
+	is_builtin_real_n_ref_class: BOOLEAN
+			-- Is current feature the built-in feature of classes "REAL_N_REF"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_ref_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_real_32_ref_class or builtin_class_code = {ET_TOKEN_CODES}.builtin_real_64_ref_class)
+		end
+
+	is_builtin_special_class: BOOLEAN
+			-- Is current feature the built-in feature of class "SPECIAL"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_special_class)
+		end
+
+	is_builtin_tuple_class: BOOLEAN
+			-- Is current feature the built-in feature of class "TUPLE"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_tuple_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_tuple_class)
+		end
+
+	is_builtin_type_class: BOOLEAN
+			-- Is current feature the built-in feature of class "TYPE"?
+		do
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_type_class
+		ensure
+			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_type_class)
+		end
 
 	is_builtin_function_item: BOOLEAN
 			-- Is current feature the built-in feature 'FUNCTION.item'?
 		do
-			Result := (builtin_code = builtin_function_feature (builtin_function_item))
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_function_item
 		ensure
 			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_function_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_function_item)
 		end
 
 	is_builtin_procedure_call: BOOLEAN
 			-- Is current feature the built-in feature 'PROCEDURE.call'?
 		do
-			Result := (builtin_code = builtin_procedure_feature (builtin_procedure_call))
+			Result := builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_procedure_call
 		ensure
 			builtin: Result implies is_builtin
+			definition: Result = (builtin_class_code = {ET_TOKEN_CODES}.builtin_procedure_class and then builtin_feature_code = {ET_TOKEN_CODES}.builtin_procedure_call)
 		end
+
+	builtin_class_code: NATURAL_8
+			-- Built-in class code of current feature
+
+	builtin_feature_code: NATURAL_8
+			-- Built-in feature code of current feature
 
 feature -- Status setting
 
