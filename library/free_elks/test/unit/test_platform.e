@@ -181,7 +181,8 @@ feature -- Test
 			p: PLATFORM
 		do
 			create p
-			assert ("64_bits_definition", p.is_64_bits = (p.pointer_bits = 64))
+-- Not supported by ISE < 17.05
+--			assert ("64_bits_definition", p.is_64_bits = (p.pointer_bits = 64))
 		end
 		
 end
