@@ -63,7 +63,7 @@ This software might work with other Eiffel compilers and/or other compiler
 versions, however no test has been made yet.
 To have a better understanding of the way this software has been designed
 and implemented, you can also have a look at
-[portability issues](http://www.gobosoft.com/eiffel/gobo/library/portability/index.html).
+[portability issues](http://www.gobosoft.com/eiffel/gobo/portability/index.html).
 
 ## Platforms
 
