@@ -37,12 +37,6 @@
 			<cluster name="kl_support" location="$|support">
 				<option void_safety="none"/>
 			</cluster>
-			<cluster name="kl_spec" location="$|spec">
-				<option void_safety="none"/>
-				<cluster name="kl_spec_ise" location="$|ise">
-					<option void_safety="none"/>
-				</cluster>
-			</cluster>
 		</cluster>
 		<cluster name="lx_lexical" location="${GOBO}/library/lexical/src">
 			<option void_safety="none"/>

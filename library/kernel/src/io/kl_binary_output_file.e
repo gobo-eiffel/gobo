@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,40 +60,36 @@ inherit
 			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 			{RAW_FILE} all
 		redefine
-
-
-
-
+			old_open_write,
+			old_open_append
 		end
 
 create
 
 	make
 
-feature {NONE} -- Implementation
+feature {RAW_FILE} -- Implementation
 
+	old_open_write
+			-- Open file in write-only mode;
+			-- create it if it does not exist.
+		do
+			precursor
+			if file_pointer = default_pointer then
+				mode := Closed_file
+				descriptor_available := False
+			end
+		end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	old_open_append
+			-- Open file in append-only mode;
+			-- create it if it does not exist.
+		do
+			precursor
+			if file_pointer = default_pointer then
+				mode := Closed_file
+				descriptor_available := False
+			end
+		end
 
 end

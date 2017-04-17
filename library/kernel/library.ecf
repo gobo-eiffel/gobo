@@ -10,7 +10,7 @@
 	<description>
 		description: "ECF file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 		license: "MIT License"
 	</description>
 
@@ -49,18 +49,6 @@
 				<condition>
 					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 					<version type="compiler" max="16.05.9.9052"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/ge$</exclude>
-				<condition>
-					<custom name="GOBO_EIFFEL" excluded_value="ge"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/ise$</exclude>
-				<condition>
-					<custom name="GOBO_EIFFEL" value="ge"/>
 				</condition>
 			</file_rule>
 		</cluster>

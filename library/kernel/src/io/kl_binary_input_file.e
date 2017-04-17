@@ -6,7 +6,7 @@ note
 		%characters (8-bit code between 0 and 255)"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,9 +63,7 @@ inherit
 		undefine
 			file_readable
 		redefine
-#ifdef GE
 			old_open_read,
-#endif
 			last_character,
 			last_string
 		end
@@ -86,9 +84,6 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-feature {NONE} -- Implementation
-
-#ifdef GE
 feature {RAW_FILE} -- Implementation
 
 	old_open_read
@@ -101,5 +96,4 @@ feature {RAW_FILE} -- Implementation
 			end
 		end
 
-#endif
 end

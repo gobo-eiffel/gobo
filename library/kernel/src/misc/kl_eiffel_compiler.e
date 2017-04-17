@@ -5,7 +5,7 @@ note
 		"Eiffel compiler used to compile this program"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,15 +21,13 @@ feature -- Access
 	vendor: STRING
 			-- Vendor of Eiffel compiler used to compiled this program
 		once
-#ifdef GE
-			Result := ge_vendor
-#else
-#ifdef ISE
-			Result := ise_vendor
-#else
-			Result := unknown_vendor
-#endif
-#endif
+			if {ISE_RUNTIME}.compiler_version > 608000000 then
+					-- The Gobo compiler version starts with 
+					-- 6080 (looks like GOBO) followed by 5 digits.
+				Result := ge_vendor
+			else
+				Result := ise_vendor
+			end
 		ensure
 			vendor_not_void: Result /= Void
 		end
@@ -46,7 +44,7 @@ feature -- Access
 	se_vendor: STRING
 			-- SmartEiffel vendor
 		obsolete
-			"[080724] SE not supported anymore."
+			"SE not supported anymore. [2008-07-24]"
 		once
 			Result := "se"
 		ensure
@@ -56,7 +54,7 @@ feature -- Access
 	ve_vendor: STRING
 			-- Visual Eiffel vendor
 		obsolete
-			"[080419] VE not supported anymore."
+			"VE not supported anymore. [2008-04-19]"
 		once
 			Result := "ve"
 		ensure
@@ -84,7 +82,7 @@ feature -- Status report
 	is_se: BOOLEAN
 			-- Has this program been compiled with SmartEiffel?
 		obsolete
-			"[080724] SE not supported anymore."
+			"SE not supported anymore. [2008-07-24]"
 		once
 			Result := False
 		ensure
@@ -94,7 +92,7 @@ feature -- Status report
 	is_ve: BOOLEAN
 			-- Has this program been compiled with Visual Eiffel?
 		obsolete
-			"[080419] VE not supported anymore."
+			"VE not supported anymore. [2008-04-19]"
 		once
 			Result := False
 		ensure

@@ -35,10 +35,6 @@
 		<cluster name="misc"/>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
-		<cluster name="spec">
-			<option name="abstract" value="true"/>
-			<cluster name="ge" prefix="kl_spec_"/>
-		</cluster>
 	</cluster>
 	<cluster name="structure" location="${GOBO}/library/structure/src" prefix="ds_">
 		<option name="abstract" value="true"/>

@@ -8,7 +8,7 @@ note
 		%the underlying file system when written to the file."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,10 +62,8 @@ inherit
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 			{PLAIN_TEXT_FILE} all
 		redefine
-
 			old_open_write,
 			old_open_append
-
 		end
 
 create
@@ -77,8 +75,7 @@ feature -- Access
 	eol: STRING = "%N"
 			-- Line separator
 
-feature {NONE} -- Implementation
-
+feature {PLAIN_TEXT_FILE} -- Implementation
 
 	old_open_write
 			-- Open file in write-only mode;
@@ -101,6 +98,5 @@ feature {NONE} -- Implementation
 				descriptor_available := False
 			end
 		end
-
 
 end

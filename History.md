@@ -11,6 +11,9 @@
 
 * Fixed bug in feature `detachable_less_than` in class
   `KL_PART_COMPARATOR` when comparing a non-void with a void.
+* Got rid of the remaining .ge files. The only supported Eiffel
+  compilers are Gobo Eiffel and ISE Eiffel, and they both use
+  the same kernel library (the FreeELKS library).
 
 ### Gobo Eiffel Tools Library
 

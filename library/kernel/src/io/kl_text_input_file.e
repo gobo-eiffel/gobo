@@ -9,7 +9,7 @@ note
 		%are able to recognize '%%N', '%%R%%N' and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,9 +66,7 @@ inherit
 		undefine
 			file_readable
 		redefine
-
 			old_open_read,
-
 			last_character,
 			last_string
 		end
@@ -172,9 +170,6 @@ feature -- Input
 			end_of_file := False
 		end
 
-feature {NONE} -- Implementation
-
-
 feature {PLAIN_TEXT_FILE} -- Implementation
 
 	old_open_read
@@ -186,6 +181,5 @@ feature {PLAIN_TEXT_FILE} -- Implementation
 				descriptor_available := False
 			end
 		end
-
 
 end

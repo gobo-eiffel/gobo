@@ -19,10 +19,6 @@
 		<cluster name="misc"/>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
-		<cluster name="spec">
-			<option name="abstract" value="true"/>
-			<cluster name="${GOBO_EIFFEL}" prefix="spec_"/>
-		</cluster>
 	</cluster>
 	<cluster name="kernel_16_05" location="${GOBO}/library/kernel/src/16.05" unless="${GOBO_EIFFEL}=ge"/>
 
