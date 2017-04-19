@@ -10495,7 +10495,14 @@ feature {NONE} -- Expression generation
 			end
 			if not (l_atomic and in_operand) then
 				l_string := a_string.value
-				current_file.put_string (c_ge_ms)
+				l_string_type := dynamic_type_set (a_string).static_type
+				if current_system.string_8_type.same_named_type (l_string_type.base_type, current_system.any_type, current_system.any_type) then
+					current_file.put_string (c_ge_ms8)
+				elseif current_system.string_32_type.same_named_type (l_string_type.base_type, current_system.any_type, current_system.any_type) then
+					current_file.put_string (c_ge_ms32)
+				else
+					current_file.put_string (c_ge_ms)
+				end
 				current_file.put_character ('(')
 				print_escaped_string (l_string)
 				current_file.put_character (',')
@@ -34353,6 +34360,8 @@ feature {NONE} -- Constants
 	c_ge_ma: STRING = "GE_ma"
 	c_ge_mark_object: STRING = "GE_mark_object"
 	c_ge_ms: STRING = "GE_ms"
+	c_ge_ms8: STRING = "GE_ms8"
+	c_ge_ms32: STRING = "GE_ms32"
 	c_ge_mt: STRING = "GE_mt"
 	c_ge_nat8: STRING = "GE_nat8"
 	c_ge_nat16: STRING = "GE_nat16"

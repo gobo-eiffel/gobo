@@ -2,6 +2,11 @@
 
 ## Version 4.2 - ??
 
+### gec
+
+* Made sure that manifest strings are created with the right
+  type (in particular for `STRING_32` manifest strings).
+
 ### gedoc
 
 * Fixed bug in the html format when the target of an assignment 
