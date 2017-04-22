@@ -2,12 +2,12 @@
 	description: "[
 		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	READABLE_STRING_32
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 
 	make_from_c (c_string: POINTER)
 			-- Initialize from contents of `c_string',
-			-- a string created by some C function
+			-- a string created by some C function.
 		require
 			c_string_exists: c_string /= default_pointer
 		local
@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
-			-- a string created by some C function
+			-- a string created by some C function.
 		obsolete
 			"Use `make_from_c'. [2017-05-31]"
 		require
@@ -151,13 +151,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_32
-			-- Character at position `i'
+	at alias "@" (i: INTEGER): CHARACTER_32
+			-- Character at position `i'.
 		deferred
 		end
 
 	item_code (i: INTEGER): INTEGER
-			-- Numeric code of character at position `i'
+			-- Numeric code of character at position `i'.
 		obsolete
 			"Due to potential truncation it is recommended to use `code (i)' instead. [2017-05-31]"
 		require
@@ -173,8 +173,7 @@ feature -- Access
 		end
 
 	index_of (c: CHARACTER_32; start_index: INTEGER): INTEGER
-			-- Position of first occurrence of `c' at or after `start_index';
-			-- 0 if none.
+			-- <Precursor>
 		local
 			a: like area
 			i, nb, l_lower_area: INTEGER
@@ -200,8 +199,7 @@ feature -- Access
 		end
 
 	last_index_of (c: CHARACTER_32; start_index_from_end: INTEGER): INTEGER
-			-- Position of last occurrence of `c',
-			-- 0 if none.
+			-- <Precursor>
 		local
 			a: like area
 			i, l_lower_area: INTEGER
@@ -237,7 +235,7 @@ feature -- Access
 		end
 
 	string_representation: STRING_32
-			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_32}
+			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_32}.
 		do
 			if same_type (create {STRING_32}.make_empty) and then attached {STRING_32} Current as l_s32 then
 				Result := l_s32
@@ -272,16 +270,16 @@ feature -- Access
 feature -- Measurement
 
 	capacity: INTEGER
-			-- Allocated space
+			-- <Precursor>
 		do
 			Result := area.count - 1
 		end
 
 	count: INTEGER
-			-- Actual number of characters making up the string
+			-- Actual number of characters making up the string.
 
 	occurrences (c: CHARACTER_32): INTEGER
-			-- Number of times `c' appears in the string
+			-- <Precursor>
 		local
 			i, nb: INTEGER
 			a: SPECIAL [CHARACTER_32]
@@ -510,7 +508,7 @@ feature -- Status report
 		end
 
 	has (c: CHARACTER_32): BOOLEAN
-			-- Does string include `c'?
+			-- <Precursor>
 		local
 			i, nb: INTEGER
 			l_area: like area
@@ -610,7 +608,7 @@ feature -- Status report
 		end
 
 	is_boolean: BOOLEAN
-			-- Does `Current' represent a BOOLEAN?
+			-- <Precursor>
 		local
 			nb: INTEGER
 		do
@@ -684,15 +682,14 @@ feature -- Conversion
 feature -- Duplication
 
 	substring (start_index, end_index: INTEGER): like Current
-			-- Copy of substring containing all characters at indices
-			-- between `start_index' and `end_index'
+			-- <Precursor>
 		deferred
 		end
 
 feature -- Output
 
 	out: STRING
-			-- Printable representation
+			-- Printable representation.
 		do
 			create Result.make (count)
 			Result.append (as_string_8)
@@ -704,7 +701,7 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	string_searcher: STRING_32_SEARCHER
-			-- String searcher specialized for READABLE_STRING_32 instances
+			-- String searcher specialized for READABLE_STRING_32 instances.
 		once
 			create Result.make
 		end
@@ -831,10 +828,10 @@ feature
 	STRING_32_ITERATION_CURSOR} -- Implementation
 
 	area: SPECIAL [CHARACTER_32]
-			-- Storage for characters
+			-- Storage for characters.
 
 	area_lower: INTEGER
-			-- Minimum index
+			-- Minimum index.
 		do
 		ensure
 			area_lower_non_negative: Result >= 0
@@ -842,7 +839,7 @@ feature
 		end
 
 	area_upper: INTEGER
-			-- Maximum index
+			-- Maximum index.
 		do
 			Result := area_lower + count - 1
 		ensure

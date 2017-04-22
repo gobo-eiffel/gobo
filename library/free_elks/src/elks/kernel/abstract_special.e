@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ancestor of SPECIAL to perform queries on SPECIAL without knowing its actual generic type."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 feature -- Measurement
 
 	count: INTEGER
-			-- Count of special area		
+			-- Count of special area.
 		deferred
 		ensure
 			count_non_negative: Result >= 0
 		end
 
 	capacity: INTEGER
-			-- Capacity of special area		
+			-- Capacity of special area.
 		deferred
 		ensure
 			count_non_negative: Result >= 0
@@ -45,9 +45,12 @@ feature -- Output
 			Result.append_integer (count)
 		end
 
+invariant
+	count_less_than_capacity: count <= capacity
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

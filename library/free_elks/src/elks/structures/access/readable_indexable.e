@@ -6,8 +6,8 @@
 	names: indexable, access;
 	access: index, membership;
 	contents: generic;
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class READABLE_INDEXABLE [G]
 
@@ -64,7 +64,7 @@ feature -- Status report
 		end
 
 invariant
-	consistent_boundaries: upper < lower implies upper = lower - 1
+	consistent_boundaries: lower <= upper or else lower = upper + 1
 
 note
 	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
@@ -78,6 +78,3 @@ note
 		]"
 
 end
-
-
-

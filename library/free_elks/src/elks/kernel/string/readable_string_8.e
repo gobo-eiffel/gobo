@@ -2,12 +2,12 @@
 	description: "[
 		Sequences of 8-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-07-23 06:24:01 -0700 (Sat, 23 Jul 2016) $"
-	revision: "$Revision: 99053 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	READABLE_STRING_8
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 	make_from_c (c_string: POINTER)
 			-- Initialize from contents of `c_string',
-			-- a string created by some C function
+			-- a string created by some C function.
 		require
 			c_string_exists: c_string /= default_pointer
 		local
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
-			-- a string created by some C function
+			-- a string created by some C function.
 		obsolete
 			"Use `make_from_c' instead. [2017-05-31]"
 		require
@@ -273,7 +273,7 @@ feature -- Access
 		end
 
 	string_representation: STRING_8
-			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
+			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}.
 		do
 			if same_type (create {STRING_8}.make_empty) and then attached {STRING_8} Current as l_s8 then
 				Result := l_s8
@@ -308,16 +308,16 @@ feature -- Access
 feature -- Measurement
 
 	capacity: INTEGER
-			-- Allocated space
+			-- <Precursor>
 		do
 			Result := area.count - 1
 		end
 
 	count: INTEGER
-			-- Actual number of characters making up the string
+			-- Actual number of characters making up the string.
 
 	occurrences (c: CHARACTER_8): INTEGER
-			-- Number of times `c' appears in the string
+			-- Number of times `c' appears in the string.
 		local
 			i, nb: INTEGER
 			a: SPECIAL [CHARACTER_8]
@@ -630,7 +630,7 @@ feature -- Status report
 		end
 
 	is_boolean: BOOLEAN
-			-- Does `Current' represent a BOOLEAN?
+			-- <Precursor>
 		local
 			nb: INTEGER
 			l_area: like area
@@ -719,15 +719,14 @@ feature -- Conversion
 feature -- Duplication
 
 	substring (start_index, end_index: INTEGER): like Current
-			-- Copy of substring containing all characters at indices
-			-- between `start_index' and `end_index'
+			-- <Precursor>
 		deferred
 		end
 
 feature -- Output
 
 	out: STRING
-			-- Printable representation
+			-- <Precursor>
 		do
 			create Result.make (count)
 			Result.append (Current)
@@ -739,7 +738,7 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	string_searcher: STRING_8_SEARCHER
-			-- String searcher specialized for READABLE_STRING_8 instances
+			-- String searcher specialized for READABLE_STRING_8 instances.
 		once
 			create Result.make
 		end
@@ -850,10 +849,10 @@ feature
 	STRING_8_ITERATION_CURSOR} -- Implementation
 
 	area: SPECIAL [CHARACTER_8]
-			-- Storage for characters
+			-- Storage for characters.
 
 	area_lower: INTEGER
-			-- Minimum index
+			-- Minimum index.
 		do
 		ensure
 			area_lower_non_negative: Result >= 0
@@ -861,7 +860,7 @@ feature
 		end
 
 	area_upper: INTEGER
-			-- Maximum index
+			-- Maximum index.
 		do
 			Result := area_lower + count - 1
 		ensure

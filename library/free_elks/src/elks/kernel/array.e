@@ -6,8 +6,8 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	date: "$Date: 2016-04-13 06:29:38 -0700 (Wed, 13 Apr 2016) $"
-	revision: "$Revision: 98619 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARRAY [G] inherit
 
@@ -868,7 +868,7 @@ feature {NONE} -- Implementation
 	empty_area: BOOLEAN
 			-- Is `area' empty?
 		do
-			Result := area = Void or else area.capacity = 0
+			Result := area.capacity = 0
 		end
 
 invariant
