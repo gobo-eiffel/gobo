@@ -533,7 +533,7 @@ EIF_POINTER eif_file_dopen(int fd, int how)
 #ifdef EIF_WINDOWS
 	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	rt_file_set_open_mode(l_mode, how, '\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
 	fp = (FILE*)rt_file_fdopen(fd, l_mode);
 	if (fp == (FILE*)0) {
