@@ -4,7 +4,7 @@
 		"C functions used to implement class MEMORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,13 @@
 
 #ifndef EIF_MEMORY_H
 #define EIF_MEMORY_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {

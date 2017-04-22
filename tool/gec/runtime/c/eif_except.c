@@ -105,7 +105,7 @@ EIF_REFERENCE eename(long code)
  */
 char eedefined(long ex)
 {
-	return (char) ((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
+	return (char)((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
 }
 
 /*

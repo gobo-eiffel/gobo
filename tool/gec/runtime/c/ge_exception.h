@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,12 @@
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_TYPES_H
+#include "ge_thread_types.h"
+#endif
+#endif
+
 #include <setjmp.h>
 
 /*
@@ -94,7 +100,7 @@ struct GE_exception_trace_buffer_struct {
  */
 typedef struct GE_call_struct GE_call;
 struct GE_call_struct {
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	void* object; /* Current object */
 #endif
 	const char* class_name;
@@ -115,7 +121,6 @@ struct GE_rescue_struct {
  * Information about the execution context.
  * One such struct per thread.
  */
-typedef struct GE_thread_context_struct GE_thread_context;
 typedef struct GE_context_struct GE_context;
 struct GE_context_struct {
 	GE_call* call; /* Call stack */
@@ -130,7 +135,7 @@ struct GE_context_struct {
 	GE_exception_trace_buffer exception_trace_buffer; /* String buffer used to build the exception trace */
 	GE_exception_trace_buffer last_exception_trace; /* Last non-routine-failure exception trace */
 	int pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
-#ifdef EIF_THREADS
+#ifdef GE_USE_THREADS
 	GE_thread_context* thread; /* Thread context */
 #endif
 };
@@ -156,6 +161,11 @@ extern GE_context* GE_current_context();
 extern void GE_init_exception(GE_context* context);
 
 /*
+ * Free memory allocated in `a_context' for exception handling.
+ */
+extern void GE_free_exception(GE_context* a_context);
+
+/*
  * Pointer to function to create a new exception manager object.
  */
 extern EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
@@ -171,24 +181,24 @@ extern void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
 extern void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
 
 /*
- * Exception tag associated with `code'.
+ * Exception tag associated with `a_code'.
  */
-extern char* GE_exception_tag(long code);
+extern char* GE_exception_tag(long a_code);
 
 /*
- * Raise an exception with code `code'.
+ * Raise an exception with code `a_code'.
  */
-extern void GE_raise(long code);
+extern void GE_raise(long a_code);
 
 /*
- * Raise an exception with code `code' and message `msg'.
+ * Raise an exception with code `a_code' and message `msg'.
  */
-extern void GE_raise_with_message(long code, const char* msg);
+extern void GE_raise_with_message(long a_code, const char* msg);
 
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-extern void GE_developer_raise(long code, char* meaning, char* message);
+extern void GE_developer_raise(long a_code, char* a_meaning, char* a_message);
 
 /*
  * Set `in_assertion' to 'not b'.

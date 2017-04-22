@@ -4,7 +4,7 @@
 		"C functions used to implement Thread support"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,20 +12,26 @@
 
 #ifndef EIF_THREADS_H
 #define EIF_THREADS_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #ifndef EIF_CECIL_H
 #include "eif_cecil.h"
+#endif
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef EIF_THREADS
+#ifndef GE_USE_THREADS
 
 /*
-	Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time.
-*/
+ * Empty stubs for EiffelThread library so that it may be compiled against a non-multithreaded run-time.
+ */
 
 /* THREAD_ENVIRONMENT */
 #define eif_thr_thread_id() NULL
@@ -78,6 +84,10 @@ extern "C" {
 #define eif_thr_sleep(nanoseconds)
 
 #else
+
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
 
 /* THREAD_ENVIRONMENT */
 #define eif_thr_thread_id() GE_thread_id()

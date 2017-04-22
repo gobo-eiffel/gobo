@@ -4,7 +4,7 @@
 		"C functions used to implement class C_DATE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,9 @@
 
 #ifndef GE_TIME_H
 #define GE_TIME_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #if defined _XOPEN_UNIX || defined __USE_XOPEN || defined __USE_BSD
 #define HAS_GETTIMEOFDAY

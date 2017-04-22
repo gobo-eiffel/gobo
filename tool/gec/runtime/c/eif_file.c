@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,9 +12,21 @@
 
 #ifndef EIF_FILE_C
 #define EIF_FILE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
+#ifndef EIF_FILE_H
+#include "eif_file.h"
+#endif
+#ifndef EIF_EXCEPT_H
+#include "eif_except.h"
+#endif
 #ifndef GE_STRING_H
 #include "ge_string.h"
+#endif
+#ifndef GE_REAL_H
+#include "ge_real.h"
 #endif
 
 /* HAS_CHOWN:
@@ -250,7 +262,7 @@ static int rt_unlink(EIF_FILENAME path)
 #endif
 }
 
-static FILE *rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
+static FILE* rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
 {
 #ifdef EIF_WINDOWS
 	return _wfopen(name, type);
@@ -259,7 +271,7 @@ static FILE *rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
 #endif
 }
 
-static FILE *rt_file_fdopen(int fd, EIF_FILENAME type)
+static FILE* rt_file_fdopen(int fd, EIF_FILENAME type)
 {
 #ifdef EIF_WINDOWS
 	return _wfdopen(fd, type);
@@ -268,7 +280,7 @@ static FILE *rt_file_fdopen(int fd, EIF_FILENAME type)
 #endif
 }
 
-static FILE *rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE *stream)
+static FILE* rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE* stream)
 {
 #ifdef EIF_WINDOWS
 	return _wfreopen(name, type, stream);
@@ -277,10 +289,10 @@ static FILE *rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE *stream)
 #endif
 }
 
-static int rt_utime(EIF_FILENAME path, struct utimbuf *times)
+static int rt_utime(EIF_FILENAME path, struct utimbuf* times)
 {
 #ifdef EIF_WINDOWS
-	return _wutime(path, (struct _utimbuf *) times);
+	return _wutime(path, (struct _utimbuf*)times);
 #else
 	return utime(path, times);
 #endif
@@ -289,12 +301,12 @@ static int rt_utime(EIF_FILENAME path, struct utimbuf *times)
 /*
  * Swallow next character if it is a new line.
  */
-static void rt_swallow_nl(FILE *f) {
+static void rt_swallow_nl(FILE* f) {
 		/* getc() cannot be used as it doesn't set the EOF flag */
 
 	if (f != stdin) {
-		if (fscanf (f, "\n") == EOF && ferror(f)) {
-			eise_io ("FILE: error during reading the end of the file,");
+		if (fscanf(f, "\n") == EOF && ferror(f)) {
+			eise_io("FILE: error during reading the end of the file,");
 		}
 	} else {
 		int c;
@@ -309,7 +321,7 @@ static void rt_swallow_nl(FILE *f) {
 	}
 }
 
-static void rt_file_stat (EIF_FILENAME path, rt_stat_buf *buf)
+static void rt_file_stat(EIF_FILENAME path, rt_stat_buf* buf)
 {
 		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
 	if (eif_file_stat(path, buf, 1) == -1) {
@@ -318,19 +330,13 @@ static void rt_file_stat (EIF_FILENAME path, rt_stat_buf *buf)
 }
 
 /*
- * Given `how' the file is being opened and a `mode' create a platform specific character
+ * Set `file_type', given `how' the file is being opened and a `mode' create a platform specific character
  * string (UTF-16 encoding on Windows and a byte sequence otherwise) that can be used by
  * the underlying OS system call to open the mode in the proper mode (e.g. open append,
  * read-write mode, ....).
  */
-static EIF_FILENAME rt_file_open_mode(int how, char mode)
+static void rt_file_set_open_mode(EIF_NATIVE_CHAR file_type[FILE_TYPE_MAX], int how, char mode)
 {
-#ifdef EIF_WINDOWS
-	static wchar_t file_type [FILE_TYPE_MAX];
-#else
-	static char file_type [FILE_TYPE_MAX];
-#endif
-
 	file_type[4] = '\0';
 	file_type[3] = '\0';
 	file_type[2] = '\0';
@@ -359,21 +365,21 @@ static EIF_FILENAME rt_file_open_mode(int how, char mode)
 	/* We make sure that files created in Eiffel are not inheritable
 	 * by default as otherwise it makes things too complicated for the
 	 * end user when spawing child processes. */
-	if (file_type [1] == '\0') {
-		file_type [1] = 'N';
-	} else if (file_type [2] == '\0') {
-		file_type [2] = 'N';
+	if (file_type[1] == '\0') {
+		file_type[1] = 'N';
+	} else if (file_type[2] == '\0') {
+		file_type[2] = 'N';
 	} else {
-		file_type [3] = 'N';
+		file_type[3] = 'N';
 	}
 #endif
-	return file_type;
 }
 
 /*
  * Create directory `dirname'.
  */
-void eif_file_mkdir(EIF_FILENAME dirname) {
+void eif_file_mkdir(EIF_FILENAME dirname)
+{
 	errno = 0;
 	if (rt_mkdir(dirname, 0777) == -1) {
 		esys(); /* Raise exception */
@@ -383,7 +389,8 @@ void eif_file_mkdir(EIF_FILENAME dirname) {
 /*
  * Rename file `from' into `to'.
  */
-void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
+void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to)
+{
 	for (;;) {
 #ifdef EIF_WINDOWS
 		if (eif_file_exists(to)) {
@@ -393,9 +400,9 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 				 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
 				 * the same. */
 			BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
-			HANDLE l_from_file = CreateFileW (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+			HANDLE l_from_file = CreateFileW(from, GENERIC_READ, FILE_SHARE_READ, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-			HANDLE l_to_file = CreateFileW (to, GENERIC_READ, FILE_SHARE_READ, NULL,
+			HANDLE l_to_file = CreateFileW(to, GENERIC_READ, FILE_SHARE_READ, NULL,
 					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 			if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
@@ -407,11 +414,11 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 					/* For some reasons we cannot open the file. This should not happen, maybe the OS has
 					 * removed `from' or `to'. In that case, we simply try to remove destination as we were
 					 * doing in former revision of `file_rename'. */
-				_wremove (to);
+				_wremove(to);
 			} else {
-				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+				BOOL success = GetFileInformationByHandle(l_from_file, &l_from_info);
 				if (success) {
-					success = GetFileInformationByHandle (l_to_file, &l_to_info);
+					success = GetFileInformationByHandle(l_to_file, &l_to_info);
 						/* We do not need the handles anymore, simply close them. */
 					CloseHandle(l_from_file);
 					CloseHandle(l_to_file);
@@ -422,7 +429,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 							(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
 							(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
 						{
-							_wremove (to);
+							_wremove(to);
 						} else {
 								/* Files are identical, nothing to be done apart from */
 							break;
@@ -431,7 +438,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 							/* An error occurred while retrieving the information about `from' and `to'. Like
 							 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 							 * the file. */
-						_wremove (to);
+						_wremove(to);
 					}
 				} else {
 						/* We do not need the handles anymore, simply close them. */
@@ -440,7 +447,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 						/* An error occurred while retrieving the information about `from' and `to'. Like
 						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 						 * the file. */
-					_wremove (to);
+					_wremove(to);
 				}
 			}
 		}
@@ -456,7 +463,8 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 /*
  * Link file `from' into `to'.
  */
-void eif_file_link(EIF_FILENAME from, EIF_FILENAME to) {
+void eif_file_link(EIF_FILENAME from, EIF_FILENAME to)
+{
 #ifdef HAS_LINK
 	errno = 0;
 	if (link(from, to) == -1) {
@@ -468,7 +476,8 @@ void eif_file_link(EIF_FILENAME from, EIF_FILENAME to) {
 /*
  * Delete file or directory `name'.
  */
-void eif_file_unlink(EIF_FILENAME name) {
+void eif_file_unlink(EIF_FILENAME name)
+{
 	rt_stat_buf buf;				/* File statistics */
 	int status;						/* Status from system call */
 
@@ -496,15 +505,18 @@ void eif_file_unlink(EIF_FILENAME name) {
 /*
  * Open file `name' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_open(EIF_FILENAME name, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_open(EIF_FILENAME name, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #if defined EIF_WINDOWS
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how, (how < 10 ? 't' : 'b')));
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how, '\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fopen(name, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -513,15 +525,18 @@ EIF_POINTER eif_file_open(EIF_FILENAME name, int how) {
 /*
  * Open file `fd' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_dopen(int fd, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_dopen(int fd, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, (how < 10 ? 't' : 'b')));
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, '\0'));
+	rt_file_set_open_mode(l_mode, how, '\0'));
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fdopen(fd, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -532,15 +547,18 @@ EIF_POINTER eif_file_dopen(int fd, int how) {
  * to the old stream described by `old'. This is useful to redirect 'stdout'
  * to another place, for instance.
  */
-EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old) {
-	FILE *fp;
+EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how, (how < 10 ? 't' : 'b')), old);
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how, '\0'), old);
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_freopen(name, l_mode, old);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -549,7 +567,8 @@ EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old) {
 /*
  * Close the file.
  */
-void eif_file_close(FILE *fp) {
+void eif_file_close(FILE* fp)
+{
 	errno = 0;
 	if (fclose(fp) != 0) {
 		esys(); /* Close failed, raise exception */
@@ -559,7 +578,8 @@ void eif_file_close(FILE *fp) {
 /*
  * Flush data held in stdio buffer.
  */
-void eif_file_flush(FILE *fp) {
+void eif_file_flush(FILE* fp)
+{
 	errno = 0;
 	if (fflush(fp) != 0) {
 	    esys(); /* Flush failed, raise exception */
@@ -578,7 +598,8 @@ void eif_file_flush(FILE *fp) {
 /*
  * Return the associated file descriptor.
  */
-EIF_INTEGER eif_file_fd(FILE *f) {
+EIF_INTEGER eif_file_fd(FILE* f)
+{
 	int res;
 	if (!f) {
 		res = 0;
@@ -589,13 +610,14 @@ EIF_INTEGER eif_file_fd(FILE *f) {
 			eraise("error occurred", EN_EXT);
 		}
 	}
-	return (EIF_INTEGER) res;
+	return (EIF_INTEGER)res;
 }
 
 /*
  * Get a character from `f'.
  */
-EIF_CHARACTER_8 eif_file_gc(FILE *f) {
+EIF_CHARACTER_8 eif_file_gc(FILE* f)
+{
 	int c;
 	errno = 0;
 	c = getc(f);
@@ -610,7 +632,8 @@ EIF_CHARACTER_8 eif_file_gc(FILE *f) {
  * with `start' being the amount of bytes already stored within s. This
  * means we really have to read (bound - start) characters.
  */
-EIF_INTEGER eif_file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
+EIF_INTEGER eif_file_gs(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
 	EIF_INTEGER amount;
 	int c = '\0';
 	EIF_INTEGER read;
@@ -648,14 +671,15 @@ EIF_INTEGER eif_file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) 
  * Read min (bound, remaining bytes in file) characters into `s' and
  * return the number of characters read.
  */
-EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound) {
-	size_t amount = fread(s, sizeof(char), (size_t) bound, f);
+EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound)
+{
+	size_t amount = fread(s, sizeof(char), (size_t)bound, f);
 
 	if (ferror(f)) {	/* An I/O error occurred */
 		eise_io("FILE: unable to read stream.");					/* Raise exception */
 	}
 
-	return (EIF_INTEGER) amount;	/* Number of characters read */
+	return (EIF_INTEGER)amount;	/* Number of characters read */
 }
 
 /*
@@ -664,7 +688,8 @@ EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound) {
  * means we really have to read (bound - start) characters. Any leading
  * spaces are skipped.
  */
-EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) {
+EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
 	int c = 0;			/* Last char read */
 
@@ -679,7 +704,7 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 		if (c == EOF && ferror(f))	/* An I/O error occurred */
 			eise_io("FILE: unable to read word.");					/* Raise exception */
 		if (c == EOF)
-			return (EIF_INTEGER) 0;				/* Reached EOF before word */
+			return (EIF_INTEGER)0;				/* Reached EOF before word */
 		else if (EOF == ungetc(c, f))
 			eise_io("FILE: unable to read word.");
 	}
@@ -693,7 +718,7 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 				eise_io("FILE: unable to read word.");
 			break;
 		}
-		*s++ = (char) c;
+		*s++ = (char)c;
 	}
 
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
@@ -713,7 +738,8 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 /*
  * Look ahead one character. If EOF, return 0.
  */
-EIF_CHARACTER_8 eif_file_lh(FILE *f) {
+EIF_CHARACTER_8 eif_file_lh(FILE* f)
+{
 	int c;
 
 	errno = 0;
@@ -724,29 +750,31 @@ EIF_CHARACTER_8 eif_file_lh(FILE *f) {
 	if (c != EOF && EOF == ungetc(c, f))
 		eise_io("FILE: error when reading a character ahead.");
 
-	return (EIF_CHARACTER_8) (c == EOF ? (char) 0 : (char) c);
+	return (EIF_CHARACTER_8)(c == EOF ? (char)0 : (char)c);
 }
 
 /*
  * Size of file `fp'.
  */
-EIF_INTEGER eif_file_size(FILE *fp) {
+EIF_INTEGER eif_file_size(FILE* fp)
+{
 	rt_stat_buf buf;
 
 	errno = 0;
-	if (fflush (fp) != 0) {
+	if (fflush(fp) != 0) {
 		esys();
 	}
-	if (rt_fstat (fileno(fp), &buf) == -1)
+	if (rt_fstat(fileno(fp), &buf) == -1)
 		esys();		/* An error occurred: raise exception */
 		/* FIXME: This code should be upgraded to use 64-bit */
-	return (EIF_INTEGER) buf.st_size;
+	return (EIF_INTEGER)buf.st_size;
 }
 
 /*
  * Read upto next input line.
  */
-void eif_file_tnil(FILE *f) {
+void eif_file_tnil(FILE* f)
+{
 	int c;
 
 	errno = 0;
@@ -759,10 +787,11 @@ void eif_file_tnil(FILE *f) {
 /*
  * Current position within file.
  */
-EIF_INTEGER eif_file_tell(FILE *f) {
+EIF_INTEGER eif_file_tell(FILE* f)
+{
 	long res;
 
-	if (f == (FILE *) 0) {
+	if (f == (FILE*)0) {
 		eraise("invalid file pointer", EN_EXT);
 	}
 
@@ -770,7 +799,7 @@ EIF_INTEGER eif_file_tell(FILE *f) {
 	if (res == -1) {
 		eraise("error occurred", EN_EXT);
 	}
-	return (EIF_INTEGER) res;
+	return (EIF_INTEGER)res;
 }
 
 /*
@@ -779,15 +808,17 @@ EIF_INTEGER eif_file_tell(FILE *f) {
  * is no way within UNIX_FILE to get the current time stamp. Otherwise,
  * we could simply call file_utime.
  */
-void eif_file_touch(EIF_FILENAME name) {
-	eif_file_utime(name, time((time_t *) 0), 2);
+void eif_file_touch(EIF_FILENAME name)
+{
+	eif_file_utime(name, time((time_t*) 0), 2);
 }
 
 /*
  * Modify the modification and/or the access time stored in the file's
  * inode. The 'how' parameter tells which attributes should be set.
  */
-void eif_file_utime(EIF_FILENAME name, time_t stamp, int how) {
+void eif_file_utime(EIF_FILENAME name, time_t stamp, int how)
+{
 	struct utimbuf tp;	/* Time array */
 	rt_stat_buf buf;	/* File statistics */
 	int status;			/* System call status */
@@ -818,7 +849,8 @@ void eif_file_utime(EIF_FILENAME name, time_t stamp, int how) {
  * This is an encapsulation of the stat() system call. The routine either
  * succeeds and returns or fails and raises the appropriate exception.
  */
-int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
+int eif_file_stat(EIF_FILENAME path, rt_stat_buf* buf, int follow)
+{
 	int status;			/* System call status */
 
 	for (;;) {
@@ -833,10 +865,10 @@ int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
 				 * case is quite rare and there is a benefit in using `lstat'
 				 * over `rt_stat' the first time as more than 90% of the files
 				 * we stat are not symlink. */
-			status = rt_stat (path, buf);
+			status = rt_stat(path, buf);
 		}
 #else
-		status = rt_stat (path, buf);		/* Get file statistics */
+		status = rt_stat(path, buf);		/* Get file statistics */
 #endif
 		if ((status == -1) && (errno == EINTR)) {
 				/* Call was interrupted by a signal we re-issue it. */
@@ -851,7 +883,8 @@ int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
  * Change permissions of file `name', using an interface like chmod(1).
  * The flag is true if permissions are to be added, 0 to remove them.
  */
-void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
+void eif_file_perm(EIF_FILENAME name, char* who, char* what, int flag)
+{
 	int fmode;					/* File mode to be altered */
 	rt_stat_buf buf;			/* File statistics */
 
@@ -859,7 +892,7 @@ void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
 	if (eif_file_stat(name, &buf, 1)) {
 		esys();
 	} else {
-		fmode = (int) buf.st_mode;	/* Fetch current file mode */
+		fmode = (int)buf.st_mode;	/* Fetch current file mode */
 
 		switch (*who) {
 		case 'u':
@@ -952,7 +985,8 @@ void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
 /*
  * Change permission mode on file `path'.
  */
-void eif_file_chmod(EIF_FILENAME path, int mode) {
+void eif_file_chmod(EIF_FILENAME path, int mode)
+{
 	errno = 0;
 #ifdef EIF_WINDOWS
 	if (_wchmod(path, mode) == -1) {
@@ -966,7 +1000,8 @@ void eif_file_chmod(EIF_FILENAME path, int mode) {
 /*
  * Change the owner of the file to `uid'.
  */
-void eif_file_chown(EIF_FILENAME name, int uid) {
+void eif_file_chown(EIF_FILENAME name, int uid)
+{
 #ifdef HAS_CHOWN
 	int gid;
 	rt_stat_buf buf;
@@ -983,7 +1018,8 @@ void eif_file_chown(EIF_FILENAME name, int uid) {
 /*
  * Change the group of the file to `gid'.
  */
-void eif_file_chgrp(EIF_FILENAME name, int gid) {
+void eif_file_chgrp(EIF_FILENAME name, int gid)
+{
 #ifdef HAS_CHOWN
 	int uid;
 	rt_stat_buf buf;
@@ -1000,7 +1036,8 @@ void eif_file_chgrp(EIF_FILENAME name, int gid) {
 /*
  * Put new_line onto `f'.
  */
-void eif_file_tnwl(FILE *f) {
+void eif_file_tnwl(FILE *f)
+{
 	errno = 0;
 	if (putc('\n', f) == EOF) {
 		eise_io("FILE: unable to write new line.");
@@ -1010,7 +1047,8 @@ void eif_file_tnwl(FILE *f) {
 /*
  * Append a copy of `other' to `f'.
  */
-void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
+void eif_file_append(FILE* f, FILE* other, EIF_INTEGER l)
+{
 	size_t amount;
 	char buffer[512];
 	int bufsize = 512;
@@ -1032,7 +1070,7 @@ void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
 			eise_io("FILE: unable to read appended file.");
 			break;
 		}
-		l -= (EIF_INTEGER) amount;
+		l -= (EIF_INTEGER)amount;
 		if (amount != fwrite(buffer, sizeof(char), amount, f)) {
 			eise_io("FILE: unable to write appended file.");
 			break;
@@ -1043,7 +1081,8 @@ void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
 /*
  * Write string `str' on `f'.
  */
-void eif_file_ps(FILE *f, char *str, EIF_INTEGER len) {
+void eif_file_ps(FILE* f, char* str, EIF_INTEGER len)
+{
 	errno = 0;
 	if (len == 0) {
 		/* Nothing to be done. */
@@ -1055,7 +1094,8 @@ void eif_file_ps(FILE *f, char *str, EIF_INTEGER len) {
 /*
  * Write character `c' on `f'.
  */
-void eif_file_pc(FILE *f, char c) {
+void eif_file_pc(FILE* f, char c)
+{
 	errno = 0;
 	if (putc(c, f) == EOF) {
 		eise_io("FILE: unable to write CHARACTER value.");
@@ -1065,7 +1105,8 @@ void eif_file_pc(FILE *f, char c) {
 /*
  * Go to absolute position `pos' counted from start.
  */
-void eif_file_go(FILE *f, EIF_INTEGER pos) {
+void eif_file_go(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, pos, FS_START) != 0) {
 		esys();
@@ -1076,7 +1117,8 @@ void eif_file_go(FILE *f, EIF_INTEGER pos) {
 /*
  * Go to absolute position `pos' counted from end.
  */
-void eif_file_recede(FILE *f, EIF_INTEGER pos) {
+void eif_file_recede(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, -pos, FS_END) != 0) {
 		esys();
@@ -1087,7 +1129,8 @@ void eif_file_recede(FILE *f, EIF_INTEGER pos) {
 /*
  * Go to absolute position `pos' counted from current position.
  */
-void eif_file_move(FILE *f, EIF_INTEGER pos) {
+void eif_file_move(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, pos, FS_CUR) != 0) {
 		esys();
@@ -1098,7 +1141,8 @@ void eif_file_move(FILE *f, EIF_INTEGER pos) {
 /*
  * End of file.
  */
-EIF_BOOLEAN eif_file_feof(FILE *fp) {
+EIF_BOOLEAN eif_file_feof(FILE* fp)
+{
 	return (EIF_BOOLEAN)(feof(fp) != 0);
 }
 
@@ -1106,11 +1150,12 @@ EIF_BOOLEAN eif_file_feof(FILE *fp) {
  * Test whether file exists or not. If `name' represents a symbolic link,
  * it will check that pointed file does exist.
  */
-EIF_BOOLEAN eif_file_exists(EIF_FILENAME name) {
+EIF_BOOLEAN eif_file_exists(EIF_FILENAME name)
+{
 	int status;					/* System call status */
 	rt_stat_buf buf;			/* Buffer to get file statistics */
 
-	status = eif_file_stat (name, &buf, 1);
+	status = eif_file_stat(name, &buf, 1);
 
 #ifdef EOVERFLOW
 	if (status == -1) {
@@ -1132,11 +1177,12 @@ EIF_BOOLEAN eif_file_exists(EIF_FILENAME name) {
  * Test whether file exists or not without following the symbolic link
  * if `name' represents one.
  */
-EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name) {
+EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name)
+{
 	int status;					/* System call status */
 	rt_stat_buf buf;			/* Buffer to get file statistics */
 
-	status = eif_file_stat (name, &buf, 0);
+	status = eif_file_stat(name, &buf, 0);
 
 #ifdef EOVERFLOW
 	if (status == -1) {
@@ -1159,16 +1205,17 @@ EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name) {
  * real UID and real GID. This is probably only useful to setuid or setgid
  * programs.
  */
-EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op) {
+EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op)
+{
 	switch (op) {
 	case 0: /* Does file exist? */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, F_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, F_OK)) ? '\01' : '\0');
 	case 1: /* Test for search permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, X_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, X_OK)) ? '\01' : '\0');
 	case 2: /* Test for write permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, W_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, W_OK)) ? '\01' : '\0');
 	case 3: /* Test for read permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, R_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, R_OK)) ? '\01' : '\0');
 	default:
 		return EIF_FALSE;
 	}
@@ -1179,7 +1226,8 @@ EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op) {
  * in the parent directory and there must not be any file bearing that name
  * with no write permissions...
  */
-EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
+EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes)
+{
 	rt_stat_buf buf;			/* Buffer to get parent directory statistics */
 	EIF_FILENAME temp = NULL;
 	EIF_FILENAME ptr;
@@ -1191,46 +1239,46 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
 #else
 	l_extra_bytes = sizeof(char);
 #endif
-	temp = (EIF_FILENAME) malloc (nbytes + l_extra_bytes);
+	temp = (EIF_FILENAME)malloc(nbytes + l_extra_bytes);
 	if (!temp) {
 		enomem();
 	} else {
 			/* Search the directory separator. */
 #ifdef EIF_WINDOWS
-		memcpy (temp, path, nbytes);
-		ptr = wcsrchr (temp, '\\');
+		memcpy(temp, path, nbytes);
+		ptr = wcsrchr(temp, '\\');
 		if (!ptr) {
 				/* On Windows we can have a forward slash as separator. */
-			ptr = wcsrchr (temp, '/');
+			ptr = wcsrchr(temp, '/');
 		}
 #else
-		strcpy (temp, path);
-		ptr = strrchr (temp, '/');
+		strcpy(temp, path);
+		ptr = strrchr(temp, '/');
 #endif
 		if (ptr) {
 			*ptr = '\0';
 #ifdef EIF_WINDOWS
 			if ((ptr == temp) || (*(ptr -1) == ':')) {
 					/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
-				wcscat (ptr, L"\\");
+				wcscat(ptr, L"\\");
 			}
 #endif
 		} else {
 #ifdef EIF_WINDOWS
-			wcsncpy (temp, L".", 2);
+			wcsncpy(temp, L".", 2);
 #else
-			strcpy (temp, ".");
+			strcpy(temp, ".");
 #endif
 		}
 
 			/* Does the parent exist? */
 		if (!eif_file_exists(temp)) {
-			free (temp);
-			return (EIF_BOOLEAN) '\0';
+			free(temp);
+			return (EIF_BOOLEAN)'\0';
 		}
 
 		rt_file_stat(temp, &buf);
-		free (temp);
+		free(temp);
 
 		if (S_ISDIR(buf.st_mode)) {	/* Is parent a directory? */
 			if (eif_file_eaccess(&buf, 1)) {	/* Check for write permissions */
@@ -1239,23 +1287,24 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
 					rt_file_stat(path, &buf);
 					if (S_ISDIR(buf.st_mode)) {
 							/* File exists and it is already a directory, thus we cannot create a file. */
-						return (EIF_BOOLEAN) '\0';
+						return (EIF_BOOLEAN)'\0';
 					} else {
 						return (eif_file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
 					}
 				}
 
-				return (EIF_BOOLEAN) '\01';
+				return (EIF_BOOLEAN)'\01';
 			}
 		}
 	}
-	return (EIF_BOOLEAN) '\0';
+	return (EIF_BOOLEAN)'\0';
 }
 
 /*
  * Get an integer from `f'.
  */
-EIF_INTEGER eif_file_gi(FILE *f) {
+EIF_INTEGER eif_file_gi(FILE* f)
+{
 	EIF_INTEGER i;
 
 	errno = 0;
@@ -1269,7 +1318,8 @@ EIF_INTEGER eif_file_gi(FILE *f) {
 /*
  * Get a real from `f'.
  */
-EIF_REAL_32 eif_file_gr(FILE *f) {
+EIF_REAL_32 eif_file_gr(FILE* f)
+{
 	EIF_REAL_32 r;
 	errno = 0;
 	if (fscanf(f, "%f", &r) < 0) {
@@ -1282,7 +1332,8 @@ EIF_REAL_32 eif_file_gr(FILE *f) {
 /*
  * Get a double from `f'.
  */
-EIF_REAL_64 eif_file_gd(FILE *f) {
+EIF_REAL_64 eif_file_gd(FILE* f)
+{
 	EIF_REAL_64 d;
 	errno = 0;
 	if (fscanf(f, "%lf", &d) < 0) {
@@ -1295,7 +1346,8 @@ EIF_REAL_64 eif_file_gd(FILE *f) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pi(FILE *f, EIF_INTEGER number) {
+void eif_file_pi(FILE* f, EIF_INTEGER number)
+{
 	errno = 0;
 	if (fprintf(f, "%d", number) < 0) {
 		eise_io("FILE: unable to write INTEGER value.");
@@ -1305,18 +1357,19 @@ void eif_file_pi(FILE *f, EIF_INTEGER number) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pr(FILE *f, EIF_REAL_32 number) {
+void eif_file_pr(FILE* f, EIF_REAL_32 number)
+{
 	int res;
 	errno = 0;
 
 	if (number != number) {
-		res = fprintf (f, "%s", "NaN");
+		res = fprintf(f, "%s", "NaN");
 	} else if (GE_real_32_is_negative_infinity(number)) {
-		res = fprintf (f, "%s", "-Infinity");
+		res = fprintf(f, "%s", "-Infinity");
 	} else if (GE_real_32_is_positive_infinity(number)) {
-		res = fprintf (f, "%s", "Infinity");
+		res = fprintf(f, "%s", "Infinity");
 	} else {
-		res = fprintf (f, "%g", number);
+		res = fprintf(f, "%g", number);
 	}
     if (res < 0) {
 		eise_io("FILE: unable to write REAL_32 value.");
@@ -1326,16 +1379,17 @@ void eif_file_pr(FILE *f, EIF_REAL_32 number) {
 /*
  * Write double `val' onto `f'.
  */
-void eif_file_pd(FILE *f, EIF_REAL_64 val) {
+void eif_file_pd(FILE* f, EIF_REAL_64 val)
+{
 	int res;
 	errno = 0;
 
 	if (val != val) {
-		res = fprintf (f, "%s", "NaN");
+		res = fprintf(f, "%s", "NaN");
 	} else if (GE_real_64_is_negative_infinity(val)) {
-		res = fprintf (f, "%s", "-Infinity");
+		res = fprintf(f, "%s", "-Infinity");
 	} else if (GE_real_64_is_positive_infinity(val)) {
-			res = fprintf (f, "%s", "Infinity");
+			res = fprintf(f, "%s", "Infinity");
 	} else {
 		res = fprintf(f, "%.17g", val);
 	}
@@ -1350,7 +1404,8 @@ void eif_file_pd(FILE *f, EIF_REAL_64 val) {
  * the area (special object) which will play the role of a stat buffer
  * structure.
  */
-EIF_INTEGER stat_size(void) {
+EIF_INTEGER stat_size(void)
+{
 	return (EIF_INTEGER)sizeof(rt_stat_buf);
 }
 
@@ -1358,16 +1413,17 @@ EIF_INTEGER stat_size(void) {
 /*
  * Does the list of groups the user belongs to include `gid'?
  */
-static EIF_BOOLEAN eif_group_in_list(int gid) {
-	Groups_t *group_list;
+static EIF_BOOLEAN eif_group_in_list(int gid)
+{
+	Groups_t* group_list;
 	int i, nb_groups, nb_groups_max;
 
-	nb_groups_max = getgroups(0, (Groups_t *)0);
+	nb_groups_max = getgroups(0, (Groups_t*)0);
 	if (nb_groups_max <= 0) {
 		return EIF_FALSE;
 	} else {
-		group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
-		if (group_list == (Groups_t *)0) {
+		group_list = (Groups_t*)malloc(nb_groups_max * sizeof(Groups_t));
+		if (group_list == (Groups_t*)0) {
 			xraise(EN_IO);
 			return EIF_FALSE;
 		} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
@@ -1392,7 +1448,8 @@ static EIF_BOOLEAN eif_group_in_list(int gid) {
  * current permission mode is held in the st_mode field of the stat()
  * buffer structure `buf'.
  */
-EIF_BOOLEAN eif_file_eaccess(rt_stat_buf *buf, int op) {
+EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
+{
 	int mode = buf->st_mode & ST_MODE;	/* Current mode */
 #ifdef HAS_GETEUID
 	int uid = buf->st_uid;				/* File owner */
@@ -1500,54 +1557,55 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf *buf, int op) {
  * Perform the field dereferencing from the appropriate stat structure,
  * which Eiffel cannot do directly.
  */
-EIF_INTEGER eif_file_info(rt_stat_buf *buf, int op) {
+EIF_INTEGER eif_file_info(rt_stat_buf* buf, int op)
+{
 	switch (op) {
 	case 0:	/* File permission mode */
 		return (EIF_INTEGER)(buf->st_mode & ST_MODE);
 	case 1:	/* Inode number */
 		return (EIF_INTEGER)buf->st_ino;
 	case 2:	/* Device inode resides on */
-		return (EIF_INTEGER) buf->st_dev;
+		return (EIF_INTEGER)buf->st_dev;
 	case 3:	/* Device type */
-		return (EIF_INTEGER) buf->st_rdev;
+		return (EIF_INTEGER)buf->st_rdev;
 	case 4:	/* UID of file */
-		return (EIF_INTEGER) buf->st_uid;
+		return (EIF_INTEGER)buf->st_uid;
 	case 5:	/* GID of file */
-		return (EIF_INTEGER) buf->st_gid;
+		return (EIF_INTEGER)buf->st_gid;
 	case 6:	/* Size of file, in bytes */
 			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_size;
 	case 7:	/* Last modification time on file */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_mtime;
+		return (EIF_INTEGER)buf->st_mtime;
 	case 8:	/* Last access made on file */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_atime;
+		return (EIF_INTEGER)buf->st_atime;
 	case 9:	/* Last status change */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_ctime;
+		return (EIF_INTEGER)buf->st_ctime;
 	case 10: /* Number of links */
-		return (EIF_INTEGER) buf->st_nlink;
+		return (EIF_INTEGER)buf->st_nlink;
 	case 11: /* File type */
-		return (EIF_INTEGER) (buf->st_mode & S_IFMT);
+		return (EIF_INTEGER)(buf->st_mode & S_IFMT);
 	case 12: /* Is file a directory */
-		return (EIF_INTEGER) S_ISDIR(buf->st_mode);
+		return (EIF_INTEGER)S_ISDIR(buf->st_mode);
 	case 13: /* Is file a regular (plain) one */
 		if (S_ISREG(buf->st_mode) || (0 == (buf->st_mode & S_IFMT)))
-			return (EIF_INTEGER) EIF_TRUE;
-		return (EIF_INTEGER) 0;
+			return (EIF_INTEGER)EIF_TRUE;
+		return (EIF_INTEGER)0;
 	case 14: /* Is file a device, ie character or block device. */
 		return (S_ISCHR(buf->st_mode) || S_ISBLK(buf->st_mode));
 	case 15: /* Is file a character device */
-		return (EIF_INTEGER) S_ISCHR(buf->st_mode);
+		return (EIF_INTEGER)S_ISCHR(buf->st_mode);
 	case 16: /* Is file a block device */
-		return (EIF_INTEGER) S_ISBLK(buf->st_mode);
+		return (EIF_INTEGER)S_ISBLK(buf->st_mode);
 	case 17: /* Is file a FIFO */
-		return (EIF_INTEGER) S_ISFIFO(buf->st_mode);
+		return (EIF_INTEGER)S_ISFIFO(buf->st_mode);
 	case 18: /* Is file a symbolic link */
-		return (EIF_INTEGER) S_ISLNK(buf->st_mode);
+		return (EIF_INTEGER)S_ISLNK(buf->st_mode);
 	case 19: /* Is file a socket */
-		return (EIF_INTEGER) S_ISSOCK(buf->st_mode);
+		return (EIF_INTEGER)S_ISSOCK(buf->st_mode);
 	default:
 		return (EIF_INTEGER)0;
     }
@@ -1558,13 +1616,14 @@ EIF_INTEGER eif_file_info(rt_stat_buf *buf, int op) {
  * if found in /etc/passwd. Otherwise, return fill it in with the numeric
  * value.
  */
-EIF_REFERENCE eif_file_owner(int uid) {
+EIF_REFERENCE eif_file_owner(int uid)
+{
 	char str[NAME_MAX];
 #ifdef HAS_GETPWUID
-	struct passwd *pp;
+	struct passwd* pp;
 
 	pp = getpwuid(uid);
-	if (pp == (struct passwd *) 0)
+	if (pp == (struct passwd*) 0)
 		sprintf(str, "%d", uid);		/* Not available: use UID */
 	else
 		strcpy(str, pp->pw_name);		/* Available: fetch login name */
@@ -1579,13 +1638,14 @@ EIF_REFERENCE eif_file_owner(int uid) {
  * if found in /etc/group. Otherwise, return fill it in with the numeric
  * value.
  */
-EIF_REFERENCE eif_file_group(int gid) {
+EIF_REFERENCE eif_file_group(int gid)
+{
 	char str[NAME_MAX];
 #ifdef HAS_GETGRGID
-	struct group *gp; /* %%ss moved from above */
+	struct group* gp; /* %%ss moved from above */
 
 	gp = getgrgid(gid);
-	if (gp == (struct group *) 0)
+	if (gp == (struct group*)0)
 		sprintf(str, "%d", gid);		/* Not available: use GID */
 	else
 		strcpy(str, gp->gr_name);		/* Available: fetch login name */
@@ -1598,10 +1658,11 @@ EIF_REFERENCE eif_file_group(int gid) {
 /*
  * Get an integer from `f'.
  */
-EIF_INTEGER eif_file_gib(FILE* f) {
+EIF_INTEGER eif_file_gib(FILE* f)
+{
 	EIF_INTEGER i;
 	errno = 0;
-	if (fread (&i, sizeof (EIF_INTEGER), 1, f) != 1) {
+	if (fread (&i, sizeof(EIF_INTEGER), 1, f) != 1) {
 		eise_io("FILE: unable to read INTEGER value.");
 	}
 	return i;
@@ -1610,10 +1671,11 @@ EIF_INTEGER eif_file_gib(FILE* f) {
 /*
  * Get a real from `f'.
  */
-EIF_REAL_32 eif_file_grb(FILE* f) {
+EIF_REAL_32 eif_file_grb(FILE* f)
+{
 	EIF_REAL_32 r;
 	errno = 0;
-	if (fread (&r, sizeof (EIF_REAL_32), 1, f) != 1) {
+	if (fread (&r, sizeof(EIF_REAL_32), 1, f) != 1) {
 		eise_io("FILE: unable to read REAL_32 value.");
 	}
 	return r;
@@ -1622,7 +1684,8 @@ EIF_REAL_32 eif_file_grb(FILE* f) {
 /*
  * Get a double from `f'.
  */
-EIF_REAL_64 eif_file_gdb(FILE* f) {
+EIF_REAL_64 eif_file_gdb(FILE* f)
+{
 	EIF_REAL_64 d;
 	errno = 0;
 	if (fread (&d, sizeof(EIF_REAL_64), 1, f) != 1) {
@@ -1636,14 +1699,16 @@ EIF_REAL_64 eif_file_gdb(FILE* f) {
  */
 EIF_POINTER eif_file_binary_open(EIF_FILENAME name, int how)
 {
-	FILE *fp;
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how,'b'));
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how,'\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fopen(name, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -1653,15 +1718,18 @@ EIF_POINTER eif_file_binary_open(EIF_FILENAME name, int how)
 /*
  * Open file `fd' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_binary_dopen(int fd, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_binary_dopen(int fd, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-		fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how,'b'));
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-		fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how,'\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fdopen(fd, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -1672,15 +1740,18 @@ EIF_POINTER eif_file_binary_dopen(int fd, int how) {
  * to the old stream described by `old'. This is useful to redirect 'stdout'
  * to another place, for instance.
  */
-EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old) {
-	FILE *fp;
+EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-		fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how,'b'), old);
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-		fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how,'\0'), old);
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_freopen(name, l_mode, old);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -1689,7 +1760,8 @@ EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pib(FILE* f, EIF_INTEGER number) {
+void eif_file_pib(FILE* f, EIF_INTEGER number)
+{
 	errno = 0;
 	if (fwrite(&number, sizeof(EIF_INTEGER),1, f) != 1) {
 		eise_io("FILE: unable to write INTEGER value.");
@@ -1699,7 +1771,8 @@ void eif_file_pib(FILE* f, EIF_INTEGER number) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_prb(FILE* f, EIF_REAL_32 number) {
+void eif_file_prb(FILE* f, EIF_REAL_32 number)
+{
 	errno = 0;
     if (fwrite(&number, sizeof(EIF_REAL_32),1, f) != 1) {
 		eise_io("FILE: unable to write REAL_32 value.");
@@ -1709,7 +1782,8 @@ void eif_file_prb(FILE* f, EIF_REAL_32 number) {
 /*
  * Write double `val' onto `f'.
  */
-void eif_file_pdb(FILE* f, EIF_REAL_64 val) {
+void eif_file_pdb(FILE* f, EIF_REAL_64 val)
+{
 	errno = 0;
 	if (fwrite (&val, sizeof(EIF_REAL_64), 1, f) != 1) {
 		eise_io("FILE: unable to write REAL_64 value.");
@@ -1721,7 +1795,7 @@ void eif_file_pdb(FILE* f, EIF_REAL_64 val) {
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  * mode: Mode of operation: non-zero for modification and zero for access time.
  */
-static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
+static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 {
 	EIF_INTEGER result = 0;
 #ifdef EIF_WINDOWS
@@ -1743,11 +1817,11 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
 	HANDLE l_file_handle;
 	ULARGE_INTEGER l_date;
 
-	l_file_handle = FindFirstFileW (name, &l_find_data);
+	l_file_handle = FindFirstFileW(name, &l_find_data);
 	if (l_file_handle != INVALID_HANDLE_VALUE) {
 			/* We do not need the file handle anymore, so we close it to
 			 * avoid handle leak. */
-		FindClose (l_file_handle);
+		FindClose(l_file_handle);
 		if (mode) {
 			l_date.LowPart = l_find_data.ftLastWriteTime.dwLowDateTime;
 			l_date.HighPart = l_find_data.ftLastWriteTime.dwHighDateTime;
@@ -1767,12 +1841,12 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
 			 *	epoch_date.HighPart = epoch_file.dwHighDateTime;
 			 * time_shift = epoch_date.QuadPart / 10000000UL; // 11644473600
 			 */
-		result = (EIF_INTEGER) (l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
+		result = (EIF_INTEGER)(l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
 	}
 #else
 	rt_stat_buf	info;
-	if (-1 != eif_file_stat (name, &info, 1)) {
-		result = (mode ?  (EIF_INTEGER) info.st_mtime: (EIF_INTEGER) info.st_atime);
+	if (-1 != eif_file_stat(name, &info, 1)) {
+		result = (mode ? (EIF_INTEGER)info.st_mtime: (EIF_INTEGER)info.st_atime);
 	}
 #endif
 	return result;
@@ -1782,16 +1856,18 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
  * Modification time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_date (EIF_FILENAME  name) {
-	return eif_file_date_for (name, 1);
+EIF_INTEGER eif_file_date (EIF_FILENAME name)
+{
+	return eif_file_date_for(name, 1);
 }
 
 /*
  * Access time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_access_date (EIF_FILENAME  name) {
-	return eif_file_date_for (name, 0);
+EIF_INTEGER eif_file_access_date (EIF_FILENAME name)
+{
+	return eif_file_date_for(name, 0);
 }
 
 #ifdef __cplusplus

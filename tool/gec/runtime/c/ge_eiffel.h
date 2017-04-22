@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -138,7 +138,7 @@ typedef int intptr_t;
 #endif
 
 /* C type for underlying integer type identifying object's dynamic type. */
-typedef uint16_t	EIF_TYPE_INDEX;
+typedef uint16_t EIF_TYPE_INDEX;
 
 /*
  * Abstraction representing an Eiffel type.
@@ -156,8 +156,8 @@ typedef struct eif_type {
  * It is used to provide backward compatibility to most Eiffel and
  * C APIs manipulating types as an INTEGER.
  */
-typedef int32_t	EIF_ENCODED_TYPE;
-typedef EIF_ENCODED_TYPE	EIF_TYPE_ID;
+typedef int32_t EIF_ENCODED_TYPE;
+typedef EIF_ENCODED_TYPE EIF_TYPE_ID;
 #define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
 
 /* Basic Eiffel types */
@@ -248,8 +248,8 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */
-typedef intptr_t	rt_int_ptr;
-typedef uintptr_t	rt_uint_ptr;
+typedef intptr_t rt_int_ptr;
+typedef uintptr_t rt_uint_ptr;
 #define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 

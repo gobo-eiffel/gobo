@@ -4,7 +4,7 @@
 		"C functions used to implement class CONSOLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,24 @@
 
 #ifndef GE_CONSOLE_C
 #define GE_CONSOLE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#endif
 
 #ifdef EIF_WINDOWS
 #include <stdio.h>
@@ -27,12 +45,30 @@ extern "C" {
 #ifdef EIF_WINDOWS
 
 static EIF_BOOLEAN GE_console_allocated = EIF_FALSE;
+#ifdef GE_USE_THREADS
+static EIF_POINTER GE_console_mutex = 0;
+#endif
 
 /*
-	Create a new DOS console if needed (i.e. in case of a Windows application).
-*/
+ * Initialize mutex to determine whether a new
+ * console needs to be created.
+ */
+void GE_init_console(void)
+{
+#ifdef GE_USE_THREADS
+	GE_console_mutex = GE_mutex_create();
+#endif
+}
+
+/*
+ * Create a new DOS console if needed (i.e. in case of a Windows application).
+ */
 void GE_show_console(void)
 {
+#ifdef GE_USE_THREADS
+	if (GE_console_mutex) {
+		GE_mutex_lock(GE_console_mutex);
+#endif
 	if (!GE_console_allocated) {
 		HANDLE hconin, hconout, hconerr;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -48,14 +84,23 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			/* Get all Std handles and raise an IO exception if we fail getting one. */
 		hconout = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (hconout == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		hconerr = GetStdHandle(STD_ERROR_HANDLE);
 		if (hconerr == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		hconin = GetStdHandle(STD_INPUT_HANDLE);
 		if (hconin == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		if (bSuccess) {
@@ -71,7 +116,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 					duplicate the handle, unfortunately the solution does not work
 					with Microsoft which explains the ifdef statement.
 				*/
-			hCrt = _open_osfhandle((intptr_t) hconout, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stdout));
 #else
@@ -79,7 +124,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			*stdout = *hf;
 #endif
 			setvbuf(stdout, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t) hconerr, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stderr));
 #else
@@ -87,7 +132,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			*stderr = *hf;
 #endif
 			setvbuf(stderr, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t) hconin, _O_TEXT | _O_RDONLY);
+			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stdin));
 #else
@@ -110,6 +155,10 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 
 		GE_console_allocated = EIF_TRUE;
 	}
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_console_mutex);
+	}
+#endif
 }
 
 #endif

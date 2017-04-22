@@ -4,7 +4,7 @@
 		"C functions used to implement class COM_FAILURE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,7 @@
 #ifndef GE_COM_FAILURE_H
 #include "ge_com_failure.h"
 #endif
+
 #ifdef EIF_WINDOWS
 #include <winerror.h>
 #include <tchar.h>
@@ -31,17 +32,17 @@ extern "C" {
 EIF_INTEGER GE_ccom_hresult(EIF_POINTER an_exception_code)
 {
 #ifdef EIF_WINDOWS
-	char *stopstring = NULL;
+	char* stopstring = NULL;
 	long result = 0, high_bits = 0, low_bits = 0;
-	char high_str [7];
-	char *exception_code = (char *)(an_exception_code);
+	char high_str[7];
+	char* exception_code = (char*)(an_exception_code);
 
 	if (exception_code != NULL) {
-		strncpy (high_str, exception_code, 6);
-		high_str [6] = '\0';
+		strncpy(high_str, exception_code, 6);
+		high_str[6] = '\0';
 
-		high_bits = strtol (high_str, &stopstring, 16);
-		low_bits = strtol (exception_code + 6, &stopstring, 16);
+		high_bits = strtol(high_str, &stopstring, 16);
+		low_bits = strtol(exception_code + 6, &stopstring, 16);
 		result = (high_bits << 16) + low_bits;
 	}
 	return (EIF_INTEGER)result;
@@ -81,7 +82,7 @@ EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 		NULL,
 		a_code,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-		(LPTSTR) &result,
+		(LPTSTR)&result,
 		0,
 		NULL
 		);
@@ -97,7 +98,7 @@ EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 EIF_INTEGER_32 GE_ccom_strlen(EIF_POINTER ptr)
 {
 #ifdef EIF_WINDOWS
-	return (EIF_INTEGER_32) _tcslen ((TCHAR *) ptr);
+	return (EIF_INTEGER_32)_tcslen((TCHAR*)ptr);
 #else
 	return 0;
 #endif
@@ -121,7 +122,7 @@ EIF_INTEGER_32 GE_ccom_character_size()
 void GE_ccom_local_free(EIF_POINTER a_ptr)
 {
 #ifdef EIF_WINDOWS
-	LocalFree((HLOCAL) a_ptr);
+	LocalFree((HLOCAL)a_ptr);
 #endif
 }
 

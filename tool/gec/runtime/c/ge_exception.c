@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTION"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,9 +19,21 @@
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
 #ifndef GE_STRING_H
 #include "ge_string.h"
 #endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#endif
+
 #ifdef EIF_WINDOWS
 #include <winbase.h>
 #endif
@@ -70,16 +82,16 @@ static char* GE_exception_tags[] = {
 };
 
 /*
- * Exception tag associated with `code'.
+ * Exception tag associated with `a_code'.
  */
-char* GE_exception_tag(long code)
+char* GE_exception_tag(long a_code)
 {
-	if (code < 0) {
+	if (a_code < 0) {
 		return "User-defined exception.";
-	} else if (code < 1 || code > GE_EX_NEX) {
+	} else if (a_code < 1 || a_code > GE_EX_NEX) {
 		return "Unknown exception.";
 	} else {
-		return GE_exception_tags[code];
+		return GE_exception_tags[a_code];
 	}
 }
 
@@ -90,9 +102,21 @@ static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
 {
 	a_trace->count = 0;
 	a_trace->capacity = 0;
-	a_trace->area = (char*) GE_raw_calloc_atomic_uncollectable(4096, 1);
+	a_trace->area = (char*)GE_unprotected_calloc_atomic_uncollectable(4096, 1);
 	if (a_trace->area) {
 		a_trace->capacity = 4096;
+	}
+}
+
+/*
+ * Free memory allocated in `a_trace'.
+ */
+static void GE_free_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+{
+	a_trace->count = 0;
+	a_trace->capacity = 0;
+	if (a_trace->area) {
+	 GE_free(a_trace->area);
 	}
 }
 
@@ -109,7 +133,7 @@ static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_tra
 	if (a_trace->area) {
 		if ((a_trace->capacity - a_trace->count) <= l_length) {
 			l_new_capacity = a_trace->capacity + l_length + 512;
-			l_new_area = (char*) GE_raw_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
+			l_new_area = (char*)GE_unprotected_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
 			if (l_new_area) {
 				a_trace->area = l_new_area;
 				a_trace->capacity = l_new_capacity;
@@ -119,7 +143,7 @@ static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_tra
 		GE_init_exception_trace_buffer(a_trace);
 	}
 	if ((a_trace->capacity - a_trace->count) > l_length) {
-		strcpy (a_trace->area + a_trace->count, a_string);
+		strcpy(a_trace->area + a_trace->count, a_string);
 		a_trace->count += l_length;
 	}
 }
@@ -132,7 +156,7 @@ static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trac
 	char* l_area = a_trace->area;
 
 	if (l_area) {
-		memset (l_area, 0, a_trace->count);
+		memset(l_area, 0, a_trace->count);
 		a_trace->count = 0;
 	}
 }
@@ -156,9 +180,9 @@ static void GE_print_class_feature_tag(GE_exception_trace_buffer* a_trace, const
 		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended
 		 * after the last character written, which should be taken into account.
 		 */
-	l_class_count = (int) strlen(a_class_name);
-	l_feature_count = (int) strlen(a_feature_name);
-	l_tag_count = (int) strlen(a_tag_name);
+	l_class_count = (int)strlen(a_class_name);
+	l_feature_count = (int)strlen(a_feature_name);
+	l_tag_count = (int)strlen(a_tag_name);
 
 		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
 		 *      for `a_class_name' and `a_feature_name'. */
@@ -244,9 +268,9 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 		 * writting more than `buffer' can hold.
 		 */
 
-	l_location_count = (int) strlen(a_location);
-	l_reason_count = (int) strlen(a_reason);
-	l_effect_count = (int) strlen(a_effect);
+	l_location_count = (int)strlen(a_location);
+	l_reason_count = (int)strlen(a_reason);
+	l_effect_count = (int)strlen(a_effect);
 
 		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
 			   for `a_object_addr' and `a_location'.
@@ -291,7 +315,7 @@ static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_
 /*
  * Print to `a_trace' the exception trace corresponding to `a_context'.
  */
-static void GE_print_exception_trace(GE_context* context, long code, const char* tag, GE_exception_trace_buffer* a_trace)
+static void GE_print_exception_trace(GE_context* a_context, long a_code, const char* a_tag, GE_exception_trace_buffer* a_trace)
 {
 	char buffer[1024];
 	GE_call* l_call;
@@ -306,14 +330,14 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 	const char* l_class_name;
 	const char* l_feature_name;
 
-#ifdef EIF_THREADS
+#ifdef GE_USE_THREADS
 	sprintf(buffer, "%s\n", "******************************** Thread exception *****************************");
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	if (context == GE_main_context) {
+	if (a_context == GE_main_context) {
 			/* Main thread. */
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (uint64_t) 0, "(thread id)");
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (uint64_t)0, "(thread id)");
 	} else {
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (uint64_t) context->thread->thread_id, "(thread id)");
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (uint64_t)a_context->thread->thread_id, "(thread id)");
 	}
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	sprintf(buffer, "%s\n", "*******************************************************************************");
@@ -330,25 +354,25 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 	} else {
 		l_root_class = "ROOT CLASS";
 	}
-	l_call = context->call;
+	l_call = a_context->call;
 	if (l_call) {
 		l_class_name = l_call->class_name;
 		l_feature_name = l_call->feature_name;
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 		l_object = l_call->object;
 #endif
 	} else {
 		l_class_name = l_root_class;
 		l_feature_name = l_root_feature;
 	}
-	if (tag) {
-		sprintf(l_tag_buf, "%.254s:", tag);
+	if (a_tag) {
+		sprintf(l_tag_buf, "%.254s:", a_tag);
 		l_tag = l_tag_buf;
 	} else {
 		l_tag = "";
 	}
 	GE_print_class_feature_tag(a_trace, l_class_name, l_feature_name, l_tag);
-	l_reason = GE_exception_tag(code);
+	l_reason = GE_exception_tag(a_code);
 	l_effect = "Fail";
 	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
 	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
@@ -356,7 +380,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 	while (l_call) {
 		l_tag = "";
 		GE_print_class_feature_tag(a_trace, l_call->class_name, l_call->feature_name, l_tag);
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 		l_object = l_call->object;
 #endif
 		l_reason = "Routine failure.";
@@ -368,7 +392,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
 	}
 	l_tag = "";
 	GE_print_class_feature_tag(a_trace, l_root_class, l_root_feature, l_tag);
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
 	l_object = NULL;
 #endif
 	l_reason = "Routine failure.";
@@ -382,7 +406,7 @@ static void GE_print_exception_trace(GE_context* context, long code, const char*
  * Default initialization for `GE_context'.
  */
 GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
-#ifdef EIF_THREADS
+#ifdef GE_USE_THREADS
 	, 0
 #endif
 	};
@@ -398,10 +422,8 @@ GE_context* GE_main_context;
  */
 GE_context* GE_current_context()
 {
-#ifdef EIF_THREADS
-	GE_thread_context* volatile ge_thread_context;
-	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
-	return ge_thread_context->context;
+#ifdef GE_USE_THREADS
+	return GE_thread_current_context();
 #else
 	return GE_main_context;
 #endif
@@ -410,15 +432,25 @@ GE_context* GE_current_context()
 /*
  * Initialization of exception handling.
  */
-void GE_init_exception(GE_context* context)
+void GE_init_exception(GE_context* a_context)
 {
 	EIF_REFERENCE l_exception_manager;
 
-	GE_init_exception_trace_buffer(&context->exception_trace_buffer);
-	GE_init_exception_trace_buffer(&context->last_exception_trace);
+	GE_init_exception_trace_buffer(&a_context->exception_trace_buffer);
+	GE_init_exception_trace_buffer(&a_context->last_exception_trace);
 	l_exception_manager = GE_new_exception_manager(EIF_TRUE);
-	context->exception_manager = l_exception_manager;
-	GE_init_exception_manager(context, l_exception_manager);
+	a_context->exception_manager = l_exception_manager;
+	GE_init_exception_manager(a_context, l_exception_manager);
+}
+
+/*
+ * Free memory allocated in `a_context' for exception handling.
+ */
+void GE_free_exception(GE_context* a_context)
+{
+	GE_free_exception_trace_buffer(&a_context->exception_trace_buffer);
+	GE_free_exception_trace_buffer(&a_context->last_exception_trace);
+	a_context->exception_manager = EIF_VOID;
 }
 
 /*
@@ -440,26 +472,24 @@ void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BO
  * Jump to execute the rescue of the last routine with a rescue
  * in the call stack.
  */
-static void GE_jump_to_last_rescue(GE_context* context)
+static void GE_jump_to_last_rescue(GE_context* a_context)
 {
 	char* l_exception_trace;
 
-	GE_rescue* r = context->last_rescue;
+	GE_rescue* r = a_context->last_rescue;
 	if (r != 0) {
-		context->last_rescue = r->previous;
-		context->raising_exception = '\0';
+		a_context->last_rescue = r->previous;
+		a_context->raising_exception = '\0';
 		GE_longjmp(r->jb, 1);
 	}
-	if (context->exception_trace_enabled) {
-#ifdef EIF_WINDOWS
+	if (a_context->exception_trace_enabled) {
 		GE_show_console();
-#endif
 		if (GE_system_name) {
 			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
-		l_exception_trace = context->last_exception_trace.area;
+		l_exception_trace = a_context->last_exception_trace.area;
 		if (l_exception_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions:\n\n");
 			fprintf(stderr, "%s", l_exception_trace);
@@ -473,7 +503,7 @@ static void GE_jump_to_last_rescue(GE_context* context)
 /*
  * Call feature EXCEPTION_MANAGER.set_exception_data.
  */
-static void GE_call_set_exception_data(GE_context* context, long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
+static void GE_call_set_exception_data(GE_context* a_context, long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
 {
 	EIF_REFERENCE l_tag;
 	EIF_REFERENCE l_recipient;
@@ -481,12 +511,12 @@ static void GE_call_set_exception_data(GE_context* context, long code, int new_o
 	EIF_REFERENCE l_rf_routine;
 	EIF_REFERENCE l_rf_class;
 	EIF_REFERENCE l_trace;
-	EIF_REFERENCE ge_exception_manager;
+	EIF_REFERENCE l_exception_manager;
 
-	ge_exception_manager = context->exception_manager;
-	if (!ge_exception_manager) {
-		GE_init_exception(context);
-		ge_exception_manager = context->exception_manager;
+	l_exception_manager = a_context->exception_manager;
+	if (!l_exception_manager) {
+		GE_init_exception(a_context);
+		l_exception_manager = a_context->exception_manager;
 	}
 	if (tag) {
 		l_tag = GE_str(tag);
@@ -513,12 +543,12 @@ static void GE_call_set_exception_data(GE_context* context, long code, int new_o
 	} else {
 		l_rf_class = GE_ms("", 0);
 	}
-	if (trace && context->exception_trace_enabled) {
+	if (trace && a_context->exception_trace_enabled) {
 		l_trace = GE_str(trace);
 	} else {
 		l_trace = GE_ms("", 0);
 	}
-	GE_set_exception_data(context, ge_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
+	GE_set_exception_data(a_context, l_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
 }
 
 /*
@@ -528,13 +558,11 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 {
 	char* l_trace;
 	GE_exception_trace_buffer* l_trace_buffer;
-	GE_context* context;
+	GE_context* l_context;
 
-	context = GE_current_context();
-	if (!context) {
-#ifdef EIF_WINDOWS
+	l_context = GE_current_context();
+	if (!l_context) {
 		GE_show_console();
-#endif
 		if (GE_system_name) {
 			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
 		} else {
@@ -542,17 +570,15 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		}
 		fprintf(stderr, "Panic: No execution context found.\n");
 		exit(1);
-	} else if (context->raising_exception) {
-#ifdef EIF_WINDOWS
+	} else if (l_context->raising_exception) {
 		GE_show_console();
-#endif
 		if (GE_system_name) {
 			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
 		} else {
 			fprintf(stderr, "\nsystem execution failed.\n");
 		}
 		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
-		l_trace = context->last_exception_trace.area;
+		l_trace = l_context->last_exception_trace.area;
 		if (l_trace) {
 			fprintf(stderr, "Following is the set of recorded exceptions\n");
 			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
@@ -562,52 +588,52 @@ static void GE_raise_exception(long code, int new_obj, int signal_code, int erro
 		}
 		exit(1);
 	} else {
-		context->raising_exception = '\1';
-		context->exception_code = code;
-		context->exception_tag = tag;
+		l_context->raising_exception = '\1';
+		l_context->exception_code = code;
+		l_context->exception_tag = tag;
 		if (code != GE_EX_FAIL) {
-			GE_wipe_out_exception_trace_buffer(&context->last_exception_trace);
+			GE_wipe_out_exception_trace_buffer(&l_context->last_exception_trace);
 		}
 		l_trace = trace;
-		if (context->exception_trace_enabled && !l_trace) {
-			l_trace_buffer = &context->exception_trace_buffer;
+		if (l_context->exception_trace_enabled && !l_trace) {
+			l_trace_buffer = &l_context->exception_trace_buffer;
 			GE_wipe_out_exception_trace_buffer(l_trace_buffer);
-			GE_print_exception_trace(context, code, tag, l_trace_buffer);
+			GE_print_exception_trace(l_context, code, tag, l_trace_buffer);
 			l_trace = l_trace_buffer->area;
 		}
-		if (code != GE_EX_FAIL && l_trace) {
-			GE_append_to_exception_trace_buffer(&context->last_exception_trace, l_trace);
+		if ((code != GE_EX_FAIL) && l_trace) {
+			GE_append_to_exception_trace_buffer(&l_context->last_exception_trace, l_trace);
 		}
-		GE_call_set_exception_data(context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
-		GE_jump_to_last_rescue(context);
-		context->raising_exception = '\0';
-		context->exception_code = 0;
-		context->exception_tag = (char*)0;
+		GE_call_set_exception_data(l_context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
+		GE_jump_to_last_rescue(l_context);
+		l_context->raising_exception = '\0';
+		l_context->exception_code = 0;
+		l_context->exception_tag = (char*)0;
 	}
 }
 
 /*
- * Raise an exception with code `code'.
+ * Raise an exception with code `a_code'.
  */
-void GE_raise(long code)
+void GE_raise(long a_code)
 {
-	GE_raise_with_message(code, NULL);
+	GE_raise_with_message(a_code, NULL);
 }
 
 /*
- * Raise an exception with code `code' and message `msg'.
+ * Raise an exception with code `a_code' and message `msg'.
  */
-void GE_raise_with_message(long code, const char* msg)
+void GE_raise_with_message(long a_code, const char* msg)
 {
-	GE_raise_exception(code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_raise_exception(a_code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
 }
 
 /*
  * Raise an exception from EXCEPTION_MANAGER.
  */
-void GE_developer_raise(long code, char* meaning, char* message)
+void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
 {
-	GE_raise_exception(code, 0, -1, -1, message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+	GE_raise_exception(a_code, 0, -1, -1, a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
 }
 
 /*
@@ -644,9 +670,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 			int i;
 			for (i = 0; i < nb; i++) {
 				if (type_id == type_ids[i]) {
-#ifdef EIF_WINDOWS
 					GE_show_console();
-#endif
 					fprintf(stderr, "CAT-call error!\n");
 #ifdef EIF_DEBUG
 					{
@@ -675,9 +699,7 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int
 EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 {
 	if (!obj) {
-#ifdef EIF_WINDOWS
 		GE_show_console();
-#endif
 		fprintf(stderr, "Call on Void target!\n");
 #ifdef EIF_DEBUG
 		{
@@ -699,9 +721,7 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 void* GE_check_null(void* ptr)
 {
 	if (!ptr) {
-#ifdef EIF_WINDOWS
 		GE_show_console();
-#endif
 		fprintf(stderr, "No more memory!\n");
 #ifdef EIF_DEBUG
 		{
@@ -716,14 +736,14 @@ void* GE_check_null(void* ptr)
 }
 
 #ifdef EIF_WINDOWS
-static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS an_exception)
+static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
 {
 		/* In order to be able to catch exceptions that cannot be caught by
 		 * just using signals on Windows, we need to set `windows_exception_filter'
 		 * as an unhandled exception filter.
 		 */
 
-	switch (an_exception->ExceptionRecord->ExceptionCode) {
+	switch (a_exception->ExceptionRecord->ExceptionCode) {
 		case STATUS_STACK_OVERFLOW:
 			GE_raise_with_message(GE_EX_EXT, "Stack overflow");
 			break;

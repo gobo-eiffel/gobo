@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,9 @@
 
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
+#endif
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
 #endif
 
 #ifdef __cplusplus

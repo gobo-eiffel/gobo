@@ -4,25 +4,234 @@
 extern "C" {
 #endif
 
+/* ET_EIFFEL_PREPARSER.yy_acclist_template_1 */
+void T440f162(GE_context* ac, T0* C, T0* a1)
+{
+	T0* t1;
+	t1 = GE_ma517((T6)201,(T6)201,
+(T6)(GE_int32(0)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(92)),
+(T6)(GE_int32(92)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(103)),
+(T6)(GE_int32(103)),
+(T6)(GE_int32(143)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(2)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(2)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(105)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(73)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(80)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(122)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(122)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(3)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(72)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(141)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(112)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(116)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(113)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(115)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(121)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(121)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(120)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(119)),
+(T6)(GE_int32(121)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(118)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(118)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(117)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(84)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(84)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(83)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(88)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(86)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(89)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(92)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(91)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(92)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(95)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(95)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(94)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(99)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(97)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(100)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(103)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(102)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(103)),
+(T6)(GE_int32(142)),
+(T6)(GE_int32(2)),
+(T6)(GE_int32(105)),
+(T6)(GE_int32(81)),
+(T6)(GE_int32(104)),
+(T6)(GE_int32(105)),
+(T6)(GE_int32(-235)),
+(T6)(GE_int32(105)),
+(T6)(GE_int32(-224)),
+(T6)(GE_int32(73)),
+(T6)(GE_int32(80)),
+(T6)(GE_int32(80)),
+(T6)(GE_int32(79)),
+(T6)(GE_int32(80)),
+(T6)(GE_int32(2147483647)));
+	T440f177(ac, C, a1, t1, (T6)(GE_int32(1)), (T6)(GE_int32(200)), (T6)(GE_int32(0)));
+}
+
 /* ET_EIFFEL_PREPARSER.yy_accept_template */
-unsigned char ge1050os26288 = '\0';
-T0* ge1050ov26288;
+unsigned char ge1050os26291 = '\0';
+T0* ge1050ov26291;
 T0* T440f80(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26288) {
-		return ge1050ov26288;
+	if (ge1050os26291) {
+		return ge1050ov26291;
 	} else {
-		ge1050os26288 = '\1';
-		ge1050ov26288 = R;
+		ge1050os26291 = '\1';
+		ge1050ov26291 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(511)));
 	T440f159(ac, C, l1);
 	T440f160(ac, C, l1);
 	T440f161(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26288 = R;
+	ge1050ov26291 = R;
 	return R;
 }
 
@@ -566,17 +775,17 @@ void T440f159(GE_context* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PREPARSER.yy_meta_template */
-unsigned char ge1050os26287 = '\0';
-T0* ge1050ov26287;
+unsigned char ge1050os26290 = '\0';
+T0* ge1050ov26290;
 T0* T440f77(GE_context* ac, T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1050os26287) {
-		return ge1050ov26287;
+	if (ge1050os26290) {
+		return ge1050ov26290;
 	} else {
-		ge1050os26287 = '\1';
-		ge1050ov26287 = R;
+		ge1050os26290 = '\1';
+		ge1050ov26290 = R;
 	}
 	t1 = GE_ma517((T6)75,(T6)75,
 (T6)(GE_int32(0)),
@@ -655,28 +864,28 @@ T0* T440f77(GE_context* ac, T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T440f90(ac, C, t1));
-	ge1050ov26287 = R;
+	ge1050ov26290 = R;
 	return R;
 }
 
 /* ET_EIFFEL_PREPARSER.yy_ec_template */
-unsigned char ge1050os26284 = '\0';
-T0* ge1050ov26284;
+unsigned char ge1050os26287 = '\0';
+T0* ge1050ov26287;
 T0* T440f71(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26284) {
-		return ge1050ov26284;
+	if (ge1050os26287) {
+		return ge1050ov26287;
 	} else {
-		ge1050os26284 = '\1';
-		ge1050ov26284 = R;
+		ge1050os26287 = '\1';
+		ge1050ov26287 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(256)));
 	T440f157(ac, C, l1);
 	T440f158(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26284 = R;
+	ge1050ov26287 = R;
 	return R;
 }
 
@@ -956,24 +1165,24 @@ void T440f157(GE_context* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PREPARSER.yy_def_template */
-unsigned char ge1050os26280 = '\0';
-T0* ge1050ov26280;
+unsigned char ge1050os26283 = '\0';
+T0* ge1050ov26283;
 T0* T440f69(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26280) {
-		return ge1050ov26280;
+	if (ge1050os26283) {
+		return ge1050ov26283;
 	} else {
-		ge1050os26280 = '\1';
-		ge1050ov26280 = R;
+		ge1050os26283 = '\1';
+		ge1050ov26283 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(540)));
 	T440f154(ac, C, l1);
 	T440f155(ac, C, l1);
 	T440f156(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26280 = R;
+	ge1050ov26283 = R;
 	return R;
 }
 
@@ -1546,24 +1755,24 @@ void T440f154(GE_context* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PREPARSER.yy_base_template */
-unsigned char ge1050os26276 = '\0';
-T0* ge1050ov26276;
+unsigned char ge1050os26279 = '\0';
+T0* ge1050ov26279;
 T0* T440f67(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26276) {
-		return ge1050ov26276;
+	if (ge1050os26279) {
+		return ge1050ov26279;
 	} else {
-		ge1050os26276 = '\1';
-		ge1050ov26276 = R;
+		ge1050os26279 = '\1';
+		ge1050ov26279 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(540)));
 	T440f151(ac, C, l1);
 	T440f152(ac, C, l1);
 	T440f153(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26276 = R;
+	ge1050ov26279 = R;
 	return R;
 }
 
@@ -2136,17 +2345,17 @@ void T440f151(GE_context* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PREPARSER.yy_chk_template */
-unsigned char ge1050os26265 = '\0';
-T0* ge1050ov26265;
+unsigned char ge1050os26268 = '\0';
+T0* ge1050ov26268;
 T0* T440f58(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26265) {
-		return ge1050ov26265;
+	if (ge1050os26268) {
+		return ge1050ov26268;
 	} else {
-		ge1050os26265 = '\1';
-		ge1050ov26265 = R;
+		ge1050os26268 = '\1';
+		ge1050ov26268 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(1872)));
 	T440f141(ac, C, l1);
@@ -2160,7 +2369,7 @@ T0* T440f58(GE_context* ac, T0* C)
 	T440f149(ac, C, l1);
 	T440f150(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26265 = R;
+	ge1050ov26268 = R;
 	return R;
 }
 
@@ -4128,17 +4337,17 @@ void T440f141(GE_context* ac, T0* C, T0* a1)
 }
 
 /* ET_EIFFEL_PREPARSER.yy_nxt_template */
-unsigned char ge1050os26254 = '\0';
-T0* ge1050ov26254;
+unsigned char ge1050os26257 = '\0';
+T0* ge1050ov26257;
 T0* T440f89(GE_context* ac, T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1050os26254) {
-		return ge1050ov26254;
+	if (ge1050os26257) {
+		return ge1050ov26257;
 	} else {
-		ge1050os26254 = '\1';
-		ge1050ov26254 = R;
+		ge1050os26257 = '\1';
+		ge1050ov26257 = R;
 	}
 	l1 = T517c10(ac, (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(1872)));
 	T440f166(ac, C, l1);
@@ -4152,7 +4361,7 @@ T0* T440f89(GE_context* ac, T0* C)
 	T440f174(ac, C, l1);
 	T440f175(ac, C, l1);
 	R = (T440f90(ac, C, l1));
-	ge1050ov26254 = R;
+	ge1050ov26257 = R;
 	return R;
 }
 
@@ -6129,7 +6338,7 @@ T0* T440f81(GE_context* ac, T0* C)
 		ge1744os14029 = '\1';
 		ge1744ov14029 = R;
 	}
-	R = T205c12(ac, GE_ms("", 0));
+	R = T205c12(ac, GE_ms8("", 0));
 	ge1744ov14029 = R;
 	return R;
 }
@@ -6138,14 +6347,14 @@ T0* T440f81(GE_context* ac, T0* C)
 T0* T440f88(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge263os2858) {
-		return ge263ov2858;
+	if (ge265os2858) {
+		return ge265ov2858;
 	} else {
-		ge263os2858 = '\1';
-		ge263ov2858 = R;
+		ge265os2858 = '\1';
+		ge265ov2858 = R;
 	}
 	R = T131c4(ac);
-	ge263ov2858 = R;
+	ge265ov2858 = R;
 	return R;
 }
 
@@ -7358,9 +7567,9 @@ void T71f199(GE_context* ac, T0* C, T0* a1, T0* a2)
 		}
 		t2 = (((((T0*)(GE_void(((T71*)(C))->a1)))->id==78)?((T78*)(((T71*)(C))->a1))->a3:((T37*)(((T71*)(C))->a1))->a3));
 		if (((T0*)(GE_void(t2)))->id==267) {
-			T267f9(ac, t2, GE_ms(": ", 2));
+			T267f9(ac, t2, GE_ms8(": ", 2));
 		} else {
-			T133f6(ac, t2, GE_ms(": ", 2));
+			T133f6(ac, t2, GE_ms8(": ", 2));
 		}
 		t2 = (((((T0*)(GE_void(((T71*)(C))->a1)))->id==78)?((T78*)(((T71*)(C))->a1))->a3:((T37*)(((T71*)(C))->a1))->a3));
 		t3 = (T438f9(ac, GE_void(l3)));
@@ -8004,19 +8213,19 @@ void T240f68(GE_context* ac, T0* C, T6 a1)
 }
 
 /* DT_DATE_TIME.epoch_to_y2k_days */
-unsigned char ge343os22687 = '\0';
-T6 ge343ov22687;
+unsigned char ge348os22690 = '\0';
+T6 ge348ov22690;
 T6 T240f46(GE_context* ac, T0* C)
 {
 	T6 R = 0;
-	if (ge343os22687) {
-		return ge343ov22687;
+	if (ge348os22690) {
+		return ge348ov22690;
 	} else {
-		ge343os22687 = '\1';
-		ge343ov22687 = R;
+		ge348os22690 = '\1';
+		ge348ov22690 = R;
 	}
 	R = (T240f11(ac, C, (T6)(GE_int32(2000)), (T6)(GE_int32(1)), (T6)(GE_int32(1))));
-	ge343ov22687 = R;
+	ge348ov22690 = R;
 	return R;
 }
 
@@ -8054,19 +8263,19 @@ T6 T240f11(GE_context* ac, T0* C, T6 a1, T6 a2, T6 a3)
 }
 
 /* DT_DATE_TIME.epoch_days_at_month */
-unsigned char ge343os22686 = '\0';
-T6 ge343ov22686;
+unsigned char ge348os22689 = '\0';
+T6 ge348ov22689;
 T6 T240f24(GE_context* ac, T0* C)
 {
 	T6 R = 0;
-	if (ge343os22686) {
-		return ge343ov22686;
+	if (ge348os22689) {
+		return ge348ov22689;
 	} else {
-		ge343os22686 = '\1';
-		ge343ov22686 = R;
+		ge348os22689 = '\1';
+		ge348ov22689 = R;
 	}
 	R = (T240f23(ac, C, (T6)(GE_int32(1)), (T6)(GE_int32(1970))));
-	ge343ov22686 = R;
+	ge348ov22689 = R;
 	return R;
 }
 
@@ -8127,18 +8336,18 @@ T6 T240f23(GE_context* ac, T0* C, T6 a1, T6 a2)
 }
 
 /* DT_DATE_TIME.epoch_leap_years */
-unsigned char ge343os22685 = '\0';
-T6 ge343ov22685;
+unsigned char ge348os22688 = '\0';
+T6 ge348ov22688;
 T6 T240f22(GE_context* ac, T0* C)
 {
 	T6 t1;
 	T6 t2;
 	T6 R = 0;
-	if (ge343os22685) {
-		return ge343ov22685;
+	if (ge348os22688) {
+		return ge348ov22688;
 	} else {
-		ge343os22685 = '\1';
-		ge343ov22685 = R;
+		ge348os22688 = '\1';
+		ge348ov22688 = R;
 	}
 	t1 = (T6)(GE_int32(1970));
 	t1 = ((T6)((t1)-((T6)(GE_int32(1)))));
@@ -8151,7 +8360,7 @@ T6 T240f22(GE_context* ac, T0* C)
 	t2 = ((T6)((t2)-((T6)(GE_int32(1)))));
 	t2 = ((T6)((t2)/((T6)(GE_int32(400)))));
 	R = ((T6)((t1)+(t2)));
-	ge343ov22685 = R;
+	ge348ov22688 = R;
 	return R;
 }
 
@@ -8316,19 +8525,19 @@ void T240f60(GE_context* ac, T0* C, T0* a1)
 }
 
 /* DT_DATE_TIME_DURATION.tmp_date_time */
-unsigned char ge1409os22928 = '\0';
-T0* ge1409ov22928;
+unsigned char ge1409os22931 = '\0';
+T0* ge1409ov22931;
 T0* T438f8(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge1409os22928) {
-		return ge1409ov22928;
+	if (ge1409os22931) {
+		return ge1409ov22931;
 	} else {
-		ge1409os22928 = '\1';
-		ge1409ov22928 = R;
+		ge1409os22931 = '\1';
+		ge1409ov22931 = R;
 	}
 	R = T240c59(ac, (T6)(GE_int32(1)), (T6)(GE_int32(1)), (T6)(GE_int32(1)), (T6)(GE_int32(0)), (T6)(GE_int32(0)), (T6)(GE_int32(0)));
-	ge1409ov22928 = R;
+	ge1409ov22931 = R;
 	return R;
 }
 
@@ -8472,9 +8681,9 @@ void T65f198(GE_context* ac, T0* C, T0* a1, T0* a2)
 		}
 		t2 = (((((T0*)(GE_void(((T65*)(C))->a6)))->id==78)?((T78*)(((T65*)(C))->a6))->a3:((T37*)(((T65*)(C))->a6))->a3));
 		if (((T0*)(GE_void(t2)))->id==267) {
-			T267f9(ac, t2, GE_ms(": ", 2));
+			T267f9(ac, t2, GE_ms8(": ", 2));
 		} else {
-			T133f6(ac, t2, GE_ms(": ", 2));
+			T133f6(ac, t2, GE_ms8(": ", 2));
 		}
 		t2 = (((((T0*)(GE_void(((T65*)(C))->a6)))->id==78)?((T78*)(((T65*)(C))->a6))->a3:((T37*)(((T65*)(C))->a6))->a3));
 		t3 = (T438f9(ac, GE_void(l3)));
@@ -8511,9 +8720,9 @@ void T62f195(GE_context* ac, T0* C, T0* a1, T0* a2)
 		}
 		t2 = (((((T0*)(GE_void(((T62*)(C))->a1)))->id==78)?((T78*)(((T62*)(C))->a1))->a3:((T37*)(((T62*)(C))->a1))->a3));
 		if (((T0*)(GE_void(t2)))->id==267) {
-			T267f9(ac, t2, GE_ms(": ", 2));
+			T267f9(ac, t2, GE_ms8(": ", 2));
 		} else {
-			T133f6(ac, t2, GE_ms(": ", 2));
+			T133f6(ac, t2, GE_ms8(": ", 2));
 		}
 		t2 = (((((T0*)(GE_void(((T62*)(C))->a1)))->id==78)?((T78*)(((T62*)(C))->a1))->a3:((T37*)(((T62*)(C))->a1))->a3));
 		t3 = (T438f9(ac, GE_void(l3)));
@@ -10306,7 +10515,7 @@ T1 T1838f3(GE_context* ac, T0* C, T6 a1)
 T0* T1873f17(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T1027x19951(ac, GE_void(((T1873*)(C))->a3)));
+	R = (T1027x19954(ac, GE_void(((T1873*)(C))->a3)));
 	return R;
 }
 
@@ -10314,7 +10523,7 @@ T0* T1873f17(GE_context* ac, T0* C)
 T0* T1255f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T1255*)(C))->a3)));
+	R = (T289x22056(ac, GE_void(((T1255*)(C))->a3)));
 	return R;
 }
 
@@ -10322,7 +10531,7 @@ T0* T1255f7(GE_context* ac, T0* C)
 T0* T1171f11(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T1171*)(C))->a4)));
+	R = (T289x22056(ac, GE_void(((T1171*)(C))->a4)));
 	return R;
 }
 
@@ -10330,7 +10539,7 @@ T0* T1171f11(GE_context* ac, T0* C)
 T0* T331f3(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T331*)(C))->a2)));
+	R = (T289x22056(ac, GE_void(((T331*)(C))->a2)));
 	return R;
 }
 
@@ -10394,7 +10603,7 @@ T0* T856f59(GE_context* ac, T0* C)
 T0* T1244f36(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T1244*)(C))->a3)));
+	R = (T289x22056(ac, GE_void(((T1244*)(C))->a3)));
 	return R;
 }
 
@@ -10402,7 +10611,7 @@ T0* T1244f36(GE_context* ac, T0* C)
 T0* T1243f36(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T1243*)(C))->a4)));
+	R = (T289x22056(ac, GE_void(((T1243*)(C))->a4)));
 	return R;
 }
 
@@ -11513,26 +11722,26 @@ T0* T501f21(GE_context* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge262os2860) {
-		return ge262ov2860;
+	if (ge264os2860) {
+		return ge264ov2860;
 	} else {
-		ge262os2860 = '\1';
-		ge262ov2860 = R;
+		ge264os2860 = '\1';
+		ge264ov2860 = R;
 	}
 	t1 = (T501f25(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
 		R = (T501f26(ac, C));
-		ge262ov2860 = R;
+		ge264ov2860 = R;
 	} else {
 		t1 = (T501f25(ac, C));
 		t2 = (T85f2(ac, GE_void(t1)));
 		if (t2) {
 			R = (T501f27(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		} else {
 			R = (T501f27(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		}
 	}
 	return R;
@@ -11542,14 +11751,14 @@ T0* T501f21(GE_context* ac, T0* C)
 T0* T501f27(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2863) {
-		return ge262ov2863;
+	if (ge264os2863) {
+		return ge264ov2863;
 	} else {
-		ge262os2863 = '\1';
-		ge262ov2863 = R;
+		ge264os2863 = '\1';
+		ge264ov2863 = R;
 	}
 	R = T122c31(ac);
-	ge262ov2863 = R;
+	ge264ov2863 = R;
 	return R;
 }
 
@@ -11557,14 +11766,14 @@ T0* T501f27(GE_context* ac, T0* C)
 T0* T501f26(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2861) {
-		return ge262ov2861;
+	if (ge264os2861) {
+		return ge264ov2861;
 	} else {
-		ge262os2861 = '\1';
-		ge262ov2861 = R;
+		ge264os2861 = '\1';
+		ge264ov2861 = R;
 	}
 	R = T121c34(ac);
-	ge262ov2861 = R;
+	ge264ov2861 = R;
 	return R;
 }
 
@@ -11572,14 +11781,14 @@ T0* T501f26(GE_context* ac, T0* C)
 T0* T501f25(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -11616,14 +11825,14 @@ T0* T501f24(GE_context* ac, T0* C)
 T0* T501f19(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge302os2857) {
-		return ge302ov2857;
+	if (ge307os2857) {
+		return ge307ov2857;
 	} else {
-		ge302os2857 = '\1';
-		ge302ov2857 = R;
+		ge307os2857 = '\1';
+		ge307ov2857 = R;
 	}
 	R = T67c5(ac);
-	ge302ov2857 = R;
+	ge307ov2857 = R;
 	return R;
 }
 
@@ -11661,26 +11870,26 @@ T0* T397f22(GE_context* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge262os2860) {
-		return ge262ov2860;
+	if (ge264os2860) {
+		return ge264ov2860;
 	} else {
-		ge262os2860 = '\1';
-		ge262ov2860 = R;
+		ge264os2860 = '\1';
+		ge264ov2860 = R;
 	}
 	t1 = (T397f26(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
 		R = (T397f27(ac, C));
-		ge262ov2860 = R;
+		ge264ov2860 = R;
 	} else {
 		t1 = (T397f26(ac, C));
 		t2 = (T85f2(ac, GE_void(t1)));
 		if (t2) {
 			R = (T397f28(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		} else {
 			R = (T397f28(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		}
 	}
 	return R;
@@ -11690,14 +11899,14 @@ T0* T397f22(GE_context* ac, T0* C)
 T0* T397f28(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2863) {
-		return ge262ov2863;
+	if (ge264os2863) {
+		return ge264ov2863;
 	} else {
-		ge262os2863 = '\1';
-		ge262ov2863 = R;
+		ge264os2863 = '\1';
+		ge264ov2863 = R;
 	}
 	R = T122c31(ac);
-	ge262ov2863 = R;
+	ge264ov2863 = R;
 	return R;
 }
 
@@ -11705,14 +11914,14 @@ T0* T397f28(GE_context* ac, T0* C)
 T0* T397f27(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2861) {
-		return ge262ov2861;
+	if (ge264os2861) {
+		return ge264ov2861;
 	} else {
-		ge262os2861 = '\1';
-		ge262ov2861 = R;
+		ge264os2861 = '\1';
+		ge264ov2861 = R;
 	}
 	R = T121c34(ac);
-	ge262ov2861 = R;
+	ge264ov2861 = R;
 	return R;
 }
 
@@ -11720,14 +11929,14 @@ T0* T397f27(GE_context* ac, T0* C)
 T0* T397f26(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -11764,14 +11973,14 @@ T0* T397f25(GE_context* ac, T0* C)
 T0* T397f20(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge302os2857) {
-		return ge302ov2857;
+	if (ge307os2857) {
+		return ge307ov2857;
 	} else {
-		ge302os2857 = '\1';
-		ge302ov2857 = R;
+		ge307os2857 = '\1';
+		ge307ov2857 = R;
 	}
 	R = T67c5(ac);
-	ge302ov2857 = R;
+	ge307ov2857 = R;
 	return R;
 }
 
@@ -17140,7 +17349,7 @@ T1 T1237f17(GE_context* ac, T0* C, T0* a1)
 			t2 = (T1575x22(ac, m1));
 			t1 = (((((((T1237*)(C))->a1) == (t2)))));
 			if (t1) {
-				t3 = (T1575x31808(ac, m1));
+				t3 = (T1575x31811(ac, m1));
 				t4 = (T1237f9(ac, C));
 				t1 = ((t3)==(t4));
 				if (t1) {
@@ -17148,7 +17357,7 @@ T1 T1237f17(GE_context* ac, T0* C, T0* a1)
 				} else {
 					t3 = (T1237f10(ac, C));
 					t4 = (T1237f9(ac, C));
-					t5 = (T1575x31808(ac, m1));
+					t5 = (T1575x31811(ac, m1));
 					R = (T35f11(ac, GE_void(t3), t4, t5));
 				}
 			}
@@ -17228,7 +17437,7 @@ T1 T1234f50(GE_context* ac, T0* C, T0* a1)
 			t2 = (T1575x22(ac, m1));
 			t1 = (((((((T1234*)(C))->a1) == (t2)))));
 			if (t1) {
-				t3 = (T1575x31808(ac, m1));
+				t3 = (T1575x31811(ac, m1));
 				t4 = (T1234f17(ac, C));
 				t1 = ((t3)==(t4));
 				if (t1) {
@@ -17236,7 +17445,7 @@ T1 T1234f50(GE_context* ac, T0* C, T0* a1)
 				} else {
 					t3 = (T1234f29(ac, C));
 					t4 = (T1234f17(ac, C));
-					t5 = (T1575x31808(ac, m1));
+					t5 = (T1575x31811(ac, m1));
 					R = (T35f11(ac, GE_void(t3), t4, t5));
 				}
 			}
@@ -17351,7 +17560,7 @@ T1 T830f48(GE_context* ac, T0* C, T0* a1)
 			t2 = (T1575x22(ac, m1));
 			t1 = (((((((T830*)(C))->a4) == (t2)))));
 			if (t1) {
-				t3 = (T1575x31808(ac, m1));
+				t3 = (T1575x31811(ac, m1));
 				t4 = (T830f8(ac, C));
 				t1 = ((t3)==(t4));
 				if (t1) {
@@ -17359,7 +17568,7 @@ T1 T830f48(GE_context* ac, T0* C, T0* a1)
 				} else {
 					t3 = (T830f7(ac, C));
 					t4 = (T830f8(ac, C));
-					t5 = (T1575x31808(ac, m1));
+					t5 = (T1575x31811(ac, m1));
 					R = (T35f11(ac, GE_void(t3), t4, t5));
 				}
 			}
@@ -17426,7 +17635,7 @@ T0* T1237f41(GE_context* ac, T0* C)
 	t2 = (((((T0*)(GE_void(t1)))->id==17)?((T17*)(t1))->a2:((T844*)(t1))->a1));
 	t2 = ((T6)((t2)+((T6)(GE_int32(8)))));
 	R = T17c45(ac, t2);
-	T17f51(ac, GE_void(R), ge828ov16580);
+	T17f51(ac, GE_void(R), ge828ov16583);
 	t1 = (T1237f9(ac, C));
 	T17f51(ac, GE_void(R), t1);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -17588,7 +17797,7 @@ T0* T1234f66(GE_context* ac, T0* C)
 	t2 = (((((T0*)(GE_void(t1)))->id==17)?((T17*)(t1))->a2:((T844*)(t1))->a1));
 	t2 = ((T6)((t2)+((T6)(GE_int32(8)))));
 	R = T17c45(ac, t2);
-	T17f51(ac, GE_void(R), ge828ov16580);
+	T17f51(ac, GE_void(R), ge828ov16583);
 	t1 = (T1234f17(ac, C));
 	T17f51(ac, GE_void(R), t1);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -17864,7 +18073,7 @@ T0* T830f66(GE_context* ac, T0* C)
 	t2 = (((((T0*)(GE_void(t1)))->id==17)?((T17*)(t1))->a2:((T844*)(t1))->a1));
 	t2 = ((T6)((t2)+((T6)(GE_int32(8)))));
 	R = T17c45(ac, t2);
-	T17f51(ac, GE_void(R), ge828ov16580);
+	T17f51(ac, GE_void(R), ge828ov16583);
 	t1 = (T830f8(ac, C));
 	T17f51(ac, GE_void(R), t1);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -18254,18 +18463,18 @@ T1 T817f3(GE_context* ac, T0* C, T0* a1)
 	T0* l2 = 0;
 	t1 = (((T186*)(GE_void(a1)))->a5);
 	if (t1) {
-		l1 = GE_ms("thread", 6);
+		l1 = GE_ms8("thread", 6);
 	} else {
 		t1 = (((T186*)(GE_void(a1)))->a6);
 		if (t1) {
-			l1 = GE_ms("scoop", 5);
+			l1 = GE_ms8("scoop", 5);
 		} else {
-			l1 = GE_ms("none", 4);
+			l1 = GE_ms8("none", 4);
 		}
 	}
 	t1 = (((((T0*)(GE_void(((T817*)(C))->a1)))->id==17)?T17f41(ac, ((T817*)(C))->a1, (T2)(' ')):T844f66(ac, ((T817*)(C))->a1, (T2)(' '))));
 	if (t1) {
-		l2 = T56c11(ac, GE_ms(" ", 1));
+		l2 = T56c11(ac, GE_ms8(" ", 1));
 		t2 = (T56f6(ac, GE_void(l2), ((T817*)(C))->a1));
 		t3 = (T817f4(ac, C));
 		t3 = T817f3ac1(ac, t3, l1);
@@ -18368,7 +18577,7 @@ T1 T815f3(GE_context* ac, T0* C, T0* a1)
 	T1 R = 0;
 	t1 = (((T186*)(GE_void(a1)))->a3);
 	t2 = (T815f4(ac, C));
-	t3 = (T35f11(ac, GE_void(t2), ((T815*)(C))->a1, GE_ms("finalize", 8)));
+	t3 = (T35f11(ac, GE_void(t2), ((T815*)(C))->a1, GE_ms8("finalize", 8)));
 	t1 = (((((t1) == (t3)))));
 	R = (((((((T815*)(C))->a2) != (t1)))));
 	return R;
@@ -18401,13 +18610,13 @@ T1 T814f3(GE_context* ac, T0* C, T0* a1)
 	t1 = (T814f4(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
-		l1 = GE_ms("windows", 7);
+		l1 = GE_ms8("windows", 7);
 	} else {
-		l1 = GE_ms("unix", 4);
+		l1 = GE_ms8("unix", 4);
 	}
 	t2 = (((((T0*)(GE_void(((T814*)(C))->a1)))->id==17)?T17f41(ac, ((T814*)(C))->a1, (T2)(' ')):T844f66(ac, ((T814*)(C))->a1, (T2)(' '))));
 	if (t2) {
-		l2 = T56c11(ac, GE_ms(" ", 1));
+		l2 = T56c11(ac, GE_ms8(" ", 1));
 		t1 = (T56f6(ac, GE_void(l2), ((T814*)(C))->a1));
 		t3 = (T814f5(ac, C));
 		t3 = T814f3ac1(ac, t3, l1);
@@ -18460,14 +18669,14 @@ T0* T814f5(GE_context* ac, T0* C)
 T0* T814f4(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -18488,7 +18697,7 @@ T1 T810f4(GE_context* ac, T0* C, T0* a1)
 			break;
 		}
 		t2 = (T1449f9(ac, GE_void(((T810*)(C))->a1), l1));
-		t1 = (T813x22187T0(ac, GE_void(t2), a1));
+		t1 = (T813x22190T0(ac, GE_void(t2), a1));
 		t1 = (((((t1) == (((T810*)(C))->a2)))));
 		if (t1) {
 			R = ((T810*)(C))->a2;
@@ -18912,10 +19121,10 @@ T1 T845f20(GE_context* ac, T0* C, T0* a1)
 		R = EIF_TRUE;
 	} else {
 		t2 = (T845f8(ac, C));
-		t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31371));
+		t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31374));
 		if (!(t1)) {
 			t2 = (T845f8(ac, C));
-			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31370));
+			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31373));
 		}
 		if (t1) {
 			t1 = (((((((T845*)(C))->a2) == ((T6)(GE_int32(2)))))));
@@ -18929,7 +19138,7 @@ T1 T845f20(GE_context* ac, T0* C, T0* a1)
 			}
 		} else {
 			t2 = (T845f8(ac, C));
-			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31372));
+			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31375));
 			if (t1) {
 				t1 = (((((((T845*)(C))->a2) == ((T6)(GE_int32(2)))))));
 				if (!(t1)) {
@@ -18939,7 +19148,7 @@ T1 T845f20(GE_context* ac, T0* C, T0* a1)
 				}
 			} else {
 				t2 = (T845f8(ac, C));
-				t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31373));
+				t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31376));
 				if (t1) {
 					t1 = (((((((T845*)(C))->a2) == ((T6)(GE_int32(4)))))));
 					if (!(t1)) {
@@ -18963,18 +19172,18 @@ T1 T845f13(GE_context* ac, T0* C, T0* a1)
 	t1 = ((a1)!=(EIF_VOID));
 	if (t1) {
 		t2 = (T845f8(ac, C));
-		t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31371));
+		t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31374));
 		if (!(t1)) {
 			t2 = (T845f8(ac, C));
-			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31370));
+			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31373));
 		}
 		if (!(t1)) {
 			t2 = (T845f8(ac, C));
-			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31372));
+			t1 = (T35f11(ac, GE_void(t2), a1, ge1312ov31375));
 		}
 		if (!(t1)) {
 			t2 = (T845f8(ac, C));
-			R = (T35f11(ac, GE_void(t2), a1, ge1312ov31373));
+			R = (T35f11(ac, GE_void(t2), a1, ge1312ov31376));
 		} else {
 			R = EIF_TRUE;
 		}
@@ -19093,18 +19302,18 @@ T1 T1236f3(GE_context* ac, T0* C, T0* a1)
 	t1 = (((T1236*)(C))->a2?((m1 = ((T1236*)(C))->a2, EIF_TRUE)):EIF_FALSE);
 	t1 = ((T1)(!(t1)));
 	if (t1) {
-		t2 = (T522x22050(ac, GE_void(a1)));
+		t2 = (T522x22053(ac, GE_void(a1)));
 		t1 = (t2?(EIF_TRUE):EIF_FALSE);
 		t1 = ((T1)(!(t1)));
 		if (t1) {
-			t2 = (T522x22049(ac, GE_void(a1)));
+			t2 = (T522x22052(ac, GE_void(a1)));
 			R = (T181f40(ac, GE_void(((T1236*)(C))->a1), t2));
 		}
 	} else {
-		t2 = (T522x22050(ac, GE_void(a1)));
+		t2 = (T522x22053(ac, GE_void(a1)));
 		t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 		if (t1) {
-			t2 = (T522x22049(ac, GE_void(a1)));
+			t2 = (T522x22052(ac, GE_void(a1)));
 			t1 = (T181f40(ac, GE_void(((T1236*)(C))->a1), t2));
 			if (t1) {
 				t2 = (T1236f5(ac, C));
@@ -19112,7 +19321,7 @@ T1 T1236f3(GE_context* ac, T0* C, T0* a1)
 				if (t1) {
 					R = EIF_TRUE;
 				} else {
-					t1 = (T856x16647T0(ac, m1, m2));
+					t1 = (T856x16650T0(ac, m1, m2));
 					if (t1) {
 						R = EIF_TRUE;
 					}
@@ -19159,20 +19368,20 @@ T1 T1235f73(GE_context* ac, T0* C, T0* a1)
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?(EIF_TRUE):EIF_FALSE);
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			t1 = (T1235f10(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			R = (T1235f6(ac, GE_void(t1), t3));
 		}
 	} else {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t2) {
 			t1 = (T1235f10(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			t2 = (T1235f6(ac, GE_void(t1), t3));
 			if (t2) {
 				t1 = (T1235f41(ac, C));
@@ -19220,20 +19429,20 @@ T1 T1234f60(GE_context* ac, T0* C, T0* a1)
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?(EIF_TRUE):EIF_FALSE);
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			t1 = (T1234f22(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			R = (T1234f6(ac, GE_void(t1), t3));
 		}
 	} else {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t2) {
 			t1 = (T1234f22(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			t2 = (T1234f6(ac, GE_void(t1), t3));
 			if (t2) {
 				t1 = (T1234f19(ac, C));
@@ -19281,20 +19490,20 @@ T1 T1233f59(GE_context* ac, T0* C, T0* a1)
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?(EIF_TRUE):EIF_FALSE);
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			t1 = (T1233f10(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			R = (T1233f6(ac, GE_void(t1), t3));
 		}
 	} else {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t2) {
 			t1 = (T1233f10(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			t2 = (T1233f6(ac, GE_void(t1), t3));
 			if (t2) {
 				t1 = (T1233f27(ac, C));
@@ -19342,20 +19551,20 @@ T1 T830f60(GE_context* ac, T0* C, T0* a1)
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?(EIF_TRUE):EIF_FALSE);
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			t1 = (T830f9(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			R = (T830f13(ac, GE_void(t1), t3));
 		}
 	} else {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t2) {
 			t1 = (T830f9(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			t2 = (T830f13(ac, GE_void(t1), t3));
 			if (t2) {
 				t1 = (T830f28(ac, C));
@@ -19403,20 +19612,20 @@ T1 T181f84(GE_context* ac, T0* C, T0* a1)
 	t2 = (t1?((m1 = t1, EIF_TRUE)):EIF_FALSE);
 	t2 = ((T1)(!(t2)));
 	if (t2) {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?(EIF_TRUE):EIF_FALSE);
 		t2 = ((T1)(!(t2)));
 		if (t2) {
 			t1 = (T181f28(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			R = (T181f40(ac, GE_void(t1), t3));
 		}
 	} else {
-		t1 = (T522x22050(ac, GE_void(a1)));
+		t1 = (T522x22053(ac, GE_void(a1)));
 		t2 = (t1?((m2 = t1, EIF_TRUE)):EIF_FALSE);
 		if (t2) {
 			t1 = (T181f28(ac, C));
-			t3 = (T522x22049(ac, GE_void(a1)));
+			t3 = (T522x22052(ac, GE_void(a1)));
 			t2 = (T181f40(ac, GE_void(t1), t3));
 			if (t2) {
 				t1 = (T181f36(ac, C));
@@ -19546,9 +19755,9 @@ T1 T795f36(GE_context* ac, T0* C, T0* a1)
 				t2 = (T795f49(ac, C));
 				t3 = (T795f50(ac, C, (T2)('/')));
 				t2 = (T122f7(ac, GE_void(t2), t3, a1));
-				l1 = (T17f10(ac, GE_ms("/", 1), t2));
+				l1 = (T17f10(ac, GE_ms8("/", 1), t2));
 			} else {
-				l1 = (T17f10(ac, GE_ms("/", 1), a1));
+				l1 = (T17f10(ac, GE_ms8("/", 1), a1));
 			}
 			R = (T800f3(ac, m1, l1));
 		} else {
@@ -19772,14 +19981,14 @@ T0* T795f50(GE_context* ac, T0* C, T2 a1)
 T0* T795f49(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2863) {
-		return ge262ov2863;
+	if (ge264os2863) {
+		return ge264ov2863;
 	} else {
-		ge262os2863 = '\1';
-		ge262ov2863 = R;
+		ge264os2863 = '\1';
+		ge264ov2863 = R;
 	}
 	R = T122c31(ac);
-	ge262ov2863 = R;
+	ge264ov2863 = R;
 	return R;
 }
 
@@ -19831,14 +20040,14 @@ T1 T795f51(GE_context* ac, T0* C, T0* a1)
 T0* T795f55(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -19864,7 +20073,7 @@ T1 T414f35(GE_context* ac, T0* C, T0* a1)
 				t1 = (T414f50(ac, C, l1, a1));
 				R = ((T1)(!(t1)));
 			} else {
-				t1 = (T77f35(ac, GE_void(l1), a1));
+				t1 = (T77f22(ac, GE_void(l1), a1));
 				R = ((T1)(!(t1)));
 			}
 		} else {
@@ -19882,7 +20091,7 @@ T1 T414f50(GE_context* ac, T0* C, T0* a1, T0* a2)
 	T0* t3;
 	T1 R = 0;
 	T0* l1 = 0;
-	l1 = (T77f23(ac, GE_void(a1)));
+	l1 = (T77f24(ac, GE_void(a1)));
 	T371f13(ac, GE_void(l1));
 	while (1) {
 		t1 = (T371f7(ac, GE_void(l1)));
@@ -19913,11 +20122,11 @@ void T77f75(GE_context* ac, T0* C, T0* a1)
 {
 	T1 t1;
 	T1 l1 = 0;
-	l1 = (T77f33(ac, C, a1));
+	l1 = (T77f34(ac, C, a1));
 	T371f10(ac, a1);
 	t1 = ((T1)(!(l1)));
 	if (t1) {
-		T77f66(ac, C, a1);
+		T77f67(ac, C, a1);
 	}
 }
 
@@ -19925,14 +20134,14 @@ void T77f75(GE_context* ac, T0* C, T0* a1)
 T0* T414f49(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -19982,7 +20191,7 @@ T1 T409f140(GE_context* ac, T0* C)
 	T1 R = 0;
 	t1 = (((T409*)(C))->a41?((m1 = ((T409*)(C))->a41, EIF_TRUE)):EIF_FALSE);
 	if (t1) {
-		t1 = (T77f32(ac, m1));
+		t1 = (T77f33(ac, m1));
 		R = ((T1)(!(t1)));
 	} else {
 		R = EIF_FALSE;
@@ -20148,14 +20357,14 @@ T1 T215f3(GE_context* ac, T0* C, T0* a1)
 T0* T214f24(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge304os2859) {
-		return ge304ov2859;
+	if (ge309os2859) {
+		return ge309ov2859;
 	} else {
-		ge304os2859 = '\1';
-		ge304ov2859 = R;
+		ge309os2859 = '\1';
+		ge309ov2859 = R;
 	}
 	R = T85c6(ac);
-	ge304ov2859 = R;
+	ge309ov2859 = R;
 	return R;
 }
 
@@ -20220,9 +20429,9 @@ T1 T795f37(GE_context* ac, T0* C, T0* a1)
 				t2 = (T795f49(ac, C));
 				t3 = (T795f50(ac, C, (T2)('/')));
 				t2 = (T122f7(ac, GE_void(t2), t3, a1));
-				l1 = (T17f10(ac, GE_ms("/", 1), t2));
+				l1 = (T17f10(ac, GE_ms8("/", 1), t2));
 			} else {
-				l1 = (T17f10(ac, GE_ms("/", 1), a1));
+				l1 = (T17f10(ac, GE_ms8("/", 1), a1));
 			}
 			R = (T800f3(ac, m1, l1));
 		} else {
@@ -20279,7 +20488,7 @@ T1 T414f36(GE_context* ac, T0* C, T0* a1)
 				t1 = (T414f50(ac, C, l1, a1));
 				R = ((T1)(!(t1)));
 			} else {
-				t1 = (T77f35(ac, GE_void(l1), a1));
+				t1 = (T77f22(ac, GE_void(l1), a1));
 				R = ((T1)(!(t1)));
 			}
 		} else {
@@ -20495,14 +20704,14 @@ T0* T795f35(GE_context* ac, T0* C)
 T0* T795f48(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2861) {
-		return ge262ov2861;
+	if (ge264os2861) {
+		return ge264ov2861;
 	} else {
-		ge262os2861 = '\1';
-		ge262ov2861 = R;
+		ge264os2861 = '\1';
+		ge264ov2861 = R;
 	}
 	R = T121c34(ac);
-	ge262ov2861 = R;
+	ge264ov2861 = R;
 	return R;
 }
 
@@ -20512,26 +20721,26 @@ T0* T795f45(GE_context* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge262os2860) {
-		return ge262ov2860;
+	if (ge264os2860) {
+		return ge264ov2860;
 	} else {
-		ge262os2860 = '\1';
-		ge262ov2860 = R;
+		ge264os2860 = '\1';
+		ge264ov2860 = R;
 	}
 	t1 = (T795f55(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
 		R = (T795f48(ac, C));
-		ge262ov2860 = R;
+		ge264ov2860 = R;
 	} else {
 		t1 = (T795f55(ac, C));
 		t2 = (T85f2(ac, GE_void(t1)));
 		if (t2) {
 			R = (T795f49(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		} else {
 			R = (T795f49(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		}
 	}
 	return R;
@@ -20541,14 +20750,14 @@ T0* T795f45(GE_context* ac, T0* C)
 T0* T795f44(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge302os2857) {
-		return ge302ov2857;
+	if (ge307os2857) {
+		return ge307ov2857;
 	} else {
-		ge302os2857 = '\1';
-		ge302ov2857 = R;
+		ge307os2857 = '\1';
+		ge307ov2857 = R;
 	}
 	R = T67c5(ac);
-	ge302ov2857 = R;
+	ge307ov2857 = R;
 	return R;
 }
 
@@ -20604,26 +20813,26 @@ T0* T414f46(GE_context* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge262os2860) {
-		return ge262ov2860;
+	if (ge264os2860) {
+		return ge264ov2860;
 	} else {
-		ge262os2860 = '\1';
-		ge262ov2860 = R;
+		ge264os2860 = '\1';
+		ge264ov2860 = R;
 	}
 	t1 = (T414f49(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
 		R = (T414f55(ac, C));
-		ge262ov2860 = R;
+		ge264ov2860 = R;
 	} else {
 		t1 = (T414f49(ac, C));
 		t2 = (T85f2(ac, GE_void(t1)));
 		if (t2) {
 			R = (T414f56(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		} else {
 			R = (T414f56(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		}
 	}
 	return R;
@@ -20633,14 +20842,14 @@ T0* T414f46(GE_context* ac, T0* C)
 T0* T414f56(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2863) {
-		return ge262ov2863;
+	if (ge264os2863) {
+		return ge264ov2863;
 	} else {
-		ge262os2863 = '\1';
-		ge262ov2863 = R;
+		ge264os2863 = '\1';
+		ge264ov2863 = R;
 	}
 	R = T122c31(ac);
-	ge262ov2863 = R;
+	ge264ov2863 = R;
 	return R;
 }
 
@@ -20648,14 +20857,14 @@ T0* T414f56(GE_context* ac, T0* C)
 T0* T414f55(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2861) {
-		return ge262ov2861;
+	if (ge264os2861) {
+		return ge264ov2861;
 	} else {
-		ge262os2861 = '\1';
-		ge262ov2861 = R;
+		ge264os2861 = '\1';
+		ge264ov2861 = R;
 	}
 	R = T121c34(ac);
-	ge262ov2861 = R;
+	ge264ov2861 = R;
 	return R;
 }
 
@@ -20713,26 +20922,26 @@ T0* T214f23(GE_context* ac, T0* C)
 	T0* t1;
 	T1 t2;
 	T0* R = 0;
-	if (ge262os2860) {
-		return ge262ov2860;
+	if (ge264os2860) {
+		return ge264ov2860;
 	} else {
-		ge262os2860 = '\1';
-		ge262ov2860 = R;
+		ge264os2860 = '\1';
+		ge264ov2860 = R;
 	}
 	t1 = (T214f24(ac, C));
 	t2 = (T85f1(ac, GE_void(t1)));
 	if (t2) {
 		R = (T214f25(ac, C));
-		ge262ov2860 = R;
+		ge264ov2860 = R;
 	} else {
 		t1 = (T214f24(ac, C));
 		t2 = (T85f2(ac, GE_void(t1)));
 		if (t2) {
 			R = (T214f28(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		} else {
 			R = (T214f28(ac, C));
-			ge262ov2860 = R;
+			ge264ov2860 = R;
 		}
 	}
 	return R;
@@ -20742,14 +20951,14 @@ T0* T214f23(GE_context* ac, T0* C)
 T0* T214f28(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2863) {
-		return ge262ov2863;
+	if (ge264os2863) {
+		return ge264ov2863;
 	} else {
-		ge262os2863 = '\1';
-		ge262ov2863 = R;
+		ge264os2863 = '\1';
+		ge264ov2863 = R;
 	}
 	R = T122c31(ac);
-	ge262ov2863 = R;
+	ge264ov2863 = R;
 	return R;
 }
 
@@ -20757,14 +20966,14 @@ T0* T214f28(GE_context* ac, T0* C)
 T0* T214f25(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge262os2861) {
-		return ge262ov2861;
+	if (ge264os2861) {
+		return ge264ov2861;
 	} else {
-		ge262os2861 = '\1';
-		ge262ov2861 = R;
+		ge264os2861 = '\1';
+		ge264ov2861 = R;
 	}
 	R = T121c34(ac);
-	ge262ov2861 = R;
+	ge264ov2861 = R;
 	return R;
 }
 
@@ -20841,14 +21050,14 @@ T0* T414f29(GE_context* ac, T0* C)
 T0* T414f45(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge302os2857) {
-		return ge302ov2857;
+	if (ge307os2857) {
+		return ge307ov2857;
 	} else {
-		ge302os2857 = '\1';
-		ge302ov2857 = R;
+		ge307os2857 = '\1';
+		ge307ov2857 = R;
 	}
 	R = T67c5(ac);
-	ge302ov2857 = R;
+	ge307ov2857 = R;
 	return R;
 }
 
@@ -20884,14 +21093,14 @@ T0* T214f37(GE_context* ac, T0* C)
 T0* T214f43(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge302os2857) {
-		return ge302ov2857;
+	if (ge307os2857) {
+		return ge307ov2857;
 	} else {
-		ge302os2857 = '\1';
-		ge302ov2857 = R;
+		ge307os2857 = '\1';
+		ge307ov2857 = R;
 	}
 	R = T67c5(ac);
-	ge302ov2857 = R;
+	ge307ov2857 = R;
 	return R;
 }
 
@@ -21293,7 +21502,7 @@ T0* T795f54(GE_context* ac, T0* C)
 		ge725os6643 = '\1';
 		ge725ov6643 = R;
 	}
-	R = GE_ms("cluster", 7);
+	R = GE_ms8("cluster", 7);
 	ge725ov6643 = R;
 	return R;
 }
@@ -21310,7 +21519,7 @@ T0* T501f28(GE_context* ac, T0* C)
 		ge736os6643 = '\1';
 		ge736ov6643 = R;
 	}
-	R = GE_ms("group", 5);
+	R = GE_ms8("group", 5);
 	ge736ov6643 = R;
 	return R;
 }
@@ -21325,7 +21534,7 @@ T0* T414f54(GE_context* ac, T0* C)
 		ge725os6643 = '\1';
 		ge725ov6643 = R;
 	}
-	R = GE_ms("cluster", 7);
+	R = GE_ms8("cluster", 7);
 	ge725ov6643 = R;
 	return R;
 }
@@ -21340,7 +21549,7 @@ T0* T397f29(GE_context* ac, T0* C)
 		ge736os6643 = '\1';
 		ge736ov6643 = R;
 	}
-	R = GE_ms("group", 5);
+	R = GE_ms8("group", 5);
 	ge736ov6643 = R;
 	return R;
 }
@@ -21355,7 +21564,7 @@ T0* T214f51(GE_context* ac, T0* C)
 		ge725os6643 = '\1';
 		ge725ov6643 = R;
 	}
-	R = GE_ms("cluster", 7);
+	R = GE_ms8("cluster", 7);
 	ge725ov6643 = R;
 	return R;
 }
@@ -22594,7 +22803,7 @@ T0* T1586f4(GE_context* ac, T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	t1 = (T318x18177(ac, GE_void(((T1586*)(C))->a2)));
+	t1 = (T318x18180(ac, GE_void(((T1586*)(C))->a2)));
 	R = (T1716x14860(ac, GE_void(t1)));
 	return R;
 }
@@ -23982,7 +24191,7 @@ T0* T1718f7(GE_context* ac, T0* C, T6 a1)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1718f6(ac, C, a1));
-	R = (T341x22058(ac, GE_void(t1)));
+	R = (T341x22061(ac, GE_void(t1)));
 	return R;
 }
 
@@ -24312,7 +24521,7 @@ T0* T972f7(GE_context* ac, T0* C, T6 a1)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T972f8(ac, C, a1));
-	R = (T969x22070(ac, GE_void(t1)));
+	R = (T969x22073(ac, GE_void(t1)));
 	return R;
 }
 
@@ -24418,7 +24627,7 @@ T0* T286f6(GE_context* ac, T0* C, T6 a1)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T286f5(ac, C, a1));
-	R = (T341x22058(ac, GE_void(t1)));
+	R = (T341x22061(ac, GE_void(t1)));
 	return R;
 }
 
@@ -25024,7 +25233,7 @@ T1 T1237f7(GE_context* ac, T0* C, T0* a1)
 				if (t1) {
 					R = EIF_FALSE;
 				} else {
-					t4 = (T1575x31808(ac, m1));
+					t4 = (T1575x31811(ac, m1));
 					t5 = (T1237f9(ac, C));
 					t1 = ((t4)==(t5));
 					if (t1) {
@@ -25032,7 +25241,7 @@ T1 T1237f7(GE_context* ac, T0* C, T0* a1)
 					} else {
 						t4 = (T1237f10(ac, C));
 						t5 = (T1237f9(ac, C));
-						t6 = (T1575x31808(ac, m1));
+						t6 = (T1575x31811(ac, m1));
 						R = (T35f11(ac, GE_void(t4), t5, t6));
 					}
 				}
@@ -25154,7 +25363,7 @@ T1 T1234f20(GE_context* ac, T0* C, T0* a1)
 				if (t1) {
 					R = EIF_FALSE;
 				} else {
-					t4 = (T1575x31808(ac, m1));
+					t4 = (T1575x31811(ac, m1));
 					t5 = (T1234f17(ac, C));
 					t1 = ((t4)==(t5));
 					if (t1) {
@@ -25162,7 +25371,7 @@ T1 T1234f20(GE_context* ac, T0* C, T0* a1)
 					} else {
 						t4 = (T1234f29(ac, C));
 						t5 = (T1234f17(ac, C));
-						t6 = (T1575x31808(ac, m1));
+						t6 = (T1575x31811(ac, m1));
 						R = (T35f11(ac, GE_void(t4), t5, t6));
 					}
 				}
@@ -25326,7 +25535,7 @@ T1 T830f24(GE_context* ac, T0* C, T0* a1)
 				if (t1) {
 					R = EIF_FALSE;
 				} else {
-					t3 = (T1575x31808(ac, m1));
+					t3 = (T1575x31811(ac, m1));
 					t4 = (T830f8(ac, C));
 					t1 = ((t3)==(t4));
 					if (t1) {
@@ -25334,7 +25543,7 @@ T1 T830f24(GE_context* ac, T0* C, T0* a1)
 					} else {
 						t3 = (T830f7(ac, C));
 						t4 = (T830f8(ac, C));
-						t5 = (T1575x31808(ac, m1));
+						t5 = (T1575x31811(ac, m1));
 						R = (T35f11(ac, GE_void(t3), t4, t5));
 					}
 				}
@@ -28374,12 +28583,12 @@ T0* T924f44(GE_context* ac, T0* C)
 		t2 = (((((T0*)(GE_void(((T924*)(C))->a4)))->id==17)?((T17*)(((T924*)(C))->a4))->a2:((T844*)(((T924*)(C))->a4))->a1));
 		t2 = ((T6)((t2)+((T6)(GE_int32(8)))));
 		R = T17c45(ac, t2);
-		T17f51(ac, GE_void(R), ge850ov17208);
+		T17f51(ac, GE_void(R), ge850ov17211);
 	} else {
 		t2 = (((((T0*)(GE_void(((T924*)(C))->a4)))->id==17)?((T17*)(((T924*)(C))->a4))->a2:((T844*)(((T924*)(C))->a4))->a1));
 		t2 = ((T6)((t2)+((T6)(GE_int32(9)))));
 		R = T17c45(ac, t2);
-		T17f51(ac, GE_void(R), ge850ov17207);
+		T17f51(ac, GE_void(R), ge850ov17210);
 	}
 	T17f51(ac, GE_void(R), ((T924*)(C))->a4);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -28737,7 +28946,7 @@ T0* T1245f8(GE_context* ac, T0* C)
 T0* T1874f15(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T1027x19951(ac, GE_void(((T1874*)(C))->a3)));
+	R = (T1027x19954(ac, GE_void(((T1874*)(C))->a3)));
 	return R;
 }
 
@@ -28745,7 +28954,7 @@ T0* T1874f15(GE_context* ac, T0* C)
 T0* T985f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T985*)(C))->a4)));
+	R = (T289x22056(ac, GE_void(((T985*)(C))->a4)));
 	return R;
 }
 
@@ -28753,7 +28962,7 @@ T0* T985f7(GE_context* ac, T0* C)
 T0* T290f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T290*)(C))->a3)));
+	R = (T289x22056(ac, GE_void(((T290*)(C))->a3)));
 	return R;
 }
 
@@ -28761,7 +28970,7 @@ T0* T290f7(GE_context* ac, T0* C)
 T0* T287f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T289x22053(ac, GE_void(((T287*)(C))->a2)));
+	R = (T289x22056(ac, GE_void(((T287*)(C))->a2)));
 	return R;
 }
 
@@ -34598,10 +34807,10 @@ T1 T1405f7(GE_context* ac, T0* C, T0* a1)
 	if (t1) {
 		R = EIF_FALSE;
 	} else {
-		t2 = (T360x22569(ac, GE_void(l2)));
+		t2 = (T360x22572(ac, GE_void(l2)));
 		t1 = (((((t2) == (((T1405*)(C))->a2)))));
 		if (t1) {
-			R = (T360x22571T0(ac, GE_void(l2), a1));
+			R = (T360x22574T0(ac, GE_void(l2), a1));
 		} else {
 			t1 = T1405f7ot1(l2, &m1);
 			if (t1) {
@@ -34660,10 +34869,10 @@ T6 T1405f11(GE_context* ac, T0* C, T0* a1)
 	if (t1) {
 		R = (T6)(GE_int32(0));
 	} else {
-		t2 = (T360x22569(ac, GE_void(l2)));
+		t2 = (T360x22572(ac, GE_void(l2)));
 		t1 = (((((t2) == (((T1405*)(C))->a2)))));
 		if (t1) {
-			R = (T360x22568T0(ac, GE_void(l2), a1));
+			R = (T360x22571T0(ac, GE_void(l2), a1));
 		} else {
 			t1 = T1405f11ot1(l2, &m1);
 			if (t1) {
@@ -34736,10 +34945,10 @@ T1 T531f10(GE_context* ac, T0* C, T0* a1)
 	if (t1) {
 		R = EIF_FALSE;
 	} else {
-		t2 = (T360x22569(ac, GE_void(l2)));
+		t2 = (T360x22572(ac, GE_void(l2)));
 		t1 = (((((t2) == (((T531*)(C))->a3)))));
 		if (t1) {
-			R = (T360x22571T0(ac, GE_void(l2), a1));
+			R = (T360x22574T0(ac, GE_void(l2), a1));
 		} else {
 			t1 = T531f10ot1(l2, &m1);
 			if (t1) {
@@ -34798,10 +35007,10 @@ T6 T531f13(GE_context* ac, T0* C, T0* a1)
 	if (t1) {
 		R = (T6)(GE_int32(0));
 	} else {
-		t2 = (T360x22569(ac, GE_void(l2)));
+		t2 = (T360x22572(ac, GE_void(l2)));
 		t1 = (((((t2) == (((T531*)(C))->a3)))));
 		if (t1) {
-			R = (T360x22568T0(ac, GE_void(l2), a1));
+			R = (T360x22571T0(ac, GE_void(l2), a1));
 		} else {
 			t1 = T531f13ot1(l2, &m1);
 			if (t1) {
@@ -35698,7 +35907,7 @@ T0* T1405f13(GE_context* ac, T0* C, T6 a1)
 		t1 = (((T1405*)(C))->a4?((m1 = ((T1405*)(C))->a4, EIF_TRUE)):EIF_FALSE);
 		if (!(t1)) {
 			GE_raise(GE_EX_CHECK);
-		}		R = (T360x22566T6(ac, m1, a1));
+		}		R = (T360x22569T6(ac, m1, a1));
 	}
 	return R;
 }
@@ -35713,7 +35922,7 @@ T0* T531f11(GE_context* ac, T0* C, T6 a1)
 		t1 = (((T531*)(C))->a5?((m1 = ((T531*)(C))->a5, EIF_TRUE)):EIF_FALSE);
 		if (!(t1)) {
 			GE_raise(GE_EX_CHECK);
-		}		R = (T360x22566T6(ac, m1, a1));
+		}		R = (T360x22569T6(ac, m1, a1));
 	}
 	return R;
 }
@@ -43439,7 +43648,7 @@ T0* T1457f4(GE_context* ac, T0* C, T6 a1)
 		R = GE_new1457(a1, EIF_FALSE);
 		*(T1457*)(R) = *(T1457*)(C);
 		memcpy(((T1457*)(R))->z2,((T1457*)(C))->z2,t1*sizeof(T0*));
-#ifndef GE_alloc_cleared
+#ifndef GE_malloc_cleared
 		memset(((T1457*)(R))->z2+t1,0,(a1-t1)*sizeof(T0*));
 #endif
 	} else {
@@ -43447,7 +43656,7 @@ T0* T1457f4(GE_context* ac, T0* C, T6 a1)
 		t1 = ((T1457*)(R))->a1;
 		if (t1 > a1) {
 			((T1457*)(R))->a1 = a1;
-#ifndef GE_alloc_cleared
+#ifndef GE_malloc_cleared
 			memset(((T1457*)(R))->z2+a1,0,(t1-a1)*sizeof(T0*));
 #endif
 		}
@@ -45814,7 +46023,7 @@ T0* T460f100(GE_context* ac, T0* C)
 		ge739os6643 = '\1';
 		ge739ov6643 = R;
 	}
-	R = GE_ms("library", 7);
+	R = GE_ms8("library", 7);
 	ge739ov6643 = R;
 	return R;
 }
@@ -45831,7 +46040,7 @@ T0* T450f101(GE_context* ac, T0* C)
 		ge734os6643 = '\1';
 		ge734ov6643 = R;
 	}
-	R = GE_ms("assembly", 8);
+	R = GE_ms8("assembly", 8);
 	ge734ov6643 = R;
 	return R;
 }
@@ -45846,7 +46055,7 @@ T0* T229f113(GE_context* ac, T0* C)
 		ge734os6643 = '\1';
 		ge734ov6643 = R;
 	}
-	R = GE_ms("assembly", 8);
+	R = GE_ms8("assembly", 8);
 	ge734ov6643 = R;
 	return R;
 }
@@ -45861,7 +46070,7 @@ T0* T216f106(GE_context* ac, T0* C)
 		ge734os6643 = '\1';
 		ge734ov6643 = R;
 	}
-	R = GE_ms("assembly", 8);
+	R = GE_ms8("assembly", 8);
 	ge734ov6643 = R;
 	return R;
 }
@@ -45876,7 +46085,7 @@ T0* T197f100(GE_context* ac, T0* C)
 		ge734os6643 = '\1';
 		ge734ov6643 = R;
 	}
-	R = GE_ms("assembly", 8);
+	R = GE_ms8("assembly", 8);
 	ge734ov6643 = R;
 	return R;
 }
@@ -45891,7 +46100,7 @@ T0* T188f113(GE_context* ac, T0* C)
 		ge739os6643 = '\1';
 		ge739ov6643 = R;
 	}
-	R = GE_ms("library", 7);
+	R = GE_ms8("library", 7);
 	ge739ov6643 = R;
 	return R;
 }
@@ -45908,7 +46117,7 @@ T0* T71f182(GE_context* ac, T0* C)
 		ge743os5965 = '\1';
 		ge743ov5965 = R;
 	}
-	R = GE_ms("system", 6);
+	R = GE_ms8("system", 6);
 	ge743ov5965 = R;
 	return R;
 }
@@ -45923,7 +46132,7 @@ T0* T65f189(GE_context* ac, T0* C)
 		ge743os5965 = '\1';
 		ge743ov5965 = R;
 	}
-	R = GE_ms("system", 6);
+	R = GE_ms8("system", 6);
 	ge743ov5965 = R;
 	return R;
 }
@@ -45938,7 +46147,7 @@ T0* T62f186(GE_context* ac, T0* C)
 		ge743os5965 = '\1';
 		ge743ov5965 = R;
 	}
-	R = GE_ms("system", 6);
+	R = GE_ms8("system", 6);
 	ge743ov5965 = R;
 	return R;
 }
@@ -45953,7 +46162,7 @@ T0* T34f159(GE_context* ac, T0* C)
 		ge743os5965 = '\1';
 		ge743ov5965 = R;
 	}
-	R = GE_ms("system", 6);
+	R = GE_ms8("system", 6);
 	ge743ov5965 = R;
 	return R;
 }
@@ -49489,7 +49698,7 @@ T1 T1244f12(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10491T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -49545,7 +49754,7 @@ T1 T1243f12(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10491T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -49595,7 +49804,7 @@ T1 T1242f12(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -49615,7 +49824,7 @@ T1 T1242f12(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10491T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -50055,7 +50264,7 @@ T1 T1244f13(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10493T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -50096,7 +50305,7 @@ T1 T1243f13(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10493T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -50131,7 +50340,7 @@ T1 T1242f13(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -50151,7 +50360,7 @@ T1 T1242f13(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10493T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -50537,7 +50746,7 @@ T6 T1244f14(GE_context* ac, T0* C, T0* a1)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a1)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10456T0(ac, GE_void(t3), l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -50571,7 +50780,7 @@ T6 T1243f14(GE_context* ac, T0* C, T0* a1)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a1)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10456T0(ac, GE_void(t3), l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -50604,7 +50813,7 @@ T6 T1242f14(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -50623,7 +50832,7 @@ T6 T1242f14(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				R = (T249x10456T0(ac, GE_void(t2), a1));
 			} else {
 				R = (T6)(GE_int32(0));
@@ -51022,7 +51231,7 @@ T1 T1244f15(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10496T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -51063,7 +51272,7 @@ T1 T1243f15(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10496T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -51098,7 +51307,7 @@ T1 T1242f15(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -51118,7 +51327,7 @@ T1 T1242f15(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10496T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -51506,7 +51715,7 @@ T1 T1244f16(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10498T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -51547,7 +51756,7 @@ T1 T1243f16(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10498T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -51582,7 +51791,7 @@ T1 T1242f16(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -51602,7 +51811,7 @@ T1 T1242f16(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10498T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -51966,7 +52175,7 @@ T1 T1244f4(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10488T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52007,7 +52216,7 @@ T1 T1243f37(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10488T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52042,7 +52251,7 @@ T1 T1242f37(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -52062,7 +52271,7 @@ T1 T1242f37(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10488T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -52426,7 +52635,7 @@ T1 T1244f5(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10490T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52467,7 +52676,7 @@ T1 T1243f38(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10490T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52502,7 +52711,7 @@ T1 T1242f39(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -52522,7 +52731,7 @@ T1 T1242f39(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10490T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -52917,7 +53126,7 @@ T1 T1244f19(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10467T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52953,7 +53162,7 @@ T1 T1243f19(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10467T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -52988,7 +53197,7 @@ T1 T1242f19(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -53008,7 +53217,7 @@ T1 T1242f19(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10467T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -53448,7 +53657,7 @@ T1 T1244f6(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1244f24(ac, C, a4));
 				R = (T249x10495T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -53500,7 +53709,7 @@ T1 T1243f39(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1243f22(ac, C, a4));
 				R = (T249x10495T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -53546,7 +53755,7 @@ T1 T1242f6(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T288x23040(ac, m1));
+					t2 = (T288x23043(ac, m1));
 					t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 				}
 				if (t1) {
@@ -53566,7 +53775,7 @@ T1 T1242f6(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T246x23039(ac, m3));
+					t2 = (T246x23042(ac, m3));
 					t4 = (T1242f23(ac, C, a4));
 					R = (T249x10495T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 				} else {
@@ -54004,7 +54213,7 @@ T1 T1244f17(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10461T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -54040,7 +54249,7 @@ T1 T1243f17(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10461T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -54075,7 +54284,7 @@ T1 T1242f17(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -54095,7 +54304,7 @@ T1 T1242f17(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10461T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -54497,7 +54706,7 @@ T0* T1244f18(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10442T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -54550,7 +54759,7 @@ T0* T1243f18(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10442T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -54587,7 +54796,7 @@ T0* T1242f18(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -54608,7 +54817,7 @@ T0* T1242f18(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10442T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -54988,7 +55197,7 @@ T0* T1244f37(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10449T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -55026,7 +55235,7 @@ T0* T1243f35(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10449T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -55063,7 +55272,7 @@ T0* T1242f36(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -55084,7 +55293,7 @@ T0* T1242f36(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10449T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -56821,7 +57030,7 @@ T0* T1244f56(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10442T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -56859,7 +57068,7 @@ T0* T1243f59(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10442T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -56897,7 +57106,7 @@ T0* T1242f58(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -56919,7 +57128,7 @@ T0* T1242f58(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10444T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -57342,7 +57551,7 @@ T0* T1244f57(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (((((T0*)(GE_void(a2)))->id==383)?T383f7(ac, a2):T83f51(ac, a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10449T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -57380,7 +57589,7 @@ T0* T1243f60(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (((((T0*)(GE_void(a2)))->id==383)?T383f7(ac, a2):T83f51(ac, a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10449T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -57418,7 +57627,7 @@ T0* T1242f59(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -57440,7 +57649,7 @@ T0* T1242f59(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10451T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -58986,7 +59195,7 @@ T1 T1244f39(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10489T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -59027,7 +59236,7 @@ T1 T1243f42(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10489T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -59062,7 +59271,7 @@ T1 T1242f41(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -59082,7 +59291,7 @@ T1 T1242f41(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10489T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -59667,7 +59876,7 @@ T1 T1244f40(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a4));
 			R = (T249x10497T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -59708,7 +59917,7 @@ T1 T1243f43(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				l3 = (T250x14761(ac, GE_void(a5)));
 			}
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a4));
 			R = (T249x10497T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -59743,7 +59952,7 @@ T1 T1242f42(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -59763,7 +59972,7 @@ T1 T1242f42(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a4));
 				R = (T249x10497T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 			} else {
@@ -60485,7 +60694,7 @@ T1 T1244f45(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10463T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -60521,7 +60730,7 @@ T1 T1243f48(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10463T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -60556,7 +60765,7 @@ T1 T1242f47(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -60576,7 +60785,7 @@ T1 T1242f47(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10463T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -60987,7 +61196,7 @@ T1 T1244f46(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1244f24(ac, C, a1));
 			R = (T249x10465T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -61023,7 +61232,7 @@ T1 T1243f49(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			t4 = (T1243f22(ac, C, a1));
 			R = (T249x10465T0T0(ac, GE_void(t3), t4, l3));
 			T383f55(ac, GE_void(l3));
@@ -61058,7 +61267,7 @@ T1 T1242f48(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -61078,7 +61287,7 @@ T1 T1242f48(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				t4 = (T1242f23(ac, C, a1));
 				R = (T249x10465T0T0(ac, GE_void(t2), t4, a2));
 			} else {
@@ -61544,7 +61753,7 @@ T0* T1244f7(GE_context* ac, T0* C, T0* a1)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a1)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10440T0(ac, GE_void(t3), l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -61580,7 +61789,7 @@ T0* T1243f7(GE_context* ac, T0* C, T0* a1)
 		if (t2) {
 			l3 = (T250x14760(ac, GE_void(a1)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10440T0(ac, GE_void(t3), l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -61615,7 +61824,7 @@ T0* T1242f7(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -61635,7 +61844,7 @@ T0* T1242f7(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				R = (T249x10440T0(ac, GE_void(t2), a1));
 			} else {
 				t2 = (T1242f24(ac, C));
@@ -62084,7 +62293,7 @@ T1 T1242f63(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 							l1 = (T83f161(ac, GE_void(l3), l4));
 							t1 = ((l1)!=(EIF_VOID));
 							if (t1) {
-								R = (T288x23036T6(ac, GE_void(l1), ((T1242*)(C))->a1));
+								R = (T288x23039T6(ac, GE_void(l1), ((T1242*)(C))->a1));
 							} else {
 								R = EIF_FALSE;
 							}
@@ -62094,7 +62303,7 @@ T1 T1242f63(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 								l1 = (T83f161(ac, GE_void(l3), ((T1242*)(C))->a1));
 								t1 = ((l1)!=(EIF_VOID));
 								if (t1) {
-									R = (T288x23036T6(ac, GE_void(l1), l4));
+									R = (T288x23039T6(ac, GE_void(l1), l4));
 								} else {
 									R = EIF_FALSE;
 								}
@@ -62115,7 +62324,7 @@ T1 T1242f63(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 							l2 = (T83f127(ac, GE_void(t2), t5));
 							t1 = ((l2)!=(EIF_VOID));
 							if (t1) {
-								R = (T246x23036T6(ac, GE_void(l2), ((T1242*)(C))->a1));
+								R = (T246x23039T6(ac, GE_void(l2), ((T1242*)(C))->a1));
 							} else {
 								R = EIF_FALSE;
 							}
@@ -62126,7 +62335,7 @@ T1 T1242f63(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 								t1 = ((l2)!=(EIF_VOID));
 								if (t1) {
 									t5 = (((T1242*)(a1))->a1);
-									R = (T246x23036T6(ac, GE_void(l2), t5));
+									R = (T246x23039T6(ac, GE_void(l2), t5));
 								} else {
 									R = EIF_FALSE;
 								}
@@ -62552,7 +62761,7 @@ T1 T1244f61(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 						t1 = ((l1)!=(EIF_VOID));
 						if (t1) {
 							t2 = (T1244f22(ac, C));
-							R = (T246x23036T6(ac, GE_void(l1), t2));
+							R = (T246x23039T6(ac, GE_void(l1), t2));
 						} else {
 							R = EIF_FALSE;
 						}
@@ -62564,7 +62773,7 @@ T1 T1244f61(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 							t1 = ((l1)!=(EIF_VOID));
 							if (t1) {
 								t2 = (((((T0*)(a1))->id==1243)?T1243f20(ac, a1):T1244f22(ac, a1)));
-								R = (T246x23036T6(ac, GE_void(l1), t2));
+								R = (T246x23039T6(ac, GE_void(l1), t2));
 							} else {
 								R = EIF_FALSE;
 							}
@@ -62696,7 +62905,7 @@ T1 T1243f65(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 						t1 = ((l1)!=(EIF_VOID));
 						if (t1) {
 							t2 = (T1243f20(ac, C));
-							R = (T246x23036T6(ac, GE_void(l1), t2));
+							R = (T246x23039T6(ac, GE_void(l1), t2));
 						} else {
 							R = EIF_FALSE;
 						}
@@ -62708,7 +62917,7 @@ T1 T1243f65(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 							t1 = ((l1)!=(EIF_VOID));
 							if (t1) {
 								t2 = (((((T0*)(a1))->id==1243)?T1243f20(ac, a1):T1244f22(ac, a1)));
-								R = (T246x23036T6(ac, GE_void(l1), t2));
+								R = (T246x23039T6(ac, GE_void(l1), t2));
 							} else {
 								R = EIF_FALSE;
 							}
@@ -63140,7 +63349,7 @@ T0* T1244f54(GE_context* ac, T0* C, T6 a1, T0* a2)
 		if (t2) {
 			l3 = (T383f7(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10445T6T0(ac, GE_void(t3), a1, l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -63176,7 +63385,7 @@ T0* T1243f57(GE_context* ac, T0* C, T6 a1, T0* a2)
 		if (t2) {
 			l3 = (T383f7(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10445T6T0(ac, GE_void(t3), a1, l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -63211,7 +63420,7 @@ T0* T1242f56(GE_context* ac, T0* C, T6 a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -63231,7 +63440,7 @@ T0* T1242f56(GE_context* ac, T0* C, T6 a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				R = (T249x10445T6T0(ac, GE_void(t2), a1, a2));
 			} else {
 				t2 = (T1242f24(ac, C));
@@ -63643,7 +63852,7 @@ T6 T1244f67(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T383f7(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10447T0T0(ac, GE_void(t3), a1, l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -63677,7 +63886,7 @@ T6 T1243f70(GE_context* ac, T0* C, T0* a1, T0* a2)
 		if (t2) {
 			l3 = (T383f7(ac, GE_void(a2)));
 			T383f54(ac, GE_void(l3), l2);
-			t3 = (T246x23039(ac, m1));
+			t3 = (T246x23042(ac, m1));
 			R = (T249x10447T0T0(ac, GE_void(t3), a1, l3));
 			T383f55(ac, GE_void(l3));
 		} else {
@@ -63710,7 +63919,7 @@ T6 T1242f70(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -63729,7 +63938,7 @@ T6 T1242f70(GE_context* ac, T0* C, T0* a1, T0* a2)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				R = (T249x10447T0T0(ac, GE_void(t2), a1, a2));
 			} else {
 				R = (T6)(GE_int32(0));
@@ -64443,7 +64652,7 @@ T1 T1242f40(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T288x23040(ac, m1));
+				t2 = (T288x23043(ac, m1));
 				t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 			}
 			if (t1) {
@@ -64462,7 +64671,7 @@ T1 T1242f40(GE_context* ac, T0* C, T0* a1)
 			t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 			t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 			if (t1) {
-				t2 = (T246x23039(ac, m3));
+				t2 = (T246x23042(ac, m3));
 				R = (T249x10470T0(ac, GE_void(t2), a1));
 			} else {
 				R = EIF_FALSE;
@@ -66719,7 +66928,7 @@ T1 T1244f65(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1244f24(ac, C, a4));
 				R = (T249x10481T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -66771,7 +66980,7 @@ T1 T1243f68(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1243f22(ac, C, a4));
 				R = (T249x10481T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -66817,7 +67026,7 @@ T1 T1242f68(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T288x23040(ac, m1));
+					t2 = (T288x23043(ac, m1));
 					t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 				}
 				if (t1) {
@@ -66837,7 +67046,7 @@ T1 T1242f68(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T246x23039(ac, m3));
+					t2 = (T246x23042(ac, m3));
 					t4 = (T1242f23(ac, C, a4));
 					R = (T249x10481T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 				} else {
@@ -67448,7 +67657,7 @@ T1 T1244f34(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1244f24(ac, C, a4));
 				R = (T249x10479T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -67500,7 +67709,7 @@ T1 T1243f34(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 					l3 = (T250x14761(ac, GE_void(a5)));
 				}
 				T383f54(ac, GE_void(l3), l2);
-				t3 = (T246x23039(ac, m1));
+				t3 = (T246x23042(ac, m1));
 				t4 = (T1243f22(ac, C, a4));
 				R = (T249x10479T0T0T0T0T0(ac, GE_void(t3), a1, a2, a3, t4, l3));
 				T383f55(ac, GE_void(l3));
@@ -67546,7 +67755,7 @@ T1 T1242f35(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f161(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m1 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T288x23040(ac, m1));
+					t2 = (T288x23043(ac, m1));
 					t1 = (t2?((m2 = t2, EIF_TRUE)):EIF_FALSE);
 				}
 				if (t1) {
@@ -67566,7 +67775,7 @@ T1 T1242f35(GE_context* ac, T0* C, T0* a1, T0* a2, T0* a3, T0* a4, T0* a5)
 				t2 = (T83f127(ac, GE_void(l1), ((T1242*)(C))->a1));
 				t1 = (t2?((m3 = t2, EIF_TRUE)):EIF_FALSE);
 				if (t1) {
-					t2 = (T246x23039(ac, m3));
+					t2 = (T246x23042(ac, m3));
 					t4 = (T1242f23(ac, C, a4));
 					R = (T249x10479T0T0T0T0T0(ac, GE_void(t2), a1, a2, a3, t4, a5));
 				} else {
@@ -69490,7 +69699,7 @@ T0* T336f50(GE_context* ac, T0* C)
 T0* T1229f36(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T1229*)(C))->a24)));
+	R = (T522x22052(ac, GE_void(((T1229*)(C))->a24)));
 	return R;
 }
 
@@ -69498,7 +69707,7 @@ T0* T1229f36(GE_context* ac, T0* C)
 T0* T1228f36(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T1228*)(C))->a25)));
+	R = (T522x22052(ac, GE_void(((T1228*)(C))->a25)));
 	return R;
 }
 
@@ -69506,7 +69715,7 @@ T0* T1228f36(GE_context* ac, T0* C)
 T0* T1227f36(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T1227*)(C))->a25)));
+	R = (T522x22052(ac, GE_void(((T1227*)(C))->a25)));
 	return R;
 }
 
@@ -69514,7 +69723,7 @@ T0* T1227f36(GE_context* ac, T0* C)
 T0* T368f41(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T368*)(C))->a9)));
+	R = (T522x22052(ac, GE_void(((T368*)(C))->a9)));
 	return R;
 }
 
@@ -69522,7 +69731,7 @@ T0* T368f41(GE_context* ac, T0* C)
 T0* T367f27(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T367*)(C))->a20)));
+	R = (T522x22052(ac, GE_void(((T367*)(C))->a20)));
 	return R;
 }
 
@@ -69530,7 +69739,7 @@ T0* T367f27(GE_context* ac, T0* C)
 T0* T365f46(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T365*)(C))->a19)));
+	R = (T522x22052(ac, GE_void(((T365*)(C))->a19)));
 	return R;
 }
 
@@ -69538,7 +69747,7 @@ T0* T365f46(GE_context* ac, T0* C)
 T0* T336f45(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T336*)(C))->a15)));
+	R = (T522x22052(ac, GE_void(((T336*)(C))->a15)));
 	return R;
 }
 
@@ -69546,7 +69755,7 @@ T0* T336f45(GE_context* ac, T0* C)
 T0* T259f46(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T259*)(C))->a15)));
+	R = (T522x22052(ac, GE_void(((T259*)(C))->a15)));
 	return R;
 }
 
@@ -69556,7 +69765,7 @@ T0* T1229f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1229f71(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69574,7 +69783,7 @@ T0* T1228f71(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1228f73(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69592,7 +69801,7 @@ T0* T1227f70(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1227f72(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69610,7 +69819,7 @@ T0* T368f66(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T368f68(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69628,7 +69837,7 @@ T0* T367f68(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T367f70(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69646,7 +69855,7 @@ T0* T365f68(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T365f70(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69664,7 +69873,7 @@ T0* T336f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T336f71(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69682,7 +69891,7 @@ T0* T259f75(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T259f77(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69698,7 +69907,7 @@ T0* T259f77(GE_context* ac, T0* C)
 T0* T1229f35(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T1229*)(C))->a24)));
+	R = (T522x22053(ac, GE_void(((T1229*)(C))->a24)));
 	return R;
 }
 
@@ -69706,7 +69915,7 @@ T0* T1229f35(GE_context* ac, T0* C)
 T0* T1228f35(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T1228*)(C))->a25)));
+	R = (T522x22053(ac, GE_void(((T1228*)(C))->a25)));
 	return R;
 }
 
@@ -69714,7 +69923,7 @@ T0* T1228f35(GE_context* ac, T0* C)
 T0* T1227f35(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T1227*)(C))->a25)));
+	R = (T522x22053(ac, GE_void(((T1227*)(C))->a25)));
 	return R;
 }
 
@@ -69722,7 +69931,7 @@ T0* T1227f35(GE_context* ac, T0* C)
 T0* T368f51(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T368*)(C))->a9)));
+	R = (T522x22053(ac, GE_void(((T368*)(C))->a9)));
 	return R;
 }
 
@@ -69730,7 +69939,7 @@ T0* T368f51(GE_context* ac, T0* C)
 T0* T367f50(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T367*)(C))->a20)));
+	R = (T522x22053(ac, GE_void(((T367*)(C))->a20)));
 	return R;
 }
 
@@ -69738,7 +69947,7 @@ T0* T367f50(GE_context* ac, T0* C)
 T0* T365f51(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T365*)(C))->a19)));
+	R = (T522x22053(ac, GE_void(((T365*)(C))->a19)));
 	return R;
 }
 
@@ -69746,7 +69955,7 @@ T0* T365f51(GE_context* ac, T0* C)
 T0* T336f51(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T336*)(C))->a15)));
+	R = (T522x22053(ac, GE_void(((T336*)(C))->a15)));
 	return R;
 }
 
@@ -69754,7 +69963,7 @@ T0* T336f51(GE_context* ac, T0* C)
 T0* T259f50(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T259*)(C))->a15)));
+	R = (T522x22053(ac, GE_void(((T259*)(C))->a15)));
 	return R;
 }
 
@@ -69764,7 +69973,7 @@ T0* T1229f70(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1229f71(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69774,7 +69983,7 @@ T0* T1228f72(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1228f73(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69784,7 +69993,7 @@ T0* T1227f71(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1227f72(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69794,7 +70003,7 @@ T0* T368f67(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T368f68(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69804,7 +70013,7 @@ T0* T367f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T367f70(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69814,7 +70023,7 @@ T0* T365f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T365f70(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69824,7 +70033,7 @@ T0* T336f70(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T336f71(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -69834,7 +70043,7 @@ T0* T259f76(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T259f77(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70565,7 +70774,7 @@ T1 T521f35(GE_context* ac, T0* C)
 T0* T1232f44(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T1232*)(C))->a13)));
+	R = (T522x22052(ac, GE_void(((T1232*)(C))->a13)));
 	return R;
 }
 
@@ -70573,7 +70782,7 @@ T0* T1232f44(GE_context* ac, T0* C)
 T0* T1231f41(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T1231*)(C))->a23)));
+	R = (T522x22052(ac, GE_void(((T1231*)(C))->a23)));
 	return R;
 }
 
@@ -70581,7 +70790,7 @@ T0* T1231f41(GE_context* ac, T0* C)
 T0* T530f33(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T530*)(C))->a5)));
+	R = (T522x22052(ac, GE_void(((T530*)(C))->a5)));
 	return R;
 }
 
@@ -70589,7 +70798,7 @@ T0* T530f33(GE_context* ac, T0* C)
 T0* T521f42(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22049(ac, GE_void(((T521*)(C))->a4)));
+	R = (T522x22052(ac, GE_void(((T521*)(C))->a4)));
 	return R;
 }
 
@@ -70599,7 +70808,7 @@ T0* T1232f74(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1232f76(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70617,7 +70826,7 @@ T0* T1231f70(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1231f72(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70635,7 +70844,7 @@ T0* T530f68(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T530f70(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70653,7 +70862,7 @@ T0* T521f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T521f71(ac, C));
-	R = (T522x22049(ac, GE_void(t1)));
+	R = (T522x22052(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70669,7 +70878,7 @@ T0* T521f71(GE_context* ac, T0* C)
 T0* T1232f33(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T1232*)(C))->a13)));
+	R = (T522x22053(ac, GE_void(((T1232*)(C))->a13)));
 	return R;
 }
 
@@ -70677,7 +70886,7 @@ T0* T1232f33(GE_context* ac, T0* C)
 T0* T1231f32(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T1231*)(C))->a23)));
+	R = (T522x22053(ac, GE_void(((T1231*)(C))->a23)));
 	return R;
 }
 
@@ -70685,7 +70894,7 @@ T0* T1231f32(GE_context* ac, T0* C)
 T0* T530f28(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T530*)(C))->a5)));
+	R = (T522x22053(ac, GE_void(((T530*)(C))->a5)));
 	return R;
 }
 
@@ -70693,7 +70902,7 @@ T0* T530f28(GE_context* ac, T0* C)
 T0* T521f31(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	R = (T522x22050(ac, GE_void(((T521*)(C))->a4)));
+	R = (T522x22053(ac, GE_void(((T521*)(C))->a4)));
 	return R;
 }
 
@@ -70703,7 +70912,7 @@ T0* T1232f75(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1232f76(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70713,7 +70922,7 @@ T0* T1231f71(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T1231f72(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70723,7 +70932,7 @@ T0* T530f69(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T530f70(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -70733,7 +70942,7 @@ T0* T521f70(GE_context* ac, T0* C)
 	T0* t1;
 	T0* R = 0;
 	t1 = (T521f71(ac, C));
-	R = (T522x22050(ac, GE_void(t1)));
+	R = (T522x22053(ac, GE_void(t1)));
 	return R;
 }
 
@@ -71847,7 +72056,7 @@ T0* T1234f31(GE_context* ac, T0* C)
 	t2 = (((((T0*)(GE_void(t1)))->id==17)?((T17*)(t1))->a2:((T844*)(t1))->a1));
 	t2 = ((T6)((t2)+((T6)(GE_int32(9)))));
 	R = T17c45(ac, t2);
-	T17f51(ac, GE_void(R), ge869ov17786);
+	T17f51(ac, GE_void(R), ge869ov17789);
 	t1 = (T1234f17(ac, C));
 	T17f51(ac, GE_void(R), t1);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -71890,7 +72099,7 @@ T0* T830f12(GE_context* ac, T0* C)
 	t2 = (((((T0*)(GE_void(t1)))->id==17)?((T17*)(t1))->a2:((T844*)(t1))->a1));
 	t2 = ((T6)((t2)+((T6)(GE_int32(8)))));
 	R = T17c45(ac, t2);
-	T17f51(ac, GE_void(R), ge857ov17333);
+	T17f51(ac, GE_void(R), ge857ov17336);
 	t1 = (T830f8(ac, C));
 	T17f51(ac, GE_void(R), t1);
 	T17f47(ac, GE_void(R), (T2)('\"'));
@@ -73323,7 +73532,7 @@ T0* T322f40(GE_context* ac, T0* C, T0* a1, T0* a2)
 	T6 l4 = 0;
 	T6 l5 = 0;
 	R = (T322f40p1(ac, C, a1, a2));
-	l1 = (T245x23038(ac, GE_void(a1)));
+	l1 = (T245x23041(ac, GE_void(a1)));
 	t1 = (T322f48(ac, C));
 	t1 = (T82f84(ac, GE_void(t1)));
 	t2 = (T244x7104T0(ac, GE_void(l1), t1));
@@ -73432,7 +73641,7 @@ T0* T305f40(GE_context* ac, T0* C, T0* a1, T0* a2)
 	T0* R = 0;
 	T0* l1 = 0;
 	R = (T305f40p1(ac, C, a1, a2));
-	l1 = (T245x23038(ac, GE_void(a1)));
+	l1 = (T245x23041(ac, GE_void(a1)));
 	t1 = (T247f25(ac, GE_void(R)));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -73983,7 +74192,7 @@ T0* T322f42(GE_context* ac, T0* C, T0* a1, T0* a2)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	R = (T322f42p1(ac, C, a1, a2));
-	l1 = (T246x23038(ac, GE_void(a1)));
+	l1 = (T246x23041(ac, GE_void(a1)));
 	t1 = (T322f48(ac, C));
 	t1 = (T82f22(ac, GE_void(t1)));
 	t2 = (T244x7104T0(ac, GE_void(l1), t1));
@@ -74126,7 +74335,7 @@ T0* T305f42(GE_context* ac, T0* C, T0* a1, T0* a2)
 	T0* R = 0;
 	T0* l1 = 0;
 	R = (T305f42p1(ac, C, a1, a2));
-	l1 = (T246x23038(ac, GE_void(a1)));
+	l1 = (T246x23041(ac, GE_void(a1)));
 	t1 = (T247f25(ac, GE_void(R)));
 	t1 = ((T1)(!(t1)));
 	if (t1) {
@@ -74365,7 +74574,7 @@ T0* T520f34(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T520*)(C))->a9), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74420,7 +74629,7 @@ T0* T519f35(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T519*)(C))->a9), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74475,7 +74684,7 @@ T0* T322f26(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T322*)(C))->a8), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74530,7 +74739,7 @@ T0* T305f26(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T305*)(C))->a8), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74585,7 +74794,7 @@ T0* T238f29(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T238*)(C))->a8), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74746,7 +74955,7 @@ T0* T520f25(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T520*)(C))->a6), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74811,7 +75020,7 @@ T0* T519f26(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T519*)(C))->a6), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74876,7 +75085,7 @@ T0* T322f32(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T322*)(C))->a6), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -74941,7 +75150,7 @@ T0* T305f32(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T305*)(C))->a6), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -75006,7 +75215,7 @@ T0* T238f28(GE_context* ac, T0* C, T6 a1, T0* a2)
 			}
 			l3 = (T308f3(ac, GE_void(((T238*)(C))->a3), l1));
 			t1 = (((((T0*)(GE_void(l3)))->id==247)?((T247*)(l3))->a1:((T309*)(l3))->a5));
-			t2 = (T288x23036T6(ac, GE_void(t1), a1));
+			t2 = (T288x23039T6(ac, GE_void(t1), a1));
 			if (t2) {
 				R = l3;
 				l1 = ((T6)((l2)+((T6)(GE_int32(1)))));
@@ -75102,15 +75311,15 @@ void T1279f16(GE_context* ac, T0* C, T0* a1, T0* a2)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a2), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a2), GE_ms8("line ", 5));
 	t1 = (T1279f11(ac, C));
 	t2 = (T1279f6(ac, C));
 	T231f6(ac, GE_void(t1), t2, a2);
-	T17f51(ac, GE_void(a2), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a2), GE_ms8(" column ", 8));
 	t1 = (T1279f11(ac, C));
 	t2 = (T1279f3(ac, C));
 	T231f6(ac, GE_void(t1), t2, a2);
-	T17f51(ac, GE_void(a2), GE_ms(" in ", 4));
+	T17f51(ac, GE_void(a2), GE_ms8(" in ", 4));
 	T17f51(ac, GE_void(a2), a1);
 	T17f47(ac, GE_void(a2), (T2)('\n'));
 	T1279f17(ac, C, a1, a2);
@@ -75300,11 +75509,11 @@ void T954f74(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T954f70(ac, C));
 	t2 = (T954f64(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T954f70(ac, C));
 	t2 = (T954f65(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75339,11 +75548,11 @@ void T648f107(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T648f97(ac, C));
 	t2 = (T648f16(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T648f97(ac, C));
 	t2 = (T648f17(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75378,11 +75587,11 @@ void T400f95(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T400f34(ac, C));
 	t2 = (T400f27(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T400f34(ac, C));
 	t2 = (T400f28(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75417,11 +75626,11 @@ void T350f94(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T350f69(ac, C));
 	t2 = (T350f19(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T350f69(ac, C));
 	t2 = (T350f20(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75456,11 +75665,11 @@ void T285f38(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T285f22(ac, C));
 	t2 = (T285f11(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T285f22(ac, C));
 	t2 = (T285f12(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75495,11 +75704,11 @@ void T181f123(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T181f85(ac, C));
 	t2 = (T181f25(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T181f85(ac, C));
 	t2 = (T181f26(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -75534,11 +75743,11 @@ void T179f14(GE_context* ac, T0* C, T0* a1)
 {
 	T0* t1;
 	T6 t2;
-	T17f51(ac, GE_void(a1), GE_ms("line ", 5));
+	T17f51(ac, GE_void(a1), GE_ms8("line ", 5));
 	t1 = (T179f10(ac, C));
 	t2 = (T179f6(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
-	T17f51(ac, GE_void(a1), GE_ms(" column ", 8));
+	T17f51(ac, GE_void(a1), GE_ms8(" column ", 8));
 	t1 = (T179f10(ac, C));
 	t2 = (T179f7(ac, C));
 	T231f6(ac, GE_void(t1), t2, a1);
@@ -79588,14 +79797,14 @@ T0* T1825f3(GE_context* ac, T0* C, T0* a1)
 T0* T1825f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -79828,14 +80037,14 @@ T0* T1775f7(GE_context* ac, T0* C, T0* a1)
 T0* T1775f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -80068,14 +80277,14 @@ T0* T1753f3(GE_context* ac, T0* C, T0* a1)
 T0* T1753f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -80308,14 +80517,14 @@ T0* T1752f3(GE_context* ac, T0* C, T0* a1)
 T0* T1752f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -80548,14 +80757,14 @@ T0* T1751f3(GE_context* ac, T0* C, T0* a1)
 T0* T1751f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -80788,14 +80997,14 @@ T0* T1750f3(GE_context* ac, T0* C, T0* a1)
 T0* T1750f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -81028,14 +81237,14 @@ T0* T1749f3(GE_context* ac, T0* C, T0* a1)
 T0* T1749f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -81268,14 +81477,14 @@ T0* T1748f3(GE_context* ac, T0* C, T0* a1)
 T0* T1748f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -81508,14 +81717,14 @@ T0* T1747f3(GE_context* ac, T0* C, T0* a1)
 T0* T1747f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -81748,14 +81957,14 @@ T0* T1746f3(GE_context* ac, T0* C, T0* a1)
 T0* T1746f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -81988,14 +82197,14 @@ T0* T1683f7(GE_context* ac, T0* C, T0* a1)
 T0* T1683f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -82228,14 +82437,14 @@ T0* T1546f14(GE_context* ac, T0* C, T0* a1)
 T0* T1546f12(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -82468,14 +82677,14 @@ T0* T1545f7(GE_context* ac, T0* C, T0* a1)
 T0* T1545f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -82708,14 +82917,14 @@ T0* T1389f3(GE_context* ac, T0* C, T0* a1)
 T0* T1389f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -82948,14 +83157,14 @@ T0* T1334f3(GE_context* ac, T0* C, T0* a1)
 T0* T1334f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -83188,14 +83397,14 @@ T0* T1333f3(GE_context* ac, T0* C, T0* a1)
 T0* T1333f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -83428,14 +83637,14 @@ T0* T778f3(GE_context* ac, T0* C, T0* a1)
 T0* T778f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -83668,14 +83877,14 @@ T0* T777f3(GE_context* ac, T0* C, T0* a1)
 T0* T777f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -83908,14 +84117,14 @@ T0* T776f3(GE_context* ac, T0* C, T0* a1)
 T0* T776f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -84148,14 +84357,14 @@ T0* T775f3(GE_context* ac, T0* C, T0* a1)
 T0* T775f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -84388,14 +84597,14 @@ T0* T774f3(GE_context* ac, T0* C, T0* a1)
 T0* T774f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -84628,14 +84837,14 @@ T0* T773f3(GE_context* ac, T0* C, T0* a1)
 T0* T773f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -84868,14 +85077,14 @@ T0* T772f3(GE_context* ac, T0* C, T0* a1)
 T0* T772f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -85108,14 +85317,14 @@ T0* T771f3(GE_context* ac, T0* C, T0* a1)
 T0* T771f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -85348,14 +85557,14 @@ T0* T529f16(GE_context* ac, T0* C, T0* a1)
 T0* T529f13(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -85588,14 +85797,14 @@ T0* T528f7(GE_context* ac, T0* C, T0* a1)
 T0* T528f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -85828,14 +86037,14 @@ T0* T527f7(GE_context* ac, T0* C, T0* a1)
 T0* T527f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -86068,14 +86277,14 @@ T0* T431f3(GE_context* ac, T0* C, T0* a1)
 T0* T431f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -86308,14 +86517,14 @@ T0* T430f3(GE_context* ac, T0* C, T0* a1)
 T0* T430f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -86548,14 +86757,14 @@ T0* T429f3(GE_context* ac, T0* C, T0* a1)
 T0* T429f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -86773,14 +86982,14 @@ T0* T428f3(GE_context* ac, T0* C, T0* a1)
 T0* T428f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -87013,14 +87222,14 @@ T0* T427f3(GE_context* ac, T0* C, T0* a1)
 T0* T427f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -87253,14 +87462,14 @@ T0* T426f3(GE_context* ac, T0* C, T0* a1)
 T0* T426f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -87493,14 +87702,14 @@ T0* T307f5(GE_context* ac, T0* C, T0* a1)
 T0* T307f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -87733,14 +87942,14 @@ T0* T168f3(GE_context* ac, T0* C, T0* a1)
 T0* T168f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -87973,14 +88182,14 @@ T0* T88f5(GE_context* ac, T0* C, T0* a1)
 T0* T88f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -88213,14 +88422,14 @@ T0* T87f5(GE_context* ac, T0* C, T0* a1)
 T0* T87f7(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -88453,14 +88662,14 @@ T0* T41f18(GE_context* ac, T0* C, T0* a1)
 T0* T41f20(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge299os2856) {
-		return ge299ov2856;
+	if (ge304os2856) {
+		return ge304ov2856;
 	} else {
-		ge299os2856 = '\1';
-		ge299ov2856 = R;
+		ge304os2856 = '\1';
+		ge304ov2856 = R;
 	}
 	R = T31c5(ac);
-	ge299ov2856 = R;
+	ge304ov2856 = R;
 	return R;
 }
 
@@ -89012,9 +89221,9 @@ T0* T51f19(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89083,9 +89292,9 @@ T0* T47f21p1(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89154,9 +89363,9 @@ T0* T46f21p1(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89225,9 +89434,9 @@ T0* T45f24p1(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89296,9 +89505,9 @@ T0* T44f23p1(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89330,9 +89539,9 @@ T0* T42f16(GE_context* ac, T0* C)
 	if (t2) {
 		t2 = ((l1)==(EIF_VOID));
 		if (t2) {
-			l1 = GE_ms("    ", 4);
+			l1 = GE_ms8("    ", 4);
 		} else {
-			T17f51(ac, GE_void(l1), GE_ms(", ", 2));
+			T17f51(ac, GE_void(l1), GE_ms8(", ", 2));
 		}
 		T17f47(ac, GE_void(l1), (T2)('-'));
 		T17f47(ac, GE_void(l1), (T2)('-'));
@@ -89505,7 +89714,7 @@ T6 T887f11(GE_context* ac, T0* C, T0* a1, T6 a2, T6 a3)
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			t3 = (T887f8(ac, C));
-			t1 = (T135f1(ac, GE_void(t3), a1, ge267ov20424));
+			t1 = (T135f1(ac, GE_void(t3), a1, ge269ov20427));
 			if (t1) {
 				t3 = (T887f7(ac, C));
 				t4 = ((T6)((a3)-(l1)));
@@ -89743,7 +89952,7 @@ T6 T30f37(GE_context* ac, T0* C, T0* a1, T6 a2, T6 a3)
 		t1 = ((T1)(!(t1)));
 		if (t1) {
 			t3 = (T30f45(ac, C));
-			t1 = (T135f1(ac, GE_void(t3), a1, ge254ov4734));
+			t1 = (T135f1(ac, GE_void(t3), a1, ge256ov4734));
 			if (t1) {
 				t4 = ((T6)((a3)-(l5)));
 				t4 = (T30f36(ac, C, a1, l1, t4));
@@ -89786,19 +89995,19 @@ T6 T30f37(GE_context* ac, T0* C, T0* a1, T6 a2, T6 a3)
 }
 
 /* KL_TEXT_INPUT_FILE.dummy_kl_character_buffer */
-unsigned char ge254os4735 = '\0';
-T0* ge254ov4735;
+unsigned char ge256os4735 = '\0';
+T0* ge256ov4735;
 T0* T30f47(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge254os4735) {
-		return ge254ov4735;
+	if (ge256os4735) {
+		return ge256ov4735;
 	} else {
-		ge254os4735 = '\1';
-		ge254ov4735 = R;
+		ge256os4735 = '\1';
+		ge256ov4735 = R;
 	}
 	R = T852c9(ac, (T6)(GE_int32(0)));
-	ge254ov4735 = R;
+	ge256ov4735 = R;
 	return R;
 }
 
@@ -89818,19 +90027,19 @@ T0* T30f45(GE_context* ac, T0* C)
 }
 
 /* KL_STRING_INPUT_STREAM.name */
-unsigned char ge269os4710 = '\0';
-T0* ge269ov4710;
+unsigned char ge271os4710 = '\0';
+T0* ge271ov4710;
 T0* T898f6(GE_context* ac, T0* C)
 {
 	T0* R = 0;
-	if (ge269os4710) {
-		return ge269ov4710;
+	if (ge271os4710) {
+		return ge271ov4710;
 	} else {
-		ge269os4710 = '\1';
-		ge269ov4710 = R;
+		ge271os4710 = '\1';
+		ge271ov4710 = R;
 	}
-	R = GE_ms("STRING", 6);
-	ge269ov4710 = R;
+	R = GE_ms8("STRING", 6);
+	ge271ov4710 = R;
 	return R;
 }
 
@@ -90154,112 +90363,110 @@ T0* GE_mt477(T0* a1)
 	return R;
 }
 
-T0* ge267ov4710;
-T0* ge266ov5877;
+T0* ge269ov4710;
+T0* ge268ov5877;
 T0* ge224ov3042;
 T0* ge164ov5883;
-T0* ge330ov20619;
-T0* ge320ov20564;
-T0* ge268ov5877;
-T0* ge1042ov16417;
-T0* ge1042ov16424;
-T0* ge1042ov16423;
-T0* ge1042ov16422;
-T0* ge252ov4755;
-T0* ge253ov2943;
-T0* ge1042ov16418;
+T0* ge335ov20622;
+T0* ge325ov20567;
+T0* ge270ov5877;
 T0* ge1042ov16420;
-T0* ge1042ov16377;
-T0* ge251ov20120;
-T0* ge251ov20121;
-T0* ge1755ov23666;
-T0* ge1755ov23651;
-T0* ge1755ov23644;
-T0* ge1755ov23629;
+T0* ge1042ov16427;
+T0* ge1042ov16426;
+T0* ge1042ov16425;
+T0* ge254ov4755;
+T0* ge255ov2943;
+T0* ge1042ov16421;
+T0* ge1042ov16423;
+T0* ge1042ov16380;
+T0* ge253ov20123;
+T0* ge253ov20124;
+T0* ge1755ov23669;
 T0* ge1755ov23654;
 T0* ge1755ov23647;
-T0* ge1755ov23655;
-T0* ge1755ov23664;
-T0* ge1755ov23657;
-T0* ge1755ov23653;
-T0* ge1755ov23641;
-T0* ge1755ov23642;
-T0* ge1755ov23656;
-T0* ge1755ov23643;
-T0* ge1755ov23630;
-T0* ge1755ov23631;
 T0* ge1755ov23632;
-T0* ge1755ov23638;
-T0* ge1755ov23640;
-T0* ge1755ov23635;
+T0* ge1755ov23657;
+T0* ge1755ov23650;
+T0* ge1755ov23658;
+T0* ge1755ov23667;
 T0* ge1755ov23660;
+T0* ge1755ov23656;
+T0* ge1755ov23644;
+T0* ge1755ov23645;
 T0* ge1755ov23659;
-T0* ge1755ov23636;
-T0* ge1755ov23637;
-T0* ge1755ov23634;
+T0* ge1755ov23646;
 T0* ge1755ov23633;
-T0* ge1751ov23421;
-T0* ge1042ov16419;
-T0* ge1042ov16421;
-T0* ge1042ov16101;
-T0* ge1042ov16137;
-T0* ge1042ov16110;
-T0* ge1042ov16105;
-T0* ge1042ov16136;
-T0* ge1042ov16360;
-T0* ge1042ov16364;
-T0* ge1042ov16361;
-T0* ge1042ov16363;
-T0* ge1042ov16362;
-T0* ge1042ov16365;
-T0* ge1042ov16367;
+T0* ge1755ov23634;
+T0* ge1755ov23635;
+T0* ge1755ov23641;
+T0* ge1755ov23643;
+T0* ge1755ov23638;
+T0* ge1755ov23663;
+T0* ge1755ov23662;
+T0* ge1755ov23639;
+T0* ge1755ov23640;
+T0* ge1755ov23637;
+T0* ge1755ov23636;
+T0* ge1751ov23424;
+T0* ge1042ov16422;
 T0* ge1042ov16366;
+T0* ge1042ov16367;
+T0* ge1042ov16424;
+T0* ge1042ov16102;
+T0* ge1042ov16136;
+T0* ge1042ov16110;
+T0* ge1042ov16361;
+T0* ge1042ov16365;
+T0* ge1042ov16362;
+T0* ge1042ov16364;
+T0* ge1042ov16363;
 T0* ge1042ov16368;
+T0* ge1042ov16370;
+T0* ge1042ov16369;
+T0* ge1042ov16371;
 T0* ge1035ov10585;
 T0* ge1035ov10584;
 T0* ge1035ov10583;
 T0* ge824ov4135;
-T0* ge271ov20057;
-T0* ge271ov20058;
-T0* ge259ov20248;
-T0* ge259ov20247;
-T0* ge274ov20057;
-T0* ge274ov20058;
-T0* ge252ov4757;
-T0* ge1042ov16183;
-T0* ge1042ov16404;
-T0* ge1042ov16189;
-T0* ge1042ov16090;
-T0* ge1042ov16405;
+T0* ge275ov20060;
+T0* ge275ov20061;
+T0* ge261ov20251;
+T0* ge261ov20250;
+T0* ge278ov20060;
+T0* ge278ov20061;
+T0* ge254ov4757;
+T0* ge1042ov16178;
+T0* ge1042ov16407;
+T0* ge1042ov16184;
+T0* ge1042ov16091;
+T0* ge1042ov16408;
+T0* ge1042ov16261;
 T0* ge1042ov16260;
-T0* ge1042ov16259;
-T0* ge1042ov16212;
-T0* ge1042ov16310;
-T0* ge1042ov16373;
-T0* ge1042ov16145;
-T0* ge1042ov16399;
-T0* ge1042ov16191;
-T0* ge1042ov16168;
-T0* ge1042ov16092;
-T0* ge1042ov16369;
-T0* ge1042ov16166;
+T0* ge1042ov16207;
+T0* ge1042ov16311;
+T0* ge1042ov16376;
+T0* ge1042ov16144;
+T0* ge1042ov16402;
+T0* ge1042ov16186;
+T0* ge1042ov16163;
+T0* ge1042ov16093;
+T0* ge1042ov16372;
+T0* ge1042ov16161;
 T0* ge824ov4106;
 T0* ge824ov4126;
-T0* ge1042ov16143;
-T0* ge1042ov16335;
-T0* ge1042ov16139;
-T0* ge1042ov16357;
-T0* ge1042ov16111;
+T0* ge1042ov16336;
 T0* ge1042ov16138;
-T0* ge1042ov16394;
-T0* ge1042ov16356;
-T0* ge1042ov16354;
+T0* ge1042ov16358;
+T0* ge1042ov16111;
+T0* ge1042ov16137;
+T0* ge1042ov16397;
+T0* ge1042ov16357;
 T0* ge1042ov16355;
-T0* ge1042ov16350;
-T0* ge1042ov16337;
+T0* ge1042ov16356;
+T0* ge1042ov16351;
 T0* ge1042ov16338;
 T0* ge1042ov16339;
-T0* ge1042ov16342;
+T0* ge1042ov16340;
 T0* ge1042ov16343;
 T0* ge1042ov16344;
 T0* ge1042ov16345;
@@ -90267,42 +90474,44 @@ T0* ge1042ov16346;
 T0* ge1042ov16347;
 T0* ge1042ov16348;
 T0* ge1042ov16349;
-T0* ge1042ov16351;
+T0* ge1042ov16350;
 T0* ge1042ov16352;
 T0* ge1042ov16353;
+T0* ge1042ov16354;
+T0* ge1042ov16342;
 T0* ge1042ov16341;
-T0* ge1042ov16340;
-T0* ge1042ov16400;
-T0* ge824ov3957;
-T0* ge1042ov16150;
-T0* ge1042ov16140;
-T0* ge1042ov16413;
-T0* ge1042ov16211;
-T0* ge1042ov16187;
-T0* ge1042ov16186;
 T0* ge1042ov16403;
-T0* ge1042ov16097;
-T0* ge1042ov16188;
-T0* ge1042ov16372;
-T0* ge1042ov16144;
-T0* ge1042ov16371;
-T0* ge1042ov16387;
+T0* ge824ov3957;
+T0* ge1042ov16149;
+T0* ge1042ov16139;
+T0* ge1042ov16416;
+T0* ge1042ov16206;
+T0* ge1042ov16182;
+T0* ge1042ov16181;
+T0* ge1042ov16406;
+T0* ge1042ov16098;
+T0* ge1042ov16183;
+T0* ge1042ov16375;
+T0* ge1042ov16143;
 T0* ge1042ov16374;
-T0* ge1042ov16158;
-T0* ge1042ov16159;
-T0* ge1042ov16388;
-T0* ge1042ov16154;
+T0* ge1042ov16390;
+T0* ge1042ov16377;
+T0* ge1042ov16241;
+T0* ge1042ov16242;
+T0* ge1042ov16391;
+T0* ge1042ov16153;
 T0* ge824ov4109;
-T0* ge1042ov16246;
-T0* ge1042ov16163;
-T0* ge1042ov16243;
-T0* ge1042ov16094;
-T0* ge1042ov16100;
-T0* ge1042ov16279;
-T0* ge1042ov16198;
+T0* ge1042ov16247;
+T0* ge1042ov16158;
+T0* ge1042ov16238;
+T0* ge1042ov16095;
+T0* ge1042ov16101;
+T0* ge1042ov16280;
+T0* ge1042ov16193;
 T0* ge1042ov16122;
+T0* ge1042ov16360;
 T0* ge1042ov16359;
-T0* ge1042ov16358;
+T0* ge1042ov16335;
 T0* ge1042ov16334;
 T0* ge1042ov16333;
 T0* ge1042ov16332;
@@ -90326,41 +90535,40 @@ T0* ge1042ov16315;
 T0* ge1042ov16314;
 T0* ge1042ov16313;
 T0* ge1042ov16312;
-T0* ge1042ov16311;
+T0* ge1042ov16310;
 T0* ge1042ov16309;
 T0* ge1042ov16308;
 T0* ge1042ov16307;
 T0* ge1042ov16306;
 T0* ge1042ov16305;
-T0* ge1042ov16304;
-T0* ge1042ov16244;
-T0* ge1042ov16242;
-T0* ge1042ov16190;
-T0* ge1042ov16273;
-T0* ge1042ov16174;
-T0* ge1042ov16155;
-T0* ge1042ov16401;
-T0* ge1042ov16206;
-T0* ge1042ov16407;
-T0* ge1042ov16229;
-T0* ge1042ov16226;
+T0* ge1042ov16243;
+T0* ge1042ov16237;
+T0* ge1042ov16185;
+T0* ge1042ov16274;
+T0* ge1042ov16169;
+T0* ge1042ov16154;
+T0* ge1042ov16404;
+T0* ge1042ov16201;
+T0* ge1042ov16410;
+T0* ge1042ov16224;
+T0* ge1042ov16221;
+T0* ge1042ov16291;
+T0* ge1042ov16299;
 T0* ge1042ov16290;
 T0* ge1042ov16298;
 T0* ge1042ov16289;
 T0* ge1042ov16297;
+T0* ge1042ov16279;
+T0* ge1042ov16103;
 T0* ge1042ov16288;
 T0* ge1042ov16296;
-T0* ge1042ov16278;
-T0* ge1042ov16102;
 T0* ge1042ov16287;
 T0* ge1042ov16295;
 T0* ge1042ov16286;
 T0* ge1042ov16294;
-T0* ge1042ov16285;
-T0* ge1042ov16293;
-T0* ge1042ov16205;
-T0* ge1042ov16176;
-T0* ge1042ov16098;
+T0* ge1042ov16200;
+T0* ge1042ov16171;
+T0* ge1042ov16099;
 T0* ge1042ov16108;
 T0* ge1042ov16132;
 T0* ge1042ov16130;
@@ -90369,33 +90577,34 @@ T0* ge1042ov16120;
 T0* ge1042ov16119;
 T0* ge1042ov16118;
 T0* ge1042ov16117;
-T0* ge1042ov16225;
+T0* ge1042ov16220;
 T0* ge1042ov16115;
 T0* ge1042ov16133;
 T0* ge1042ov16107;
-T0* ge1042ov16104;
-T0* ge1042ov16151;
-T0* ge1042ov16193;
-T0* ge1042ov16192;
-T0* ge1042ov16336;
-T0* ge1042ov16269;
+T0* ge1042ov16105;
+T0* ge1042ov16150;
+T0* ge1042ov16188;
+T0* ge1042ov16187;
+T0* ge1042ov16337;
+T0* ge1042ov16270;
+T0* ge1042ov16301;
 T0* ge1042ov16300;
-T0* ge1042ov16299;
+T0* ge1042ov16293;
 T0* ge1042ov16292;
-T0* ge1042ov16291;
+T0* ge1042ov16285;
 T0* ge1042ov16284;
-T0* ge1042ov16283;
-T0* ge1042ov16280;
 T0* ge1042ov16281;
+T0* ge1042ov16282;
+T0* ge1042ov16278;
 T0* ge1042ov16277;
 T0* ge1042ov16276;
+T0* ge1042ov16398;
 T0* ge1042ov16275;
-T0* ge1042ov16395;
-T0* ge1042ov16274;
+T0* ge1042ov16268;
 T0* ge1042ov16267;
-T0* ge1042ov16266;
-T0* ge1042ov16263;
-T0* ge1042ov16261;
+T0* ge1042ov16264;
+T0* ge1042ov16262;
+T0* ge1042ov16259;
 T0* ge1042ov16258;
 T0* ge1042ov16257;
 T0* ge1042ov16256;
@@ -90403,89 +90612,88 @@ T0* ge1042ov16255;
 T0* ge1042ov16254;
 T0* ge1042ov16253;
 T0* ge1042ov16252;
-T0* ge1042ov16251;
-T0* ge1042ov16239;
-T0* ge1042ov16240;
-T0* ge1042ov16236;
-T0* ge1042ov16238;
-T0* ge1042ov16237;
-T0* ge1042ov16235;
-T0* ge1042ov16233;
 T0* ge1042ov16234;
-T0* ge1042ov16232;
+T0* ge1042ov16235;
 T0* ge1042ov16231;
+T0* ge1042ov16233;
+T0* ge1042ov16232;
 T0* ge1042ov16230;
 T0* ge1042ov16228;
+T0* ge1042ov16229;
 T0* ge1042ov16227;
-T0* ge1042ov16224;
+T0* ge1042ov16226;
+T0* ge1042ov16225;
 T0* ge1042ov16223;
 T0* ge1042ov16222;
-T0* ge1042ov16221;
-T0* ge1042ov16220;
 T0* ge1042ov16219;
 T0* ge1042ov16218;
 T0* ge1042ov16217;
-T0* ge1042ov16209;
-T0* ge1042ov16207;
+T0* ge1042ov16216;
+T0* ge1042ov16215;
+T0* ge1042ov16214;
+T0* ge1042ov16213;
+T0* ge1042ov16212;
 T0* ge1042ov16204;
-T0* ge1042ov16203;
 T0* ge1042ov16202;
-T0* ge1042ov16201;
-T0* ge1042ov16200;
-T0* ge1042ov16208;
-T0* ge1042ov16271;
-T0* ge1042ov16270;
-T0* ge1042ov16268;
-T0* ge1042ov16182;
-T0* ge1042ov16181;
-T0* ge1042ov16180;
-T0* ge1042ov16179;
-T0* ge1042ov16178;
-T0* ge1042ov16177;
-T0* ge1042ov16165;
-T0* ge1042ov16164;
-T0* ge1042ov16162;
+T0* ge1042ov16199;
+T0* ge1042ov16198;
+T0* ge1042ov16197;
+T0* ge1042ov16196;
+T0* ge1042ov16195;
+T0* ge1042ov16203;
 T0* ge1042ov16272;
-T0* ge1042ov16210;
-T0* ge1042ov16170;
-T0* ge1042ov16169;
+T0* ge1042ov16271;
+T0* ge1042ov16269;
+T0* ge1042ov16177;
+T0* ge1042ov16176;
+T0* ge1042ov16175;
+T0* ge1042ov16174;
 T0* ge1042ov16173;
 T0* ge1042ov16172;
-T0* ge1042ov16171;
-T0* ge1042ov16175;
-T0* ge1042ov16241;
-T0* ge1042ov16161;
 T0* ge1042ov16160;
-T0* ge1042ov16386;
-T0* ge1042ov16245;
-T0* ge1042ov16396;
-T0* ge1042ov16389;
-T0* ge1042ov16390;
-T0* ge1042ov16091;
-T0* ge1042ov16391;
-T0* ge1042ov16146;
-T0* ge1042ov16141;
+T0* ge1042ov16159;
+T0* ge1042ov16157;
+T0* ge1042ov16273;
+T0* ge1042ov16205;
+T0* ge1042ov16165;
+T0* ge1042ov16164;
+T0* ge1042ov16168;
 T0* ge1042ov16167;
+T0* ge1042ov16166;
+T0* ge1042ov16170;
+T0* ge1042ov16236;
+T0* ge1042ov16156;
+T0* ge1042ov16155;
+T0* ge1042ov16389;
+T0* ge1042ov16244;
+T0* ge1042ov16399;
+T0* ge1042ov16392;
+T0* ge1042ov16393;
+T0* ge1042ov16092;
+T0* ge1042ov16394;
+T0* ge1042ov16145;
+T0* ge1042ov16140;
+T0* ge1042ov16162;
 T0* ge824ov3761;
 T0* ge824ov3785;
 T0* ge824ov3827;
-T0* ge1042ov16095;
 T0* ge1042ov16096;
+T0* ge1042ov16097;
 T0* ge824ov3796;
-T0* ge1042ov16378;
-T0* ge1042ov16156;
-T0* ge1042ov16157;
-T0* ge1042ov16282;
-T0* ge1042ov16262;
+T0* ge1042ov16381;
+T0* ge1042ov16239;
+T0* ge1042ov16240;
+T0* ge1042ov16283;
+T0* ge1042ov16263;
+T0* ge1042ov16266;
 T0* ge1042ov16265;
-T0* ge1042ov16264;
-T0* ge1042ov16103;
-T0* ge1042ov16402;
-T0* ge1042ov16409;
-T0* ge1042ov16152;
-T0* ge1042ov16410;
-T0* ge1042ov16393;
-T0* ge1042ov16408;
+T0* ge1042ov16104;
+T0* ge1042ov16405;
+T0* ge1042ov16412;
+T0* ge1042ov16151;
+T0* ge1042ov16413;
+T0* ge1042ov16396;
+T0* ge1042ov16411;
 T0* ge1042ov16128;
 T0* ge1042ov16127;
 T0* ge1042ov16126;
@@ -90501,7 +90709,7 @@ T0* ge1042ov16124;
 T0* ge824ov3776;
 T0* ge1042ov16112;
 T0* ge824ov3764;
-T0* ge1042ov16142;
+T0* ge1042ov16141;
 T0* ge824ov3799;
 T0* ge1042ov16106;
 T0* ge824ov3752;
@@ -90608,10 +90816,10 @@ T0* ge824ov3759;
 T0* ge824ov3758;
 T0* ge824ov4172;
 T0* ge1135ov13058;
-T0* ge1132ov22376;
-T0* ge1132ov22288;
-T0* ge1132ov22426;
-T0* ge1132ov22338;
+T0* ge1132ov22379;
+T0* ge1132ov22291;
+T0* ge1132ov22429;
+T0* ge1132ov22341;
 T0* ge1135ov13066;
 T0* ge1135ov13037;
 T0* ge1135ov13038;
@@ -90619,18 +90827,18 @@ T0* ge1135ov13060;
 T0* ge1124ov13498;
 T0* ge1124ov13499;
 T0* ge1124ov13500;
-T0* ge1132ov22425;
-T0* ge1132ov22337;
+T0* ge1132ov22428;
+T0* ge1132ov22340;
 T0* ge1135ov13062;
 T0* ge1135ov13045;
 T0* ge1135ov13059;
 T0* ge1135ov13040;
-T0* ge1132ov22419;
-T0* ge1132ov22331;
-T0* ge1132ov22418;
-T0* ge1132ov22330;
-T0* ge1132ov22427;
-T0* ge1132ov22339;
+T0* ge1132ov22422;
+T0* ge1132ov22334;
+T0* ge1132ov22421;
+T0* ge1132ov22333;
+T0* ge1132ov22430;
+T0* ge1132ov22342;
 T0* ge1135ov13022;
 T0* ge1135ov13050;
 T0* ge1135ov13039;
@@ -90644,33 +90852,33 @@ T0* ge1135ov13064;
 T0* ge1135ov13057;
 T0* ge1135ov13049;
 T0* ge1135ov13063;
+T0* ge1132ov22466;
+T0* ge1132ov22378;
+T0* ge1132ov22465;
+T0* ge1132ov22377;
+T0* ge1132ov22464;
+T0* ge1132ov22376;
 T0* ge1132ov22463;
 T0* ge1132ov22375;
-T0* ge1132ov22462;
-T0* ge1132ov22374;
-T0* ge1132ov22461;
-T0* ge1132ov22373;
-T0* ge1132ov22460;
-T0* ge1132ov22372;
+T0* ge1132ov22426;
+T0* ge1132ov22338;
+T0* ge1132ov22425;
+T0* ge1132ov22337;
+T0* ge1132ov22424;
+T0* ge1132ov22336;
 T0* ge1132ov22423;
 T0* ge1132ov22335;
-T0* ge1132ov22422;
-T0* ge1132ov22334;
-T0* ge1132ov22421;
-T0* ge1132ov22333;
-T0* ge1132ov22420;
-T0* ge1132ov22332;
 T0* ge1135ov13018;
 T0* ge1135ov13021;
 T0* ge1135ov13034;
+T0* ge1132ov22434;
+T0* ge1132ov22346;
+T0* ge1132ov22433;
+T0* ge1132ov22345;
+T0* ge1132ov22432;
+T0* ge1132ov22344;
 T0* ge1132ov22431;
 T0* ge1132ov22343;
-T0* ge1132ov22430;
-T0* ge1132ov22342;
-T0* ge1132ov22429;
-T0* ge1132ov22341;
-T0* ge1132ov22428;
-T0* ge1132ov22340;
 T0* ge1138ov13017;
 T0* ge1138ov13016;
 T0* ge1135ov13047;
@@ -90688,77 +90896,77 @@ T0* ge1135ov13042;
 T0* ge1135ov13061;
 T0* ge1135ov13023;
 T0* ge1135ov13043;
+T0* ge1132ov22415;
+T0* ge1132ov22327;
+T0* ge1132ov22414;
+T0* ge1132ov22326;
+T0* ge1132ov22413;
+T0* ge1132ov22325;
 T0* ge1132ov22412;
 T0* ge1132ov22324;
 T0* ge1132ov22411;
 T0* ge1132ov22323;
-T0* ge1132ov22410;
-T0* ge1132ov22322;
-T0* ge1132ov22409;
-T0* ge1132ov22321;
-T0* ge1132ov22408;
-T0* ge1132ov22320;
 T0* ge1135ov13030;
-T0* ge1132ov22394;
-T0* ge1132ov22306;
-T0* ge1132ov22395;
-T0* ge1132ov22307;
-T0* ge1132ov22393;
-T0* ge1132ov22305;
-T0* ge1132ov22392;
-T0* ge1132ov22304;
-T0* ge1132ov22391;
-T0* ge1132ov22303;
-T0* ge1132ov22390;
-T0* ge1132ov22302;
-T0* ge1132ov22399;
-T0* ge1132ov22311;
-T0* ge1132ov22398;
-T0* ge1132ov22310;
 T0* ge1132ov22397;
 T0* ge1132ov22309;
+T0* ge1132ov22398;
+T0* ge1132ov22310;
 T0* ge1132ov22396;
 T0* ge1132ov22308;
-T0* ge1132ov22459;
-T0* ge1132ov22371;
-T0* ge1132ov22458;
-T0* ge1132ov22370;
-T0* ge1132ov22457;
-T0* ge1132ov22369;
-T0* ge1132ov22456;
-T0* ge1132ov22368;
+T0* ge1132ov22395;
+T0* ge1132ov22307;
+T0* ge1132ov22394;
+T0* ge1132ov22306;
+T0* ge1132ov22393;
+T0* ge1132ov22305;
+T0* ge1132ov22402;
+T0* ge1132ov22314;
 T0* ge1132ov22401;
 T0* ge1132ov22313;
 T0* ge1132ov22400;
 T0* ge1132ov22312;
-T0* ge1132ov22383;
-T0* ge1132ov22295;
-T0* ge1132ov22384;
-T0* ge1132ov22296;
-T0* ge1132ov22382;
-T0* ge1132ov22294;
-T0* ge1132ov22381;
-T0* ge1132ov22293;
+T0* ge1132ov22399;
+T0* ge1132ov22311;
+T0* ge1132ov22462;
+T0* ge1132ov22374;
+T0* ge1132ov22461;
+T0* ge1132ov22373;
+T0* ge1132ov22460;
+T0* ge1132ov22372;
+T0* ge1132ov22459;
+T0* ge1132ov22371;
 T0* ge1132ov22404;
 T0* ge1132ov22316;
-T0* ge1132ov22405;
-T0* ge1132ov22317;
 T0* ge1132ov22403;
 T0* ge1132ov22315;
-T0* ge1132ov22402;
-T0* ge1132ov22314;
+T0* ge1132ov22386;
+T0* ge1132ov22298;
+T0* ge1132ov22387;
+T0* ge1132ov22299;
+T0* ge1132ov22385;
+T0* ge1132ov22297;
+T0* ge1132ov22384;
+T0* ge1132ov22296;
+T0* ge1132ov22407;
+T0* ge1132ov22319;
+T0* ge1132ov22408;
+T0* ge1132ov22320;
+T0* ge1132ov22406;
+T0* ge1132ov22318;
+T0* ge1132ov22405;
+T0* ge1132ov22317;
+T0* ge1132ov22445;
+T0* ge1132ov22357;
+T0* ge1132ov22444;
+T0* ge1132ov22356;
+T0* ge1132ov22443;
+T0* ge1132ov22355;
 T0* ge1132ov22442;
 T0* ge1132ov22354;
 T0* ge1132ov22441;
 T0* ge1132ov22353;
 T0* ge1132ov22440;
 T0* ge1132ov22352;
-T0* ge1132ov22439;
-T0* ge1132ov22351;
-T0* ge1132ov22438;
-T0* ge1132ov22350;
-T0* ge1132ov22437;
-T0* ge1132ov22349;
 T0* ge1135ov13029;
 T0* ge1135ov13036;
 T0* ge1135ov13053;
@@ -90766,119 +90974,119 @@ T0* ge1135ov13052;
 T0* ge1135ov13055;
 T0* ge1135ov13048;
 T0* ge1135ov13046;
+T0* ge1132ov22450;
+T0* ge1132ov22362;
+T0* ge1132ov22449;
+T0* ge1132ov22361;
+T0* ge1132ov22448;
+T0* ge1132ov22360;
 T0* ge1132ov22447;
 T0* ge1132ov22359;
 T0* ge1132ov22446;
 T0* ge1132ov22358;
-T0* ge1132ov22445;
-T0* ge1132ov22357;
-T0* ge1132ov22444;
-T0* ge1132ov22356;
-T0* ge1132ov22443;
-T0* ge1132ov22355;
-T0* ge1132ov22451;
-T0* ge1132ov22363;
-T0* ge1132ov22455;
-T0* ge1132ov22367;
 T0* ge1132ov22454;
 T0* ge1132ov22366;
+T0* ge1132ov22458;
+T0* ge1132ov22370;
+T0* ge1132ov22457;
+T0* ge1132ov22369;
+T0* ge1132ov22456;
+T0* ge1132ov22368;
+T0* ge1132ov22455;
+T0* ge1132ov22367;
 T0* ge1132ov22453;
 T0* ge1132ov22365;
-T0* ge1132ov22452;
-T0* ge1132ov22364;
-T0* ge1132ov22450;
-T0* ge1132ov22362;
+T0* ge1132ov22383;
+T0* ge1132ov22295;
+T0* ge1132ov22382;
+T0* ge1132ov22294;
+T0* ge1132ov22381;
+T0* ge1132ov22293;
 T0* ge1132ov22380;
 T0* ge1132ov22292;
-T0* ge1132ov22379;
-T0* ge1132ov22291;
-T0* ge1132ov22378;
-T0* ge1132ov22290;
-T0* ge1132ov22377;
-T0* ge1132ov22289;
 T0* ge1135ov13054;
-T0* ge1132ov22449;
-T0* ge1132ov22361;
+T0* ge1132ov22452;
+T0* ge1132ov22364;
+T0* ge1132ov22439;
+T0* ge1132ov22351;
+T0* ge1132ov22438;
+T0* ge1132ov22350;
 T0* ge1132ov22436;
 T0* ge1132ov22348;
+T0* ge1132ov22437;
+T0* ge1132ov22349;
 T0* ge1132ov22435;
 T0* ge1132ov22347;
-T0* ge1132ov22433;
-T0* ge1132ov22345;
-T0* ge1132ov22434;
-T0* ge1132ov22346;
-T0* ge1132ov22432;
-T0* ge1132ov22344;
-T0* ge1132ov22448;
-T0* ge1132ov22360;
+T0* ge1132ov22451;
+T0* ge1132ov22363;
+T0* ge1132ov22392;
+T0* ge1132ov22304;
+T0* ge1132ov22391;
+T0* ge1132ov22303;
 T0* ge1132ov22389;
 T0* ge1132ov22301;
+T0* ge1132ov22390;
+T0* ge1132ov22302;
 T0* ge1132ov22388;
 T0* ge1132ov22300;
-T0* ge1132ov22386;
-T0* ge1132ov22298;
-T0* ge1132ov22387;
-T0* ge1132ov22299;
-T0* ge1132ov22385;
-T0* ge1132ov22297;
-T0* ge1132ov22407;
-T0* ge1132ov22319;
-T0* ge1132ov22406;
-T0* ge1132ov22318;
-T0* ge1132ov22416;
-T0* ge1132ov22328;
-T0* ge1132ov22415;
-T0* ge1132ov22327;
-T0* ge1132ov22417;
-T0* ge1132ov22329;
-T0* ge1132ov22424;
-T0* ge1132ov22336;
+T0* ge1132ov22410;
+T0* ge1132ov22322;
+T0* ge1132ov22409;
+T0* ge1132ov22321;
+T0* ge1132ov22419;
+T0* ge1132ov22331;
+T0* ge1132ov22418;
+T0* ge1132ov22330;
+T0* ge1132ov22420;
+T0* ge1132ov22332;
+T0* ge1132ov22427;
+T0* ge1132ov22339;
 T0* ge1124ov13504;
 T0* ge1124ov13503;
-T0* ge1132ov22414;
-T0* ge1132ov22326;
-T0* ge1132ov22413;
-T0* ge1132ov22325;
-T0* ge1314ov21614;
-T0* ge1314ov21576;
-T0* ge1314ov21574;
-T0* ge1314ov21615;
-T0* ge1314ov21587;
-T0* ge1314ov21586;
-T0* ge1314ov21597;
-T0* ge1314ov21591;
+T0* ge1132ov22417;
+T0* ge1132ov22329;
+T0* ge1132ov22416;
+T0* ge1132ov22328;
+T0* ge1314ov21617;
+T0* ge1314ov21579;
+T0* ge1314ov21577;
+T0* ge1314ov21618;
 T0* ge1314ov21590;
 T0* ge1314ov21589;
-T0* ge1314ov21595;
+T0* ge1314ov21600;
 T0* ge1314ov21594;
-T0* ge1314ov21596;
-T0* ge1314ov21573;
+T0* ge1314ov21593;
+T0* ge1314ov21592;
+T0* ge1314ov21598;
+T0* ge1314ov21597;
 T0* ge1314ov21599;
-T0* ge1314ov21608;
-T0* ge1317ov21437;
-T0* ge1317ov21435;
-T0* ge1317ov21436;
-T0* ge1314ov21609;
-T0* ge1314ov21610;
-T0* ge1314ov21613;
-T0* ge1314ov21611;
-T0* ge1314ov21612;
-T0* ge1314ov21606;
-T0* ge1310ov22013;
-T0* ge1310ov22014;
-T0* ge1314ov21579;
+T0* ge1314ov21576;
 T0* ge1314ov21602;
+T0* ge1314ov21611;
+T0* ge1317ov21440;
+T0* ge1317ov21438;
+T0* ge1317ov21439;
+T0* ge1314ov21612;
+T0* ge1314ov21613;
+T0* ge1314ov21616;
+T0* ge1314ov21614;
+T0* ge1314ov21615;
+T0* ge1314ov21609;
+T0* ge1310ov22016;
+T0* ge1310ov22017;
+T0* ge1314ov21582;
+T0* ge1314ov21605;
 T0* ge1307ov12493;
 T0* ge1307ov12492;
-T0* ge1314ov21622;
-T0* ge1314ov21623;
-T0* ge1314ov21624;
-T0* ge1314ov21617;
-T0* ge1314ov21600;
-T0* ge1314ov21601;
+T0* ge1314ov21625;
+T0* ge1314ov21626;
+T0* ge1314ov21627;
+T0* ge1314ov21620;
 T0* ge1314ov21603;
-T0* ge1314ov21607;
-T0* ge1263ov20673;
+T0* ge1314ov21604;
+T0* ge1314ov21606;
+T0* ge1314ov21610;
+T0* ge1263ov20676;
 T0* ge1153ov11234;
 T0* ge1153ov11235;
 T0* ge1153ov11236;
@@ -91017,7 +91225,7 @@ T0* ge1350ov12897;
 T0* ge9ov11120;
 T0* ge9ov11127;
 T0* ge16ov10740;
-T0* ge290ov2854;
+T0* ge295ov2854;
 T0* ge6ov10760;
 T0* ge9ov11123;
 T0* ge9ov11130;
@@ -91035,10 +91243,10 @@ T0* ge6ov10762;
 T0* ge6ov10761;
 T0* ge1192ov3067;
 T0* ge1192ov3065;
-T0* ge1321ov31215;
-T0* ge1321ov31216;
-T0* ge1312ov31371;
-T0* ge1312ov31373;
+T0* ge1321ov31218;
+T0* ge1321ov31219;
+T0* ge1312ov31374;
+T0* ge1312ov31376;
 T0* ge824ov3775;
 T0* ge1031ov8700;
 T0* ge1031ov8698;
@@ -91357,8 +91565,8 @@ T0* ge824ov4180;
 T0* ge824ov4150;
 T0* ge824ov4136;
 T0* ge824ov4167;
-T0* ge1038ov37023;
-T0* ge1038ov37022;
+T0* ge1038ov37026;
+T0* ge1038ov37025;
 T0* ge824ov4153;
 T0* ge824ov4115;
 T0* ge824ov4147;
@@ -91374,7 +91582,7 @@ T0* ge824ov4138;
 T0* ge824ov4166;
 T0* ge1041ov9741;
 T0* ge1041ov9298;
-T0* ge1053ov25752;
+T0* ge1053ov25755;
 T0* ge824ov4235;
 T0* ge824ov4241;
 T0* ge824ov4242;
@@ -91741,7 +91949,7 @@ T0* ge824ov4231;
 T0* ge824ov4232;
 T0* ge824ov4233;
 T0* ge228ov14256;
-T0* ge1053ov25780;
+T0* ge1053ov25783;
 T0* ge1041ov9547;
 T0* ge1041ov9358;
 T0* ge1041ov9104;
@@ -91825,18 +92033,18 @@ T0* ge1041ov9228;
 T0* ge1041ov9710;
 T0* ge1041ov9440;
 T0* ge1041ov9267;
-T0* ge1042ov16184;
-T0* ge1042ov16412;
-T0* ge1042ov16392;
-T0* ge1042ov16301;
-T0* ge1042ov16406;
-T0* ge1042ov16376;
-T0* ge1042ov16303;
-T0* ge1042ov16196;
+T0* ge1042ov16179;
+T0* ge1042ov16415;
+T0* ge1042ov16395;
 T0* ge1042ov16302;
-T0* ge1042ov16398;
-T0* ge1042ov16385;
-T0* ge1042ov16414;
+T0* ge1042ov16409;
+T0* ge1042ov16379;
+T0* ge1042ov16304;
+T0* ge1042ov16191;
+T0* ge1042ov16303;
+T0* ge1042ov16401;
+T0* ge1042ov16388;
+T0* ge1042ov16417;
 T0* ge1041ov9709;
 T0* ge1041ov9439;
 T0* ge1041ov9266;
@@ -91858,6 +92066,8 @@ T0* ge1041ov9261;
 T0* ge1041ov9724;
 T0* ge1041ov9447;
 T0* ge1041ov9281;
+T0* ge1042ov16245;
+T0* ge1042ov16246;
 T0* ge1041ov9480;
 T0* ge1041ov9326;
 T0* ge1041ov9037;
@@ -91875,7 +92085,7 @@ T0* ge1041ov9189;
 T0* ge1041ov9631;
 T0* ge1041ov9400;
 T0* ge1041ov9188;
-T0* ge1042ov16415;
+T0* ge1042ov16418;
 T0* ge1041ov9641;
 T0* ge1041ov9404;
 T0* ge1041ov9198;
@@ -91899,7 +92109,7 @@ T0* ge1041ov9405;
 T0* ge1041ov9199;
 T0* ge1041ov9640;
 T0* ge1041ov9197;
-T0* ge1042ov16379;
+T0* ge1042ov16382;
 T0* ge1041ov9703;
 T0* ge1041ov9438;
 T0* ge1041ov9260;
@@ -91911,19 +92121,19 @@ T0* ge1041ov9448;
 T0* ge1041ov9282;
 T0* ge1041ov9723;
 T0* ge1041ov9280;
-T0* ge1042ov16249;
+T0* ge1042ov16250;
 T0* ge1041ov9765;
 T0* ge1041ov9474;
 T0* ge1041ov9322;
 T0* ge1041ov9721;
 T0* ge1041ov9278;
-T0* ge1042ov16213;
-T0* ge1042ov16214;
-T0* ge1042ov16215;
-T0* ge1042ov16216;
-T0* ge1042ov16247;
+T0* ge1042ov16208;
+T0* ge1042ov16209;
+T0* ge1042ov16210;
+T0* ge1042ov16211;
 T0* ge1042ov16248;
-T0* ge1042ov16250;
+T0* ge1042ov16249;
+T0* ge1042ov16251;
 T0* ge1041ov9722;
 T0* ge1041ov9279;
 T0* ge1041ov9550;
@@ -91931,12 +92141,12 @@ T0* ge1041ov9107;
 T0* ge1041ov9717;
 T0* ge1041ov9444;
 T0* ge1041ov9274;
-T0* ge818ov18085;
-T0* ge818ov18084;
+T0* ge818ov18088;
+T0* ge818ov18087;
 T0* ge1041ov9716;
 T0* ge1041ov9443;
 T0* ge1041ov9273;
-T0* ge818ov18086;
+T0* ge818ov18089;
 T0* ge1041ov9734;
 T0* ge1041ov9457;
 T0* ge1041ov9291;
@@ -91945,9 +92155,9 @@ T0* ge1041ov9456;
 T0* ge1041ov9290;
 T0* ge1042ov16135;
 T0* ge1042ov16123;
-T0* ge1042ov16397;
-T0* ge1042ov16148;
-T0* ge1042ov16375;
+T0* ge1042ov16400;
+T0* ge1042ov16147;
+T0* ge1042ov16378;
 T0* ge1041ov9684;
 T0* ge1041ov9241;
 T0* ge1041ov9680;
@@ -91980,7 +92190,7 @@ T0* ge1041ov9057;
 T0* ge1041ov9699;
 T0* ge1041ov9435;
 T0* ge1041ov9256;
-T0* ge1042ov16384;
+T0* ge1042ov16387;
 T0* ge1041ov9477;
 T0* ge1041ov9324;
 T0* ge1041ov9034;
@@ -92117,17 +92327,17 @@ T0* ge1041ov9216;
 T0* ge1041ov9665;
 T0* ge1041ov9417;
 T0* ge1041ov9222;
-T0* ge66ov37592;
+T0* ge66ov37595;
 T0* ge1030ov8626;
 T0* ge1030ov8621;
 T0* ge1030ov8616;
 T0* ge1041ov9728;
 T0* ge1041ov9450;
 T0* ge1041ov9285;
-T0* ge1042ov16147;
-T0* ge1042ov16149;
-T0* ge1042ov16370;
-T0* ge1042ov16195;
+T0* ge1042ov16146;
+T0* ge1042ov16148;
+T0* ge1042ov16373;
+T0* ge1042ov16190;
 T0* ge1041ov9638;
 T0* ge1041ov9403;
 T0* ge1041ov9195;
@@ -92136,7 +92346,7 @@ T0* ge1041ov9196;
 T0* ge1041ov9637;
 T0* ge1041ov9402;
 T0* ge1041ov9194;
-T0* ge1042ov16199;
+T0* ge1042ov16194;
 T0* ge1041ov9481;
 T0* ge1041ov9327;
 T0* ge1041ov9038;
@@ -92202,11 +92412,11 @@ T0* ge1041ov9470;
 T0* ge1041ov9312;
 T0* ge1041ov9756;
 T0* ge1041ov9313;
-T0* ge1243ov21101;
-T0* ge1243ov21100;
-T0* ge357ov5877;
-T0* ge270ov5877;
-T0* ge257ov5877;
+T0* ge1243ov21104;
+T0* ge1243ov21103;
+T0* ge274ov5877;
+T0* ge272ov5877;
+T0* ge259ov5877;
 T0* ge16ov10741;
 T0* ge16ov10742;
 T0* ge16ov10743;
@@ -92219,7 +92429,7 @@ T0* ge1040ov8654;
 T0* ge1040ov8649;
 T0* ge1040ov8653;
 T0* ge1040ov8648;
-T0* ge828ov16580;
+T0* ge828ov16583;
 T0* ge824ov4295;
 T0* ge824ov4296;
 T0* ge824ov4276;
@@ -92242,8 +92452,8 @@ T0* ge824ov4279;
 T0* ge824ov4291;
 T0* ge824ov4294;
 T0* ge824ov4234;
-T0* ge1312ov31370;
-T0* ge1312ov31372;
+T0* ge1312ov31373;
+T0* ge1312ov31375;
 T0* ge725ov6893;
 T0* ge725ov6894;
 T0* ge824ov4272;
@@ -92267,8 +92477,8 @@ T0* ge824ov4256;
 T0* ge824ov4257;
 T0* ge824ov4258;
 T0* ge824ov4273;
-T0* ge850ov17208;
-T0* ge850ov17207;
+T0* ge850ov17211;
+T0* ge850ov17210;
 T0* ge824ov4187;
 T0* ge824ov4188;
 T0* ge824ov4186;
@@ -92283,8 +92493,8 @@ T0* ge824ov4194;
 T0* ge824ov4195;
 T0* ge824ov4196;
 T0* ge824ov4222;
-T0* ge869ov17786;
-T0* ge857ov17333;
+T0* ge869ov17789;
+T0* ge857ov17336;
 T0* ge51ov5881;
 T0* ge37ov5881;
 T0* ge43ov5881;
@@ -92315,2264 +92525,2265 @@ T0* ge163ov5881;
 T0* ge166ov5881;
 T0* ge173ov5881;
 T0* ge162ov5881;
-T0* ge267ov20424;
-T0* ge254ov4734;
+T0* ge269ov20427;
+T0* ge256ov4734;
 T0* geic2;
 T0* geic3;
 T0* geic4;
 
 void GE_init_const1()
 {
-	ge267ov4710 = (GE_ms("stdin", 5));
-	ge266ov5877 = (GE_ms("\n", 1));
-	ge224ov3042 = (GE_ms("", 0));
-	ge164ov5883 = (GE_ms("", 0));
-	ge330ov20619 = (GE_ms("", 0));
-	ge320ov20564 = (GE_ms("", 0));
-	ge268ov5877 = (GE_ms("\n", 1));
-	ge1042ov16417 = (GE_ms(".bat", 4));
-	ge1042ov16424 = (GE_ms(".sh", 3));
-	ge1042ov16423 = (GE_ms(".rc", 3));
-	ge1042ov16422 = (GE_ms(".res", 4));
-	ge252ov4755 = (GE_ms("empty_name", 10));
-	ge253ov2943 = (GE_ms("dummy", 5));
-	ge1042ov16418 = (GE_ms(".c", 2));
-	ge1042ov16420 = (GE_ms(".cpp", 4));
-	ge1042ov16377 = (GE_ms("#include", 8));
-	ge251ov20120 = (GE_ms("", 0));
-	ge251ov20121 = (GE_ms("empty_name", 10));
-	ge1755ov23666 = (GE_ms("no pattern compiled", 19));
-	ge1755ov23651 = (GE_ms("unmatched parentheses", 21));
-	ge1755ov23644 = (GE_ms("back reference to non-existent subpattern", 41));
-	ge1755ov23629 = (GE_ms("compilation successfully", 24));
-	ge1755ov23654 = (GE_ms("lookbehind assertion is not fixed length", 40));
-	ge1755ov23647 = (GE_ms("missing ) after comment", 23));
-	ge1755ov23655 = (GE_ms("malformed number after (\?(", 26));
-	ge1755ov23664 = (GE_ms("invalid condition (\?(0)", 23));
-	ge1755ov23657 = (GE_ms("assertion expected after (\?(", 28));
-	ge1755ov23653 = (GE_ms("unrecognized character after (\?<", 32));
-	ge1755ov23641 = (GE_ms("unrecognized character after (\?", 31));
-	ge1755ov23642 = (GE_ms("too many capturing parenthesized sub-patterns", 45));
-	ge1755ov23656 = (GE_ms("conditional group contains more than two branches", 49));
-	ge1755ov23643 = (GE_ms("missing )", 9));
-	ge1755ov23630 = (GE_ms("\\ at end of pattern", 19));
-	ge1755ov23631 = (GE_ms("\\c at end of pattern", 20));
-	ge1755ov23632 = (GE_ms("unrecognized character follows \\", 32));
-	ge1755ov23638 = (GE_ms("nothing to repeat", 17));
-	ge1755ov23640 = (GE_ms("internal error: unexpected repeat", 33));
-	ge1755ov23635 = (GE_ms("missing terminating ] for character class", 41));
-	ge1755ov23660 = (GE_ms("POSIX collating elements are not supported", 42));
-	ge1755ov23659 = (GE_ms("unknown POSIX class name", 24));
-	ge1755ov23636 = (GE_ms("invalid escape sequence in character class", 42));
-	ge1755ov23637 = (GE_ms("range out of order in character class", 37));
-	ge1755ov23634 = (GE_ms("number too big in {} quantifier", 31));
-	ge1755ov23633 = (GE_ms("numbers out of order in {} quantifier", 37));
-	ge1751ov23421 = (GE_ms("", 0));
-	ge1042ov16419 = (GE_ms(".cfg", 4));
-	ge1042ov16421 = (GE_ms(".h", 2));
-	ge1042ov16101 = (GE_ms("#define", 7));
-	ge1042ov16137 = (GE_ms("EIF_TRACE", 9));
-	ge1042ov16110 = (GE_ms("EIF_EXCEPTION_TRACE", 19));
-	ge1042ov16105 = (GE_ms("EIF_BOEHM_GC", 12));
-	ge1042ov16136 = (GE_ms("EIF_THREADS", 11));
-	ge1042ov16360 = (GE_ms("GE_USE_ANCESTORS", 16));
-	ge1042ov16364 = (GE_ms("GE_USE_ATTRIBUTES", 17));
-	ge1042ov16361 = (GE_ms("GE_USE_ATTRIBUTE_NAME", 21));
-	ge1042ov16363 = (GE_ms("GE_USE_ATTRIBUTE_TYPE_ID", 24));
-	ge1042ov16362 = (GE_ms("GE_USE_ATTRIBUTE_OFFSET", 23));
-	ge1042ov16365 = (GE_ms("GE_USE_TYPE_GENERATOR", 21));
-	ge1042ov16367 = (GE_ms("GE_USE_TYPE_NAME", 16));
-	ge1042ov16366 = (GE_ms("GE_USE_TYPE_GENERIC_PARAMETERS", 30));
-	ge1042ov16368 = (GE_ms("GE_USE_TYPE_OBJECT_SIZE", 23));
-	ge1035ov10585 = (GE_ms("giaaa", 5));
-	ge1035ov10584 = (GE_ms("GIAAA", 5));
-	ge1035ov10583 = (GE_ms("[$1] internal error.", 20));
-	ge824ov4135 = (GE_ms("end", 3));
-	ge271ov20057 = (GE_ms(".", 1));
-	ge271ov20058 = (GE_ms("..", 2));
-	ge259ov20248 = (GE_ms("..", 2));
-	ge259ov20247 = (GE_ms(".", 1));
-	ge274ov20057 = (GE_ms(".", 1));
-	ge274ov20058 = (GE_ms("..", 2));
-	ge252ov4757 = (GE_ms("dummy", 5));
-	ge1042ov16183 = (GE_ms("GE_context", 10));
-	ge1042ov16404 = (GE_ms("tc", 2));
-	ge1042ov16189 = (GE_ms("GE_default_context", 18));
-	ge1042ov16090 = (GE_ms("ac", 2));
-	ge1042ov16405 = (GE_ms("&tc", 3));
-	ge1042ov16260 = (GE_ms("GE_new_exception_manager", 24));
-	ge1042ov16259 = (GE_ms("GE_new", 6));
-	ge1042ov16212 = (GE_ms("GE_init_exception_manager", 25));
-	ge1042ov16310 = (GE_ms("GE_set_exception_data", 21));
-	ge1042ov16373 = (GE_ms("#ifdef", 6));
-	ge1042ov16145 = (GE_ms("#endif", 6));
-	ge1042ov16399 = (GE_ms("return", 6));
-	ge1042ov16191 = (GE_ms("GE_dts", 6));
-	ge1042ov16168 = (GE_ms("GE_catcall", 10));
-	ge1042ov16092 = (GE_ms("->", 2));
-	ge1042ov16369 = (GE_ms("GE_void", 7));
-	ge1042ov16166 = (GE_ms("GE_boxed", 8));
-	ge824ov4106 = (GE_ms("Current", 7));
-	ge824ov4126 = (GE_ms("create", 6));
-	ge1042ov16143 = (GE_ms("EIF_WINDOWS", 11));
-	ge1042ov16335 = (GE_ms("GE_show_console", 15));
-	ge1042ov16139 = (GE_ms("EIF_TYPE_OBJ", 12));
-	ge1042ov16357 = (GE_ms("GE_types", 8));
-	ge1042ov16111 = (GE_ms("EIF_FALSE", 9));
-	ge1042ov16138 = (GE_ms("EIF_TRUE", 8));
-	ge1042ov16394 = (GE_ms("offsetof", 8));
-	ge1042ov16356 = (GE_ms("GE_type_infos", 13));
-	ge1042ov16354 = (GE_ms("GE_TYPE_FLAG_SPECIAL", 20));
+	ge269ov4710 = (GE_ms8("stdin", 5));
+	ge268ov5877 = (GE_ms8("\n", 1));
+	ge224ov3042 = (GE_ms8("", 0));
+	ge164ov5883 = (GE_ms8("", 0));
+	ge335ov20622 = (GE_ms8("", 0));
+	ge325ov20567 = (GE_ms8("", 0));
+	ge270ov5877 = (GE_ms8("\n", 1));
+	ge1042ov16420 = (GE_ms8(".bat", 4));
+	ge1042ov16427 = (GE_ms8(".sh", 3));
+	ge1042ov16426 = (GE_ms8(".rc", 3));
+	ge1042ov16425 = (GE_ms8(".res", 4));
+	ge254ov4755 = (GE_ms8("empty_name", 10));
+	ge255ov2943 = (GE_ms8("dummy", 5));
+	ge1042ov16421 = (GE_ms8(".c", 2));
+	ge1042ov16423 = (GE_ms8(".cpp", 4));
+	ge1042ov16380 = (GE_ms8("#include", 8));
+	ge253ov20123 = (GE_ms8("", 0));
+	ge253ov20124 = (GE_ms8("empty_name", 10));
+	ge1755ov23669 = (GE_ms8("no pattern compiled", 19));
+	ge1755ov23654 = (GE_ms8("unmatched parentheses", 21));
+	ge1755ov23647 = (GE_ms8("back reference to non-existent subpattern", 41));
+	ge1755ov23632 = (GE_ms8("compilation successfully", 24));
+	ge1755ov23657 = (GE_ms8("lookbehind assertion is not fixed length", 40));
+	ge1755ov23650 = (GE_ms8("missing ) after comment", 23));
+	ge1755ov23658 = (GE_ms8("malformed number after (\?(", 26));
+	ge1755ov23667 = (GE_ms8("invalid condition (\?(0)", 23));
+	ge1755ov23660 = (GE_ms8("assertion expected after (\?(", 28));
+	ge1755ov23656 = (GE_ms8("unrecognized character after (\?<", 32));
+	ge1755ov23644 = (GE_ms8("unrecognized character after (\?", 31));
+	ge1755ov23645 = (GE_ms8("too many capturing parenthesized sub-patterns", 45));
+	ge1755ov23659 = (GE_ms8("conditional group contains more than two branches", 49));
+	ge1755ov23646 = (GE_ms8("missing )", 9));
+	ge1755ov23633 = (GE_ms8("\\ at end of pattern", 19));
+	ge1755ov23634 = (GE_ms8("\\c at end of pattern", 20));
+	ge1755ov23635 = (GE_ms8("unrecognized character follows \\", 32));
+	ge1755ov23641 = (GE_ms8("nothing to repeat", 17));
+	ge1755ov23643 = (GE_ms8("internal error: unexpected repeat", 33));
+	ge1755ov23638 = (GE_ms8("missing terminating ] for character class", 41));
+	ge1755ov23663 = (GE_ms8("POSIX collating elements are not supported", 42));
+	ge1755ov23662 = (GE_ms8("unknown POSIX class name", 24));
+	ge1755ov23639 = (GE_ms8("invalid escape sequence in character class", 42));
+	ge1755ov23640 = (GE_ms8("range out of order in character class", 37));
+	ge1755ov23637 = (GE_ms8("number too big in {} quantifier", 31));
+	ge1755ov23636 = (GE_ms8("numbers out of order in {} quantifier", 37));
+	ge1751ov23424 = (GE_ms8("", 0));
+	ge1042ov16422 = (GE_ms8(".cfg", 4));
+	ge1042ov16366 = (GE_ms8("GE_USE_BOEHM_GC", 15));
+	ge1042ov16367 = (GE_ms8("GE_USE_THREADS", 14));
+	ge1042ov16424 = (GE_ms8(".h", 2));
+	ge1042ov16102 = (GE_ms8("#define", 7));
+	ge1042ov16136 = (GE_ms8("EIF_TRACE", 9));
+	ge1042ov16110 = (GE_ms8("EIF_EXCEPTION_TRACE", 19));
+	ge1042ov16361 = (GE_ms8("GE_USE_ANCESTORS", 16));
+	ge1042ov16365 = (GE_ms8("GE_USE_ATTRIBUTES", 17));
+	ge1042ov16362 = (GE_ms8("GE_USE_ATTRIBUTE_NAME", 21));
+	ge1042ov16364 = (GE_ms8("GE_USE_ATTRIBUTE_TYPE_ID", 24));
+	ge1042ov16363 = (GE_ms8("GE_USE_ATTRIBUTE_OFFSET", 23));
+	ge1042ov16368 = (GE_ms8("GE_USE_TYPE_GENERATOR", 21));
+	ge1042ov16370 = (GE_ms8("GE_USE_TYPE_NAME", 16));
+	ge1042ov16369 = (GE_ms8("GE_USE_TYPE_GENERIC_PARAMETERS", 30));
+	ge1042ov16371 = (GE_ms8("GE_USE_TYPE_OBJECT_SIZE", 23));
+	ge1035ov10585 = (GE_ms8("giaaa", 5));
+	ge1035ov10584 = (GE_ms8("GIAAA", 5));
+	ge1035ov10583 = (GE_ms8("[$1] internal error.", 20));
+	ge824ov4135 = (GE_ms8("end", 3));
+	ge275ov20060 = (GE_ms8(".", 1));
+	ge275ov20061 = (GE_ms8("..", 2));
+	ge261ov20251 = (GE_ms8("..", 2));
+	ge261ov20250 = (GE_ms8(".", 1));
+	ge278ov20060 = (GE_ms8(".", 1));
+	ge278ov20061 = (GE_ms8("..", 2));
+	ge254ov4757 = (GE_ms8("dummy", 5));
+	ge1042ov16178 = (GE_ms8("GE_context", 10));
+	ge1042ov16407 = (GE_ms8("tc", 2));
+	ge1042ov16184 = (GE_ms8("GE_default_context", 18));
+	ge1042ov16091 = (GE_ms8("ac", 2));
+	ge1042ov16408 = (GE_ms8("&tc", 3));
+	ge1042ov16261 = (GE_ms8("GE_new_exception_manager", 24));
+	ge1042ov16260 = (GE_ms8("GE_new", 6));
+	ge1042ov16207 = (GE_ms8("GE_init_exception_manager", 25));
+	ge1042ov16311 = (GE_ms8("GE_set_exception_data", 21));
+	ge1042ov16376 = (GE_ms8("#ifdef", 6));
+	ge1042ov16144 = (GE_ms8("#endif", 6));
+	ge1042ov16402 = (GE_ms8("return", 6));
+	ge1042ov16186 = (GE_ms8("GE_dts", 6));
+	ge1042ov16163 = (GE_ms8("GE_catcall", 10));
+	ge1042ov16093 = (GE_ms8("->", 2));
+	ge1042ov16372 = (GE_ms8("GE_void", 7));
+	ge1042ov16161 = (GE_ms8("GE_boxed", 8));
+	ge824ov4106 = (GE_ms8("Current", 7));
+	ge824ov4126 = (GE_ms8("create", 6));
+	ge1042ov16336 = (GE_ms8("GE_show_console", 15));
+	ge1042ov16138 = (GE_ms8("EIF_TYPE_OBJ", 12));
+	ge1042ov16358 = (GE_ms8("GE_types", 8));
+	ge1042ov16111 = (GE_ms8("EIF_FALSE", 9));
+	ge1042ov16137 = (GE_ms8("EIF_TRUE", 8));
+	ge1042ov16397 = (GE_ms8("offsetof", 8));
+	ge1042ov16357 = (GE_ms8("GE_type_infos", 13));
+	ge1042ov16355 = (GE_ms8("GE_TYPE_FLAG_SPECIAL", 20));
+	ge1042ov16356 = (GE_ms8("GE_TYPE_FLAG_TUPLE", 18));
 }
 
 void GE_init_const2()
 {
-	ge1042ov16355 = (GE_ms("GE_TYPE_FLAG_TUPLE", 18));
-	ge1042ov16350 = (GE_ms("GE_TYPE_FLAG_NONE", 17));
-	ge1042ov16337 = (GE_ms("GE_TYPE_FLAG_BOOLEAN", 20));
-	ge1042ov16338 = (GE_ms("GE_TYPE_FLAG_CHARACTER_8", 24));
-	ge1042ov16339 = (GE_ms("GE_TYPE_FLAG_CHARACTER_32", 25));
-	ge1042ov16342 = (GE_ms("GE_TYPE_FLAG_INTEGER_8", 22));
-	ge1042ov16343 = (GE_ms("GE_TYPE_FLAG_INTEGER_16", 23));
-	ge1042ov16344 = (GE_ms("GE_TYPE_FLAG_INTEGER_32", 23));
-	ge1042ov16345 = (GE_ms("GE_TYPE_FLAG_INTEGER_64", 23));
-	ge1042ov16346 = (GE_ms("GE_TYPE_FLAG_NATURAL_8", 22));
-	ge1042ov16347 = (GE_ms("GE_TYPE_FLAG_NATURAL_16", 23));
-	ge1042ov16348 = (GE_ms("GE_TYPE_FLAG_NATURAL_32", 23));
-	ge1042ov16349 = (GE_ms("GE_TYPE_FLAG_NATURAL_64", 23));
-	ge1042ov16351 = (GE_ms("GE_TYPE_FLAG_POINTER", 20));
-	ge1042ov16352 = (GE_ms("GE_TYPE_FLAG_REAL_32", 20));
-	ge1042ov16353 = (GE_ms("GE_TYPE_FLAG_REAL_64", 20));
-	ge1042ov16341 = (GE_ms("GE_TYPE_FLAG_EXPANDED", 21));
-	ge1042ov16340 = (GE_ms("GE_TYPE_FLAG_DEFERRED", 21));
-	ge1042ov16400 = (GE_ms("sizeof", 6));
-	ge824ov3957 = (GE_ms("item", 4));
-	ge1042ov16150 = (GE_ms("extern", 6));
-	ge1042ov16140 = (GE_ms("EIF_TYPE_INDEX", 14));
-	ge1042ov16413 = (GE_ms("void", 4));
-	ge1042ov16211 = (GE_ms("GE_init_const", 13));
-	ge1042ov16187 = (GE_ms("GE_deep_twin", 12));
-	ge1042ov16186 = (GE_ms("GE_deep", 7));
-	ge1042ov16403 = (GE_ms("switch", 6));
-	ge1042ov16097 = (GE_ms("case", 4));
-	ge1042ov16188 = (GE_ms("GE_default", 10));
-	ge1042ov16372 = (GE_ms("if", 2));
-	ge1042ov16144 = (GE_ms("else", 4));
-	ge1042ov16371 = (GE_ms("id", 2));
-	ge1042ov16387 = (GE_ms("memcpy", 6));
-	ge1042ov16374 = (GE_ms("#ifndef", 7));
-	ge1042ov16158 = (GE_ms("GE_alloc_cleared", 16));
-	ge1042ov16159 = (GE_ms("GE_alloc_atomic_cleared", 23));
-	ge1042ov16388 = (GE_ms("memset", 6));
-	ge1042ov16154 = (GE_ms("for", 3));
-	ge824ov4109 = (GE_ms("Result", 6));
-	ge1042ov16246 = (GE_ms("GE_mt", 5));
-	ge1042ov16163 = (GE_ms("GE_bma", 6));
-	ge1042ov16243 = (GE_ms("GE_ma", 5));
-	ge1042ov16094 = (GE_ms("break", 5));
-	ge1042ov16100 = (GE_ms("default", 7));
-	ge1042ov16279 = (GE_ms("GE_raise", 8));
-	ge1042ov16198 = (GE_ms("GE_EX_PROG", 10));
-	ge1042ov16122 = (GE_ms("eif_mem_free", 12));
-	ge1042ov16359 = (GE_ms("GE_unmark_object", 16));
-	ge1042ov16358 = (GE_ms("GE_unlock_marking", 17));
-	ge1042ov16334 = (GE_ms("GE_set_reference_field_at", 25));
-	ge1042ov16333 = (GE_ms("GE_set_reference_field", 22));
-	ge1042ov16332 = (GE_ms("GE_set_real_64_field_at", 23));
-	ge1042ov16331 = (GE_ms("GE_set_real_64_field", 20));
-	ge1042ov16330 = (GE_ms("GE_set_real_32_field_at", 23));
-	ge1042ov16329 = (GE_ms("GE_set_real_32_field", 20));
-	ge1042ov16328 = (GE_ms("GE_set_pointer_field_at", 23));
-	ge1042ov16327 = (GE_ms("GE_set_pointer_field", 20));
-	ge1042ov16326 = (GE_ms("GE_set_natural_64_field_at", 26));
-	ge1042ov16325 = (GE_ms("GE_set_natural_64_field", 23));
-	ge1042ov16324 = (GE_ms("GE_set_natural_32_field_at", 26));
-	ge1042ov16323 = (GE_ms("GE_set_natural_32_field", 23));
-	ge1042ov16322 = (GE_ms("GE_set_natural_16_field_at", 26));
-	ge1042ov16321 = (GE_ms("GE_set_natural_16_field", 23));
-	ge1042ov16320 = (GE_ms("GE_set_natural_8_field_at", 25));
-	ge1042ov16319 = (GE_ms("GE_set_natural_8_field", 22));
-	ge1042ov16318 = (GE_ms("GE_set_integer_64_field_at", 26));
-	ge1042ov16317 = (GE_ms("GE_set_integer_8_field", 22));
-	ge1042ov16316 = (GE_ms("GE_set_integer_32_field_at", 26));
-	ge1042ov16315 = (GE_ms("GE_set_integer_32_field", 23));
-	ge1042ov16314 = (GE_ms("GE_set_integer_16_field_at", 26));
-	ge1042ov16313 = (GE_ms("GE_set_integer_16_field", 23));
-	ge1042ov16312 = (GE_ms("GE_set_integer_8_field_at", 25));
-	ge1042ov16311 = (GE_ms("GE_set_integer_8_field", 22));
-	ge1042ov16309 = (GE_ms("GE_set_character_32_field_at", 28));
-	ge1042ov16308 = (GE_ms("GE_set_character_32_field", 25));
-	ge1042ov16307 = (GE_ms("GE_set_character_8_field_at", 27));
-	ge1042ov16306 = (GE_ms("GE_set_character_8_field", 24));
-	ge1042ov16305 = (GE_ms("GE_set_boolean_field_at", 23));
-	ge1042ov16304 = (GE_ms("GE_set_boolean_field", 20));
-	ge1042ov16244 = (GE_ms("GE_mark_object", 14));
-	ge1042ov16242 = (GE_ms("GE_lock_marking", 15));
-	ge1042ov16190 = (GE_ms("GE_developer_raise", 18));
-	ge1042ov16273 = (GE_ms("GE_object_id_free", 17));
-	ge1042ov16174 = (GE_ms("GE_ccom_local_free", 18));
-	ge1042ov16155 = (GE_ms("fprintf", 7));
-	ge1042ov16401 = (GE_ms("stderr", 6));
-	ge1042ov16206 = (GE_ms("GE_generating_type_of_encoded_type", 34));
-	ge1042ov16407 = (GE_ms("type_id", 7));
-	ge1042ov16229 = (GE_ms("GE_is_deferred_encoded_type", 27));
-	ge1042ov16226 = (GE_ms("GE_is_attached_encoded_type", 27));
-	ge1042ov16290 = (GE_ms("GE_real_32_positive_infinity", 28));
-	ge1042ov16298 = (GE_ms("GE_real_64_positive_infinity", 28));
-	ge1042ov16289 = (GE_ms("GE_real_32_negative_infinity", 28));
-	ge1042ov16297 = (GE_ms("GE_real_64_negative_infinity", 28));
-	ge1042ov16288 = (GE_ms("GE_real_32_nan", 14));
-	ge1042ov16296 = (GE_ms("GE_real_64_nan", 14));
-	ge1042ov16278 = (GE_ms("GE_power", 8));
-	ge1042ov16102 = (GE_ms("double", 6));
-	ge1042ov16287 = (GE_ms("GE_real_32_is_positive_infinity", 31));
-	ge1042ov16295 = (GE_ms("GE_real_64_is_positive_infinity", 31));
-	ge1042ov16286 = (GE_ms("GE_real_32_is_negative_infinity", 31));
+	ge1042ov16351 = (GE_ms8("GE_TYPE_FLAG_NONE", 17));
+	ge1042ov16338 = (GE_ms8("GE_TYPE_FLAG_BOOLEAN", 20));
+	ge1042ov16339 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_8", 24));
+	ge1042ov16340 = (GE_ms8("GE_TYPE_FLAG_CHARACTER_32", 25));
+	ge1042ov16343 = (GE_ms8("GE_TYPE_FLAG_INTEGER_8", 22));
+	ge1042ov16344 = (GE_ms8("GE_TYPE_FLAG_INTEGER_16", 23));
+	ge1042ov16345 = (GE_ms8("GE_TYPE_FLAG_INTEGER_32", 23));
+	ge1042ov16346 = (GE_ms8("GE_TYPE_FLAG_INTEGER_64", 23));
+	ge1042ov16347 = (GE_ms8("GE_TYPE_FLAG_NATURAL_8", 22));
+	ge1042ov16348 = (GE_ms8("GE_TYPE_FLAG_NATURAL_16", 23));
+	ge1042ov16349 = (GE_ms8("GE_TYPE_FLAG_NATURAL_32", 23));
+	ge1042ov16350 = (GE_ms8("GE_TYPE_FLAG_NATURAL_64", 23));
+	ge1042ov16352 = (GE_ms8("GE_TYPE_FLAG_POINTER", 20));
+	ge1042ov16353 = (GE_ms8("GE_TYPE_FLAG_REAL_32", 20));
+	ge1042ov16354 = (GE_ms8("GE_TYPE_FLAG_REAL_64", 20));
+	ge1042ov16342 = (GE_ms8("GE_TYPE_FLAG_EXPANDED", 21));
+	ge1042ov16341 = (GE_ms8("GE_TYPE_FLAG_DEFERRED", 21));
+	ge1042ov16403 = (GE_ms8("sizeof", 6));
+	ge824ov3957 = (GE_ms8("item", 4));
+	ge1042ov16149 = (GE_ms8("extern", 6));
+	ge1042ov16139 = (GE_ms8("EIF_TYPE_INDEX", 14));
+	ge1042ov16416 = (GE_ms8("void", 4));
+	ge1042ov16206 = (GE_ms8("GE_init_const", 13));
+	ge1042ov16182 = (GE_ms8("GE_deep_twin", 12));
+	ge1042ov16181 = (GE_ms8("GE_deep", 7));
+	ge1042ov16406 = (GE_ms8("switch", 6));
+	ge1042ov16098 = (GE_ms8("case", 4));
+	ge1042ov16183 = (GE_ms8("GE_default", 10));
+	ge1042ov16375 = (GE_ms8("if", 2));
+	ge1042ov16143 = (GE_ms8("else", 4));
+	ge1042ov16374 = (GE_ms8("id", 2));
+	ge1042ov16390 = (GE_ms8("memcpy", 6));
+	ge1042ov16377 = (GE_ms8("#ifndef", 7));
+	ge1042ov16241 = (GE_ms8("GE_malloc_cleared", 17));
+	ge1042ov16242 = (GE_ms8("GE_malloc_atomic_cleared", 24));
+	ge1042ov16391 = (GE_ms8("memset", 6));
+	ge1042ov16153 = (GE_ms8("for", 3));
+	ge824ov4109 = (GE_ms8("Result", 6));
+	ge1042ov16247 = (GE_ms8("GE_mt", 5));
+	ge1042ov16158 = (GE_ms8("GE_bma", 6));
+	ge1042ov16238 = (GE_ms8("GE_ma", 5));
+	ge1042ov16095 = (GE_ms8("break", 5));
+	ge1042ov16101 = (GE_ms8("default", 7));
+	ge1042ov16280 = (GE_ms8("GE_raise", 8));
+	ge1042ov16193 = (GE_ms8("GE_EX_PROG", 10));
+	ge1042ov16122 = (GE_ms8("eif_mem_free", 12));
+	ge1042ov16360 = (GE_ms8("GE_unmark_object", 16));
+	ge1042ov16359 = (GE_ms8("GE_unlock_marking", 17));
+	ge1042ov16335 = (GE_ms8("GE_set_reference_field_at", 25));
+	ge1042ov16334 = (GE_ms8("GE_set_reference_field", 22));
+	ge1042ov16333 = (GE_ms8("GE_set_real_64_field_at", 23));
+	ge1042ov16332 = (GE_ms8("GE_set_real_64_field", 20));
+	ge1042ov16331 = (GE_ms8("GE_set_real_32_field_at", 23));
+	ge1042ov16330 = (GE_ms8("GE_set_real_32_field", 20));
+	ge1042ov16329 = (GE_ms8("GE_set_pointer_field_at", 23));
+	ge1042ov16328 = (GE_ms8("GE_set_pointer_field", 20));
+	ge1042ov16327 = (GE_ms8("GE_set_natural_64_field_at", 26));
+	ge1042ov16326 = (GE_ms8("GE_set_natural_64_field", 23));
+	ge1042ov16325 = (GE_ms8("GE_set_natural_32_field_at", 26));
+	ge1042ov16324 = (GE_ms8("GE_set_natural_32_field", 23));
+	ge1042ov16323 = (GE_ms8("GE_set_natural_16_field_at", 26));
+	ge1042ov16322 = (GE_ms8("GE_set_natural_16_field", 23));
+	ge1042ov16321 = (GE_ms8("GE_set_natural_8_field_at", 25));
+	ge1042ov16320 = (GE_ms8("GE_set_natural_8_field", 22));
+	ge1042ov16319 = (GE_ms8("GE_set_integer_64_field_at", 26));
+	ge1042ov16318 = (GE_ms8("GE_set_integer_8_field", 22));
+	ge1042ov16317 = (GE_ms8("GE_set_integer_32_field_at", 26));
+	ge1042ov16316 = (GE_ms8("GE_set_integer_32_field", 23));
+	ge1042ov16315 = (GE_ms8("GE_set_integer_16_field_at", 26));
+	ge1042ov16314 = (GE_ms8("GE_set_integer_16_field", 23));
+	ge1042ov16313 = (GE_ms8("GE_set_integer_8_field_at", 25));
+	ge1042ov16312 = (GE_ms8("GE_set_integer_8_field", 22));
+	ge1042ov16310 = (GE_ms8("GE_set_character_32_field_at", 28));
+	ge1042ov16309 = (GE_ms8("GE_set_character_32_field", 25));
+	ge1042ov16308 = (GE_ms8("GE_set_character_8_field_at", 27));
+	ge1042ov16307 = (GE_ms8("GE_set_character_8_field", 24));
+	ge1042ov16306 = (GE_ms8("GE_set_boolean_field_at", 23));
+	ge1042ov16305 = (GE_ms8("GE_set_boolean_field", 20));
+	ge1042ov16243 = (GE_ms8("GE_mark_object", 14));
+	ge1042ov16237 = (GE_ms8("GE_lock_marking", 15));
+	ge1042ov16185 = (GE_ms8("GE_developer_raise", 18));
+	ge1042ov16274 = (GE_ms8("GE_object_id_free", 17));
+	ge1042ov16169 = (GE_ms8("GE_ccom_local_free", 18));
+	ge1042ov16154 = (GE_ms8("fprintf", 7));
+	ge1042ov16404 = (GE_ms8("stderr", 6));
+	ge1042ov16201 = (GE_ms8("GE_generating_type_of_encoded_type", 34));
+	ge1042ov16410 = (GE_ms8("type_id", 7));
+	ge1042ov16224 = (GE_ms8("GE_is_deferred_encoded_type", 27));
+	ge1042ov16221 = (GE_ms8("GE_is_attached_encoded_type", 27));
+	ge1042ov16291 = (GE_ms8("GE_real_32_positive_infinity", 28));
+	ge1042ov16299 = (GE_ms8("GE_real_64_positive_infinity", 28));
+	ge1042ov16290 = (GE_ms8("GE_real_32_negative_infinity", 28));
+	ge1042ov16298 = (GE_ms8("GE_real_64_negative_infinity", 28));
+	ge1042ov16289 = (GE_ms8("GE_real_32_nan", 14));
+	ge1042ov16297 = (GE_ms8("GE_real_64_nan", 14));
+	ge1042ov16279 = (GE_ms8("GE_power", 8));
+	ge1042ov16103 = (GE_ms8("double", 6));
+	ge1042ov16288 = (GE_ms8("GE_real_32_is_positive_infinity", 31));
+	ge1042ov16296 = (GE_ms8("GE_real_64_is_positive_infinity", 31));
+	ge1042ov16287 = (GE_ms8("GE_real_32_is_negative_infinity", 31));
+	ge1042ov16295 = (GE_ms8("GE_real_64_is_negative_infinity", 31));
 }
 
 void GE_init_const3()
 {
-	ge1042ov16294 = (GE_ms("GE_real_64_is_negative_infinity", 31));
-	ge1042ov16285 = (GE_ms("GE_real_32_is_nan", 17));
-	ge1042ov16293 = (GE_ms("GE_real_64_is_nan", 17));
-	ge1042ov16205 = (GE_ms("GE_floor", 8));
-	ge1042ov16176 = (GE_ms("GE_ceiling", 10));
-	ge1042ov16098 = (GE_ms("char", 4));
-	ge1042ov16108 = (GE_ms("EIF_CHARACTER_32", 16));
-	ge1042ov16132 = (GE_ms("EIF_REAL_32", 11));
-	ge1042ov16130 = (GE_ms("EIF_POINTER", 11));
-	ge1042ov16121 = (GE_ms("EIF_IS_WINDOWS", 14));
-	ge1042ov16120 = (GE_ms("EIF_IS_VXWORKS", 14));
-	ge1042ov16119 = (GE_ms("EIF_IS_VMS", 10));
-	ge1042ov16118 = (GE_ms("EIF_IS_UNIX", 11));
-	ge1042ov16117 = (GE_ms("EIF_IS_MAC", 10));
-	ge1042ov16225 = (GE_ms("GE_IS_64_BITS", 13));
-	ge1042ov16115 = (GE_ms("EIF_INTEGER_32", 14));
-	ge1042ov16133 = (GE_ms("EIF_REAL_64", 11));
-	ge1042ov16107 = (GE_ms("EIF_CHARACTER_8", 15));
-	ge1042ov16104 = (GE_ms("EIF_BOOLEAN", 11));
-	ge1042ov16151 = (GE_ms("find_referers", 13));
-	ge1042ov16193 = (GE_ms("GE_encoded_type_from_name", 25));
-	ge1042ov16192 = (GE_ms("GE_encoded_type_conforms_to", 27));
-	ge1042ov16336 = (GE_ms("GE_storable_version_of_encoded_type", 35));
-	ge1042ov16269 = (GE_ms("GE_object_at_offset", 19));
-	ge1042ov16300 = (GE_ms("GE_reference_field_at", 21));
-	ge1042ov16299 = (GE_ms("GE_reference_field", 18));
-	ge1042ov16292 = (GE_ms("GE_real_64_field_at", 19));
-	ge1042ov16291 = (GE_ms("GE_real_64_field", 16));
-	ge1042ov16284 = (GE_ms("GE_real_32_field_at", 19));
-	ge1042ov16283 = (GE_ms("GE_real_32_field", 16));
-	ge1042ov16280 = (GE_ms("GE_raw_object_at_offset", 23));
-	ge1042ov16281 = (GE_ms("GE_raw_reference_field_at", 25));
-	ge1042ov16277 = (GE_ms("GE_pointer_field_at", 19));
-	ge1042ov16276 = (GE_ms("GE_pointer_field", 16));
-	ge1042ov16275 = (GE_ms("GE_persistent_field_count_of_encoded_type", 41));
-	ge1042ov16395 = (GE_ms("once_objects", 12));
-	ge1042ov16274 = (GE_ms("GE_object_size", 14));
-	ge1042ov16267 = (GE_ms("GE_new_type_instance_of_encoded_type", 36));
-	ge1042ov16266 = (GE_ms("GE_new_tuple_instance_of_encoded_type", 37));
-	ge1042ov16263 = (GE_ms("GE_new_special_of_reference_instance_of_encoded_type", 52));
-	ge1042ov16261 = (GE_ms("GE_new_instance_of_encoded_type", 31));
-	ge1042ov16258 = (GE_ms("GE_natural_64_field_at", 22));
-	ge1042ov16257 = (GE_ms("GE_natural_64_field", 19));
-	ge1042ov16256 = (GE_ms("GE_natural_32_field_at", 22));
-	ge1042ov16255 = (GE_ms("GE_natural_32_field", 19));
-	ge1042ov16254 = (GE_ms("GE_natural_16_field_at", 22));
-	ge1042ov16253 = (GE_ms("GE_natural_16_field", 19));
-	ge1042ov16252 = (GE_ms("GE_natural_8_field_at", 21));
-	ge1042ov16251 = (GE_ms("GE_natural_8_field", 18));
-	ge1042ov16239 = (GE_ms("GE_is_tuple_encoded_type", 24));
-	ge1042ov16240 = (GE_ms("GE_is_tuple_object", 18));
-	ge1042ov16236 = (GE_ms("GE_is_special_of_reference_encoded_type", 39));
-	ge1042ov16238 = (GE_ms("GE_is_special_of_reference_or_basic_expanded_encoded_type", 57));
-	ge1042ov16237 = (GE_ms("GE_is_special_of_reference_object", 33));
-	ge1042ov16235 = (GE_ms("GE_is_special_of_expanded_object", 32));
-	ge1042ov16233 = (GE_ms("GE_is_special_copy_semantics_item", 33));
-	ge1042ov16234 = (GE_ms("GE_is_special_object", 20));
-	ge1042ov16232 = (GE_ms("GE_is_object_marked", 19));
-	ge1042ov16231 = (GE_ms("GE_is_field_transient_of_encoded_type", 37));
-	ge1042ov16230 = (GE_ms("GE_is_field_expanded_of_encoded_type", 36));
-	ge1042ov16228 = (GE_ms("GE_is_expanded_object", 21));
-	ge1042ov16227 = (GE_ms("GE_is_copy_semantics_field", 26));
-	ge1042ov16224 = (GE_ms("GE_integer_64_field_at", 22));
-	ge1042ov16223 = (GE_ms("GE_integer_8_field", 18));
-	ge1042ov16222 = (GE_ms("GE_integer_32_field_at", 22));
-	ge1042ov16221 = (GE_ms("GE_integer_32_field", 19));
-	ge1042ov16220 = (GE_ms("GE_integer_16_field_at", 22));
-	ge1042ov16219 = (GE_ms("GE_integer_16_field", 19));
-	ge1042ov16218 = (GE_ms("GE_integer_8_field_at", 21));
-	ge1042ov16217 = (GE_ms("GE_integer_8_field", 18));
-	ge1042ov16209 = (GE_ms("GE_generic_parameter_count_of_encoded_type", 42));
-	ge1042ov16207 = (GE_ms("GE_generator_of_encoded_type", 28));
-	ge1042ov16204 = (GE_ms("GE_field_type_kind_of_encoded_type", 34));
-	ge1042ov16203 = (GE_ms("GE_field_static_type_of_encoded_type", 36));
-	ge1042ov16202 = (GE_ms("GE_field_offset_of_encoded_type", 31));
-	ge1042ov16201 = (GE_ms("GE_field_name_of_encoded_type", 29));
-	ge1042ov16200 = (GE_ms("GE_field_count_of_encoded_type", 30));
-	ge1042ov16208 = (GE_ms("GE_generic_parameter_of_encoded_type", 36));
-	ge1042ov16271 = (GE_ms("GE_object_encoded_type_at_offset", 32));
-	ge1042ov16270 = (GE_ms("GE_object_encoded_type", 22));
-	ge1042ov16268 = (GE_ms("GE_non_attached_encoded_type", 28));
-	ge1042ov16182 = (GE_ms("GE_compiler_version", 19));
-	ge1042ov16181 = (GE_ms("GE_check_assert", 15));
-	ge1042ov16180 = (GE_ms("GE_character_32_field_at", 24));
-	ge1042ov16179 = (GE_ms("GE_character_32_field", 21));
-	ge1042ov16178 = (GE_ms("GE_character_8_field_at", 23));
-	ge1042ov16177 = (GE_ms("GE_character_8_field", 20));
-	ge1042ov16165 = (GE_ms("GE_boolean_field_at", 19));
-	ge1042ov16164 = (GE_ms("GE_boolean_field", 16));
-	ge1042ov16162 = (GE_ms("GE_attached_encoded_type", 24));
-	ge1042ov16272 = (GE_ms("GE_object_id", 12));
-	ge1042ov16210 = (GE_ms("GE_id_object", 12));
-	ge1042ov16170 = (GE_ms("GE_ccom_error_text", 18));
-	ge1042ov16169 = (GE_ms("GE_ccom_character_size", 22));
-	ge1042ov16173 = (GE_ms("GE_ccom_hresult_facility", 24));
-	ge1042ov16172 = (GE_ms("GE_ccom_hresult_code", 20));
-	ge1042ov16171 = (GE_ms("GE_ccom_hresult", 15));
-	ge1042ov16175 = (GE_ms("GE_ccom_strlen", 14));
-	ge1042ov16241 = (GE_ms("GE_istr32_from_nstr", 19));
-	ge1042ov16161 = (GE_ms("GE_argv", 7));
-	ge1042ov16160 = (GE_ms("GE_argc", 7));
+	ge1042ov16286 = (GE_ms8("GE_real_32_is_nan", 17));
+	ge1042ov16294 = (GE_ms8("GE_real_64_is_nan", 17));
+	ge1042ov16200 = (GE_ms8("GE_floor", 8));
+	ge1042ov16171 = (GE_ms8("GE_ceiling", 10));
+	ge1042ov16099 = (GE_ms8("char", 4));
+	ge1042ov16108 = (GE_ms8("EIF_CHARACTER_32", 16));
+	ge1042ov16132 = (GE_ms8("EIF_REAL_32", 11));
+	ge1042ov16130 = (GE_ms8("EIF_POINTER", 11));
+	ge1042ov16121 = (GE_ms8("EIF_IS_WINDOWS", 14));
+	ge1042ov16120 = (GE_ms8("EIF_IS_VXWORKS", 14));
+	ge1042ov16119 = (GE_ms8("EIF_IS_VMS", 10));
+	ge1042ov16118 = (GE_ms8("EIF_IS_UNIX", 11));
+	ge1042ov16117 = (GE_ms8("EIF_IS_MAC", 10));
+	ge1042ov16220 = (GE_ms8("GE_IS_64_BITS", 13));
+	ge1042ov16115 = (GE_ms8("EIF_INTEGER_32", 14));
+	ge1042ov16133 = (GE_ms8("EIF_REAL_64", 11));
+	ge1042ov16107 = (GE_ms8("EIF_CHARACTER_8", 15));
+	ge1042ov16105 = (GE_ms8("EIF_BOOLEAN", 11));
+	ge1042ov16150 = (GE_ms8("find_referers", 13));
+	ge1042ov16188 = (GE_ms8("GE_encoded_type_from_name", 25));
+	ge1042ov16187 = (GE_ms8("GE_encoded_type_conforms_to", 27));
+	ge1042ov16337 = (GE_ms8("GE_storable_version_of_encoded_type", 35));
+	ge1042ov16270 = (GE_ms8("GE_object_at_offset", 19));
+	ge1042ov16301 = (GE_ms8("GE_reference_field_at", 21));
+	ge1042ov16300 = (GE_ms8("GE_reference_field", 18));
+	ge1042ov16293 = (GE_ms8("GE_real_64_field_at", 19));
+	ge1042ov16292 = (GE_ms8("GE_real_64_field", 16));
+	ge1042ov16285 = (GE_ms8("GE_real_32_field_at", 19));
+	ge1042ov16284 = (GE_ms8("GE_real_32_field", 16));
+	ge1042ov16281 = (GE_ms8("GE_raw_object_at_offset", 23));
+	ge1042ov16282 = (GE_ms8("GE_raw_reference_field_at", 25));
+	ge1042ov16278 = (GE_ms8("GE_pointer_field_at", 19));
+	ge1042ov16277 = (GE_ms8("GE_pointer_field", 16));
+	ge1042ov16276 = (GE_ms8("GE_persistent_field_count_of_encoded_type", 41));
+	ge1042ov16398 = (GE_ms8("once_objects", 12));
+	ge1042ov16275 = (GE_ms8("GE_object_size", 14));
+	ge1042ov16268 = (GE_ms8("GE_new_type_instance_of_encoded_type", 36));
+	ge1042ov16267 = (GE_ms8("GE_new_tuple_instance_of_encoded_type", 37));
+	ge1042ov16264 = (GE_ms8("GE_new_special_of_reference_instance_of_encoded_type", 52));
+	ge1042ov16262 = (GE_ms8("GE_new_instance_of_encoded_type", 31));
+	ge1042ov16259 = (GE_ms8("GE_natural_64_field_at", 22));
+	ge1042ov16258 = (GE_ms8("GE_natural_64_field", 19));
+	ge1042ov16257 = (GE_ms8("GE_natural_32_field_at", 22));
+	ge1042ov16256 = (GE_ms8("GE_natural_32_field", 19));
+	ge1042ov16255 = (GE_ms8("GE_natural_16_field_at", 22));
+	ge1042ov16254 = (GE_ms8("GE_natural_16_field", 19));
+	ge1042ov16253 = (GE_ms8("GE_natural_8_field_at", 21));
+	ge1042ov16252 = (GE_ms8("GE_natural_8_field", 18));
+	ge1042ov16234 = (GE_ms8("GE_is_tuple_encoded_type", 24));
+	ge1042ov16235 = (GE_ms8("GE_is_tuple_object", 18));
+	ge1042ov16231 = (GE_ms8("GE_is_special_of_reference_encoded_type", 39));
+	ge1042ov16233 = (GE_ms8("GE_is_special_of_reference_or_basic_expanded_encoded_type", 57));
+	ge1042ov16232 = (GE_ms8("GE_is_special_of_reference_object", 33));
+	ge1042ov16230 = (GE_ms8("GE_is_special_of_expanded_object", 32));
+	ge1042ov16228 = (GE_ms8("GE_is_special_copy_semantics_item", 33));
+	ge1042ov16229 = (GE_ms8("GE_is_special_object", 20));
+	ge1042ov16227 = (GE_ms8("GE_is_object_marked", 19));
+	ge1042ov16226 = (GE_ms8("GE_is_field_transient_of_encoded_type", 37));
+	ge1042ov16225 = (GE_ms8("GE_is_field_expanded_of_encoded_type", 36));
+	ge1042ov16223 = (GE_ms8("GE_is_expanded_object", 21));
+	ge1042ov16222 = (GE_ms8("GE_is_copy_semantics_field", 26));
+	ge1042ov16219 = (GE_ms8("GE_integer_64_field_at", 22));
+	ge1042ov16218 = (GE_ms8("GE_integer_8_field", 18));
+	ge1042ov16217 = (GE_ms8("GE_integer_32_field_at", 22));
+	ge1042ov16216 = (GE_ms8("GE_integer_32_field", 19));
+	ge1042ov16215 = (GE_ms8("GE_integer_16_field_at", 22));
+	ge1042ov16214 = (GE_ms8("GE_integer_16_field", 19));
+	ge1042ov16213 = (GE_ms8("GE_integer_8_field_at", 21));
+	ge1042ov16212 = (GE_ms8("GE_integer_8_field", 18));
+	ge1042ov16204 = (GE_ms8("GE_generic_parameter_count_of_encoded_type", 42));
+	ge1042ov16202 = (GE_ms8("GE_generator_of_encoded_type", 28));
+	ge1042ov16199 = (GE_ms8("GE_field_type_kind_of_encoded_type", 34));
+	ge1042ov16198 = (GE_ms8("GE_field_static_type_of_encoded_type", 36));
+	ge1042ov16197 = (GE_ms8("GE_field_offset_of_encoded_type", 31));
+	ge1042ov16196 = (GE_ms8("GE_field_name_of_encoded_type", 29));
+	ge1042ov16195 = (GE_ms8("GE_field_count_of_encoded_type", 30));
+	ge1042ov16203 = (GE_ms8("GE_generic_parameter_of_encoded_type", 36));
+	ge1042ov16272 = (GE_ms8("GE_object_encoded_type_at_offset", 32));
+	ge1042ov16271 = (GE_ms8("GE_object_encoded_type", 22));
+	ge1042ov16269 = (GE_ms8("GE_non_attached_encoded_type", 28));
+	ge1042ov16177 = (GE_ms8("GE_compiler_version", 19));
+	ge1042ov16176 = (GE_ms8("GE_check_assert", 15));
+	ge1042ov16175 = (GE_ms8("GE_character_32_field_at", 24));
+	ge1042ov16174 = (GE_ms8("GE_character_32_field", 21));
+	ge1042ov16173 = (GE_ms8("GE_character_8_field_at", 23));
+	ge1042ov16172 = (GE_ms8("GE_character_8_field", 20));
+	ge1042ov16160 = (GE_ms8("GE_boolean_field_at", 19));
+	ge1042ov16159 = (GE_ms8("GE_boolean_field", 16));
+	ge1042ov16157 = (GE_ms8("GE_attached_encoded_type", 24));
+	ge1042ov16273 = (GE_ms8("GE_object_id", 12));
+	ge1042ov16205 = (GE_ms8("GE_id_object", 12));
+	ge1042ov16165 = (GE_ms8("GE_ccom_error_text", 18));
+	ge1042ov16164 = (GE_ms8("GE_ccom_character_size", 22));
+	ge1042ov16168 = (GE_ms8("GE_ccom_hresult_facility", 24));
+	ge1042ov16167 = (GE_ms8("GE_ccom_hresult_code", 20));
+	ge1042ov16166 = (GE_ms8("GE_ccom_hresult", 15));
+	ge1042ov16170 = (GE_ms8("GE_ccom_strlen", 14));
+	ge1042ov16236 = (GE_ms8("GE_istr32_from_nstr", 19));
+	ge1042ov16156 = (GE_ms8("GE_argv", 7));
+	ge1042ov16155 = (GE_ms8("GE_argc", 7));
+	ge1042ov16389 = (GE_ms8("memcmp", 6));
 }
 
 void GE_init_const4()
 {
-	ge1042ov16386 = (GE_ms("memcmp", 6));
-	ge1042ov16245 = (GE_ms("GE_ms", 5));
-	ge1042ov16396 = (GE_ms("||", 2));
-	ge1042ov16389 = (GE_ms("!", 1));
-	ge1042ov16390 = (GE_ms("!=", 2));
-	ge1042ov16091 = (GE_ms("&&", 2));
-	ge1042ov16391 = (GE_ms("", 0));
-	ge1042ov16146 = (GE_ms("==", 2));
-	ge1042ov16141 = (GE_ms("EIF_VOID", 8));
-	ge1042ov16167 = (GE_ms("GE_call", 7));
-	ge824ov3761 = (GE_ms("FUNCTION", 8));
-	ge824ov3785 = (GE_ms("PROCEDURE", 9));
-	ge824ov3827 = (GE_ms("call", 4));
-	ge1042ov16095 = (GE_ms("call", 4));
-	ge1042ov16096 = (GE_ms("caller", 6));
-	ge824ov3796 = (GE_ms("TUPLE", 5));
-	ge1042ov16378 = (GE_ms("initialize", 10));
-	ge1042ov16156 = (GE_ms("GE_alloc", 8));
-	ge1042ov16157 = (GE_ms("GE_alloc_atomic", 15));
-	ge1042ov16282 = (GE_ms("GE_register_dispose", 19));
-	ge1042ov16262 = (GE_ms("GE_new_istr32", 13));
-	ge1042ov16265 = (GE_ms("GE_new_str32", 12));
-	ge1042ov16264 = (GE_ms("GE_new_str8", 11));
-	ge1042ov16103 = (GE_ms("EIF_ANY", 7));
-	ge1042ov16402 = (GE_ms("struct", 6));
-	ge1042ov16409 = (GE_ms("uint16_t", 8));
-	ge1042ov16152 = (GE_ms("flags", 5));
-	ge1042ov16410 = (GE_ms("uint32_t", 8));
-	ge1042ov16393 = (GE_ms("offset", 6));
-	ge1042ov16408 = (GE_ms("typedef", 7));
-	ge1042ov16128 = (GE_ms("EIF_NATURAL_64", 14));
-	ge1042ov16127 = (GE_ms("EIF_NATURAL_32", 14));
-	ge1042ov16126 = (GE_ms("EIF_NATURAL_16", 14));
-	ge1042ov16125 = (GE_ms("EIF_NATURAL_8", 13));
-	ge1042ov16116 = (GE_ms("EIF_INTEGER_64", 14));
-	ge1042ov16114 = (GE_ms("EIF_INTEGER_16", 14));
-	ge1042ov16113 = (GE_ms("EIF_INTEGER_8", 13));
-	ge1042ov16109 = (GE_ms("EIF_DOUBLE", 10));
-	ge824ov3757 = (GE_ms("DOUBLE", 6));
-	ge1042ov16131 = (GE_ms("EIF_REAL", 8));
-	ge824ov3786 = (GE_ms("REAL", 4));
-	ge1042ov16124 = (GE_ms("EIF_NATURAL", 11));
-	ge824ov3776 = (GE_ms("NATURAL", 7));
-	ge1042ov16112 = (GE_ms("EIF_INTEGER", 11));
-	ge824ov3764 = (GE_ms("INTEGER", 7));
-	ge1042ov16142 = (GE_ms("EIF_WIDE_CHAR", 13));
-	ge824ov3799 = (GE_ms("WIDE_CHARACTER", 14));
-	ge1042ov16106 = (GE_ms("EIF_CHARACTER", 13));
-	ge824ov3752 = (GE_ms("CHARACTER", 9));
-	ge824ov3773 = (GE_ms("ITERATION_CURSOR", 16));
-	ge824ov3772 = (GE_ms("ITERABLE", 8));
-	ge824ov3756 = (GE_ms("DISPOSABLE", 10));
-	ge824ov3794 = (GE_ms("SYSTEM_OBJECT", 13));
-	ge824ov3748 = (GE_ms("ANY", 3));
-	ge824ov3750 = (GE_ms("ARRAY", 5));
-	ge824ov3798 = (GE_ms("TYPED_POINTER", 13));
-	ge824ov3797 = (GE_ms("TYPE", 4));
-	ge824ov3790 = (GE_ms("SPECIAL", 7));
-	ge824ov3789 = (GE_ms("ROUTINE", 7));
-	ge824ov3784 = (GE_ms("PREDICATE", 9));
-	ge824ov3783 = (GE_ms("POINTER", 7));
-	ge824ov3788 = (GE_ms("REAL_64", 7));
-	ge824ov3787 = (GE_ms("REAL_32", 7));
-	ge824ov3780 = (GE_ms("NATURAL_64", 10));
-	ge824ov3779 = (GE_ms("NATURAL_32", 10));
-	ge824ov3778 = (GE_ms("NATURAL_16", 10));
-	ge824ov3777 = (GE_ms("NATURAL_8", 9));
-	ge824ov3768 = (GE_ms("INTEGER_64", 10));
-	ge824ov3767 = (GE_ms("INTEGER_32", 10));
-	ge824ov3766 = (GE_ms("INTEGER_16", 10));
-	ge824ov3765 = (GE_ms("INTEGER_8", 9));
-	ge824ov3754 = (GE_ms("CHARACTER_32", 12));
-	ge824ov3753 = (GE_ms("CHARACTER_8", 11));
-	ge824ov3751 = (GE_ms("BOOLEAN", 7));
-	ge824ov4124 = (GE_ms("class", 5));
-	ge824ov3800 = (GE_ms("*UNKNOWN*", 9));
-	ge1041ov9718 = (GE_ms("vwbe0a", 6));
-	ge1041ov9445 = (GE_ms("VWBE", 4));
-	ge1041ov9275 = (GE_ms("boolean expression of non-BOOLEAN type \'$7\'.", 44));
-	ge1039ov8736 = (GE_ms("gvsrc5a", 7));
-	ge1039ov8730 = (GE_ms("GVSRC5", 6));
-	ge1039ov8724 = (GE_ms("[$1] root creation procedure `$3\' is not a feature of root class $2.", 68));
-	ge1039ov8732 = (GE_ms("vsrc1a", 6));
-	ge1039ov8726 = (GE_ms("VSRC1", 5));
-	ge1039ov8720 = (GE_ms("[$1] root class $2 should not be generic.", 41));
-	ge1039ov8735 = (GE_ms("gvsrc4a", 7));
-	ge1039ov8729 = (GE_ms("GVSRC4", 6));
-	ge1039ov8723 = (GE_ms("[$1] unknown root class $2.", 27));
-	ge1039ov8737 = (GE_ms("gvsrc6a", 7));
-	ge1039ov8731 = (GE_ms("GVSRC6", 6));
-	ge1039ov8725 = (GE_ms("[$1] root creation procedure `$3\' is not declared as publicly available creation procedure in root class $2.", 108));
-	ge824ov3856 = (GE_ms("default_create", 14));
-	ge1039ov8734 = (GE_ms("gvsrc3a", 7));
-	ge1039ov8728 = (GE_ms("GVSRC3", 6));
-	ge1039ov8722 = (GE_ms("[$1] missing root class.", 24));
-	ge824ov4048 = (GE_ms("set_exception_data", 18));
-	ge824ov3905 = (GE_ms("init_exception_manager", 22));
-	ge1041ov9740 = (GE_ms("gvkfe6a", 7));
-	ge1041ov9463 = (GE_ms("GVKFE-6", 7));
-	ge1041ov9297 = (GE_ms("routine `$7\' in kernel class $5 has not the expected signature \'$8\'.", 68));
-	ge1041ov9738 = (GE_ms("gvkfe4a", 7));
+	ge1042ov16244 = (GE_ms8("GE_ms", 5));
+	ge1042ov16399 = (GE_ms8("||", 2));
+	ge1042ov16392 = (GE_ms8("!", 1));
+	ge1042ov16393 = (GE_ms8("!=", 2));
+	ge1042ov16092 = (GE_ms8("&&", 2));
+	ge1042ov16394 = (GE_ms8("", 0));
+	ge1042ov16145 = (GE_ms8("==", 2));
+	ge1042ov16140 = (GE_ms8("EIF_VOID", 8));
+	ge1042ov16162 = (GE_ms8("GE_call", 7));
+	ge824ov3761 = (GE_ms8("FUNCTION", 8));
+	ge824ov3785 = (GE_ms8("PROCEDURE", 9));
+	ge824ov3827 = (GE_ms8("call", 4));
+	ge1042ov16096 = (GE_ms8("call", 4));
+	ge1042ov16097 = (GE_ms8("caller", 6));
+	ge824ov3796 = (GE_ms8("TUPLE", 5));
+	ge1042ov16381 = (GE_ms8("initialize", 10));
+	ge1042ov16239 = (GE_ms8("GE_malloc", 9));
+	ge1042ov16240 = (GE_ms8("GE_malloc_atomic", 16));
+	ge1042ov16283 = (GE_ms8("GE_register_dispose", 19));
+	ge1042ov16263 = (GE_ms8("GE_new_istr32", 13));
+	ge1042ov16266 = (GE_ms8("GE_new_str32", 12));
+	ge1042ov16265 = (GE_ms8("GE_new_str8", 11));
+	ge1042ov16104 = (GE_ms8("EIF_ANY", 7));
+	ge1042ov16405 = (GE_ms8("struct", 6));
+	ge1042ov16412 = (GE_ms8("uint16_t", 8));
+	ge1042ov16151 = (GE_ms8("flags", 5));
+	ge1042ov16413 = (GE_ms8("uint32_t", 8));
+	ge1042ov16396 = (GE_ms8("offset", 6));
+	ge1042ov16411 = (GE_ms8("typedef", 7));
+	ge1042ov16128 = (GE_ms8("EIF_NATURAL_64", 14));
+	ge1042ov16127 = (GE_ms8("EIF_NATURAL_32", 14));
+	ge1042ov16126 = (GE_ms8("EIF_NATURAL_16", 14));
+	ge1042ov16125 = (GE_ms8("EIF_NATURAL_8", 13));
+	ge1042ov16116 = (GE_ms8("EIF_INTEGER_64", 14));
+	ge1042ov16114 = (GE_ms8("EIF_INTEGER_16", 14));
+	ge1042ov16113 = (GE_ms8("EIF_INTEGER_8", 13));
+	ge1042ov16109 = (GE_ms8("EIF_DOUBLE", 10));
+	ge824ov3757 = (GE_ms8("DOUBLE", 6));
+	ge1042ov16131 = (GE_ms8("EIF_REAL", 8));
+	ge824ov3786 = (GE_ms8("REAL", 4));
+	ge1042ov16124 = (GE_ms8("EIF_NATURAL", 11));
+	ge824ov3776 = (GE_ms8("NATURAL", 7));
+	ge1042ov16112 = (GE_ms8("EIF_INTEGER", 11));
+	ge824ov3764 = (GE_ms8("INTEGER", 7));
+	ge1042ov16141 = (GE_ms8("EIF_WIDE_CHAR", 13));
+	ge824ov3799 = (GE_ms8("WIDE_CHARACTER", 14));
+	ge1042ov16106 = (GE_ms8("EIF_CHARACTER", 13));
+	ge824ov3752 = (GE_ms8("CHARACTER", 9));
+	ge824ov3773 = (GE_ms8("ITERATION_CURSOR", 16));
+	ge824ov3772 = (GE_ms8("ITERABLE", 8));
+	ge824ov3756 = (GE_ms8("DISPOSABLE", 10));
+	ge824ov3794 = (GE_ms8("SYSTEM_OBJECT", 13));
+	ge824ov3748 = (GE_ms8("ANY", 3));
+	ge824ov3750 = (GE_ms8("ARRAY", 5));
+	ge824ov3798 = (GE_ms8("TYPED_POINTER", 13));
+	ge824ov3797 = (GE_ms8("TYPE", 4));
+	ge824ov3790 = (GE_ms8("SPECIAL", 7));
+	ge824ov3789 = (GE_ms8("ROUTINE", 7));
+	ge824ov3784 = (GE_ms8("PREDICATE", 9));
+	ge824ov3783 = (GE_ms8("POINTER", 7));
+	ge824ov3788 = (GE_ms8("REAL_64", 7));
+	ge824ov3787 = (GE_ms8("REAL_32", 7));
+	ge824ov3780 = (GE_ms8("NATURAL_64", 10));
+	ge824ov3779 = (GE_ms8("NATURAL_32", 10));
+	ge824ov3778 = (GE_ms8("NATURAL_16", 10));
+	ge824ov3777 = (GE_ms8("NATURAL_8", 9));
+	ge824ov3768 = (GE_ms8("INTEGER_64", 10));
+	ge824ov3767 = (GE_ms8("INTEGER_32", 10));
+	ge824ov3766 = (GE_ms8("INTEGER_16", 10));
+	ge824ov3765 = (GE_ms8("INTEGER_8", 9));
+	ge824ov3754 = (GE_ms8("CHARACTER_32", 12));
+	ge824ov3753 = (GE_ms8("CHARACTER_8", 11));
+	ge824ov3751 = (GE_ms8("BOOLEAN", 7));
+	ge824ov4124 = (GE_ms8("class", 5));
+	ge824ov3800 = (GE_ms8("*UNKNOWN*", 9));
+	ge1041ov9718 = (GE_ms8("vwbe0a", 6));
+	ge1041ov9445 = (GE_ms8("VWBE", 4));
+	ge1041ov9275 = (GE_ms8("boolean expression of non-BOOLEAN type \'$7\'.", 44));
+	ge1039ov8736 = (GE_ms8("gvsrc5a", 7));
+	ge1039ov8730 = (GE_ms8("GVSRC5", 6));
+	ge1039ov8724 = (GE_ms8("[$1] root creation procedure `$3\' is not a feature of root class $2.", 68));
+	ge1039ov8732 = (GE_ms8("vsrc1a", 6));
+	ge1039ov8726 = (GE_ms8("VSRC1", 5));
+	ge1039ov8720 = (GE_ms8("[$1] root class $2 should not be generic.", 41));
+	ge1039ov8735 = (GE_ms8("gvsrc4a", 7));
+	ge1039ov8729 = (GE_ms8("GVSRC4", 6));
+	ge1039ov8723 = (GE_ms8("[$1] unknown root class $2.", 27));
+	ge1039ov8737 = (GE_ms8("gvsrc6a", 7));
+	ge1039ov8731 = (GE_ms8("GVSRC6", 6));
+	ge1039ov8725 = (GE_ms8("[$1] root creation procedure `$3\' is not declared as publicly available creation procedure in root class $2.", 108));
+	ge824ov3856 = (GE_ms8("default_create", 14));
+	ge1039ov8734 = (GE_ms8("gvsrc3a", 7));
+	ge1039ov8728 = (GE_ms8("GVSRC3", 6));
+	ge1039ov8722 = (GE_ms8("[$1] missing root class.", 24));
+	ge824ov4048 = (GE_ms8("set_exception_data", 18));
+	ge824ov3905 = (GE_ms8("init_exception_manager", 22));
+	ge1041ov9740 = (GE_ms8("gvkfe6a", 7));
+	ge1041ov9463 = (GE_ms8("GVKFE-6", 7));
+	ge1041ov9297 = (GE_ms8("routine `$7\' in kernel class $5 has not the expected signature \'$8\'.", 68));
+	ge1041ov9738 = (GE_ms8("gvkfe4a", 7));
+	ge1041ov9461 = (GE_ms8("GVKFE-4", 7));
 }
 
 void GE_init_const5()
 {
-	ge1041ov9461 = (GE_ms("GVKFE-4", 7));
-	ge1041ov9295 = (GE_ms("feature `$7\' in kernel class $5 is not a procedure.", 51));
-	ge824ov4078 = (GE_ms("set_rout_disp_final", 19));
-	ge824ov4038 = (GE_ms("rout_disp", 9));
-	ge824ov3844 = (GE_ms("closed_operands", 15));
-	ge824ov4089 = (GE_ms("to_pointer", 10));
-	ge824ov4002 = (GE_ms("pointer_item", 12));
-	ge824ov4104 = (GE_ms("upper", 5));
-	ge824ov3962 = (GE_ms("lower", 5));
-	ge824ov3803 = (GE_ms("area", 4));
-	ge824ov3828 = (GE_ms("capacity", 8));
-	ge1041ov9737 = (GE_ms("gvkfe3a", 7));
-	ge1041ov9460 = (GE_ms("GVKFE-3", 7));
-	ge1041ov9294 = (GE_ms("attribute `$7\' in kernel class $5 has not the expected type \'$8\'.", 65));
-	ge1041ov9735 = (GE_ms("gvkfe1a", 7));
-	ge1041ov9458 = (GE_ms("GVKFE-1", 7));
-	ge1041ov9292 = (GE_ms("feature `$7\' is missing in kernel class $5.", 43));
-	ge1041ov9736 = (GE_ms("gvkfe2a", 7));
-	ge1041ov9459 = (GE_ms("GVKFE-2", 7));
-	ge1041ov9293 = (GE_ms("feature `$7\' in kernel class $5 is not an attribute.", 52));
-	ge824ov3851 = (GE_ms("count", 5));
-	ge1039ov8733 = (GE_ms("gvknl1a", 7));
-	ge1039ov8727 = (GE_ms("GVKNL1", 6));
-	ge1039ov8721 = (GE_ms("[$1] missing kernel class $2.", 29));
-	ge824ov4130 = (GE_ms("deferred", 8));
-	ge824ov4254 = (GE_ms("WIDE_CHARACTER_REF", 18));
-	ge824ov4238 = (GE_ms("CHARACTER_32_REF", 16));
-	ge824ov3791 = (GE_ms("STRING", 6));
-	ge824ov3792 = (GE_ms("STRING_8", 8));
-	ge824ov4251 = (GE_ms("REAL_REF", 8));
-	ge824ov4252 = (GE_ms("REAL_32_REF", 11));
-	ge824ov4245 = (GE_ms("NATURAL_REF", 11));
-	ge824ov4248 = (GE_ms("NATURAL_32_REF", 14));
-	ge824ov4240 = (GE_ms("INTEGER_REF", 11));
-	ge824ov4243 = (GE_ms("INTEGER_32_REF", 14));
-	ge824ov4239 = (GE_ms("DOUBLE_REF", 10));
-	ge824ov4253 = (GE_ms("REAL_64_REF", 11));
-	ge824ov4236 = (GE_ms("CHARACTER_REF", 13));
-	ge824ov4237 = (GE_ms("CHARACTER_8_REF", 15));
-	ge824ov4152 = (GE_ms("like", 4));
-	ge824ov4131 = (GE_ms("detachable", 10));
-	ge824ov3795 = (GE_ms("SYSTEM_STRING", 13));
-	ge824ov4148 = (GE_ms("inherit", 7));
-	ge824ov3793 = (GE_ms("STRING_32", 9));
-	ge824ov3781 = (GE_ms("NONE", 4));
-	ge824ov3770 = (GE_ms("ISE_EXCEPTION_MANAGER", 21));
-	ge824ov3763 = (GE_ms("IMMUTABLE_STRING_32", 19));
-	ge824ov3759 = (GE_ms("EXCEPTION_MANAGER", 17));
-	ge824ov3758 = (GE_ms("EXCEPTION", 9));
-	ge824ov4172 = (GE_ms("separate", 8));
-	ge1135ov13058 = (GE_ms("system", 6));
-	ge1132ov22376 = (GE_ms("ESYN", 4));
-	ge1132ov22288 = (GE_ms("$5", 2));
-	ge1132ov22426 = (GE_ms("EABX", 4));
-	ge1132ov22338 = (GE_ms("root element of ECF file should be \'system\' and not \'$5\'.", 57));
-	ge1135ov13066 = (GE_ms("void_safety", 11));
-	ge1135ov13037 = (GE_ms("is_attached_by_default", 22));
-	ge1135ov13038 = (GE_ms("is_obsolete_routine_type", 24));
-	ge1135ov13060 = (GE_ms("trace", 5));
-	ge1124ov13498 = (GE_ms("console_application", 19));
-	ge1124ov13499 = (GE_ms("concurrency", 11));
-	ge1124ov13500 = (GE_ms("exception_trace", 15));
-	ge1132ov22425 = (GE_ms("EABW", 4));
-	ge1132ov22337 = (GE_ms("no library target specified in library ECF file \"$5\".", 53));
-	ge1135ov13062 = (GE_ms("uuid", 4));
-	ge1135ov13045 = (GE_ms("name", 4));
-	ge1135ov13059 = (GE_ms("target", 6));
-	ge1135ov13040 = (GE_ms("library_target", 14));
-	ge1132ov22419 = (GE_ms("EABQ", 4));
-	ge1132ov22331 = (GE_ms("\'library_target\' attribute \"$5\" in element \'system\' is not the name of an existing target.", 90));
-	ge1132ov22418 = (GE_ms("EABP", 4));
-	ge1132ov22330 = (GE_ms("\'library_target\' attribute in element \'system\' is empty.", 56));
-	ge1132ov22427 = (GE_ms("EABY", 4));
-	ge1132ov22339 = (GE_ms("no \'target\' element found in element \'system\'.", 46));
-	ge1135ov13022 = (GE_ms("cluster", 7));
-	ge1135ov13050 = (GE_ms("override", 8));
-	ge1135ov13039 = (GE_ms("library", 7));
-	ge1135ov13019 = (GE_ms("assembly", 8));
-	ge1135ov13035 = (GE_ms("file_rule", 9));
-	ge1135ov13031 = (GE_ms("external_include", 16));
-	ge1135ov13032 = (GE_ms("external_library", 16));
-	ge1135ov13033 = (GE_ms("external_object", 15));
-	ge1135ov13056 = (GE_ms("root", 4));
-	ge1135ov13064 = (GE_ms("variable", 8));
-	ge1135ov13057 = (GE_ms("setting", 7));
-	ge1135ov13049 = (GE_ms("option", 6));
-	ge1135ov13063 = (GE_ms("value", 5));
-	ge1132ov22463 = (GE_ms("ESVE", 4));
-	ge1132ov22375 = (GE_ms("\'value\' attribute in element \'setting\' is empty.", 48));
-	ge1132ov22462 = (GE_ms("ESVM", 4));
-	ge1132ov22374 = (GE_ms("\'value\' attribute is missing in element \'setting\'.", 50));
-	ge1132ov22461 = (GE_ms("ESNE", 4));
-	ge1132ov22373 = (GE_ms("\'name\' attribute in element \'setting\' is empty.", 47));
-	ge1132ov22460 = (GE_ms("ESNM", 4));
-	ge1132ov22372 = (GE_ms("\'name\' attribute is missing in element \'setting\'.", 49));
-	ge1132ov22423 = (GE_ms("EABU", 4));
-	ge1132ov22335 = (GE_ms("\'value\' attribute in element \'variable\' is empty.", 49));
-	ge1132ov22422 = (GE_ms("EABT", 4));
-	ge1132ov22334 = (GE_ms("\'value\' attribute is missing in element \'variable\'.", 51));
-	ge1132ov22421 = (GE_ms("EABS", 4));
-	ge1132ov22333 = (GE_ms("\'name\' attribute in element \'variable\' is empty.", 48));
+	ge1041ov9295 = (GE_ms8("feature `$7\' in kernel class $5 is not a procedure.", 51));
+	ge824ov4078 = (GE_ms8("set_rout_disp_final", 19));
+	ge824ov4038 = (GE_ms8("rout_disp", 9));
+	ge824ov3844 = (GE_ms8("closed_operands", 15));
+	ge824ov4089 = (GE_ms8("to_pointer", 10));
+	ge824ov4002 = (GE_ms8("pointer_item", 12));
+	ge824ov4104 = (GE_ms8("upper", 5));
+	ge824ov3962 = (GE_ms8("lower", 5));
+	ge824ov3803 = (GE_ms8("area", 4));
+	ge824ov3828 = (GE_ms8("capacity", 8));
+	ge1041ov9737 = (GE_ms8("gvkfe3a", 7));
+	ge1041ov9460 = (GE_ms8("GVKFE-3", 7));
+	ge1041ov9294 = (GE_ms8("attribute `$7\' in kernel class $5 has not the expected type \'$8\'.", 65));
+	ge1041ov9735 = (GE_ms8("gvkfe1a", 7));
+	ge1041ov9458 = (GE_ms8("GVKFE-1", 7));
+	ge1041ov9292 = (GE_ms8("feature `$7\' is missing in kernel class $5.", 43));
+	ge1041ov9736 = (GE_ms8("gvkfe2a", 7));
+	ge1041ov9459 = (GE_ms8("GVKFE-2", 7));
+	ge1041ov9293 = (GE_ms8("feature `$7\' in kernel class $5 is not an attribute.", 52));
+	ge824ov3851 = (GE_ms8("count", 5));
+	ge1039ov8733 = (GE_ms8("gvknl1a", 7));
+	ge1039ov8727 = (GE_ms8("GVKNL1", 6));
+	ge1039ov8721 = (GE_ms8("[$1] missing kernel class $2.", 29));
+	ge824ov4130 = (GE_ms8("deferred", 8));
+	ge824ov4254 = (GE_ms8("WIDE_CHARACTER_REF", 18));
+	ge824ov4238 = (GE_ms8("CHARACTER_32_REF", 16));
+	ge824ov3791 = (GE_ms8("STRING", 6));
+	ge824ov3792 = (GE_ms8("STRING_8", 8));
+	ge824ov4251 = (GE_ms8("REAL_REF", 8));
+	ge824ov4252 = (GE_ms8("REAL_32_REF", 11));
+	ge824ov4245 = (GE_ms8("NATURAL_REF", 11));
+	ge824ov4248 = (GE_ms8("NATURAL_32_REF", 14));
+	ge824ov4240 = (GE_ms8("INTEGER_REF", 11));
+	ge824ov4243 = (GE_ms8("INTEGER_32_REF", 14));
+	ge824ov4239 = (GE_ms8("DOUBLE_REF", 10));
+	ge824ov4253 = (GE_ms8("REAL_64_REF", 11));
+	ge824ov4236 = (GE_ms8("CHARACTER_REF", 13));
+	ge824ov4237 = (GE_ms8("CHARACTER_8_REF", 15));
+	ge824ov4152 = (GE_ms8("like", 4));
+	ge824ov4131 = (GE_ms8("detachable", 10));
+	ge824ov3795 = (GE_ms8("SYSTEM_STRING", 13));
+	ge824ov4148 = (GE_ms8("inherit", 7));
+	ge824ov3793 = (GE_ms8("STRING_32", 9));
+	ge824ov3781 = (GE_ms8("NONE", 4));
+	ge824ov3770 = (GE_ms8("ISE_EXCEPTION_MANAGER", 21));
+	ge824ov3763 = (GE_ms8("IMMUTABLE_STRING_32", 19));
+	ge824ov3759 = (GE_ms8("EXCEPTION_MANAGER", 17));
+	ge824ov3758 = (GE_ms8("EXCEPTION", 9));
+	ge824ov4172 = (GE_ms8("separate", 8));
+	ge1135ov13058 = (GE_ms8("system", 6));
+	ge1132ov22379 = (GE_ms8("ESYN", 4));
+	ge1132ov22291 = (GE_ms8("$5", 2));
+	ge1132ov22429 = (GE_ms8("EABX", 4));
+	ge1132ov22341 = (GE_ms8("root element of ECF file should be \'system\' and not \'$5\'.", 57));
+	ge1135ov13066 = (GE_ms8("void_safety", 11));
+	ge1135ov13037 = (GE_ms8("is_attached_by_default", 22));
+	ge1135ov13038 = (GE_ms8("is_obsolete_routine_type", 24));
+	ge1135ov13060 = (GE_ms8("trace", 5));
+	ge1124ov13498 = (GE_ms8("console_application", 19));
+	ge1124ov13499 = (GE_ms8("concurrency", 11));
+	ge1124ov13500 = (GE_ms8("exception_trace", 15));
+	ge1132ov22428 = (GE_ms8("EABW", 4));
+	ge1132ov22340 = (GE_ms8("no library target specified in library ECF file \"$5\".", 53));
+	ge1135ov13062 = (GE_ms8("uuid", 4));
+	ge1135ov13045 = (GE_ms8("name", 4));
+	ge1135ov13059 = (GE_ms8("target", 6));
+	ge1135ov13040 = (GE_ms8("library_target", 14));
+	ge1132ov22422 = (GE_ms8("EABQ", 4));
+	ge1132ov22334 = (GE_ms8("\'library_target\' attribute \"$5\" in element \'system\' is not the name of an existing target.", 90));
+	ge1132ov22421 = (GE_ms8("EABP", 4));
+	ge1132ov22333 = (GE_ms8("\'library_target\' attribute in element \'system\' is empty.", 56));
+	ge1132ov22430 = (GE_ms8("EABY", 4));
+	ge1132ov22342 = (GE_ms8("no \'target\' element found in element \'system\'.", 46));
+	ge1135ov13022 = (GE_ms8("cluster", 7));
+	ge1135ov13050 = (GE_ms8("override", 8));
+	ge1135ov13039 = (GE_ms8("library", 7));
+	ge1135ov13019 = (GE_ms8("assembly", 8));
+	ge1135ov13035 = (GE_ms8("file_rule", 9));
+	ge1135ov13031 = (GE_ms8("external_include", 16));
+	ge1135ov13032 = (GE_ms8("external_library", 16));
+	ge1135ov13033 = (GE_ms8("external_object", 15));
+	ge1135ov13056 = (GE_ms8("root", 4));
+	ge1135ov13064 = (GE_ms8("variable", 8));
+	ge1135ov13057 = (GE_ms8("setting", 7));
+	ge1135ov13049 = (GE_ms8("option", 6));
+	ge1135ov13063 = (GE_ms8("value", 5));
+	ge1132ov22466 = (GE_ms8("ESVE", 4));
+	ge1132ov22378 = (GE_ms8("\'value\' attribute in element \'setting\' is empty.", 48));
+	ge1132ov22465 = (GE_ms8("ESVM", 4));
+	ge1132ov22377 = (GE_ms8("\'value\' attribute is missing in element \'setting\'.", 50));
+	ge1132ov22464 = (GE_ms8("ESNE", 4));
+	ge1132ov22376 = (GE_ms8("\'name\' attribute in element \'setting\' is empty.", 47));
+	ge1132ov22463 = (GE_ms8("ESNM", 4));
+	ge1132ov22375 = (GE_ms8("\'name\' attribute is missing in element \'setting\'.", 49));
+	ge1132ov22426 = (GE_ms8("EABU", 4));
+	ge1132ov22338 = (GE_ms8("\'value\' attribute in element \'variable\' is empty.", 49));
+	ge1132ov22425 = (GE_ms8("EABT", 4));
+	ge1132ov22337 = (GE_ms8("\'value\' attribute is missing in element \'variable\'.", 51));
+	ge1132ov22424 = (GE_ms8("EABS", 4));
+	ge1132ov22336 = (GE_ms8("\'name\' attribute in element \'variable\' is empty.", 48));
+	ge1132ov22423 = (GE_ms8("EABR", 4));
 }
 
 void GE_init_const6()
 {
-	ge1132ov22420 = (GE_ms("EABR", 4));
-	ge1132ov22332 = (GE_ms("\'name\' attribute is missing in element \'variable\'.", 50));
-	ge1135ov13018 = (GE_ms("all_classes", 11));
-	ge1135ov13021 = (GE_ms("class", 5));
-	ge1135ov13034 = (GE_ms("feature", 7));
-	ge1132ov22431 = (GE_ms("EACC", 4));
-	ge1132ov22343 = (GE_ms("\'feature\' attribute in element \'root\' is empty.", 47));
-	ge1132ov22430 = (GE_ms("EACB", 4));
-	ge1132ov22342 = (GE_ms("\'class\' attribute in element \'root\' is empty.", 45));
-	ge1132ov22429 = (GE_ms("EACA", 4));
-	ge1132ov22341 = (GE_ms("\'class\' attribute is missing in element \'root\'.", 47));
-	ge1132ov22428 = (GE_ms("EABZ", 4));
-	ge1132ov22340 = (GE_ms("\'all_classes\' attribute \"$5\" in element \'root\' should be a boolean.", 67));
-	ge1138ov13017 = (GE_ms("false", 5));
-	ge1138ov13016 = (GE_ms("true", 4));
-	ge1135ov13047 = (GE_ms("location", 8));
-	ge1135ov13025 = (GE_ms("condition", 9));
-	ge1135ov13051 = (GE_ms("platform", 8));
-	ge1135ov13020 = (GE_ms("build", 5));
-	ge1135ov13044 = (GE_ms("multithreaded", 13));
-	ge1135ov13024 = (GE_ms("concurrency", 11));
-	ge1135ov13027 = (GE_ms("dotnet", 6));
-	ge1135ov13028 = (GE_ms("dynamic_runtime", 15));
-	ge1135ov13026 = (GE_ms("custom", 6));
-	ge1135ov13065 = (GE_ms("version", 7));
-	ge1135ov13041 = (GE_ms("min", 3));
-	ge1135ov13042 = (GE_ms("max", 3));
-	ge1135ov13061 = (GE_ms("type", 4));
-	ge1135ov13023 = (GE_ms("compiler", 8));
-	ge1135ov13043 = (GE_ms("msil_clr", 8));
-	ge1132ov22412 = (GE_ms("EABJ", 4));
-	ge1132ov22324 = (GE_ms("\'type\' attribute \"$5\" in \'version\' condition should be either \"compiler\" or \"msil_clr\".", 87));
-	ge1132ov22411 = (GE_ms("EABI", 4));
-	ge1132ov22323 = (GE_ms("\'type\' attribute is missing in \'version\' condition.", 51));
-	ge1132ov22410 = (GE_ms("EABH", 4));
-	ge1132ov22322 = (GE_ms("\'max\' attribute \"$6\" should be greater than or equal to \'min\' attribute \"$5\" in \'version\' condition.", 100));
-	ge1132ov22409 = (GE_ms("EABG", 4));
-	ge1132ov22321 = (GE_ms("\'max\' attribute \"$5\" in \'version\' condition should be of the form \"N.N.N.N\".", 76));
-	ge1132ov22408 = (GE_ms("EABF", 4));
-	ge1132ov22320 = (GE_ms("\'min\' attribute \"$5\" in \'version\' condition should be of the form \"N.N.N.N\".", 76));
-	ge1135ov13030 = (GE_ms("excluded_value", 14));
-	ge1132ov22394 = (GE_ms("EAAR", 4));
-	ge1132ov22306 = (GE_ms("\'excluded_value\' attribute in \'custom\' condition is empty.", 58));
-	ge1132ov22395 = (GE_ms("EAAS", 4));
-	ge1132ov22307 = (GE_ms("\'value\' or \'excluded_value\' attribute is missing in \'custom\' condition.", 71));
-	ge1132ov22393 = (GE_ms("EAAQ", 4));
-	ge1132ov22305 = (GE_ms("\'value\' attribute in \'custom\' condition is empty.", 49));
-	ge1132ov22392 = (GE_ms("EAAP", 4));
-	ge1132ov22304 = (GE_ms("cannot have both \'value\' and \'excluded_value\' in \'custom\' condition.", 68));
-	ge1132ov22391 = (GE_ms("EAAO", 4));
-	ge1132ov22303 = (GE_ms("\'name\' attribute in \'custom\' condition is empty.", 48));
-	ge1132ov22390 = (GE_ms("EAAN", 4));
-	ge1132ov22302 = (GE_ms("\'name\' attribute is missing in \'custom\' condition.", 50));
-	ge1132ov22399 = (GE_ms("EAAW", 4));
-	ge1132ov22311 = (GE_ms("\'value\' attribute \"$5\" in \'dynamic_runtime\' condition should be a boolean.", 74));
-	ge1132ov22398 = (GE_ms("EAAV", 4));
-	ge1132ov22310 = (GE_ms("\'value\' attribute is missing in \'dynamic_runtime\' condition.", 60));
-	ge1132ov22397 = (GE_ms("EAAU", 4));
-	ge1132ov22309 = (GE_ms("\'value\' attribute \"$5\" in \'dotnet\' condition should be a boolean.", 65));
-	ge1132ov22396 = (GE_ms("EAAT", 4));
-	ge1132ov22308 = (GE_ms("\'value\' attribute is missing in \'dotnet\' condition.", 51));
-	ge1132ov22459 = (GE_ms("EADE", 4));
-	ge1132ov22371 = (GE_ms("\'value\' or \'excluded_value\' attribute is missing in \'concurrency\' condition.", 76));
-	ge1132ov22458 = (GE_ms("EADD", 4));
-	ge1132ov22370 = (GE_ms("\'excluded_value\' attribute in \'concurrency\' condition is empty.", 63));
-	ge1132ov22457 = (GE_ms("EADC", 4));
-	ge1132ov22369 = (GE_ms("\'value\' attribute in \'concurrency\' condition is empty.", 54));
-	ge1132ov22456 = (GE_ms("EADB", 4));
-	ge1132ov22368 = (GE_ms("cannot have both \'value\' and \'excluded_value\' in \'concurrency\' condition.", 73));
-	ge1132ov22401 = (GE_ms("EAAY", 4));
-	ge1132ov22313 = (GE_ms("\'value\' attribute \"$5\" in \'multithreaded\' condition should be a boolean.", 72));
-	ge1132ov22400 = (GE_ms("EAAX", 4));
-	ge1132ov22312 = (GE_ms("\'value\' attribute is missing in \'multithreaded\' condition.", 58));
-	ge1132ov22383 = (GE_ms("EAAG", 4));
-	ge1132ov22295 = (GE_ms("\'excluded_value\' attribute in \'build\' condition is empty.", 57));
-	ge1132ov22384 = (GE_ms("EAAH", 4));
-	ge1132ov22296 = (GE_ms("\'value\' or \'excluded_value\' attribute is missing in \'build\' condition.", 70));
-	ge1132ov22382 = (GE_ms("EAAF", 4));
-	ge1132ov22294 = (GE_ms("\'value\' attribute in \'build\' condition is empty.", 48));
-	ge1132ov22381 = (GE_ms("EAAE", 4));
-	ge1132ov22293 = (GE_ms("cannot have both \'value\' and \'excluded_value\' in \'build\' condition.", 67));
-	ge1132ov22404 = (GE_ms("EABB", 4));
-	ge1132ov22316 = (GE_ms("\'excluded_value\' attribute in \'platform\' condition is empty.", 60));
-	ge1132ov22405 = (GE_ms("EABC", 4));
-	ge1132ov22317 = (GE_ms("\'value\' or \'excluded_value\' attribute is missing in \'platform\' condition.", 73));
-	ge1132ov22403 = (GE_ms("EABA", 4));
-	ge1132ov22315 = (GE_ms("\'value\' attribute in \'platform\' condition is empty.", 51));
-	ge1132ov22402 = (GE_ms("EAAZ", 4));
-	ge1132ov22314 = (GE_ms("cannot have both \'value\' and \'excluded_value\' in \'platform\' condition.", 70));
-	ge1132ov22442 = (GE_ms("EACN", 4));
-	ge1132ov22354 = (GE_ms("\'location\' attribute in element \'external_object\' is empty.", 59));
-	ge1132ov22441 = (GE_ms("EACM", 4));
-	ge1132ov22353 = (GE_ms("\'location\' attribute is missing in element \'external_object\'.", 61));
-	ge1132ov22440 = (GE_ms("EACL", 4));
-	ge1132ov22352 = (GE_ms("\'location\' attribute in element \'external_library\' is empty.", 60));
-	ge1132ov22439 = (GE_ms("EACK", 4));
-	ge1132ov22351 = (GE_ms("\'location\' attribute is missing in element \'external_library\'.", 62));
-	ge1132ov22438 = (GE_ms("EACJ", 4));
-	ge1132ov22350 = (GE_ms("\'location\' attribute in element \'external_include\' is empty.", 60));
-	ge1132ov22437 = (GE_ms("EACI", 4));
-	ge1132ov22349 = (GE_ms("\'location\' attribute is missing in element \'external_include\'.", 62));
+	ge1132ov22335 = (GE_ms8("\'name\' attribute is missing in element \'variable\'.", 50));
+	ge1135ov13018 = (GE_ms8("all_classes", 11));
+	ge1135ov13021 = (GE_ms8("class", 5));
+	ge1135ov13034 = (GE_ms8("feature", 7));
+	ge1132ov22434 = (GE_ms8("EACC", 4));
+	ge1132ov22346 = (GE_ms8("\'feature\' attribute in element \'root\' is empty.", 47));
+	ge1132ov22433 = (GE_ms8("EACB", 4));
+	ge1132ov22345 = (GE_ms8("\'class\' attribute in element \'root\' is empty.", 45));
+	ge1132ov22432 = (GE_ms8("EACA", 4));
+	ge1132ov22344 = (GE_ms8("\'class\' attribute is missing in element \'root\'.", 47));
+	ge1132ov22431 = (GE_ms8("EABZ", 4));
+	ge1132ov22343 = (GE_ms8("\'all_classes\' attribute \"$5\" in element \'root\' should be a boolean.", 67));
+	ge1138ov13017 = (GE_ms8("false", 5));
+	ge1138ov13016 = (GE_ms8("true", 4));
+	ge1135ov13047 = (GE_ms8("location", 8));
+	ge1135ov13025 = (GE_ms8("condition", 9));
+	ge1135ov13051 = (GE_ms8("platform", 8));
+	ge1135ov13020 = (GE_ms8("build", 5));
+	ge1135ov13044 = (GE_ms8("multithreaded", 13));
+	ge1135ov13024 = (GE_ms8("concurrency", 11));
+	ge1135ov13027 = (GE_ms8("dotnet", 6));
+	ge1135ov13028 = (GE_ms8("dynamic_runtime", 15));
+	ge1135ov13026 = (GE_ms8("custom", 6));
+	ge1135ov13065 = (GE_ms8("version", 7));
+	ge1135ov13041 = (GE_ms8("min", 3));
+	ge1135ov13042 = (GE_ms8("max", 3));
+	ge1135ov13061 = (GE_ms8("type", 4));
+	ge1135ov13023 = (GE_ms8("compiler", 8));
+	ge1135ov13043 = (GE_ms8("msil_clr", 8));
+	ge1132ov22415 = (GE_ms8("EABJ", 4));
+	ge1132ov22327 = (GE_ms8("\'type\' attribute \"$5\" in \'version\' condition should be either \"compiler\" or \"msil_clr\".", 87));
+	ge1132ov22414 = (GE_ms8("EABI", 4));
+	ge1132ov22326 = (GE_ms8("\'type\' attribute is missing in \'version\' condition.", 51));
+	ge1132ov22413 = (GE_ms8("EABH", 4));
+	ge1132ov22325 = (GE_ms8("\'max\' attribute \"$6\" should be greater than or equal to \'min\' attribute \"$5\" in \'version\' condition.", 100));
+	ge1132ov22412 = (GE_ms8("EABG", 4));
+	ge1132ov22324 = (GE_ms8("\'max\' attribute \"$5\" in \'version\' condition should be of the form \"N.N.N.N\".", 76));
+	ge1132ov22411 = (GE_ms8("EABF", 4));
+	ge1132ov22323 = (GE_ms8("\'min\' attribute \"$5\" in \'version\' condition should be of the form \"N.N.N.N\".", 76));
+	ge1135ov13030 = (GE_ms8("excluded_value", 14));
+	ge1132ov22397 = (GE_ms8("EAAR", 4));
+	ge1132ov22309 = (GE_ms8("\'excluded_value\' attribute in \'custom\' condition is empty.", 58));
+	ge1132ov22398 = (GE_ms8("EAAS", 4));
+	ge1132ov22310 = (GE_ms8("\'value\' or \'excluded_value\' attribute is missing in \'custom\' condition.", 71));
+	ge1132ov22396 = (GE_ms8("EAAQ", 4));
+	ge1132ov22308 = (GE_ms8("\'value\' attribute in \'custom\' condition is empty.", 49));
+	ge1132ov22395 = (GE_ms8("EAAP", 4));
+	ge1132ov22307 = (GE_ms8("cannot have both \'value\' and \'excluded_value\' in \'custom\' condition.", 68));
+	ge1132ov22394 = (GE_ms8("EAAO", 4));
+	ge1132ov22306 = (GE_ms8("\'name\' attribute in \'custom\' condition is empty.", 48));
+	ge1132ov22393 = (GE_ms8("EAAN", 4));
+	ge1132ov22305 = (GE_ms8("\'name\' attribute is missing in \'custom\' condition.", 50));
+	ge1132ov22402 = (GE_ms8("EAAW", 4));
+	ge1132ov22314 = (GE_ms8("\'value\' attribute \"$5\" in \'dynamic_runtime\' condition should be a boolean.", 74));
+	ge1132ov22401 = (GE_ms8("EAAV", 4));
+	ge1132ov22313 = (GE_ms8("\'value\' attribute is missing in \'dynamic_runtime\' condition.", 60));
+	ge1132ov22400 = (GE_ms8("EAAU", 4));
+	ge1132ov22312 = (GE_ms8("\'value\' attribute \"$5\" in \'dotnet\' condition should be a boolean.", 65));
+	ge1132ov22399 = (GE_ms8("EAAT", 4));
+	ge1132ov22311 = (GE_ms8("\'value\' attribute is missing in \'dotnet\' condition.", 51));
+	ge1132ov22462 = (GE_ms8("EADE", 4));
+	ge1132ov22374 = (GE_ms8("\'value\' or \'excluded_value\' attribute is missing in \'concurrency\' condition.", 76));
+	ge1132ov22461 = (GE_ms8("EADD", 4));
+	ge1132ov22373 = (GE_ms8("\'excluded_value\' attribute in \'concurrency\' condition is empty.", 63));
+	ge1132ov22460 = (GE_ms8("EADC", 4));
+	ge1132ov22372 = (GE_ms8("\'value\' attribute in \'concurrency\' condition is empty.", 54));
+	ge1132ov22459 = (GE_ms8("EADB", 4));
+	ge1132ov22371 = (GE_ms8("cannot have both \'value\' and \'excluded_value\' in \'concurrency\' condition.", 73));
+	ge1132ov22404 = (GE_ms8("EAAY", 4));
+	ge1132ov22316 = (GE_ms8("\'value\' attribute \"$5\" in \'multithreaded\' condition should be a boolean.", 72));
+	ge1132ov22403 = (GE_ms8("EAAX", 4));
+	ge1132ov22315 = (GE_ms8("\'value\' attribute is missing in \'multithreaded\' condition.", 58));
+	ge1132ov22386 = (GE_ms8("EAAG", 4));
+	ge1132ov22298 = (GE_ms8("\'excluded_value\' attribute in \'build\' condition is empty.", 57));
+	ge1132ov22387 = (GE_ms8("EAAH", 4));
+	ge1132ov22299 = (GE_ms8("\'value\' or \'excluded_value\' attribute is missing in \'build\' condition.", 70));
+	ge1132ov22385 = (GE_ms8("EAAF", 4));
+	ge1132ov22297 = (GE_ms8("\'value\' attribute in \'build\' condition is empty.", 48));
+	ge1132ov22384 = (GE_ms8("EAAE", 4));
+	ge1132ov22296 = (GE_ms8("cannot have both \'value\' and \'excluded_value\' in \'build\' condition.", 67));
+	ge1132ov22407 = (GE_ms8("EABB", 4));
+	ge1132ov22319 = (GE_ms8("\'excluded_value\' attribute in \'platform\' condition is empty.", 60));
+	ge1132ov22408 = (GE_ms8("EABC", 4));
+	ge1132ov22320 = (GE_ms8("\'value\' or \'excluded_value\' attribute is missing in \'platform\' condition.", 73));
+	ge1132ov22406 = (GE_ms8("EABA", 4));
+	ge1132ov22318 = (GE_ms8("\'value\' attribute in \'platform\' condition is empty.", 51));
+	ge1132ov22405 = (GE_ms8("EAAZ", 4));
+	ge1132ov22317 = (GE_ms8("cannot have both \'value\' and \'excluded_value\' in \'platform\' condition.", 70));
+	ge1132ov22445 = (GE_ms8("EACN", 4));
+	ge1132ov22357 = (GE_ms8("\'location\' attribute in element \'external_object\' is empty.", 59));
+	ge1132ov22444 = (GE_ms8("EACM", 4));
+	ge1132ov22356 = (GE_ms8("\'location\' attribute is missing in element \'external_object\'.", 61));
+	ge1132ov22443 = (GE_ms8("EACL", 4));
+	ge1132ov22355 = (GE_ms8("\'location\' attribute in element \'external_library\' is empty.", 60));
+	ge1132ov22442 = (GE_ms8("EACK", 4));
+	ge1132ov22354 = (GE_ms8("\'location\' attribute is missing in element \'external_library\'.", 62));
+	ge1132ov22441 = (GE_ms8("EACJ", 4));
+	ge1132ov22353 = (GE_ms8("\'location\' attribute in element \'external_include\' is empty.", 60));
+	ge1132ov22440 = (GE_ms8("EACI", 4));
+	ge1132ov22352 = (GE_ms8("\'location\' attribute is missing in element \'external_include\'.", 62));
+	ge1135ov13029 = (GE_ms8("exclude", 7));
 }
 
 void GE_init_const7()
 {
-	ge1135ov13029 = (GE_ms("exclude", 7));
-	ge1135ov13036 = (GE_ms("include", 7));
-	ge1135ov13053 = (GE_ms("readonly", 8));
-	ge1135ov13052 = (GE_ms("prefix", 6));
-	ge1135ov13055 = (GE_ms("renaming", 8));
-	ge1135ov13048 = (GE_ms("old_name", 8));
-	ge1135ov13046 = (GE_ms("new_name", 8));
-	ge1132ov22447 = (GE_ms("EACS", 4));
-	ge1132ov22359 = (GE_ms("\'old_name\' attribute $5 already appears in another \'renaming\' clause.", 69));
-	ge1132ov22446 = (GE_ms("EACR", 4));
-	ge1132ov22358 = (GE_ms("\'new_name\' attribute in \'renaming\' clause is empty.", 51));
-	ge1132ov22445 = (GE_ms("EACQ", 4));
-	ge1132ov22357 = (GE_ms("\'new_name\' attribute is missing in \'renaming\' clause.", 53));
-	ge1132ov22444 = (GE_ms("EACP", 4));
-	ge1132ov22356 = (GE_ms("\'old_name\' attribute in \'renaming\' clause is empty.", 51));
-	ge1132ov22443 = (GE_ms("EACO", 4));
-	ge1132ov22355 = (GE_ms("\'old_name\' attribute is missing in \'renaming\' clause.", 53));
-	ge1132ov22451 = (GE_ms("EACW", 4));
-	ge1132ov22363 = (GE_ms("\'readonly\' attribute \"$5\" in element \'assembly\' should be a boolean.", 68));
-	ge1132ov22455 = (GE_ms("EADA", 4));
-	ge1132ov22367 = (GE_ms("\'location\' attribute in element \'assembly\' is empty.", 52));
-	ge1132ov22454 = (GE_ms("EACZ", 4));
-	ge1132ov22366 = (GE_ms("\'name\' attribute in element \'assembly\' is empty.", 48));
-	ge1132ov22453 = (GE_ms("EACY", 4));
-	ge1132ov22365 = (GE_ms("\'location\' attribute is missing in element \'assembly\'.", 54));
-	ge1132ov22452 = (GE_ms("EACX", 4));
-	ge1132ov22364 = (GE_ms("\'name\' attribute is missing in element \'assembly\'.", 50));
-	ge1132ov22450 = (GE_ms("EACV", 4));
-	ge1132ov22362 = (GE_ms("\'readonly\' attribute \"$5\" in element \'library\' should be a boolean.", 67));
-	ge1132ov22380 = (GE_ms("EAAD", 4));
-	ge1132ov22292 = (GE_ms("\'location\' attribute in element \'library\' is empty.", 51));
-	ge1132ov22379 = (GE_ms("EAAC", 4));
-	ge1132ov22291 = (GE_ms("\'name\' attribute in element \'library\' is empty.", 47));
-	ge1132ov22378 = (GE_ms("EAAB", 4));
-	ge1132ov22290 = (GE_ms("\'location\' attribute is missing in element \'library\'.", 53));
-	ge1132ov22377 = (GE_ms("EAAA", 4));
-	ge1132ov22289 = (GE_ms("\'name\' attribute is missing in element \'library\'.", 49));
-	ge1135ov13054 = (GE_ms("recursive", 9));
-	ge1132ov22449 = (GE_ms("EACU", 4));
-	ge1132ov22361 = (GE_ms("\'readonly\' attribute \"$5\" in element \'override\' should be a boolean.", 68));
-	ge1132ov22436 = (GE_ms("EACH", 4));
-	ge1132ov22348 = (GE_ms("\'recursive\' attribute \"$5\" in element \'override\' should be a boolean.", 69));
-	ge1132ov22435 = (GE_ms("EACG", 4));
-	ge1132ov22347 = (GE_ms("\'location\' attribute in element \'override\' is empty.", 52));
-	ge1132ov22433 = (GE_ms("EACE", 4));
-	ge1132ov22345 = (GE_ms("\'location\' attribute is missing in element \'override\'.", 54));
-	ge1132ov22434 = (GE_ms("EACF", 4));
-	ge1132ov22346 = (GE_ms("\'name\' attribute in element \'override\' is empty.", 48));
-	ge1132ov22432 = (GE_ms("EACD", 4));
-	ge1132ov22344 = (GE_ms("\'name\' attribute is missing in element \'override\'.", 50));
-	ge1132ov22448 = (GE_ms("EACT", 4));
-	ge1132ov22360 = (GE_ms("\'readonly\' attribute \"$5\" in element \'cluster\' should be a boolean.", 67));
-	ge1132ov22389 = (GE_ms("EAAM", 4));
-	ge1132ov22301 = (GE_ms("\'recursive\' attribute \"$5\" in element \'cluster\' should be a boolean.", 68));
-	ge1132ov22388 = (GE_ms("EAAL", 4));
-	ge1132ov22300 = (GE_ms("\'location\' attribute in element \'cluster\' is empty.", 51));
-	ge1132ov22386 = (GE_ms("EAAJ", 4));
-	ge1132ov22298 = (GE_ms("\'location\' attribute is missing in element \'cluster\'.", 53));
-	ge1132ov22387 = (GE_ms("EAAK", 4));
-	ge1132ov22299 = (GE_ms("\'name\' attribute in element \'cluster\' is empty.", 47));
-	ge1132ov22385 = (GE_ms("EAAI", 4));
-	ge1132ov22297 = (GE_ms("\'name\' attribute is missing in element \'cluster\'.", 49));
-	ge1132ov22407 = (GE_ms("EABE", 4));
-	ge1132ov22319 = (GE_ms("\'name\' attribute in element \'target\' is empty.", 46));
-	ge1132ov22406 = (GE_ms("EABD", 4));
-	ge1132ov22318 = (GE_ms("\'name\' attribute is missing in element \'target\'.", 48));
-	ge1132ov22416 = (GE_ms("EABN", 4));
-	ge1132ov22328 = (GE_ms("\'name\' attribute in element \'system\' describing a library is empty.", 67));
-	ge1132ov22415 = (GE_ms("EABM", 4));
-	ge1132ov22327 = (GE_ms("\'name\' attribute is missing in element \'system\' describing a library.", 69));
-	ge1132ov22417 = (GE_ms("EABO", 4));
-	ge1132ov22329 = (GE_ms("\'uuid\' attribute is missing in element \'system\' describing a library.", 69));
-	ge1132ov22424 = (GE_ms("EABV", 4));
-	ge1132ov22336 = (GE_ms("cannot open library ECF file \"$5\".", 34));
-	ge1124ov13504 = (GE_ms("multithreaded", 13));
-	ge1124ov13503 = (GE_ms("msil_generation", 15));
-	ge1132ov22414 = (GE_ms("EABL", 4));
-	ge1132ov22326 = (GE_ms("\'name\' attribute in element \'system\' is empty.", 46));
-	ge1132ov22413 = (GE_ms("EABK", 4));
-	ge1132ov22325 = (GE_ms("\'name\' attribute is missing in element \'system\'.", 48));
-	ge1314ov21614 = (GE_ms("PE reference only allowed in DTD", 32));
-	ge1314ov21576 = (GE_ms("< not allowed in attribute value", 32));
-	ge1314ov21574 = (GE_ms("-- not allowed in comment", 25));
-	ge1314ov21615 = (GE_ms("xml prefix reserved in processing instruction", 45));
-	ge1314ov21587 = (GE_ms("Misformed XML Declaration", 25));
-	ge1314ov21586 = (GE_ms("Misplaced markup declaration", 28));
-	ge1314ov21597 = (GE_ms("End tag does not match start tag", 32));
-	ge1314ov21591 = (GE_ms("Missing element end tag", 23));
-	ge1314ov21590 = (GE_ms("Error in element content", 24));
-	ge1314ov21589 = (GE_ms("Misformed start tag", 19));
-	ge1314ov21595 = (GE_ms("Attribute declared twice", 24));
-	ge1314ov21594 = (GE_ms("Misformed attribute in tag", 26));
-	ge1314ov21596 = (GE_ms("Error in end tag", 16));
-	ge1314ov21573 = (GE_ms("]]> not allowed in content", 26));
-	ge1314ov21599 = (GE_ms("Error in XML declaration", 24));
-	ge1314ov21608 = (GE_ms("Misformed element type declaration", 34));
-	ge1317ov21437 = (GE_ms("*", 1));
-	ge1317ov21435 = (GE_ms("+", 1));
-	ge1317ov21436 = (GE_ms("\?", 1));
-	ge1314ov21609 = (GE_ms("Misformed attribute list declaration", 36));
-	ge1314ov21610 = (GE_ms("Misformed attribute definition declaration", 42));
+	ge1135ov13036 = (GE_ms8("include", 7));
+	ge1135ov13053 = (GE_ms8("readonly", 8));
+	ge1135ov13052 = (GE_ms8("prefix", 6));
+	ge1135ov13055 = (GE_ms8("renaming", 8));
+	ge1135ov13048 = (GE_ms8("old_name", 8));
+	ge1135ov13046 = (GE_ms8("new_name", 8));
+	ge1132ov22450 = (GE_ms8("EACS", 4));
+	ge1132ov22362 = (GE_ms8("\'old_name\' attribute $5 already appears in another \'renaming\' clause.", 69));
+	ge1132ov22449 = (GE_ms8("EACR", 4));
+	ge1132ov22361 = (GE_ms8("\'new_name\' attribute in \'renaming\' clause is empty.", 51));
+	ge1132ov22448 = (GE_ms8("EACQ", 4));
+	ge1132ov22360 = (GE_ms8("\'new_name\' attribute is missing in \'renaming\' clause.", 53));
+	ge1132ov22447 = (GE_ms8("EACP", 4));
+	ge1132ov22359 = (GE_ms8("\'old_name\' attribute in \'renaming\' clause is empty.", 51));
+	ge1132ov22446 = (GE_ms8("EACO", 4));
+	ge1132ov22358 = (GE_ms8("\'old_name\' attribute is missing in \'renaming\' clause.", 53));
+	ge1132ov22454 = (GE_ms8("EACW", 4));
+	ge1132ov22366 = (GE_ms8("\'readonly\' attribute \"$5\" in element \'assembly\' should be a boolean.", 68));
+	ge1132ov22458 = (GE_ms8("EADA", 4));
+	ge1132ov22370 = (GE_ms8("\'location\' attribute in element \'assembly\' is empty.", 52));
+	ge1132ov22457 = (GE_ms8("EACZ", 4));
+	ge1132ov22369 = (GE_ms8("\'name\' attribute in element \'assembly\' is empty.", 48));
+	ge1132ov22456 = (GE_ms8("EACY", 4));
+	ge1132ov22368 = (GE_ms8("\'location\' attribute is missing in element \'assembly\'.", 54));
+	ge1132ov22455 = (GE_ms8("EACX", 4));
+	ge1132ov22367 = (GE_ms8("\'name\' attribute is missing in element \'assembly\'.", 50));
+	ge1132ov22453 = (GE_ms8("EACV", 4));
+	ge1132ov22365 = (GE_ms8("\'readonly\' attribute \"$5\" in element \'library\' should be a boolean.", 67));
+	ge1132ov22383 = (GE_ms8("EAAD", 4));
+	ge1132ov22295 = (GE_ms8("\'location\' attribute in element \'library\' is empty.", 51));
+	ge1132ov22382 = (GE_ms8("EAAC", 4));
+	ge1132ov22294 = (GE_ms8("\'name\' attribute in element \'library\' is empty.", 47));
+	ge1132ov22381 = (GE_ms8("EAAB", 4));
+	ge1132ov22293 = (GE_ms8("\'location\' attribute is missing in element \'library\'.", 53));
+	ge1132ov22380 = (GE_ms8("EAAA", 4));
+	ge1132ov22292 = (GE_ms8("\'name\' attribute is missing in element \'library\'.", 49));
+	ge1135ov13054 = (GE_ms8("recursive", 9));
+	ge1132ov22452 = (GE_ms8("EACU", 4));
+	ge1132ov22364 = (GE_ms8("\'readonly\' attribute \"$5\" in element \'override\' should be a boolean.", 68));
+	ge1132ov22439 = (GE_ms8("EACH", 4));
+	ge1132ov22351 = (GE_ms8("\'recursive\' attribute \"$5\" in element \'override\' should be a boolean.", 69));
+	ge1132ov22438 = (GE_ms8("EACG", 4));
+	ge1132ov22350 = (GE_ms8("\'location\' attribute in element \'override\' is empty.", 52));
+	ge1132ov22436 = (GE_ms8("EACE", 4));
+	ge1132ov22348 = (GE_ms8("\'location\' attribute is missing in element \'override\'.", 54));
+	ge1132ov22437 = (GE_ms8("EACF", 4));
+	ge1132ov22349 = (GE_ms8("\'name\' attribute in element \'override\' is empty.", 48));
+	ge1132ov22435 = (GE_ms8("EACD", 4));
+	ge1132ov22347 = (GE_ms8("\'name\' attribute is missing in element \'override\'.", 50));
+	ge1132ov22451 = (GE_ms8("EACT", 4));
+	ge1132ov22363 = (GE_ms8("\'readonly\' attribute \"$5\" in element \'cluster\' should be a boolean.", 67));
+	ge1132ov22392 = (GE_ms8("EAAM", 4));
+	ge1132ov22304 = (GE_ms8("\'recursive\' attribute \"$5\" in element \'cluster\' should be a boolean.", 68));
+	ge1132ov22391 = (GE_ms8("EAAL", 4));
+	ge1132ov22303 = (GE_ms8("\'location\' attribute in element \'cluster\' is empty.", 51));
+	ge1132ov22389 = (GE_ms8("EAAJ", 4));
+	ge1132ov22301 = (GE_ms8("\'location\' attribute is missing in element \'cluster\'.", 53));
+	ge1132ov22390 = (GE_ms8("EAAK", 4));
+	ge1132ov22302 = (GE_ms8("\'name\' attribute in element \'cluster\' is empty.", 47));
+	ge1132ov22388 = (GE_ms8("EAAI", 4));
+	ge1132ov22300 = (GE_ms8("\'name\' attribute is missing in element \'cluster\'.", 49));
+	ge1132ov22410 = (GE_ms8("EABE", 4));
+	ge1132ov22322 = (GE_ms8("\'name\' attribute in element \'target\' is empty.", 46));
+	ge1132ov22409 = (GE_ms8("EABD", 4));
+	ge1132ov22321 = (GE_ms8("\'name\' attribute is missing in element \'target\'.", 48));
+	ge1132ov22419 = (GE_ms8("EABN", 4));
+	ge1132ov22331 = (GE_ms8("\'name\' attribute in element \'system\' describing a library is empty.", 67));
+	ge1132ov22418 = (GE_ms8("EABM", 4));
+	ge1132ov22330 = (GE_ms8("\'name\' attribute is missing in element \'system\' describing a library.", 69));
+	ge1132ov22420 = (GE_ms8("EABO", 4));
+	ge1132ov22332 = (GE_ms8("\'uuid\' attribute is missing in element \'system\' describing a library.", 69));
+	ge1132ov22427 = (GE_ms8("EABV", 4));
+	ge1132ov22339 = (GE_ms8("cannot open library ECF file \"$5\".", 34));
+	ge1124ov13504 = (GE_ms8("multithreaded", 13));
+	ge1124ov13503 = (GE_ms8("msil_generation", 15));
+	ge1132ov22417 = (GE_ms8("EABL", 4));
+	ge1132ov22329 = (GE_ms8("\'name\' attribute in element \'system\' is empty.", 46));
+	ge1132ov22416 = (GE_ms8("EABK", 4));
+	ge1132ov22328 = (GE_ms8("\'name\' attribute is missing in element \'system\'.", 48));
+	ge1314ov21617 = (GE_ms8("PE reference only allowed in DTD", 32));
+	ge1314ov21579 = (GE_ms8("< not allowed in attribute value", 32));
+	ge1314ov21577 = (GE_ms8("-- not allowed in comment", 25));
+	ge1314ov21618 = (GE_ms8("xml prefix reserved in processing instruction", 45));
+	ge1314ov21590 = (GE_ms8("Misformed XML Declaration", 25));
+	ge1314ov21589 = (GE_ms8("Misplaced markup declaration", 28));
+	ge1314ov21600 = (GE_ms8("End tag does not match start tag", 32));
+	ge1314ov21594 = (GE_ms8("Missing element end tag", 23));
+	ge1314ov21593 = (GE_ms8("Error in element content", 24));
+	ge1314ov21592 = (GE_ms8("Misformed start tag", 19));
+	ge1314ov21598 = (GE_ms8("Attribute declared twice", 24));
+	ge1314ov21597 = (GE_ms8("Misformed attribute in tag", 26));
+	ge1314ov21599 = (GE_ms8("Error in end tag", 16));
+	ge1314ov21576 = (GE_ms8("]]> not allowed in content", 26));
+	ge1314ov21602 = (GE_ms8("Error in XML declaration", 24));
+	ge1314ov21611 = (GE_ms8("Misformed element type declaration", 34));
+	ge1317ov21440 = (GE_ms8("*", 1));
+	ge1317ov21438 = (GE_ms8("+", 1));
+	ge1317ov21439 = (GE_ms8("\?", 1));
+	ge1314ov21612 = (GE_ms8("Misformed attribute list declaration", 36));
+	ge1314ov21613 = (GE_ms8("Misformed attribute definition declaration", 42));
+	ge1314ov21616 = (GE_ms8("Misformed conditional section", 29));
 }
 
 void GE_init_const8()
 {
-	ge1314ov21613 = (GE_ms("Misformed conditional section", 29));
-	ge1314ov21611 = (GE_ms("Misformed entity declaration", 28));
-	ge1314ov21612 = (GE_ms("Misformed entity notation", 25));
-	ge1314ov21606 = (GE_ms("Parser is not configured to support external DTDs", 49));
-	ge1310ov22013 = (GE_ms("1.0", 3));
-	ge1310ov22014 = (GE_ms("utf-8", 5));
-	ge1314ov21579 = (GE_ms("unsupported character encoding", 30));
-	ge1314ov21602 = (GE_ms("External reference in quoted value", 34));
-	ge1307ov12493 = (GE_ms("undefined", 9));
-	ge1307ov12492 = (GE_ms("(TRUNCATED)", 11));
-	ge1314ov21622 = (GE_ms("Unexpected non-ASCII character in ASCII-only mode", 49));
-	ge1314ov21623 = (GE_ms("Unexpected non-latin1 character in latin1-only mode", 51));
-	ge1314ov21624 = (GE_ms("Invalid UTF8 character sequence", 31));
-	ge1314ov21617 = (GE_ms("Name misformed", 14));
-	ge1314ov21600 = (GE_ms("Literal entity expected in attribute", 36));
-	ge1314ov21601 = (GE_ms("Entity is not defined", 21));
-	ge1314ov21603 = (GE_ms("Entity cannot be recursively included", 37));
-	ge1314ov21607 = (GE_ms("Undefined PE entity", 19));
-	ge1263ov20673 = (GE_ms("root", 4));
-	ge1153ov11234 = (GE_ms("abstract", 8));
-	ge1153ov11235 = (GE_ms("address_expression", 18));
-	ge1153ov11236 = (GE_ms("arguments", 9));
-	ge1153ov11237 = (GE_ms("array_optimization", 18));
-	ge1153ov11238 = (GE_ms("assembly", 8));
-	ge1153ov11239 = (GE_ms("assertion", 9));
-	ge1153ov11240 = (GE_ms("attached_by_default", 19));
-	ge1153ov11241 = (GE_ms("automatic_backup", 16));
-	ge1153ov11242 = (GE_ms("callback", 8));
-	ge1153ov11243 = (GE_ms("case_insensitive", 16));
-	ge1153ov11244 = (GE_ms("check_generic_creation_constraint", 33));
-	ge1153ov11245 = (GE_ms("check_vape", 10));
-	ge1153ov11246 = (GE_ms("clean", 5));
-	ge1153ov11247 = (GE_ms("cls_compliant", 13));
-	ge1153ov11248 = (GE_ms("component", 9));
-	ge1153ov11249 = (GE_ms("console_application", 19));
-	ge1153ov11250 = (GE_ms("create_keyword_extension", 24));
-	ge1153ov11251 = (GE_ms("culture", 7));
-	ge1153ov11252 = (GE_ms("c_compiler_options", 18));
-	ge1153ov11253 = (GE_ms("dead_code_removal", 17));
-	ge1153ov11254 = (GE_ms("debug", 5));
-	ge1153ov11255 = (GE_ms("debug_tag", 9));
-	ge1153ov11256 = (GE_ms("debugger", 8));
-	ge1153ov11257 = (GE_ms("document", 8));
-	ge1153ov11258 = (GE_ms("dotnet_naming_convention", 24));
-	ge1153ov11259 = (GE_ms("dynamic_runtime", 15));
-	ge1153ov11260 = (GE_ms("ecf_library", 11));
-	ge1153ov11261 = (GE_ms("enforce_unique_class_names", 26));
-	ge1153ov11262 = (GE_ms("exception_trace", 15));
-	ge1153ov11263 = (GE_ms("exclude", 7));
-	ge1153ov11264 = (GE_ms("export", 6));
-	ge1153ov11265 = (GE_ms("external_runtime", 16));
-	ge1153ov11266 = (GE_ms("finalize", 8));
-	ge1153ov11267 = (GE_ms("flat_fst_optimization", 21));
-	ge1153ov11268 = (GE_ms("force_32bits", 12));
-	ge1153ov11269 = (GE_ms("fst_expansion_factor", 20));
-	ge1153ov11270 = (GE_ms("fst_optimization", 16));
-	ge1153ov11271 = (GE_ms("full_class_checking", 19));
-	ge1153ov11272 = (GE_ms("garbage_collector", 17));
-	ge1153ov11273 = (GE_ms("gc_info", 7));
-	ge1153ov11274 = (GE_ms("heap_size", 9));
-	ge1153ov11275 = (GE_ms("header", 6));
-	ge1153ov11276 = (GE_ms("high_memory_compiler", 20));
-	ge1153ov11277 = (GE_ms("il_verifiable", 13));
-	ge1153ov11278 = (GE_ms("include", 7));
-	ge1153ov11279 = (GE_ms("inlining", 8));
-	ge1153ov11280 = (GE_ms("inlining_size", 13));
-	ge1153ov11281 = (GE_ms("jumps_optimization", 18));
-	ge1153ov11282 = (GE_ms("layout", 6));
-	ge1153ov11283 = (GE_ms("layout_optimization", 19));
-	ge1153ov11284 = (GE_ms("leaves_optimization", 19));
-	ge1153ov11285 = (GE_ms("line_generation", 15));
-	ge1153ov11286 = (GE_ms("link", 4));
-	ge1153ov11287 = (GE_ms("linker", 6));
-	ge1153ov11288 = (GE_ms("linux_fpu_double_precision", 26));
-	ge1153ov11289 = (GE_ms("manifest_string_trace", 21));
-	ge1153ov11290 = (GE_ms("map", 3));
-	ge1153ov11291 = (GE_ms("metadata_cache_path", 19));
-	ge1153ov11292 = (GE_ms("msil_assembly_compatibility", 27));
-	ge1153ov11293 = (GE_ms("msil_classes_per_module", 23));
-	ge1153ov11294 = (GE_ms("msil_clr_version", 16));
-	ge1153ov11295 = (GE_ms("msil_culture", 12));
-	ge1153ov11296 = (GE_ms("msil_generation", 15));
-	ge1153ov11297 = (GE_ms("msil_generation_version", 23));
-	ge1153ov11298 = (GE_ms("msil_key_file_name", 18));
-	ge1153ov11299 = (GE_ms("msil_use_optimized_precompile", 29));
-	ge1153ov11300 = (GE_ms("multithreaded", 13));
-	ge1153ov11301 = (GE_ms("namespace", 9));
-	ge1153ov11302 = (GE_ms("no_default_lib", 14));
-	ge1153ov11303 = (GE_ms("old_verbatim_strings", 20));
-	ge1153ov11304 = (GE_ms("override_cluster", 16));
-	ge1153ov11305 = (GE_ms("portable_code_generation", 24));
-	ge1153ov11306 = (GE_ms("precompiled", 11));
-	ge1153ov11307 = (GE_ms("prefix", 6));
-	ge1153ov11308 = (GE_ms("profile", 7));
-	ge1153ov11309 = (GE_ms("public_key_token", 16));
-	ge1153ov11310 = (GE_ms("read_only", 9));
-	ge1153ov11311 = (GE_ms("recursive", 9));
-	ge1153ov11312 = (GE_ms("reloads_optimization", 20));
-	ge1153ov11313 = (GE_ms("shared_library_definition", 25));
-	ge1153ov11314 = (GE_ms("split", 5));
-	ge1153ov11315 = (GE_ms("stack_size", 10));
+	ge1314ov21614 = (GE_ms8("Misformed entity declaration", 28));
+	ge1314ov21615 = (GE_ms8("Misformed entity notation", 25));
+	ge1314ov21609 = (GE_ms8("Parser is not configured to support external DTDs", 49));
+	ge1310ov22016 = (GE_ms8("1.0", 3));
+	ge1310ov22017 = (GE_ms8("utf-8", 5));
+	ge1314ov21582 = (GE_ms8("unsupported character encoding", 30));
+	ge1314ov21605 = (GE_ms8("External reference in quoted value", 34));
+	ge1307ov12493 = (GE_ms8("undefined", 9));
+	ge1307ov12492 = (GE_ms8("(TRUNCATED)", 11));
+	ge1314ov21625 = (GE_ms8("Unexpected non-ASCII character in ASCII-only mode", 49));
+	ge1314ov21626 = (GE_ms8("Unexpected non-latin1 character in latin1-only mode", 51));
+	ge1314ov21627 = (GE_ms8("Invalid UTF8 character sequence", 31));
+	ge1314ov21620 = (GE_ms8("Name misformed", 14));
+	ge1314ov21603 = (GE_ms8("Literal entity expected in attribute", 36));
+	ge1314ov21604 = (GE_ms8("Entity is not defined", 21));
+	ge1314ov21606 = (GE_ms8("Entity cannot be recursively included", 37));
+	ge1314ov21610 = (GE_ms8("Undefined PE entity", 19));
+	ge1263ov20676 = (GE_ms8("root", 4));
+	ge1153ov11234 = (GE_ms8("abstract", 8));
+	ge1153ov11235 = (GE_ms8("address_expression", 18));
+	ge1153ov11236 = (GE_ms8("arguments", 9));
+	ge1153ov11237 = (GE_ms8("array_optimization", 18));
+	ge1153ov11238 = (GE_ms8("assembly", 8));
+	ge1153ov11239 = (GE_ms8("assertion", 9));
+	ge1153ov11240 = (GE_ms8("attached_by_default", 19));
+	ge1153ov11241 = (GE_ms8("automatic_backup", 16));
+	ge1153ov11242 = (GE_ms8("callback", 8));
+	ge1153ov11243 = (GE_ms8("case_insensitive", 16));
+	ge1153ov11244 = (GE_ms8("check_generic_creation_constraint", 33));
+	ge1153ov11245 = (GE_ms8("check_vape", 10));
+	ge1153ov11246 = (GE_ms8("clean", 5));
+	ge1153ov11247 = (GE_ms8("cls_compliant", 13));
+	ge1153ov11248 = (GE_ms8("component", 9));
+	ge1153ov11249 = (GE_ms8("console_application", 19));
+	ge1153ov11250 = (GE_ms8("create_keyword_extension", 24));
+	ge1153ov11251 = (GE_ms8("culture", 7));
+	ge1153ov11252 = (GE_ms8("c_compiler_options", 18));
+	ge1153ov11253 = (GE_ms8("dead_code_removal", 17));
+	ge1153ov11254 = (GE_ms8("debug", 5));
+	ge1153ov11255 = (GE_ms8("debug_tag", 9));
+	ge1153ov11256 = (GE_ms8("debugger", 8));
+	ge1153ov11257 = (GE_ms8("document", 8));
+	ge1153ov11258 = (GE_ms8("dotnet_naming_convention", 24));
+	ge1153ov11259 = (GE_ms8("dynamic_runtime", 15));
+	ge1153ov11260 = (GE_ms8("ecf_library", 11));
+	ge1153ov11261 = (GE_ms8("enforce_unique_class_names", 26));
+	ge1153ov11262 = (GE_ms8("exception_trace", 15));
+	ge1153ov11263 = (GE_ms8("exclude", 7));
+	ge1153ov11264 = (GE_ms8("export", 6));
+	ge1153ov11265 = (GE_ms8("external_runtime", 16));
+	ge1153ov11266 = (GE_ms8("finalize", 8));
+	ge1153ov11267 = (GE_ms8("flat_fst_optimization", 21));
+	ge1153ov11268 = (GE_ms8("force_32bits", 12));
+	ge1153ov11269 = (GE_ms8("fst_expansion_factor", 20));
+	ge1153ov11270 = (GE_ms8("fst_optimization", 16));
+	ge1153ov11271 = (GE_ms8("full_class_checking", 19));
+	ge1153ov11272 = (GE_ms8("garbage_collector", 17));
+	ge1153ov11273 = (GE_ms8("gc_info", 7));
+	ge1153ov11274 = (GE_ms8("heap_size", 9));
+	ge1153ov11275 = (GE_ms8("header", 6));
+	ge1153ov11276 = (GE_ms8("high_memory_compiler", 20));
+	ge1153ov11277 = (GE_ms8("il_verifiable", 13));
+	ge1153ov11278 = (GE_ms8("include", 7));
+	ge1153ov11279 = (GE_ms8("inlining", 8));
+	ge1153ov11280 = (GE_ms8("inlining_size", 13));
+	ge1153ov11281 = (GE_ms8("jumps_optimization", 18));
+	ge1153ov11282 = (GE_ms8("layout", 6));
+	ge1153ov11283 = (GE_ms8("layout_optimization", 19));
+	ge1153ov11284 = (GE_ms8("leaves_optimization", 19));
+	ge1153ov11285 = (GE_ms8("line_generation", 15));
+	ge1153ov11286 = (GE_ms8("link", 4));
+	ge1153ov11287 = (GE_ms8("linker", 6));
+	ge1153ov11288 = (GE_ms8("linux_fpu_double_precision", 26));
+	ge1153ov11289 = (GE_ms8("manifest_string_trace", 21));
+	ge1153ov11290 = (GE_ms8("map", 3));
+	ge1153ov11291 = (GE_ms8("metadata_cache_path", 19));
+	ge1153ov11292 = (GE_ms8("msil_assembly_compatibility", 27));
+	ge1153ov11293 = (GE_ms8("msil_classes_per_module", 23));
+	ge1153ov11294 = (GE_ms8("msil_clr_version", 16));
+	ge1153ov11295 = (GE_ms8("msil_culture", 12));
+	ge1153ov11296 = (GE_ms8("msil_generation", 15));
+	ge1153ov11297 = (GE_ms8("msil_generation_version", 23));
+	ge1153ov11298 = (GE_ms8("msil_key_file_name", 18));
+	ge1153ov11299 = (GE_ms8("msil_use_optimized_precompile", 29));
+	ge1153ov11300 = (GE_ms8("multithreaded", 13));
+	ge1153ov11301 = (GE_ms8("namespace", 9));
+	ge1153ov11302 = (GE_ms8("no_default_lib", 14));
+	ge1153ov11303 = (GE_ms8("old_verbatim_strings", 20));
+	ge1153ov11304 = (GE_ms8("override_cluster", 16));
+	ge1153ov11305 = (GE_ms8("portable_code_generation", 24));
+	ge1153ov11306 = (GE_ms8("precompiled", 11));
+	ge1153ov11307 = (GE_ms8("prefix", 6));
+	ge1153ov11308 = (GE_ms8("profile", 7));
+	ge1153ov11309 = (GE_ms8("public_key_token", 16));
+	ge1153ov11310 = (GE_ms8("read_only", 9));
+	ge1153ov11311 = (GE_ms8("recursive", 9));
+	ge1153ov11312 = (GE_ms8("reloads_optimization", 20));
+	ge1153ov11313 = (GE_ms8("shared_library_definition", 25));
+	ge1153ov11314 = (GE_ms8("split", 5));
+	ge1153ov11315 = (GE_ms8("stack_size", 10));
+	ge1153ov11316 = (GE_ms8("storable", 8));
 }
 
 void GE_init_const9()
 {
-	ge1153ov11316 = (GE_ms("storable", 8));
-	ge1153ov11317 = (GE_ms("storable_filename", 17));
-	ge1153ov11318 = (GE_ms("strip", 5));
-	ge1153ov11319 = (GE_ms("syntax", 6));
-	ge1153ov11320 = (GE_ms("target", 6));
-	ge1153ov11321 = (GE_ms("trace", 5));
-	ge1153ov11322 = (GE_ms("use_cluster_name_as_namespace", 29));
-	ge1153ov11323 = (GE_ms("use_full_cluster_name_as_namespace", 34));
-	ge1153ov11324 = (GE_ms("verbose", 7));
-	ge1153ov11325 = (GE_ms("version", 7));
-	ge1153ov11326 = (GE_ms("visible_filename", 16));
-	ge1153ov11327 = (GE_ms("void_safety", 11));
-	ge1153ov11328 = (GE_ms("warning", 7));
-	ge1153ov11329 = (GE_ms("wedit", 5));
-	ge1153ov11430 = (GE_ms("boehm", 5));
-	ge1153ov11442 = (GE_ms("internal", 8));
-	ge1184ov11201 = (GE_ms("", 0));
-	ge1153ov11453 = (GE_ms("require", 7));
-	ge1153ov11438 = (GE_ms("ensure", 6));
-	ge1153ov11443 = (GE_ms("invariant", 9));
-	ge1153ov11444 = (GE_ms("loop_invariant", 14));
-	ge1153ov11445 = (GE_ms("loop_variant", 12));
-	ge1153ov11431 = (GE_ms("check", 5));
-	ge1153ov11449 = (GE_ms("none", 4));
-	ge1153ov11456 = (GE_ms("style", 5));
-	ge1153ov11436 = (GE_ms("default", 7));
-	ge1153ov11427 = (GE_ms("all", 3));
-	ge1153ov11452 = (GE_ms("on_demand", 9));
-	ge1153ov11434 = (GE_ms("complete", 8));
-	ge1153ov11439 = (GE_ms("exe", 3));
-	ge1153ov11437 = (GE_ms("dll", 3));
-	ge1153ov11433 = (GE_ms("com", 3));
-	ge1153ov11448 = (GE_ms("no_main", 7));
-	ge1153ov11450 = (GE_ms("obsolete", 8));
-	ge1153ov11458 = (GE_ms("transitional", 12));
-	ge1153ov11455 = (GE_ms("standard", 8));
-	ge1153ov11447 = (GE_ms("microsoft", 9));
-	ge1153ov11429 = (GE_ms("auto", 4));
-	ge1153ov11454 = (GE_ms("sequential", 10));
-	ge1153ov11428 = (GE_ms("array", 5));
-	ge1153ov11435 = (GE_ms("constant", 8));
-	ge1153ov11451 = (GE_ms("once", 4));
-	ge1153ov11446 = (GE_ms("low_level", 9));
-	ge1153ov11440 = (GE_ms("feature", 7));
-	ge1153ov11432 = (GE_ms("class", 5));
-	ge1153ov11460 = (GE_ms("winapi", 6));
-	ge1153ov11441 = (GE_ms("generate", 8));
-	ge1153ov11457 = (GE_ms("supplier_precondition", 21));
-	ge1184ov11200 = (GE_ms("false", 5));
-	ge1184ov11199 = (GE_ms("true", 4));
-	ge1143ov11853 = (GE_ms("", 0));
-	ge1149ov11778 = (GE_ms("", 0));
-	ge1350ov12897 = (GE_ms(" \t\r\n", 4));
-	ge9ov11120 = (GE_ms("The value \'$2\' is not valid for the option \'$1\'.", 48));
-	ge9ov11127 = (GE_ms("APIPAR", 6));
-	ge16ov10740 = (GE_ms("usage: ", 7));
-	ge290ov2854 = (GE_ms("4.1", 3));
-	ge6ov10760 = (GE_ms("Errors parsing arguments, aborting.", 35));
-	ge9ov11123 = (GE_ms("Too many occurrences of option \'$1\'.", 36));
-	ge9ov11130 = (GE_ms("APSOPT", 6));
-	ge9ov11121 = (GE_ms("The mandatory option \'$1\' is missing.", 37));
-	ge9ov11128 = (GE_ms("APMOPT", 6));
-	ge9ov11122 = (GE_ms("The option \'$1\' is missing a parameter.", 39));
-	ge9ov11129 = (GE_ms("APMPAR", 6));
-	ge9ov11124 = (GE_ms("Unknown option \'$1\'.", 20));
-	ge9ov11131 = (GE_ms("APUOPT", 6));
-	ge9ov11125 = (GE_ms("The flag \'$1\' was given the parameter \'$2\'.", 43));
-	ge9ov11132 = (GE_ms("APUPAR", 6));
-	ge6ov10755 = (GE_ms("help", 4));
-	ge6ov10754 = (GE_ms("Display this help text.", 23));
-	ge6ov10762 = (GE_ms("parameters ...", 14));
-	ge6ov10761 = (GE_ms("", 0));
-	ge1192ov3067 = (GE_ms("ISE_LIBRARY", 11));
-	ge1192ov3065 = (GE_ms("ISE_EIFFEL", 10));
-	ge1321ov31215 = (GE_ms(" ", 1));
-	ge1321ov31216 = (GE_ms("  ", 2));
-	ge1312ov31371 = (GE_ms("iso-8859-1", 10));
-	ge1312ov31373 = (GE_ms("utf-16", 6));
-	ge824ov3775 = (GE_ms("NATIVE_ARRAY", 12));
-	ge1031ov8700 = (GE_ms("gaaaa", 5));
-	ge1031ov8698 = (GE_ms("GAAAA", 5));
-	ge1031ov8696 = (GE_ms("[$1] assembly $2: .NET assemblies not supported.", 48));
-	ge922ov6772 = (GE_ms("TUPLE", 5));
-	ge915ov9906 = (GE_ms("like ", 5));
-	ge911ov15097 = (GE_ms("like Current", 12));
-	ge1041ov9690 = (GE_ms("vtgc0a", 6));
-	ge1041ov9430 = (GE_ms("VTGC", 4));
-	ge1041ov9247 = (GE_ms("`$7\' is not the final name of a procedure in constraint\'s base class $8.", 72));
-	ge1041ov9691 = (GE_ms("vtgc0b", 6));
-	ge1041ov9248 = (GE_ms("`$7\' is not the final name of a procedure in constraint\'s base class $8.", 72));
-	ge1041ov9597 = (GE_ms("vgcp3c", 6));
-	ge1041ov9379 = (GE_ms("VGCP-3", 6));
-	ge1041ov9154 = (GE_ms("procedure name `$7\' appears twice in creation clause of constraint.", 67));
-	ge824ov4121 = (GE_ms("attached", 8));
-	ge1041ov9511 = (GE_ms("vdrd2c", 6));
-	ge1041ov9341 = (GE_ms("VDRD-2", 6));
-	ge1041ov9068 = (GE_ms("signature of selected feature `$7\' does not conform to the signature of replicated feature `$8\' in parent $9.", 109));
-	ge1041ov9512 = (GE_ms("vdrd2d", 6));
-	ge1041ov9069 = (GE_ms("signature of selected feature `$7\' inherited from $8 does not conform to the signature of replicated feature `$9\' in parent $10.", 128));
-	ge1041ov9495 = (GE_ms("vdjr0b", 6));
-	ge1041ov9334 = (GE_ms("VDJR", 4));
+	ge1153ov11317 = (GE_ms8("storable_filename", 17));
+	ge1153ov11318 = (GE_ms8("strip", 5));
+	ge1153ov11319 = (GE_ms8("syntax", 6));
+	ge1153ov11320 = (GE_ms8("target", 6));
+	ge1153ov11321 = (GE_ms8("trace", 5));
+	ge1153ov11322 = (GE_ms8("use_cluster_name_as_namespace", 29));
+	ge1153ov11323 = (GE_ms8("use_full_cluster_name_as_namespace", 34));
+	ge1153ov11324 = (GE_ms8("verbose", 7));
+	ge1153ov11325 = (GE_ms8("version", 7));
+	ge1153ov11326 = (GE_ms8("visible_filename", 16));
+	ge1153ov11327 = (GE_ms8("void_safety", 11));
+	ge1153ov11328 = (GE_ms8("warning", 7));
+	ge1153ov11329 = (GE_ms8("wedit", 5));
+	ge1153ov11430 = (GE_ms8("boehm", 5));
+	ge1153ov11442 = (GE_ms8("internal", 8));
+	ge1184ov11201 = (GE_ms8("", 0));
+	ge1153ov11453 = (GE_ms8("require", 7));
+	ge1153ov11438 = (GE_ms8("ensure", 6));
+	ge1153ov11443 = (GE_ms8("invariant", 9));
+	ge1153ov11444 = (GE_ms8("loop_invariant", 14));
+	ge1153ov11445 = (GE_ms8("loop_variant", 12));
+	ge1153ov11431 = (GE_ms8("check", 5));
+	ge1153ov11449 = (GE_ms8("none", 4));
+	ge1153ov11456 = (GE_ms8("style", 5));
+	ge1153ov11436 = (GE_ms8("default", 7));
+	ge1153ov11427 = (GE_ms8("all", 3));
+	ge1153ov11452 = (GE_ms8("on_demand", 9));
+	ge1153ov11434 = (GE_ms8("complete", 8));
+	ge1153ov11439 = (GE_ms8("exe", 3));
+	ge1153ov11437 = (GE_ms8("dll", 3));
+	ge1153ov11433 = (GE_ms8("com", 3));
+	ge1153ov11448 = (GE_ms8("no_main", 7));
+	ge1153ov11450 = (GE_ms8("obsolete", 8));
+	ge1153ov11458 = (GE_ms8("transitional", 12));
+	ge1153ov11455 = (GE_ms8("standard", 8));
+	ge1153ov11447 = (GE_ms8("microsoft", 9));
+	ge1153ov11429 = (GE_ms8("auto", 4));
+	ge1153ov11454 = (GE_ms8("sequential", 10));
+	ge1153ov11428 = (GE_ms8("array", 5));
+	ge1153ov11435 = (GE_ms8("constant", 8));
+	ge1153ov11451 = (GE_ms8("once", 4));
+	ge1153ov11446 = (GE_ms8("low_level", 9));
+	ge1153ov11440 = (GE_ms8("feature", 7));
+	ge1153ov11432 = (GE_ms8("class", 5));
+	ge1153ov11460 = (GE_ms8("winapi", 6));
+	ge1153ov11441 = (GE_ms8("generate", 8));
+	ge1153ov11457 = (GE_ms8("supplier_precondition", 21));
+	ge1184ov11200 = (GE_ms8("false", 5));
+	ge1184ov11199 = (GE_ms8("true", 4));
+	ge1143ov11853 = (GE_ms8("", 0));
+	ge1149ov11778 = (GE_ms8("", 0));
+	ge1350ov12897 = (GE_ms8(" \t\r\n", 4));
+	ge9ov11120 = (GE_ms8("The value \'$2\' is not valid for the option \'$1\'.", 48));
+	ge9ov11127 = (GE_ms8("APIPAR", 6));
+	ge16ov10740 = (GE_ms8("usage: ", 7));
+	ge295ov2854 = (GE_ms8("4.1", 3));
+	ge6ov10760 = (GE_ms8("Errors parsing arguments, aborting.", 35));
+	ge9ov11123 = (GE_ms8("Too many occurrences of option \'$1\'.", 36));
+	ge9ov11130 = (GE_ms8("APSOPT", 6));
+	ge9ov11121 = (GE_ms8("The mandatory option \'$1\' is missing.", 37));
+	ge9ov11128 = (GE_ms8("APMOPT", 6));
+	ge9ov11122 = (GE_ms8("The option \'$1\' is missing a parameter.", 39));
+	ge9ov11129 = (GE_ms8("APMPAR", 6));
+	ge9ov11124 = (GE_ms8("Unknown option \'$1\'.", 20));
+	ge9ov11131 = (GE_ms8("APUOPT", 6));
+	ge9ov11125 = (GE_ms8("The flag \'$1\' was given the parameter \'$2\'.", 43));
+	ge9ov11132 = (GE_ms8("APUPAR", 6));
+	ge6ov10755 = (GE_ms8("help", 4));
+	ge6ov10754 = (GE_ms8("Display this help text.", 23));
+	ge6ov10762 = (GE_ms8("parameters ...", 14));
+	ge6ov10761 = (GE_ms8("", 0));
+	ge1192ov3067 = (GE_ms8("ISE_LIBRARY", 11));
+	ge1192ov3065 = (GE_ms8("ISE_EIFFEL", 10));
+	ge1321ov31218 = (GE_ms8(" ", 1));
+	ge1321ov31219 = (GE_ms8("  ", 2));
+	ge1312ov31374 = (GE_ms8("iso-8859-1", 10));
+	ge1312ov31376 = (GE_ms8("utf-16", 6));
+	ge824ov3775 = (GE_ms8("NATIVE_ARRAY", 12));
+	ge1031ov8700 = (GE_ms8("gaaaa", 5));
+	ge1031ov8698 = (GE_ms8("GAAAA", 5));
+	ge1031ov8696 = (GE_ms8("[$1] assembly $2: .NET assemblies not supported.", 48));
+	ge922ov6772 = (GE_ms8("TUPLE", 5));
+	ge915ov9906 = (GE_ms8("like ", 5));
+	ge911ov15097 = (GE_ms8("like Current", 12));
+	ge1041ov9690 = (GE_ms8("vtgc0a", 6));
+	ge1041ov9430 = (GE_ms8("VTGC", 4));
+	ge1041ov9247 = (GE_ms8("`$7\' is not the final name of a procedure in constraint\'s base class $8.", 72));
+	ge1041ov9691 = (GE_ms8("vtgc0b", 6));
+	ge1041ov9248 = (GE_ms8("`$7\' is not the final name of a procedure in constraint\'s base class $8.", 72));
+	ge1041ov9597 = (GE_ms8("vgcp3c", 6));
+	ge1041ov9379 = (GE_ms8("VGCP-3", 6));
+	ge1041ov9154 = (GE_ms8("procedure name `$7\' appears twice in creation clause of constraint.", 67));
+	ge824ov4121 = (GE_ms8("attached", 8));
+	ge1041ov9511 = (GE_ms8("vdrd2c", 6));
+	ge1041ov9341 = (GE_ms8("VDRD-2", 6));
+	ge1041ov9068 = (GE_ms8("signature of selected feature `$7\' does not conform to the signature of replicated feature `$8\' in parent $9.", 109));
+	ge1041ov9512 = (GE_ms8("vdrd2d", 6));
+	ge1041ov9069 = (GE_ms8("signature of selected feature `$7\' inherited from $8 does not conform to the signature of replicated feature `$9\' in parent $10.", 128));
+	ge1041ov9495 = (GE_ms8("vdjr0b", 6));
+	ge1041ov9334 = (GE_ms8("VDJR", 4));
+	ge1041ov9052 = (GE_ms8("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Type of argument number $10 differs.", 122));
 }
 
 void GE_init_const10()
 {
-	ge1041ov9052 = (GE_ms("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Type of argument number $10 differs.", 122));
-	ge1041ov9494 = (GE_ms("vdjr0a", 6));
-	ge1041ov9051 = (GE_ms("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Different number of arguments.", 116));
-	ge1041ov9496 = (GE_ms("vdjr0c", 6));
-	ge1041ov9053 = (GE_ms("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Type of result differs.", 109));
-	ge1041ov9520 = (GE_ms("vdrd6b", 6));
-	ge1041ov9345 = (GE_ms("VDRD-6", 6));
-	ge1041ov9077 = (GE_ms("attribute `$7\' inherited from $8 and its redeclared version don\'t have the same type expandedness.", 98));
-	ge1041ov9509 = (GE_ms("vdrd2a", 6));
-	ge1041ov9066 = (GE_ms("signature of feature `$7\' does not conform to the signature of redeclared feature `$8\' in parent $9.", 100));
-	ge1041ov9510 = (GE_ms("vdrd2b", 6));
-	ge1041ov9067 = (GE_ms("signature of feature `$7\' inherited from $8 does not conform to the signature of redeclared feature `$9\' in parent $10.", 119));
-	ge1041ov9627 = (GE_ms("vmrc2b", 6));
-	ge1041ov9396 = (GE_ms("VMRC-2", 6));
-	ge1041ov9184 = (GE_ms("replicated features $7 have been selected more than once.", 57));
-	ge1041ov9626 = (GE_ms("vmrc2a", 6));
-	ge1041ov9183 = (GE_ms("replicated features $7 have not been selected.", 46));
-	ge1041ov9628 = (GE_ms("vmss1a", 6));
-	ge1041ov9397 = (GE_ms("VMSS-1", 6));
-	ge1041ov9185 = (GE_ms("`$7\' is not the final name of a feature inherited from $8.", 58));
-	ge1041ov9524 = (GE_ms("vdrs1a", 6));
-	ge1041ov9347 = (GE_ms("VDRS-1", 6));
-	ge1041ov9081 = (GE_ms("`$7\' is not the final name of a feature inherited from $8.", 58));
-	ge1041ov9530 = (GE_ms("vdus1a", 6));
-	ge1041ov9351 = (GE_ms("VDUS-1", 6));
-	ge1041ov9087 = (GE_ms("`$7\' is not the final name of a feature inherited from $8.", 58));
-	ge1041ov9619 = (GE_ms("vlel2a", 6));
-	ge1041ov9392 = (GE_ms("VLEL-2", 6));
-	ge1041ov9176 = (GE_ms("`$7\' is not the final name of a feature inherited from $8.", 58));
-	ge1041ov9602 = (GE_ms("vhrc1a", 6));
-	ge1041ov9382 = (GE_ms("VHRC-1", 6));
-	ge1041ov9159 = (GE_ms("`$7\' is not the final name of a feature in $8.", 46));
-	ge1041ov9629 = (GE_ms("vmss2a", 6));
-	ge1041ov9398 = (GE_ms("VMSS-2", 6));
-	ge1041ov9186 = (GE_ms("feature name `$7\' appears twice in the Select subclause of parent $8.", 69));
-	ge1041ov9527 = (GE_ms("vdrs3a", 6));
-	ge1041ov9349 = (GE_ms("VDRS-3", 6));
-	ge1041ov9084 = (GE_ms("feature name `$7\' appears twice in the Redefine subclause of parent $8.", 71));
-	ge1041ov9534 = (GE_ms("vdus4a", 6));
-	ge1041ov9354 = (GE_ms("VDUS-4", 6));
-	ge1041ov9091 = (GE_ms("feature name `$7\' appears twice in the Undefine subclause of parent $8.", 71));
-	ge1041ov9620 = (GE_ms("vlel3a", 6));
-	ge1041ov9393 = (GE_ms("VLEL-3", 6));
-	ge1041ov9177 = (GE_ms("feature name `$7\' appears twice in the Export subclause of parent $8.", 69));
-	ge1041ov9618 = (GE_ms("vlel1a", 6));
-	ge1041ov9391 = (GE_ms("VLEL-1", 6));
-	ge1041ov9175 = (GE_ms("\'all\' keyword appears twice in the Export subclause of parent $7.", 65));
-	ge1041ov9603 = (GE_ms("vhrc2a", 6));
-	ge1041ov9383 = (GE_ms("VHRC-2", 6));
-	ge1041ov9160 = (GE_ms("feature name `$7\' appears as first element of two Rename_pairs.", 63));
-	ge1041ov9621 = (GE_ms("vmfn0a", 6));
-	ge1041ov9394 = (GE_ms("VMFN", 4));
-	ge1041ov9178 = (GE_ms("two features with the same name `$7\'.", 37));
-	ge824ov4119 = (GE_ms("as", 2));
-	ge824ov3889 = (GE_ms("forth", 5));
-	ge824ov3801 = (GE_ms("after", 5));
-	ge824ov3985 = (GE_ms("new_cursor", 10));
-	ge824ov3862 = (GE_ms("dispose", 7));
-	ge1041ov9739 = (GE_ms("gvkfe5a", 7));
-	ge1041ov9462 = (GE_ms("GVKFE-5", 7));
-	ge1041ov9296 = (GE_ms("feature `$7\' in kernel class $5 is not a query.", 47));
-	ge824ov3930 = (GE_ms("is_equal", 8));
-	ge824ov3850 = (GE_ms("copy", 4));
-	ge1041ov9593 = (GE_ms("vgcp2a", 6));
-	ge1041ov9378 = (GE_ms("VGCP-2", 6));
-	ge1041ov9150 = (GE_ms("`$7\' is not the final name of a procedure.", 42));
-	ge1041ov9594 = (GE_ms("vgcp2b", 6));
-	ge1041ov9151 = (GE_ms("`$7\' is not the final name of a procedure.", 42));
-	ge1041ov9585 = (GE_ms("vgcc6a", 6));
-	ge1041ov9375 = (GE_ms("VGCC-6", 6));
-	ge1041ov9142 = (GE_ms("`$7\' is the final name of a once-procedure.", 43));
-	ge1041ov9596 = (GE_ms("vgcp3b", 6));
-	ge1041ov9153 = (GE_ms("procedure name `$7\' appears in two different creation clauses.", 62));
-	ge1041ov9595 = (GE_ms("vgcp3a", 6));
-	ge1041ov9152 = (GE_ms("procedure name `$7\' appears twice in creation clause.", 53));
-	ge1041ov9592 = (GE_ms("vgcp1a", 6));
-	ge1041ov9377 = (GE_ms("VGCP-1", 6));
-	ge1041ov9149 = (GE_ms("deferred class has a creation clause.", 37));
-	ge1041ov9557 = (GE_ms("vfac4a", 6));
-	ge1041ov9363 = (GE_ms("VFAC-4", 6));
-	ge1041ov9114 = (GE_ms("the type of the $10-th argument of assigner procedure `$8\' and of the $9-th argument of query `$7\' do not have the same deanchored form.", 136));
-	ge1041ov9556 = (GE_ms("vfac3a", 6));
-	ge1041ov9362 = (GE_ms("VFAC-3", 6));
-	ge1041ov9113 = (GE_ms("the type of the first argument of assigner procedure `$8\' and the result type of query `$7\' do not have the same deanchored form.", 129));
-	ge1041ov9555 = (GE_ms("vfac2a", 6));
-	ge1041ov9361 = (GE_ms("VFAC-2", 6));
-	ge1041ov9112 = (GE_ms("the number of arguments in assigner procedure `$8\' is not one more than the number of arguments in query `$7\'.", 110));
-	ge1041ov9554 = (GE_ms("vfac1b", 6));
-	ge1041ov9360 = (GE_ms("VFAC-1", 6));
-	ge1041ov9111 = (GE_ms("query `$7\' has an assigner mark `$8\' but this feature is not a procedure.", 73));
-	ge1041ov9553 = (GE_ms("vfac1a", 6));
-	ge1041ov9110 = (GE_ms("query `$7\' has an assigner mark `$8\' but there is no feature with that name.", 76));
-	ge1041ov9485 = (GE_ms("vcch2a", 6));
-	ge1041ov9330 = (GE_ms("VCCH-2", 6));
-	ge1041ov9042 = (GE_ms("class is marked as deferred but has no deferred feature.", 56));
-	ge1041ov9483 = (GE_ms("vcch1a", 6));
-	ge1041ov9329 = (GE_ms("VCCH-1", 6));
-	ge1041ov9040 = (GE_ms("class is not marked as deferred but has deferred feature `$7\'.", 62));
-	ge1041ov9563 = (GE_ms("vfav1f", 6));
-	ge1041ov9364 = (GE_ms("VFAV-1", 6));
-	ge1041ov9120 = (GE_ms("features `$7\' and `$9\' have both the same binary Operator alias `$8\'.", 69));
+	ge1041ov9494 = (GE_ms8("vdjr0a", 6));
+	ge1041ov9051 = (GE_ms8("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Different number of arguments.", 116));
+	ge1041ov9496 = (GE_ms8("vdjr0c", 6));
+	ge1041ov9053 = (GE_ms8("joined deferred features `$7\' inherited from $8 and $9 don\'t have the same signature. Type of result differs.", 109));
+	ge1041ov9520 = (GE_ms8("vdrd6b", 6));
+	ge1041ov9345 = (GE_ms8("VDRD-6", 6));
+	ge1041ov9077 = (GE_ms8("attribute `$7\' inherited from $8 and its redeclared version don\'t have the same type expandedness.", 98));
+	ge1041ov9509 = (GE_ms8("vdrd2a", 6));
+	ge1041ov9066 = (GE_ms8("signature of feature `$7\' does not conform to the signature of redeclared feature `$8\' in parent $9.", 100));
+	ge1041ov9510 = (GE_ms8("vdrd2b", 6));
+	ge1041ov9067 = (GE_ms8("signature of feature `$7\' inherited from $8 does not conform to the signature of redeclared feature `$9\' in parent $10.", 119));
+	ge1041ov9627 = (GE_ms8("vmrc2b", 6));
+	ge1041ov9396 = (GE_ms8("VMRC-2", 6));
+	ge1041ov9184 = (GE_ms8("replicated features $7 have been selected more than once.", 57));
+	ge1041ov9626 = (GE_ms8("vmrc2a", 6));
+	ge1041ov9183 = (GE_ms8("replicated features $7 have not been selected.", 46));
+	ge1041ov9628 = (GE_ms8("vmss1a", 6));
+	ge1041ov9397 = (GE_ms8("VMSS-1", 6));
+	ge1041ov9185 = (GE_ms8("`$7\' is not the final name of a feature inherited from $8.", 58));
+	ge1041ov9524 = (GE_ms8("vdrs1a", 6));
+	ge1041ov9347 = (GE_ms8("VDRS-1", 6));
+	ge1041ov9081 = (GE_ms8("`$7\' is not the final name of a feature inherited from $8.", 58));
+	ge1041ov9530 = (GE_ms8("vdus1a", 6));
+	ge1041ov9351 = (GE_ms8("VDUS-1", 6));
+	ge1041ov9087 = (GE_ms8("`$7\' is not the final name of a feature inherited from $8.", 58));
+	ge1041ov9619 = (GE_ms8("vlel2a", 6));
+	ge1041ov9392 = (GE_ms8("VLEL-2", 6));
+	ge1041ov9176 = (GE_ms8("`$7\' is not the final name of a feature inherited from $8.", 58));
+	ge1041ov9602 = (GE_ms8("vhrc1a", 6));
+	ge1041ov9382 = (GE_ms8("VHRC-1", 6));
+	ge1041ov9159 = (GE_ms8("`$7\' is not the final name of a feature in $8.", 46));
+	ge1041ov9629 = (GE_ms8("vmss2a", 6));
+	ge1041ov9398 = (GE_ms8("VMSS-2", 6));
+	ge1041ov9186 = (GE_ms8("feature name `$7\' appears twice in the Select subclause of parent $8.", 69));
+	ge1041ov9527 = (GE_ms8("vdrs3a", 6));
+	ge1041ov9349 = (GE_ms8("VDRS-3", 6));
+	ge1041ov9084 = (GE_ms8("feature name `$7\' appears twice in the Redefine subclause of parent $8.", 71));
+	ge1041ov9534 = (GE_ms8("vdus4a", 6));
+	ge1041ov9354 = (GE_ms8("VDUS-4", 6));
+	ge1041ov9091 = (GE_ms8("feature name `$7\' appears twice in the Undefine subclause of parent $8.", 71));
+	ge1041ov9620 = (GE_ms8("vlel3a", 6));
+	ge1041ov9393 = (GE_ms8("VLEL-3", 6));
+	ge1041ov9177 = (GE_ms8("feature name `$7\' appears twice in the Export subclause of parent $8.", 69));
+	ge1041ov9618 = (GE_ms8("vlel1a", 6));
+	ge1041ov9391 = (GE_ms8("VLEL-1", 6));
+	ge1041ov9175 = (GE_ms8("\'all\' keyword appears twice in the Export subclause of parent $7.", 65));
+	ge1041ov9603 = (GE_ms8("vhrc2a", 6));
+	ge1041ov9383 = (GE_ms8("VHRC-2", 6));
+	ge1041ov9160 = (GE_ms8("feature name `$7\' appears as first element of two Rename_pairs.", 63));
+	ge1041ov9621 = (GE_ms8("vmfn0a", 6));
+	ge1041ov9394 = (GE_ms8("VMFN", 4));
+	ge1041ov9178 = (GE_ms8("two features with the same name `$7\'.", 37));
+	ge824ov4119 = (GE_ms8("as", 2));
+	ge824ov3889 = (GE_ms8("forth", 5));
+	ge824ov3801 = (GE_ms8("after", 5));
+	ge824ov3985 = (GE_ms8("new_cursor", 10));
+	ge824ov3862 = (GE_ms8("dispose", 7));
+	ge1041ov9739 = (GE_ms8("gvkfe5a", 7));
+	ge1041ov9462 = (GE_ms8("GVKFE-5", 7));
+	ge1041ov9296 = (GE_ms8("feature `$7\' in kernel class $5 is not a query.", 47));
+	ge824ov3930 = (GE_ms8("is_equal", 8));
+	ge824ov3850 = (GE_ms8("copy", 4));
+	ge1041ov9593 = (GE_ms8("vgcp2a", 6));
+	ge1041ov9378 = (GE_ms8("VGCP-2", 6));
+	ge1041ov9150 = (GE_ms8("`$7\' is not the final name of a procedure.", 42));
+	ge1041ov9594 = (GE_ms8("vgcp2b", 6));
+	ge1041ov9151 = (GE_ms8("`$7\' is not the final name of a procedure.", 42));
+	ge1041ov9585 = (GE_ms8("vgcc6a", 6));
+	ge1041ov9375 = (GE_ms8("VGCC-6", 6));
+	ge1041ov9142 = (GE_ms8("`$7\' is the final name of a once-procedure.", 43));
+	ge1041ov9596 = (GE_ms8("vgcp3b", 6));
+	ge1041ov9153 = (GE_ms8("procedure name `$7\' appears in two different creation clauses.", 62));
+	ge1041ov9595 = (GE_ms8("vgcp3a", 6));
+	ge1041ov9152 = (GE_ms8("procedure name `$7\' appears twice in creation clause.", 53));
+	ge1041ov9592 = (GE_ms8("vgcp1a", 6));
+	ge1041ov9377 = (GE_ms8("VGCP-1", 6));
+	ge1041ov9149 = (GE_ms8("deferred class has a creation clause.", 37));
+	ge1041ov9557 = (GE_ms8("vfac4a", 6));
+	ge1041ov9363 = (GE_ms8("VFAC-4", 6));
+	ge1041ov9114 = (GE_ms8("the type of the $10-th argument of assigner procedure `$8\' and of the $9-th argument of query `$7\' do not have the same deanchored form.", 136));
+	ge1041ov9556 = (GE_ms8("vfac3a", 6));
+	ge1041ov9362 = (GE_ms8("VFAC-3", 6));
+	ge1041ov9113 = (GE_ms8("the type of the first argument of assigner procedure `$8\' and the result type of query `$7\' do not have the same deanchored form.", 129));
+	ge1041ov9555 = (GE_ms8("vfac2a", 6));
+	ge1041ov9361 = (GE_ms8("VFAC-2", 6));
+	ge1041ov9112 = (GE_ms8("the number of arguments in assigner procedure `$8\' is not one more than the number of arguments in query `$7\'.", 110));
+	ge1041ov9554 = (GE_ms8("vfac1b", 6));
+	ge1041ov9360 = (GE_ms8("VFAC-1", 6));
+	ge1041ov9111 = (GE_ms8("query `$7\' has an assigner mark `$8\' but this feature is not a procedure.", 73));
+	ge1041ov9553 = (GE_ms8("vfac1a", 6));
+	ge1041ov9110 = (GE_ms8("query `$7\' has an assigner mark `$8\' but there is no feature with that name.", 76));
+	ge1041ov9485 = (GE_ms8("vcch2a", 6));
+	ge1041ov9330 = (GE_ms8("VCCH-2", 6));
+	ge1041ov9042 = (GE_ms8("class is marked as deferred but has no deferred feature.", 56));
+	ge1041ov9483 = (GE_ms8("vcch1a", 6));
+	ge1041ov9329 = (GE_ms8("VCCH-1", 6));
+	ge1041ov9040 = (GE_ms8("class is not marked as deferred but has deferred feature `$7\'.", 62));
+	ge1041ov9563 = (GE_ms8("vfav1f", 6));
+	ge1041ov9364 = (GE_ms8("VFAV-1", 6));
+	ge1041ov9120 = (GE_ms8("features `$7\' and `$9\' have both the same binary Operator alias `$8\'.", 69));
+	ge1041ov9560 = (GE_ms8("vfav1c", 6));
 }
 
 void GE_init_const11()
 {
-	ge1041ov9560 = (GE_ms("vfav1c", 6));
-	ge1041ov9117 = (GE_ms("features `$7\' and `$9\' have both the same unary Operator alias `$8\'.", 68));
-	ge1041ov9571 = (GE_ms("vfav4b", 6));
-	ge1041ov9366 = (GE_ms("VFAV-4", 6));
-	ge1041ov9128 = (GE_ms("features `$7\' and `$9\' have both the same Parenthesis alias `$8\'.", 65));
-	ge1041ov9567 = (GE_ms("vfav2b", 6));
-	ge1041ov9365 = (GE_ms("VFAV-2", 6));
-	ge1041ov9124 = (GE_ms("features `$7\' and `$9\' have both the same Bracket alias `$8\'.", 61));
-	ge1041ov9564 = (GE_ms("vfav1g", 6));
-	ge1041ov9121 = (GE_ms("features `$7\' and `$9\' inherited from $11 have both the same binary Operator alias `$8\'.", 88));
-	ge1041ov9561 = (GE_ms("vfav1d", 6));
-	ge1041ov9118 = (GE_ms("features `$7\' and `$9\' inherited from $11 have both the same unary Operator alias `$8\'.", 87));
-	ge1041ov9572 = (GE_ms("vfav4c", 6));
-	ge1041ov9129 = (GE_ms("features `$7\' and `$9\' inherited from $11 have both the same Parenthesis alias `$8\'.", 84));
-	ge1041ov9568 = (GE_ms("vfav2c", 6));
-	ge1041ov9125 = (GE_ms("features `$7\' and `$9\' inherited from $11 have both the same Bracket alias `$8\'.", 80));
-	ge1041ov9565 = (GE_ms("vfav1h", 6));
-	ge1041ov9122 = (GE_ms("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same binary Operator alias `$8\'.", 107));
-	ge1041ov9562 = (GE_ms("vfav1e", 6));
-	ge1041ov9119 = (GE_ms("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same unary Operator alias `$8\'.", 106));
-	ge1041ov9573 = (GE_ms("vfav4d", 6));
-	ge1041ov9130 = (GE_ms("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same Parenthesis alias `$8\'.", 103));
-	ge1041ov9569 = (GE_ms("vfav2d", 6));
-	ge1041ov9126 = (GE_ms("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same Bracket alias `$8\'.", 99));
-	ge1041ov9683 = (GE_ms("vtat2a", 6));
-	ge1041ov9426 = (GE_ms("VTAT-2", 6));
-	ge1041ov9240 = (GE_ms("anchor cycle $7.", 16));
-	ge1041ov9579 = (GE_ms("vffd7b", 6));
-	ge1041ov9370 = (GE_ms("VFFD-7", 6));
-	ge1041ov9136 = (GE_ms("feature `$7\' is a once funtion but its type contains a formal generic parameter.", 80));
-	ge1041ov9578 = (GE_ms("vffd7a", 6));
-	ge1041ov9135 = (GE_ms("feature `$7\' is a once funtion but its type contains an anchored type.", 70));
-	ge1041ov9559 = (GE_ms("vfav1b", 6));
-	ge1041ov9116 = (GE_ms("feature `$7\' has a unary Operator alias `$8\' but is not a query with no argument.", 81));
-	ge1041ov9558 = (GE_ms("vfav1a", 6));
-	ge1041ov9115 = (GE_ms("feature `$7\' has a binary Operator alias `$8\' but is not a query with at exactly one argument.", 94));
-	ge1041ov9570 = (GE_ms("vfav4a", 6));
-	ge1041ov9127 = (GE_ms("feature `$7\' has a Parenthesis alias `$8\' but is not a feature with at least one argument.", 90));
-	ge1041ov9566 = (GE_ms("vfav2a", 6));
-	ge1041ov9123 = (GE_ms("feature `$7\' has a Bracket alias `$8\' but is not a query with at least one argument.", 84));
-	ge1041ov9577 = (GE_ms("vffd6a", 6));
-	ge1041ov9369 = (GE_ms("VFFD-6", 6));
-	ge1041ov9134 = (GE_ms("feature `$7\' has an Infix name but is not a function with exactly one argument.", 79));
-	ge1041ov9576 = (GE_ms("vffd5a", 6));
-	ge1041ov9368 = (GE_ms("VFFD-5", 6));
-	ge1041ov9133 = (GE_ms("feature `$7\' has a Prefix name but is not an attribute or a function with no argument.", 86));
-	ge1041ov9575 = (GE_ms("vffd4a", 6));
-	ge1041ov9367 = (GE_ms("VFFD-4", 6));
-	ge1041ov9132 = (GE_ms("deferred feature `$7\' is marked as frozen.", 42));
-	ge1041ov9672 = (GE_ms("vrfa0a", 6));
-	ge1041ov9420 = (GE_ms("VRFA", 4));
-	ge1041ov9229 = (GE_ms("argument name \'$7\' in feature `$8\' is also the final name of a feature.", 71));
-	ge1041ov9670 = (GE_ms("vreg0a", 6));
-	ge1041ov9419 = (GE_ms("VREG", 4));
-	ge1041ov9227 = (GE_ms("argument name \'$7\' appear twice in feature `$8\'.", 48));
-	ge1041ov9498 = (GE_ms("vdjr2b", 6));
-	ge1041ov9335 = (GE_ms("VDJR-2", 6));
-	ge1041ov9055 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $11 has a different one `$10\'.", 110));
-	ge1041ov9625 = (GE_ms("vmfn2b", 6));
-	ge1041ov9395 = (GE_ms("VMFN-2", 6));
-	ge1041ov9182 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $11 has a different one `$10\'.", 110));
-	ge1041ov9497 = (GE_ms("vdjr2a", 6));
-	ge1041ov9054 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $10 has none.", 93));
-	ge1041ov9624 = (GE_ms("vmfn2a", 6));
-	ge1041ov9181 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $10 has none.", 93));
-	ge1041ov9623 = (GE_ms("vmfn0c", 6));
-	ge1041ov9180 = (GE_ms("two features with the same name `$7\' inherited from $8 and `$9\' inherited from $10.", 83));
-	ge1041ov9528 = (GE_ms("vdrs4a", 6));
-	ge1041ov9350 = (GE_ms("VDRS-4", 6));
-	ge1041ov9085 = (GE_ms("Redefine subclause of $8 lists feature `$7\' but it is not redefined.", 68));
-	ge1041ov9526 = (GE_ms("vdrs2b", 6));
-	ge1041ov9348 = (GE_ms("VDRS-2", 6));
-	ge1041ov9083 = (GE_ms("cannot redefine the constant attribute `$7\'.", 44));
-	ge1041ov9525 = (GE_ms("vdrs2a", 6));
-	ge1041ov9082 = (GE_ms("cannot redefine the frozen feature `$7\'.", 40));
-	ge1041ov9532 = (GE_ms("vdus2b", 6));
-	ge1041ov9352 = (GE_ms("VDUS-2", 6));
-	ge1041ov9089 = (GE_ms("cannot undefine the attribute `$7\'.", 35));
-	ge1041ov9531 = (GE_ms("vdus2a", 6));
-	ge1041ov9088 = (GE_ms("cannot undefine the frozen feature `$7\'.", 40));
-	ge1041ov9533 = (GE_ms("vdus3a", 6));
-	ge1041ov9353 = (GE_ms("VDUS-3", 6));
-	ge1041ov9090 = (GE_ms("cannot undefine the deferred feature `$7\'.", 42));
-	ge1041ov9607 = (GE_ms("vhrc4d", 6));
-	ge1041ov9384 = (GE_ms("VHRC-4", 6));
-	ge1041ov9164 = (GE_ms("`$7\' has a unary Operator alias `$8\' but `$9\' in $10 is not a query with no argument.", 85));
-	ge1041ov9606 = (GE_ms("vhrc4c", 6));
-	ge1041ov9163 = (GE_ms("`$7\' has a binary Operator alias `$8\' but `$9\' in $10 is not a query with exactly one argument.", 95));
-	ge1041ov9574 = (GE_ms("vfav4e", 6));
-	ge1041ov9131 = (GE_ms("`$7\' has a Parenthesis alias `$8\' but `$9\' in $10 is not a feature with at least one argument.", 94));
-	ge1041ov9605 = (GE_ms("vhrc4b", 6));
-	ge1041ov9162 = (GE_ms("`$7\' has a Bracket alias `$8\' but `$9\' in $10 is not a query with at least one argument.", 88));
-	ge1041ov9604 = (GE_ms("vhrc4a", 6));
-	ge1041ov9161 = (GE_ms("`$7\' is of the Prefix form but `$8\' in $9 is not an attribute nor a function with no argument.", 94));
-	ge1041ov9608 = (GE_ms("vhrc5a", 6));
-	ge1041ov9385 = (GE_ms("VHRC-5", 6));
-	ge1041ov9165 = (GE_ms("`$7\' is of the Infix form but `$8\' in $9 is not a function with one argument.", 77));
-	ge1041ov9514 = (GE_ms("vdrd3b", 6));
-	ge1041ov9342 = (GE_ms("VDRD-3", 6));
-	ge1041ov9071 = (GE_ms("feature `$7\' is redeclared but its postconditions do not begin with \'ensure then\'.", 82));
-	ge1041ov9513 = (GE_ms("vdrd3a", 6));
+	ge1041ov9117 = (GE_ms8("features `$7\' and `$9\' have both the same unary Operator alias `$8\'.", 68));
+	ge1041ov9571 = (GE_ms8("vfav4b", 6));
+	ge1041ov9366 = (GE_ms8("VFAV-4", 6));
+	ge1041ov9128 = (GE_ms8("features `$7\' and `$9\' have both the same Parenthesis alias `$8\'.", 65));
+	ge1041ov9567 = (GE_ms8("vfav2b", 6));
+	ge1041ov9365 = (GE_ms8("VFAV-2", 6));
+	ge1041ov9124 = (GE_ms8("features `$7\' and `$9\' have both the same Bracket alias `$8\'.", 61));
+	ge1041ov9564 = (GE_ms8("vfav1g", 6));
+	ge1041ov9121 = (GE_ms8("features `$7\' and `$9\' inherited from $11 have both the same binary Operator alias `$8\'.", 88));
+	ge1041ov9561 = (GE_ms8("vfav1d", 6));
+	ge1041ov9118 = (GE_ms8("features `$7\' and `$9\' inherited from $11 have both the same unary Operator alias `$8\'.", 87));
+	ge1041ov9572 = (GE_ms8("vfav4c", 6));
+	ge1041ov9129 = (GE_ms8("features `$7\' and `$9\' inherited from $11 have both the same Parenthesis alias `$8\'.", 84));
+	ge1041ov9568 = (GE_ms8("vfav2c", 6));
+	ge1041ov9125 = (GE_ms8("features `$7\' and `$9\' inherited from $11 have both the same Bracket alias `$8\'.", 80));
+	ge1041ov9565 = (GE_ms8("vfav1h", 6));
+	ge1041ov9122 = (GE_ms8("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same binary Operator alias `$8\'.", 107));
+	ge1041ov9562 = (GE_ms8("vfav1e", 6));
+	ge1041ov9119 = (GE_ms8("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same unary Operator alias `$8\'.", 106));
+	ge1041ov9573 = (GE_ms8("vfav4d", 6));
+	ge1041ov9130 = (GE_ms8("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same Parenthesis alias `$8\'.", 103));
+	ge1041ov9569 = (GE_ms8("vfav2d", 6));
+	ge1041ov9126 = (GE_ms8("features `$7\' inherited from $9 and `$10\' inherited from $12 have both the same Bracket alias `$8\'.", 99));
+	ge1041ov9683 = (GE_ms8("vtat2a", 6));
+	ge1041ov9426 = (GE_ms8("VTAT-2", 6));
+	ge1041ov9240 = (GE_ms8("anchor cycle $7.", 16));
+	ge1041ov9579 = (GE_ms8("vffd7b", 6));
+	ge1041ov9370 = (GE_ms8("VFFD-7", 6));
+	ge1041ov9136 = (GE_ms8("feature `$7\' is a once funtion but its type contains a formal generic parameter.", 80));
+	ge1041ov9578 = (GE_ms8("vffd7a", 6));
+	ge1041ov9135 = (GE_ms8("feature `$7\' is a once funtion but its type contains an anchored type.", 70));
+	ge1041ov9559 = (GE_ms8("vfav1b", 6));
+	ge1041ov9116 = (GE_ms8("feature `$7\' has a unary Operator alias `$8\' but is not a query with no argument.", 81));
+	ge1041ov9558 = (GE_ms8("vfav1a", 6));
+	ge1041ov9115 = (GE_ms8("feature `$7\' has a binary Operator alias `$8\' but is not a query with at exactly one argument.", 94));
+	ge1041ov9570 = (GE_ms8("vfav4a", 6));
+	ge1041ov9127 = (GE_ms8("feature `$7\' has a Parenthesis alias `$8\' but is not a feature with at least one argument.", 90));
+	ge1041ov9566 = (GE_ms8("vfav2a", 6));
+	ge1041ov9123 = (GE_ms8("feature `$7\' has a Bracket alias `$8\' but is not a query with at least one argument.", 84));
+	ge1041ov9577 = (GE_ms8("vffd6a", 6));
+	ge1041ov9369 = (GE_ms8("VFFD-6", 6));
+	ge1041ov9134 = (GE_ms8("feature `$7\' has an Infix name but is not a function with exactly one argument.", 79));
+	ge1041ov9576 = (GE_ms8("vffd5a", 6));
+	ge1041ov9368 = (GE_ms8("VFFD-5", 6));
+	ge1041ov9133 = (GE_ms8("feature `$7\' has a Prefix name but is not an attribute or a function with no argument.", 86));
+	ge1041ov9575 = (GE_ms8("vffd4a", 6));
+	ge1041ov9367 = (GE_ms8("VFFD-4", 6));
+	ge1041ov9132 = (GE_ms8("deferred feature `$7\' is marked as frozen.", 42));
+	ge1041ov9672 = (GE_ms8("vrfa0a", 6));
+	ge1041ov9420 = (GE_ms8("VRFA", 4));
+	ge1041ov9229 = (GE_ms8("argument name \'$7\' in feature `$8\' is also the final name of a feature.", 71));
+	ge1041ov9670 = (GE_ms8("vreg0a", 6));
+	ge1041ov9419 = (GE_ms8("VREG", 4));
+	ge1041ov9227 = (GE_ms8("argument name \'$7\' appear twice in feature `$8\'.", 48));
+	ge1041ov9498 = (GE_ms8("vdjr2b", 6));
+	ge1041ov9335 = (GE_ms8("VDJR-2", 6));
+	ge1041ov9055 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $11 has a different one `$10\'.", 110));
+	ge1041ov9625 = (GE_ms8("vmfn2b", 6));
+	ge1041ov9395 = (GE_ms8("VMFN-2", 6));
+	ge1041ov9182 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $11 has a different one `$10\'.", 110));
+	ge1041ov9497 = (GE_ms8("vdjr2a", 6));
+	ge1041ov9054 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $10 has none.", 93));
+	ge1041ov9624 = (GE_ms8("vmfn2a", 6));
+	ge1041ov9181 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but the version inherited from $10 has none.", 93));
+	ge1041ov9623 = (GE_ms8("vmfn0c", 6));
+	ge1041ov9180 = (GE_ms8("two features with the same name `$7\' inherited from $8 and `$9\' inherited from $10.", 83));
+	ge1041ov9528 = (GE_ms8("vdrs4a", 6));
+	ge1041ov9350 = (GE_ms8("VDRS-4", 6));
+	ge1041ov9085 = (GE_ms8("Redefine subclause of $8 lists feature `$7\' but it is not redefined.", 68));
+	ge1041ov9526 = (GE_ms8("vdrs2b", 6));
+	ge1041ov9348 = (GE_ms8("VDRS-2", 6));
+	ge1041ov9083 = (GE_ms8("cannot redefine the constant attribute `$7\'.", 44));
+	ge1041ov9525 = (GE_ms8("vdrs2a", 6));
+	ge1041ov9082 = (GE_ms8("cannot redefine the frozen feature `$7\'.", 40));
+	ge1041ov9532 = (GE_ms8("vdus2b", 6));
+	ge1041ov9352 = (GE_ms8("VDUS-2", 6));
+	ge1041ov9089 = (GE_ms8("cannot undefine the attribute `$7\'.", 35));
+	ge1041ov9531 = (GE_ms8("vdus2a", 6));
+	ge1041ov9088 = (GE_ms8("cannot undefine the frozen feature `$7\'.", 40));
+	ge1041ov9533 = (GE_ms8("vdus3a", 6));
+	ge1041ov9353 = (GE_ms8("VDUS-3", 6));
+	ge1041ov9090 = (GE_ms8("cannot undefine the deferred feature `$7\'.", 42));
+	ge1041ov9607 = (GE_ms8("vhrc4d", 6));
+	ge1041ov9384 = (GE_ms8("VHRC-4", 6));
+	ge1041ov9164 = (GE_ms8("`$7\' has a unary Operator alias `$8\' but `$9\' in $10 is not a query with no argument.", 85));
+	ge1041ov9606 = (GE_ms8("vhrc4c", 6));
+	ge1041ov9163 = (GE_ms8("`$7\' has a binary Operator alias `$8\' but `$9\' in $10 is not a query with exactly one argument.", 95));
+	ge1041ov9574 = (GE_ms8("vfav4e", 6));
+	ge1041ov9131 = (GE_ms8("`$7\' has a Parenthesis alias `$8\' but `$9\' in $10 is not a feature with at least one argument.", 94));
+	ge1041ov9605 = (GE_ms8("vhrc4b", 6));
+	ge1041ov9162 = (GE_ms8("`$7\' has a Bracket alias `$8\' but `$9\' in $10 is not a query with at least one argument.", 88));
+	ge1041ov9604 = (GE_ms8("vhrc4a", 6));
+	ge1041ov9161 = (GE_ms8("`$7\' is of the Prefix form but `$8\' in $9 is not an attribute nor a function with no argument.", 94));
+	ge1041ov9608 = (GE_ms8("vhrc5a", 6));
+	ge1041ov9385 = (GE_ms8("VHRC-5", 6));
+	ge1041ov9165 = (GE_ms8("`$7\' is of the Infix form but `$8\' in $9 is not a function with one argument.", 77));
+	ge1041ov9514 = (GE_ms8("vdrd3b", 6));
+	ge1041ov9342 = (GE_ms8("VDRD-3", 6));
+	ge1041ov9071 = (GE_ms8("feature `$7\' is redeclared but its postconditions do not begin with \'ensure then\'.", 82));
+	ge1041ov9513 = (GE_ms8("vdrd3a", 6));
+	ge1041ov9070 = (GE_ms8("feature `$7\' is redeclared but its preconditions do not begin with \'require else\'.", 82));
 }
 
 void GE_init_const12()
 {
-	ge1041ov9070 = (GE_ms("feature `$7\' is redeclared but its preconditions do not begin with \'require else\'.", 82));
-	ge1041ov9519 = (GE_ms("vdrd6a", 6));
-	ge1041ov9076 = (GE_ms("attribute `$7\' inherited from $8 is not redeclared into an attribute.", 69));
-	ge1041ov9516 = (GE_ms("vdrd4b", 6));
-	ge1041ov9343 = (GE_ms("VDRD-4", 6));
-	ge1041ov9073 = (GE_ms("effective feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 98));
-	ge1041ov9517 = (GE_ms("vdrd4c", 6));
-	ge1041ov9074 = (GE_ms("effective feature `$8\' inherited from $9 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses.", 132));
-	ge1041ov9622 = (GE_ms("vmfn0b", 6));
-	ge1041ov9179 = (GE_ms("two features with the same name `$7\' in current class and `$8\' inherited from $9.", 81));
-	ge1041ov9515 = (GE_ms("vdrd4a", 6));
-	ge1041ov9072 = (GE_ms("deferred feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 97));
-	ge1041ov9529 = (GE_ms("vdrs4b", 6));
-	ge1041ov9086 = (GE_ms("redeclaration of feature `$7\' from $8 is an effecting and should not appear in the Redefine subclause.", 102));
-	ge1041ov9518 = (GE_ms("vdrd5a", 6));
-	ge1041ov9344 = (GE_ms("VDRD-5", 6));
-	ge1041ov9075 = (GE_ms("effective feature `$7\' inherited from $8 is redefined into a deferred one.", 74));
-	ge1041ov9523 = (GE_ms("vdrd7c", 6));
-	ge1041ov9346 = (GE_ms("VDRD-7", 6));
-	ge1041ov9080 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has a different one `$11\'.", 102));
-	ge1041ov9521 = (GE_ms("vdrd7a", 6));
-	ge1041ov9078 = (GE_ms("feature `$7\' inherited from $8 has no alias but its redeclared version has one `$10\'.", 85));
-	ge1041ov9522 = (GE_ms("vdrd7b", 6));
-	ge1041ov9079 = (GE_ms("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has none.", 85));
-	ge1041ov9630 = (GE_ms("vmss3a", 6));
-	ge1041ov9399 = (GE_ms("VMSS-3", 6));
-	ge1041ov9187 = (GE_ms("feature name `$7\' appears in the Select subclause of parent $8 but is not replicated.", 85));
-	ge1041ov9599 = (GE_ms("vhpr1a", 6));
-	ge1041ov9371 = (GE_ms("VHPR-1", 6));
-	ge1041ov9156 = (GE_ms("inheritance cycle $7.", 21));
-	ge1041ov9493 = (GE_ms("vcfg3h", 6));
-	ge1041ov9333 = (GE_ms("VCFG-3", 6));
-	ge1041ov9050 = (GE_ms("formal generic constraint cycle $7.", 35));
-	ge1041ov9491 = (GE_ms("vcfg3e", 6));
-	ge1041ov9048 = (GE_ms("formal generic constraint cycle $7.", 35));
-	ge1041ov9487 = (GE_ms("vcfg2a", 6));
-	ge1041ov9332 = (GE_ms("VCFG-2", 6));
-	ge1041ov9044 = (GE_ms("\'$7\' is the name of formal generic parameters #$7 and #$8.", 58));
-	ge1041ov9486 = (GE_ms("vcfg1a", 6));
-	ge1041ov9331 = (GE_ms("VCFG-1", 6));
-	ge1041ov9043 = (GE_ms("formal generic parameter \'$7\' has the same name as a class in the surrounding universe.", 87));
-	ge1041ov9729 = (GE_ms("gvagp0a", 7));
-	ge1041ov9451 = (GE_ms("GVAGP", 5));
-	ge1041ov9286 = (GE_ms("ancestors with generic parameter mismatch: \'$7\' and \'$8\'.", 57));
-	ge1041ov9732 = (GE_ms("gvhso2a", 7));
-	ge1041ov9455 = (GE_ms("GVHSO-2", 7));
-	ge1041ov9289 = (GE_ms("implicitly inherits from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class.", 83));
-	ge1041ov9688 = (GE_ms("vtct0a", 6));
-	ge1041ov9429 = (GE_ms("VTCT", 4));
-	ge1041ov9245 = (GE_ms("type based on unknown class $7.", 31));
-	ge1041ov9731 = (GE_ms("gvhso1a", 7));
-	ge1041ov9454 = (GE_ms("GVHSO-1", 7));
-	ge1041ov9288 = (GE_ms("implicitly inherits from unknown class SYSTEM_OBJECT.", 53));
-	ge1041ov9598 = (GE_ms("vhay0a", 6));
-	ge1041ov9380 = (GE_ms("VHAY", 4));
-	ge1041ov9155 = (GE_ms("implicitly inherits from unknown class ANY.", 43));
-	ge1041ov9600 = (GE_ms("vhpr1b", 6));
-	ge1041ov9157 = (GE_ms("inheritance cycle when inheriting from $7.", 42));
-	ge1030ov8628 = (GE_ms("gcdep", 5));
-	ge1030ov8623 = (GE_ms("GCDEP", 5));
-	ge1030ov8618 = (GE_ms("[$1] cluster $2: class $3 (from cluster $4) is a provider of class $5 (from cluster $6) which is not contained in any of the clusters $7.", 137));
-	ge1030ov8629 = (GE_ms("gcpro", 5));
-	ge1030ov8624 = (GE_ms("GCPRO", 5));
-	ge1030ov8619 = (GE_ms("[$1] cluster $2: class $3 (from cluster $4) depends on class $5 (from cluster $6) which is not contained in any of the clusters $7.", 131));
-	ge1030ov8627 = (GE_ms("gcaab", 5));
-	ge1030ov8622 = (GE_ms("GCAAB", 5));
-	ge1030ov8617 = (GE_ms("[$1] cluster $2: cannot read Eiffel file \'$3\'.", 46));
-	ge1041ov9742 = (GE_ms("gvscn1b", 7));
-	ge1041ov9464 = (GE_ms("GVSCN-1", 7));
-	ge1041ov9299 = (GE_ms("file \'$8\' does not contain the expected class $5.", 49));
-	ge824ov4114 = (GE_ms("agent", 5));
-	ge824ov4159 = (GE_ms("once", 4));
-	ge824ov4113 = (GE_ms("across", 6));
-	ge824ov4110 = (GE_ms("True", 4));
-	ge824ov4174 = (GE_ms("strip", 5));
-	ge824ov4158 = (GE_ms("old", 3));
-	ge824ov4133 = (GE_ms("else", 4));
-	ge824ov4160 = (GE_ms("or", 2));
-	ge824ov4175 = (GE_ms("then", 4));
-	ge824ov4117 = (GE_ms("and", 3));
-	ge824ov4162 = (GE_ms("precursor", 9));
-	ge824ov4129 = (GE_ms("debug", 5));
-	ge824ov4132 = (GE_ms("do", 2));
-	ge824ov4182 = (GE_ms("when", 4));
-	ge824ov4123 = (GE_ms("check", 5));
-	ge824ov4154 = (GE_ms("loop", 4));
-	ge824ov4142 = (GE_ms("from", 4));
-	ge824ov4168 = (GE_ms("rescue", 6));
-	ge824ov4122 = (GE_ms("attribute", 9));
-	ge824ov4180 = (GE_ms("variant", 7));
-	ge824ov4150 = (GE_ms("invariant", 9));
-	ge824ov4136 = (GE_ms("ensure", 6));
-	ge824ov4167 = (GE_ms("require", 7));
-	ge1038ov37023 = (GE_ms("gssss", 5));
-	ge1038ov37022 = (GE_ms("Syntax error:\n$1", 16));
-	ge824ov4153 = (GE_ms("local", 5));
-	ge824ov4115 = (GE_ms("alias", 5));
-	ge824ov4147 = (GE_ms("infix", 5));
-	ge824ov4163 = (GE_ms("prefix", 6));
-	ge824ov4151 = (GE_ms("is", 2));
-	ge824ov4178 = (GE_ms("unique", 6));
+	ge1041ov9519 = (GE_ms8("vdrd6a", 6));
+	ge1041ov9076 = (GE_ms8("attribute `$7\' inherited from $8 is not redeclared into an attribute.", 69));
+	ge1041ov9516 = (GE_ms8("vdrd4b", 6));
+	ge1041ov9343 = (GE_ms8("VDRD-4", 6));
+	ge1041ov9073 = (GE_ms8("effective feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 98));
+	ge1041ov9517 = (GE_ms8("vdrd4c", 6));
+	ge1041ov9074 = (GE_ms8("effective feature `$8\' inherited from $9 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses.", 132));
+	ge1041ov9622 = (GE_ms8("vmfn0b", 6));
+	ge1041ov9179 = (GE_ms8("two features with the same name `$7\' in current class and `$8\' inherited from $9.", 81));
+	ge1041ov9515 = (GE_ms8("vdrd4a", 6));
+	ge1041ov9072 = (GE_ms8("deferred feature `$7\' inherited from $8 is redefined but is not listed in the Redefine subclause.", 97));
+	ge1041ov9529 = (GE_ms8("vdrs4b", 6));
+	ge1041ov9086 = (GE_ms8("redeclaration of feature `$7\' from $8 is an effecting and should not appear in the Redefine subclause.", 102));
+	ge1041ov9518 = (GE_ms8("vdrd5a", 6));
+	ge1041ov9344 = (GE_ms8("VDRD-5", 6));
+	ge1041ov9075 = (GE_ms8("effective feature `$7\' inherited from $8 is redefined into a deferred one.", 74));
+	ge1041ov9523 = (GE_ms8("vdrd7c", 6));
+	ge1041ov9346 = (GE_ms8("VDRD-7", 6));
+	ge1041ov9080 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has a different one `$11\'.", 102));
+	ge1041ov9521 = (GE_ms8("vdrd7a", 6));
+	ge1041ov9078 = (GE_ms8("feature `$7\' inherited from $8 has no alias but its redeclared version has one `$10\'.", 85));
+	ge1041ov9522 = (GE_ms8("vdrd7b", 6));
+	ge1041ov9079 = (GE_ms8("feature `$7\' inherited from $9 has an alias `$8\' but its redeclared version has none.", 85));
+	ge1041ov9630 = (GE_ms8("vmss3a", 6));
+	ge1041ov9399 = (GE_ms8("VMSS-3", 6));
+	ge1041ov9187 = (GE_ms8("feature name `$7\' appears in the Select subclause of parent $8 but is not replicated.", 85));
+	ge1041ov9599 = (GE_ms8("vhpr1a", 6));
+	ge1041ov9371 = (GE_ms8("VHPR-1", 6));
+	ge1041ov9156 = (GE_ms8("inheritance cycle $7.", 21));
+	ge1041ov9493 = (GE_ms8("vcfg3h", 6));
+	ge1041ov9333 = (GE_ms8("VCFG-3", 6));
+	ge1041ov9050 = (GE_ms8("formal generic constraint cycle $7.", 35));
+	ge1041ov9491 = (GE_ms8("vcfg3e", 6));
+	ge1041ov9048 = (GE_ms8("formal generic constraint cycle $7.", 35));
+	ge1041ov9487 = (GE_ms8("vcfg2a", 6));
+	ge1041ov9332 = (GE_ms8("VCFG-2", 6));
+	ge1041ov9044 = (GE_ms8("\'$7\' is the name of formal generic parameters #$7 and #$8.", 58));
+	ge1041ov9486 = (GE_ms8("vcfg1a", 6));
+	ge1041ov9331 = (GE_ms8("VCFG-1", 6));
+	ge1041ov9043 = (GE_ms8("formal generic parameter \'$7\' has the same name as a class in the surrounding universe.", 87));
+	ge1041ov9729 = (GE_ms8("gvagp0a", 7));
+	ge1041ov9451 = (GE_ms8("GVAGP", 5));
+	ge1041ov9286 = (GE_ms8("ancestors with generic parameter mismatch: \'$7\' and \'$8\'.", 57));
+	ge1041ov9732 = (GE_ms8("gvhso2a", 7));
+	ge1041ov9455 = (GE_ms8("GVHSO-2", 7));
+	ge1041ov9289 = (GE_ms8("implicitly inherits from class SYSTEM_OBJECT but SYSTEM_OBJECT is not a .NET class.", 83));
+	ge1041ov9688 = (GE_ms8("vtct0a", 6));
+	ge1041ov9429 = (GE_ms8("VTCT", 4));
+	ge1041ov9245 = (GE_ms8("type based on unknown class $7.", 31));
+	ge1041ov9731 = (GE_ms8("gvhso1a", 7));
+	ge1041ov9454 = (GE_ms8("GVHSO-1", 7));
+	ge1041ov9288 = (GE_ms8("implicitly inherits from unknown class SYSTEM_OBJECT.", 53));
+	ge1041ov9598 = (GE_ms8("vhay0a", 6));
+	ge1041ov9380 = (GE_ms8("VHAY", 4));
+	ge1041ov9155 = (GE_ms8("implicitly inherits from unknown class ANY.", 43));
+	ge1041ov9600 = (GE_ms8("vhpr1b", 6));
+	ge1041ov9157 = (GE_ms8("inheritance cycle when inheriting from $7.", 42));
+	ge1030ov8628 = (GE_ms8("gcdep", 5));
+	ge1030ov8623 = (GE_ms8("GCDEP", 5));
+	ge1030ov8618 = (GE_ms8("[$1] cluster $2: class $3 (from cluster $4) is a provider of class $5 (from cluster $6) which is not contained in any of the clusters $7.", 137));
+	ge1030ov8629 = (GE_ms8("gcpro", 5));
+	ge1030ov8624 = (GE_ms8("GCPRO", 5));
+	ge1030ov8619 = (GE_ms8("[$1] cluster $2: class $3 (from cluster $4) depends on class $5 (from cluster $6) which is not contained in any of the clusters $7.", 131));
+	ge1030ov8627 = (GE_ms8("gcaab", 5));
+	ge1030ov8622 = (GE_ms8("GCAAB", 5));
+	ge1030ov8617 = (GE_ms8("[$1] cluster $2: cannot read Eiffel file \'$3\'.", 46));
+	ge1041ov9742 = (GE_ms8("gvscn1b", 7));
+	ge1041ov9464 = (GE_ms8("GVSCN-1", 7));
+	ge1041ov9299 = (GE_ms8("file \'$8\' does not contain the expected class $5.", 49));
+	ge824ov4114 = (GE_ms8("agent", 5));
+	ge824ov4159 = (GE_ms8("once", 4));
+	ge824ov4113 = (GE_ms8("across", 6));
+	ge824ov4110 = (GE_ms8("True", 4));
+	ge824ov4174 = (GE_ms8("strip", 5));
+	ge824ov4158 = (GE_ms8("old", 3));
+	ge824ov4133 = (GE_ms8("else", 4));
+	ge824ov4160 = (GE_ms8("or", 2));
+	ge824ov4175 = (GE_ms8("then", 4));
+	ge824ov4117 = (GE_ms8("and", 3));
+	ge824ov4162 = (GE_ms8("precursor", 9));
+	ge824ov4129 = (GE_ms8("debug", 5));
+	ge824ov4132 = (GE_ms8("do", 2));
+	ge824ov4182 = (GE_ms8("when", 4));
+	ge824ov4123 = (GE_ms8("check", 5));
+	ge824ov4154 = (GE_ms8("loop", 4));
+	ge824ov4142 = (GE_ms8("from", 4));
+	ge824ov4168 = (GE_ms8("rescue", 6));
+	ge824ov4122 = (GE_ms8("attribute", 9));
+	ge824ov4180 = (GE_ms8("variant", 7));
+	ge824ov4150 = (GE_ms8("invariant", 9));
+	ge824ov4136 = (GE_ms8("ensure", 6));
+	ge824ov4167 = (GE_ms8("require", 7));
+	ge1038ov37026 = (GE_ms8("gssss", 5));
+	ge1038ov37025 = (GE_ms8("Syntax error:\n$1", 16));
+	ge824ov4153 = (GE_ms8("local", 5));
+	ge824ov4115 = (GE_ms8("alias", 5));
+	ge824ov4147 = (GE_ms8("infix", 5));
+	ge824ov4163 = (GE_ms8("prefix", 6));
+	ge824ov4151 = (GE_ms8("is", 2));
+	ge824ov4178 = (GE_ms8("unique", 6));
+	ge824ov4141 = (GE_ms8("feature", 7));
 }
 
 void GE_init_const13()
 {
-	ge824ov4141 = (GE_ms("feature", 7));
-	ge824ov4125 = (GE_ms("convert", 7));
-	ge824ov4127 = (GE_ms("creation", 8));
-	ge824ov4164 = (GE_ms("redefine", 8));
-	ge824ov4116 = (GE_ms("all", 3));
-	ge824ov4138 = (GE_ms("export", 6));
-	ge824ov4166 = (GE_ms("rename", 6));
-	ge1041ov9741 = (GE_ms("gvscn1a", 7));
-	ge1041ov9298 = (GE_ms("file \'$8\' contains class $9 instead of the expected class $5.", 61));
-	ge1053ov25752 = (GE_ms("", 0));
-	ge824ov4235 = (GE_ms("BOOLEAN_REF", 11));
-	ge824ov4241 = (GE_ms("INTEGER_8_REF", 13));
-	ge824ov4242 = (GE_ms("INTEGER_16_REF", 14));
-	ge824ov4244 = (GE_ms("INTEGER_64_REF", 14));
-	ge824ov4246 = (GE_ms("NATURAL_8_REF", 13));
-	ge824ov4247 = (GE_ms("NATURAL_16_REF", 14));
-	ge824ov4249 = (GE_ms("NATURAL_64_REF", 14));
-	ge824ov4250 = (GE_ms("POINTER_REF", 11));
-	ge824ov4297 = (GE_ms("built_in", 8));
-	ge824ov4298 = (GE_ms("static built_in", 15));
-	ge824ov4299 = (GE_ms("built_in static", 15));
-	ge824ov3749 = (GE_ms("ARGUMENTS_32", 12));
-	ge824ov3755 = (GE_ms("COM_FAILURE", 11));
-	ge824ov3760 = (GE_ms("EXCEPTION_MANAGER_FACTORY", 25));
-	ge824ov3762 = (GE_ms("IDENTIFIED_ROUTINES", 19));
-	ge824ov3769 = (GE_ms("INTERNAL", 8));
-	ge824ov3771 = (GE_ms("ISE_RUNTIME", 11));
-	ge824ov3774 = (GE_ms("MEMORY", 6));
-	ge824ov3782 = (GE_ms("PLATFORM", 8));
-	ge824ov3802 = (GE_ms("aliased_resized_area", 20));
-	ge824ov3804 = (GE_ms("argument_count", 14));
-	ge824ov3805 = (GE_ms("as_integer_8", 12));
-	ge824ov3806 = (GE_ms("as_integer_16", 13));
-	ge824ov3807 = (GE_ms("as_integer_32", 13));
-	ge824ov3808 = (GE_ms("as_integer_64", 13));
-	ge824ov3809 = (GE_ms("as_natural_8", 12));
-	ge824ov3810 = (GE_ms("as_natural_16", 13));
-	ge824ov3811 = (GE_ms("as_natural_32", 13));
-	ge824ov3812 = (GE_ms("as_natural_64", 13));
-	ge824ov3813 = (GE_ms("attached_type", 13));
-	ge824ov3814 = (GE_ms("base_address", 12));
-	ge824ov3815 = (GE_ms("base_class_name", 15));
-	ge824ov3816 = (GE_ms("bit_and", 7));
-	ge824ov3817 = (GE_ms("bit_not", 7));
-	ge824ov3818 = (GE_ms("bit_or", 6));
-	ge824ov3819 = (GE_ms("bit_shift_left", 14));
-	ge824ov3820 = (GE_ms("bit_shift_right", 15));
-	ge824ov3821 = (GE_ms("bit_xor", 7));
-	ge824ov3822 = (GE_ms("boolean_bytes", 13));
-	ge824ov3823 = (GE_ms("boolean_field", 13));
-	ge824ov3824 = (GE_ms("boolean_field_at", 16));
-	ge824ov3825 = (GE_ms("boolean_item", 12));
-	ge824ov3826 = (GE_ms("c_strlen", 8));
-	ge824ov3829 = (GE_ms("catch", 5));
-	ge824ov3830 = (GE_ms("ccom_hresult", 12));
-	ge824ov3831 = (GE_ms("ccom_hresult_code", 17));
-	ge824ov3832 = (GE_ms("ccom_hresult_facility", 21));
-	ge824ov3833 = (GE_ms("ceiling_real_32", 15));
-	ge824ov3834 = (GE_ms("ceiling_real_64", 15));
-	ge824ov3835 = (GE_ms("character_8_field", 17));
-	ge824ov3836 = (GE_ms("character_8_field_at", 20));
-	ge824ov3837 = (GE_ms("character_8_item", 16));
-	ge824ov3838 = (GE_ms("character_32_field", 18));
-	ge824ov3839 = (GE_ms("character_32_field_at", 21));
-	ge824ov3840 = (GE_ms("character_32_item", 17));
-	ge824ov3841 = (GE_ms("character_bytes", 15));
-	ge824ov3842 = (GE_ms("character_size", 14));
-	ge824ov3843 = (GE_ms("check_assert", 12));
-	ge824ov3845 = (GE_ms("code", 4));
-	ge824ov3846 = (GE_ms("compiler_version", 16));
-	ge824ov3847 = (GE_ms("conforms_to", 11));
-	ge824ov3848 = (GE_ms("conjuncted", 10));
-	ge824ov3849 = (GE_ms("conjuncted_semistrict", 21));
-	ge824ov3852 = (GE_ms("cwin_error_text", 15));
-	ge824ov3853 = (GE_ms("cwin_local_free", 15));
-	ge824ov3854 = (GE_ms("deep_twin", 9));
-	ge824ov3855 = (GE_ms("default", 7));
-	ge824ov3857 = (GE_ms("detachable_type", 15));
-	ge824ov3858 = (GE_ms("developer_raise", 15));
-	ge824ov3859 = (GE_ms("disjuncted", 10));
-	ge824ov3860 = (GE_ms("disjuncted_exclusive", 20));
-	ge824ov3861 = (GE_ms("disjuncted_semistrict", 21));
-	ge824ov3863 = (GE_ms("double_bytes", 12));
-	ge824ov3864 = (GE_ms("dynamic_type", 12));
-	ge824ov3865 = (GE_ms("dynamic_type_at_offset", 22));
-	ge824ov3866 = (GE_ms("eif_gen_param_id", 16));
-	ge824ov3867 = (GE_ms("eif_id_object", 13));
-	ge824ov3868 = (GE_ms("eif_object_id", 13));
-	ge824ov3869 = (GE_ms("eif_object_id_free", 18));
-	ge824ov3870 = (GE_ms("element_size", 12));
-	ge824ov3871 = (GE_ms("exception_from_code", 19));
-	ge824ov3872 = (GE_ms("exception_manager", 17));
-	ge824ov3873 = (GE_ms("extend", 6));
-	ge824ov3874 = (GE_ms("fast_call", 9));
-	ge824ov3875 = (GE_ms("fast_item", 9));
-	ge824ov3876 = (GE_ms("field", 5));
-	ge824ov3877 = (GE_ms("field_count", 11));
-	ge824ov3878 = (GE_ms("field_count_of_type", 19));
-	ge824ov3879 = (GE_ms("field_name", 10));
-	ge824ov3880 = (GE_ms("field_name_of_type", 18));
-	ge824ov3881 = (GE_ms("field_offset_of_type", 20));
+	ge824ov4125 = (GE_ms8("convert", 7));
+	ge824ov4127 = (GE_ms8("creation", 8));
+	ge824ov4164 = (GE_ms8("redefine", 8));
+	ge824ov4116 = (GE_ms8("all", 3));
+	ge824ov4138 = (GE_ms8("export", 6));
+	ge824ov4166 = (GE_ms8("rename", 6));
+	ge1041ov9741 = (GE_ms8("gvscn1a", 7));
+	ge1041ov9298 = (GE_ms8("file \'$8\' contains class $9 instead of the expected class $5.", 61));
+	ge1053ov25755 = (GE_ms8("", 0));
+	ge824ov4235 = (GE_ms8("BOOLEAN_REF", 11));
+	ge824ov4241 = (GE_ms8("INTEGER_8_REF", 13));
+	ge824ov4242 = (GE_ms8("INTEGER_16_REF", 14));
+	ge824ov4244 = (GE_ms8("INTEGER_64_REF", 14));
+	ge824ov4246 = (GE_ms8("NATURAL_8_REF", 13));
+	ge824ov4247 = (GE_ms8("NATURAL_16_REF", 14));
+	ge824ov4249 = (GE_ms8("NATURAL_64_REF", 14));
+	ge824ov4250 = (GE_ms8("POINTER_REF", 11));
+	ge824ov4297 = (GE_ms8("built_in", 8));
+	ge824ov4298 = (GE_ms8("static built_in", 15));
+	ge824ov4299 = (GE_ms8("built_in static", 15));
+	ge824ov3749 = (GE_ms8("ARGUMENTS_32", 12));
+	ge824ov3755 = (GE_ms8("COM_FAILURE", 11));
+	ge824ov3760 = (GE_ms8("EXCEPTION_MANAGER_FACTORY", 25));
+	ge824ov3762 = (GE_ms8("IDENTIFIED_ROUTINES", 19));
+	ge824ov3769 = (GE_ms8("INTERNAL", 8));
+	ge824ov3771 = (GE_ms8("ISE_RUNTIME", 11));
+	ge824ov3774 = (GE_ms8("MEMORY", 6));
+	ge824ov3782 = (GE_ms8("PLATFORM", 8));
+	ge824ov3802 = (GE_ms8("aliased_resized_area", 20));
+	ge824ov3804 = (GE_ms8("argument_count", 14));
+	ge824ov3805 = (GE_ms8("as_integer_8", 12));
+	ge824ov3806 = (GE_ms8("as_integer_16", 13));
+	ge824ov3807 = (GE_ms8("as_integer_32", 13));
+	ge824ov3808 = (GE_ms8("as_integer_64", 13));
+	ge824ov3809 = (GE_ms8("as_natural_8", 12));
+	ge824ov3810 = (GE_ms8("as_natural_16", 13));
+	ge824ov3811 = (GE_ms8("as_natural_32", 13));
+	ge824ov3812 = (GE_ms8("as_natural_64", 13));
+	ge824ov3813 = (GE_ms8("attached_type", 13));
+	ge824ov3814 = (GE_ms8("base_address", 12));
+	ge824ov3815 = (GE_ms8("base_class_name", 15));
+	ge824ov3816 = (GE_ms8("bit_and", 7));
+	ge824ov3817 = (GE_ms8("bit_not", 7));
+	ge824ov3818 = (GE_ms8("bit_or", 6));
+	ge824ov3819 = (GE_ms8("bit_shift_left", 14));
+	ge824ov3820 = (GE_ms8("bit_shift_right", 15));
+	ge824ov3821 = (GE_ms8("bit_xor", 7));
+	ge824ov3822 = (GE_ms8("boolean_bytes", 13));
+	ge824ov3823 = (GE_ms8("boolean_field", 13));
+	ge824ov3824 = (GE_ms8("boolean_field_at", 16));
+	ge824ov3825 = (GE_ms8("boolean_item", 12));
+	ge824ov3826 = (GE_ms8("c_strlen", 8));
+	ge824ov3829 = (GE_ms8("catch", 5));
+	ge824ov3830 = (GE_ms8("ccom_hresult", 12));
+	ge824ov3831 = (GE_ms8("ccom_hresult_code", 17));
+	ge824ov3832 = (GE_ms8("ccom_hresult_facility", 21));
+	ge824ov3833 = (GE_ms8("ceiling_real_32", 15));
+	ge824ov3834 = (GE_ms8("ceiling_real_64", 15));
+	ge824ov3835 = (GE_ms8("character_8_field", 17));
+	ge824ov3836 = (GE_ms8("character_8_field_at", 20));
+	ge824ov3837 = (GE_ms8("character_8_item", 16));
+	ge824ov3838 = (GE_ms8("character_32_field", 18));
+	ge824ov3839 = (GE_ms8("character_32_field_at", 21));
+	ge824ov3840 = (GE_ms8("character_32_item", 17));
+	ge824ov3841 = (GE_ms8("character_bytes", 15));
+	ge824ov3842 = (GE_ms8("character_size", 14));
+	ge824ov3843 = (GE_ms8("check_assert", 12));
+	ge824ov3845 = (GE_ms8("code", 4));
+	ge824ov3846 = (GE_ms8("compiler_version", 16));
+	ge824ov3847 = (GE_ms8("conforms_to", 11));
+	ge824ov3848 = (GE_ms8("conjuncted", 10));
+	ge824ov3849 = (GE_ms8("conjuncted_semistrict", 21));
+	ge824ov3852 = (GE_ms8("cwin_error_text", 15));
+	ge824ov3853 = (GE_ms8("cwin_local_free", 15));
+	ge824ov3854 = (GE_ms8("deep_twin", 9));
+	ge824ov3855 = (GE_ms8("default", 7));
+	ge824ov3857 = (GE_ms8("detachable_type", 15));
+	ge824ov3858 = (GE_ms8("developer_raise", 15));
+	ge824ov3859 = (GE_ms8("disjuncted", 10));
+	ge824ov3860 = (GE_ms8("disjuncted_exclusive", 20));
+	ge824ov3861 = (GE_ms8("disjuncted_semistrict", 21));
+	ge824ov3863 = (GE_ms8("double_bytes", 12));
+	ge824ov3864 = (GE_ms8("dynamic_type", 12));
+	ge824ov3865 = (GE_ms8("dynamic_type_at_offset", 22));
+	ge824ov3866 = (GE_ms8("eif_gen_param_id", 16));
+	ge824ov3867 = (GE_ms8("eif_id_object", 13));
+	ge824ov3868 = (GE_ms8("eif_object_id", 13));
+	ge824ov3869 = (GE_ms8("eif_object_id_free", 18));
+	ge824ov3870 = (GE_ms8("element_size", 12));
+	ge824ov3871 = (GE_ms8("exception_from_code", 19));
+	ge824ov3872 = (GE_ms8("exception_manager", 17));
+	ge824ov3873 = (GE_ms8("extend", 6));
+	ge824ov3874 = (GE_ms8("fast_call", 9));
+	ge824ov3875 = (GE_ms8("fast_item", 9));
+	ge824ov3876 = (GE_ms8("field", 5));
+	ge824ov3877 = (GE_ms8("field_count", 11));
+	ge824ov3878 = (GE_ms8("field_count_of_type", 19));
+	ge824ov3879 = (GE_ms8("field_name", 10));
+	ge824ov3880 = (GE_ms8("field_name_of_type", 18));
+	ge824ov3881 = (GE_ms8("field_offset_of_type", 20));
+	ge824ov3882 = (GE_ms8("field_static_type", 17));
 }
 
 void GE_init_const14()
 {
-	ge824ov3882 = (GE_ms("field_static_type", 17));
-	ge824ov3883 = (GE_ms("field_static_type_of_type", 25));
-	ge824ov3884 = (GE_ms("field_type", 10));
-	ge824ov3885 = (GE_ms("field_type_of_type", 18));
-	ge824ov3886 = (GE_ms("find_referers", 13));
-	ge824ov3887 = (GE_ms("floor_real_32", 13));
-	ge824ov3888 = (GE_ms("floor_real_64", 13));
-	ge824ov3890 = (GE_ms("free", 4));
-	ge824ov3891 = (GE_ms("generating_type", 15));
-	ge824ov3892 = (GE_ms("generating_type_of_type", 23));
-	ge824ov3893 = (GE_ms("generator", 9));
-	ge824ov3894 = (GE_ms("generator_of_type", 17));
-	ge824ov3895 = (GE_ms("generic_parameter_count", 23));
-	ge824ov3896 = (GE_ms("generic_parameter_type", 22));
-	ge824ov3897 = (GE_ms("has_default", 11));
-	ge824ov3898 = (GE_ms("hash_code", 9));
-	ge824ov3899 = (GE_ms("i_th_argument_pointer", 21));
-	ge824ov3900 = (GE_ms("i_th_argument_string", 20));
-	ge824ov3901 = (GE_ms("identity", 8));
-	ge824ov3902 = (GE_ms("ignore", 6));
-	ge824ov3903 = (GE_ms("implication", 11));
-	ge824ov3904 = (GE_ms("in_assertion", 12));
-	ge824ov3906 = (GE_ms("integer_8_field", 15));
-	ge824ov3907 = (GE_ms("integer_8_field_at", 18));
-	ge824ov3908 = (GE_ms("integer_8_item", 14));
-	ge824ov3909 = (GE_ms("integer_16_field", 16));
-	ge824ov3910 = (GE_ms("integer_16_field_at", 19));
-	ge824ov3911 = (GE_ms("integer_16_item", 15));
-	ge824ov3912 = (GE_ms("integer_32_field", 16));
-	ge824ov3913 = (GE_ms("integer_32_field_at", 19));
-	ge824ov3914 = (GE_ms("integer_32_item", 15));
-	ge824ov3915 = (GE_ms("integer_64_field", 16));
-	ge824ov3916 = (GE_ms("integer_64_field_at", 19));
-	ge824ov3917 = (GE_ms("integer_64_item", 15));
-	ge824ov3918 = (GE_ms("integer_bytes", 13));
-	ge824ov3919 = (GE_ms("integer_quotient", 16));
-	ge824ov3920 = (GE_ms("integer_remainder", 17));
-	ge824ov3921 = (GE_ms("is_64_bits", 10));
-	ge824ov3922 = (GE_ms("is_attached", 11));
-	ge824ov3923 = (GE_ms("is_attached_type", 16));
-	ge824ov3924 = (GE_ms("is_caught", 9));
-	ge824ov3925 = (GE_ms("is_copy_semantics_field", 23));
-	ge824ov3926 = (GE_ms("is_deep_equal", 13));
-	ge824ov3927 = (GE_ms("is_default_pointer", 18));
-	ge824ov3928 = (GE_ms("is_deferred", 11));
-	ge824ov3929 = (GE_ms("is_dotnet", 9));
-	ge824ov3931 = (GE_ms("is_expanded", 11));
-	ge824ov3932 = (GE_ms("is_field_expanded_of_type", 25));
-	ge824ov3933 = (GE_ms("is_field_transient_of_type", 26));
-	ge824ov3934 = (GE_ms("is_ignorable", 12));
-	ge824ov3935 = (GE_ms("is_ignored", 10));
-	ge824ov3936 = (GE_ms("is_less", 7));
-	ge824ov3937 = (GE_ms("is_mac", 6));
-	ge824ov3938 = (GE_ms("is_nan", 6));
-	ge824ov3939 = (GE_ms("is_negative_infinity", 20));
-	ge824ov3940 = (GE_ms("is_object_marked", 16));
-	ge824ov3941 = (GE_ms("is_positive_infinity", 20));
-	ge824ov3942 = (GE_ms("is_raisable", 11));
-	ge824ov3943 = (GE_ms("is_scoop_capable", 16));
-	ge824ov3944 = (GE_ms("is_special", 10));
-	ge824ov3945 = (GE_ms("is_special_copy_semantics_item", 30));
-	ge824ov3946 = (GE_ms("is_special_of_expanded", 22));
-	ge824ov3947 = (GE_ms("is_special_of_reference", 23));
-	ge824ov3948 = (GE_ms("is_special_of_reference_or_basic_type", 37));
-	ge824ov3949 = (GE_ms("is_special_of_reference_type", 28));
-	ge824ov3950 = (GE_ms("is_thread_capable", 17));
-	ge824ov3951 = (GE_ms("is_tuple", 8));
-	ge824ov3952 = (GE_ms("is_tuple_type", 13));
-	ge824ov3953 = (GE_ms("is_unix", 7));
-	ge824ov3954 = (GE_ms("is_vms", 6));
-	ge824ov3955 = (GE_ms("is_vxworks", 10));
-	ge824ov3956 = (GE_ms("is_windows", 10));
-	ge824ov3958 = (GE_ms("item_code", 9));
-	ge824ov3959 = (GE_ms("last_exception", 14));
-	ge824ov3960 = (GE_ms("last_result", 11));
-	ge824ov3961 = (GE_ms("lock_marking", 12));
-	ge824ov3963 = (GE_ms("make", 4));
-	ge824ov3964 = (GE_ms("make_empty", 10));
-	ge824ov3965 = (GE_ms("mark_object", 11));
-	ge824ov3966 = (GE_ms("max_type_id", 11));
-	ge824ov3967 = (GE_ms("minus", 5));
-	ge824ov3968 = (GE_ms("name", 4));
-	ge824ov3969 = (GE_ms("nan", 3));
-	ge824ov3970 = (GE_ms("natural_8_field", 15));
-	ge824ov3971 = (GE_ms("natural_8_field_at", 18));
-	ge824ov3972 = (GE_ms("natural_8_item", 14));
-	ge824ov3973 = (GE_ms("natural_16_field", 16));
-	ge824ov3974 = (GE_ms("natural_16_field_at", 19));
-	ge824ov3975 = (GE_ms("natural_16_item", 15));
-	ge824ov3976 = (GE_ms("natural_32_code", 15));
-	ge824ov3977 = (GE_ms("natural_32_field", 16));
-	ge824ov3978 = (GE_ms("natural_32_field_at", 19));
-	ge824ov3979 = (GE_ms("natural_32_item", 15));
-	ge824ov3980 = (GE_ms("natural_64_field", 16));
-	ge824ov3981 = (GE_ms("natural_64_field_at", 19));
-	ge824ov3982 = (GE_ms("natural_64_item", 15));
-	ge824ov3983 = (GE_ms("negated", 7));
-	ge824ov3984 = (GE_ms("negative_infinity", 17));
-	ge824ov3986 = (GE_ms("new_instance", 12));
-	ge824ov3987 = (GE_ms("new_instance_of", 15));
-	ge824ov3988 = (GE_ms("new_special_any_instance", 24));
+	ge824ov3883 = (GE_ms8("field_static_type_of_type", 25));
+	ge824ov3884 = (GE_ms8("field_type", 10));
+	ge824ov3885 = (GE_ms8("field_type_of_type", 18));
+	ge824ov3886 = (GE_ms8("find_referers", 13));
+	ge824ov3887 = (GE_ms8("floor_real_32", 13));
+	ge824ov3888 = (GE_ms8("floor_real_64", 13));
+	ge824ov3890 = (GE_ms8("free", 4));
+	ge824ov3891 = (GE_ms8("generating_type", 15));
+	ge824ov3892 = (GE_ms8("generating_type_of_type", 23));
+	ge824ov3893 = (GE_ms8("generator", 9));
+	ge824ov3894 = (GE_ms8("generator_of_type", 17));
+	ge824ov3895 = (GE_ms8("generic_parameter_count", 23));
+	ge824ov3896 = (GE_ms8("generic_parameter_type", 22));
+	ge824ov3897 = (GE_ms8("has_default", 11));
+	ge824ov3898 = (GE_ms8("hash_code", 9));
+	ge824ov3899 = (GE_ms8("i_th_argument_pointer", 21));
+	ge824ov3900 = (GE_ms8("i_th_argument_string", 20));
+	ge824ov3901 = (GE_ms8("identity", 8));
+	ge824ov3902 = (GE_ms8("ignore", 6));
+	ge824ov3903 = (GE_ms8("implication", 11));
+	ge824ov3904 = (GE_ms8("in_assertion", 12));
+	ge824ov3906 = (GE_ms8("integer_8_field", 15));
+	ge824ov3907 = (GE_ms8("integer_8_field_at", 18));
+	ge824ov3908 = (GE_ms8("integer_8_item", 14));
+	ge824ov3909 = (GE_ms8("integer_16_field", 16));
+	ge824ov3910 = (GE_ms8("integer_16_field_at", 19));
+	ge824ov3911 = (GE_ms8("integer_16_item", 15));
+	ge824ov3912 = (GE_ms8("integer_32_field", 16));
+	ge824ov3913 = (GE_ms8("integer_32_field_at", 19));
+	ge824ov3914 = (GE_ms8("integer_32_item", 15));
+	ge824ov3915 = (GE_ms8("integer_64_field", 16));
+	ge824ov3916 = (GE_ms8("integer_64_field_at", 19));
+	ge824ov3917 = (GE_ms8("integer_64_item", 15));
+	ge824ov3918 = (GE_ms8("integer_bytes", 13));
+	ge824ov3919 = (GE_ms8("integer_quotient", 16));
+	ge824ov3920 = (GE_ms8("integer_remainder", 17));
+	ge824ov3921 = (GE_ms8("is_64_bits", 10));
+	ge824ov3922 = (GE_ms8("is_attached", 11));
+	ge824ov3923 = (GE_ms8("is_attached_type", 16));
+	ge824ov3924 = (GE_ms8("is_caught", 9));
+	ge824ov3925 = (GE_ms8("is_copy_semantics_field", 23));
+	ge824ov3926 = (GE_ms8("is_deep_equal", 13));
+	ge824ov3927 = (GE_ms8("is_default_pointer", 18));
+	ge824ov3928 = (GE_ms8("is_deferred", 11));
+	ge824ov3929 = (GE_ms8("is_dotnet", 9));
+	ge824ov3931 = (GE_ms8("is_expanded", 11));
+	ge824ov3932 = (GE_ms8("is_field_expanded_of_type", 25));
+	ge824ov3933 = (GE_ms8("is_field_transient_of_type", 26));
+	ge824ov3934 = (GE_ms8("is_ignorable", 12));
+	ge824ov3935 = (GE_ms8("is_ignored", 10));
+	ge824ov3936 = (GE_ms8("is_less", 7));
+	ge824ov3937 = (GE_ms8("is_mac", 6));
+	ge824ov3938 = (GE_ms8("is_nan", 6));
+	ge824ov3939 = (GE_ms8("is_negative_infinity", 20));
+	ge824ov3940 = (GE_ms8("is_object_marked", 16));
+	ge824ov3941 = (GE_ms8("is_positive_infinity", 20));
+	ge824ov3942 = (GE_ms8("is_raisable", 11));
+	ge824ov3943 = (GE_ms8("is_scoop_capable", 16));
+	ge824ov3944 = (GE_ms8("is_special", 10));
+	ge824ov3945 = (GE_ms8("is_special_copy_semantics_item", 30));
+	ge824ov3946 = (GE_ms8("is_special_of_expanded", 22));
+	ge824ov3947 = (GE_ms8("is_special_of_reference", 23));
+	ge824ov3948 = (GE_ms8("is_special_of_reference_or_basic_type", 37));
+	ge824ov3949 = (GE_ms8("is_special_of_reference_type", 28));
+	ge824ov3950 = (GE_ms8("is_thread_capable", 17));
+	ge824ov3951 = (GE_ms8("is_tuple", 8));
+	ge824ov3952 = (GE_ms8("is_tuple_type", 13));
+	ge824ov3953 = (GE_ms8("is_unix", 7));
+	ge824ov3954 = (GE_ms8("is_vms", 6));
+	ge824ov3955 = (GE_ms8("is_vxworks", 10));
+	ge824ov3956 = (GE_ms8("is_windows", 10));
+	ge824ov3958 = (GE_ms8("item_code", 9));
+	ge824ov3959 = (GE_ms8("last_exception", 14));
+	ge824ov3960 = (GE_ms8("last_result", 11));
+	ge824ov3961 = (GE_ms8("lock_marking", 12));
+	ge824ov3963 = (GE_ms8("make", 4));
+	ge824ov3964 = (GE_ms8("make_empty", 10));
+	ge824ov3965 = (GE_ms8("mark_object", 11));
+	ge824ov3966 = (GE_ms8("max_type_id", 11));
+	ge824ov3967 = (GE_ms8("minus", 5));
+	ge824ov3968 = (GE_ms8("name", 4));
+	ge824ov3969 = (GE_ms8("nan", 3));
+	ge824ov3970 = (GE_ms8("natural_8_field", 15));
+	ge824ov3971 = (GE_ms8("natural_8_field_at", 18));
+	ge824ov3972 = (GE_ms8("natural_8_item", 14));
+	ge824ov3973 = (GE_ms8("natural_16_field", 16));
+	ge824ov3974 = (GE_ms8("natural_16_field_at", 19));
+	ge824ov3975 = (GE_ms8("natural_16_item", 15));
+	ge824ov3976 = (GE_ms8("natural_32_code", 15));
+	ge824ov3977 = (GE_ms8("natural_32_field", 16));
+	ge824ov3978 = (GE_ms8("natural_32_field_at", 19));
+	ge824ov3979 = (GE_ms8("natural_32_item", 15));
+	ge824ov3980 = (GE_ms8("natural_64_field", 16));
+	ge824ov3981 = (GE_ms8("natural_64_field_at", 19));
+	ge824ov3982 = (GE_ms8("natural_64_item", 15));
+	ge824ov3983 = (GE_ms8("negated", 7));
+	ge824ov3984 = (GE_ms8("negative_infinity", 17));
+	ge824ov3986 = (GE_ms8("new_instance", 12));
+	ge824ov3987 = (GE_ms8("new_instance_of", 15));
+	ge824ov3988 = (GE_ms8("new_special_any_instance", 24));
+	ge824ov3989 = (GE_ms8("new_special_of_reference_instance_of", 36));
 }
 
 void GE_init_const15()
 {
-	ge824ov3989 = (GE_ms("new_special_of_reference_instance_of", 36));
-	ge824ov3990 = (GE_ms("new_tuple_instance_of", 21));
-	ge824ov3991 = (GE_ms("new_type_instance_of", 20));
-	ge824ov3992 = (GE_ms("object_comparison", 17));
-	ge824ov3993 = (GE_ms("object_size", 11));
-	ge824ov3994 = (GE_ms("once_objects", 12));
-	ge824ov3995 = (GE_ms("opposite", 8));
-	ge824ov3996 = (GE_ms("out", 3));
-	ge824ov3997 = (GE_ms("persistent_field_count_of_type", 30));
-	ge824ov3998 = (GE_ms("plus", 4));
-	ge824ov3999 = (GE_ms("pointer_bytes", 13));
-	ge824ov4000 = (GE_ms("pointer_field", 13));
-	ge824ov4001 = (GE_ms("pointer_field_at", 16));
-	ge824ov4003 = (GE_ms("positive_infinity", 17));
-	ge824ov4004 = (GE_ms("power", 5));
-	ge824ov4005 = (GE_ms("pre_ecma_mapping_status", 23));
-	ge824ov4006 = (GE_ms("product", 7));
-	ge824ov4007 = (GE_ms("put", 3));
-	ge824ov4008 = (GE_ms("put_boolean", 11));
-	ge824ov4009 = (GE_ms("put_character_8", 15));
-	ge824ov4010 = (GE_ms("put_character_32", 16));
-	ge824ov4011 = (GE_ms("put_integer_8", 13));
-	ge824ov4012 = (GE_ms("put_integer_16", 14));
-	ge824ov4013 = (GE_ms("put_integer_32", 14));
-	ge824ov4014 = (GE_ms("put_integer_64", 14));
-	ge824ov4015 = (GE_ms("put_natural_8", 13));
-	ge824ov4016 = (GE_ms("put_natural_16", 14));
-	ge824ov4017 = (GE_ms("put_natural_32", 14));
-	ge824ov4018 = (GE_ms("put_natural_64", 14));
-	ge824ov4019 = (GE_ms("put_pointer", 11));
-	ge824ov4020 = (GE_ms("put_real_32", 11));
-	ge824ov4021 = (GE_ms("put_real_64", 11));
-	ge824ov4022 = (GE_ms("put_reference", 13));
-	ge824ov4023 = (GE_ms("quotient", 8));
-	ge824ov4024 = (GE_ms("raise", 5));
-	ge824ov4025 = (GE_ms("raw_reference_field_at", 22));
-	ge824ov4026 = (GE_ms("raw_reference_field_at_offset", 29));
-	ge824ov4027 = (GE_ms("real_32_field", 13));
-	ge824ov4028 = (GE_ms("real_32_field_at", 16));
-	ge824ov4029 = (GE_ms("real_32_item", 12));
-	ge824ov4030 = (GE_ms("real_64_field", 13));
-	ge824ov4031 = (GE_ms("real_64_field_at", 16));
-	ge824ov4032 = (GE_ms("real_64_item", 12));
-	ge824ov4033 = (GE_ms("real_bytes", 10));
-	ge824ov4034 = (GE_ms("reference_field", 15));
-	ge824ov4035 = (GE_ms("reference_field_at", 18));
-	ge824ov4036 = (GE_ms("reference_field_at_offset", 25));
-	ge824ov4037 = (GE_ms("reference_item", 14));
-	ge824ov4039 = (GE_ms("runtime_name", 12));
-	ge824ov4040 = (GE_ms("same_type", 9));
-	ge824ov4041 = (GE_ms("set_boolean_field", 17));
-	ge824ov4042 = (GE_ms("set_boolean_field_at", 20));
-	ge824ov4043 = (GE_ms("set_character_8_field", 21));
-	ge824ov4044 = (GE_ms("set_character_8_field_at", 24));
-	ge824ov4045 = (GE_ms("set_character_32_field", 22));
-	ge824ov4046 = (GE_ms("set_character_32_field_at", 25));
-	ge824ov4047 = (GE_ms("set_count", 9));
-	ge824ov4049 = (GE_ms("set_integer_8_field", 19));
-	ge824ov4050 = (GE_ms("set_integer_8_field_at", 22));
-	ge824ov4051 = (GE_ms("set_integer_16_field", 20));
-	ge824ov4052 = (GE_ms("set_integer_16_field_at", 23));
-	ge824ov4053 = (GE_ms("set_integer_32_field", 20));
-	ge824ov4054 = (GE_ms("set_integer_32_field_at", 23));
-	ge824ov4055 = (GE_ms("set_integer_64_field", 20));
-	ge824ov4056 = (GE_ms("set_integer_64_field_at", 23));
-	ge824ov4057 = (GE_ms("set_is_ignored", 14));
-	ge824ov4058 = (GE_ms("set_item", 8));
-	ge824ov4059 = (GE_ms("set_natural_8_field", 19));
-	ge824ov4060 = (GE_ms("set_natural_8_field_at", 22));
-	ge824ov4061 = (GE_ms("set_natural_16_field", 20));
-	ge824ov4062 = (GE_ms("set_natural_16_field_at", 23));
-	ge824ov4063 = (GE_ms("set_natural_32_field", 20));
-	ge824ov4064 = (GE_ms("set_natural_32_field_at", 23));
-	ge824ov4065 = (GE_ms("set_natural_64_field", 20));
-	ge824ov4066 = (GE_ms("set_natural_64_field_at", 23));
-	ge824ov4067 = (GE_ms("set_object_comparison", 21));
-	ge824ov4068 = (GE_ms("set_operands", 12));
-	ge824ov4069 = (GE_ms("set_pointer_field", 17));
-	ge824ov4070 = (GE_ms("set_pointer_field_at", 20));
-	ge824ov4071 = (GE_ms("set_pre_ecma_mapping", 20));
-	ge824ov4072 = (GE_ms("set_real_32_field", 17));
-	ge824ov4073 = (GE_ms("set_real_32_field_at", 20));
-	ge824ov4074 = (GE_ms("set_real_64_field", 17));
-	ge824ov4075 = (GE_ms("set_real_64_field_at", 20));
-	ge824ov4076 = (GE_ms("set_reference_field", 19));
-	ge824ov4077 = (GE_ms("set_reference_field_at", 22));
-	ge824ov4079 = (GE_ms("standard_copy", 13));
-	ge824ov4080 = (GE_ms("standard_is_equal", 17));
-	ge824ov4081 = (GE_ms("standard_twin", 13));
-	ge824ov4082 = (GE_ms("storable_version_of_type", 24));
-	ge824ov4083 = (GE_ms("tagged_out", 10));
-	ge824ov4084 = (GE_ms("to_character", 12));
-	ge824ov4085 = (GE_ms("to_character_8", 14));
-	ge824ov4086 = (GE_ms("to_character_32", 15));
-	ge824ov4087 = (GE_ms("to_double", 9));
-	ge824ov4088 = (GE_ms("to_integer_32", 13));
-	ge824ov4090 = (GE_ms("to_real", 7));
-	ge824ov4091 = (GE_ms("to_real_32", 10));
-	ge824ov4092 = (GE_ms("to_real_64", 10));
-	ge824ov4093 = (GE_ms("truncated_to_integer", 20));
-	ge824ov4094 = (GE_ms("truncated_to_integer_64", 23));
+	ge824ov3990 = (GE_ms8("new_tuple_instance_of", 21));
+	ge824ov3991 = (GE_ms8("new_type_instance_of", 20));
+	ge824ov3992 = (GE_ms8("object_comparison", 17));
+	ge824ov3993 = (GE_ms8("object_size", 11));
+	ge824ov3994 = (GE_ms8("once_objects", 12));
+	ge824ov3995 = (GE_ms8("opposite", 8));
+	ge824ov3996 = (GE_ms8("out", 3));
+	ge824ov3997 = (GE_ms8("persistent_field_count_of_type", 30));
+	ge824ov3998 = (GE_ms8("plus", 4));
+	ge824ov3999 = (GE_ms8("pointer_bytes", 13));
+	ge824ov4000 = (GE_ms8("pointer_field", 13));
+	ge824ov4001 = (GE_ms8("pointer_field_at", 16));
+	ge824ov4003 = (GE_ms8("positive_infinity", 17));
+	ge824ov4004 = (GE_ms8("power", 5));
+	ge824ov4005 = (GE_ms8("pre_ecma_mapping_status", 23));
+	ge824ov4006 = (GE_ms8("product", 7));
+	ge824ov4007 = (GE_ms8("put", 3));
+	ge824ov4008 = (GE_ms8("put_boolean", 11));
+	ge824ov4009 = (GE_ms8("put_character_8", 15));
+	ge824ov4010 = (GE_ms8("put_character_32", 16));
+	ge824ov4011 = (GE_ms8("put_integer_8", 13));
+	ge824ov4012 = (GE_ms8("put_integer_16", 14));
+	ge824ov4013 = (GE_ms8("put_integer_32", 14));
+	ge824ov4014 = (GE_ms8("put_integer_64", 14));
+	ge824ov4015 = (GE_ms8("put_natural_8", 13));
+	ge824ov4016 = (GE_ms8("put_natural_16", 14));
+	ge824ov4017 = (GE_ms8("put_natural_32", 14));
+	ge824ov4018 = (GE_ms8("put_natural_64", 14));
+	ge824ov4019 = (GE_ms8("put_pointer", 11));
+	ge824ov4020 = (GE_ms8("put_real_32", 11));
+	ge824ov4021 = (GE_ms8("put_real_64", 11));
+	ge824ov4022 = (GE_ms8("put_reference", 13));
+	ge824ov4023 = (GE_ms8("quotient", 8));
+	ge824ov4024 = (GE_ms8("raise", 5));
+	ge824ov4025 = (GE_ms8("raw_reference_field_at", 22));
+	ge824ov4026 = (GE_ms8("raw_reference_field_at_offset", 29));
+	ge824ov4027 = (GE_ms8("real_32_field", 13));
+	ge824ov4028 = (GE_ms8("real_32_field_at", 16));
+	ge824ov4029 = (GE_ms8("real_32_item", 12));
+	ge824ov4030 = (GE_ms8("real_64_field", 13));
+	ge824ov4031 = (GE_ms8("real_64_field_at", 16));
+	ge824ov4032 = (GE_ms8("real_64_item", 12));
+	ge824ov4033 = (GE_ms8("real_bytes", 10));
+	ge824ov4034 = (GE_ms8("reference_field", 15));
+	ge824ov4035 = (GE_ms8("reference_field_at", 18));
+	ge824ov4036 = (GE_ms8("reference_field_at_offset", 25));
+	ge824ov4037 = (GE_ms8("reference_item", 14));
+	ge824ov4039 = (GE_ms8("runtime_name", 12));
+	ge824ov4040 = (GE_ms8("same_type", 9));
+	ge824ov4041 = (GE_ms8("set_boolean_field", 17));
+	ge824ov4042 = (GE_ms8("set_boolean_field_at", 20));
+	ge824ov4043 = (GE_ms8("set_character_8_field", 21));
+	ge824ov4044 = (GE_ms8("set_character_8_field_at", 24));
+	ge824ov4045 = (GE_ms8("set_character_32_field", 22));
+	ge824ov4046 = (GE_ms8("set_character_32_field_at", 25));
+	ge824ov4047 = (GE_ms8("set_count", 9));
+	ge824ov4049 = (GE_ms8("set_integer_8_field", 19));
+	ge824ov4050 = (GE_ms8("set_integer_8_field_at", 22));
+	ge824ov4051 = (GE_ms8("set_integer_16_field", 20));
+	ge824ov4052 = (GE_ms8("set_integer_16_field_at", 23));
+	ge824ov4053 = (GE_ms8("set_integer_32_field", 20));
+	ge824ov4054 = (GE_ms8("set_integer_32_field_at", 23));
+	ge824ov4055 = (GE_ms8("set_integer_64_field", 20));
+	ge824ov4056 = (GE_ms8("set_integer_64_field_at", 23));
+	ge824ov4057 = (GE_ms8("set_is_ignored", 14));
+	ge824ov4058 = (GE_ms8("set_item", 8));
+	ge824ov4059 = (GE_ms8("set_natural_8_field", 19));
+	ge824ov4060 = (GE_ms8("set_natural_8_field_at", 22));
+	ge824ov4061 = (GE_ms8("set_natural_16_field", 20));
+	ge824ov4062 = (GE_ms8("set_natural_16_field_at", 23));
+	ge824ov4063 = (GE_ms8("set_natural_32_field", 20));
+	ge824ov4064 = (GE_ms8("set_natural_32_field_at", 23));
+	ge824ov4065 = (GE_ms8("set_natural_64_field", 20));
+	ge824ov4066 = (GE_ms8("set_natural_64_field_at", 23));
+	ge824ov4067 = (GE_ms8("set_object_comparison", 21));
+	ge824ov4068 = (GE_ms8("set_operands", 12));
+	ge824ov4069 = (GE_ms8("set_pointer_field", 17));
+	ge824ov4070 = (GE_ms8("set_pointer_field_at", 20));
+	ge824ov4071 = (GE_ms8("set_pre_ecma_mapping", 20));
+	ge824ov4072 = (GE_ms8("set_real_32_field", 17));
+	ge824ov4073 = (GE_ms8("set_real_32_field_at", 20));
+	ge824ov4074 = (GE_ms8("set_real_64_field", 17));
+	ge824ov4075 = (GE_ms8("set_real_64_field_at", 20));
+	ge824ov4076 = (GE_ms8("set_reference_field", 19));
+	ge824ov4077 = (GE_ms8("set_reference_field_at", 22));
+	ge824ov4079 = (GE_ms8("standard_copy", 13));
+	ge824ov4080 = (GE_ms8("standard_is_equal", 17));
+	ge824ov4081 = (GE_ms8("standard_twin", 13));
+	ge824ov4082 = (GE_ms8("storable_version_of_type", 24));
+	ge824ov4083 = (GE_ms8("tagged_out", 10));
+	ge824ov4084 = (GE_ms8("to_character", 12));
+	ge824ov4085 = (GE_ms8("to_character_8", 14));
+	ge824ov4086 = (GE_ms8("to_character_32", 15));
+	ge824ov4087 = (GE_ms8("to_double", 9));
+	ge824ov4088 = (GE_ms8("to_integer_32", 13));
+	ge824ov4090 = (GE_ms8("to_real", 7));
+	ge824ov4091 = (GE_ms8("to_real_32", 10));
+	ge824ov4092 = (GE_ms8("to_real_64", 10));
+	ge824ov4093 = (GE_ms8("truncated_to_integer", 20));
+	ge824ov4094 = (GE_ms8("truncated_to_integer_64", 23));
+	ge824ov4095 = (GE_ms8("truncated_to_real", 17));
 }
 
 void GE_init_const16()
 {
-	ge824ov4095 = (GE_ms("truncated_to_real", 17));
-	ge824ov4096 = (GE_ms("twin", 4));
-	ge824ov4097 = (GE_ms("type_conforms_to", 16));
-	ge824ov4098 = (GE_ms("type_id", 7));
-	ge824ov4099 = (GE_ms("type_id_from_name", 17));
-	ge824ov4100 = (GE_ms("type_of_code", 12));
-	ge824ov4101 = (GE_ms("type_of_type", 12));
-	ge824ov4102 = (GE_ms("unlock_marking", 14));
-	ge824ov4103 = (GE_ms("unmark_object", 13));
-	ge824ov4105 = (GE_ms("wide_character_bytes", 20));
-	ge824ov4107 = (GE_ms("False", 5));
-	ge824ov4108 = (GE_ms("Precursor", 9));
-	ge824ov4111 = (GE_ms("Void", 4));
-	ge824ov4112 = (GE_ms("Unique", 6));
-	ge824ov4120 = (GE_ms("assign", 6));
-	ge824ov4128 = (GE_ms("current", 7));
-	ge824ov4134 = (GE_ms("elseif", 6));
-	ge824ov4137 = (GE_ms("expanded", 8));
-	ge824ov4139 = (GE_ms("external", 8));
-	ge824ov4140 = (GE_ms("false", 5));
-	ge824ov4143 = (GE_ms("frozen", 6));
-	ge824ov4144 = (GE_ms("if", 2));
-	ge824ov4145 = (GE_ms("implies", 7));
-	ge824ov4146 = (GE_ms("indexing", 8));
-	ge824ov4149 = (GE_ms("inspect", 7));
-	ge824ov4155 = (GE_ms("not", 3));
-	ge824ov4156 = (GE_ms("note", 4));
-	ge824ov4157 = (GE_ms("obsolete", 8));
-	ge824ov4165 = (GE_ms("reference", 9));
-	ge824ov4169 = (GE_ms("result", 6));
-	ge824ov4170 = (GE_ms("retry", 5));
-	ge824ov4171 = (GE_ms("select", 6));
-	ge824ov4173 = (GE_ms("some", 4));
-	ge824ov4176 = (GE_ms("true", 4));
-	ge824ov4177 = (GE_ms("undefine", 8));
-	ge824ov4179 = (GE_ms("until", 5));
-	ge824ov4181 = (GE_ms("void", 4));
-	ge824ov4183 = (GE_ms("xor", 3));
-	ge824ov4197 = (GE_ms("->", 2));
-	ge824ov4198 = (GE_ms(":=", 2));
-	ge824ov4199 = (GE_ms("\?=", 2));
-	ge824ov4200 = (GE_ms("@", 1));
-	ge824ov4201 = (GE_ms("!", 1));
-	ge824ov4203 = (GE_ms(":", 1));
-	ge824ov4204 = (GE_ms(",", 1));
-	ge824ov4205 = (GE_ms("//", 2));
-	ge824ov4206 = (GE_ms("/", 1));
-	ge824ov4207 = (GE_ms("$", 1));
-	ge824ov4208 = (GE_ms(".", 1));
-	ge824ov4209 = (GE_ms("..", 2));
-	ge824ov4210 = (GE_ms("=", 1));
-	ge824ov4211 = (GE_ms(">=", 2));
-	ge824ov4212 = (GE_ms(">", 1));
-	ge824ov4213 = (GE_ms("<=", 2));
-	ge824ov4214 = (GE_ms("<<", 2));
-	ge824ov4215 = (GE_ms("{", 1));
-	ge824ov4216 = (GE_ms("[", 1));
-	ge824ov4217 = (GE_ms("(", 1));
-	ge824ov4218 = (GE_ms("<", 1));
-	ge824ov4219 = (GE_ms("-", 1));
-	ge824ov4220 = (GE_ms("\\\\", 2));
-	ge824ov4221 = (GE_ms("/=", 2));
-	ge824ov4224 = (GE_ms("+", 1));
-	ge824ov4225 = (GE_ms("^", 1));
-	ge824ov4226 = (GE_ms("\?", 1));
-	ge824ov4227 = (GE_ms(">>", 2));
-	ge824ov4228 = (GE_ms("}", 1));
-	ge824ov4229 = (GE_ms("]", 1));
-	ge824ov4230 = (GE_ms(")", 1));
-	ge824ov4231 = (GE_ms(";", 1));
-	ge824ov4232 = (GE_ms("~", 1));
-	ge824ov4233 = (GE_ms("*", 1));
-	ge228ov14256 = (GE_ms("", 0));
-	ge1053ov25780 = (GE_ms("dummy", 5));
-	ge1041ov9547 = (GE_ms("veen9b", 6));
-	ge1041ov9358 = (GE_ms("VEEN-9", 6));
-	ge1041ov9104 = (GE_ms("`$7\' appearing in the invariant or one of its possibly nested inline agents, is an across cursor that is used outside of its scope.", 131));
-	ge1041ov9546 = (GE_ms("veen9a", 6));
-	ge1041ov9103 = (GE_ms("`$7\' appearing in feature `$8\' or one of its possibly nested inline agents, is an across cursor that is used outside of its scope.", 130));
-	ge1041ov9545 = (GE_ms("veen8b", 6));
-	ge1041ov9357 = (GE_ms("VEEN-8", 6));
-	ge1041ov9102 = (GE_ms("`$7\' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope.", 135));
-	ge1041ov9544 = (GE_ms("veen8a", 6));
-	ge1041ov9101 = (GE_ms("`$7\' appearing in feature `$8\' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope.", 134));
-	ge1041ov9548 = (GE_ms("vevi0a", 6));
-	ge1041ov9359 = (GE_ms("VEVI", 4));
-	ge1041ov9105 = (GE_ms("local entity `$7\' declared as attached is used before being initialized.", 72));
-	ge1041ov9539 = (GE_ms("veen2c", 6));
-	ge1041ov9356 = (GE_ms("VEEN-2", 6));
-	ge1041ov9096 = (GE_ms("local entity `$7\' appears in the precondition or postcondition of feature `$8\'.", 79));
-	ge1041ov9541 = (GE_ms("veen2e", 6));
-	ge1041ov9098 = (GE_ms("local entity `$7\' appears in the precondition or postcondition of an inline agent.", 82));
-	ge1041ov9701 = (GE_ms("vuex2a", 6));
-	ge1041ov9437 = (GE_ms("VUEX-2", 6));
-	ge1041ov9258 = (GE_ms("`$7\' is not the final name of a feature in class $8.", 52));
-	ge1041ov9696 = (GE_ms("vuar1c", 6));
-	ge1041ov9433 = (GE_ms("VUAR-1", 6));
-	ge1041ov9253 = (GE_ms("call to Tuple label `$7\' cannot have arguments.", 47));
-	ge1041ov9715 = (GE_ms("vuta2b", 6));
-	ge1041ov9442 = (GE_ms("VUTA-2", 6));
-	ge1041ov9272 = (GE_ms("the target (of type \'$8\') of the call to Tuple label `$7\' is not attached.", 74));
+	ge824ov4096 = (GE_ms8("twin", 4));
+	ge824ov4097 = (GE_ms8("type_conforms_to", 16));
+	ge824ov4098 = (GE_ms8("type_id", 7));
+	ge824ov4099 = (GE_ms8("type_id_from_name", 17));
+	ge824ov4100 = (GE_ms8("type_of_code", 12));
+	ge824ov4101 = (GE_ms8("type_of_type", 12));
+	ge824ov4102 = (GE_ms8("unlock_marking", 14));
+	ge824ov4103 = (GE_ms8("unmark_object", 13));
+	ge824ov4105 = (GE_ms8("wide_character_bytes", 20));
+	ge824ov4107 = (GE_ms8("False", 5));
+	ge824ov4108 = (GE_ms8("Precursor", 9));
+	ge824ov4111 = (GE_ms8("Void", 4));
+	ge824ov4112 = (GE_ms8("Unique", 6));
+	ge824ov4120 = (GE_ms8("assign", 6));
+	ge824ov4128 = (GE_ms8("current", 7));
+	ge824ov4134 = (GE_ms8("elseif", 6));
+	ge824ov4137 = (GE_ms8("expanded", 8));
+	ge824ov4139 = (GE_ms8("external", 8));
+	ge824ov4140 = (GE_ms8("false", 5));
+	ge824ov4143 = (GE_ms8("frozen", 6));
+	ge824ov4144 = (GE_ms8("if", 2));
+	ge824ov4145 = (GE_ms8("implies", 7));
+	ge824ov4146 = (GE_ms8("indexing", 8));
+	ge824ov4149 = (GE_ms8("inspect", 7));
+	ge824ov4155 = (GE_ms8("not", 3));
+	ge824ov4156 = (GE_ms8("note", 4));
+	ge824ov4157 = (GE_ms8("obsolete", 8));
+	ge824ov4165 = (GE_ms8("reference", 9));
+	ge824ov4169 = (GE_ms8("result", 6));
+	ge824ov4170 = (GE_ms8("retry", 5));
+	ge824ov4171 = (GE_ms8("select", 6));
+	ge824ov4173 = (GE_ms8("some", 4));
+	ge824ov4176 = (GE_ms8("true", 4));
+	ge824ov4177 = (GE_ms8("undefine", 8));
+	ge824ov4179 = (GE_ms8("until", 5));
+	ge824ov4181 = (GE_ms8("void", 4));
+	ge824ov4183 = (GE_ms8("xor", 3));
+	ge824ov4197 = (GE_ms8("->", 2));
+	ge824ov4198 = (GE_ms8(":=", 2));
+	ge824ov4199 = (GE_ms8("\?=", 2));
+	ge824ov4200 = (GE_ms8("@", 1));
+	ge824ov4201 = (GE_ms8("!", 1));
+	ge824ov4203 = (GE_ms8(":", 1));
+	ge824ov4204 = (GE_ms8(",", 1));
+	ge824ov4205 = (GE_ms8("//", 2));
+	ge824ov4206 = (GE_ms8("/", 1));
+	ge824ov4207 = (GE_ms8("$", 1));
+	ge824ov4208 = (GE_ms8(".", 1));
+	ge824ov4209 = (GE_ms8("..", 2));
+	ge824ov4210 = (GE_ms8("=", 1));
+	ge824ov4211 = (GE_ms8(">=", 2));
+	ge824ov4212 = (GE_ms8(">", 1));
+	ge824ov4213 = (GE_ms8("<=", 2));
+	ge824ov4214 = (GE_ms8("<<", 2));
+	ge824ov4215 = (GE_ms8("{", 1));
+	ge824ov4216 = (GE_ms8("[", 1));
+	ge824ov4217 = (GE_ms8("(", 1));
+	ge824ov4218 = (GE_ms8("<", 1));
+	ge824ov4219 = (GE_ms8("-", 1));
+	ge824ov4220 = (GE_ms8("\\\\", 2));
+	ge824ov4221 = (GE_ms8("/=", 2));
+	ge824ov4224 = (GE_ms8("+", 1));
+	ge824ov4225 = (GE_ms8("^", 1));
+	ge824ov4226 = (GE_ms8("\?", 1));
+	ge824ov4227 = (GE_ms8(">>", 2));
+	ge824ov4228 = (GE_ms8("}", 1));
+	ge824ov4229 = (GE_ms8("]", 1));
+	ge824ov4230 = (GE_ms8(")", 1));
+	ge824ov4231 = (GE_ms8(";", 1));
+	ge824ov4232 = (GE_ms8("~", 1));
+	ge824ov4233 = (GE_ms8("*", 1));
+	ge228ov14256 = (GE_ms8("", 0));
+	ge1053ov25783 = (GE_ms8("dummy", 5));
+	ge1041ov9547 = (GE_ms8("veen9b", 6));
+	ge1041ov9358 = (GE_ms8("VEEN-9", 6));
+	ge1041ov9104 = (GE_ms8("`$7\' appearing in the invariant or one of its possibly nested inline agents, is an across cursor that is used outside of its scope.", 131));
+	ge1041ov9546 = (GE_ms8("veen9a", 6));
+	ge1041ov9103 = (GE_ms8("`$7\' appearing in feature `$8\' or one of its possibly nested inline agents, is an across cursor that is used outside of its scope.", 130));
+	ge1041ov9545 = (GE_ms8("veen8b", 6));
+	ge1041ov9357 = (GE_ms8("VEEN-8", 6));
+	ge1041ov9102 = (GE_ms8("`$7\' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope.", 135));
+	ge1041ov9544 = (GE_ms8("veen8a", 6));
+	ge1041ov9101 = (GE_ms8("`$7\' appearing in feature `$8\' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope.", 134));
+	ge1041ov9548 = (GE_ms8("vevi0a", 6));
+	ge1041ov9359 = (GE_ms8("VEVI", 4));
+	ge1041ov9105 = (GE_ms8("local entity `$7\' declared as attached is used before being initialized.", 72));
+	ge1041ov9539 = (GE_ms8("veen2c", 6));
+	ge1041ov9356 = (GE_ms8("VEEN-2", 6));
+	ge1041ov9096 = (GE_ms8("local entity `$7\' appears in the precondition or postcondition of feature `$8\'.", 79));
+	ge1041ov9541 = (GE_ms8("veen2e", 6));
+	ge1041ov9098 = (GE_ms8("local entity `$7\' appears in the precondition or postcondition of an inline agent.", 82));
+	ge1041ov9701 = (GE_ms8("vuex2a", 6));
+	ge1041ov9437 = (GE_ms8("VUEX-2", 6));
+	ge1041ov9258 = (GE_ms8("`$7\' is not the final name of a feature in class $8.", 52));
+	ge1041ov9696 = (GE_ms8("vuar1c", 6));
+	ge1041ov9433 = (GE_ms8("VUAR-1", 6));
+	ge1041ov9253 = (GE_ms8("call to Tuple label `$7\' cannot have arguments.", 47));
+	ge1041ov9715 = (GE_ms8("vuta2b", 6));
+	ge1041ov9442 = (GE_ms8("VUTA-2", 6));
+	ge1041ov9272 = (GE_ms8("the target (of type \'$8\') of the call to Tuple label `$7\' is not attached.", 74));
+	ge1041ov9616 = (GE_ms8("vkcn2a", 6));
 }
 
 void GE_init_const17()
 {
-	ge1041ov9616 = (GE_ms("vkcn2a", 6));
-	ge1041ov9390 = (GE_ms("VKCN-2", 6));
-	ge1041ov9173 = (GE_ms("procedure `$8\' of class $9 appears in a call expression.", 56));
-	ge1041ov9698 = (GE_ms("vuar2b", 6));
-	ge1041ov9434 = (GE_ms("VUAR-2", 6));
-	ge1041ov9255 = (GE_ms("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 128));
-	ge1041ov9697 = (GE_ms("vuar2a", 6));
-	ge1041ov9254 = (GE_ms("the $10-th actual argument (of type \'$11\') does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 141));
-	ge1041ov9508 = (GE_ms("vdpr4b", 6));
-	ge1041ov9340 = (GE_ms("VDPR-4B", 7));
-	ge1041ov9065 = (GE_ms("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$7\' in class $8.", 140));
-	ge1041ov9695 = (GE_ms("vuar1b", 6));
-	ge1041ov9252 = (GE_ms("the number of actual arguments is not the same as the number of formal arguments of feature `$8\'.", 97));
-	ge1041ov9694 = (GE_ms("vuar1a", 6));
-	ge1041ov9251 = (GE_ms("the number of actual arguments is not the same as the number of formal arguments of feature `$8\' in class $9.", 109));
-	ge1041ov9507 = (GE_ms("vdpr4a", 6));
-	ge1041ov9339 = (GE_ms("VDPR-4A", 7));
-	ge1041ov9064 = (GE_ms("the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$7\' in class $8.", 127));
-	ge1041ov9479 = (GE_ms("vape0b", 6));
-	ge1041ov9325 = (GE_ms("VAPE", 4));
-	ge1041ov9036 = (GE_ms("feature `$8\' of class $9 appearing in the precondition of `$10\' is not exported to class $11 to which feature `$10\' is exported.", 128));
-	ge1041ov9702 = (GE_ms("vuex2b", 6));
-	ge1041ov9259 = (GE_ms("feature `$8\' of class $9 is not exported to class $5.", 53));
-	ge1041ov9714 = (GE_ms("vuta2a", 6));
-	ge1041ov9271 = (GE_ms("the target (of type \'$9\') of the call to feature `$8\' is not attached.", 70));
-	ge1041ov9614 = (GE_ms("vkcn1a", 6));
-	ge1041ov9389 = (GE_ms("VKCN-1", 6));
-	ge1041ov9171 = (GE_ms("query `$8\' of class $9 appears in a call instruction.", 53));
-	ge1041ov9478 = (GE_ms("vape0a", 6));
-	ge1041ov9035 = (GE_ms("feature `$8\' of class $5 appearing in the precondition of `$9\' is not exported to class $10 to which feature `$9\' is exported.", 126));
-	ge1041ov9549 = (GE_ms("vevi0b", 6));
-	ge1041ov9106 = (GE_ms("entity \'Result\' declared as attached is used before being initialized.", 70));
-	ge1041ov9537 = (GE_ms("veen2a", 6));
-	ge1041ov9094 = (GE_ms("entity \'Result\' appears in the body, postcondition or rescue clause of a procedure `$7\'.", 88));
-	ge1041ov9543 = (GE_ms("veen2g", 6));
-	ge1041ov9100 = (GE_ms("entity \'Result\' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure.", 127));
-	ge1041ov9540 = (GE_ms("veen2d", 6));
-	ge1041ov9097 = (GE_ms("entity \'Result\' appears in the invariant of the class.", 54));
-	ge1041ov9538 = (GE_ms("veen2b", 6));
-	ge1041ov9095 = (GE_ms("entity \'Result\' appears in the precondition of feature `$7\'.", 60));
-	ge1041ov9686 = (GE_ms("vtcg4a", 6));
-	ge1041ov9428 = (GE_ms("VTCG-4", 6));
-	ge1041ov9243 = (GE_ms("base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8\' available as creation procedure to class $10.", 131));
-	ge1041ov9687 = (GE_ms("vtcg4b", 6));
-	ge1041ov9244 = (GE_ms("the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8\' as creation procedure in its generic constraint.", 175));
-	ge1041ov9674 = (GE_ms("vrle1a", 6));
-	ge1041ov9421 = (GE_ms("VRLE-1", 6));
-	ge1041ov9231 = (GE_ms("local variable name \'$7\' in feature `$8\' is also the final name of a feature.", 77));
-	ge1041ov9675 = (GE_ms("vrle2a", 6));
-	ge1041ov9422 = (GE_ms("VRLE-2", 6));
-	ge1041ov9232 = (GE_ms("local variable name \'$7\' in feature `$8\' is also the name of a formal argument of this feature.", 95));
-	ge1041ov9671 = (GE_ms("vreg0b", 6));
-	ge1041ov9228 = (GE_ms("local variable name \'$7\' appear twice in feature `$8\'.", 54));
-	ge1041ov9710 = (GE_ms("vuot3a", 6));
-	ge1041ov9440 = (GE_ms("VUOT-3", 6));
-	ge1041ov9267 = (GE_ms("object-test with local name \'$6\' has the same name as another object-test local appearing in the same feature `$7\' or in the same inline agent.", 143));
-	ge1042ov16184 = (GE_ms("GE_current_context", 18));
-	ge1042ov16412 = (GE_ms("unsigned", 8));
-	ge1042ov16392 = (GE_ms("object", 6));
-	ge1042ov16301 = (GE_ms("GE_rescue", 9));
-	ge1042ov16406 = (GE_ms("tr", 2));
-	ge1042ov16376 = (GE_ms("in_rescue", 9));
-	ge1042ov16303 = (GE_ms("GE_setjmp", 9));
-	ge1042ov16196 = (GE_ms("GE_EX_FAIL", 10));
-	ge1042ov16302 = (GE_ms("GE_retry", 8));
-	ge1042ov16398 = (GE_ms("previous", 8));
-	ge1042ov16385 = (GE_ms("last_rescue", 11));
-	ge1042ov16414 = (GE_ms("volatile", 8));
-	ge1041ov9709 = (GE_ms("vuot1f", 6));
-	ge1041ov9439 = (GE_ms("VUOT-1", 6));
-	ge1041ov9266 = (GE_ms("the scope of object-test with local name \'$6\' overlaps with the scope of another object-test with the same local name.", 118));
-	ge1041ov9713 = (GE_ms("vuot4b", 6));
-	ge1041ov9441 = (GE_ms("VUOT-4", 6));
-	ge1041ov9270 = (GE_ms("ISE does not support object-tests in check instructions.", 56));
-	ge1041ov9712 = (GE_ms("vuot4a", 6));
-	ge1041ov9269 = (GE_ms("ISE does not support object-tests in preconditions.", 51));
-	ge1041ov9708 = (GE_ms("vuot1e", 6));
-	ge1041ov9265 = (GE_ms("object-test with local name \'$6\' appears in the scope of an across cursor with the same name.", 93));
-	ge1041ov9707 = (GE_ms("vuot1d", 6));
-	ge1041ov9264 = (GE_ms("object-test with local name \'$6\' appears in the scope of another object-test local with the same name.", 102));
-	ge1041ov9706 = (GE_ms("vuot1c", 6));
-	ge1041ov9263 = (GE_ms("object-test local name \'$6\' is also the name of a local variable of an enclosing feature or inline agent.", 105));
-	ge1041ov9705 = (GE_ms("vuot1b", 6));
-	ge1041ov9262 = (GE_ms("object-test local name \'$6\' is also the name of a formal argument of an enclosing feature or inline agent.", 106));
-	ge1041ov9704 = (GE_ms("vuot1a", 6));
-	ge1041ov9261 = (GE_ms("object-test local name \'$6\' is also the final name of a feature.", 64));
-	ge1041ov9724 = (GE_ms("vwmq0d", 6));
-	ge1041ov9447 = (GE_ms("VWMQ", 4));
-	ge1041ov9281 = (GE_ms("type \'$7\' in the string constant is not one of the sized variants of STRING.", 76));
-	ge1041ov9480 = (GE_ms("vave0a", 6));
-	ge1041ov9326 = (GE_ms("VAVE", 4));
-	ge1041ov9037 = (GE_ms("loop variant expression of non-INTEGER type \'$7\'.", 49));
-	ge1041ov9636 = (GE_ms("voit2e", 6));
-	ge1041ov9401 = (GE_ms("VOIT-2", 6));
-	ge1041ov9193 = (GE_ms("across with cursor name \'$6\' appears in the scope of another across cursor with the same name.", 94));
-	ge1041ov9635 = (GE_ms("voit2d", 6));
-	ge1041ov9192 = (GE_ms("across with cursor name \'$6\' appears in the scope of an object-test local with the same name.", 93));
-	ge1041ov9634 = (GE_ms("voit2c", 6));
-	ge1041ov9191 = (GE_ms("across cursor name \'$6\' is also the name of a local variable of an enclosing feature or inline agent.", 101));
-	ge1041ov9633 = (GE_ms("voit2b", 6));
-	ge1041ov9190 = (GE_ms("across cursor name \'$6\' is also the name of a formal argument of an enclosing feature or inline agent.", 102));
+	ge1041ov9390 = (GE_ms8("VKCN-2", 6));
+	ge1041ov9173 = (GE_ms8("procedure `$8\' of class $9 appears in a call expression.", 56));
+	ge1041ov9698 = (GE_ms8("vuar2b", 6));
+	ge1041ov9434 = (GE_ms8("VUAR-2", 6));
+	ge1041ov9255 = (GE_ms8("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 128));
+	ge1041ov9697 = (GE_ms8("vuar2a", 6));
+	ge1041ov9254 = (GE_ms8("the $10-th actual argument (of type \'$11\') does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 141));
+	ge1041ov9508 = (GE_ms8("vdpr4b", 6));
+	ge1041ov9340 = (GE_ms8("VDPR-4B", 7));
+	ge1041ov9065 = (GE_ms8("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$7\' in class $8.", 140));
+	ge1041ov9695 = (GE_ms8("vuar1b", 6));
+	ge1041ov9252 = (GE_ms8("the number of actual arguments is not the same as the number of formal arguments of feature `$8\'.", 97));
+	ge1041ov9694 = (GE_ms8("vuar1a", 6));
+	ge1041ov9251 = (GE_ms8("the number of actual arguments is not the same as the number of formal arguments of feature `$8\' in class $9.", 109));
+	ge1041ov9507 = (GE_ms8("vdpr4a", 6));
+	ge1041ov9339 = (GE_ms8("VDPR-4A", 7));
+	ge1041ov9064 = (GE_ms8("the number of actual arguments in Precursor call is not the same as the number of formal arguments of feature `$7\' in class $8.", 127));
+	ge1041ov9479 = (GE_ms8("vape0b", 6));
+	ge1041ov9325 = (GE_ms8("VAPE", 4));
+	ge1041ov9036 = (GE_ms8("feature `$8\' of class $9 appearing in the precondition of `$10\' is not exported to class $11 to which feature `$10\' is exported.", 128));
+	ge1041ov9702 = (GE_ms8("vuex2b", 6));
+	ge1041ov9259 = (GE_ms8("feature `$8\' of class $9 is not exported to class $5.", 53));
+	ge1041ov9714 = (GE_ms8("vuta2a", 6));
+	ge1041ov9271 = (GE_ms8("the target (of type \'$9\') of the call to feature `$8\' is not attached.", 70));
+	ge1041ov9614 = (GE_ms8("vkcn1a", 6));
+	ge1041ov9389 = (GE_ms8("VKCN-1", 6));
+	ge1041ov9171 = (GE_ms8("query `$8\' of class $9 appears in a call instruction.", 53));
+	ge1041ov9478 = (GE_ms8("vape0a", 6));
+	ge1041ov9035 = (GE_ms8("feature `$8\' of class $5 appearing in the precondition of `$9\' is not exported to class $10 to which feature `$9\' is exported.", 126));
+	ge1041ov9549 = (GE_ms8("vevi0b", 6));
+	ge1041ov9106 = (GE_ms8("entity \'Result\' declared as attached is used before being initialized.", 70));
+	ge1041ov9537 = (GE_ms8("veen2a", 6));
+	ge1041ov9094 = (GE_ms8("entity \'Result\' appears in the body, postcondition or rescue clause of a procedure `$7\'.", 88));
+	ge1041ov9543 = (GE_ms8("veen2g", 6));
+	ge1041ov9100 = (GE_ms8("entity \'Result\' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure.", 127));
+	ge1041ov9540 = (GE_ms8("veen2d", 6));
+	ge1041ov9097 = (GE_ms8("entity \'Result\' appears in the invariant of the class.", 54));
+	ge1041ov9538 = (GE_ms8("veen2b", 6));
+	ge1041ov9095 = (GE_ms8("entity \'Result\' appears in the precondition of feature `$7\'.", 60));
+	ge1041ov9686 = (GE_ms8("vtcg4a", 6));
+	ge1041ov9428 = (GE_ms8("VTCG-4", 6));
+	ge1041ov9243 = (GE_ms8("base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8\' available as creation procedure to class $10.", 131));
+	ge1041ov9687 = (GE_ms8("vtcg4b", 6));
+	ge1041ov9244 = (GE_ms8("the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8\' as creation procedure in its generic constraint.", 175));
+	ge1041ov9674 = (GE_ms8("vrle1a", 6));
+	ge1041ov9421 = (GE_ms8("VRLE-1", 6));
+	ge1041ov9231 = (GE_ms8("local variable name \'$7\' in feature `$8\' is also the final name of a feature.", 77));
+	ge1041ov9675 = (GE_ms8("vrle2a", 6));
+	ge1041ov9422 = (GE_ms8("VRLE-2", 6));
+	ge1041ov9232 = (GE_ms8("local variable name \'$7\' in feature `$8\' is also the name of a formal argument of this feature.", 95));
+	ge1041ov9671 = (GE_ms8("vreg0b", 6));
+	ge1041ov9228 = (GE_ms8("local variable name \'$7\' appear twice in feature `$8\'.", 54));
+	ge1041ov9710 = (GE_ms8("vuot3a", 6));
+	ge1041ov9440 = (GE_ms8("VUOT-3", 6));
+	ge1041ov9267 = (GE_ms8("object-test with local name \'$6\' has the same name as another object-test local appearing in the same feature `$7\' or in the same inline agent.", 143));
+	ge1042ov16179 = (GE_ms8("GE_current_context", 18));
+	ge1042ov16415 = (GE_ms8("unsigned", 8));
+	ge1042ov16395 = (GE_ms8("object", 6));
+	ge1042ov16302 = (GE_ms8("GE_rescue", 9));
+	ge1042ov16409 = (GE_ms8("tr", 2));
+	ge1042ov16379 = (GE_ms8("in_rescue", 9));
+	ge1042ov16304 = (GE_ms8("GE_setjmp", 9));
+	ge1042ov16191 = (GE_ms8("GE_EX_FAIL", 10));
+	ge1042ov16303 = (GE_ms8("GE_retry", 8));
+	ge1042ov16401 = (GE_ms8("previous", 8));
+	ge1042ov16388 = (GE_ms8("last_rescue", 11));
+	ge1042ov16417 = (GE_ms8("volatile", 8));
+	ge1041ov9709 = (GE_ms8("vuot1f", 6));
+	ge1041ov9439 = (GE_ms8("VUOT-1", 6));
+	ge1041ov9266 = (GE_ms8("the scope of object-test with local name \'$6\' overlaps with the scope of another object-test with the same local name.", 118));
+	ge1041ov9713 = (GE_ms8("vuot4b", 6));
+	ge1041ov9441 = (GE_ms8("VUOT-4", 6));
+	ge1041ov9270 = (GE_ms8("ISE does not support object-tests in check instructions.", 56));
+	ge1041ov9712 = (GE_ms8("vuot4a", 6));
+	ge1041ov9269 = (GE_ms8("ISE does not support object-tests in preconditions.", 51));
+	ge1041ov9708 = (GE_ms8("vuot1e", 6));
+	ge1041ov9265 = (GE_ms8("object-test with local name \'$6\' appears in the scope of an across cursor with the same name.", 93));
+	ge1041ov9707 = (GE_ms8("vuot1d", 6));
+	ge1041ov9264 = (GE_ms8("object-test with local name \'$6\' appears in the scope of another object-test local with the same name.", 102));
+	ge1041ov9706 = (GE_ms8("vuot1c", 6));
+	ge1041ov9263 = (GE_ms8("object-test local name \'$6\' is also the name of a local variable of an enclosing feature or inline agent.", 105));
+	ge1041ov9705 = (GE_ms8("vuot1b", 6));
+	ge1041ov9262 = (GE_ms8("object-test local name \'$6\' is also the name of a formal argument of an enclosing feature or inline agent.", 106));
+	ge1041ov9704 = (GE_ms8("vuot1a", 6));
+	ge1041ov9261 = (GE_ms8("object-test local name \'$6\' is also the final name of a feature.", 64));
+	ge1041ov9724 = (GE_ms8("vwmq0d", 6));
+	ge1041ov9447 = (GE_ms8("VWMQ", 4));
+	ge1041ov9281 = (GE_ms8("type \'$7\' in the string constant is not one of the sized variants of STRING.", 76));
+	ge1042ov16245 = (GE_ms8("GE_ms8", 6));
+	ge1042ov16246 = (GE_ms8("GE_ms32", 7));
+	ge1041ov9480 = (GE_ms8("vave0a", 6));
+	ge1041ov9326 = (GE_ms8("VAVE", 4));
+	ge1041ov9037 = (GE_ms8("loop variant expression of non-INTEGER type \'$7\'.", 49));
+	ge1041ov9636 = (GE_ms8("voit2e", 6));
+	ge1041ov9401 = (GE_ms8("VOIT-2", 6));
+	ge1041ov9193 = (GE_ms8("across with cursor name \'$6\' appears in the scope of another across cursor with the same name.", 94));
+	ge1041ov9635 = (GE_ms8("voit2d", 6));
+	ge1041ov9192 = (GE_ms8("across with cursor name \'$6\' appears in the scope of an object-test local with the same name.", 93));
+	ge1041ov9634 = (GE_ms8("voit2c", 6));
+	ge1041ov9191 = (GE_ms8("across cursor name \'$6\' is also the name of a local variable of an enclosing feature or inline agent.", 101));
+	ge1041ov9633 = (GE_ms8("voit2b", 6));
 }
 
 void GE_init_const18()
 {
-	ge1041ov9632 = (GE_ms("voit2a", 6));
-	ge1041ov9189 = (GE_ms("across cursor name \'$6\' is also the final name of a feature.", 60));
-	ge1041ov9631 = (GE_ms("voit1a", 6));
-	ge1041ov9400 = (GE_ms("VOIT-1", 6));
-	ge1041ov9188 = (GE_ms("the type \'$7\' of the across iterable expression does not conform to any generic derivation of ITERABLE.", 103));
-	ge1042ov16415 = (GE_ms("while", 5));
-	ge1041ov9641 = (GE_ms("vpca1b", 6));
-	ge1041ov9404 = (GE_ms("VPCA-1", 6));
-	ge1041ov9198 = (GE_ms("`$7\' is not the final name of a feature in class $8.", 52));
-	ge1041ov9648 = (GE_ms("vpca5b", 6));
-	ge1041ov9408 = (GE_ms("VPCA-5", 6));
-	ge1041ov9205 = (GE_ms("the type \'$10\' specified for the $9-th actual argument of Call_agent does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 155));
-	ge1041ov9647 = (GE_ms("vpca5a", 6));
-	ge1041ov9204 = (GE_ms("the type \'$11\' specified for the $10-th actual argument of Call_agent does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 168));
-	ge1041ov9646 = (GE_ms("vpca4b", 6));
-	ge1041ov9407 = (GE_ms("VPCA-4", 6));
-	ge1041ov9203 = (GE_ms("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 128));
-	ge1041ov9645 = (GE_ms("vpca4a", 6));
-	ge1041ov9202 = (GE_ms("the $10-th actual argument (of type \'$11\') does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 141));
-	ge1041ov9644 = (GE_ms("vpca3b", 6));
-	ge1041ov9406 = (GE_ms("VPCA-3", 6));
-	ge1041ov9201 = (GE_ms("the number of actual arguments is not the same as the number of formal arguments of feature `$8\'.", 97));
-	ge1041ov9643 = (GE_ms("vpca3a", 6));
-	ge1041ov9200 = (GE_ms("the number of actual arguments is not the same as the number of formal arguments of feature `$8\' in class $9.", 109));
-	ge1041ov9642 = (GE_ms("vpca2a", 6));
-	ge1041ov9405 = (GE_ms("VPCA-2", 6));
-	ge1041ov9199 = (GE_ms("feature `$8\' of class $9 is not exported to class $5.", 53));
-	ge1041ov9640 = (GE_ms("vpca1a", 6));
-	ge1041ov9197 = (GE_ms("`$7\' is not the final name of a feature in class $5.", 52));
-	ge1042ov16379 = (GE_ms("int", 3));
-	ge1041ov9703 = (GE_ms("vuno3a", 6));
-	ge1041ov9438 = (GE_ms("VUNO-3", 6));
-	ge1041ov9260 = (GE_ms("feature `$8\' of class $9 is not valid for static call.", 54));
-	ge1041ov9727 = (GE_ms("vwst2a", 6));
-	ge1041ov9449 = (GE_ms("VWST-2", 6));
-	ge1041ov9284 = (GE_ms("feature name `$7\' appears twice in strip expression.", 52));
-	ge1041ov9725 = (GE_ms("vwst1a", 6));
-	ge1041ov9448 = (GE_ms("VWST-1", 6));
-	ge1041ov9282 = (GE_ms("feature name `$7\' is not the final name of a feature in class $5.", 65));
-	ge1041ov9723 = (GE_ms("vwmq0c", 6));
-	ge1041ov9280 = (GE_ms("type \'$7\' in the character constant is not one of the sized variants of CHARACTER.", 82));
-	ge1042ov16249 = (GE_ms("GE_nat32", 8));
-	ge1041ov9765 = (GE_ms("gvwmc2a", 7));
-	ge1041ov9474 = (GE_ms("GVWMC-2", 7));
-	ge1041ov9322 = (GE_ms("integer constant \'$7\' is not representable as an instance of \'$8\'.", 66));
-	ge1041ov9721 = (GE_ms("vwmq0a", 6));
-	ge1041ov9278 = (GE_ms("type \'$7\' in the integer constant is not one of the sized variants of INTEGER.", 78));
-	ge1042ov16213 = (GE_ms("GE_int8", 7));
-	ge1042ov16214 = (GE_ms("GE_int16", 8));
-	ge1042ov16215 = (GE_ms("GE_int32", 8));
-	ge1042ov16216 = (GE_ms("GE_int64", 8));
-	ge1042ov16247 = (GE_ms("GE_nat8", 7));
-	ge1042ov16248 = (GE_ms("GE_nat16", 8));
-	ge1042ov16250 = (GE_ms("GE_nat64", 8));
-	ge1041ov9722 = (GE_ms("vwmq0b", 6));
-	ge1041ov9279 = (GE_ms("type \'$7\' in the real constant is not one of the sized variants of REAL.", 72));
-	ge1041ov9550 = (GE_ms("vevi0c", 6));
-	ge1041ov9107 = (GE_ms("entity \'Result\' declared as attached is not initialized at the end of the body of function `$7\'.", 96));
-	ge1041ov9717 = (GE_ms("vvok2a", 6));
-	ge1041ov9444 = (GE_ms("VVOK-2", 6));
-	ge1041ov9274 = (GE_ms("once key \"$6\" is not supported. The supported once keys are \"THREAD\", \"PROCESS\" and \"OBJECT\".", 93));
-	ge818ov18085 = (GE_ms("PROCESS", 7));
-	ge818ov18084 = (GE_ms("THREAD", 6));
-	ge1041ov9716 = (GE_ms("vvok1a", 6));
-	ge1041ov9443 = (GE_ms("VVOK-1", 6));
-	ge1041ov9273 = (GE_ms("once keys \"$6\" and \"$7\" cannot be combined.", 43));
-	ge818ov18086 = (GE_ms("OBJECT", 6));
-	ge1041ov9734 = (GE_ms("gvkbu1a", 7));
-	ge1041ov9457 = (GE_ms("GVKBU-1", 7));
-	ge1041ov9291 = (GE_ms("unknown built-in routine `$7\' in class $5.", 42));
-	ge1041ov9733 = (GE_ms("gvkbs0a", 7));
-	ge1041ov9456 = (GE_ms("GVKBS", 5));
-	ge1041ov9290 = (GE_ms("built-in routine `$7\' in class $5 has not the expected signature \'$8\'.", 70));
-	ge1042ov16135 = (GE_ms("EIF_TEST", 8));
-	ge1042ov16123 = (GE_ms("EIF_NATIVE_CHAR", 15));
-	ge1042ov16397 = (GE_ms("pre_ecma_mapping_status", 23));
-	ge1042ov16148 = (GE_ms("exception_manager", 17));
-	ge1042ov16375 = (GE_ms("in_assertion", 12));
-	ge1041ov9684 = (GE_ms("vtat2b", 6));
-	ge1041ov9241 = (GE_ms("invalid type \'$7\' when part of a qualified anchored type: the type of anchor `$8\' must not depend (possibly recursively) on a qualified anchored type.", 150));
-	ge1041ov9680 = (GE_ms("vtat1a", 6));
-	ge1041ov9425 = (GE_ms("VTAT-1", 6));
-	ge1041ov9237 = (GE_ms("invalid type \'$7\': the anchor `$8\' must be the final name of a query.", 69));
-	ge1041ov9681 = (GE_ms("vtat1b", 6));
-	ge1041ov9238 = (GE_ms("invalid type \'$7\': the anchor `$8\' must be the final name of a query, or an argument of routine `$9\'.", 101));
-	ge1041ov9488 = (GE_ms("vcfg3a", 6));
-	ge1041ov9045 = (GE_ms("invalid type \'$7\' in constraint of formal generic parameter.", 60));
-	ge1041ov9601 = (GE_ms("vhpr3a", 6));
-	ge1041ov9381 = (GE_ms("VHPR-3", 6));
-	ge1041ov9158 = (GE_ms("invalid type \'$7\' in parent clause.", 35));
-	ge1041ov9682 = (GE_ms("vtat1c", 6));
-	ge1041ov9239 = (GE_ms("invalid type \'$7\': the anchor `$8\' must be the final name of a query in class $9.", 81));
-	ge1041ov9503 = (GE_ms("vdpr3b", 6));
-	ge1041ov9338 = (GE_ms("VDPR-3", 6));
-	ge1041ov9060 = (GE_ms("feature `$7\' is not the redefinition of an effective feature.", 61));
-	ge1041ov9502 = (GE_ms("vdpr3a", 6));
-	ge1041ov9059 = (GE_ms("conflict in Precursor construct between effective features `$7\' inherited from \'$8\' and `$9\' inherited from \'$10\'.", 114));
-	ge1041ov9501 = (GE_ms("vdpr2a", 6));
-	ge1041ov9337 = (GE_ms("VDPR-2", 6));
-	ge1041ov9058 = (GE_ms("class $7 in Precursor construct is not a parent of class $6.", 60));
-	ge1041ov9505 = (GE_ms("vdpr3d", 6));
+	ge1041ov9190 = (GE_ms8("across cursor name \'$6\' is also the name of a formal argument of an enclosing feature or inline agent.", 102));
+	ge1041ov9632 = (GE_ms8("voit2a", 6));
+	ge1041ov9189 = (GE_ms8("across cursor name \'$6\' is also the final name of a feature.", 60));
+	ge1041ov9631 = (GE_ms8("voit1a", 6));
+	ge1041ov9400 = (GE_ms8("VOIT-1", 6));
+	ge1041ov9188 = (GE_ms8("the type \'$7\' of the across iterable expression does not conform to any generic derivation of ITERABLE.", 103));
+	ge1042ov16418 = (GE_ms8("while", 5));
+	ge1041ov9641 = (GE_ms8("vpca1b", 6));
+	ge1041ov9404 = (GE_ms8("VPCA-1", 6));
+	ge1041ov9198 = (GE_ms8("`$7\' is not the final name of a feature in class $8.", 52));
+	ge1041ov9648 = (GE_ms8("vpca5b", 6));
+	ge1041ov9408 = (GE_ms8("VPCA-5", 6));
+	ge1041ov9205 = (GE_ms8("the type \'$10\' specified for the $9-th actual argument of Call_agent does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 155));
+	ge1041ov9647 = (GE_ms8("vpca5a", 6));
+	ge1041ov9204 = (GE_ms8("the type \'$11\' specified for the $10-th actual argument of Call_agent does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 168));
+	ge1041ov9646 = (GE_ms8("vpca4b", 6));
+	ge1041ov9407 = (GE_ms8("VPCA-4", 6));
+	ge1041ov9203 = (GE_ms8("the $9-th actual argument (of type \'$10\') does not conform to the corresponding formal argument (of type \'$11\') of feature `$8\'.", 128));
+	ge1041ov9645 = (GE_ms8("vpca4a", 6));
+	ge1041ov9202 = (GE_ms8("the $10-th actual argument (of type \'$11\') does not conform to the corresponding formal argument (of type \'$12\') of feature `$8\' in class $9.", 141));
+	ge1041ov9644 = (GE_ms8("vpca3b", 6));
+	ge1041ov9406 = (GE_ms8("VPCA-3", 6));
+	ge1041ov9201 = (GE_ms8("the number of actual arguments is not the same as the number of formal arguments of feature `$8\'.", 97));
+	ge1041ov9643 = (GE_ms8("vpca3a", 6));
+	ge1041ov9200 = (GE_ms8("the number of actual arguments is not the same as the number of formal arguments of feature `$8\' in class $9.", 109));
+	ge1041ov9642 = (GE_ms8("vpca2a", 6));
+	ge1041ov9405 = (GE_ms8("VPCA-2", 6));
+	ge1041ov9199 = (GE_ms8("feature `$8\' of class $9 is not exported to class $5.", 53));
+	ge1041ov9640 = (GE_ms8("vpca1a", 6));
+	ge1041ov9197 = (GE_ms8("`$7\' is not the final name of a feature in class $5.", 52));
+	ge1042ov16382 = (GE_ms8("int", 3));
+	ge1041ov9703 = (GE_ms8("vuno3a", 6));
+	ge1041ov9438 = (GE_ms8("VUNO-3", 6));
+	ge1041ov9260 = (GE_ms8("feature `$8\' of class $9 is not valid for static call.", 54));
+	ge1041ov9727 = (GE_ms8("vwst2a", 6));
+	ge1041ov9449 = (GE_ms8("VWST-2", 6));
+	ge1041ov9284 = (GE_ms8("feature name `$7\' appears twice in strip expression.", 52));
+	ge1041ov9725 = (GE_ms8("vwst1a", 6));
+	ge1041ov9448 = (GE_ms8("VWST-1", 6));
+	ge1041ov9282 = (GE_ms8("feature name `$7\' is not the final name of a feature in class $5.", 65));
+	ge1041ov9723 = (GE_ms8("vwmq0c", 6));
+	ge1041ov9280 = (GE_ms8("type \'$7\' in the character constant is not one of the sized variants of CHARACTER.", 82));
+	ge1042ov16250 = (GE_ms8("GE_nat32", 8));
+	ge1041ov9765 = (GE_ms8("gvwmc2a", 7));
+	ge1041ov9474 = (GE_ms8("GVWMC-2", 7));
+	ge1041ov9322 = (GE_ms8("integer constant \'$7\' is not representable as an instance of \'$8\'.", 66));
+	ge1041ov9721 = (GE_ms8("vwmq0a", 6));
+	ge1041ov9278 = (GE_ms8("type \'$7\' in the integer constant is not one of the sized variants of INTEGER.", 78));
+	ge1042ov16208 = (GE_ms8("GE_int8", 7));
+	ge1042ov16209 = (GE_ms8("GE_int16", 8));
+	ge1042ov16210 = (GE_ms8("GE_int32", 8));
+	ge1042ov16211 = (GE_ms8("GE_int64", 8));
+	ge1042ov16248 = (GE_ms8("GE_nat8", 7));
+	ge1042ov16249 = (GE_ms8("GE_nat16", 8));
+	ge1042ov16251 = (GE_ms8("GE_nat64", 8));
+	ge1041ov9722 = (GE_ms8("vwmq0b", 6));
+	ge1041ov9279 = (GE_ms8("type \'$7\' in the real constant is not one of the sized variants of REAL.", 72));
+	ge1041ov9550 = (GE_ms8("vevi0c", 6));
+	ge1041ov9107 = (GE_ms8("entity \'Result\' declared as attached is not initialized at the end of the body of function `$7\'.", 96));
+	ge1041ov9717 = (GE_ms8("vvok2a", 6));
+	ge1041ov9444 = (GE_ms8("VVOK-2", 6));
+	ge1041ov9274 = (GE_ms8("once key \"$6\" is not supported. The supported once keys are \"THREAD\", \"PROCESS\" and \"OBJECT\".", 93));
+	ge818ov18088 = (GE_ms8("PROCESS", 7));
+	ge818ov18087 = (GE_ms8("THREAD", 6));
+	ge1041ov9716 = (GE_ms8("vvok1a", 6));
+	ge1041ov9443 = (GE_ms8("VVOK-1", 6));
+	ge1041ov9273 = (GE_ms8("once keys \"$6\" and \"$7\" cannot be combined.", 43));
+	ge818ov18089 = (GE_ms8("OBJECT", 6));
+	ge1041ov9734 = (GE_ms8("gvkbu1a", 7));
+	ge1041ov9457 = (GE_ms8("GVKBU-1", 7));
+	ge1041ov9291 = (GE_ms8("unknown built-in routine `$7\' in class $5.", 42));
+	ge1041ov9733 = (GE_ms8("gvkbs0a", 7));
+	ge1041ov9456 = (GE_ms8("GVKBS", 5));
+	ge1041ov9290 = (GE_ms8("built-in routine `$7\' in class $5 has not the expected signature \'$8\'.", 70));
+	ge1042ov16135 = (GE_ms8("EIF_TEST", 8));
+	ge1042ov16123 = (GE_ms8("EIF_NATIVE_CHAR", 15));
+	ge1042ov16400 = (GE_ms8("pre_ecma_mapping_status", 23));
+	ge1042ov16147 = (GE_ms8("exception_manager", 17));
+	ge1042ov16378 = (GE_ms8("in_assertion", 12));
+	ge1041ov9684 = (GE_ms8("vtat2b", 6));
+	ge1041ov9241 = (GE_ms8("invalid type \'$7\' when part of a qualified anchored type: the type of anchor `$8\' must not depend (possibly recursively) on a qualified anchored type.", 150));
+	ge1041ov9680 = (GE_ms8("vtat1a", 6));
+	ge1041ov9425 = (GE_ms8("VTAT-1", 6));
+	ge1041ov9237 = (GE_ms8("invalid type \'$7\': the anchor `$8\' must be the final name of a query.", 69));
+	ge1041ov9681 = (GE_ms8("vtat1b", 6));
+	ge1041ov9238 = (GE_ms8("invalid type \'$7\': the anchor `$8\' must be the final name of a query, or an argument of routine `$9\'.", 101));
+	ge1041ov9488 = (GE_ms8("vcfg3a", 6));
+	ge1041ov9045 = (GE_ms8("invalid type \'$7\' in constraint of formal generic parameter.", 60));
+	ge1041ov9601 = (GE_ms8("vhpr3a", 6));
+	ge1041ov9381 = (GE_ms8("VHPR-3", 6));
+	ge1041ov9158 = (GE_ms8("invalid type \'$7\' in parent clause.", 35));
+	ge1041ov9682 = (GE_ms8("vtat1c", 6));
+	ge1041ov9239 = (GE_ms8("invalid type \'$7\': the anchor `$8\' must be the final name of a query in class $9.", 81));
+	ge1041ov9503 = (GE_ms8("vdpr3b", 6));
+	ge1041ov9338 = (GE_ms8("VDPR-3", 6));
+	ge1041ov9060 = (GE_ms8("feature `$7\' is not the redefinition of an effective feature.", 61));
+	ge1041ov9502 = (GE_ms8("vdpr3a", 6));
+	ge1041ov9059 = (GE_ms8("conflict in Precursor construct between effective features `$7\' inherited from \'$8\' and `$9\' inherited from \'$10\'.", 114));
+	ge1041ov9501 = (GE_ms8("vdpr2a", 6));
+	ge1041ov9337 = (GE_ms8("VDPR-2", 6));
+	ge1041ov9058 = (GE_ms8("class $7 in Precursor construct is not a parent of class $6.", 60));
 }
 
 void GE_init_const19()
 {
-	ge1041ov9062 = (GE_ms("feature `$7\' is not the redeclaration of a feature.", 51));
-	ge1041ov9506 = (GE_ms("vdpr3e", 6));
-	ge1041ov9063 = (GE_ms("the associated feature of inline agents cannot be redefined.", 60));
-	ge1041ov9500 = (GE_ms("vdpr1b", 6));
-	ge1041ov9336 = (GE_ms("VDPR-1", 6));
-	ge1041ov9057 = (GE_ms("Precursor expression does not appear in a Routine_body.", 55));
-	ge1041ov9699 = (GE_ms("vuar4a", 6));
-	ge1041ov9435 = (GE_ms("VUAR-4", 6));
-	ge1041ov9256 = (GE_ms("`$7\' is not the final name of a feature in class $5.", 52));
-	ge1042ov16384 = (GE_ms("is_special", 10));
-	ge1041ov9477 = (GE_ms("vaol1a", 6));
-	ge1041ov9324 = (GE_ms("VAOL-1", 6));
-	ge1041ov9034 = (GE_ms("old expression does not appear in a postcondition.", 50));
-	ge1041ov9551 = (GE_ms("vevi0d", 6));
-	ge1041ov9108 = (GE_ms("entity \'Result\' declared as attached is not initialized at the end of the body of inline agent.", 95));
-	ge1041ov9656 = (GE_ms("vpir1h", 6));
-	ge1041ov9409 = (GE_ms("VPIR-1", 6));
-	ge1041ov9213 = (GE_ms("local variable name \'$7\' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent.", 156));
-	ge1041ov9654 = (GE_ms("vpir1f", 6));
-	ge1041ov9211 = (GE_ms("local variable name \'$7\' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.", 160));
-	ge1041ov9652 = (GE_ms("vpir1d", 6));
-	ge1041ov9209 = (GE_ms("local variable name \'$7\' in inline agent is also the name of a local variable of an enclosing feature or inline agent.", 118));
-	ge1041ov9651 = (GE_ms("vpir1c", 6));
-	ge1041ov9208 = (GE_ms("local variable name \'$7\' in inline agent is also the name of a formal argument of an enclosing feature or inline agent.", 119));
-	ge1041ov9677 = (GE_ms("vrlv1b", 6));
-	ge1041ov9423 = (GE_ms("VRLV-1", 6));
-	ge1041ov9234 = (GE_ms("local variable name \'$7\' in inline agent is also the final name of a feature.", 77));
-	ge1041ov9679 = (GE_ms("vrlv2b", 6));
-	ge1041ov9424 = (GE_ms("VRLV-2", 6));
-	ge1041ov9236 = (GE_ms("local variable name \'$7\' in inline agent is also the name of a formal argument of this agent.", 93));
-	ge1041ov9669 = (GE_ms("vred0d", 6));
-	ge1041ov9418 = (GE_ms("VRED", 4));
-	ge1041ov9226 = (GE_ms("local variable name \'$7\' appear twice in inline agent.", 54));
-	ge1041ov9711 = (GE_ms("vuot3b", 6));
-	ge1041ov9268 = (GE_ms("object-test with local name \'$6\' has the same name as another object-test local appearing in the invariant or in the same inline agent.", 135));
-	ge1041ov9655 = (GE_ms("vpir1g", 6));
-	ge1041ov9212 = (GE_ms("argument name \'$7\' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent.", 150));
-	ge1041ov9653 = (GE_ms("vpir1e", 6));
-	ge1041ov9210 = (GE_ms("argument name \'$7\' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.", 154));
-	ge1041ov9650 = (GE_ms("vpir1b", 6));
-	ge1041ov9207 = (GE_ms("argument name \'$7\' in inline agent is also the name of a local variable of an enclosing feature or inline agent.", 112));
-	ge1041ov9649 = (GE_ms("vpir1a", 6));
-	ge1041ov9206 = (GE_ms("argument name \'$7\' in inline agent is also the name of a formal argument of an enclosing feature or inline agent.", 113));
-	ge1041ov9673 = (GE_ms("vrfa0b", 6));
-	ge1041ov9230 = (GE_ms("argument name \'$7\' in inline agent is also the final name of a feature.", 71));
-	ge1041ov9668 = (GE_ms("vred0c", 6));
-	ge1041ov9225 = (GE_ms("argument name \'$7\' appear twice in inline agent.", 48));
-	ge1041ov9657 = (GE_ms("vpir3a", 6));
-	ge1041ov9410 = (GE_ms("VPIR-3", 6));
-	ge1041ov9214 = (GE_ms("inline agents cannot be of the once form.", 41));
-	ge1041ov9658 = (GE_ms("vpir3b", 6));
-	ge1041ov9215 = (GE_ms("inline agents cannot be of the external form.", 45));
-	ge1041ov9689 = (GE_ms("vtct0b", 6));
-	ge1041ov9246 = (GE_ms("type based on unknown class $7.", 31));
-	ge1041ov9492 = (GE_ms("vcfg3f", 6));
-	ge1041ov9049 = (GE_ms("constraint of formal generic parameter \'$7\' contains \'$8\' itself.", 65));
-	ge1041ov9490 = (GE_ms("vcfg3c", 6));
-	ge1041ov9047 = (GE_ms("constraint of formal generic parameter \'$7\' is another formal generic parameter \'$8\'.", 85));
-	ge1041ov9489 = (GE_ms("vcfg3b", 6));
-	ge1041ov9046 = (GE_ms("constraint of formal generic parameter \'$7\' is \'$8\' itself.", 59));
-	ge1041ov9685 = (GE_ms("vtcg3a", 6));
-	ge1041ov9427 = (GE_ms("VTCG-3", 6));
-	ge1041ov9242 = (GE_ms("actual generic parameter \'$7\' in type \'$9\' does not conform to constraint \'$8\'.", 79));
-	ge1041ov9743 = (GE_ms("gvtcg5a", 7));
-	ge1041ov9465 = (GE_ms("GVTCG-5", 7));
-	ge1041ov9300 = (GE_ms("actual generic parameter \'$7\' in type \'$8\' is not a reference type but the corresponding formal parameter is marked as reference.", 129));
-	ge1041ov9744 = (GE_ms("gvtcg5b", 7));
-	ge1041ov9301 = (GE_ms("actual generic parameter \'$7\' in type \'$8\' is not expanded type but the corresponding formal parameter is marked as expanded.", 125));
-	ge1041ov9693 = (GE_ms("vtug2a", 6));
-	ge1041ov9432 = (GE_ms("VTUG-2", 6));
-	ge1041ov9250 = (GE_ms("type \'$7\' has wrong number of actual generic parameters.", 56));
-	ge1041ov9692 = (GE_ms("vtug1a", 6));
-	ge1041ov9431 = (GE_ms("VTUG-1", 6));
-	ge1041ov9249 = (GE_ms("type \'$7\' has actual generic parameters but class $8 is not generic.", 68));
-	ge1041ov9730 = (GE_ms("gvhpr5a", 7));
-	ge1041ov9453 = (GE_ms("GVHPR-5", 7));
-	ge1041ov9287 = (GE_ms("cannot inherit from Tuple_type \'$7\'.", 36));
-	ge1041ov9700 = (GE_ms("vuex1a", 6));
-	ge1041ov9436 = (GE_ms("VUEX-1", 6));
-	ge1041ov9257 = (GE_ms("`$7\' is not the final name of a feature in class $5.", 52));
-	ge1041ov9617 = (GE_ms("vkcn2c", 6));
-	ge1041ov9174 = (GE_ms("procedure `$8\' appears in a call expression.", 44));
-	ge1041ov9754 = (GE_ms("gvuao0c", 7));
-	ge1041ov9469 = (GE_ms("GVUAO", 5));
-	ge1041ov9311 = (GE_ms("`$7\' is an object-test local of in an invariant and hence cannot have actual arguments.", 87));
-	ge1041ov9752 = (GE_ms("gvuao0a", 7));
-	ge1041ov9309 = (GE_ms("`$7\' is an object-test local of feature `$8\' and hence cannot have actual arguments.", 84));
-	ge1041ov9753 = (GE_ms("gvuao0b", 7));
-	ge1041ov9310 = (GE_ms("`$7\' is an object-test local of an inline agent and hence cannot have actual arguments.", 87));
-	ge1041ov9749 = (GE_ms("gvuac0c", 7));
-	ge1041ov9467 = (GE_ms("GVUAC", 5));
-	ge1041ov9306 = (GE_ms("`$7\' is an across cursor of in an invariant and hence cannot have actual arguments.", 83));
-	ge1041ov9747 = (GE_ms("gvuac0a", 7));
-	ge1041ov9304 = (GE_ms("`$7\' is an across cursor of feature `$8\' and hence cannot have actual arguments.", 80));
-	ge1041ov9748 = (GE_ms("gvuac0b", 7));
-	ge1041ov9305 = (GE_ms("`$7\' is an across cursor of an inline agent and hence cannot have actual arguments.", 83));
-	ge1041ov9750 = (GE_ms("gvual0a", 7));
-	ge1041ov9468 = (GE_ms("GVUAL", 5));
-	ge1041ov9307 = (GE_ms("`$7\' is a local variable of feature `$8\' and hence cannot have actual arguments.", 80));
-	ge1041ov9751 = (GE_ms("gvual0b", 7));
-	ge1041ov9308 = (GE_ms("`$7\' is a local variable of an inline agent and hence cannot have actual arguments.", 83));
+	ge1041ov9505 = (GE_ms8("vdpr3d", 6));
+	ge1041ov9062 = (GE_ms8("feature `$7\' is not the redeclaration of a feature.", 51));
+	ge1041ov9506 = (GE_ms8("vdpr3e", 6));
+	ge1041ov9063 = (GE_ms8("the associated feature of inline agents cannot be redefined.", 60));
+	ge1041ov9500 = (GE_ms8("vdpr1b", 6));
+	ge1041ov9336 = (GE_ms8("VDPR-1", 6));
+	ge1041ov9057 = (GE_ms8("Precursor expression does not appear in a Routine_body.", 55));
+	ge1041ov9699 = (GE_ms8("vuar4a", 6));
+	ge1041ov9435 = (GE_ms8("VUAR-4", 6));
+	ge1041ov9256 = (GE_ms8("`$7\' is not the final name of a feature in class $5.", 52));
+	ge1042ov16387 = (GE_ms8("is_special", 10));
+	ge1041ov9477 = (GE_ms8("vaol1a", 6));
+	ge1041ov9324 = (GE_ms8("VAOL-1", 6));
+	ge1041ov9034 = (GE_ms8("old expression does not appear in a postcondition.", 50));
+	ge1041ov9551 = (GE_ms8("vevi0d", 6));
+	ge1041ov9108 = (GE_ms8("entity \'Result\' declared as attached is not initialized at the end of the body of inline agent.", 95));
+	ge1041ov9656 = (GE_ms8("vpir1h", 6));
+	ge1041ov9409 = (GE_ms8("VPIR-1", 6));
+	ge1041ov9213 = (GE_ms8("local variable name \'$7\' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent.", 156));
+	ge1041ov9654 = (GE_ms8("vpir1f", 6));
+	ge1041ov9211 = (GE_ms8("local variable name \'$7\' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.", 160));
+	ge1041ov9652 = (GE_ms8("vpir1d", 6));
+	ge1041ov9209 = (GE_ms8("local variable name \'$7\' in inline agent is also the name of a local variable of an enclosing feature or inline agent.", 118));
+	ge1041ov9651 = (GE_ms8("vpir1c", 6));
+	ge1041ov9208 = (GE_ms8("local variable name \'$7\' in inline agent is also the name of a formal argument of an enclosing feature or inline agent.", 119));
+	ge1041ov9677 = (GE_ms8("vrlv1b", 6));
+	ge1041ov9423 = (GE_ms8("VRLV-1", 6));
+	ge1041ov9234 = (GE_ms8("local variable name \'$7\' in inline agent is also the final name of a feature.", 77));
+	ge1041ov9679 = (GE_ms8("vrlv2b", 6));
+	ge1041ov9424 = (GE_ms8("VRLV-2", 6));
+	ge1041ov9236 = (GE_ms8("local variable name \'$7\' in inline agent is also the name of a formal argument of this agent.", 93));
+	ge1041ov9669 = (GE_ms8("vred0d", 6));
+	ge1041ov9418 = (GE_ms8("VRED", 4));
+	ge1041ov9226 = (GE_ms8("local variable name \'$7\' appear twice in inline agent.", 54));
+	ge1041ov9711 = (GE_ms8("vuot3b", 6));
+	ge1041ov9268 = (GE_ms8("object-test with local name \'$6\' has the same name as another object-test local appearing in the invariant or in the same inline agent.", 135));
+	ge1041ov9655 = (GE_ms8("vpir1g", 6));
+	ge1041ov9212 = (GE_ms8("argument name \'$7\' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent.", 150));
+	ge1041ov9653 = (GE_ms8("vpir1e", 6));
+	ge1041ov9210 = (GE_ms8("argument name \'$7\' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent.", 154));
+	ge1041ov9650 = (GE_ms8("vpir1b", 6));
+	ge1041ov9207 = (GE_ms8("argument name \'$7\' in inline agent is also the name of a local variable of an enclosing feature or inline agent.", 112));
+	ge1041ov9649 = (GE_ms8("vpir1a", 6));
+	ge1041ov9206 = (GE_ms8("argument name \'$7\' in inline agent is also the name of a formal argument of an enclosing feature or inline agent.", 113));
+	ge1041ov9673 = (GE_ms8("vrfa0b", 6));
+	ge1041ov9230 = (GE_ms8("argument name \'$7\' in inline agent is also the final name of a feature.", 71));
+	ge1041ov9668 = (GE_ms8("vred0c", 6));
+	ge1041ov9225 = (GE_ms8("argument name \'$7\' appear twice in inline agent.", 48));
+	ge1041ov9657 = (GE_ms8("vpir3a", 6));
+	ge1041ov9410 = (GE_ms8("VPIR-3", 6));
+	ge1041ov9214 = (GE_ms8("inline agents cannot be of the once form.", 41));
+	ge1041ov9658 = (GE_ms8("vpir3b", 6));
+	ge1041ov9215 = (GE_ms8("inline agents cannot be of the external form.", 45));
+	ge1041ov9689 = (GE_ms8("vtct0b", 6));
+	ge1041ov9246 = (GE_ms8("type based on unknown class $7.", 31));
+	ge1041ov9492 = (GE_ms8("vcfg3f", 6));
+	ge1041ov9049 = (GE_ms8("constraint of formal generic parameter \'$7\' contains \'$8\' itself.", 65));
+	ge1041ov9490 = (GE_ms8("vcfg3c", 6));
+	ge1041ov9047 = (GE_ms8("constraint of formal generic parameter \'$7\' is another formal generic parameter \'$8\'.", 85));
+	ge1041ov9489 = (GE_ms8("vcfg3b", 6));
+	ge1041ov9046 = (GE_ms8("constraint of formal generic parameter \'$7\' is \'$8\' itself.", 59));
+	ge1041ov9685 = (GE_ms8("vtcg3a", 6));
+	ge1041ov9427 = (GE_ms8("VTCG-3", 6));
+	ge1041ov9242 = (GE_ms8("actual generic parameter \'$7\' in type \'$9\' does not conform to constraint \'$8\'.", 79));
+	ge1041ov9743 = (GE_ms8("gvtcg5a", 7));
+	ge1041ov9465 = (GE_ms8("GVTCG-5", 7));
+	ge1041ov9300 = (GE_ms8("actual generic parameter \'$7\' in type \'$8\' is not a reference type but the corresponding formal parameter is marked as reference.", 129));
+	ge1041ov9744 = (GE_ms8("gvtcg5b", 7));
+	ge1041ov9301 = (GE_ms8("actual generic parameter \'$7\' in type \'$8\' is not expanded type but the corresponding formal parameter is marked as expanded.", 125));
+	ge1041ov9693 = (GE_ms8("vtug2a", 6));
+	ge1041ov9432 = (GE_ms8("VTUG-2", 6));
+	ge1041ov9250 = (GE_ms8("type \'$7\' has wrong number of actual generic parameters.", 56));
+	ge1041ov9692 = (GE_ms8("vtug1a", 6));
+	ge1041ov9431 = (GE_ms8("VTUG-1", 6));
+	ge1041ov9249 = (GE_ms8("type \'$7\' has actual generic parameters but class $8 is not generic.", 68));
+	ge1041ov9730 = (GE_ms8("gvhpr5a", 7));
+	ge1041ov9453 = (GE_ms8("GVHPR-5", 7));
+	ge1041ov9287 = (GE_ms8("cannot inherit from Tuple_type \'$7\'.", 36));
+	ge1041ov9700 = (GE_ms8("vuex1a", 6));
+	ge1041ov9436 = (GE_ms8("VUEX-1", 6));
+	ge1041ov9257 = (GE_ms8("`$7\' is not the final name of a feature in class $5.", 52));
+	ge1041ov9617 = (GE_ms8("vkcn2c", 6));
+	ge1041ov9174 = (GE_ms8("procedure `$8\' appears in a call expression.", 44));
+	ge1041ov9754 = (GE_ms8("gvuao0c", 7));
+	ge1041ov9469 = (GE_ms8("GVUAO", 5));
+	ge1041ov9311 = (GE_ms8("`$7\' is an object-test local of in an invariant and hence cannot have actual arguments.", 87));
+	ge1041ov9752 = (GE_ms8("gvuao0a", 7));
+	ge1041ov9309 = (GE_ms8("`$7\' is an object-test local of feature `$8\' and hence cannot have actual arguments.", 84));
+	ge1041ov9753 = (GE_ms8("gvuao0b", 7));
+	ge1041ov9310 = (GE_ms8("`$7\' is an object-test local of an inline agent and hence cannot have actual arguments.", 87));
+	ge1041ov9749 = (GE_ms8("gvuac0c", 7));
+	ge1041ov9467 = (GE_ms8("GVUAC", 5));
+	ge1041ov9306 = (GE_ms8("`$7\' is an across cursor of in an invariant and hence cannot have actual arguments.", 83));
+	ge1041ov9747 = (GE_ms8("gvuac0a", 7));
+	ge1041ov9304 = (GE_ms8("`$7\' is an across cursor of feature `$8\' and hence cannot have actual arguments.", 80));
+	ge1041ov9748 = (GE_ms8("gvuac0b", 7));
+	ge1041ov9305 = (GE_ms8("`$7\' is an across cursor of an inline agent and hence cannot have actual arguments.", 83));
+	ge1041ov9750 = (GE_ms8("gvual0a", 7));
+	ge1041ov9468 = (GE_ms8("GVUAL", 5));
+	ge1041ov9307 = (GE_ms8("`$7\' is a local variable of feature `$8\' and hence cannot have actual arguments.", 80));
+	ge1041ov9751 = (GE_ms8("gvual0b", 7));
 }
 
 void GE_init_const20()
 {
-	ge1041ov9745 = (GE_ms("gvuaa0a", 7));
-	ge1041ov9466 = (GE_ms("GVUAA", 5));
-	ge1041ov9302 = (GE_ms("`$7\' is a formal argument of feature `$8\' and hence cannot have actual arguments.", 81));
-	ge1041ov9746 = (GE_ms("gvuaa0b", 7));
-	ge1041ov9303 = (GE_ms("`$7\' is a formal argument of an inline agent and hence cannot have actual arguments.", 84));
-	ge1041ov9720 = (GE_ms("vweq0b", 6));
-	ge1041ov9446 = (GE_ms("VWEQ", 4));
-	ge1041ov9277 = (GE_ms("none of the operands of \'$7\' (of types \'$8\' and \'$9\') conforms or converts to the other.", 88));
-	ge1041ov9719 = (GE_ms("vweq0a", 6));
-	ge1041ov9276 = (GE_ms("none of the operands of \'$7\' (of types \'$8\' and \'$9\') conforms or converts to the other.", 88));
-	ge1041ov9587 = (GE_ms("vgcc6c", 6));
-	ge1041ov9144 = (GE_ms("procedure `$8\' of class $9 is not exported for creation to class $5.", 68));
-	ge1041ov9590 = (GE_ms("vgcc8a", 6));
-	ge1041ov9376 = (GE_ms("VGCC-8", 6));
-	ge1041ov9147 = (GE_ms("procedure `$8\' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5.", 114));
-	ge1041ov9580 = (GE_ms("vgcc1a", 6));
-	ge1041ov9372 = (GE_ms("VGCC-1", 6));
-	ge1041ov9137 = (GE_ms("creation expression with no Creation_call part, but $7 is deferred.", 67));
-	ge1041ov9583 = (GE_ms("vgcc5a", 6));
-	ge1041ov9374 = (GE_ms("VGCC-5", 6));
-	ge1041ov9140 = (GE_ms("creation expression with no Creation_call part, but $7 has a Creators part.", 75));
-	ge1041ov9586 = (GE_ms("vgcc6b", 6));
-	ge1041ov9143 = (GE_ms("`$7\' is not the final name of a procedure in class $9.", 54));
-	ge1041ov9552 = (GE_ms("vevi0e", 6));
-	ge1041ov9109 = (GE_ms("entity \'Result\' declared as attached is not initialized at the end of the body of attribute `$7\'.", 97));
-	ge1041ov9664 = (GE_ms("vqmc5a", 6));
-	ge1041ov9415 = (GE_ms("VQMC-5", 6));
-	ge1041ov9221 = (GE_ms("string constant attribute `$7\' is not declared of type STRING.", 62));
-	ge1041ov9663 = (GE_ms("vqmc4a", 6));
-	ge1041ov9414 = (GE_ms("VQMC-4", 6));
-	ge1041ov9220 = (GE_ms("real constant attribute `$7\' is not declared of type REAL or DOUBLE.", 68));
-	ge1041ov9661 = (GE_ms("vqmc3a", 6));
-	ge1041ov9413 = (GE_ms("VQMC-3", 6));
-	ge1041ov9218 = (GE_ms("integer constant attribute `$7\' is not declared of type INTEGER.", 64));
-	ge1041ov9662 = (GE_ms("vqmc3b", 6));
-	ge1041ov9219 = (GE_ms("integer value \'$9\' in constant attribute `$7\' is not representable as an instance of \'$8\'.", 90));
-	ge1041ov9660 = (GE_ms("vqmc2a", 6));
-	ge1041ov9412 = (GE_ms("VQMC-2", 6));
-	ge1041ov9217 = (GE_ms("character constant attribute `$7\' is not declared of type CHARACTER.", 68));
-	ge1041ov9659 = (GE_ms("vqmc1a", 6));
-	ge1041ov9411 = (GE_ms("VQMC-1", 6));
-	ge1041ov9216 = (GE_ms("boolean constant attribute `$7\' is not declared of type BOOLEAN.", 64));
-	ge1041ov9665 = (GE_ms("vqui0a", 6));
-	ge1041ov9417 = (GE_ms("VQUI", 4));
-	ge1041ov9222 = (GE_ms("unique attribute `$7\' is not declared of type INTEGER.", 54));
-	ge66ov37592 = (GE_ms("standard input", 14));
-	ge1030ov8626 = (GE_ms("gcaaa", 5));
-	ge1030ov8621 = (GE_ms("GCAAA", 5));
-	ge1030ov8616 = (GE_ms("[$1] cluster $2: cannot read cluster directory \'$3\'.", 52));
-	ge1041ov9728 = (GE_ms("vxrt0a", 6));
-	ge1041ov9450 = (GE_ms("VXRT", 4));
-	ge1041ov9285 = (GE_ms("Retry instruction does not appear in a Rescue clause.", 53));
-	ge1042ov16147 = (GE_ms("exception_code", 14));
-	ge1042ov16149 = (GE_ms("exception_tag", 13));
-	ge1042ov16370 = (GE_ms("goto", 4));
-	ge1042ov16195 = (GE_ms("GE_EX_CHECK", 11));
-	ge1041ov9638 = (GE_ms("vomb2a", 6));
-	ge1041ov9403 = (GE_ms("VOMB-2", 6));
-	ge1041ov9195 = (GE_ms("inspect constant of type \'$7\' different from type \'$8\' of inspect expression.", 77));
-	ge1041ov9639 = (GE_ms("vomb2b", 6));
-	ge1041ov9196 = (GE_ms("inspect choice `$7\' is not a constant attribute.", 48));
-	ge1041ov9637 = (GE_ms("vomb1a", 6));
-	ge1041ov9402 = (GE_ms("VOMB-1", 6));
-	ge1041ov9194 = (GE_ms("inspect expression of type \'$7\' different from INTEGER or CHARACTER.", 68));
-	ge1042ov16199 = (GE_ms("GE_EX_WHEN", 10));
-	ge1041ov9481 = (GE_ms("vbac1a", 6));
-	ge1041ov9327 = (GE_ms("VBAC-1", 6));
-	ge1041ov9038 = (GE_ms("the source of the assigner call (of type \'$7\') does not conform nor convert to its target (of type \'$8\').", 105));
-	ge1041ov9482 = (GE_ms("vbac2a", 6));
-	ge1041ov9328 = (GE_ms("VBAC-2", 6));
-	ge1041ov9039 = (GE_ms("query `$7\' in class $8 has no assigner command.", 47));
-	ge1041ov9609 = (GE_ms("vjar0a", 6));
-	ge1041ov9386 = (GE_ms("VJAR", 4));
-	ge1041ov9166 = (GE_ms("the source of the assignment (of type \'$7\') does not conform nor convert to its target entity (of type \'$8\').", 109));
-	ge1041ov9535 = (GE_ms("veen0a", 6));
-	ge1041ov9355 = (GE_ms("VEEN", 4));
-	ge1041ov9092 = (GE_ms("`$7\' appears in feature `$8\', but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of feature `$8\'.", 152));
-	ge1041ov9536 = (GE_ms("veen0b", 6));
-	ge1041ov9093 = (GE_ms("`$7\' appears in an inline agent, but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of this inline agent.", 160));
-	ge1041ov9611 = (GE_ms("vjaw0b", 6));
-	ge1041ov9387 = (GE_ms("VJAW", 4));
-	ge1041ov9168 = (GE_ms("`$7\' is the name of a formal argument of feature `$8\'. A Writable is either a local variable (including Result) or an attribute.", 128));
-	ge1041ov9612 = (GE_ms("vjaw0c", 6));
-	ge1041ov9169 = (GE_ms("`$7\' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute.", 131));
-	ge1041ov9610 = (GE_ms("vjaw0a", 6));
-	ge1041ov9167 = (GE_ms("feature `$7\' is not an attribute. A Writable is either a local variable (including Result) or an attribute.", 107));
-	ge1041ov9613 = (GE_ms("vjrv0a", 6));
-	ge1041ov9388 = (GE_ms("VJRV", 4));
-	ge1041ov9170 = (GE_ms("the type \'$7\' of the target entity of the assignment attempt is not a reference type.", 85));
-	ge1041ov9589 = (GE_ms("vgcc6e", 6));
-	ge1041ov9146 = (GE_ms("procedure `$8\' of class $9 is not exported for creation to class $5.", 68));
-	ge1041ov9591 = (GE_ms("vgcc8b", 6));
-	ge1041ov9148 = (GE_ms("procedure `$8\' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5.", 114));
-	ge1041ov9581 = (GE_ms("vgcc1b", 6));
-	ge1041ov9138 = (GE_ms("creation instruction with no Creation_call part, but $7 is deferred.", 68));
-	ge1041ov9584 = (GE_ms("vgcc5b", 6));
-	ge1041ov9141 = (GE_ms("creation instruction with no Creation_call part, but $7 has a Creators part.", 76));
-	ge1041ov9582 = (GE_ms("vgcc3a", 6));
-	ge1041ov9373 = (GE_ms("VGCC-3", 6));
-	ge1041ov9139 = (GE_ms("explicit creation type \'$7\' does not conform to target entity type \'$8\'.", 72));
-	ge1041ov9588 = (GE_ms("vgcc6d", 6));
+	ge1041ov9308 = (GE_ms8("`$7\' is a local variable of an inline agent and hence cannot have actual arguments.", 83));
+	ge1041ov9745 = (GE_ms8("gvuaa0a", 7));
+	ge1041ov9466 = (GE_ms8("GVUAA", 5));
+	ge1041ov9302 = (GE_ms8("`$7\' is a formal argument of feature `$8\' and hence cannot have actual arguments.", 81));
+	ge1041ov9746 = (GE_ms8("gvuaa0b", 7));
+	ge1041ov9303 = (GE_ms8("`$7\' is a formal argument of an inline agent and hence cannot have actual arguments.", 84));
+	ge1041ov9720 = (GE_ms8("vweq0b", 6));
+	ge1041ov9446 = (GE_ms8("VWEQ", 4));
+	ge1041ov9277 = (GE_ms8("none of the operands of \'$7\' (of types \'$8\' and \'$9\') conforms or converts to the other.", 88));
+	ge1041ov9719 = (GE_ms8("vweq0a", 6));
+	ge1041ov9276 = (GE_ms8("none of the operands of \'$7\' (of types \'$8\' and \'$9\') conforms or converts to the other.", 88));
+	ge1041ov9587 = (GE_ms8("vgcc6c", 6));
+	ge1041ov9144 = (GE_ms8("procedure `$8\' of class $9 is not exported for creation to class $5.", 68));
+	ge1041ov9590 = (GE_ms8("vgcc8a", 6));
+	ge1041ov9376 = (GE_ms8("VGCC-8", 6));
+	ge1041ov9147 = (GE_ms8("procedure `$8\' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5.", 114));
+	ge1041ov9580 = (GE_ms8("vgcc1a", 6));
+	ge1041ov9372 = (GE_ms8("VGCC-1", 6));
+	ge1041ov9137 = (GE_ms8("creation expression with no Creation_call part, but $7 is deferred.", 67));
+	ge1041ov9583 = (GE_ms8("vgcc5a", 6));
+	ge1041ov9374 = (GE_ms8("VGCC-5", 6));
+	ge1041ov9140 = (GE_ms8("creation expression with no Creation_call part, but $7 has a Creators part.", 75));
+	ge1041ov9586 = (GE_ms8("vgcc6b", 6));
+	ge1041ov9143 = (GE_ms8("`$7\' is not the final name of a procedure in class $9.", 54));
+	ge1041ov9552 = (GE_ms8("vevi0e", 6));
+	ge1041ov9109 = (GE_ms8("entity \'Result\' declared as attached is not initialized at the end of the body of attribute `$7\'.", 97));
+	ge1041ov9664 = (GE_ms8("vqmc5a", 6));
+	ge1041ov9415 = (GE_ms8("VQMC-5", 6));
+	ge1041ov9221 = (GE_ms8("string constant attribute `$7\' is not declared of type STRING.", 62));
+	ge1041ov9663 = (GE_ms8("vqmc4a", 6));
+	ge1041ov9414 = (GE_ms8("VQMC-4", 6));
+	ge1041ov9220 = (GE_ms8("real constant attribute `$7\' is not declared of type REAL or DOUBLE.", 68));
+	ge1041ov9661 = (GE_ms8("vqmc3a", 6));
+	ge1041ov9413 = (GE_ms8("VQMC-3", 6));
+	ge1041ov9218 = (GE_ms8("integer constant attribute `$7\' is not declared of type INTEGER.", 64));
+	ge1041ov9662 = (GE_ms8("vqmc3b", 6));
+	ge1041ov9219 = (GE_ms8("integer value \'$9\' in constant attribute `$7\' is not representable as an instance of \'$8\'.", 90));
+	ge1041ov9660 = (GE_ms8("vqmc2a", 6));
+	ge1041ov9412 = (GE_ms8("VQMC-2", 6));
+	ge1041ov9217 = (GE_ms8("character constant attribute `$7\' is not declared of type CHARACTER.", 68));
+	ge1041ov9659 = (GE_ms8("vqmc1a", 6));
+	ge1041ov9411 = (GE_ms8("VQMC-1", 6));
+	ge1041ov9216 = (GE_ms8("boolean constant attribute `$7\' is not declared of type BOOLEAN.", 64));
+	ge1041ov9665 = (GE_ms8("vqui0a", 6));
+	ge1041ov9417 = (GE_ms8("VQUI", 4));
+	ge1041ov9222 = (GE_ms8("unique attribute `$7\' is not declared of type INTEGER.", 54));
+	ge66ov37595 = (GE_ms8("standard input", 14));
+	ge1030ov8626 = (GE_ms8("gcaaa", 5));
+	ge1030ov8621 = (GE_ms8("GCAAA", 5));
+	ge1030ov8616 = (GE_ms8("[$1] cluster $2: cannot read cluster directory \'$3\'.", 52));
+	ge1041ov9728 = (GE_ms8("vxrt0a", 6));
+	ge1041ov9450 = (GE_ms8("VXRT", 4));
+	ge1041ov9285 = (GE_ms8("Retry instruction does not appear in a Rescue clause.", 53));
+	ge1042ov16146 = (GE_ms8("exception_code", 14));
+	ge1042ov16148 = (GE_ms8("exception_tag", 13));
+	ge1042ov16373 = (GE_ms8("goto", 4));
+	ge1042ov16190 = (GE_ms8("GE_EX_CHECK", 11));
+	ge1041ov9638 = (GE_ms8("vomb2a", 6));
+	ge1041ov9403 = (GE_ms8("VOMB-2", 6));
+	ge1041ov9195 = (GE_ms8("inspect constant of type \'$7\' different from type \'$8\' of inspect expression.", 77));
+	ge1041ov9639 = (GE_ms8("vomb2b", 6));
+	ge1041ov9196 = (GE_ms8("inspect choice `$7\' is not a constant attribute.", 48));
+	ge1041ov9637 = (GE_ms8("vomb1a", 6));
+	ge1041ov9402 = (GE_ms8("VOMB-1", 6));
+	ge1041ov9194 = (GE_ms8("inspect expression of type \'$7\' different from INTEGER or CHARACTER.", 68));
+	ge1042ov16194 = (GE_ms8("GE_EX_WHEN", 10));
+	ge1041ov9481 = (GE_ms8("vbac1a", 6));
+	ge1041ov9327 = (GE_ms8("VBAC-1", 6));
+	ge1041ov9038 = (GE_ms8("the source of the assigner call (of type \'$7\') does not conform nor convert to its target (of type \'$8\').", 105));
+	ge1041ov9482 = (GE_ms8("vbac2a", 6));
+	ge1041ov9328 = (GE_ms8("VBAC-2", 6));
+	ge1041ov9039 = (GE_ms8("query `$7\' in class $8 has no assigner command.", 47));
+	ge1041ov9609 = (GE_ms8("vjar0a", 6));
+	ge1041ov9386 = (GE_ms8("VJAR", 4));
+	ge1041ov9166 = (GE_ms8("the source of the assignment (of type \'$7\') does not conform nor convert to its target entity (of type \'$8\').", 109));
+	ge1041ov9535 = (GE_ms8("veen0a", 6));
+	ge1041ov9355 = (GE_ms8("VEEN", 4));
+	ge1041ov9092 = (GE_ms8("`$7\' appears in feature `$8\', but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of feature `$8\'.", 152));
+	ge1041ov9536 = (GE_ms8("veen0b", 6));
+	ge1041ov9093 = (GE_ms8("`$7\' appears in an inline agent, but it is not the final name of a feature in class $6 nor the name of a local variable or formal argument of this inline agent.", 160));
+	ge1041ov9611 = (GE_ms8("vjaw0b", 6));
+	ge1041ov9387 = (GE_ms8("VJAW", 4));
+	ge1041ov9168 = (GE_ms8("`$7\' is the name of a formal argument of feature `$8\'. A Writable is either a local variable (including Result) or an attribute.", 128));
+	ge1041ov9612 = (GE_ms8("vjaw0c", 6));
+	ge1041ov9169 = (GE_ms8("`$7\' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute.", 131));
+	ge1041ov9610 = (GE_ms8("vjaw0a", 6));
+	ge1041ov9167 = (GE_ms8("feature `$7\' is not an attribute. A Writable is either a local variable (including Result) or an attribute.", 107));
+	ge1041ov9613 = (GE_ms8("vjrv0a", 6));
+	ge1041ov9388 = (GE_ms8("VJRV", 4));
+	ge1041ov9170 = (GE_ms8("the type \'$7\' of the target entity of the assignment attempt is not a reference type.", 85));
+	ge1041ov9589 = (GE_ms8("vgcc6e", 6));
+	ge1041ov9146 = (GE_ms8("procedure `$8\' of class $9 is not exported for creation to class $5.", 68));
+	ge1041ov9591 = (GE_ms8("vgcc8b", 6));
+	ge1041ov9148 = (GE_ms8("procedure `$8\' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5.", 114));
+	ge1041ov9581 = (GE_ms8("vgcc1b", 6));
+	ge1041ov9138 = (GE_ms8("creation instruction with no Creation_call part, but $7 is deferred.", 68));
+	ge1041ov9584 = (GE_ms8("vgcc5b", 6));
+	ge1041ov9141 = (GE_ms8("creation instruction with no Creation_call part, but $7 has a Creators part.", 76));
+	ge1041ov9582 = (GE_ms8("vgcc3a", 6));
+	ge1041ov9373 = (GE_ms8("VGCC-3", 6));
+	ge1041ov9139 = (GE_ms8("explicit creation type \'$7\' does not conform to target entity type \'$8\'.", 72));
 }
 
 void GE_init_const21()
 {
-	ge1041ov9145 = (GE_ms("`$7\' is not the final name of a procedure in class $9.", 54));
-	ge1041ov9499 = (GE_ms("vdpr1a", 6));
-	ge1041ov9056 = (GE_ms("Precursor instruction does not appear in a Routine_body.", 56));
-	ge1041ov9615 = (GE_ms("vkcn1c", 6));
-	ge1041ov9172 = (GE_ms("query `$8\' appears in a call instruction.", 41));
-	ge1041ov9764 = (GE_ms("gvuio0c", 7));
-	ge1041ov9473 = (GE_ms("GVUIO", 5));
-	ge1041ov9321 = (GE_ms("`$7\' is an object-test local of an invariant and hence cannot be an instruction.", 80));
-	ge1041ov9762 = (GE_ms("gvuio0a", 7));
-	ge1041ov9319 = (GE_ms("`$7\' is an object-test local of feature `$8\' and hence cannot be an instruction.", 80));
-	ge1041ov9763 = (GE_ms("gvuio0b", 7));
-	ge1041ov9320 = (GE_ms("`$7\' is an object-test local of an inline agent and hence cannot be an instruction.", 83));
-	ge1041ov9759 = (GE_ms("gvuic0c", 7));
-	ge1041ov9471 = (GE_ms("GVUIC", 5));
-	ge1041ov9316 = (GE_ms("`$7\' is an across cursor of an invariant and hence cannot be an instruction.", 76));
-	ge1041ov9757 = (GE_ms("gvuic0a", 7));
-	ge1041ov9314 = (GE_ms("`$7\' is an across cursor of feature `$8\' and hence cannot be an instruction.", 76));
-	ge1041ov9758 = (GE_ms("gvuic0b", 7));
-	ge1041ov9315 = (GE_ms("`$7\' is an across cursor of an inline agent and hence cannot be an instruction.", 79));
-	ge1041ov9760 = (GE_ms("gvuil0a", 7));
-	ge1041ov9472 = (GE_ms("GVUIL", 5));
-	ge1041ov9317 = (GE_ms("`$7\' is a local variable of feature `$8\' and hence cannot be an instruction.", 76));
-	ge1041ov9761 = (GE_ms("gvuil0b", 7));
-	ge1041ov9318 = (GE_ms("`$7\' is a local variable of an inline agent and hence cannot be an instruction.", 79));
-	ge1041ov9755 = (GE_ms("gvuia0a", 7));
-	ge1041ov9470 = (GE_ms("GVUIA", 5));
-	ge1041ov9312 = (GE_ms("`$7\' is a formal argument of feature `$8\' and hence cannot be an instruction.", 77));
-	ge1041ov9756 = (GE_ms("gvuia0b", 7));
-	ge1041ov9313 = (GE_ms("`$7\' is a formal argument of an inline agent and hence cannot be an instruction.", 80));
-	ge1243ov21101 = (GE_ms("Namespace declared twice", 24));
-	ge1243ov21100 = (GE_ms("Undeclared namespace error", 26));
-	ge357ov5877 = (GE_ms("\n", 1));
-	ge270ov5877 = (GE_ms("\n", 1));
-	ge257ov5877 = (GE_ms("\n", 1));
-	ge16ov10741 = (GE_ms("\n", 1));
-	ge16ov10742 = (GE_ms("\n", 1));
-	ge16ov10743 = (GE_ms("\nOptions:\n", 10));
-	ge1040ov8656 = (GE_ms("vscn0d", 6));
-	ge1040ov8652 = (GE_ms("VSCN", 4));
-	ge1040ov8651 = (GE_ms("[$1] $2 $3: class $4 cannot be overridden both by class $5 in $6 \'$7\' and by class $8 in $9 \'$10\'.", 98));
-	ge1040ov8655 = (GE_ms("vscn0c", 6));
-	ge1040ov8650 = (GE_ms("[$1] $2 $3: assembly class $4 appearing as class $5 in assembly \'$6\' cannot be overridden by class $8 in $9 \'$10\'$11.", 117));
-	ge1040ov8654 = (GE_ms("vscn0b", 6));
-	ge1040ov8649 = (GE_ms("[$1] $2 $3: built-in class NONE cannot be overridden by class $5 in $6 \'$7\'$8.", 78));
-	ge1040ov8653 = (GE_ms("vscn0a", 6));
-	ge1040ov8648 = (GE_ms("[$1] $2 $3: class $4 name clash between class $5 in $6 \'$7\'$8 and class $9 in $10 \'$11\'$12.", 91));
-	ge828ov16580 = (GE_ms("alias \"", 7));
-	ge824ov4295 = (GE_ms("alias \"[]\"", 10));
-	ge824ov4296 = (GE_ms("alias \"()\"", 10));
-	ge824ov4276 = (GE_ms("alias \"and\"", 11));
-	ge824ov4292 = (GE_ms("alias \"and then\"", 16));
-	ge824ov4280 = (GE_ms("alias \"//\"", 10));
-	ge824ov4281 = (GE_ms("alias \"/\"", 9));
-	ge824ov4282 = (GE_ms("alias \">=\"", 10));
-	ge824ov4283 = (GE_ms("alias \">\"", 9));
-	ge824ov4277 = (GE_ms("alias \"implies\"", 15));
-	ge824ov4284 = (GE_ms("alias \"<=\"", 10));
-	ge824ov4285 = (GE_ms("alias \"<\"", 9));
-	ge824ov4286 = (GE_ms("alias \"-\"", 9));
-	ge824ov4287 = (GE_ms("alias \"\\\\\"", 10));
-	ge824ov4278 = (GE_ms("alias \"or\"", 10));
-	ge824ov4293 = (GE_ms("alias \"or else\"", 15));
-	ge824ov4288 = (GE_ms("alias \"+\"", 9));
-	ge824ov4289 = (GE_ms("alias \"^\"", 9));
-	ge824ov4290 = (GE_ms("alias \"*\"", 9));
-	ge824ov4279 = (GE_ms("alias \"xor\"", 11));
-	ge824ov4291 = (GE_ms("alias \"..\"", 10));
-	ge824ov4294 = (GE_ms("alias \"not\"", 11));
-	ge824ov4234 = (GE_ms("***unknown_name***", 18));
-	ge1312ov31370 = (GE_ms("us-ascii", 8));
-	ge1312ov31372 = (GE_ms("utf-8", 5));
-	ge725ov6893 = (GE_ms(".", 1));
-	ge725ov6894 = (GE_ms("..", 2));
-	ge824ov4272 = (GE_ms("infix \"or else\"", 15));
-	ge824ov4271 = (GE_ms("infix \"and then\"", 16));
-	ge824ov4259 = (GE_ms("infix \"//\"", 10));
-	ge824ov4260 = (GE_ms("infix \"/\"", 9));
-	ge824ov4261 = (GE_ms("infix \">=\"", 10));
-	ge824ov4262 = (GE_ms("infix \">\"", 9));
-	ge824ov4263 = (GE_ms("infix \"<=\"", 10));
-	ge824ov4264 = (GE_ms("infix \"<\"", 9));
-	ge824ov4265 = (GE_ms("infix \"-\"", 9));
-	ge824ov4266 = (GE_ms("infix \"\\\\\"", 10));
-	ge824ov4267 = (GE_ms("infix \"+\"", 9));
-	ge824ov4268 = (GE_ms("infix \"^\"", 9));
-	ge824ov4269 = (GE_ms("infix \"*\"", 9));
-	ge824ov4270 = (GE_ms("infix \"..\"", 10));
-	ge824ov4274 = (GE_ms("prefix \"-\"", 10));
-	ge824ov4275 = (GE_ms("prefix \"+\"", 10));
-	ge824ov4255 = (GE_ms("infix \"and\"", 11));
-	ge824ov4256 = (GE_ms("infix \"implies\"", 15));
-	ge824ov4257 = (GE_ms("infix \"or\"", 10));
-	ge824ov4258 = (GE_ms("infix \"xor\"", 11));
-	ge824ov4273 = (GE_ms("prefix \"not\"", 12));
-	ge850ov17208 = (GE_ms("infix \"", 7));
-	ge850ov17207 = (GE_ms("prefix \"", 8));
-	ge824ov4187 = (GE_ms("attached separate expanded", 26));
-	ge824ov4188 = (GE_ms("attached separate reference", 27));
-	ge824ov4186 = (GE_ms("attached separate", 17));
-	ge824ov4184 = (GE_ms("attached expanded", 17));
-	ge824ov4185 = (GE_ms("attached reference", 18));
+	ge1041ov9588 = (GE_ms8("vgcc6d", 6));
+	ge1041ov9145 = (GE_ms8("`$7\' is not the final name of a procedure in class $9.", 54));
+	ge1041ov9499 = (GE_ms8("vdpr1a", 6));
+	ge1041ov9056 = (GE_ms8("Precursor instruction does not appear in a Routine_body.", 56));
+	ge1041ov9615 = (GE_ms8("vkcn1c", 6));
+	ge1041ov9172 = (GE_ms8("query `$8\' appears in a call instruction.", 41));
+	ge1041ov9764 = (GE_ms8("gvuio0c", 7));
+	ge1041ov9473 = (GE_ms8("GVUIO", 5));
+	ge1041ov9321 = (GE_ms8("`$7\' is an object-test local of an invariant and hence cannot be an instruction.", 80));
+	ge1041ov9762 = (GE_ms8("gvuio0a", 7));
+	ge1041ov9319 = (GE_ms8("`$7\' is an object-test local of feature `$8\' and hence cannot be an instruction.", 80));
+	ge1041ov9763 = (GE_ms8("gvuio0b", 7));
+	ge1041ov9320 = (GE_ms8("`$7\' is an object-test local of an inline agent and hence cannot be an instruction.", 83));
+	ge1041ov9759 = (GE_ms8("gvuic0c", 7));
+	ge1041ov9471 = (GE_ms8("GVUIC", 5));
+	ge1041ov9316 = (GE_ms8("`$7\' is an across cursor of an invariant and hence cannot be an instruction.", 76));
+	ge1041ov9757 = (GE_ms8("gvuic0a", 7));
+	ge1041ov9314 = (GE_ms8("`$7\' is an across cursor of feature `$8\' and hence cannot be an instruction.", 76));
+	ge1041ov9758 = (GE_ms8("gvuic0b", 7));
+	ge1041ov9315 = (GE_ms8("`$7\' is an across cursor of an inline agent and hence cannot be an instruction.", 79));
+	ge1041ov9760 = (GE_ms8("gvuil0a", 7));
+	ge1041ov9472 = (GE_ms8("GVUIL", 5));
+	ge1041ov9317 = (GE_ms8("`$7\' is a local variable of feature `$8\' and hence cannot be an instruction.", 76));
+	ge1041ov9761 = (GE_ms8("gvuil0b", 7));
+	ge1041ov9318 = (GE_ms8("`$7\' is a local variable of an inline agent and hence cannot be an instruction.", 79));
+	ge1041ov9755 = (GE_ms8("gvuia0a", 7));
+	ge1041ov9470 = (GE_ms8("GVUIA", 5));
+	ge1041ov9312 = (GE_ms8("`$7\' is a formal argument of feature `$8\' and hence cannot be an instruction.", 77));
+	ge1041ov9756 = (GE_ms8("gvuia0b", 7));
+	ge1041ov9313 = (GE_ms8("`$7\' is a formal argument of an inline agent and hence cannot be an instruction.", 80));
+	ge1243ov21104 = (GE_ms8("Namespace declared twice", 24));
+	ge1243ov21103 = (GE_ms8("Undeclared namespace error", 26));
+	ge274ov5877 = (GE_ms8("\n", 1));
+	ge272ov5877 = (GE_ms8("\n", 1));
+	ge259ov5877 = (GE_ms8("\n", 1));
+	ge16ov10741 = (GE_ms8("\n", 1));
+	ge16ov10742 = (GE_ms8("\n", 1));
+	ge16ov10743 = (GE_ms8("\nOptions:\n", 10));
+	ge1040ov8656 = (GE_ms8("vscn0d", 6));
+	ge1040ov8652 = (GE_ms8("VSCN", 4));
+	ge1040ov8651 = (GE_ms8("[$1] $2 $3: class $4 cannot be overridden both by class $5 in $6 \'$7\' and by class $8 in $9 \'$10\'.", 98));
+	ge1040ov8655 = (GE_ms8("vscn0c", 6));
+	ge1040ov8650 = (GE_ms8("[$1] $2 $3: assembly class $4 appearing as class $5 in assembly \'$6\' cannot be overridden by class $8 in $9 \'$10\'$11.", 117));
+	ge1040ov8654 = (GE_ms8("vscn0b", 6));
+	ge1040ov8649 = (GE_ms8("[$1] $2 $3: built-in class NONE cannot be overridden by class $5 in $6 \'$7\'$8.", 78));
+	ge1040ov8653 = (GE_ms8("vscn0a", 6));
+	ge1040ov8648 = (GE_ms8("[$1] $2 $3: class $4 name clash between class $5 in $6 \'$7\'$8 and class $9 in $10 \'$11\'$12.", 91));
+	ge828ov16583 = (GE_ms8("alias \"", 7));
+	ge824ov4295 = (GE_ms8("alias \"[]\"", 10));
+	ge824ov4296 = (GE_ms8("alias \"()\"", 10));
+	ge824ov4276 = (GE_ms8("alias \"and\"", 11));
+	ge824ov4292 = (GE_ms8("alias \"and then\"", 16));
+	ge824ov4280 = (GE_ms8("alias \"//\"", 10));
+	ge824ov4281 = (GE_ms8("alias \"/\"", 9));
+	ge824ov4282 = (GE_ms8("alias \">=\"", 10));
+	ge824ov4283 = (GE_ms8("alias \">\"", 9));
+	ge824ov4277 = (GE_ms8("alias \"implies\"", 15));
+	ge824ov4284 = (GE_ms8("alias \"<=\"", 10));
+	ge824ov4285 = (GE_ms8("alias \"<\"", 9));
+	ge824ov4286 = (GE_ms8("alias \"-\"", 9));
+	ge824ov4287 = (GE_ms8("alias \"\\\\\"", 10));
+	ge824ov4278 = (GE_ms8("alias \"or\"", 10));
+	ge824ov4293 = (GE_ms8("alias \"or else\"", 15));
+	ge824ov4288 = (GE_ms8("alias \"+\"", 9));
+	ge824ov4289 = (GE_ms8("alias \"^\"", 9));
+	ge824ov4290 = (GE_ms8("alias \"*\"", 9));
+	ge824ov4279 = (GE_ms8("alias \"xor\"", 11));
+	ge824ov4291 = (GE_ms8("alias \"..\"", 10));
+	ge824ov4294 = (GE_ms8("alias \"not\"", 11));
+	ge824ov4234 = (GE_ms8("***unknown_name***", 18));
+	ge1312ov31373 = (GE_ms8("us-ascii", 8));
+	ge1312ov31375 = (GE_ms8("utf-8", 5));
+	ge725ov6893 = (GE_ms8(".", 1));
+	ge725ov6894 = (GE_ms8("..", 2));
+	ge824ov4272 = (GE_ms8("infix \"or else\"", 15));
+	ge824ov4271 = (GE_ms8("infix \"and then\"", 16));
+	ge824ov4259 = (GE_ms8("infix \"//\"", 10));
+	ge824ov4260 = (GE_ms8("infix \"/\"", 9));
+	ge824ov4261 = (GE_ms8("infix \">=\"", 10));
+	ge824ov4262 = (GE_ms8("infix \">\"", 9));
+	ge824ov4263 = (GE_ms8("infix \"<=\"", 10));
+	ge824ov4264 = (GE_ms8("infix \"<\"", 9));
+	ge824ov4265 = (GE_ms8("infix \"-\"", 9));
+	ge824ov4266 = (GE_ms8("infix \"\\\\\"", 10));
+	ge824ov4267 = (GE_ms8("infix \"+\"", 9));
+	ge824ov4268 = (GE_ms8("infix \"^\"", 9));
+	ge824ov4269 = (GE_ms8("infix \"*\"", 9));
+	ge824ov4270 = (GE_ms8("infix \"..\"", 10));
+	ge824ov4274 = (GE_ms8("prefix \"-\"", 10));
+	ge824ov4275 = (GE_ms8("prefix \"+\"", 10));
+	ge824ov4255 = (GE_ms8("infix \"and\"", 11));
+	ge824ov4256 = (GE_ms8("infix \"implies\"", 15));
+	ge824ov4257 = (GE_ms8("infix \"or\"", 10));
+	ge824ov4258 = (GE_ms8("infix \"xor\"", 11));
+	ge824ov4273 = (GE_ms8("prefix \"not\"", 12));
+	ge850ov17211 = (GE_ms8("infix \"", 7));
+	ge850ov17210 = (GE_ms8("prefix \"", 8));
+	ge824ov4187 = (GE_ms8("attached separate expanded", 26));
+	ge824ov4188 = (GE_ms8("attached separate reference", 27));
+	ge824ov4186 = (GE_ms8("attached separate", 17));
+	ge824ov4184 = (GE_ms8("attached expanded", 17));
 }
 
 void GE_init_const22()
 {
-	ge824ov4192 = (GE_ms("detachable separate expanded", 28));
-	ge824ov4193 = (GE_ms("detachable separate reference", 29));
-	ge824ov4191 = (GE_ms("detachable separate", 19));
-	ge824ov4189 = (GE_ms("detachable expanded", 19));
-	ge824ov4190 = (GE_ms("detachable reference", 20));
-	ge824ov4194 = (GE_ms("separate expanded", 17));
-	ge824ov4195 = (GE_ms("separate reference", 18));
-	ge824ov4196 = (GE_ms("", 0));
-	ge824ov4222 = (GE_ms("/~", 2));
-	ge869ov17786 = (GE_ms("prefix \"", 8));
-	ge857ov17333 = (GE_ms("infix \"", 7));
-	ge51ov5881 = (GE_ms("\"$1\", line $2: negative range in character class", 48));
-	ge37ov5881 = (GE_ms("\"$1\", line $2: character \'$3\' out of range", 42));
-	ge43ov5881 = (GE_ms("$0: variable trailing context rules cannot be used with -f", 58));
-	ge42ov5881 = (GE_ms("$0: `reject\' cannot be used with -f", 35));
-	ge41ov5881 = (GE_ms("$0: -f and -m don\'t make sense together", 39));
-	ge32ov5881 = (GE_ms("\"$1\", line $2: bad character: $3", 32));
-	ge31ov5881 = (GE_ms("\"$1\", line $2: bad character class or missing close bracket", 59));
-	ge48ov5881 = (GE_ms("\"$1\", line $2: missing quote", 28));
-	ge61ov5881 = (GE_ms("\"$1\", line $2: unrecognized rule", 32));
-	ge1162ov5881 = (GE_ms("found invalid expression \'$1\' at $2", 35));
-	ge169ov5881 = (GE_ms("$0: too many (i.e. $1) nested include files", 43));
-	ge168ov5881 = (GE_ms("Syntax error in \"$1\" at line $2", 31));
-	ge1156ov5881 = (GE_ms("attribute \'$2\' of element <$1> at $4 is obsolete, use element $3 instead", 72));
-	ge1172ov5881 = (GE_ms("option name \'$1\' in option-element is unknown $2", 48));
-	ge1169ov5881 = (GE_ms("<exclude> at $1 is obsolete, use \'if\'/\'unless\' attributes instead", 65));
-	ge1168ov5881 = (GE_ms("<cluster> at $1 is obsolete. Specify options, clusters and mounts directly under <system> instead", 97));
-	ge1164ov5881 = (GE_ms("element \'$1\' must have child-element \'$2\' $3", 44));
-	ge1171ov5881 = (GE_ms("found unknown element \'$2\' in element \'$1\' $3", 45));
-	ge1163ov5881 = (GE_ms("element \'$1\' must have attribute \'$2\' $3", 40));
-	ge1175ov5881 = (GE_ms("Xace document must have a \'$1\' root-element $2", 46));
-	ge1159ov5881 = (GE_ms("element <$1> at $3 is obsolete, use element $2 instead", 54));
-	ge1170ov5881 = (GE_ms("attribute \'$2\' in element \'$1\' should have a positive integer value $4", 70));
-	ge1174ov5881 = (GE_ms("attribute \'$2\' in element \'$1\' should have one of the following values: $4 $5", 77));
-	ge1166ov5881 = (GE_ms("attribute \'$2\' in element \'$1\' should have a non-empty value $3", 63));
-	ge1157ov5881 = (GE_ms("attribute \'$2\' in element \'$1\' should have a boolean value $4", 61));
-	ge1165ov5881 = (GE_ms("Library \'$1\' mounted with incompatible prefixes \'$2\' and \'$3\' in $4 and $5", 74));
-	ge163ov5881 = (GE_ms("$0: cannot write to \'$1\'", 24));
-	ge166ov5881 = (GE_ms("$1", 2));
-	ge173ov5881 = (GE_ms("$0 version $1", 13));
-	ge162ov5881 = (GE_ms("$0: cannot read \'$1\'", 20));
-	ge267ov20424 = (GE_ms("", 0));
-	ge254ov4734 = (GE_ms("", 0));
-	geic2 = (GE_ms(" (label on item #", 17));
-	geic3 = (GE_ms(" with a manifest tuple argument", 31));
-	geic4 = (GE_ms(" of type ", 9));
+	ge824ov4185 = (GE_ms8("attached reference", 18));
+	ge824ov4192 = (GE_ms8("detachable separate expanded", 28));
+	ge824ov4193 = (GE_ms8("detachable separate reference", 29));
+	ge824ov4191 = (GE_ms8("detachable separate", 19));
+	ge824ov4189 = (GE_ms8("detachable expanded", 19));
+	ge824ov4190 = (GE_ms8("detachable reference", 20));
+	ge824ov4194 = (GE_ms8("separate expanded", 17));
+	ge824ov4195 = (GE_ms8("separate reference", 18));
+	ge824ov4196 = (GE_ms8("", 0));
+	ge824ov4222 = (GE_ms8("/~", 2));
+	ge869ov17789 = (GE_ms8("prefix \"", 8));
+	ge857ov17336 = (GE_ms8("infix \"", 7));
+	ge51ov5881 = (GE_ms8("\"$1\", line $2: negative range in character class", 48));
+	ge37ov5881 = (GE_ms8("\"$1\", line $2: character \'$3\' out of range", 42));
+	ge43ov5881 = (GE_ms8("$0: variable trailing context rules cannot be used with -f", 58));
+	ge42ov5881 = (GE_ms8("$0: `reject\' cannot be used with -f", 35));
+	ge41ov5881 = (GE_ms8("$0: -f and -m don\'t make sense together", 39));
+	ge32ov5881 = (GE_ms8("\"$1\", line $2: bad character: $3", 32));
+	ge31ov5881 = (GE_ms8("\"$1\", line $2: bad character class or missing close bracket", 59));
+	ge48ov5881 = (GE_ms8("\"$1\", line $2: missing quote", 28));
+	ge61ov5881 = (GE_ms8("\"$1\", line $2: unrecognized rule", 32));
+	ge1162ov5881 = (GE_ms8("found invalid expression \'$1\' at $2", 35));
+	ge169ov5881 = (GE_ms8("$0: too many (i.e. $1) nested include files", 43));
+	ge168ov5881 = (GE_ms8("Syntax error in \"$1\" at line $2", 31));
+	ge1156ov5881 = (GE_ms8("attribute \'$2\' of element <$1> at $4 is obsolete, use element $3 instead", 72));
+	ge1172ov5881 = (GE_ms8("option name \'$1\' in option-element is unknown $2", 48));
+	ge1169ov5881 = (GE_ms8("<exclude> at $1 is obsolete, use \'if\'/\'unless\' attributes instead", 65));
+	ge1168ov5881 = (GE_ms8("<cluster> at $1 is obsolete. Specify options, clusters and mounts directly under <system> instead", 97));
+	ge1164ov5881 = (GE_ms8("element \'$1\' must have child-element \'$2\' $3", 44));
+	ge1171ov5881 = (GE_ms8("found unknown element \'$2\' in element \'$1\' $3", 45));
+	ge1163ov5881 = (GE_ms8("element \'$1\' must have attribute \'$2\' $3", 40));
+	ge1175ov5881 = (GE_ms8("Xace document must have a \'$1\' root-element $2", 46));
+	ge1159ov5881 = (GE_ms8("element <$1> at $3 is obsolete, use element $2 instead", 54));
+	ge1170ov5881 = (GE_ms8("attribute \'$2\' in element \'$1\' should have a positive integer value $4", 70));
+	ge1174ov5881 = (GE_ms8("attribute \'$2\' in element \'$1\' should have one of the following values: $4 $5", 77));
+	ge1166ov5881 = (GE_ms8("attribute \'$2\' in element \'$1\' should have a non-empty value $3", 63));
+	ge1157ov5881 = (GE_ms8("attribute \'$2\' in element \'$1\' should have a boolean value $4", 61));
+	ge1165ov5881 = (GE_ms8("Library \'$1\' mounted with incompatible prefixes \'$2\' and \'$3\' in $4 and $5", 74));
+	ge163ov5881 = (GE_ms8("$0: cannot write to \'$1\'", 24));
+	ge166ov5881 = (GE_ms8("$1", 2));
+	ge173ov5881 = (GE_ms8("$0 version $1", 13));
+	ge162ov5881 = (GE_ms8("$0: cannot read \'$1\'", 20));
+	ge269ov20427 = (GE_ms8("", 0));
+	ge256ov4734 = (GE_ms8("", 0));
+	geic2 = (GE_ms8(" (label on item #", 17));
+	geic3 = (GE_ms8(" with a manifest tuple argument", 31));
+	geic4 = (GE_ms8(" of type ", 9));
 }
 
 void GE_init_const()
@@ -98442,6 +98653,7 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 	GE_init_exception_manager = &T20f14;
 	GE_set_exception_data = &T20f15;
 	GE_init_exception(ac);
+	GE_init_console();
 	GE_init_identified();
 	GE_init_const();
 	t1 = T23c40(ac);
@@ -98455,1458 +98667,10 @@ int GE_main(int argc, EIF_NATIVE_CHAR** argv)
 /*
 	description:
 
-		"C functions used to implement class ARGUMENTS"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2013, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef GE_ARGUMENTS_C
-#define GE_ARGUMENTS_C
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int GE_argc;
-EIF_NATIVE_CHAR** GE_argv;
-
-	/* Clean up function */
-typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
-void eif_register_cleanup(EIF_CLEANUP f){
-	/* TODO: Needed to compile some code at AXAR */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
-		"C functions used to implement class EXCEPTION"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef GE_EXCEPTION_C
-#define GE_EXCEPTION_C
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#pragma once
-#endif
-
-#ifndef GE_EXCEPTION_H
-#include "ge_exception.h"
-#endif
-#ifndef GE_STRING_H
-#include "ge_string.h"
-#endif
-#ifdef EIF_WINDOWS
-#include <winbase.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*
- * Pre-defined exception tags. No restriction on size.
- */
-static char* GE_exception_tags[] = {
-	(char *) 0,							/* Nothing */
-	"Feature call on void target.",		/* GE_EX_VOID */
-	"No more memory.",					/* GE_EX_MEM */
-	"Precondition violated.",			/* GE_EX_PRE */
-	"Postcondition violated.",			/* GE_EX_POST */
-	"Floating point exception.",		/* GE_EX_FLOAT */
-	"Class invariant violated.",		/* GE_EX_CINV */
-	"Assertion violated.",				/* GE_EX_CHECK */
-	"Routine failure.",					/* GE_EX_FAIL */
-	"Unmatched inspect value.",			/* GE_EX_WHEN */
-	"Non-decreasing loop variant or negative value reached.",		/* GE_EX_VAR */
-	"Loop invariant violated.",			/* GE_EX_LINV */
-	"Operating system signal.",			/* GE_EX_SIG */
-	"Eiffel run-time panic.",			/* GE_EX_BYE */
-	"Exception in rescue clause.",		/* GE_EX_RESC */
-	"Out of memory.",					/* GE_EX_OMEM */
-	"Resumption attempt failed.",		/* GE_EX_RES */
-	"Create on deferred.",				/* GE_EX_CDEF */
-	"External event.",					/* GE_EX_EXT */
-	"Void assigned to expanded.",		/* GE_EX_VEXP */
-	"Exception in signal handler.",		/* GE_EX_HDLR */
-	"I/O error.",						/* GE_EX_IO */
-	"Operating system error.",			/* GE_EX_SYS */
-	"Retrieval error.",					/* GE_EX_RETR */
-	"Developer exception.",				/* GE_EX_PROG */
-	"Eiffel run-time fatal error.",		/* GE_EX_FATAL */
-	"CECIL cannot call melted code",	/* GE_EX_DOL */
-	"Runtime I/O error.",				/* GE_EX_ISE_IO */
-	"COM error.",						/* GE_EX_COM */
-	"Runtime check violated.",			/* GE_EX_RT_CHECK */
-	"Old expression evaluation failed.",/* GE_EX_OLD */
-	"Serialization failed."				/* GE_EX_SEL */
-	"SCOOP processor dirty."			/* GE_EX_DIRTY */
-};
-
-/*
- * Exception tag associated with `code'.
- */
-char* GE_exception_tag(long code)
-{
-	if (code < 0) {
-		return "User-defined exception.";
-	} else if (code < 1 || code > GE_EX_NEX) {
-		return "Unknown exception.";
-	} else {
-		return GE_exception_tags[code];
-	}
-}
-
-/*
- * Initialize `a_trace'.
- */
-static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
-{
-	a_trace->count = 0;
-	a_trace->capacity = 0;
-	a_trace->area = (char*) GE_raw_calloc_atomic_uncollectable(4096, 1);
-	if (a_trace->area) {
-		a_trace->capacity = 4096;
-	}
-}
-
-/*
- * Append `a_string' to `a_trace'.
- * Resize area if needed.
- */
-static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
-{
-	int l_length = strlen(a_string);
-	uint32_t l_new_capacity;
-	char* l_new_area;
-
-	if (a_trace->area) {
-		if ((a_trace->capacity - a_trace->count) <= l_length) {
-			l_new_capacity = a_trace->capacity + l_length + 512;
-			l_new_area = (char*) GE_raw_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
-			if (l_new_area) {
-				a_trace->area = l_new_area;
-				a_trace->capacity = l_new_capacity;
-			}
-		}
-	} else {
-		GE_init_exception_trace_buffer(a_trace);
-	}
-	if ((a_trace->capacity - a_trace->count) > l_length) {
-		strcpy (a_trace->area + a_trace->count, a_string);
-		a_trace->count += l_length;
-	}
-}
-
-/*
- * Wipe out `a_trace'.
- */
-static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
-{
-	char* l_area = a_trace->area;
-
-	if (l_area) {
-		memset (l_area, 0, a_trace->count);
-		a_trace->count = 0;
-	}
-}
-
-/*
- * Print first line of exception which contains `a_class_name', `a_feature_name'
- * and `a_tag_name' to `a_trace'.
- */
-static void GE_print_class_feature_tag(GE_exception_trace_buffer* a_trace, const char* a_class_name, const char* a_feature_name, const char* a_tag_name)
-{
-	char buffer[256];
-	int l_class_count, l_feature_count, l_tag_count;
-
-		/* We are trying to provide the best format possible so that we can see all the useful
-		 * information about the location and the reason of the crash.
-		 * Note that the C format `%width[.precision]s' means that we will display `width'
-		 * characters on the screen and only `precision' characters from `s' will be displayed,
-		 * meaning that if `precision' is smaller than `width' the text is right aligned.
-		 *
-		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
-		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended
-		 * after the last character written, which should be taken into account.
-		 */
-	l_class_count = (int) strlen(a_class_name);
-	l_feature_count = (int) strlen(a_feature_name);
-	l_tag_count = (int) strlen(a_tag_name);
-
-		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
-		 *      for `a_class_name' and `a_feature_name'. */
-		/* 2 - precision of 234 = 254 - 20, 20 being number of characters written
-		 *      for `a_class_name'.*/
-		/* 3 - precision of 254, 254 being number of characters written
-		 *      excluding `\n' and null character appended at the end */
-		/* 4 - precision of 251, 231 and 208 being number of characters written
-		 *      excluding eclipse from above numbers. */
-	if (l_class_count > 19) {
-		if (l_class_count > 251) {
-			sprintf(buffer, "%.251s...\n", a_class_name);
-		} else {
-			sprintf(buffer, "%*.254s\n", l_class_count, a_class_name);
-		}
-		GE_append_to_exception_trace_buffer(a_trace, buffer);
-		if (l_feature_count > 22) {
-			if (l_feature_count > 231) {
-				sprintf(buffer, "%.231s...\n", a_feature_name);
-			} else {
-				sprintf(buffer, "%*.234s\n", 20 + l_feature_count, a_feature_name);
-			}
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-			if (l_tag_count > 0) {
-				if (l_tag_count > 208) {
-					sprintf(buffer, "%.208s...\n", a_tag_name);
-				} else {
-					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
-				}
-				GE_append_to_exception_trace_buffer(a_trace, buffer);
-			}
-		} else {
-			if (l_tag_count > 208) {
-				sprintf(buffer, "%*.22s %.208s...\n", 20 + l_feature_count, a_feature_name, a_tag_name);
-			} else {
-				sprintf(buffer, "%*.22s %*.211s\n", 20 + l_feature_count, a_feature_name, (43 + l_tag_count) - (20 + l_feature_count + 1), a_tag_name);
-			}
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		}
-	} else {
-		if (l_feature_count > 22) {
-			if (l_feature_count > 208) {
-				sprintf(buffer, "%-19.19s %.208s...\n", a_class_name, a_feature_name);
-			} else {
-				sprintf(buffer, "%-19.19s %*.211s\n", a_class_name, l_feature_count, a_feature_name);
-			}
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-			if (l_tag_count > 0) {
-				if (l_tag_count > 208) {
-					sprintf(buffer, "%.208s...\n", a_tag_name);
-				} else {
-					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
-				}
-				GE_append_to_exception_trace_buffer(a_trace, buffer);
-			}
-		} else {
-			if (l_tag_count > 208) {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.208s...\n", a_class_name, a_feature_name, a_tag_name);
-			} else {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.211s\n", a_class_name, a_feature_name, a_tag_name);
-			}
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		}
-	}
-}
-
-/*
- * Print second line of exception which contains `a_object_addr', `a_location',
- * `a_reason' and `a_effect' to `a_trace'.
- */
-static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_trace, void* a_object_addr, char* a_location, char* a_reason, char* a_effect)
-{
-	char buffer[256];
-	int l_location_count, l_reason_count, l_effect_count;
-
-		/* We are trying to provide the best format possible so that we can see all the useful
-		 * information about the location and the reason of the crash.
-		 * Note that the C format `%width[.precision]s' means that we will display `width'
-		 * characters on the screen and only `precision' characters from `s' will be displayed,
-		 * meaning that if `precision' is smaller than `width' the text is right aligned.
-		 *
-		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
-		 * writting more than `buffer' can hold.
-		 */
-
-	l_location_count = (int) strlen(a_location);
-	l_reason_count = (int) strlen(a_reason);
-	l_effect_count = (int) strlen(a_effect);
-
-		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
-			   for `a_object_addr' and `a_location'.
-		 * 2 - precision of 181 = 254 - 73, 73 being number of characters written
-			   for `a_object_addr', `a_location' and `a_reason'.
-		 * 3 - 22, number of characters written for `a_location'
-		 * 4 - 29, number of characters written for `a_reason' */
-
-		/* Check this for formatting using `printf':
-		 * http://en.wikipedia.org/wiki/Printf#printf_format_placeholders */
-
-		/* Print object address with 16 digits to be ready when pointers
-		 * will be on 64 bits on all platform. */
-	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (unsigned long)(intptr_t)a_object_addr);
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-
-	if (l_location_count > 22) {
-		sprintf(buffer, "%*.254s\n", l_location_count, a_location);
-		GE_append_to_exception_trace_buffer(a_trace, buffer);
-		if (l_reason_count > 29) {
-			sprintf(buffer, "%*.211s\n", 43 + l_reason_count, a_reason);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-			sprintf(buffer, "%*.181s\n", 73 + l_effect_count, a_effect);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		} else {
-			sprintf(buffer, "%*.29s %*.181s\n", 43 + l_reason_count, a_reason, (73 + l_effect_count) - (43 + l_reason_count + 1), a_effect);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		}
-	} else {
-		if (l_reason_count > 29) {
-			sprintf(buffer,"%-22.22s %*.211s\n", a_location, l_reason_count, a_reason);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-			sprintf(buffer, "%*.181s\n", 73 + l_effect_count, a_effect);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		} else {
-			sprintf(buffer,"%-22.22s %-29.29s %*.181s\n", a_location, a_reason, l_effect_count, a_effect);
-			GE_append_to_exception_trace_buffer(a_trace, buffer);
-		}
-	}
-}
-
-/*
- * Print to `a_trace' the exception trace corresponding to `a_context'.
- */
-static void GE_print_exception_trace(GE_context* context, long code, const char* tag, GE_exception_trace_buffer* a_trace)
-{
-	char buffer[1024];
-	GE_call* l_call;
-	char* l_tag;
-	char l_tag_buf[256];
-	void* l_object = NULL;
-	char* l_location = "";
-	char* l_reason;
-	char* l_effect;
-	char* l_root_class;
-	char* l_root_feature = "root's creation";
-	const char* l_class_name;
-	const char* l_feature_name;
-
-#ifdef EIF_THREADS
-	sprintf(buffer, "%s\n", "******************************** Thread exception *****************************");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	if (context == GE_main_context) {
-			/* Main thread. */
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (uint64_t) 0, "(thread id)");
-	} else {
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (uint64_t) context->thread->thread_id, "(thread id)");
-	}
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	sprintf(buffer, "%s\n", "*******************************************************************************");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-#endif
-	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	sprintf(buffer, "%-19.19s %-22.22s %-29.29s %-6.6s\n", "Class / Object", "Routine", "Nature of exception", "Effect");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	if (GE_root_class_name) {
-		l_root_class = GE_root_class_name;
-	} else {
-		l_root_class = "ROOT CLASS";
-	}
-	l_call = context->call;
-	if (l_call) {
-		l_class_name = l_call->class_name;
-		l_feature_name = l_call->feature_name;
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
-		l_object = l_call->object;
-#endif
-	} else {
-		l_class_name = l_root_class;
-		l_feature_name = l_root_feature;
-	}
-	if (tag) {
-		sprintf(l_tag_buf, "%.254s:", tag);
-		l_tag = l_tag_buf;
-	} else {
-		l_tag = "";
-	}
-	GE_print_class_feature_tag(a_trace, l_class_name, l_feature_name, l_tag);
-	l_reason = GE_exception_tag(code);
-	l_effect = "Fail";
-	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
-	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-	while (l_call) {
-		l_tag = "";
-		GE_print_class_feature_tag(a_trace, l_call->class_name, l_call->feature_name, l_tag);
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
-		l_object = l_call->object;
-#endif
-		l_reason = "Routine failure.";
-		l_effect = "Fail";
-		GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
-		sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-		GE_append_to_exception_trace_buffer(a_trace, buffer);
-		l_call = l_call->caller;
-	}
-	l_tag = "";
-	GE_print_class_feature_tag(a_trace, l_root_class, l_root_feature, l_tag);
-#ifdef EIF_CURRENT_IN_EXCEPTION_TRACE
-	l_object = NULL;
-#endif
-	l_reason = "Routine failure.";
-	l_effect = "Exit";
-	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
-	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
-	GE_append_to_exception_trace_buffer(a_trace, buffer);
-}
-
-/*
- * Default initialization for `GE_context'.
- */
-GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
-#ifdef EIF_THREADS
-	, 0
-#endif
-	};
-
-/*
- * Execution context of main thread.
- * Should be used from the main thread only.
- */
-GE_context* GE_main_context;
-
-/*
- * Execution context of current thread.
- */
-GE_context* GE_current_context()
-{
-#ifdef EIF_THREADS
-	GE_thread_context* volatile ge_thread_context;
-	EIF_TSD_GET0(GE_thread_context*, GE_thread_context_key, ge_thread_context);
-	return ge_thread_context->context;
-#else
-	return GE_main_context;
-#endif
-}
-
-/*
- * Initialization of exception handling.
- */
-void GE_init_exception(GE_context* context)
-{
-	EIF_REFERENCE l_exception_manager;
-
-	GE_init_exception_trace_buffer(&context->exception_trace_buffer);
-	GE_init_exception_trace_buffer(&context->last_exception_trace);
-	l_exception_manager = GE_new_exception_manager(EIF_TRUE);
-	context->exception_manager = l_exception_manager;
-	GE_init_exception_manager(context, l_exception_manager);
-}
-
-/*
- * Pointer to function to create a new exception manager object.
- */
-EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
-
-/*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.init_exception_manager.
- */
-void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
-
-/*
- * Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data.
- */
-void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
-
-/*
- * Jump to execute the rescue of the last routine with a rescue
- * in the call stack.
- */
-static void GE_jump_to_last_rescue(GE_context* context)
-{
-	char* l_exception_trace;
-
-	GE_rescue* r = context->last_rescue;
-	if (r != 0) {
-		context->last_rescue = r->previous;
-		context->raising_exception = '\0';
-		GE_longjmp(r->jb, 1);
-	}
-	if (context->exception_trace_enabled) {
-#ifdef EIF_WINDOWS
-		GE_show_console();
-#endif
-		if (GE_system_name) {
-			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
-		} else {
-			fprintf(stderr, "\nsystem execution failed.\n");
-		}
-		l_exception_trace = context->last_exception_trace.area;
-		if (l_exception_trace) {
-			fprintf(stderr, "Following is the set of recorded exceptions:\n\n");
-			fprintf(stderr, "%s", l_exception_trace);
-		} else {
-			fprintf(stderr, "No exception trace found.\n");
-		}
-	}
-	exit(1);
-}
-
-/*
- * Call feature EXCEPTION_MANAGER.set_exception_data.
- */
-static void GE_call_set_exception_data(GE_context* context, long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
-{
-	EIF_REFERENCE l_tag;
-	EIF_REFERENCE l_recipient;
-	EIF_REFERENCE l_eclass;
-	EIF_REFERENCE l_rf_routine;
-	EIF_REFERENCE l_rf_class;
-	EIF_REFERENCE l_trace;
-	EIF_REFERENCE ge_exception_manager;
-
-	ge_exception_manager = context->exception_manager;
-	if (!ge_exception_manager) {
-		GE_init_exception(context);
-		ge_exception_manager = context->exception_manager;
-	}
-	if (tag) {
-		l_tag = GE_str(tag);
-	} else {
-		l_tag = GE_ms("", 0);
-	}
-	if (recipient) {
-		l_recipient = GE_str(recipient);
-	} else {
-		l_recipient = GE_ms("", 0);
-	}
-	if (eclass) {
-		l_eclass = GE_str(eclass);
-	} else {
-		l_eclass = GE_ms("", 0);
-	}
-	if (rf_routine) {
-		l_rf_routine = GE_str(rf_routine);
-	} else {
-		l_rf_routine = GE_ms("", 0);
-	}
-	if (rf_class) {
-		l_rf_class = GE_str(rf_class);
-	} else {
-		l_rf_class = GE_ms("", 0);
-	}
-	if (trace && context->exception_trace_enabled) {
-		l_trace = GE_str(trace);
-	} else {
-		l_trace = GE_ms("", 0);
-	}
-	GE_set_exception_data(context, ge_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
-}
-
-/*
- * Raise an exception.
- */
-static void GE_raise_exception(long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
-{
-	char* l_trace;
-	GE_exception_trace_buffer* l_trace_buffer;
-	GE_context* context;
-
-	context = GE_current_context();
-	if (!context) {
-#ifdef EIF_WINDOWS
-		GE_show_console();
-#endif
-		if (GE_system_name) {
-			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
-		} else {
-			fprintf(stderr, "\nsystem execution failed.\n");
-		}
-		fprintf(stderr, "Panic: No execution context found.\n");
-		exit(1);
-	} else if (context->raising_exception) {
-#ifdef EIF_WINDOWS
-		GE_show_console();
-#endif
-		if (GE_system_name) {
-			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
-		} else {
-			fprintf(stderr, "\nsystem execution failed.\n");
-		}
-		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
-		l_trace = context->last_exception_trace.area;
-		if (l_trace) {
-			fprintf(stderr, "Following is the set of recorded exceptions\n");
-			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
-			fprintf(stderr, "%s", l_trace);
-		} else {
-			fprintf(stderr, "No exception trace found.\n");
-		}
-		exit(1);
-	} else {
-		context->raising_exception = '\1';
-		context->exception_code = code;
-		context->exception_tag = tag;
-		if (code != GE_EX_FAIL) {
-			GE_wipe_out_exception_trace_buffer(&context->last_exception_trace);
-		}
-		l_trace = trace;
-		if (context->exception_trace_enabled && !l_trace) {
-			l_trace_buffer = &context->exception_trace_buffer;
-			GE_wipe_out_exception_trace_buffer(l_trace_buffer);
-			GE_print_exception_trace(context, code, tag, l_trace_buffer);
-			l_trace = l_trace_buffer->area;
-		}
-		if (code != GE_EX_FAIL && l_trace) {
-			GE_append_to_exception_trace_buffer(&context->last_exception_trace, l_trace);
-		}
-		GE_call_set_exception_data(context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
-		GE_jump_to_last_rescue(context);
-		context->raising_exception = '\0';
-		context->exception_code = 0;
-		context->exception_tag = (char*)0;
-	}
-}
-
-/*
- * Raise an exception with code `code'.
- */
-void GE_raise(long code)
-{
-	GE_raise_with_message(code, NULL);
-}
-
-/*
- * Raise an exception with code `code' and message `msg'.
- */
-void GE_raise_with_message(long code, const char* msg)
-{
-	GE_raise_exception(code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
-}
-
-/*
- * Raise an exception from EXCEPTION_MANAGER.
- */
-void GE_developer_raise(long code, char* meaning, char* message)
-{
-	GE_raise_exception(code, 0, -1, -1, message, NULL, NULL, NULL, NULL, NULL, -1, 0);
-}
-
-/*
- * Set `in_assertion' to 'not b'.
- * Return the opposite of previous value.
- */
-EIF_BOOLEAN GE_check_assert(EIF_BOOLEAN b)
-{
-	EIF_BOOLEAN l_old_value;
-	GE_context* l_context;
-
-	l_context = GE_current_context();
-	l_old_value = EIF_TEST(!(l_context->in_assertion));
-	l_context->in_assertion = (b?0:1);
-	return l_old_value;
-}
-
-/*
- * Check whether the type id of `obj' is not in `type_ids'.
- * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
- * `nb' is the number of ids in `type_ids' and is expected to be >0.
- * `type_ids' is sorted in increasing order.
- * Return `obj'.
- */
-EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int nb)
-{
-	if (obj) {
-		int type_id = obj->id;
-		if (type_id < type_ids[0]) {
-			/* Done */
-		} else if (type_id > type_ids[nb-1]) {
-			/* Done */
-		} else {
-			int i;
-			for (i = 0; i < nb; i++) {
-				if (type_id == type_ids[i]) {
-#ifdef EIF_WINDOWS
-					GE_show_console();
-#endif
-					fprintf(stderr, "CAT-call error!\n");
-#ifdef EIF_DEBUG
-					{
-						char c;
-						fprintf(stderr, "Press Enter...\n");
-						scanf("%c", &c);
-					}
-#endif
-					GE_raise_with_message(GE_EX_PROG, "CAT-call error.");
-					break;
-				} else if (type_id < type_ids[i]) {
-						/* type-ids are sorted in increasing order. */
-					break;
-				}
-			}
-		}
-	}
-	return (obj);
-}
-
-/*
- * Check whether `obj' is Void.
- * If it is, then raise a call-on-void-target exception.
- * Return `obj'.
- */
-EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
-{
-	if (!obj) {
-#ifdef EIF_WINDOWS
-		GE_show_console();
-#endif
-		fprintf(stderr, "Call on Void target!\n");
-#ifdef EIF_DEBUG
-		{
-			char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
-		GE_raise(GE_EX_VOID);
-	}
-	return (obj);
-}
-
-/*
- * Check whether `ptr' is a null pointer.
- * If it is, then raise a no-more-memory exception.
- * Return `ptr'.
- */
-void* GE_check_null(void* ptr)
-{
-	if (!ptr) {
-#ifdef EIF_WINDOWS
-		GE_show_console();
-#endif
-		fprintf(stderr, "No more memory!\n");
-#ifdef EIF_DEBUG
-		{
-			char c;
-			fprintf(stderr, "Press Enter...\n");
-			scanf("%c", &c);
-		}
-#endif
-		GE_raise(GE_EX_MEM);
-	}
-	return (ptr);
-}
-
-#ifdef EIF_WINDOWS
-static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS an_exception)
-{
-		/* In order to be able to catch exceptions that cannot be caught by
-		 * just using signals on Windows, we need to set `windows_exception_filter'
-		 * as an unhandled exception filter.
-		 */
-
-	switch (an_exception->ExceptionRecord->ExceptionCode) {
-		case STATUS_STACK_OVERFLOW:
-			GE_raise_with_message(GE_EX_EXT, "Stack overflow");
-			break;
-
-		case STATUS_INTEGER_DIVIDE_BY_ZERO:
-			GE_raise_with_message(GE_EX_FLOAT, "Integer division by Zero");
-			break;
-
-		default:
-			GE_raise_with_message(GE_EX_EXT, "Unhandled exception");
-			break;
-	}
-
-		/* Possible return values include:
-		 * EXCEPTION_CONTINUE_EXECUTION : Returns to the statement that caused the exception
-		 *    and re-executes that statement. (Causes an infinite loop of calling the exception
-		 *    handler if the handler does not fix the problem)
-		 * EXCEPTION_EXECUTE_HANDLER: Passes the exception to default handler, in our case
-		 *    none, since `windows_exception_filter' is the default one now.
-		 * EXCEPTION_CONTINUE_SEARCH: Continue to search up the stack for a handle
-		 */
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
-/*
- * Set default exception handler.
- */
-void GE_set_windows_exception_filter()
-{
-	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
-	old_exception_handler = SetUnhandledExceptionFilter (GE_windows_exception_filter);
-}
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
-		"C functions used to implement type information"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef GE_TYPES_C
-#define GE_TYPES_C
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-#pragma once
-#endif
-
-#ifndef GE_TYPES_H
-#include "ge_types.h"
-#endif
-#ifndef GE_STRING_H
-#include "ge_string.h"
-#endif
-#ifndef GE_EXCEPTION_H
-#include "ge_exception.h"
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/*
- * Number of type infos in `GE_type_infos'.
- * Do not take into account the fake item at index 0.
- */
-int GE_type_info_count;
-
-/*
- * Encode a EIF_TYPE into a EIF_ENCODED_TYPE.
- * The lower part of EIF_ENCODED_TYPE contains the .id field,
- * and the upper part the .annotations.
- */
-EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
-{
-	EIF_ENCODED_TYPE l_result;
-
-#if defined(_MSC_VER)
-		/* This code below is just optimized as one move by cl on x86 platforms.
-		 * The else-part below generates non-optimal code with cl.
-		 */
-	memcpy(&l_result, &a_type, sizeof(EIF_ENCODED_TYPE));
-#else
-		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
-	l_result = a_type.annotations;
-	l_result = (l_result << 16) | a_type.id;
-#endif
-
-	return l_result;
-}
-
-/*
- * Decode a EIF_ENCODED_TYPE into a EIF_TYPE.
- * The lower part of EIF_ENCODED_TYPE contains the .id field,
- * and the upper part the .annotations.
- */
-EIF_TYPE GE_decoded_type(EIF_ENCODED_TYPE a_type)
-{
-	EIF_TYPE l_result;
-
-#if defined(_MSC_VER)
-		/* This code below is just optimized as one move by cl on x86 platforms.
-		 * The else-part below generates non-optimal code with cl.
-		 */
-	memcpy(&l_result, &a_type, sizeof(EIF_TYPE));
-#else
-		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
-	l_result.id = a_type & 0x0000FFFF;
-	l_result.annotations = a_type >> 16;
-#endif
-
-	return l_result;
-}
-
-/*
- * Type with `a_id' and `a_annotations'.
- */
-EIF_TYPE GE_new_type(EIF_TYPE_INDEX a_id, EIF_TYPE_INDEX a_annotations)
-{
-	EIF_TYPE l_result;
-	l_result.id = a_id;
-	l_result.annotations = a_annotations;
-	return l_result;
-}
-
-/*
- * Associated detachable type of `a_type' if any,
- * otherwise `a_type'.
- */
-EIF_TYPE GE_non_attached_type(EIF_TYPE a_type)
-{
-		/* Since types are by default detachable, we simply remove
-		 * all attachment marks. */
-	a_type.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
-	return a_type;
-}
-
-/*
- * Associated attached type of `a_type' if any,
- * otherwise `a_type'.
- */
-EIF_TYPE GE_attached_type(EIF_TYPE a_type)
-{
-	a_type.annotations &= ~DETACHABLE_FLAG;
-	a_type.annotations |= ATTACHED_FLAG;
-	return a_type;
-}
-
-/*
- * Is `a_type' a SPECIAL type of user-defined expanded type?
- */
-EIF_BOOLEAN GE_is_special_of_expanded_type_index(EIF_TYPE_INDEX a_type)
-{
-	EIF_BOOLEAN l_result = EIF_FALSE;
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	EIF_TYPE_INDEX l_generic_parameter;
-	uint32_t l_flags;
-
-	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
-		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
-		l_flags = GE_type_infos[l_generic_parameter].flags;
-		l_result = EIF_TEST((l_flags & GE_TYPE_FLAG_EXPANDED) && !(l_flags & GE_TYPE_FLAG_BASIC_MASK));
-	}
-#endif
-	return l_result;
-}
-
-/*
- * Is `a_type' a SPECIAL type of reference type?
- */
-EIF_BOOLEAN GE_is_special_of_reference_type_index(EIF_TYPE_INDEX a_type)
-{
-	EIF_BOOLEAN l_result = EIF_FALSE;
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	EIF_TYPE_INDEX l_generic_parameter;
-	uint32_t l_flags;
-
-	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
-		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
-		l_flags = GE_type_infos[l_generic_parameter].flags;
-		l_result = EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED));
-	}
-#endif
-	return l_result;
-}
-
-/*
- * Is `a_type' a SPECIAL type of reference type or basic expanded type?
- * (Note that user-defined expanded types are excluded.)
- */
-EIF_BOOLEAN GE_is_special_of_reference_or_basic_expanded_type_index(EIF_TYPE_INDEX a_type)
-{
-	EIF_BOOLEAN l_result = EIF_FALSE;
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	EIF_TYPE_INDEX l_generic_parameter;
-	uint32_t l_flags;
-
-	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
-		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
-		l_flags = GE_type_infos[l_generic_parameter].flags;
-		l_result = EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED) || (l_flags & GE_TYPE_FLAG_BASIC_MASK));
-	}
-#endif
-	return l_result;
-}
-
-/*
- * Does `i'-th field of `a_object + a_physical_offset' (which is expected to be reference)
- * denote a reference with copy semantics?
- */
-EIF_BOOLEAN GE_is_copy_semantics_field(EIF_INTEGER i, EIF_POINTER a_object, EIF_INTEGER a_physical_offset)
-{
-	EIF_REFERENCE l_object;
-
-	l_object = GE_reference_field(i, a_object, a_physical_offset);
-	if (l_object) {
-		return GE_is_expanded_object(l_object);
-	} else {
-		return EIF_FALSE;
-	}
-}
-
-/*
- * Does `i'-th item of special `a_object' (which is expected to be reference)
- * denote a reference with copy semantics?
- */
-EIF_BOOLEAN GE_is_special_copy_semantics_item(EIF_INTEGER i, EIF_POINTER a_object)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
-	EIF_REFERENCE l_object;
-	GE_type_info l_type_info;
-
-	l_type_info = GE_type_infos[((EIF_REFERENCE)a_object)->id];
-		/* The last pseudo attribute is the item at index 0 in the special object */
-	l_object = *(EIF_REFERENCE*)((char*)a_object + l_type_info.attributes[l_type_info.attribute_count - 1]->offset + i * sizeof(EIF_REFERENCE));
-	if (l_object) {
-		return GE_is_expanded_object(l_object);
-	} else {
-		return EIF_FALSE;
-	}
-#else
-	return EIF_FALSE;
-#endif
-}
-
-/*
- * Generator class name of `a_type'.
- */
-EIF_REFERENCE GE_generator_of_type_index(EIF_TYPE_INDEX a_type)
-{
-	const char* l_generator;
-#ifdef GE_USE_TYPE_GENERATOR
-/* TODO: check that `a_type' is valid. */
-	l_generator = GE_type_infos[a_type].generator;
-#else
-	l_generator = "";
-#endif
-	return GE_str(l_generator);
-}
-
-/*
- * Full name of `a_type'.
- */
-EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type)
-{
-	const char* l_name;
-#ifdef GE_USE_TYPE_NAME
-/* TODO: check that `a_type' is valid. */
-/* TODO: handle type annotations. */
-	l_name = GE_type_infos[GE_decoded_type(a_type).id].name;
-#else
-	l_name = "";
-#endif
-	return GE_str(l_name);
-}
-
-/*
- * Encoded type whose name is `a_name'.
- * -1 if no such type.
- */
-EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
-{
-#ifdef GE_USE_TYPE_NAME
-/* TODO: check that `a_type' is valid. */
-/* TODO: handle type annotations. */
-	int i;
-
-	for (i = 1; i <= GE_type_info_count; i++) {
-		if (strcmp((char*) a_name, GE_type_infos[i].name) == 0) {
-			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, 0x0));
-		}
-	}
-#endif
-	return EIF_NO_TYPE;
-}
-
-/*
- * Does `a_type_1' conform to `a_type_2'?
- */
-EIF_BOOLEAN GE_encoded_type_conforms_to(EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_TYPE a_type_2)
-{
-#ifdef GE_USE_ANCESTORS
-	GE_type_info l_type_info_1;
-	GE_ancestor** l_ancestors;
-	uint32_t l_ancestor_count, i;
-	EIF_TYPE_INDEX l_type_index_1, l_type_index_2, l_ancestor_type_index;
-
-/* TODO: take into account type annotation */
-	l_type_index_1 = GE_decoded_type(a_type_1).id;
-	l_type_index_2 = GE_decoded_type(a_type_2).id;
-	l_type_info_1 = GE_type_infos[l_type_index_1];
-	if (l_type_info_1.flags & GE_TYPE_FLAG_NONE) {
-			/* NONE */
-		uint32_t l_flags = GE_type_infos[l_type_index_2].flags;
-		return EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED));
-	} else {
-		l_ancestors = l_type_info_1.ancestors;
-		l_ancestor_count = l_type_info_1.ancestor_count;
-		for (i = 0; i < l_ancestor_count; i++) {
-			l_ancestor_type_index = l_ancestors[i]->type_id;
-			if (l_ancestor_type_index == l_type_index_2) {
-				return EIF_TRUE;
-			} else if (l_ancestor_type_index > l_type_index_2) {
-				return EIF_FALSE;
-			}
-		}
-	}
-#endif
-	return EIF_FALSE;
-}
-
-/*
- * Number of generic parameters.
- */
-EIF_INTEGER GE_generic_parameter_count_of_type_index(EIF_TYPE_INDEX a_type)
-{
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	return (EIF_INTEGER)GE_type_infos[a_type].generic_parameter_count;
-#else
-	return (EIF_INTEGER)0;
-#endif
-}
-
-/*
- * Type of `i'-th generic parameter of `a_type'.
- */
-EIF_INTEGER GE_generic_parameter_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER i)
-{
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-/* TODO: check that `a_type' and `i' are valid. */
-	return (EIF_INTEGER)GE_type_infos[a_type].generic_parameters[i - 1];
-#else
-	return (EIF_INTEGER)0;
-#endif
-}
-
-/*
- * Number of fields of an object of dynamic type `a_type'.
- */
-EIF_INTEGER GE_field_count_of_type_index(EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
-/* TODO: check that `a_type' is valid. */
-	return (EIF_INTEGER)GE_type_infos[a_type].attribute_count;
-#else
-	return (EIF_INTEGER)0;
-#endif
-}
-
-/*
- * Physical offset of the `i'-th field for an object of dynamic type `a_type'.
- */
-EIF_INTEGER GE_field_offset_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
-/* TODO: check that `a_type' and `i' are valid. */
-	return (EIF_INTEGER)GE_type_infos[a_type].attributes[i - 1]->offset;
-#else
-	return (EIF_INTEGER)0;
-#endif
-}
-
-/*
- * Name of the `i'-th field for an object of dynamic type `a_type'.
- */
-EIF_POINTER GE_field_name_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_NAME)
-/* TODO: check that `a_type' and `i' are valid. */
-	return (EIF_POINTER)GE_type_infos[a_type].attributes[i - 1]->name;
-#else
-	return (EIF_POINTER)0;
-#endif
-}
-
-/*
- * Static type of the `i'-th field for an object of dynamic type `a_type'.
- */
-EIF_INTEGER GE_field_static_type_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
-/* TODO: check that `a_type' and `i' are valid. */
-	return (EIF_INTEGER)GE_type_infos[a_type].attributes[i - 1]->type_id;
-#else
-	return (EIF_INTEGER)0;
-#endif
-}
-
-/*
- * Kind of type of the `i'-th field for an object of dynamic type `a_type'.
- */
-EIF_INTEGER GE_field_type_kind_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
-	uint32_t l_flags = GE_type_infos[GE_decoded_type(GE_type_infos[a_type].attributes[i - 1]->type_id).id].flags;
-	if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
-		switch (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
-		case GE_TYPE_FLAG_BOOLEAN:
-			return (EIF_INTEGER)GE_TYPE_KIND_BOOLEAN;
-		case GE_TYPE_FLAG_CHARACTER_8:
-			return (EIF_INTEGER)GE_TYPE_KIND_CHARACTER_8;
-		case GE_TYPE_FLAG_CHARACTER_32:
-			return (EIF_INTEGER)GE_TYPE_KIND_CHARACTER_32;
-		case GE_TYPE_FLAG_INTEGER_8:
-			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_8;
-		case GE_TYPE_FLAG_INTEGER_16:
-			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_16;
-		case GE_TYPE_FLAG_INTEGER_32:
-			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_32;
-		case GE_TYPE_FLAG_INTEGER_64:
-			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_64;
-		case GE_TYPE_FLAG_NATURAL_8:
-			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_8;
-		case GE_TYPE_FLAG_NATURAL_16:
-			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_16;
-		case GE_TYPE_FLAG_NATURAL_32:
-			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_32;
-		case GE_TYPE_FLAG_NATURAL_64:
-			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_64;
-		case GE_TYPE_FLAG_POINTER:
-			return (EIF_INTEGER)GE_TYPE_KIND_POINTER;
-		case GE_TYPE_FLAG_REAL_32:
-			return (EIF_INTEGER)GE_TYPE_KIND_REAL_32;
-		case GE_TYPE_FLAG_REAL_64:
-			return (EIF_INTEGER)GE_TYPE_KIND_REAL_64;
-		default:
-			return (EIF_INTEGER)GE_TYPE_KIND_INVALID;
-		}
-	} else if (l_flags & GE_TYPE_FLAG_EXPANDED) {
-		return (EIF_INTEGER)GE_TYPE_KIND_EXPANDED;
-	} else {
-		return (EIF_INTEGER)GE_TYPE_KIND_REFERENCE;
-	}
-#else
-	return (EIF_INTEGER)GE_TYPE_KIND_INVALID;
-#endif
-}
-
-/*
- * Physical size of `a_object'.
- */
-EIF_NATURAL_64 GE_object_size(EIF_POINTER a_object)
-{
-#ifdef GE_USE_TYPE_OBJECT_SIZE
-	EIF_TYPE_INDEX l_type_index = ((EIF_REFERENCE)(a_object))->id;
-	uint64_t l_size = GE_type_infos[l_type_index].object_size;
-#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	if (GE_is_special_type_index (l_type_index)) {
-		EIF_TYPE_INDEX l_generic_parameter = GE_decoded_type(GE_type_infos[l_type_index].generic_parameters[0]).id;
-		uint32_t l_flags = GE_type_infos[l_generic_parameter].flags;
-		EIF_INTEGER l_capacity = ((EIF_SPECIAL*)a_object)->capacity;
-		uint64_t l_item_size;
-
-		if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
-			switch (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
-			case GE_TYPE_FLAG_BOOLEAN:
-				l_item_size = sizeof(EIF_BOOLEAN);
-				break;
-			case GE_TYPE_FLAG_CHARACTER_8:
-				l_item_size = sizeof(EIF_CHARACTER_8);
-				break;
-			case GE_TYPE_FLAG_CHARACTER_32:
-				l_item_size = sizeof(EIF_CHARACTER_32);
-				break;
-			case GE_TYPE_FLAG_INTEGER_8:
-				l_item_size = sizeof(EIF_INTEGER_8);
-				break;
-			case GE_TYPE_FLAG_INTEGER_16:
-				l_item_size = sizeof(EIF_INTEGER_16);
-				break;
-			case GE_TYPE_FLAG_INTEGER_32:
-				l_item_size = sizeof(EIF_INTEGER_32);
-				break;
-			case GE_TYPE_FLAG_INTEGER_64:
-				l_item_size = sizeof(EIF_INTEGER_64);
-				break;
-			case GE_TYPE_FLAG_NATURAL_8:
-				l_item_size = sizeof(EIF_NATURAL_8);
-				break;
-			case GE_TYPE_FLAG_NATURAL_16:
-				l_item_size = sizeof(EIF_NATURAL_16);
-				break;
-			case GE_TYPE_FLAG_NATURAL_32:
-				l_item_size = sizeof(EIF_NATURAL_32);
-				break;
-			case GE_TYPE_FLAG_NATURAL_64:
-				l_item_size = sizeof(EIF_NATURAL_64);
-				break;
-			case GE_TYPE_FLAG_POINTER:
-				l_item_size = sizeof(EIF_POINTER);
-				break;
-			case GE_TYPE_FLAG_REAL_32:
-				l_item_size = sizeof(EIF_REAL_32);
-				break;
-			case GE_TYPE_FLAG_REAL_64:
-				l_item_size = sizeof(EIF_REAL_64);
-				break;
-			default:
-				l_item_size = 0;
-			}
-		} else if (l_flags & GE_TYPE_FLAG_EXPANDED) {
-			l_item_size = GE_type_infos[l_generic_parameter].object_size;
-		} else {
-			l_item_size = sizeof(EIF_REFERENCE);
-		}
-		l_size += l_capacity * l_item_size;
-	}
-#endif
-	return (EIF_NATURAL_64)l_size;
-#else
-	return (EIF_NATURAL_64)0;
-#endif
-}
-
-/*
- * Is `i'-th field of objects of type `a_type' a user-defined expanded attribute?
- */
-EIF_BOOLEAN GE_is_field_expanded_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
-{
-#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
-	uint32_t l_flags = GE_type_infos[GE_decoded_type(GE_type_infos[a_type].attributes[i - 1]->type_id).id].flags;
-	return EIF_TEST((l_flags & GE_TYPE_FLAG_EXPANDED) && !(l_flags & GE_TYPE_FLAG_BASIC_MASK));
-#else
-	return EIF_FALSE;
-#endif
-}
-
-/*
- * Get a lock on `GE_mark_object' and `GE_unmark_object' routines so that
- * 2 threads cannot `GE_mark_object' and `GE_unmark_object' at the same time.
- */
-void GE_lock_marking()
-{
-#ifdef GE_USE_THREADS
-/* TODO */
-#endif
-}
-
-/*
- * Release a lock on `GE_mark_object' and `GE_unmark_object', so that another
- * thread can use `GE_mark_object' and `GE_unmark_object'.
- */
-void GE_unlock_marking()
-{
-#ifdef GE_USE_THREADS
-/* TODO */
-#endif
-}
-
-/*
- * Is `obj' marked?
- */
-EIF_BOOLEAN GE_is_object_marked(EIF_POINTER obj)
-{
-	return EIF_TEST(((EIF_REFERENCE)obj)->flags & GE_OBJECT_FLAG_MARKED);
-}
-
-/*
- * Mark `obj'.
- */
-void GE_mark_object(EIF_POINTER obj)
-{
-	((EIF_REFERENCE)obj)->flags |= GE_OBJECT_FLAG_MARKED;
-}
-
-/*
- * Unmark `obj'.
- */
-void GE_unmark_object(EIF_POINTER obj)
-{
-	((EIF_REFERENCE)obj)->flags &= ~GE_OBJECT_FLAG_MARKED;
-}
-
-/*
- * New instance of dynamic `a_type'.
- * Note: returned object is not initialized and may
- * hence violate its invariant.
- * `a_type' cannot represent a SPECIAL type, use
- * `GE_new_special_instance_of_special_type_index' instead.
- */
-EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
-{
-	EIF_REFERENCE (*l_new)(EIF_BOOLEAN);
-
-	l_new = (EIF_REFERENCE (*)(EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
-	if (l_new) {
-		return l_new(EIF_TRUE);
-	} else {
-		return EIF_VOID;
-	}
-}
-
-/*
- * New instance of dynamic `a_type' that represents
- * a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
- * basic type, use `SPECIAL'.
- */
-EIF_REFERENCE GE_new_special_any_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
-{
-	EIF_REFERENCE (*l_new)(EIF_INTEGER,EIF_BOOLEAN);
-
-	l_new = (EIF_REFERENCE (*)(EIF_INTEGER,EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
-	if (l_new) {
-		return l_new(a_capacity, EIF_TRUE);
-	} else {
-		return EIF_VOID;
-	}
-}
-
-/*
- * New instance of TYPE for object of type `a_type'.
- */
-EIF_REFERENCE GE_new_type_instance_of_encoded_type(EIF_ENCODED_TYPE a_type)
-{
-	EIF_TYPE_INDEX l_type_index;
-	EIF_REFERENCE l_result;
-
-/* TODO: take into account type annotation. */
-	l_type_index = GE_decoded_type(a_type).id;
-	l_result = (EIF_REFERENCE)&(GE_types[l_type_index]);
-	if (l_result->id == 0) {
-		l_result = EIF_VOID;
-		GE_raise(GE_EX_PROG);
-	}
-	return l_result;
-}
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -99921,10 +98685,10 @@ extern "C" {
 #ifndef GE_STRING_H
 #include "ge_string.h"
 #endif
-#ifndef GE_STRING_H
+#ifndef GE_NATIVE_STRING_H
 #include "ge_native_string.h"
 #endif
-#ifndef GE_STRING_H
+#ifndef GE_GC_H
 #include "ge_gc.h"
 #endif
 
@@ -99986,7 +98750,7 @@ static int GE_nstr_str32len(EIF_NATIVE_CHAR* s, EIF_INTEGER n)
 			} else {
 				j += 3;
 			}
-		} else if ((c1 & 0xF0) == 0xE0 ) {
+		} else if ((c1 & 0xF0) == 0xE0) {
 			if (i + 2 < n) {
 				c2 = (uint8_t)s[i + 1];
 				c3 = (uint8_t)s[i + 2];
@@ -100158,7 +98922,7 @@ static void GE_nstr_to_str32(EIF_NATIVE_CHAR* s, EIF_CHARACTER_32* a_buffer, EIF
 				GE_uint8_to_escaped_str32(c1, a_buffer + j);
 				j += 3;
 			}
-		} else if ((c1 & 0xF0) == 0xE0 ) {
+		} else if ((c1 & 0xF0) == 0xE0) {
 			if (i + 2 < n) {
 				c2 = (uint8_t)s[i + 1];
 				c3 = (uint8_t)s[i + 2];
@@ -100365,10 +99129,735 @@ extern "C" {
 /*
 	description:
 
+		"C functions used to implement type information"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef GE_TYPES_C
+#define GE_TYPES_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_TYPES_H
+#include "ge_types.h"
+#endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ * Number of type infos in `GE_type_infos'.
+ * Do not take into account the fake item at index 0.
+ */
+int GE_type_info_count;
+
+/*
+ * Encode a EIF_TYPE into a EIF_ENCODED_TYPE.
+ * The lower part of EIF_ENCODED_TYPE contains the .id field,
+ * and the upper part the .annotations.
+ */
+EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
+{
+	EIF_ENCODED_TYPE l_result;
+
+#if defined(_MSC_VER)
+		/* This code below is just optimized as one move by cl on x86 platforms.
+		 * The else-part below generates non-optimal code with cl.
+		 */
+	memcpy(&l_result, &a_type, sizeof(EIF_ENCODED_TYPE));
+#else
+		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
+	l_result = a_type.annotations;
+	l_result = (l_result << 16) | a_type.id;
+#endif
+	return l_result;
+}
+
+/*
+ * Decode a EIF_ENCODED_TYPE into a EIF_TYPE.
+ * The lower part of EIF_ENCODED_TYPE contains the .id field,
+ * and the upper part the .annotations.
+ */
+EIF_TYPE GE_decoded_type(EIF_ENCODED_TYPE a_type)
+{
+	EIF_TYPE l_result;
+
+#if defined(_MSC_VER)
+		/* This code below is just optimized as one move by cl on x86 platforms.
+		 * The else-part below generates non-optimal code with cl.
+		 */
+	memcpy(&l_result, &a_type, sizeof(EIF_TYPE));
+#else
+		/* This code below is just optimized as one move by gcc/clang on x86 platforms. */
+	l_result.id = a_type & 0x0000FFFF;
+	l_result.annotations = a_type >> 16;
+#endif
+	return l_result;
+}
+
+/*
+ * Type with `a_id' and `a_annotations'.
+ */
+EIF_TYPE GE_new_type(EIF_TYPE_INDEX a_id, EIF_TYPE_INDEX a_annotations)
+{
+	EIF_TYPE l_result;
+	l_result.id = a_id;
+	l_result.annotations = a_annotations;
+	return l_result;
+}
+
+/*
+ * Associated detachable type of `a_type' if any,
+ * otherwise `a_type'.
+ */
+EIF_TYPE GE_non_attached_type(EIF_TYPE a_type)
+{
+		/* Since types are by default detachable, we simply remove
+		 * all attachment marks. */
+	a_type.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+	return a_type;
+}
+
+/*
+ * Associated attached type of `a_type' if any,
+ * otherwise `a_type'.
+ */
+EIF_TYPE GE_attached_type(EIF_TYPE a_type)
+{
+	a_type.annotations &= ~DETACHABLE_FLAG;
+	a_type.annotations |= ATTACHED_FLAG;
+	return a_type;
+}
+
+/*
+ * Is `a_type' a SPECIAL type of user-defined expanded type?
+ */
+EIF_BOOLEAN GE_is_special_of_expanded_type_index(EIF_TYPE_INDEX a_type)
+{
+	EIF_BOOLEAN l_result = EIF_FALSE;
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+	EIF_TYPE_INDEX l_generic_parameter;
+	uint32_t l_flags;
+
+	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
+		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
+		l_flags = GE_type_infos[l_generic_parameter].flags;
+		l_result = EIF_TEST((l_flags & GE_TYPE_FLAG_EXPANDED) && !(l_flags & GE_TYPE_FLAG_BASIC_MASK));
+	}
+#endif
+	return l_result;
+}
+
+/*
+ * Is `a_type' a SPECIAL type of reference type?
+ */
+EIF_BOOLEAN GE_is_special_of_reference_type_index(EIF_TYPE_INDEX a_type)
+{
+	EIF_BOOLEAN l_result = EIF_FALSE;
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+	EIF_TYPE_INDEX l_generic_parameter;
+	uint32_t l_flags;
+
+	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
+		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
+		l_flags = GE_type_infos[l_generic_parameter].flags;
+		l_result = EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED));
+	}
+#endif
+	return l_result;
+}
+
+/*
+ * Is `a_type' a SPECIAL type of reference type or basic expanded type?
+ * (Note that user-defined expanded types are excluded.)
+ */
+EIF_BOOLEAN GE_is_special_of_reference_or_basic_expanded_type_index(EIF_TYPE_INDEX a_type)
+{
+	EIF_BOOLEAN l_result = EIF_FALSE;
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+	EIF_TYPE_INDEX l_generic_parameter;
+	uint32_t l_flags;
+
+	if ((GE_type_infos[a_type].flags & GE_TYPE_FLAG_SPECIAL)) {
+		l_generic_parameter = GE_decoded_type(GE_type_infos[a_type].generic_parameters[0]).id;
+		l_flags = GE_type_infos[l_generic_parameter].flags;
+		l_result = EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED) || (l_flags & GE_TYPE_FLAG_BASIC_MASK));
+	}
+#endif
+	return l_result;
+}
+
+/*
+ * Does `i'-th field of `a_object + a_physical_offset' (which is expected to be reference)
+ * denote a reference with copy semantics?
+ */
+EIF_BOOLEAN GE_is_copy_semantics_field(EIF_INTEGER i, EIF_POINTER a_object, EIF_INTEGER a_physical_offset)
+{
+	EIF_REFERENCE l_object;
+
+	l_object = GE_reference_field(i, a_object, a_physical_offset);
+	if (l_object) {
+		return GE_is_expanded_object(l_object);
+	} else {
+		return EIF_FALSE;
+	}
+}
+
+/*
+ * Does `i'-th item of special `a_object' (which is expected to be reference)
+ * denote a reference with copy semantics?
+ */
+EIF_BOOLEAN GE_is_special_copy_semantics_item(EIF_INTEGER i, EIF_POINTER a_object)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
+	EIF_REFERENCE l_object;
+	GE_type_info l_type_info;
+
+	l_type_info = GE_type_infos[((EIF_REFERENCE)a_object)->id];
+		/* The last pseudo attribute is the item at index 0 in the special object */
+	l_object = *(EIF_REFERENCE*)((char*)a_object + l_type_info.attributes[l_type_info.attribute_count - 1]->offset + i * sizeof(EIF_REFERENCE));
+	if (l_object) {
+		return GE_is_expanded_object(l_object);
+	} else {
+		return EIF_FALSE;
+	}
+#else
+	return EIF_FALSE;
+#endif
+}
+
+/*
+ * Generator class name of `a_type'.
+ */
+EIF_REFERENCE GE_generator_of_type_index(EIF_TYPE_INDEX a_type)
+{
+	const char* l_generator;
+#ifdef GE_USE_TYPE_GENERATOR
+/* TODO: check that `a_type' is valid. */
+	l_generator = GE_type_infos[a_type].generator;
+#else
+	l_generator = "";
+#endif
+	return GE_str(l_generator);
+}
+
+/*
+ * Full name of `a_type'.
+ */
+EIF_REFERENCE GE_generating_type_of_encoded_type(EIF_ENCODED_TYPE a_type)
+{
+	const char* l_name;
+#ifdef GE_USE_TYPE_NAME
+/* TODO: check that `a_type' is valid. */
+/* TODO: handle type annotations. */
+	l_name = GE_type_infos[GE_decoded_type(a_type).id].name;
+#else
+	l_name = "";
+#endif
+	return GE_str(l_name);
+}
+
+/*
+ * Encoded type whose name is `a_name'.
+ * -1 if no such type.
+ */
+EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
+{
+#ifdef GE_USE_TYPE_NAME
+/* TODO: check that `a_type' is valid. */
+/* TODO: handle type annotations. */
+	int i;
+
+	for (i = 1; i <= GE_type_info_count; i++) {
+		if (strcmp((char*)a_name, GE_type_infos[i].name) == 0) {
+			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, 0x0));
+		}
+	}
+#endif
+	return EIF_NO_TYPE;
+}
+
+/*
+ * Does `a_type_1' conform to `a_type_2'?
+ */
+EIF_BOOLEAN GE_encoded_type_conforms_to(EIF_ENCODED_TYPE a_type_1, EIF_ENCODED_TYPE a_type_2)
+{
+#ifdef GE_USE_ANCESTORS
+	GE_type_info l_type_info_1;
+	GE_ancestor** l_ancestors;
+	uint32_t l_ancestor_count, i;
+	EIF_TYPE_INDEX l_type_index_1, l_type_index_2, l_ancestor_type_index;
+
+/* TODO: take into account type annotation */
+	l_type_index_1 = GE_decoded_type(a_type_1).id;
+	l_type_index_2 = GE_decoded_type(a_type_2).id;
+	l_type_info_1 = GE_type_infos[l_type_index_1];
+	if (l_type_info_1.flags & GE_TYPE_FLAG_NONE) {
+			/* NONE */
+		uint32_t l_flags = GE_type_infos[l_type_index_2].flags;
+		return EIF_TEST(!(l_flags & GE_TYPE_FLAG_EXPANDED));
+	} else {
+		l_ancestors = l_type_info_1.ancestors;
+		l_ancestor_count = l_type_info_1.ancestor_count;
+		for (i = 0; i < l_ancestor_count; i++) {
+			l_ancestor_type_index = l_ancestors[i]->type_id;
+			if (l_ancestor_type_index == l_type_index_2) {
+				return EIF_TRUE;
+			} else if (l_ancestor_type_index > l_type_index_2) {
+				return EIF_FALSE;
+			}
+		}
+	}
+#endif
+	return EIF_FALSE;
+}
+
+/*
+ * Number of generic parameters.
+ */
+EIF_INTEGER GE_generic_parameter_count_of_type_index(EIF_TYPE_INDEX a_type)
+{
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+	return (EIF_INTEGER)GE_type_infos[a_type].generic_parameter_count;
+#else
+	return (EIF_INTEGER)0;
+#endif
+}
+
+/*
+ * Type of `i'-th generic parameter of `a_type'.
+ */
+EIF_INTEGER GE_generic_parameter_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER i)
+{
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+/* TODO: check that `a_type' and `i' are valid. */
+	return (EIF_INTEGER)GE_type_infos[a_type].generic_parameters[i - 1];
+#else
+	return (EIF_INTEGER)0;
+#endif
+}
+
+/*
+ * Number of fields of an object of dynamic type `a_type'.
+ */
+EIF_INTEGER GE_field_count_of_type_index(EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
+/* TODO: check that `a_type' is valid. */
+	return (EIF_INTEGER)GE_type_infos[a_type].attribute_count;
+#else
+	return (EIF_INTEGER)0;
+#endif
+}
+
+/*
+ * Physical offset of the `i'-th field for an object of dynamic type `a_type'.
+ */
+EIF_INTEGER GE_field_offset_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_OFFSET)
+/* TODO: check that `a_type' and `i' are valid. */
+	return (EIF_INTEGER)GE_type_infos[a_type].attributes[i - 1]->offset;
+#else
+	return (EIF_INTEGER)0;
+#endif
+}
+
+/*
+ * Name of the `i'-th field for an object of dynamic type `a_type'.
+ */
+EIF_POINTER GE_field_name_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_NAME)
+/* TODO: check that `a_type' and `i' are valid. */
+	return (EIF_POINTER)GE_type_infos[a_type].attributes[i - 1]->name;
+#else
+	return (EIF_POINTER)0;
+#endif
+}
+
+/*
+ * Static type of the `i'-th field for an object of dynamic type `a_type'.
+ */
+EIF_INTEGER GE_field_static_type_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
+/* TODO: check that `a_type' and `i' are valid. */
+	return (EIF_INTEGER)GE_type_infos[a_type].attributes[i - 1]->type_id;
+#else
+	return (EIF_INTEGER)0;
+#endif
+}
+
+/*
+ * Kind of type of the `i'-th field for an object of dynamic type `a_type'.
+ */
+EIF_INTEGER GE_field_type_kind_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
+	uint32_t l_flags = GE_type_infos[GE_decoded_type(GE_type_infos[a_type].attributes[i - 1]->type_id).id].flags;
+	if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
+		switch (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
+		case GE_TYPE_FLAG_BOOLEAN:
+			return (EIF_INTEGER)GE_TYPE_KIND_BOOLEAN;
+		case GE_TYPE_FLAG_CHARACTER_8:
+			return (EIF_INTEGER)GE_TYPE_KIND_CHARACTER_8;
+		case GE_TYPE_FLAG_CHARACTER_32:
+			return (EIF_INTEGER)GE_TYPE_KIND_CHARACTER_32;
+		case GE_TYPE_FLAG_INTEGER_8:
+			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_8;
+		case GE_TYPE_FLAG_INTEGER_16:
+			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_16;
+		case GE_TYPE_FLAG_INTEGER_32:
+			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_32;
+		case GE_TYPE_FLAG_INTEGER_64:
+			return (EIF_INTEGER)GE_TYPE_KIND_INTEGER_64;
+		case GE_TYPE_FLAG_NATURAL_8:
+			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_8;
+		case GE_TYPE_FLAG_NATURAL_16:
+			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_16;
+		case GE_TYPE_FLAG_NATURAL_32:
+			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_32;
+		case GE_TYPE_FLAG_NATURAL_64:
+			return (EIF_INTEGER)GE_TYPE_KIND_NATURAL_64;
+		case GE_TYPE_FLAG_POINTER:
+			return (EIF_INTEGER)GE_TYPE_KIND_POINTER;
+		case GE_TYPE_FLAG_REAL_32:
+			return (EIF_INTEGER)GE_TYPE_KIND_REAL_32;
+		case GE_TYPE_FLAG_REAL_64:
+			return (EIF_INTEGER)GE_TYPE_KIND_REAL_64;
+		default:
+			return (EIF_INTEGER)GE_TYPE_KIND_INVALID;
+		}
+	} else if (l_flags & GE_TYPE_FLAG_EXPANDED) {
+		return (EIF_INTEGER)GE_TYPE_KIND_EXPANDED;
+	} else {
+		return (EIF_INTEGER)GE_TYPE_KIND_REFERENCE;
+	}
+#else
+	return (EIF_INTEGER)GE_TYPE_KIND_INVALID;
+#endif
+}
+
+/*
+ * Physical size of `a_object'.
+ */
+EIF_NATURAL_64 GE_object_size(EIF_POINTER a_object)
+{
+#ifdef GE_USE_TYPE_OBJECT_SIZE
+	EIF_TYPE_INDEX l_type_index = ((EIF_REFERENCE)(a_object))->id;
+	uint64_t l_size = GE_type_infos[l_type_index].object_size;
+#ifdef GE_USE_TYPE_GENERIC_PARAMETERS
+	if (GE_is_special_type_index(l_type_index)) {
+		EIF_TYPE_INDEX l_generic_parameter = GE_decoded_type(GE_type_infos[l_type_index].generic_parameters[0]).id;
+		uint32_t l_flags = GE_type_infos[l_generic_parameter].flags;
+		EIF_INTEGER l_capacity = ((EIF_SPECIAL*)a_object)->capacity;
+		uint64_t l_item_size;
+
+		if (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
+			switch (l_flags & GE_TYPE_FLAG_BASIC_MASK) {
+			case GE_TYPE_FLAG_BOOLEAN:
+				l_item_size = sizeof(EIF_BOOLEAN);
+				break;
+			case GE_TYPE_FLAG_CHARACTER_8:
+				l_item_size = sizeof(EIF_CHARACTER_8);
+				break;
+			case GE_TYPE_FLAG_CHARACTER_32:
+				l_item_size = sizeof(EIF_CHARACTER_32);
+				break;
+			case GE_TYPE_FLAG_INTEGER_8:
+				l_item_size = sizeof(EIF_INTEGER_8);
+				break;
+			case GE_TYPE_FLAG_INTEGER_16:
+				l_item_size = sizeof(EIF_INTEGER_16);
+				break;
+			case GE_TYPE_FLAG_INTEGER_32:
+				l_item_size = sizeof(EIF_INTEGER_32);
+				break;
+			case GE_TYPE_FLAG_INTEGER_64:
+				l_item_size = sizeof(EIF_INTEGER_64);
+				break;
+			case GE_TYPE_FLAG_NATURAL_8:
+				l_item_size = sizeof(EIF_NATURAL_8);
+				break;
+			case GE_TYPE_FLAG_NATURAL_16:
+				l_item_size = sizeof(EIF_NATURAL_16);
+				break;
+			case GE_TYPE_FLAG_NATURAL_32:
+				l_item_size = sizeof(EIF_NATURAL_32);
+				break;
+			case GE_TYPE_FLAG_NATURAL_64:
+				l_item_size = sizeof(EIF_NATURAL_64);
+				break;
+			case GE_TYPE_FLAG_POINTER:
+				l_item_size = sizeof(EIF_POINTER);
+				break;
+			case GE_TYPE_FLAG_REAL_32:
+				l_item_size = sizeof(EIF_REAL_32);
+				break;
+			case GE_TYPE_FLAG_REAL_64:
+				l_item_size = sizeof(EIF_REAL_64);
+				break;
+			default:
+				l_item_size = 0;
+			}
+		} else if (l_flags & GE_TYPE_FLAG_EXPANDED) {
+			l_item_size = GE_type_infos[l_generic_parameter].object_size;
+		} else {
+			l_item_size = sizeof(EIF_REFERENCE);
+		}
+		l_size += l_capacity * l_item_size;
+	}
+#endif
+	return (EIF_NATURAL_64)l_size;
+#else
+	return (EIF_NATURAL_64)0;
+#endif
+}
+
+/*
+ * Is `i'-th field of objects of type `a_type' a user-defined expanded attribute?
+ */
+EIF_BOOLEAN GE_is_field_expanded_of_type_index(EIF_INTEGER i, EIF_TYPE_INDEX a_type)
+{
+#if defined(GE_USE_ATTRIBUTES) && defined(GE_USE_ATTRIBUTE_TYPE_ID)
+	uint32_t l_flags = GE_type_infos[GE_decoded_type(GE_type_infos[a_type].attributes[i - 1]->type_id).id].flags;
+	return EIF_TEST((l_flags & GE_TYPE_FLAG_EXPANDED) && !(l_flags & GE_TYPE_FLAG_BASIC_MASK));
+#else
+	return EIF_FALSE;
+#endif
+}
+
+/*
+ * Get a lock on `GE_mark_object' and `GE_unmark_object' routines so that
+ * 2 threads cannot `GE_mark_object' and `GE_unmark_object' at the same time.
+ */
+void GE_lock_marking()
+{
+#ifdef GE_USE_THREADS
+/* TODO */
+#endif
+}
+
+/*
+ * Release a lock on `GE_mark_object' and `GE_unmark_object', so that another
+ * thread can use `GE_mark_object' and `GE_unmark_object'.
+ */
+void GE_unlock_marking()
+{
+#ifdef GE_USE_THREADS
+/* TODO */
+#endif
+}
+
+/*
+ * Is `obj' marked?
+ */
+EIF_BOOLEAN GE_is_object_marked(EIF_POINTER obj)
+{
+	return EIF_TEST(((EIF_REFERENCE)obj)->flags & GE_OBJECT_FLAG_MARKED);
+}
+
+/*
+ * Mark `obj'.
+ */
+void GE_mark_object(EIF_POINTER obj)
+{
+	((EIF_REFERENCE)obj)->flags |= GE_OBJECT_FLAG_MARKED;
+}
+
+/*
+ * Unmark `obj'.
+ */
+void GE_unmark_object(EIF_POINTER obj)
+{
+	((EIF_REFERENCE)obj)->flags &= ~GE_OBJECT_FLAG_MARKED;
+}
+
+/*
+ * New instance of dynamic `a_type'.
+ * Note: returned object is not initialized and may
+ * hence violate its invariant.
+ * `a_type' cannot represent a SPECIAL type, use
+ * `GE_new_special_instance_of_special_type_index' instead.
+ */
+EIF_REFERENCE GE_new_instance_of_type_index(EIF_TYPE_INDEX a_type)
+{
+	EIF_REFERENCE (*l_new)(EIF_BOOLEAN);
+
+	l_new = (EIF_REFERENCE (*)(EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
+	if (l_new) {
+		return l_new(EIF_TRUE);
+	} else {
+		return EIF_VOID;
+	}
+}
+
+/*
+ * New instance of dynamic `a_type' that represents
+ * a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
+ * basic type, use `SPECIAL'.
+ */
+EIF_REFERENCE GE_new_special_any_instance_of_type_index(EIF_TYPE_INDEX a_type, EIF_INTEGER a_capacity)
+{
+	EIF_REFERENCE (*l_new)(EIF_INTEGER,EIF_BOOLEAN);
+
+	l_new = (EIF_REFERENCE (*)(EIF_INTEGER,EIF_BOOLEAN))GE_type_infos[a_type].new_instance;
+	if (l_new) {
+		return l_new(a_capacity, EIF_TRUE);
+	} else {
+		return EIF_VOID;
+	}
+}
+
+/*
+ * New instance of TYPE for object of type `a_type'.
+ */
+EIF_REFERENCE GE_new_type_instance_of_encoded_type(EIF_ENCODED_TYPE a_type)
+{
+	EIF_TYPE_INDEX l_type_index;
+	EIF_REFERENCE l_result;
+
+/* TODO: take into account type annotation. */
+	l_type_index = GE_decoded_type(a_type).id;
+	l_result = (EIF_REFERENCE)&(GE_types[l_type_index]);
+	if (l_result->id == 0) {
+		l_result = EIF_VOID;
+		GE_raise(GE_EX_PROG);
+	}
+	return l_result;
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
+		"C functions used to access garbage collector facilities"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef GE_GC_C
+#define GE_GC_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
+#ifndef GE_TYPES_H
+#include "ge_types.h"
+#endif
+
+/*
+ * Allocate memory that does not contain pointers to collectable objects.
+ * The allocated memory is zeroed.
+ * The allocated object is itself not collectable.
+ * Do not raise an exception when no-more-memory.
+ */
+#ifdef GE_USE_BOEHM_GC
+void* GE_unprotected_calloc_atomic_uncollectable(size_t nelem, size_t elsize)
+{
+	void* new_p;
+
+	new_p = GC_malloc_atomic_uncollectable(nelem * elsize);
+	if (new_p) {
+		memset(new_p, 0, nelem * elsize);
+	}
+	return new_p;
+}
+#endif
+
+/*
+ * Allocate more memory for the given pointer.
+ * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
+ * The extra allocated memory is zeroed.
+ * Raise an exception when no-more-memory.
+ */
+void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
+{
+	void* new_p;
+#ifdef GE_USE_BOEHM_GC
+	new_p = GE_null(GC_REALLOC(p, new_nelem * elsize));
+#else /* No GC */
+	new_p = GE_null(realloc(p, new_nelem * elsize));
+#endif
+	memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
+	return new_p;
+}
+
+/*
+ * Allocate more memory for the given pointer.
+ * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
+ * The extra allocated memory is zeroed.
+ * Do not raise an exception when no-more-memory.
+ */
+void* GE_unprotected_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
+{
+	void* new_p;
+#ifdef GE_USE_BOEHM_GC
+	new_p = GC_REALLOC(p, new_nelem * elsize);
+#else /* No GC */
+	new_p = realloc(p, new_nelem * elsize);
+#endif
+	if (new_p) {
+		memset(((char*)new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
+	}
+	return new_p;
+}
+
+/*
+ * Call dispose routine `disp' on object `C'.
+ */
+#ifdef GE_USE_BOEHM_GC
+void GE_boehm_dispose(void* C, void* disp) {
+	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
 		"C functions used to implement class CONSOLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100376,6 +99865,24 @@ extern "C" {
 
 #ifndef GE_CONSOLE_C
 #define GE_CONSOLE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#endif
 
 #ifdef EIF_WINDOWS
 #include <stdio.h>
@@ -100391,12 +99898,30 @@ extern "C" {
 #ifdef EIF_WINDOWS
 
 static EIF_BOOLEAN GE_console_allocated = EIF_FALSE;
+#ifdef GE_USE_THREADS
+static EIF_POINTER GE_console_mutex = 0;
+#endif
 
 /*
-	Create a new DOS console if needed (i.e. in case of a Windows application).
-*/
+ * Initialize mutex to determine whether a new
+ * console needs to be created.
+ */
+void GE_init_console(void)
+{
+#ifdef GE_USE_THREADS
+	GE_console_mutex = GE_mutex_create();
+#endif
+}
+
+/*
+ * Create a new DOS console if needed (i.e. in case of a Windows application).
+ */
 void GE_show_console(void)
 {
+#ifdef GE_USE_THREADS
+	if (GE_console_mutex) {
+		GE_mutex_lock(GE_console_mutex);
+#endif
 	if (!GE_console_allocated) {
 		HANDLE hconin, hconout, hconerr;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -100412,14 +99937,23 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			/* Get all Std handles and raise an IO exception if we fail getting one. */
 		hconout = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (hconout == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		hconerr = GetStdHandle(STD_ERROR_HANDLE);
 		if (hconerr == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		hconin = GetStdHandle(STD_INPUT_HANDLE);
 		if (hconin == INVALID_HANDLE_VALUE) {
+#ifdef GE_USE_THREADS
+			GE_mutex_unlock(GE_console_mutex);
+#endif
 			GE_raise(GE_EX_PROG);
 		}
 		if (bSuccess) {
@@ -100435,7 +99969,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 					duplicate the handle, unfortunately the solution does not work
 					with Microsoft which explains the ifdef statement.
 				*/
-			hCrt = _open_osfhandle((intptr_t) hconout, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t)hconout, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stdout));
 #else
@@ -100443,7 +99977,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			*stdout = *hf;
 #endif
 			setvbuf(stdout, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t) hconerr, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t)hconerr, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stderr));
 #else
@@ -100451,7 +99985,7 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 			*stderr = *hf;
 #endif
 			setvbuf(stderr, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle((intptr_t) hconin, _O_TEXT | _O_RDONLY);
+			hCrt = _open_osfhandle((intptr_t)hconin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
 			dup2(hCrt, _fileno(stdin));
 #else
@@ -100474,6 +100008,10 @@ extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 
 		GE_console_allocated = EIF_TRUE;
 	}
+#ifdef GE_USE_THREADS
+		GE_mutex_unlock(GE_console_mutex);
+	}
+#endif
 }
 
 #endif
@@ -100494,10 +100032,856 @@ extern "C" {
 /*
 	description:
 
+		"C functions used to implement class EXCEPTION"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef GE_EXCEPTION_C
+#define GE_EXCEPTION_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
+#ifndef GE_STRING_H
+#include "ge_string.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#endif
+
+#ifdef EIF_WINDOWS
+#include <winbase.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ * Pre-defined exception tags. No restriction on size.
+ */
+static char* GE_exception_tags[] = {
+	(char *) 0,							/* Nothing */
+	"Feature call on void target.",		/* GE_EX_VOID */
+	"No more memory.",					/* GE_EX_MEM */
+	"Precondition violated.",			/* GE_EX_PRE */
+	"Postcondition violated.",			/* GE_EX_POST */
+	"Floating point exception.",		/* GE_EX_FLOAT */
+	"Class invariant violated.",		/* GE_EX_CINV */
+	"Assertion violated.",				/* GE_EX_CHECK */
+	"Routine failure.",					/* GE_EX_FAIL */
+	"Unmatched inspect value.",			/* GE_EX_WHEN */
+	"Non-decreasing loop variant or negative value reached.",		/* GE_EX_VAR */
+	"Loop invariant violated.",			/* GE_EX_LINV */
+	"Operating system signal.",			/* GE_EX_SIG */
+	"Eiffel run-time panic.",			/* GE_EX_BYE */
+	"Exception in rescue clause.",		/* GE_EX_RESC */
+	"Out of memory.",					/* GE_EX_OMEM */
+	"Resumption attempt failed.",		/* GE_EX_RES */
+	"Create on deferred.",				/* GE_EX_CDEF */
+	"External event.",					/* GE_EX_EXT */
+	"Void assigned to expanded.",		/* GE_EX_VEXP */
+	"Exception in signal handler.",		/* GE_EX_HDLR */
+	"I/O error.",						/* GE_EX_IO */
+	"Operating system error.",			/* GE_EX_SYS */
+	"Retrieval error.",					/* GE_EX_RETR */
+	"Developer exception.",				/* GE_EX_PROG */
+	"Eiffel run-time fatal error.",		/* GE_EX_FATAL */
+	"CECIL cannot call melted code",	/* GE_EX_DOL */
+	"Runtime I/O error.",				/* GE_EX_ISE_IO */
+	"COM error.",						/* GE_EX_COM */
+	"Runtime check violated.",			/* GE_EX_RT_CHECK */
+	"Old expression evaluation failed.",/* GE_EX_OLD */
+	"Serialization failed."				/* GE_EX_SEL */
+	"SCOOP processor dirty."			/* GE_EX_DIRTY */
+};
+
+/*
+ * Exception tag associated with `a_code'.
+ */
+char* GE_exception_tag(long a_code)
+{
+	if (a_code < 0) {
+		return "User-defined exception.";
+	} else if (a_code < 1 || a_code > GE_EX_NEX) {
+		return "Unknown exception.";
+	} else {
+		return GE_exception_tags[a_code];
+	}
+}
+
+/*
+ * Initialize `a_trace'.
+ */
+static void GE_init_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+{
+	a_trace->count = 0;
+	a_trace->capacity = 0;
+	a_trace->area = (char*)GE_unprotected_calloc_atomic_uncollectable(4096, 1);
+	if (a_trace->area) {
+		a_trace->capacity = 4096;
+	}
+}
+
+/*
+ * Free memory allocated in `a_trace'.
+ */
+static void GE_free_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+{
+	a_trace->count = 0;
+	a_trace->capacity = 0;
+	if (a_trace->area) {
+	 GE_free(a_trace->area);
+	}
+}
+
+/*
+ * Append `a_string' to `a_trace'.
+ * Resize area if needed.
+ */
+static void GE_append_to_exception_trace_buffer(GE_exception_trace_buffer* a_trace, char* a_string)
+{
+	int l_length = strlen(a_string);
+	uint32_t l_new_capacity;
+	char* l_new_area;
+
+	if (a_trace->area) {
+		if ((a_trace->capacity - a_trace->count) <= l_length) {
+			l_new_capacity = a_trace->capacity + l_length + 512;
+			l_new_area = (char*)GE_unprotected_recalloc(a_trace->area, a_trace->capacity, l_new_capacity, 1);
+			if (l_new_area) {
+				a_trace->area = l_new_area;
+				a_trace->capacity = l_new_capacity;
+			}
+		}
+	} else {
+		GE_init_exception_trace_buffer(a_trace);
+	}
+	if ((a_trace->capacity - a_trace->count) > l_length) {
+		strcpy(a_trace->area + a_trace->count, a_string);
+		a_trace->count += l_length;
+	}
+}
+
+/*
+ * Wipe out `a_trace'.
+ */
+static void GE_wipe_out_exception_trace_buffer(GE_exception_trace_buffer* a_trace)
+{
+	char* l_area = a_trace->area;
+
+	if (l_area) {
+		memset(l_area, 0, a_trace->count);
+		a_trace->count = 0;
+	}
+}
+
+/*
+ * Print first line of exception which contains `a_class_name', `a_feature_name'
+ * and `a_tag_name' to `a_trace'.
+ */
+static void GE_print_class_feature_tag(GE_exception_trace_buffer* a_trace, const char* a_class_name, const char* a_feature_name, const char* a_tag_name)
+{
+	char buffer[256];
+	int l_class_count, l_feature_count, l_tag_count;
+
+		/* We are trying to provide the best format possible so that we can see all the useful
+		 * information about the location and the reason of the crash.
+		 * Note that the C format `%width[.precision]s' means that we will display `width'
+		 * characters on the screen and only `precision' characters from `s' will be displayed,
+		 * meaning that if `precision' is smaller than `width' the text is right aligned.
+		 *
+		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
+		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended
+		 * after the last character written, which should be taken into account.
+		 */
+	l_class_count = (int)strlen(a_class_name);
+	l_feature_count = (int)strlen(a_feature_name);
+	l_tag_count = (int)strlen(a_tag_name);
+
+		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
+		 *      for `a_class_name' and `a_feature_name'. */
+		/* 2 - precision of 234 = 254 - 20, 20 being number of characters written
+		 *      for `a_class_name'.*/
+		/* 3 - precision of 254, 254 being number of characters written
+		 *      excluding `\n' and null character appended at the end */
+		/* 4 - precision of 251, 231 and 208 being number of characters written
+		 *      excluding eclipse from above numbers. */
+	if (l_class_count > 19) {
+		if (l_class_count > 251) {
+			sprintf(buffer, "%.251s...\n", a_class_name);
+		} else {
+			sprintf(buffer, "%*.254s\n", l_class_count, a_class_name);
+		}
+		GE_append_to_exception_trace_buffer(a_trace, buffer);
+		if (l_feature_count > 22) {
+			if (l_feature_count > 231) {
+				sprintf(buffer, "%.231s...\n", a_feature_name);
+			} else {
+				sprintf(buffer, "%*.234s\n", 20 + l_feature_count, a_feature_name);
+			}
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+			if (l_tag_count > 0) {
+				if (l_tag_count > 208) {
+					sprintf(buffer, "%.208s...\n", a_tag_name);
+				} else {
+					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
+				}
+				GE_append_to_exception_trace_buffer(a_trace, buffer);
+			}
+		} else {
+			if (l_tag_count > 208) {
+				sprintf(buffer, "%*.22s %.208s...\n", 20 + l_feature_count, a_feature_name, a_tag_name);
+			} else {
+				sprintf(buffer, "%*.22s %*.211s\n", 20 + l_feature_count, a_feature_name, (43 + l_tag_count) - (20 + l_feature_count + 1), a_tag_name);
+			}
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		}
+	} else {
+		if (l_feature_count > 22) {
+			if (l_feature_count > 208) {
+				sprintf(buffer, "%-19.19s %.208s...\n", a_class_name, a_feature_name);
+			} else {
+				sprintf(buffer, "%-19.19s %*.211s\n", a_class_name, l_feature_count, a_feature_name);
+			}
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+			if (l_tag_count > 0) {
+				if (l_tag_count > 208) {
+					sprintf(buffer, "%.208s...\n", a_tag_name);
+				} else {
+					sprintf(buffer, "%*.211s\n", 43 + l_tag_count, a_tag_name);
+				}
+				GE_append_to_exception_trace_buffer(a_trace, buffer);
+			}
+		} else {
+			if (l_tag_count > 208) {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.208s...\n", a_class_name, a_feature_name, a_tag_name);
+			} else {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.211s\n", a_class_name, a_feature_name, a_tag_name);
+			}
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		}
+	}
+}
+
+/*
+ * Print second line of exception which contains `a_object_addr', `a_location',
+ * `a_reason' and `a_effect' to `a_trace'.
+ */
+static void GE_print_object_location_reason_effect(GE_exception_trace_buffer* a_trace, void* a_object_addr, char* a_location, char* a_reason, char* a_effect)
+{
+	char buffer[256];
+	int l_location_count, l_reason_count, l_effect_count;
+
+		/* We are trying to provide the best format possible so that we can see all the useful
+		 * information about the location and the reason of the crash.
+		 * Note that the C format `%width[.precision]s' means that we will display `width'
+		 * characters on the screen and only `precision' characters from `s' will be displayed,
+		 * meaning that if `precision' is smaller than `width' the text is right aligned.
+		 *
+		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
+		 * writting more than `buffer' can hold.
+		 */
+
+	l_location_count = (int)strlen(a_location);
+	l_reason_count = (int)strlen(a_reason);
+	l_effect_count = (int)strlen(a_effect);
+
+		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
+			   for `a_object_addr' and `a_location'.
+		 * 2 - precision of 181 = 254 - 73, 73 being number of characters written
+			   for `a_object_addr', `a_location' and `a_reason'.
+		 * 3 - 22, number of characters written for `a_location'
+		 * 4 - 29, number of characters written for `a_reason' */
+
+		/* Check this for formatting using `printf':
+		 * http://en.wikipedia.org/wiki/Printf#printf_format_placeholders */
+
+		/* Print object address with 16 digits to be ready when pointers
+		 * will be on 64 bits on all platform. */
+	sprintf(buffer, "<%016" EIF_POINTER_DISPLAY ">  ", (unsigned long)(intptr_t)a_object_addr);
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+
+	if (l_location_count > 22) {
+		sprintf(buffer, "%*.254s\n", l_location_count, a_location);
+		GE_append_to_exception_trace_buffer(a_trace, buffer);
+		if (l_reason_count > 29) {
+			sprintf(buffer, "%*.211s\n", 43 + l_reason_count, a_reason);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+			sprintf(buffer, "%*.181s\n", 73 + l_effect_count, a_effect);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		} else {
+			sprintf(buffer, "%*.29s %*.181s\n", 43 + l_reason_count, a_reason, (73 + l_effect_count) - (43 + l_reason_count + 1), a_effect);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		}
+	} else {
+		if (l_reason_count > 29) {
+			sprintf(buffer,"%-22.22s %*.211s\n", a_location, l_reason_count, a_reason);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+			sprintf(buffer, "%*.181s\n", 73 + l_effect_count, a_effect);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		} else {
+			sprintf(buffer,"%-22.22s %-29.29s %*.181s\n", a_location, a_reason, l_effect_count, a_effect);
+			GE_append_to_exception_trace_buffer(a_trace, buffer);
+		}
+	}
+}
+
+/*
+ * Print to `a_trace' the exception trace corresponding to `a_context'.
+ */
+static void GE_print_exception_trace(GE_context* a_context, long a_code, const char* a_tag, GE_exception_trace_buffer* a_trace)
+{
+	char buffer[1024];
+	GE_call* l_call;
+	char* l_tag;
+	char l_tag_buf[256];
+	void* l_object = NULL;
+	char* l_location = "";
+	char* l_reason;
+	char* l_effect;
+	char* l_root_class;
+	char* l_root_feature = "root's creation";
+	const char* l_class_name;
+	const char* l_feature_name;
+
+#ifdef GE_USE_THREADS
+	sprintf(buffer, "%s\n", "******************************** Thread exception *****************************");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	if (a_context == GE_main_context) {
+			/* Main thread. */
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (uint64_t)0, "(thread id)");
+	} else {
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (uint64_t)a_context->thread->thread_id, "(thread id)");
+	}
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer, "%s\n", "*******************************************************************************");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+#endif
+	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer, "%-19.19s %-22.22s %-29.29s %-6.6s\n", "Class / Object", "Routine", "Nature of exception", "Effect");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	if (GE_root_class_name) {
+		l_root_class = GE_root_class_name;
+	} else {
+		l_root_class = "ROOT CLASS";
+	}
+	l_call = a_context->call;
+	if (l_call) {
+		l_class_name = l_call->class_name;
+		l_feature_name = l_call->feature_name;
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
+		l_object = l_call->object;
+#endif
+	} else {
+		l_class_name = l_root_class;
+		l_feature_name = l_root_feature;
+	}
+	if (a_tag) {
+		sprintf(l_tag_buf, "%.254s:", a_tag);
+		l_tag = l_tag_buf;
+	} else {
+		l_tag = "";
+	}
+	GE_print_class_feature_tag(a_trace, l_class_name, l_feature_name, l_tag);
+	l_reason = GE_exception_tag(a_code);
+	l_effect = "Fail";
+	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
+	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+	while (l_call) {
+		l_tag = "";
+		GE_print_class_feature_tag(a_trace, l_call->class_name, l_call->feature_name, l_tag);
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
+		l_object = l_call->object;
+#endif
+		l_reason = "Routine failure.";
+		l_effect = "Fail";
+		GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
+		sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
+		GE_append_to_exception_trace_buffer(a_trace, buffer);
+		l_call = l_call->caller;
+	}
+	l_tag = "";
+	GE_print_class_feature_tag(a_trace, l_root_class, l_root_feature, l_tag);
+#ifdef GE_USE_CURRENT_IN_EXCEPTION_TRACE
+	l_object = NULL;
+#endif
+	l_reason = "Routine failure.";
+	l_effect = "Exit";
+	GE_print_object_location_reason_effect(a_trace, l_object, l_location, l_reason, l_effect);
+	sprintf(buffer, "%s\n", "-------------------------------------------------------------------------------");
+	GE_append_to_exception_trace_buffer(a_trace, buffer);
+}
+
+/*
+ * Default initialization for `GE_context'.
+ */
+GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
+#ifdef GE_USE_THREADS
+	, 0
+#endif
+	};
+
+/*
+ * Execution context of main thread.
+ * Should be used from the main thread only.
+ */
+GE_context* GE_main_context;
+
+/*
+ * Execution context of current thread.
+ */
+GE_context* GE_current_context()
+{
+#ifdef GE_USE_THREADS
+	return GE_thread_current_context();
+#else
+	return GE_main_context;
+#endif
+}
+
+/*
+ * Initialization of exception handling.
+ */
+void GE_init_exception(GE_context* a_context)
+{
+	EIF_REFERENCE l_exception_manager;
+
+	GE_init_exception_trace_buffer(&a_context->exception_trace_buffer);
+	GE_init_exception_trace_buffer(&a_context->last_exception_trace);
+	l_exception_manager = GE_new_exception_manager(EIF_TRUE);
+	a_context->exception_manager = l_exception_manager;
+	GE_init_exception_manager(a_context, l_exception_manager);
+}
+
+/*
+ * Free memory allocated in `a_context' for exception handling.
+ */
+void GE_free_exception(GE_context* a_context)
+{
+	GE_free_exception_trace_buffer(&a_context->exception_trace_buffer);
+	GE_free_exception_trace_buffer(&a_context->last_exception_trace);
+	a_context->exception_manager = EIF_VOID;
+}
+
+/*
+ * Pointer to function to create a new exception manager object.
+ */
+EIF_REFERENCE (*GE_new_exception_manager)(EIF_BOOLEAN);
+
+/*
+ * Pointer to Eiffel routine EXCEPTION_MANAGER.init_exception_manager.
+ */
+void (*GE_init_exception_manager)(GE_context*, EIF_REFERENCE);
+
+/*
+ * Pointer to Eiffel routine EXCEPTION_MANAGER.set_exception_data.
+ */
+void (*GE_set_exception_data)(GE_context*, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_INTEGER_32, EIF_INTEGER_32, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER_32, EIF_BOOLEAN);
+
+/*
+ * Jump to execute the rescue of the last routine with a rescue
+ * in the call stack.
+ */
+static void GE_jump_to_last_rescue(GE_context* a_context)
+{
+	char* l_exception_trace;
+
+	GE_rescue* r = a_context->last_rescue;
+	if (r != 0) {
+		a_context->last_rescue = r->previous;
+		a_context->raising_exception = '\0';
+		GE_longjmp(r->jb, 1);
+	}
+	if (a_context->exception_trace_enabled) {
+		GE_show_console();
+		if (GE_system_name) {
+			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
+		} else {
+			fprintf(stderr, "\nsystem execution failed.\n");
+		}
+		l_exception_trace = a_context->last_exception_trace.area;
+		if (l_exception_trace) {
+			fprintf(stderr, "Following is the set of recorded exceptions:\n\n");
+			fprintf(stderr, "%s", l_exception_trace);
+		} else {
+			fprintf(stderr, "No exception trace found.\n");
+		}
+	}
+	exit(1);
+}
+
+/*
+ * Call feature EXCEPTION_MANAGER.set_exception_data.
+ */
+static void GE_call_set_exception_data(GE_context* a_context, long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
+{
+	EIF_REFERENCE l_tag;
+	EIF_REFERENCE l_recipient;
+	EIF_REFERENCE l_eclass;
+	EIF_REFERENCE l_rf_routine;
+	EIF_REFERENCE l_rf_class;
+	EIF_REFERENCE l_trace;
+	EIF_REFERENCE l_exception_manager;
+
+	l_exception_manager = a_context->exception_manager;
+	if (!l_exception_manager) {
+		GE_init_exception(a_context);
+		l_exception_manager = a_context->exception_manager;
+	}
+	if (tag) {
+		l_tag = GE_str(tag);
+	} else {
+		l_tag = GE_ms("", 0);
+	}
+	if (recipient) {
+		l_recipient = GE_str(recipient);
+	} else {
+		l_recipient = GE_ms("", 0);
+	}
+	if (eclass) {
+		l_eclass = GE_str(eclass);
+	} else {
+		l_eclass = GE_ms("", 0);
+	}
+	if (rf_routine) {
+		l_rf_routine = GE_str(rf_routine);
+	} else {
+		l_rf_routine = GE_ms("", 0);
+	}
+	if (rf_class) {
+		l_rf_class = GE_str(rf_class);
+	} else {
+		l_rf_class = GE_ms("", 0);
+	}
+	if (trace && a_context->exception_trace_enabled) {
+		l_trace = GE_str(trace);
+	} else {
+		l_trace = GE_ms("", 0);
+	}
+	GE_set_exception_data(a_context, l_exception_manager, (EIF_INTEGER_32) code, EIF_TEST(new_obj), (EIF_INTEGER_32) signal_code, (EIF_INTEGER_32) error_code, l_tag, l_recipient, l_eclass, l_rf_routine, l_rf_class, l_trace, (EIF_INTEGER_32) line_number, EIF_TEST(is_invariant_entry));
+}
+
+/*
+ * Raise an exception.
+ */
+static void GE_raise_exception(long code, int new_obj, int signal_code, int error_code, const char* tag, char* recipient, char* eclass, char* rf_routine, char* rf_class, char* trace, int line_number, int is_invariant_entry)
+{
+	char* l_trace;
+	GE_exception_trace_buffer* l_trace_buffer;
+	GE_context* l_context;
+
+	l_context = GE_current_context();
+	if (!l_context) {
+		GE_show_console();
+		if (GE_system_name) {
+			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
+		} else {
+			fprintf(stderr, "\nsystem execution failed.\n");
+		}
+		fprintf(stderr, "Panic: No execution context found.\n");
+		exit(1);
+	} else if (l_context->raising_exception) {
+		GE_show_console();
+		if (GE_system_name) {
+			fprintf(stderr, "\n%s: system execution failed.\n", GE_system_name);
+		} else {
+			fprintf(stderr, "\nsystem execution failed.\n");
+		}
+		fprintf(stderr, "Panic: A crash occurred while processing exceptions.\n");
+		l_trace = l_context->last_exception_trace.area;
+		if (l_trace) {
+			fprintf(stderr, "Following is the set of recorded exceptions\n");
+			fprintf(stderr, "NB: The raised panic may have induced completely inconsistent information:\n\n");
+			fprintf(stderr, "%s", l_trace);
+		} else {
+			fprintf(stderr, "No exception trace found.\n");
+		}
+		exit(1);
+	} else {
+		l_context->raising_exception = '\1';
+		l_context->exception_code = code;
+		l_context->exception_tag = tag;
+		if (code != GE_EX_FAIL) {
+			GE_wipe_out_exception_trace_buffer(&l_context->last_exception_trace);
+		}
+		l_trace = trace;
+		if (l_context->exception_trace_enabled && !l_trace) {
+			l_trace_buffer = &l_context->exception_trace_buffer;
+			GE_wipe_out_exception_trace_buffer(l_trace_buffer);
+			GE_print_exception_trace(l_context, code, tag, l_trace_buffer);
+			l_trace = l_trace_buffer->area;
+		}
+		if ((code != GE_EX_FAIL) && l_trace) {
+			GE_append_to_exception_trace_buffer(&l_context->last_exception_trace, l_trace);
+		}
+		GE_call_set_exception_data(l_context, code, new_obj, signal_code, error_code, tag, recipient, eclass, rf_routine, rf_class, l_trace, line_number, is_invariant_entry);
+		GE_jump_to_last_rescue(l_context);
+		l_context->raising_exception = '\0';
+		l_context->exception_code = 0;
+		l_context->exception_tag = (char*)0;
+	}
+}
+
+/*
+ * Raise an exception with code `a_code'.
+ */
+void GE_raise(long a_code)
+{
+	GE_raise_with_message(a_code, NULL);
+}
+
+/*
+ * Raise an exception with code `a_code' and message `msg'.
+ */
+void GE_raise_with_message(long a_code, const char* msg)
+{
+	GE_raise_exception(a_code, 1, -1, -1, msg, NULL, NULL, NULL, NULL, NULL, -1, 0);
+}
+
+/*
+ * Raise an exception from EXCEPTION_MANAGER.
+ */
+void GE_developer_raise(long a_code, char* a_meaning, char* a_message)
+{
+	GE_raise_exception(a_code, 0, -1, -1, a_message, NULL, NULL, NULL, NULL, NULL, -1, 0);
+}
+
+/*
+ * Set `in_assertion' to 'not b'.
+ * Return the opposite of previous value.
+ */
+EIF_BOOLEAN GE_check_assert(EIF_BOOLEAN b)
+{
+	EIF_BOOLEAN l_old_value;
+	GE_context* l_context;
+
+	l_context = GE_current_context();
+	l_old_value = EIF_TEST(!(l_context->in_assertion));
+	l_context->in_assertion = (b?0:1);
+	return l_old_value;
+}
+
+/*
+ * Check whether the type id of `obj' is not in `type_ids'.
+ * If it is, then raise a CAT-call exception. Don't do anything if `obj' is Void.
+ * `nb' is the number of ids in `type_ids' and is expected to be >0.
+ * `type_ids' is sorted in increasing order.
+ * Return `obj'.
+ */
+EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, EIF_TYPE_INDEX type_ids[], int nb)
+{
+	if (obj) {
+		int type_id = obj->id;
+		if (type_id < type_ids[0]) {
+			/* Done */
+		} else if (type_id > type_ids[nb-1]) {
+			/* Done */
+		} else {
+			int i;
+			for (i = 0; i < nb; i++) {
+				if (type_id == type_ids[i]) {
+					GE_show_console();
+					fprintf(stderr, "CAT-call error!\n");
+#ifdef EIF_DEBUG
+					{
+						char c;
+						fprintf(stderr, "Press Enter...\n");
+						scanf("%c", &c);
+					}
+#endif
+					GE_raise_with_message(GE_EX_PROG, "CAT-call error.");
+					break;
+				} else if (type_id < type_ids[i]) {
+						/* type-ids are sorted in increasing order. */
+					break;
+				}
+			}
+		}
+	}
+	return (obj);
+}
+
+/*
+ * Check whether `obj' is Void.
+ * If it is, then raise a call-on-void-target exception.
+ * Return `obj'.
+ */
+EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
+{
+	if (!obj) {
+		GE_show_console();
+		fprintf(stderr, "Call on Void target!\n");
+#ifdef EIF_DEBUG
+		{
+			char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(GE_EX_VOID);
+	}
+	return (obj);
+}
+
+/*
+ * Check whether `ptr' is a null pointer.
+ * If it is, then raise a no-more-memory exception.
+ * Return `ptr'.
+ */
+void* GE_check_null(void* ptr)
+{
+	if (!ptr) {
+		GE_show_console();
+		fprintf(stderr, "No more memory!\n");
+#ifdef EIF_DEBUG
+		{
+			char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(GE_EX_MEM);
+	}
+	return (ptr);
+}
+
+#ifdef EIF_WINDOWS
+static LONG WINAPI GE_windows_exception_filter(LPEXCEPTION_POINTERS a_exception)
+{
+		/* In order to be able to catch exceptions that cannot be caught by
+		 * just using signals on Windows, we need to set `windows_exception_filter'
+		 * as an unhandled exception filter.
+		 */
+
+	switch (a_exception->ExceptionRecord->ExceptionCode) {
+		case STATUS_STACK_OVERFLOW:
+			GE_raise_with_message(GE_EX_EXT, "Stack overflow");
+			break;
+
+		case STATUS_INTEGER_DIVIDE_BY_ZERO:
+			GE_raise_with_message(GE_EX_FLOAT, "Integer division by Zero");
+			break;
+
+		default:
+			GE_raise_with_message(GE_EX_EXT, "Unhandled exception");
+			break;
+	}
+
+		/* Possible return values include:
+		 * EXCEPTION_CONTINUE_EXECUTION : Returns to the statement that caused the exception
+		 *    and re-executes that statement. (Causes an infinite loop of calling the exception
+		 *    handler if the handler does not fix the problem)
+		 * EXCEPTION_EXECUTE_HANDLER: Passes the exception to default handler, in our case
+		 *    none, since `windows_exception_filter' is the default one now.
+		 * EXCEPTION_CONTINUE_SEARCH: Continue to search up the stack for a handle
+		 */
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+/*
+ * Set default exception handler.
+ */
+void GE_set_windows_exception_filter()
+{
+	LPTOP_LEVEL_EXCEPTION_FILTER old_exception_handler = NULL;
+	old_exception_handler = SetUnhandledExceptionFilter (GE_windows_exception_filter);
+}
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
+		"C functions used to implement class ARGUMENTS"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef GE_ARGUMENTS_C
+#define GE_ARGUMENTS_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_ARGUMENTS_H
+#include "ge_arguments.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int GE_argc;
+EIF_NATIVE_CHAR** GE_argv;
+
+	/* Clean up function */
+typedef void (* EIF_CLEANUP)(EIF_BOOLEAN);
+void eif_register_cleanup(EIF_CLEANUP f){
+	/* TODO: Needed to compile some code at AXAR */
+	GE_show_console();
+	fprintf(stderr, "'eif_register_cleanup' in 'ge_arguments.h' not implemented\n");
+}
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
 		"C functions used to implement the program initialization"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100505,6 +100889,22 @@ extern "C" {
 
 #ifndef GE_MAIN_C
 #define GE_MAIN_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_MAIN_H
+#include "ge_main.h"
+#endif
+#ifndef GE_ARGUMENTS_H
+#include "ge_arguments.h"
+#endif
+#ifndef GE_NATIVE_STRING_H
+#include "ge_native_string.h"
+#endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -100531,45 +100931,10 @@ LPWSTR eif_lpCmdLine;
 int eif_nCmdShow;
 
 /*
- * Main entry point when compiling a Windows application.
- * See:
- *    http://en.wikipedia.org/wiki/WinMain
- *    http://msdn2.microsoft.com/en-us/library/ms633559.aspx
- */
-extern int main(void);
-extern void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp);
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
-	return main();
-}
-
-int main(void)
-{
-	int code;
-	int argc;
-	EIF_NATIVE_CHAR** argv;
-	EIF_NATIVE_CHAR* cmd;
-#ifdef EIF_WINDOWS
-	GE_set_windows_exception_filter();
-		/* Variables used in WEL. */
-	eif_hInstance = GetModuleHandle(NULL);
-	eif_hPrevInstance = NULL;
-	eif_lpCmdLine = GetCommandLineW();
-	eif_nCmdShow = SW_SHOW;
-#endif
-	cmd = GE_nstrdup(GetCommandLineW());
-	GE_get_argcargv(cmd, &argc, &argv);
-	code = GE_main(argc, argv);
-	free(cmd);
-	free(argv);
-	return code;
-}
-
-/*
- * Break the shell command held in 'cmd', putting each shell word
+ * Break the shell command held in `cmd', putting each shell word
  * in a separate array entry, hence building an argument
- * suitable for the 'main'. Note that 'cmd' will be altered
- * and 'argvp' will point to some chunks of it.
+ * suitable for the 'main'. Note that `cmd' will be altered
+ * and `argvp' will point to some chunks of it.
  */
 void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 {
@@ -100587,7 +100952,7 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 		; /* empty */
 	if (p <= pe) {
 		*argc = *argc + 1; /* at least one argument */
-		qb = q = malloc((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
+		qb = q = GE_unprotected_malloc_atomic_uncollectable((pe - p + 2) * sizeof(EIF_NATIVE_CHAR));
 		if (!qb) {
 			return;
 		}
@@ -100633,13 +100998,13 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 	}
 
 	if (!argvp) {
-		free(qb);
+		GE_free(qb);
 		return;
 	}
 
-	*argvp = (EIF_NATIVE_CHAR**)malloc((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
+	*argvp = (EIF_NATIVE_CHAR**)GE_unprotected_malloc_atomic_uncollectable((*argc+1)*sizeof(EIF_NATIVE_CHAR*));
 	if (!(*argvp)) {
-		free(qb);
+		GE_free(qb);
 		return;
 	}
 
@@ -100647,111 +101012,55 @@ void GE_get_argcargv(EIF_NATIVE_CHAR* cmd, int* argc, EIF_NATIVE_CHAR*** argvp)
 		(*argvp)[i] = qb;
 		qb += GE_nstrlen(qb) + 1;
 	}
-	(*argvp)[i] = (EIF_NATIVE_CHAR *)0;
+	(*argvp)[i] = (EIF_NATIVE_CHAR*)0;
+}
+
+int main(void)
+{
+	int code;
+	int argc;
+	EIF_NATIVE_CHAR** argv;
+	EIF_NATIVE_CHAR* cmd;
+#ifdef EIF_WINDOWS
+	GE_set_windows_exception_filter();
+		/* Variables used in WEL. */
+	eif_hInstance = GetModuleHandle(NULL);
+	eif_hPrevInstance = NULL;
+	eif_lpCmdLine = GetCommandLineW();
+	eif_nCmdShow = SW_SHOW;
+#endif
+	cmd = GE_nstrdup(GetCommandLineW());
+	GE_get_argcargv(cmd, &argc, &argv);
+	code = GE_main(argc, argv);
+	GE_free(cmd);
+	if (argc > 0) {
+		GE_free(argv[0]);
+	}
+	GE_free(argv);
+	return code;
+}
+
+/*
+ * Main entry point when compiling a Windows application.
+ * See:
+ *    http://en.wikipedia.org/wiki/WinMain
+ *    http://msdn2.microsoft.com/en-us/library/ms633559.aspx
+ */
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	return main();
 }
 
 #else
 
-int main (int argc, char ** argv)
+int main(int argc, char** argv)
 {
-	return GE_main (argc, argv);
+	return GE_main(argc, argv);
 }
 
 #endif
 
 #ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
-		"C functions used to access garbage collector facilities"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef GE_GC_C
-#define GE_GC_C
-
-/*
- * Allocate memory that does not contain pointers to collectable objects.
- * The allocated memory is zeroed.
- * The allocated object is itself not collectable.
- * Do not raise an exception when no-more-memory.
- */
-#ifdef EIF_BOEHM_GC
-void* GE_raw_calloc_atomic_uncollectable(size_t nelem, size_t elsize)
-{
-	void* new_p;
-
-	new_p = GC_malloc_atomic_uncollectable(nelem * elsize);
-	if (new_p) {
-		memset(new_p, 0, nelem * elsize);
-	}
-	return new_p;
-}
-#endif
-
-/*
- * Allocate more memory for the given pointer.
- * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
- * The extra allocated memory is zeroed.
- * The allocated object is itself collectable.
- * Raise an exception when no-more-memory.
- */
-void* GE_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
-{
-	void* new_p;
-#ifdef EIF_BOEHM_GC
-	new_p = GE_null(GC_REALLOC(p, new_nelem * elsize));
-#else /* No GC */
-	new_p = GE_null(realloc(p, new_nelem * elsize));
-#endif
-	memset(((char*) new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
-	return new_p;
-}
-
-/*
- * Allocate more memory for the given pointer.
- * The reallocated pointer keeps the same properties (e.g. atomic or not, collectable or not).
- * The extra allocated memory is zeroed.
- * The allocated object is itself collectable.
- * Do not raise an exception when no-more-memory.
- */
-void* GE_raw_recalloc(void* p, size_t old_nelem, size_t new_nelem, size_t elsize)
-{
-	void* new_p;
-#ifdef EIF_BOEHM_GC
-	new_p = GC_REALLOC(p, new_nelem * elsize);
-#else /* No GC */
-	new_p = realloc(p, new_nelem * elsize);
-#endif
-	if (new_p) {
-		memset(((char*) new_p) + (old_nelem * elsize), 0, (new_nelem - old_nelem) * elsize);
-	}
-	return new_p;
-}
-
-/*
- * Call dispose routine `disp' on object `C'.
- */
-#ifdef EIF_BOEHM_GC
-void GE_boehm_dispose(void* C, void* disp) {
-	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(GE_current_context(), (EIF_REFERENCE) C);
 }
 #endif
 
@@ -100770,7 +101079,7 @@ extern "C" {
 		"C functions used to implement class IDENTIFIED"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100778,14 +101087,24 @@ extern "C" {
 
 #ifndef GE_IDENTIFIED_C
 #define GE_IDENTIFIED_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_IDENTIFIED_H
+#include "ge_identified.h"
+#endif
+#ifndef GE_GC_H
+#include "ge_gc.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /*
-	Weak pointers.
-*/
+ * Weak pointers.
+ */
 
 /*
  * Weak pointer structure.
@@ -100801,11 +101120,11 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
 	GE_weak_pointer* wp;
 
 	if (object == 0) {
-		return (GE_weak_pointer*) 0;
+		return (GE_weak_pointer*)0;
 	} else {
-		wp = (GE_weak_pointer*) GE_malloc_atomic(sizeof(GE_weak_pointer));
+		wp = (GE_weak_pointer*)GE_malloc_atomic(sizeof(GE_weak_pointer));
 		wp->object = object;
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 		GC_GENERAL_REGISTER_DISAPPEARING_LINK((void**)(&wp->object), GC_base(object));
 #endif
 		return wp;
@@ -100817,7 +101136,7 @@ GE_weak_pointer* GE_new_weak_pointer(EIF_REFERENCE object) {
  */
 EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
 	if (wp == 0) {
-		return (EIF_REFERENCE) 0;
+		return (EIF_REFERENCE)0;
 	} else {
 		return (wp->object);
 	}
@@ -100826,9 +101145,9 @@ EIF_REFERENCE GE_weak_pointer_object_without_lock(GE_weak_pointer* wp) {
 /*
  * Access to the object held in the weak pointer.
  */
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
-	return (EIF_REFERENCE) GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
+	return (EIF_REFERENCE)GC_call_with_alloc_lock((GC_fn_type)GE_weak_pointer_object_without_lock, wp);
 }
 #else /* No GC */
 #define GE_weak_pointer_object(wp) GE_weak_pointer_object_without_lock(wp)
@@ -100836,8 +101155,8 @@ EIF_REFERENCE GE_weak_pointer_object(GE_weak_pointer* wp) {
 
 
 /*
-	Identified data structures and functions.
-*/
+ * Identified data structures and functions.
+ */
 
 /*
  * Size of inner arrays in `GE_id_objects'.
@@ -100873,7 +101192,7 @@ EIF_INTEGER_32 GE_last_object_id;
  * Initialize data to keep track of object ids.
  */
 void GE_init_identified(void) {
-	GE_id_objects = (GE_weak_pointer***) 0;
+	GE_id_objects = (GE_weak_pointer***)0;
 	GE_id_objects_capacity = 0;
 	GE_last_object_id = 0;
 }
@@ -100922,21 +101241,21 @@ EIF_REFERENCE GE_id_object(EIF_INTEGER_32 id) {
 	} else {
 		id_object_chunk = GE_id_objects[i];
 		if (id_object_chunk == 0) {
-			return (EIF_REFERENCE) 0;
+			return (EIF_REFERENCE)0;
 		} else {
 			i = id % GE_ID_OBJECT_CHUNK_SIZE;
 			wp = id_object_chunk[i];
 			if (wp == 0) {
-				return (EIF_REFERENCE) 0;
+				return (EIF_REFERENCE)0;
 			} else {
 				object = GE_weak_pointer_object(wp);
 				if (object == 0) {
-					id_object_chunk[i] = (GE_weak_pointer*) 0;
-#ifdef EIF_BOEHM_GC
+					id_object_chunk[i] = (GE_weak_pointer*)0;
+#ifdef GE_USE_BOEHM_GC
 					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 					GE_free(wp);
-					return (EIF_REFERENCE) 0;
+					return (EIF_REFERENCE)0;
 				} else {
 					return object;
 				}
@@ -100963,11 +101282,11 @@ void GE_object_id_free(EIF_INTEGER_32 id) {
 			if (wp != 0) {
 				object = GE_weak_pointer_object(wp);
 				if (object != 0) {
-#ifdef EIF_BOEHM_GC
+#ifdef GE_USE_BOEHM_GC
 					GC_unregister_disappearing_link((void**)(&wp->object));
 #endif
 				}
-				id_object_chunk[i] = (GE_weak_pointer*) 0;
+				id_object_chunk[i] = (GE_weak_pointer*)0;
 				GE_free(wp);
 			}
 		}
@@ -100993,7 +101312,7 @@ extern "C" {
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101001,124 +101320,122 @@ extern "C" {
 
 #ifndef EIF_CECIL_C
 #define EIF_CECIL_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_CECIL_H
+#include "eif_cecil.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-EIF_PROCEDURE eif_procedure(char* rout, EIF_TYPE_ID cid) {
+EIF_PROCEDURE eif_procedure(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_procedure' in 'eif_cecil.c' not implemented\n");
-	return (EIF_PROCEDURE) 0;
+	return (EIF_PROCEDURE)0;
 }
 
-EIF_INTEGER_FUNCTION eif_integer_function(char* rout, EIF_TYPE_ID cid) {
+EIF_INTEGER_FUNCTION eif_integer_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_integer_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_INTEGER_FUNCTION) 0;
+	return (EIF_INTEGER_FUNCTION)0;
 }
 
-EIF_REFERENCE_FUNCTION eif_reference_function(char* rout, EIF_TYPE_ID cid) {
+EIF_REFERENCE_FUNCTION eif_reference_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_reference_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_REFERENCE_FUNCTION) 0;
+	return (EIF_REFERENCE_FUNCTION)0;
 }
 
 EIF_POINTER_FUNCTION eif_pointer_function(char* rout, EIF_TYPE_ID cid) {
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_pointer_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_POINTER_FUNCTION) 0;
+	return (EIF_POINTER_FUNCTION)0;
 }
 
-EIF_BOOLEAN_FUNCTION eif_boolean_function(char* rout, EIF_TYPE_ID cid) {
+EIF_BOOLEAN_FUNCTION eif_boolean_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_boolean_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_BOOLEAN_FUNCTION) 0;
+	return (EIF_BOOLEAN_FUNCTION)0;
 }
 
-EIF_REAL_32_FUNCTION eif_real_32_function(char* rout, EIF_TYPE_ID cid) {
+EIF_REAL_32_FUNCTION eif_real_32_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_real_32_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_REAL_32_FUNCTION) 0;
+	return (EIF_REAL_32_FUNCTION)0;
 }
 
 EIF_REAL_64_FUNCTION eif_real_64_function(char* rout, EIF_TYPE_ID cid) {
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_real_64_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_REAL_64_FUNCTION) 0;
+	return (EIF_REAL_64_FUNCTION)0;
 }
 
-EIF_CHARACTER_8_FUNCTION eif_character_8_function(char* rout, EIF_TYPE_ID cid) {
+EIF_CHARACTER_8_FUNCTION eif_character_8_function(char* rout, EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_character_8_function' in 'eif_cecil.c' not implemented\n");
-	return (EIF_CHARACTER_8_FUNCTION) 0;
+	return (EIF_CHARACTER_8_FUNCTION)0;
 }
 
-EIF_OBJECT eif_create(EIF_TYPE_ID cid) {
+EIF_OBJECT eif_create(EIF_TYPE_ID cid)
+{
 	/* TODO */
-#ifdef EIF_WINDOWS
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_create' in 'eif_cecil.c' not implemented\n");
-	return (EIF_OBJECT) 0;
+	return (EIF_OBJECT)0;
 }
 
-EIF_TYPE_ID eif_type_id(char* type_string) {
-#ifdef EIF_WINDOWS
+EIF_TYPE_ID eif_type_id(char* type_string)
+{
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_type_id' in 'eif_cecil.c' not implemented\n");
 	return EIF_NO_TYPE;
 }
 
-extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret) {
-#ifdef EIF_WINDOWS
+extern EIF_INTEGER eifaddr_offset(EIF_REFERENCE object, char *name, int * const ret)
+{
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eifaddr_offset' in 'eif_cecil.c' not implemented\n");
 	return 0;
 }
 
-EIF_TYPE_ID eiftype(EIF_OBJECT object) {
+EIF_TYPE_ID eiftype(EIF_OBJECT object)
+{
 		/* Obsolete. Use "eif_type_by_reference" instead.
-		 * Return the Type id of the specified object. 
+		 * Return the Type id of the specified object.
 		 */
-	return (EIF_TYPE_ID) object->id;
+	return (EIF_TYPE_ID)object->id;
 }
 
-EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object) {
+EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object)
+{
 		/* Return type id of the direct reference "object" */
-	return (EIF_TYPE_ID) object->id;
+	return (EIF_TYPE_ID)object->id;
 }
 
-EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32_t pos) {
-#ifdef EIF_WINDOWS
+EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32_t pos)
+{
 	GE_show_console();
-#endif
 	fprintf(stderr, "'eif_gen_param_id' in 'eif_cecil.c' not implemented\n");
 	return 0;
 }
@@ -101142,7 +101459,7 @@ extern "C" {
 		"Part of ISE Eiffel runtime. Needed to compile the EiffelCOM library."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2010-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101150,12 +101467,19 @@ extern "C" {
 
 #ifndef EIF_PLUG_C
 #define EIF_PLUG_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_PLUG_H
+#include "eif_plug.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#ifndef EIF_THREADS
+#ifndef GE_USE_THREADS
 int nstcall = 0;
 #endif
 
@@ -101279,7 +101603,7 @@ EIF_REFERENCE eename(long code)
  */
 char eedefined(long ex)
 {
-	return (char) ((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
+	return (char)((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
 }
 
 /*
@@ -101333,7 +101657,7 @@ extern "C" {
 		"C functions used to implement class REAL"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2013-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101341,6 +101665,13 @@ extern "C" {
 
 #ifndef GE_REAL_C
 #define GE_REAL_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_REAL_H
+#include "ge_real.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -101351,7 +101682,7 @@ extern "C" {
  */
 EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
 {
-	return *(EIF_NATURAL_32 *)&v;
+	return *(EIF_NATURAL_32*)&v;
 }
 
 /*
@@ -101359,7 +101690,7 @@ EIF_NATURAL_32 GE_real_32_to_bits(EIF_REAL_32 v)
  */
 EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
 {
-	return *(EIF_NATURAL_64 *)&v;
+	return *(EIF_NATURAL_64*)&v;
 }
 
 /*
@@ -101367,7 +101698,7 @@ EIF_NATURAL_64 GE_real_64_to_bits(EIF_REAL_64 v)
  */
 EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
 {
-	return *(EIF_REAL_32 *)&v;
+	return *(EIF_REAL_32*)&v;
 }
 
 /*
@@ -101375,7 +101706,7 @@ EIF_REAL_32 GE_real_32_from_bits(EIF_NATURAL_32 v)
  */
 EIF_REAL_64 GE_real_64_from_bits(EIF_NATURAL_64 v)
 {
-	return *(EIF_REAL_64 *)&v;
+	return *(EIF_REAL_64*)&v;
 }
 
 #ifdef __cplusplus
@@ -101397,7 +101728,7 @@ extern "C" {
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101405,9 +101736,21 @@ extern "C" {
 
 #ifndef EIF_FILE_C
 #define EIF_FILE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
+#ifndef EIF_FILE_H
+#include "eif_file.h"
+#endif
+#ifndef EIF_EXCEPT_H
+#include "eif_except.h"
+#endif
 #ifndef GE_STRING_H
 #include "ge_string.h"
+#endif
+#ifndef GE_REAL_H
+#include "ge_real.h"
 #endif
 
 /* HAS_CHOWN:
@@ -101643,7 +101986,7 @@ static int rt_unlink(EIF_FILENAME path)
 #endif
 }
 
-static FILE *rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
+static FILE* rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
 {
 #ifdef EIF_WINDOWS
 	return _wfopen(name, type);
@@ -101652,7 +101995,7 @@ static FILE *rt_file_fopen(EIF_FILENAME name, EIF_FILENAME type)
 #endif
 }
 
-static FILE *rt_file_fdopen(int fd, EIF_FILENAME type)
+static FILE* rt_file_fdopen(int fd, EIF_FILENAME type)
 {
 #ifdef EIF_WINDOWS
 	return _wfdopen(fd, type);
@@ -101661,7 +102004,7 @@ static FILE *rt_file_fdopen(int fd, EIF_FILENAME type)
 #endif
 }
 
-static FILE *rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE *stream)
+static FILE* rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE* stream)
 {
 #ifdef EIF_WINDOWS
 	return _wfreopen(name, type, stream);
@@ -101670,10 +102013,10 @@ static FILE *rt_file_freopen(EIF_FILENAME name, EIF_FILENAME type, FILE *stream)
 #endif
 }
 
-static int rt_utime(EIF_FILENAME path, struct utimbuf *times)
+static int rt_utime(EIF_FILENAME path, struct utimbuf* times)
 {
 #ifdef EIF_WINDOWS
-	return _wutime(path, (struct _utimbuf *) times);
+	return _wutime(path, (struct _utimbuf*)times);
 #else
 	return utime(path, times);
 #endif
@@ -101682,12 +102025,12 @@ static int rt_utime(EIF_FILENAME path, struct utimbuf *times)
 /*
  * Swallow next character if it is a new line.
  */
-static void rt_swallow_nl(FILE *f) {
+static void rt_swallow_nl(FILE* f) {
 		/* getc() cannot be used as it doesn't set the EOF flag */
 
 	if (f != stdin) {
-		if (fscanf (f, "\n") == EOF && ferror(f)) {
-			eise_io ("FILE: error during reading the end of the file,");
+		if (fscanf(f, "\n") == EOF && ferror(f)) {
+			eise_io("FILE: error during reading the end of the file,");
 		}
 	} else {
 		int c;
@@ -101702,7 +102045,7 @@ static void rt_swallow_nl(FILE *f) {
 	}
 }
 
-static void rt_file_stat (EIF_FILENAME path, rt_stat_buf *buf)
+static void rt_file_stat(EIF_FILENAME path, rt_stat_buf* buf)
 {
 		/* To preserve compatibility we always follow symbolic links and raise an exception upon failure. */
 	if (eif_file_stat(path, buf, 1) == -1) {
@@ -101711,19 +102054,13 @@ static void rt_file_stat (EIF_FILENAME path, rt_stat_buf *buf)
 }
 
 /*
- * Given `how' the file is being opened and a `mode' create a platform specific character
+ * Set `file_type', given `how' the file is being opened and a `mode' create a platform specific character
  * string (UTF-16 encoding on Windows and a byte sequence otherwise) that can be used by
  * the underlying OS system call to open the mode in the proper mode (e.g. open append,
  * read-write mode, ....).
  */
-static EIF_FILENAME rt_file_open_mode(int how, char mode)
+static void rt_file_set_open_mode(EIF_NATIVE_CHAR file_type[FILE_TYPE_MAX], int how, char mode)
 {
-#ifdef EIF_WINDOWS
-	static wchar_t file_type [FILE_TYPE_MAX];
-#else
-	static char file_type [FILE_TYPE_MAX];
-#endif
-
 	file_type[4] = '\0';
 	file_type[3] = '\0';
 	file_type[2] = '\0';
@@ -101752,21 +102089,21 @@ static EIF_FILENAME rt_file_open_mode(int how, char mode)
 	/* We make sure that files created in Eiffel are not inheritable
 	 * by default as otherwise it makes things too complicated for the
 	 * end user when spawing child processes. */
-	if (file_type [1] == '\0') {
-		file_type [1] = 'N';
-	} else if (file_type [2] == '\0') {
-		file_type [2] = 'N';
+	if (file_type[1] == '\0') {
+		file_type[1] = 'N';
+	} else if (file_type[2] == '\0') {
+		file_type[2] = 'N';
 	} else {
-		file_type [3] = 'N';
+		file_type[3] = 'N';
 	}
 #endif
-	return file_type;
 }
 
 /*
  * Create directory `dirname'.
  */
-void eif_file_mkdir(EIF_FILENAME dirname) {
+void eif_file_mkdir(EIF_FILENAME dirname)
+{
 	errno = 0;
 	if (rt_mkdir(dirname, 0777) == -1) {
 		esys(); /* Raise exception */
@@ -101776,7 +102113,8 @@ void eif_file_mkdir(EIF_FILENAME dirname) {
 /*
  * Rename file `from' into `to'.
  */
-void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
+void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to)
+{
 	for (;;) {
 #ifdef EIF_WINDOWS
 		if (eif_file_exists(to)) {
@@ -101786,9 +102124,9 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 				 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
 				 * the same. */
 			BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
-			HANDLE l_from_file = CreateFileW (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+			HANDLE l_from_file = CreateFileW(from, GENERIC_READ, FILE_SHARE_READ, NULL,
 				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-			HANDLE l_to_file = CreateFileW (to, GENERIC_READ, FILE_SHARE_READ, NULL,
+			HANDLE l_to_file = CreateFileW(to, GENERIC_READ, FILE_SHARE_READ, NULL,
 					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 			if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
@@ -101800,11 +102138,11 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 					/* For some reasons we cannot open the file. This should not happen, maybe the OS has
 					 * removed `from' or `to'. In that case, we simply try to remove destination as we were
 					 * doing in former revision of `file_rename'. */
-				_wremove (to);
+				_wremove(to);
 			} else {
-				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+				BOOL success = GetFileInformationByHandle(l_from_file, &l_from_info);
 				if (success) {
-					success = GetFileInformationByHandle (l_to_file, &l_to_info);
+					success = GetFileInformationByHandle(l_to_file, &l_to_info);
 						/* We do not need the handles anymore, simply close them. */
 					CloseHandle(l_from_file);
 					CloseHandle(l_to_file);
@@ -101815,7 +102153,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 							(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
 							(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
 						{
-							_wremove (to);
+							_wremove(to);
 						} else {
 								/* Files are identical, nothing to be done apart from */
 							break;
@@ -101824,7 +102162,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 							/* An error occurred while retrieving the information about `from' and `to'. Like
 							 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 							 * the file. */
-						_wremove (to);
+						_wremove(to);
 					}
 				} else {
 						/* We do not need the handles anymore, simply close them. */
@@ -101833,7 +102171,7 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 						/* An error occurred while retrieving the information about `from' and `to'. Like
 						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
 						 * the file. */
-					_wremove (to);
+					_wremove(to);
 				}
 			}
 		}
@@ -101849,7 +102187,8 @@ void eif_file_rename(EIF_FILENAME from, EIF_FILENAME to) {
 /*
  * Link file `from' into `to'.
  */
-void eif_file_link(EIF_FILENAME from, EIF_FILENAME to) {
+void eif_file_link(EIF_FILENAME from, EIF_FILENAME to)
+{
 #ifdef HAS_LINK
 	errno = 0;
 	if (link(from, to) == -1) {
@@ -101861,7 +102200,8 @@ void eif_file_link(EIF_FILENAME from, EIF_FILENAME to) {
 /*
  * Delete file or directory `name'.
  */
-void eif_file_unlink(EIF_FILENAME name) {
+void eif_file_unlink(EIF_FILENAME name)
+{
 	rt_stat_buf buf;				/* File statistics */
 	int status;						/* Status from system call */
 
@@ -101889,15 +102229,18 @@ void eif_file_unlink(EIF_FILENAME name) {
 /*
  * Open file `name' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_open(EIF_FILENAME name, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_open(EIF_FILENAME name, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #if defined EIF_WINDOWS
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how, (how < 10 ? 't' : 'b')));
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how, '\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fopen(name, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -101906,15 +102249,18 @@ EIF_POINTER eif_file_open(EIF_FILENAME name, int how) {
 /*
  * Open file `fd' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_dopen(int fd, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_dopen(int fd, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, (how < 10 ? 't' : 'b')));
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how, '\0'));
+	rt_file_set_open_mode(l_mode, how, '\0'));
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fdopen(fd, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -101925,15 +102271,18 @@ EIF_POINTER eif_file_dopen(int fd, int how) {
  * to the old stream described by `old'. This is useful to redirect 'stdout'
  * to another place, for instance.
  */
-EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old) {
-	FILE *fp;
+EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how, (how < 10 ? 't' : 'b')), old);
+	rt_file_set_open_mode(l_mode, how, (how < 10 ? 't' : 'b'));
 #else
-	fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how, '\0'), old);
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_freopen(name, l_mode, old);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -101942,7 +102291,8 @@ EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old) {
 /*
  * Close the file.
  */
-void eif_file_close(FILE *fp) {
+void eif_file_close(FILE* fp)
+{
 	errno = 0;
 	if (fclose(fp) != 0) {
 		esys(); /* Close failed, raise exception */
@@ -101952,7 +102302,8 @@ void eif_file_close(FILE *fp) {
 /*
  * Flush data held in stdio buffer.
  */
-void eif_file_flush(FILE *fp) {
+void eif_file_flush(FILE* fp)
+{
 	errno = 0;
 	if (fflush(fp) != 0) {
 	    esys(); /* Flush failed, raise exception */
@@ -101971,7 +102322,8 @@ void eif_file_flush(FILE *fp) {
 /*
  * Return the associated file descriptor.
  */
-EIF_INTEGER eif_file_fd(FILE *f) {
+EIF_INTEGER eif_file_fd(FILE* f)
+{
 	int res;
 	if (!f) {
 		res = 0;
@@ -101982,13 +102334,14 @@ EIF_INTEGER eif_file_fd(FILE *f) {
 			eraise("error occurred", EN_EXT);
 		}
 	}
-	return (EIF_INTEGER) res;
+	return (EIF_INTEGER)res;
 }
 
 /*
  * Get a character from `f'.
  */
-EIF_CHARACTER_8 eif_file_gc(FILE *f) {
+EIF_CHARACTER_8 eif_file_gc(FILE* f)
+{
 	int c;
 	errno = 0;
 	c = getc(f);
@@ -102003,7 +102356,8 @@ EIF_CHARACTER_8 eif_file_gc(FILE *f) {
  * with `start' being the amount of bytes already stored within s. This
  * means we really have to read (bound - start) characters.
  */
-EIF_INTEGER eif_file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
+EIF_INTEGER eif_file_gs(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
 	EIF_INTEGER amount;
 	int c = '\0';
 	EIF_INTEGER read;
@@ -102041,14 +102395,15 @@ EIF_INTEGER eif_file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) 
  * Read min (bound, remaining bytes in file) characters into `s' and
  * return the number of characters read.
  */
-EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound) {
-	size_t amount = fread(s, sizeof(char), (size_t) bound, f);
+EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound)
+{
+	size_t amount = fread(s, sizeof(char), (size_t)bound, f);
 
 	if (ferror(f)) {	/* An I/O error occurred */
 		eise_io("FILE: unable to read stream.");					/* Raise exception */
 	}
 
-	return (EIF_INTEGER) amount;	/* Number of characters read */
+	return (EIF_INTEGER)amount;	/* Number of characters read */
 }
 
 /*
@@ -102057,7 +102412,8 @@ EIF_INTEGER eif_file_gss(FILE* f, char* s, EIF_INTEGER bound) {
  * means we really have to read (bound - start) characters. Any leading
  * spaces are skipped.
  */
-EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) {
+EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
 	int c = 0;			/* Last char read */
 
@@ -102072,7 +102428,7 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 		if (c == EOF && ferror(f))	/* An I/O error occurred */
 			eise_io("FILE: unable to read word.");					/* Raise exception */
 		if (c == EOF)
-			return (EIF_INTEGER) 0;				/* Reached EOF before word */
+			return (EIF_INTEGER)0;				/* Reached EOF before word */
 		else if (EOF == ungetc(c, f))
 			eise_io("FILE: unable to read word.");
 	}
@@ -102086,7 +102442,7 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 				eise_io("FILE: unable to read word.");
 			break;
 		}
-		*s++ = (char) c;
+		*s++ = (char)c;
 	}
 
 	if (c == EOF && ferror(f))	/* An I/O error occurred */
@@ -102106,7 +102462,8 @@ EIF_INTEGER eif_file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) 
 /*
  * Look ahead one character. If EOF, return 0.
  */
-EIF_CHARACTER_8 eif_file_lh(FILE *f) {
+EIF_CHARACTER_8 eif_file_lh(FILE* f)
+{
 	int c;
 
 	errno = 0;
@@ -102117,29 +102474,31 @@ EIF_CHARACTER_8 eif_file_lh(FILE *f) {
 	if (c != EOF && EOF == ungetc(c, f))
 		eise_io("FILE: error when reading a character ahead.");
 
-	return (EIF_CHARACTER_8) (c == EOF ? (char) 0 : (char) c);
+	return (EIF_CHARACTER_8)(c == EOF ? (char)0 : (char)c);
 }
 
 /*
  * Size of file `fp'.
  */
-EIF_INTEGER eif_file_size(FILE *fp) {
+EIF_INTEGER eif_file_size(FILE* fp)
+{
 	rt_stat_buf buf;
 
 	errno = 0;
-	if (fflush (fp) != 0) {
+	if (fflush(fp) != 0) {
 		esys();
 	}
-	if (rt_fstat (fileno(fp), &buf) == -1)
+	if (rt_fstat(fileno(fp), &buf) == -1)
 		esys();		/* An error occurred: raise exception */
 		/* FIXME: This code should be upgraded to use 64-bit */
-	return (EIF_INTEGER) buf.st_size;
+	return (EIF_INTEGER)buf.st_size;
 }
 
 /*
  * Read upto next input line.
  */
-void eif_file_tnil(FILE *f) {
+void eif_file_tnil(FILE* f)
+{
 	int c;
 
 	errno = 0;
@@ -102152,10 +102511,11 @@ void eif_file_tnil(FILE *f) {
 /*
  * Current position within file.
  */
-EIF_INTEGER eif_file_tell(FILE *f) {
+EIF_INTEGER eif_file_tell(FILE* f)
+{
 	long res;
 
-	if (f == (FILE *) 0) {
+	if (f == (FILE*)0) {
 		eraise("invalid file pointer", EN_EXT);
 	}
 
@@ -102163,7 +102523,7 @@ EIF_INTEGER eif_file_tell(FILE *f) {
 	if (res == -1) {
 		eraise("error occurred", EN_EXT);
 	}
-	return (EIF_INTEGER) res;
+	return (EIF_INTEGER)res;
 }
 
 /*
@@ -102172,15 +102532,17 @@ EIF_INTEGER eif_file_tell(FILE *f) {
  * is no way within UNIX_FILE to get the current time stamp. Otherwise,
  * we could simply call file_utime.
  */
-void eif_file_touch(EIF_FILENAME name) {
-	eif_file_utime(name, time((time_t *) 0), 2);
+void eif_file_touch(EIF_FILENAME name)
+{
+	eif_file_utime(name, time((time_t*) 0), 2);
 }
 
 /*
  * Modify the modification and/or the access time stored in the file's
  * inode. The 'how' parameter tells which attributes should be set.
  */
-void eif_file_utime(EIF_FILENAME name, time_t stamp, int how) {
+void eif_file_utime(EIF_FILENAME name, time_t stamp, int how)
+{
 	struct utimbuf tp;	/* Time array */
 	rt_stat_buf buf;	/* File statistics */
 	int status;			/* System call status */
@@ -102211,7 +102573,8 @@ void eif_file_utime(EIF_FILENAME name, time_t stamp, int how) {
  * This is an encapsulation of the stat() system call. The routine either
  * succeeds and returns or fails and raises the appropriate exception.
  */
-int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
+int eif_file_stat(EIF_FILENAME path, rt_stat_buf* buf, int follow)
+{
 	int status;			/* System call status */
 
 	for (;;) {
@@ -102226,10 +102589,10 @@ int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
 				 * case is quite rare and there is a benefit in using `lstat'
 				 * over `rt_stat' the first time as more than 90% of the files
 				 * we stat are not symlink. */
-			status = rt_stat (path, buf);
+			status = rt_stat(path, buf);
 		}
 #else
-		status = rt_stat (path, buf);		/* Get file statistics */
+		status = rt_stat(path, buf);		/* Get file statistics */
 #endif
 		if ((status == -1) && (errno == EINTR)) {
 				/* Call was interrupted by a signal we re-issue it. */
@@ -102244,7 +102607,8 @@ int eif_file_stat(EIF_FILENAME path, rt_stat_buf *buf, int follow) {
  * Change permissions of file `name', using an interface like chmod(1).
  * The flag is true if permissions are to be added, 0 to remove them.
  */
-void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
+void eif_file_perm(EIF_FILENAME name, char* who, char* what, int flag)
+{
 	int fmode;					/* File mode to be altered */
 	rt_stat_buf buf;			/* File statistics */
 
@@ -102252,7 +102616,7 @@ void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
 	if (eif_file_stat(name, &buf, 1)) {
 		esys();
 	} else {
-		fmode = (int) buf.st_mode;	/* Fetch current file mode */
+		fmode = (int)buf.st_mode;	/* Fetch current file mode */
 
 		switch (*who) {
 		case 'u':
@@ -102345,7 +102709,8 @@ void eif_file_perm(EIF_FILENAME name, char *who, char *what, int flag) {
 /*
  * Change permission mode on file `path'.
  */
-void eif_file_chmod(EIF_FILENAME path, int mode) {
+void eif_file_chmod(EIF_FILENAME path, int mode)
+{
 	errno = 0;
 #ifdef EIF_WINDOWS
 	if (_wchmod(path, mode) == -1) {
@@ -102359,7 +102724,8 @@ void eif_file_chmod(EIF_FILENAME path, int mode) {
 /*
  * Change the owner of the file to `uid'.
  */
-void eif_file_chown(EIF_FILENAME name, int uid) {
+void eif_file_chown(EIF_FILENAME name, int uid)
+{
 #ifdef HAS_CHOWN
 	int gid;
 	rt_stat_buf buf;
@@ -102376,7 +102742,8 @@ void eif_file_chown(EIF_FILENAME name, int uid) {
 /*
  * Change the group of the file to `gid'.
  */
-void eif_file_chgrp(EIF_FILENAME name, int gid) {
+void eif_file_chgrp(EIF_FILENAME name, int gid)
+{
 #ifdef HAS_CHOWN
 	int uid;
 	rt_stat_buf buf;
@@ -102393,7 +102760,8 @@ void eif_file_chgrp(EIF_FILENAME name, int gid) {
 /*
  * Put new_line onto `f'.
  */
-void eif_file_tnwl(FILE *f) {
+void eif_file_tnwl(FILE *f)
+{
 	errno = 0;
 	if (putc('\n', f) == EOF) {
 		eise_io("FILE: unable to write new line.");
@@ -102403,7 +102771,8 @@ void eif_file_tnwl(FILE *f) {
 /*
  * Append a copy of `other' to `f'.
  */
-void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
+void eif_file_append(FILE* f, FILE* other, EIF_INTEGER l)
+{
 	size_t amount;
 	char buffer[512];
 	int bufsize = 512;
@@ -102425,7 +102794,7 @@ void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
 			eise_io("FILE: unable to read appended file.");
 			break;
 		}
-		l -= (EIF_INTEGER) amount;
+		l -= (EIF_INTEGER)amount;
 		if (amount != fwrite(buffer, sizeof(char), amount, f)) {
 			eise_io("FILE: unable to write appended file.");
 			break;
@@ -102436,7 +102805,8 @@ void eif_file_append(FILE *f, FILE *other, EIF_INTEGER l) {
 /*
  * Write string `str' on `f'.
  */
-void eif_file_ps(FILE *f, char *str, EIF_INTEGER len) {
+void eif_file_ps(FILE* f, char* str, EIF_INTEGER len)
+{
 	errno = 0;
 	if (len == 0) {
 		/* Nothing to be done. */
@@ -102448,7 +102818,8 @@ void eif_file_ps(FILE *f, char *str, EIF_INTEGER len) {
 /*
  * Write character `c' on `f'.
  */
-void eif_file_pc(FILE *f, char c) {
+void eif_file_pc(FILE* f, char c)
+{
 	errno = 0;
 	if (putc(c, f) == EOF) {
 		eise_io("FILE: unable to write CHARACTER value.");
@@ -102458,7 +102829,8 @@ void eif_file_pc(FILE *f, char c) {
 /*
  * Go to absolute position `pos' counted from start.
  */
-void eif_file_go(FILE *f, EIF_INTEGER pos) {
+void eif_file_go(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, pos, FS_START) != 0) {
 		esys();
@@ -102469,7 +102841,8 @@ void eif_file_go(FILE *f, EIF_INTEGER pos) {
 /*
  * Go to absolute position `pos' counted from end.
  */
-void eif_file_recede(FILE *f, EIF_INTEGER pos) {
+void eif_file_recede(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, -pos, FS_END) != 0) {
 		esys();
@@ -102480,7 +102853,8 @@ void eif_file_recede(FILE *f, EIF_INTEGER pos) {
 /*
  * Go to absolute position `pos' counted from current position.
  */
-void eif_file_move(FILE *f, EIF_INTEGER pos) {
+void eif_file_move(FILE* f, EIF_INTEGER pos)
+{
 	errno = 0;
 	if (fseek(f, pos, FS_CUR) != 0) {
 		esys();
@@ -102491,7 +102865,8 @@ void eif_file_move(FILE *f, EIF_INTEGER pos) {
 /*
  * End of file.
  */
-EIF_BOOLEAN eif_file_feof(FILE *fp) {
+EIF_BOOLEAN eif_file_feof(FILE* fp)
+{
 	return (EIF_BOOLEAN)(feof(fp) != 0);
 }
 
@@ -102499,11 +102874,12 @@ EIF_BOOLEAN eif_file_feof(FILE *fp) {
  * Test whether file exists or not. If `name' represents a symbolic link,
  * it will check that pointed file does exist.
  */
-EIF_BOOLEAN eif_file_exists(EIF_FILENAME name) {
+EIF_BOOLEAN eif_file_exists(EIF_FILENAME name)
+{
 	int status;					/* System call status */
 	rt_stat_buf buf;			/* Buffer to get file statistics */
 
-	status = eif_file_stat (name, &buf, 1);
+	status = eif_file_stat(name, &buf, 1);
 
 #ifdef EOVERFLOW
 	if (status == -1) {
@@ -102525,11 +102901,12 @@ EIF_BOOLEAN eif_file_exists(EIF_FILENAME name) {
  * Test whether file exists or not without following the symbolic link
  * if `name' represents one.
  */
-EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name) {
+EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name)
+{
 	int status;					/* System call status */
 	rt_stat_buf buf;			/* Buffer to get file statistics */
 
-	status = eif_file_stat (name, &buf, 0);
+	status = eif_file_stat(name, &buf, 0);
 
 #ifdef EOVERFLOW
 	if (status == -1) {
@@ -102552,16 +102929,17 @@ EIF_BOOLEAN eif_file_path_exists(EIF_FILENAME name) {
  * real UID and real GID. This is probably only useful to setuid or setgid
  * programs.
  */
-EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op) {
+EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op)
+{
 	switch (op) {
 	case 0: /* Does file exist? */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, F_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, F_OK)) ? '\01' : '\0');
 	case 1: /* Test for search permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, X_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, X_OK)) ? '\01' : '\0');
 	case 2: /* Test for write permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, W_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, W_OK)) ? '\01' : '\0');
 	case 3: /* Test for read permission */
-		return (EIF_BOOLEAN) ((-1 != rt_access(name, R_OK)) ? '\01' : '\0');
+		return (EIF_BOOLEAN)((-1 != rt_access(name, R_OK)) ? '\01' : '\0');
 	default:
 		return EIF_FALSE;
 	}
@@ -102572,7 +102950,8 @@ EIF_BOOLEAN eif_file_access(EIF_FILENAME name, EIF_INTEGER op) {
  * in the parent directory and there must not be any file bearing that name
  * with no write permissions...
  */
-EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
+EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes)
+{
 	rt_stat_buf buf;			/* Buffer to get parent directory statistics */
 	EIF_FILENAME temp = NULL;
 	EIF_FILENAME ptr;
@@ -102584,46 +102963,46 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
 #else
 	l_extra_bytes = sizeof(char);
 #endif
-	temp = (EIF_FILENAME) malloc (nbytes + l_extra_bytes);
+	temp = (EIF_FILENAME)malloc(nbytes + l_extra_bytes);
 	if (!temp) {
 		enomem();
 	} else {
 			/* Search the directory separator. */
 #ifdef EIF_WINDOWS
-		memcpy (temp, path, nbytes);
-		ptr = wcsrchr (temp, '\\');
+		memcpy(temp, path, nbytes);
+		ptr = wcsrchr(temp, '\\');
 		if (!ptr) {
 				/* On Windows we can have a forward slash as separator. */
-			ptr = wcsrchr (temp, '/');
+			ptr = wcsrchr(temp, '/');
 		}
 #else
-		strcpy (temp, path);
-		ptr = strrchr (temp, '/');
+		strcpy(temp, path);
+		ptr = strrchr(temp, '/');
 #endif
 		if (ptr) {
 			*ptr = '\0';
 #ifdef EIF_WINDOWS
 			if ((ptr == temp) || (*(ptr -1) == ':')) {
 					/* path is of the form a:\bbb or \bbb, parent is a:\ or \ */
-				wcscat (ptr, L"\\");
+				wcscat(ptr, L"\\");
 			}
 #endif
 		} else {
 #ifdef EIF_WINDOWS
-			wcsncpy (temp, L".", 2);
+			wcsncpy(temp, L".", 2);
 #else
-			strcpy (temp, ".");
+			strcpy(temp, ".");
 #endif
 		}
 
 			/* Does the parent exist? */
 		if (!eif_file_exists(temp)) {
-			free (temp);
-			return (EIF_BOOLEAN) '\0';
+			free(temp);
+			return (EIF_BOOLEAN)'\0';
 		}
 
 		rt_file_stat(temp, &buf);
-		free (temp);
+		free(temp);
 
 		if (S_ISDIR(buf.st_mode)) {	/* Is parent a directory? */
 			if (eif_file_eaccess(&buf, 1)) {	/* Check for write permissions */
@@ -102632,23 +103011,24 @@ EIF_BOOLEAN eif_file_creatable(EIF_FILENAME path, EIF_INTEGER nbytes) {
 					rt_file_stat(path, &buf);
 					if (S_ISDIR(buf.st_mode)) {
 							/* File exists and it is already a directory, thus we cannot create a file. */
-						return (EIF_BOOLEAN) '\0';
+						return (EIF_BOOLEAN)'\0';
 					} else {
 						return (eif_file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
 					}
 				}
 
-				return (EIF_BOOLEAN) '\01';
+				return (EIF_BOOLEAN)'\01';
 			}
 		}
 	}
-	return (EIF_BOOLEAN) '\0';
+	return (EIF_BOOLEAN)'\0';
 }
 
 /*
  * Get an integer from `f'.
  */
-EIF_INTEGER eif_file_gi(FILE *f) {
+EIF_INTEGER eif_file_gi(FILE* f)
+{
 	EIF_INTEGER i;
 
 	errno = 0;
@@ -102662,7 +103042,8 @@ EIF_INTEGER eif_file_gi(FILE *f) {
 /*
  * Get a real from `f'.
  */
-EIF_REAL_32 eif_file_gr(FILE *f) {
+EIF_REAL_32 eif_file_gr(FILE* f)
+{
 	EIF_REAL_32 r;
 	errno = 0;
 	if (fscanf(f, "%f", &r) < 0) {
@@ -102675,7 +103056,8 @@ EIF_REAL_32 eif_file_gr(FILE *f) {
 /*
  * Get a double from `f'.
  */
-EIF_REAL_64 eif_file_gd(FILE *f) {
+EIF_REAL_64 eif_file_gd(FILE* f)
+{
 	EIF_REAL_64 d;
 	errno = 0;
 	if (fscanf(f, "%lf", &d) < 0) {
@@ -102688,7 +103070,8 @@ EIF_REAL_64 eif_file_gd(FILE *f) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pi(FILE *f, EIF_INTEGER number) {
+void eif_file_pi(FILE* f, EIF_INTEGER number)
+{
 	errno = 0;
 	if (fprintf(f, "%d", number) < 0) {
 		eise_io("FILE: unable to write INTEGER value.");
@@ -102698,18 +103081,19 @@ void eif_file_pi(FILE *f, EIF_INTEGER number) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pr(FILE *f, EIF_REAL_32 number) {
+void eif_file_pr(FILE* f, EIF_REAL_32 number)
+{
 	int res;
 	errno = 0;
 
 	if (number != number) {
-		res = fprintf (f, "%s", "NaN");
+		res = fprintf(f, "%s", "NaN");
 	} else if (GE_real_32_is_negative_infinity(number)) {
-		res = fprintf (f, "%s", "-Infinity");
+		res = fprintf(f, "%s", "-Infinity");
 	} else if (GE_real_32_is_positive_infinity(number)) {
-		res = fprintf (f, "%s", "Infinity");
+		res = fprintf(f, "%s", "Infinity");
 	} else {
-		res = fprintf (f, "%g", number);
+		res = fprintf(f, "%g", number);
 	}
     if (res < 0) {
 		eise_io("FILE: unable to write REAL_32 value.");
@@ -102719,16 +103103,17 @@ void eif_file_pr(FILE *f, EIF_REAL_32 number) {
 /*
  * Write double `val' onto `f'.
  */
-void eif_file_pd(FILE *f, EIF_REAL_64 val) {
+void eif_file_pd(FILE* f, EIF_REAL_64 val)
+{
 	int res;
 	errno = 0;
 
 	if (val != val) {
-		res = fprintf (f, "%s", "NaN");
+		res = fprintf(f, "%s", "NaN");
 	} else if (GE_real_64_is_negative_infinity(val)) {
-		res = fprintf (f, "%s", "-Infinity");
+		res = fprintf(f, "%s", "-Infinity");
 	} else if (GE_real_64_is_positive_infinity(val)) {
-			res = fprintf (f, "%s", "Infinity");
+			res = fprintf(f, "%s", "Infinity");
 	} else {
 		res = fprintf(f, "%.17g", val);
 	}
@@ -102743,7 +103128,8 @@ void eif_file_pd(FILE *f, EIF_REAL_64 val) {
  * the area (special object) which will play the role of a stat buffer
  * structure.
  */
-EIF_INTEGER stat_size(void) {
+EIF_INTEGER stat_size(void)
+{
 	return (EIF_INTEGER)sizeof(rt_stat_buf);
 }
 
@@ -102751,16 +103137,17 @@ EIF_INTEGER stat_size(void) {
 /*
  * Does the list of groups the user belongs to include `gid'?
  */
-static EIF_BOOLEAN eif_group_in_list(int gid) {
-	Groups_t *group_list;
+static EIF_BOOLEAN eif_group_in_list(int gid)
+{
+	Groups_t* group_list;
 	int i, nb_groups, nb_groups_max;
 
-	nb_groups_max = getgroups(0, (Groups_t *)0);
+	nb_groups_max = getgroups(0, (Groups_t*)0);
 	if (nb_groups_max <= 0) {
 		return EIF_FALSE;
 	} else {
-		group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
-		if (group_list == (Groups_t *)0) {
+		group_list = (Groups_t*)malloc(nb_groups_max * sizeof(Groups_t));
+		if (group_list == (Groups_t*)0) {
 			xraise(EN_IO);
 			return EIF_FALSE;
 		} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
@@ -102785,7 +103172,8 @@ static EIF_BOOLEAN eif_group_in_list(int gid) {
  * current permission mode is held in the st_mode field of the stat()
  * buffer structure `buf'.
  */
-EIF_BOOLEAN eif_file_eaccess(rt_stat_buf *buf, int op) {
+EIF_BOOLEAN eif_file_eaccess(rt_stat_buf* buf, int op)
+{
 	int mode = buf->st_mode & ST_MODE;	/* Current mode */
 #ifdef HAS_GETEUID
 	int uid = buf->st_uid;				/* File owner */
@@ -102893,54 +103281,55 @@ EIF_BOOLEAN eif_file_eaccess(rt_stat_buf *buf, int op) {
  * Perform the field dereferencing from the appropriate stat structure,
  * which Eiffel cannot do directly.
  */
-EIF_INTEGER eif_file_info(rt_stat_buf *buf, int op) {
+EIF_INTEGER eif_file_info(rt_stat_buf* buf, int op)
+{
 	switch (op) {
 	case 0:	/* File permission mode */
 		return (EIF_INTEGER)(buf->st_mode & ST_MODE);
 	case 1:	/* Inode number */
 		return (EIF_INTEGER)buf->st_ino;
 	case 2:	/* Device inode resides on */
-		return (EIF_INTEGER) buf->st_dev;
+		return (EIF_INTEGER)buf->st_dev;
 	case 3:	/* Device type */
-		return (EIF_INTEGER) buf->st_rdev;
+		return (EIF_INTEGER)buf->st_rdev;
 	case 4:	/* UID of file */
-		return (EIF_INTEGER) buf->st_uid;
+		return (EIF_INTEGER)buf->st_uid;
 	case 5:	/* GID of file */
-		return (EIF_INTEGER) buf->st_gid;
+		return (EIF_INTEGER)buf->st_gid;
 	case 6:	/* Size of file, in bytes */
 			/* FIXME: This code should be upgraded to use 64-bit */
 		return (EIF_INTEGER) buf->st_size;
 	case 7:	/* Last modification time on file */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_mtime;
+		return (EIF_INTEGER)buf->st_mtime;
 	case 8:	/* Last access made on file */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_atime;
+		return (EIF_INTEGER)buf->st_atime;
 	case 9:	/* Last status change */
 			/* FIXME: This code should be upgraded to use 64-bit */
-		return (EIF_INTEGER) buf->st_ctime;
+		return (EIF_INTEGER)buf->st_ctime;
 	case 10: /* Number of links */
-		return (EIF_INTEGER) buf->st_nlink;
+		return (EIF_INTEGER)buf->st_nlink;
 	case 11: /* File type */
-		return (EIF_INTEGER) (buf->st_mode & S_IFMT);
+		return (EIF_INTEGER)(buf->st_mode & S_IFMT);
 	case 12: /* Is file a directory */
-		return (EIF_INTEGER) S_ISDIR(buf->st_mode);
+		return (EIF_INTEGER)S_ISDIR(buf->st_mode);
 	case 13: /* Is file a regular (plain) one */
 		if (S_ISREG(buf->st_mode) || (0 == (buf->st_mode & S_IFMT)))
-			return (EIF_INTEGER) EIF_TRUE;
-		return (EIF_INTEGER) 0;
+			return (EIF_INTEGER)EIF_TRUE;
+		return (EIF_INTEGER)0;
 	case 14: /* Is file a device, ie character or block device. */
 		return (S_ISCHR(buf->st_mode) || S_ISBLK(buf->st_mode));
 	case 15: /* Is file a character device */
-		return (EIF_INTEGER) S_ISCHR(buf->st_mode);
+		return (EIF_INTEGER)S_ISCHR(buf->st_mode);
 	case 16: /* Is file a block device */
-		return (EIF_INTEGER) S_ISBLK(buf->st_mode);
+		return (EIF_INTEGER)S_ISBLK(buf->st_mode);
 	case 17: /* Is file a FIFO */
-		return (EIF_INTEGER) S_ISFIFO(buf->st_mode);
+		return (EIF_INTEGER)S_ISFIFO(buf->st_mode);
 	case 18: /* Is file a symbolic link */
-		return (EIF_INTEGER) S_ISLNK(buf->st_mode);
+		return (EIF_INTEGER)S_ISLNK(buf->st_mode);
 	case 19: /* Is file a socket */
-		return (EIF_INTEGER) S_ISSOCK(buf->st_mode);
+		return (EIF_INTEGER)S_ISSOCK(buf->st_mode);
 	default:
 		return (EIF_INTEGER)0;
     }
@@ -102951,13 +103340,14 @@ EIF_INTEGER eif_file_info(rt_stat_buf *buf, int op) {
  * if found in /etc/passwd. Otherwise, return fill it in with the numeric
  * value.
  */
-EIF_REFERENCE eif_file_owner(int uid) {
+EIF_REFERENCE eif_file_owner(int uid)
+{
 	char str[NAME_MAX];
 #ifdef HAS_GETPWUID
-	struct passwd *pp;
+	struct passwd* pp;
 
 	pp = getpwuid(uid);
-	if (pp == (struct passwd *) 0)
+	if (pp == (struct passwd*) 0)
 		sprintf(str, "%d", uid);		/* Not available: use UID */
 	else
 		strcpy(str, pp->pw_name);		/* Available: fetch login name */
@@ -102972,13 +103362,14 @@ EIF_REFERENCE eif_file_owner(int uid) {
  * if found in /etc/group. Otherwise, return fill it in with the numeric
  * value.
  */
-EIF_REFERENCE eif_file_group(int gid) {
+EIF_REFERENCE eif_file_group(int gid)
+{
 	char str[NAME_MAX];
 #ifdef HAS_GETGRGID
-	struct group *gp; /* %%ss moved from above */
+	struct group* gp; /* %%ss moved from above */
 
 	gp = getgrgid(gid);
-	if (gp == (struct group *) 0)
+	if (gp == (struct group*)0)
 		sprintf(str, "%d", gid);		/* Not available: use GID */
 	else
 		strcpy(str, gp->gr_name);		/* Available: fetch login name */
@@ -102991,10 +103382,11 @@ EIF_REFERENCE eif_file_group(int gid) {
 /*
  * Get an integer from `f'.
  */
-EIF_INTEGER eif_file_gib(FILE* f) {
+EIF_INTEGER eif_file_gib(FILE* f)
+{
 	EIF_INTEGER i;
 	errno = 0;
-	if (fread (&i, sizeof (EIF_INTEGER), 1, f) != 1) {
+	if (fread (&i, sizeof(EIF_INTEGER), 1, f) != 1) {
 		eise_io("FILE: unable to read INTEGER value.");
 	}
 	return i;
@@ -103003,10 +103395,11 @@ EIF_INTEGER eif_file_gib(FILE* f) {
 /*
  * Get a real from `f'.
  */
-EIF_REAL_32 eif_file_grb(FILE* f) {
+EIF_REAL_32 eif_file_grb(FILE* f)
+{
 	EIF_REAL_32 r;
 	errno = 0;
-	if (fread (&r, sizeof (EIF_REAL_32), 1, f) != 1) {
+	if (fread (&r, sizeof(EIF_REAL_32), 1, f) != 1) {
 		eise_io("FILE: unable to read REAL_32 value.");
 	}
 	return r;
@@ -103015,7 +103408,8 @@ EIF_REAL_32 eif_file_grb(FILE* f) {
 /*
  * Get a double from `f'.
  */
-EIF_REAL_64 eif_file_gdb(FILE* f) {
+EIF_REAL_64 eif_file_gdb(FILE* f)
+{
 	EIF_REAL_64 d;
 	errno = 0;
 	if (fread (&d, sizeof(EIF_REAL_64), 1, f) != 1) {
@@ -103029,14 +103423,16 @@ EIF_REAL_64 eif_file_gdb(FILE* f) {
  */
 EIF_POINTER eif_file_binary_open(EIF_FILENAME name, int how)
 {
-	FILE *fp;
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how,'b'));
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-	fp = (FILE *)rt_file_fopen(name, rt_file_open_mode(how,'\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fopen(name, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -103046,15 +103442,18 @@ EIF_POINTER eif_file_binary_open(EIF_FILENAME name, int how)
 /*
  * Open file `fd' with the corresponding type `how'.
  */
-EIF_POINTER eif_file_binary_dopen(int fd, int how) {
-	FILE *fp;
+EIF_POINTER eif_file_binary_dopen(int fd, int how)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-		fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how,'b'));
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-		fp = (FILE *)rt_file_fdopen(fd, rt_file_open_mode(how,'\0'));
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_fdopen(fd, l_mode);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -103065,15 +103464,18 @@ EIF_POINTER eif_file_binary_dopen(int fd, int how) {
  * to the old stream described by `old'. This is useful to redirect 'stdout'
  * to another place, for instance.
  */
-EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old) {
-	FILE *fp;
+EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old)
+{
+	FILE* fp;
+	EIF_NATIVE_CHAR l_mode[FILE_TYPE_MAX];
 	errno = 0;
 #ifdef EIF_WINDOWS
-		fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how,'b'), old);
+	rt_file_set_open_mode(l_mode, how, 'b');
 #else
-		fp = (FILE *)rt_file_freopen(name, rt_file_open_mode(how,'\0'), old);
+	rt_file_set_open_mode(l_mode, how, '\0');
 #endif
-	if (fp == (FILE *)0) {
+	fp = (FILE*)rt_file_freopen(name, l_mode, old);
+	if (fp == (FILE*)0) {
 		esys(); /* Open failed, raise exception */
 	}
 	return (EIF_POINTER)fp;
@@ -103082,7 +103484,8 @@ EIF_POINTER eif_file_binary_reopen(EIF_FILENAME name, int how, FILE* old) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_pib(FILE* f, EIF_INTEGER number) {
+void eif_file_pib(FILE* f, EIF_INTEGER number)
+{
 	errno = 0;
 	if (fwrite(&number, sizeof(EIF_INTEGER),1, f) != 1) {
 		eise_io("FILE: unable to write INTEGER value.");
@@ -103092,7 +103495,8 @@ void eif_file_pib(FILE* f, EIF_INTEGER number) {
 /*
  * Write `number' on `f'.
  */
-void eif_file_prb(FILE* f, EIF_REAL_32 number) {
+void eif_file_prb(FILE* f, EIF_REAL_32 number)
+{
 	errno = 0;
     if (fwrite(&number, sizeof(EIF_REAL_32),1, f) != 1) {
 		eise_io("FILE: unable to write REAL_32 value.");
@@ -103102,7 +103506,8 @@ void eif_file_prb(FILE* f, EIF_REAL_32 number) {
 /*
  * Write double `val' onto `f'.
  */
-void eif_file_pdb(FILE* f, EIF_REAL_64 val) {
+void eif_file_pdb(FILE* f, EIF_REAL_64 val)
+{
 	errno = 0;
 	if (fwrite (&val, sizeof(EIF_REAL_64), 1, f) != 1) {
 		eise_io("FILE: unable to write REAL_64 value.");
@@ -103114,7 +103519,7 @@ void eif_file_pdb(FILE* f, EIF_REAL_64 val) {
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  * mode: Mode of operation: non-zero for modification and zero for access time.
  */
-static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
+static EIF_INTEGER eif_file_date_for(EIF_FILENAME name, int mode)
 {
 	EIF_INTEGER result = 0;
 #ifdef EIF_WINDOWS
@@ -103136,11 +103541,11 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
 	HANDLE l_file_handle;
 	ULARGE_INTEGER l_date;
 
-	l_file_handle = FindFirstFileW (name, &l_find_data);
+	l_file_handle = FindFirstFileW(name, &l_find_data);
 	if (l_file_handle != INVALID_HANDLE_VALUE) {
 			/* We do not need the file handle anymore, so we close it to
 			 * avoid handle leak. */
-		FindClose (l_file_handle);
+		FindClose(l_file_handle);
 		if (mode) {
 			l_date.LowPart = l_find_data.ftLastWriteTime.dwLowDateTime;
 			l_date.HighPart = l_find_data.ftLastWriteTime.dwHighDateTime;
@@ -103160,12 +103565,12 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
 			 *	epoch_date.HighPart = epoch_file.dwHighDateTime;
 			 * time_shift = epoch_date.QuadPart / 10000000UL; // 11644473600
 			 */
-		result = (EIF_INTEGER) (l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
+		result = (EIF_INTEGER)(l_date.QuadPart / GE_nat64(10000000) - GE_nat64(11644473600));
 	}
 #else
 	rt_stat_buf	info;
-	if (-1 != eif_file_stat (name, &info, 1)) {
-		result = (mode ?  (EIF_INTEGER) info.st_mtime: (EIF_INTEGER) info.st_atime);
+	if (-1 != eif_file_stat(name, &info, 1)) {
+		result = (mode ? (EIF_INTEGER)info.st_mtime: (EIF_INTEGER)info.st_atime);
 	}
 #endif
 	return result;
@@ -103175,16 +103580,18 @@ static EIF_INTEGER eif_file_date_for (EIF_FILENAME name, int mode)
  * Modification time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_date (EIF_FILENAME  name) {
-	return eif_file_date_for (name, 1);
+EIF_INTEGER eif_file_date (EIF_FILENAME name)
+{
+	return eif_file_date_for(name, 1);
 }
 
 /*
  * Access time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-EIF_INTEGER eif_file_access_date (EIF_FILENAME  name) {
-	return eif_file_date_for (name, 0);
+EIF_INTEGER eif_file_access_date (EIF_FILENAME name)
+{
+	return eif_file_date_for(name, 0);
 }
 
 #ifdef __cplusplus
@@ -103206,7 +103613,7 @@ extern "C" {
 		"C functions used to implement class CONSOLE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103214,6 +103621,19 @@ extern "C" {
 
 #ifndef EIF_CONSOLE_C
 #define EIF_CONSOLE_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_CONSOLE_H
+#include "eif_console.h"
+#endif
+#ifndef EIF_FILE_H
+#include "eif_file.h"
+#endif
+#ifndef GE_CONSOLE_H
+#include "ge_console.h"
+#endif
 
 #include <stdio.h>
 
@@ -103221,9 +103641,8 @@ extern "C" {
 extern "C" {
 #endif
 
-#define eif_show_console GE_show_console
-
-EIF_POINTER console_def(EIF_INTEGER file) {
+EIF_POINTER console_def(EIF_INTEGER file)
+{
 	switch (file) {
 	case 0:
 		return (EIF_POINTER)stdin;
@@ -103238,122 +103657,105 @@ EIF_POINTER console_def(EIF_INTEGER file) {
 	}
 }
 
-EIF_BOOLEAN console_eof(FILE* fp) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_BOOLEAN console_eof(FILE* fp)
+{
+	GE_show_console();
 	return eif_file_feof(fp);
 }
 
-EIF_CHARACTER_8 console_separator(FILE *f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_CHARACTER_8 console_separator(FILE *f)
+{
+	GE_show_console();
 	return eif_file_lh(f);
 }
 
-void console_ps(FILE* f, char* str, EIF_INTEGER len) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_ps(FILE* f, char* str, EIF_INTEGER len)
+{
+	GE_show_console();
 	eif_file_ps(f, str, len);
 }
 
-void console_pr(FILE* f, EIF_REAL_32 number) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_pr(FILE* f, EIF_REAL_32 number)
+{
+	GE_show_console();
 	eif_file_pr(f, number);
 }
 
-void console_pc(FILE* f, EIF_CHARACTER_8 c) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_pc(FILE* f, EIF_CHARACTER_8 c)
+{
+	GE_show_console();
 	eif_file_pc(f, c);
 }
 
-void console_pd(FILE* f, EIF_REAL_64 val) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_pd(FILE* f, EIF_REAL_64 val)
+{
+	GE_show_console();
 	eif_file_pd(f, val);
 }
 
-void console_pi(FILE* f, EIF_INTEGER number) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_pi(FILE* f, EIF_INTEGER number)
+{
+	GE_show_console();
 	eif_file_pi(f, number);
 }
 
-void console_tnwl(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_tnwl(FILE* f)
+{
+	GE_show_console();
 	console_pc(f,'\n');
 }
 
-EIF_CHARACTER_8 console_readchar(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_CHARACTER_8 console_readchar(FILE* f)
+{
+	GE_show_console();
 	return eif_file_gc(f);
 }
 
-EIF_REAL_32 console_readreal(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_REAL_32 console_readreal(FILE* f)
+{
+	GE_show_console();
 	return eif_file_gr(f);
 }
 
-EIF_INTEGER console_readint(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_INTEGER console_readint(FILE* f)
+{
+	GE_show_console();
 	return eif_file_gi(f);
 }
 
-EIF_REAL_64 console_readdouble(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_REAL_64 console_readdouble(FILE* f)
+{
+	GE_show_console();
 	return eif_file_gd(f);
 }
 
-EIF_INTEGER console_readword(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_INTEGER console_readword(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
+	GE_show_console();
 	return eif_file_gw(f, s, bound, start);
 }
 
-EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start)
+{
+	GE_show_console();
 	return eif_file_gs(f, s, bound, start);
 }
 
-void console_next_line(FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_next_line(FILE* f)
+{
+	GE_show_console();
 	eif_file_tnil(f);
 }
 
-EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound)
+{
+	GE_show_console();
 	return eif_file_gss(f, s, bound);
 }
 
-void console_file_close (FILE* f) {
-#ifdef EIF_WINDOWS
-	eif_show_console();
-#endif
+void console_file_close (FILE* f)
+{
+	GE_show_console();
 	eif_file_close(f);
 }
 
@@ -103373,35 +103775,10 @@ extern "C" {
 /*
 	description:
 
-		"C functions used to access DLLs"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef GE_DLL_C
-#define GE_DLL_C
-
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
 		"C functions used to implement class EXECUTION_ENVIRONMENT"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103409,6 +103786,13 @@ extern "C" {
 
 #ifndef EIF_MISC_C
 #define EIF_MISC_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_MISC_H
+#include "eif_misc.h"
+#endif
 
 #include <stdlib.h>
 #ifdef WIN32
@@ -103425,7 +103809,8 @@ extern "C" {
 extern "C" {
 #endif
 
-EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s) {
+EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s)
+{
 #ifdef EIF_WINDOWS
 	return (EIF_INTEGER)_wsystem(s);
 #else
@@ -103433,7 +103818,8 @@ EIF_INTEGER eif_system(EIF_NATIVE_CHAR* s) {
 #endif
 }
 
-void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd) {
+void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd)
+{
 #ifdef EIF_WINDOWS
 	STARTUPINFOW siStartInfo;
 	PROCESS_INFORMATION procinfo;
@@ -103441,7 +103827,7 @@ void eif_system_asynchronous(EIF_NATIVE_CHAR* cmd) {
 	EIF_INTEGER result;
 
 	current_dir = (wchar_t*)_wgetcwd(NULL, PATH_MAX);
-	memset(&siStartInfo, 0, sizeof siStartInfo);
+	memset(&siStartInfo, 0, sizeof(siStartInfo));
 	siStartInfo.cb = sizeof(STARTUPINFO);
 	siStartInfo.lpTitle = NULL;
 	siStartInfo.lpReserved = NULL;
@@ -103524,7 +103910,7 @@ void eif_sleep(EIF_INTEGER_64 nanoseconds)
 	while (total_time > 0) {
 			/* Sleep for maximum timeout not exceeding time left */
 		if (timeout > total_time) {
-			timeout = (EIF_SLEEP_TYPE) total_time;
+			timeout = (EIF_SLEEP_TYPE)total_time;
 		}
 		EIF_SLEEP_FUNCTION(timeout);
 		total_time -= timeout;
@@ -103554,7 +103940,7 @@ extern "C" {
 		"C functions used to implement class DIRECTORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103562,6 +103948,13 @@ extern "C" {
 
 #ifndef EIF_DIR_C
 #define EIF_DIR_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef EIF_DIR_H
+#include "eif_dir.h"
+#endif
 
 #ifdef EIF_WINDOWS
 #ifdef __cplusplus
@@ -103704,7 +104097,8 @@ extern "C" {
 #	define rt_access		access
 #endif
 
-EIF_POINTER eif_dir_open(EIF_FILENAME dirname) {
+EIF_POINTER eif_dir_open(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* result = (GE_directory*)malloc(sizeof(GE_directory));
 	result->name = dirname;
@@ -103715,7 +104109,8 @@ EIF_POINTER eif_dir_open(EIF_FILENAME dirname) {
 #endif
 }
 
-EIF_POINTER eif_dir_next(EIF_POINTER dir) {
+EIF_POINTER eif_dir_next(EIF_POINTER dir)
+{
 #ifdef EIF_WINDOWS
 	BOOL r;
 	size_t a_name_length;
@@ -103762,7 +104157,8 @@ EIF_POINTER eif_dir_next(EIF_POINTER dir) {
 #endif
 }
 
-EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name) {
+EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* GE_dir = (GE_directory*)dir;
 	HANDLE h = GE_dir->handle;
@@ -103778,7 +104174,8 @@ EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name) {
 	return GE_dir;
 }
 
-void eif_dir_close(EIF_POINTER dir) {
+void eif_dir_close(EIF_POINTER dir)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* GE_dir = (GE_directory*)dir;
 	HANDLE h = GE_dir->handle;
@@ -103793,13 +104190,15 @@ void eif_dir_close(EIF_POINTER dir) {
 #endif
 }
 
-EIF_BOOLEAN eif_dir_exists(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_exists(EIF_FILENAME dirname)
+{
 	rt_stat_buf buf;
 
 	return (EIF_BOOLEAN) ((!rt_stat (dirname, &buf) && S_ISDIR(buf.st_mode)) ? EIF_TRUE : EIF_FALSE);
 }
 
-EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
 	return (EIF_BOOLEAN) (_waccess (dirname, R_OK) != -1);
 #else
@@ -103822,16 +104221,17 @@ EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname) {
 		return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, F_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess (dirname, F_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -103852,16 +104252,17 @@ EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname) {
 		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, W_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess (dirname, W_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -103882,19 +104283,20 @@ EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname) {
 		return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_deletable (EIF_FILENAME name)
+EIF_BOOLEAN eif_dir_is_deletable(EIF_FILENAME name)
 {
-	return eif_dir_is_writable (name);
+	return eif_dir_is_writable(name);
 }
 
-EIF_CHARACTER_8 eif_dir_separator(void) {
+EIF_CHARACTER_8 eif_dir_separator(void)
+{
 #ifdef EIF_WINDOWS
 	return (EIF_CHARACTER_8)'\\';
 #else
@@ -103902,7 +104304,8 @@ EIF_CHARACTER_8 eif_dir_separator(void) {
 #endif
 }
 
-EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
+EIF_INTEGER eif_dir_current(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
+{
 	EIF_INTEGER l_nbytes;
 
 #ifdef EIF_WINDOWS
@@ -103911,26 +104314,26 @@ EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
 	drive [0] = '.';
 	drive [1] = '\0';
 		/* First calculate the length of the buffer we need to hold the current working directory. */
-	l_nbytes = (GetFullPathNameW (drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t) ;
+	l_nbytes = (GetFullPathNameW(drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t) ;
 
 	if (l_nbytes == 0) {
 			/* Failure: we cannot retrieve our current directory. */
 		l_nbytes = -1;
 	} else {
 		if (a_buffer && (a_count >= l_nbytes)) {
-			l_nbytes = (GetFullPathNameW (drive, l_nbytes / sizeof(wchar_t), a_buffer, &subpart) + 1) * sizeof(wchar_t);
+			l_nbytes = (GetFullPathNameW(drive, l_nbytes / sizeof(wchar_t), a_buffer, &subpart) + 1) * sizeof(wchar_t);
 		}
 	}
 	return l_nbytes;
 
 #else
 	char *cwd;
-	cwd = getcwd (NULL, PATH_MAX);
+	cwd = getcwd(NULL, PATH_MAX);
 
 	if (cwd) {
 		l_nbytes = (strlen(cwd) + 1) * sizeof(char);
 		if (a_buffer && (a_count >= l_nbytes)) {
-			memcpy (a_buffer, cwd, l_nbytes);
+			memcpy(a_buffer, cwd, l_nbytes);
 		}
 		free(cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
 	} else {
@@ -103942,11 +104345,12 @@ EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
 #endif
 }
 
-EIF_INTEGER eif_chdir(EIF_FILENAME path) {
+EIF_INTEGER eif_chdir(EIF_FILENAME path)
+{
 #ifdef EIF_WINDOWS
-	return _wchdir (path);
+	return _wchdir(path);
 #else
-	return chdir (path);
+	return chdir(path);
 #endif
 }
 
@@ -103969,7 +104373,7 @@ extern "C" {
 		"C functions used to implement class COM_FAILURE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -103984,6 +104388,7 @@ extern "C" {
 #ifndef GE_COM_FAILURE_H
 #include "ge_com_failure.h"
 #endif
+
 #ifdef EIF_WINDOWS
 #include <winerror.h>
 #include <tchar.h>
@@ -103996,17 +104401,17 @@ extern "C" {
 EIF_INTEGER GE_ccom_hresult(EIF_POINTER an_exception_code)
 {
 #ifdef EIF_WINDOWS
-	char *stopstring = NULL;
+	char* stopstring = NULL;
 	long result = 0, high_bits = 0, low_bits = 0;
-	char high_str [7];
-	char *exception_code = (char *)(an_exception_code);
+	char high_str[7];
+	char* exception_code = (char*)(an_exception_code);
 
 	if (exception_code != NULL) {
-		strncpy (high_str, exception_code, 6);
-		high_str [6] = '\0';
+		strncpy(high_str, exception_code, 6);
+		high_str[6] = '\0';
 
-		high_bits = strtol (high_str, &stopstring, 16);
-		low_bits = strtol (exception_code + 6, &stopstring, 16);
+		high_bits = strtol(high_str, &stopstring, 16);
+		low_bits = strtol(exception_code + 6, &stopstring, 16);
 		result = (high_bits << 16) + low_bits;
 	}
 	return (EIF_INTEGER)result;
@@ -104046,7 +104451,7 @@ EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 		NULL,
 		a_code,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-		(LPTSTR) &result,
+		(LPTSTR)&result,
 		0,
 		NULL
 		);
@@ -104062,7 +104467,7 @@ EIF_POINTER GE_ccom_error_text(EIF_INTEGER a_code)
 EIF_INTEGER_32 GE_ccom_strlen(EIF_POINTER ptr)
 {
 #ifdef EIF_WINDOWS
-	return (EIF_INTEGER_32) _tcslen ((TCHAR *) ptr);
+	return (EIF_INTEGER_32)_tcslen((TCHAR*)ptr);
 #else
 	return 0;
 #endif
@@ -104086,7 +104491,7 @@ EIF_INTEGER_32 GE_ccom_character_size()
 void GE_ccom_local_free(EIF_POINTER a_ptr)
 {
 #ifdef EIF_WINDOWS
-	LocalFree((HLOCAL) a_ptr);
+	LocalFree((HLOCAL)a_ptr);
 #endif
 }
 

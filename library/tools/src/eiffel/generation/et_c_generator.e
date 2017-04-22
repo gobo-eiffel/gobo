@@ -632,13 +632,13 @@ feature {NONE} -- Compilation script generation
 					l_c_config_parser.define_value ("True", "EIF_WORKBENCH")
 				end
 				if use_boehm_gc then
-					l_c_config_parser.define_value ("True", "EIF_BOEHM_GC")
+					l_c_config_parser.define_value ("True", c_ge_use_boehm_gc)
 				end
 				if console_application_mode then
 					l_c_config_parser.define_value ("True", "EIF_CONSOLE")
 				end
 				if multithreaded_mode then
-					l_c_config_parser.define_value ("True", "EIF_THREADS")
+					l_c_config_parser.define_value ("True", c_ge_use_threads)
 				end
 				l_c_config_parser.parse_file (l_file)
 				l_file.close
@@ -819,23 +819,32 @@ feature {NONE} -- C code Generation
 				if use_boehm_gc then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
-					header_file.put_line (c_eif_boehm_gc)
+					header_file.put_line (c_ge_use_boehm_gc)
 					header_file.put_new_line
 				end
 				if multithreaded_mode then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
-					header_file.put_line (c_eif_threads)
+					header_file.put_line (c_ge_use_threads)
 					header_file.put_new_line
 				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
+				if multithreaded_mode then
+					include_runtime_header_file ("ge_thread_types.h", True, header_file)
+					header_file.put_new_line
+				end
+				include_runtime_header_file ("ge_exception.h", True, header_file)
+				header_file.put_new_line
+				if multithreaded_mode then
+					include_runtime_header_file ("ge_thread.h", True, header_file)
+					header_file.put_new_line
+				end
 				include_runtime_header_file ("ge_native_string.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
 				header_file.put_new_line
-				include_runtime_header_file ("ge_exception.h", True, header_file)
-				header_file.put_new_line
+
 				include_runtime_header_file ("ge_types.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_string.h", True, header_file)
@@ -848,10 +857,6 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				include_runtime_header_file ("ge_identified.h", True, header_file)
 				header_file.put_new_line
-				if multithreaded_mode then
-					include_runtime_header_file ("ge_thread.h", True, header_file)
-					header_file.put_new_line
-				end
 					-- Two header files needed to compile EiffelCOM.
 				include_runtime_header_file ("eif_cecil.h", False, header_file)
 				include_runtime_header_file ("eif_plug.h", False, header_file)
@@ -951,7 +956,7 @@ feature {NONE} -- C code Generation
 					-- Include runtime C files.
 				from included_runtime_c_files.start until included_runtime_c_files.after loop
 					print_end_extern_c (current_file)
-					include_runtime_c_file (included_runtime_c_files.item_for_iteration, current_file)
+					include_runtime_file (included_runtime_c_files.item_for_iteration, current_file)
 					print_start_extern_c (current_file)
 					flush_to_c_file
 					included_runtime_c_files.forth
@@ -960,7 +965,7 @@ feature {NONE} -- C code Generation
 				header_file.put_new_line
 				from included_runtime_header_files.start until included_runtime_header_files.after loop
 					if not included_runtime_header_files.item_for_iteration then
-						include_runtime_c_file (included_runtime_header_files.key_for_iteration, header_file)
+						include_runtime_file (included_runtime_header_files.key_for_iteration, header_file)
 					end
 					included_runtime_header_files.forth
 				end
@@ -16796,9 +16801,9 @@ feature {NONE} -- Deep features generation
 					current_file.put_string (c_ifndef)
 					current_file.put_character (' ')
 					if l_special_type.has_nested_reference_attributes then
-						current_file.put_line (c_ge_alloc_cleared)
+						current_file.put_line (c_ge_malloc_cleared)
 					else
-						current_file.put_line (c_ge_alloc_atomic_cleared)
+						current_file.put_line (c_ge_malloc_atomic_cleared)
 					end
 					print_indentation
 					current_file.put_string (c_memset)
@@ -25525,9 +25530,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
 				if l_special_type.has_nested_reference_attributes then
-					current_file.put_line (c_ge_alloc_cleared)
+					current_file.put_line (c_ge_malloc_cleared)
 				else
-					current_file.put_line (c_ge_alloc_atomic_cleared)
+					current_file.put_line (c_ge_malloc_atomic_cleared)
 				end
 				print_indentation
 				current_file.put_string (c_memset)
@@ -25605,9 +25610,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
 				if l_special_type.has_nested_reference_attributes then
-					current_file.put_line (c_ge_alloc_cleared)
+					current_file.put_line (c_ge_malloc_cleared)
 				else
-					current_file.put_line (c_ge_alloc_atomic_cleared)
+					current_file.put_line (c_ge_malloc_atomic_cleared)
 				end
 				print_indentation
 				current_file.put_string (c_memset)
@@ -25924,9 +25929,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body not implemented%N")
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
 				if l_special_type.has_nested_reference_attributes then
-					current_file.put_line (c_ge_alloc_cleared)
+					current_file.put_line (c_ge_malloc_cleared)
 				else
-					current_file.put_line (c_ge_alloc_atomic_cleared)
+					current_file.put_line (c_ge_malloc_atomic_cleared)
 				end
 				print_indentation
 				current_file.put_string (c_memset)
@@ -27397,6 +27402,8 @@ feature {NONE} -- C function generation
 				print_indentation
 				current_file.put_line ("GE_init_exception(ac);")
 				print_indentation
+				current_file.put_line ("GE_init_console();")
+				print_indentation
 				current_file.put_line ("GE_init_identified();")
 				print_indentation
 				current_file.put_line ("GE_init_const();")
@@ -28502,9 +28509,9 @@ feature {NONE} -- C function generation
 			print_boxed_type_declaration (a_type, current_file)
 			current_file.put_character (')')
 			if a_type.has_nested_reference_attributes then
-				current_file.put_string (c_ge_alloc)
+				current_file.put_string (c_ge_malloc)
 			else
-				current_file.put_string (c_ge_alloc_atomic)
+				current_file.put_string (c_ge_malloc_atomic)
 			end
 			current_file.put_character ('(')
 			current_file.put_string (c_sizeof)
@@ -29033,9 +29040,9 @@ feature {NONE} -- Memory allocation
 			current_file.put_character (')')
 			if a_type.has_nested_reference_attributes then
 				l_has_nested_reference_attributes := True
-				current_file.put_string (c_ge_alloc)
+				current_file.put_string (c_ge_malloc)
 			else
-				current_file.put_string (c_ge_alloc_atomic)
+				current_file.put_string (c_ge_malloc_atomic)
 			end
 			current_file.put_character ('(')
 			current_file.put_string (c_sizeof)
@@ -29116,9 +29123,9 @@ feature {NONE} -- Memory allocation
 				current_file.put_string (c_ifndef)
 				current_file.put_character (' ')
 				if l_has_nested_reference_attributes then
-					current_file.put_line (c_ge_alloc_cleared)
+					current_file.put_line (c_ge_malloc_cleared)
 				else
-					current_file.put_line (c_ge_alloc_atomic_cleared)
+					current_file.put_line (c_ge_malloc_atomic_cleared)
 				end
 				print_indentation
 				current_file.put_string (c_memset)
@@ -29360,16 +29367,12 @@ feature {NONE} -- Trace generation
 			-- Print to `current_file' a call to 'GE_show_console' to make sure
 			-- that a DOS console is available for Windows applications.
 		do
-			current_file.put_string (c_ifdef)
-			current_file.put_character (' ')
-			current_file.put_line (c_eif_windows)
 			print_indentation
 			current_file.put_string (c_ge_show_console)
 			current_file.put_character ('(')
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
-			current_file.put_line (c_endif)
 		end
 
 feature {NONE} -- Type generation
@@ -32259,8 +32262,8 @@ feature {NONE} -- Include files
 			end
 		end
 
-	include_runtime_c_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Include content of runtime C file `a_filename' to `a_file'.
+	include_runtime_file (a_filename: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Include content of runtime file `a_filename' to `a_file'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_file_not_void: a_file /= Void
@@ -32331,99 +32334,247 @@ feature {NONE} -- Include files
 				elseif a_filename.same_string ("%"ge_time.h%"") then
 					include_runtime_header_file ("ge_time.h", False, a_file)
 				else
-					included_header_filenames.force (a_filename)
+					included_header_filenames.force_last (a_filename)
 				end
 			end
 		end
 
 	include_runtime_header_file (a_filename: STRING; a_force: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM)
-			-- Include runtime header file `a_filename' to `a_file'.
-			-- `a_force' means that the file should be included now.
+			-- Add runtime header file `a_filename' to `included_runtime_header_files',
+			-- and the header files it depends on. Also add associated C file,
+			-- if any, to `included_runtime_c_files'.
+			-- `a_force' means that the file should be written now to `a_file'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
+		local
+			l_c_filename: detachable STRING
+			l_has_file: BOOLEAN
 		do
-			if not included_runtime_header_files.has (a_filename) then
-				if a_filename.same_string ("ge_arguments.h") then
-					included_runtime_c_files.force ("ge_arguments.c")
-				elseif a_filename.same_string ("ge_console.h") then
-					included_runtime_c_files.force ("ge_console.c")
-				elseif a_filename.same_string ("ge_dll.h") then
-					included_runtime_c_files.force ("ge_dll.c")
-				elseif a_filename.same_string ("ge_exception.h") then
-					included_runtime_c_files.force ("ge_exception.c")
-				elseif a_filename.same_string ("ge_deep.h") then
-					included_runtime_c_files.force ("ge_deep.c")
-				elseif a_filename.same_string ("ge_gc.h") then
-					included_runtime_c_files.force ("ge_gc.c")
-				elseif a_filename.same_string ("ge_identified.h") then
-					included_runtime_c_files.force ("ge_identified.c")
-				elseif a_filename.same_string ("ge_thread.h") then
-					included_runtime_c_files.force ("ge_thread.c")
-				elseif a_filename.same_string ("ge_main.h") then
-					included_runtime_c_files.force ("ge_main.c")
-				elseif a_filename.same_string ("ge_real.h") then
-					included_runtime_c_files.force ("ge_real.c")
-				elseif a_filename.same_string ("ge_com_failure.h") then
-					included_runtime_c_files.force ("ge_com_failure.c")
-				elseif a_filename.same_string ("ge_types.h") then
-					included_runtime_c_files.force ("ge_types.c")
-				elseif a_filename.same_string ("ge_string.h") then
-					included_runtime_c_files.force ("ge_string.c")
-				elseif a_filename.same_string ("eif_cecil.h") then
-					included_runtime_c_files.force ("eif_cecil.c")
+			l_has_file := included_runtime_header_files.has (a_filename)
+			if not l_has_file or else (a_force and then not included_runtime_header_files.item (a_filename)) then
+				if a_filename.same_string ("eif_cecil.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_cecil.c"
 				elseif a_filename.same_string ("eif_console.h") then
-					include_runtime_header_file ("ge_console.h", False, a_file)
-					include_runtime_header_file ("eif_file.h", False, a_file)
-					included_runtime_c_files.force ("eif_console.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_console.c"
 				elseif a_filename.same_string ("eif_dir.h") then
-					include_runtime_header_file ("eif_except.h", False, a_file)
-					included_runtime_c_files.force ("eif_dir.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_dir.c"
 				elseif a_filename.same_string ("eif_eiffel.h") then
-					include_runtime_header_file ("eif_except.h", False, a_file)
-					include_runtime_header_file ("eif_globals.h", False, a_file)
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_string.h", a_force, a_file)
+					include_runtime_header_file ("eif_globals.h", a_force, a_file)
+					include_runtime_header_file ("eif_except.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_except.h") then
-					include_runtime_header_file ("ge_exception.h", False, a_file)
-					included_runtime_c_files.force ("eif_except.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					l_c_filename := "eif_except.c"
 				elseif a_filename.same_string ("eif_file.h") then
-					include_runtime_header_file ("eif_except.h", False, a_file)
-					include_runtime_header_file ("ge_real.h", False, a_file)
-					included_runtime_c_files.force ("eif_file.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_file.c"
 				elseif a_filename.same_string ("eif_globals.h") then
-					include_runtime_header_file ("eif_threads.h", False, a_file)
+					include_runtime_header_file ("eif_threads.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_main.h") then
-					included_runtime_c_files.force ("eif_main.c")
+					l_c_filename := "eif_main.c"
 				elseif a_filename.same_string ("eif_memory.h") then
-					included_runtime_c_files.force ("eif_memory.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_memory.c"
 				elseif a_filename.same_string ("eif_misc.h") then
-					include_runtime_header_file ("ge_dll.h", False, a_file)
-					included_runtime_c_files.force ("eif_misc.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_dll.h", a_force, a_file)
+					l_c_filename := "eif_misc.c"
 				elseif a_filename.same_string ("eif_path_name.h") then
-					included_runtime_c_files.force ("eif_path_name.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_path_name.c"
 				elseif a_filename.same_string ("eif_plug.h") then
-					included_runtime_c_files.force ("eif_plug.c")
+					l_c_filename := "eif_plug.c"
+				elseif a_filename.same_string ("eif_project.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_retrieve.h") then
-					included_runtime_c_files.force ("eif_retrieve.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_retrieve.c"
 				elseif a_filename.same_string ("eif_sig.h") then
-					included_runtime_c_files.force ("eif_sig.c")
+					l_c_filename := "eif_sig.c"
 				elseif a_filename.same_string ("eif_store.h") then
-					included_runtime_c_files.force ("eif_store.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_store.c"
 				elseif a_filename.same_string ("eif_threads.h") then
-					include_runtime_header_file ("eif_cecil.h", False, a_file)
+					include_runtime_header_file ("eif_cecil.h", a_force, a_file)
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					if multithreaded_mode then
+						include_runtime_header_file ("ge_thread.h", False, a_file)
+					end
 				elseif a_filename.same_string ("eif_traverse.h") then
-					included_runtime_c_files.force ("eif_traverse.c")
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "eif_traverse.c"
+				elseif a_filename.same_string ("ge_arguments.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_arguments.c"
+				elseif a_filename.same_string ("ge_com_failure.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_com_failure.c"
+				elseif a_filename.same_string ("ge_console.h") then
+					l_c_filename := "ge_console.c"
+				elseif a_filename.same_string ("ge_deep.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_deep.c"
+				elseif a_filename.same_string ("ge_exception.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					if multithreaded_mode then
+						include_runtime_header_file ("ge_thread_types.h", a_force, a_file)
+					end
+					l_c_filename := "ge_exception.c"
+				elseif a_filename.same_string ("ge_gc.h") then
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					l_c_filename := "ge_gc.c"
+				elseif a_filename.same_string ("ge_identified.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_identified.c"
+				elseif a_filename.same_string ("ge_main.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_main.c"
+				elseif a_filename.same_string ("ge_native_string.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+				elseif a_filename.same_string ("ge_real.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_real.c"
+				elseif a_filename.same_string ("ge_string.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					l_c_filename := "ge_string.c"
+				elseif a_filename.same_string ("ge_thread.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_thread_types.h", a_force, a_file)
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					l_c_filename := "ge_thread.c"
+				elseif a_filename.same_string ("ge_thread_types.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+				elseif a_filename.same_string ("ge_types.h") then
+					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
+					l_c_filename := "ge_types.c"
 				end
 				if a_force then
-					include_runtime_c_file (a_filename, a_file)
-					included_runtime_header_files.force (True, a_filename)
+					include_runtime_file (a_filename, a_file)
+					if l_has_file then
+						included_runtime_header_files.replace (True, a_filename)
+					else
+						included_runtime_header_files.force_last (True, a_filename)
+					end
 				else
-					included_runtime_header_files.force (False, a_filename)
+					included_runtime_header_files.force_last (False, a_filename)
 				end
-			elseif a_force and then not included_runtime_header_files.item (a_filename) then
-				include_runtime_c_file (a_filename, a_file)
-				included_runtime_header_files.replace (True, a_filename)
+				if l_c_filename /= Void then
+					include_runtime_c_file (l_c_filename, a_file)
+				end
 			end
+		ensure
+			included: included_runtime_header_files.has (a_filename)
+		end
+
+	include_runtime_c_file (a_filename: STRING; a_header_file: KI_TEXT_OUTPUT_STREAM)
+			-- Add runtime C file `a_filename' to `included_runtime_c_files'.
+			-- Also add the header files it depends on to `included_runtime_header_files'.
+			-- `a_header_file' is where to include these header files.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_header_file_not_void: a_header_file /= Void
+			a_header_file_open_write: a_header_file.is_open_write
+		do
+			if not included_runtime_c_files.has (a_filename) then
+				if a_filename.same_string ("eif_cecil.c") then
+					include_runtime_header_file ("eif_cecil.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_console.c") then
+					include_runtime_header_file ("eif_console.h", False, a_header_file)
+					include_runtime_header_file ("eif_file.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_dir.c") then
+					include_runtime_header_file ("eif_dir.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_except.c") then
+					include_runtime_header_file ("eif_except.h", False, a_header_file)
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_file.c") then
+					include_runtime_header_file ("eif_file.h", False, a_header_file)
+					include_runtime_header_file ("eif_except.h", False, a_header_file)
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+					include_runtime_header_file ("ge_real.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_main.c") then
+					include_runtime_header_file ("eif_main.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_memory.c") then
+					include_runtime_header_file ("eif_memory.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_misc.c") then
+					include_runtime_header_file ("eif_misc.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_path_name.c") then
+					include_runtime_header_file ("eif_path_name.h", False, a_header_file)
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_plug.c") then
+					include_runtime_header_file ("eif_plug.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_retrieve.c") then
+					include_runtime_header_file ("eif_retrieve.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_sig.c") then
+					include_runtime_header_file ("eif_sig.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_store.c") then
+					include_runtime_header_file ("eif_store.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("eif_traverse.c") then
+					include_runtime_header_file ("eif_traverse.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_arguments.c") then
+					include_runtime_header_file ("ge_arguments.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_com_failure.c") then
+					include_runtime_header_file ("ge_com_failure.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_console.c") then
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+					include_runtime_header_file ("ge_eiffel.h", False, a_header_file)
+					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					if multithreaded_mode then
+						include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					end
+				elseif a_filename.same_string ("ge_deep.c") then
+					include_runtime_header_file ("ge_deep.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_exception.c") then
+					include_runtime_header_file ("ge_exception.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+					include_runtime_header_file ("ge_console.h", False, a_header_file)
+					if multithreaded_mode then
+						include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					end
+				elseif a_filename.same_string ("ge_gc.c") then
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+					include_runtime_header_file ("ge_types.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_identified.c") then
+					include_runtime_header_file ("ge_identified.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_main.c") then
+					include_runtime_header_file ("ge_main.h", False, a_header_file)
+					include_runtime_header_file ("ge_arguments.h", False, a_header_file)
+					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_real.c") then
+					include_runtime_header_file ("ge_real.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_string.c") then
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+					include_runtime_header_file ("ge_native_string.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_thread.c") then
+					include_runtime_header_file ("ge_thread.h", False, a_header_file)
+					include_runtime_header_file ("ge_gc.h", False, a_header_file)
+				elseif a_filename.same_string ("ge_types.c") then
+					include_runtime_header_file ("ge_types.h", False, a_header_file)
+					include_runtime_header_file ("ge_string.h", False, a_header_file)
+				end
+				included_runtime_c_files.force_last (a_filename)
+			end
+		ensure
+			included: included_runtime_c_files.has (a_filename)
 		end
 
 	included_header_filenames: DS_HASH_SET [STRING]
@@ -34219,7 +34370,6 @@ feature {NONE} -- Constants
 	c_double: STRING = "double"
 	c_eif_any: STRING = "EIF_ANY"
 	c_eif_boolean: STRING = "EIF_BOOLEAN"
-	c_eif_boehm_gc: STRING = "EIF_BOEHM_GC"
 	c_eif_character: STRING = "EIF_CHARACTER"
 	c_eif_character_8: STRING = "EIF_CHARACTER_8"
 	c_eif_character_32: STRING = "EIF_CHARACTER_32"
@@ -34250,7 +34400,6 @@ feature {NONE} -- Constants
 	c_eif_real_64: STRING = "EIF_REAL_64"
 	c_eif_reference: STRING = "EIF_REFERENCE"
 	c_eif_test: STRING = "EIF_TEST"
-	c_eif_threads: STRING = "EIF_THREADS"
 	c_eif_trace: STRING = "EIF_TRACE"
 	c_eif_true: STRING = "EIF_TRUE"
 	c_eif_type: STRING = "EIF_TYPE_OBJ"
@@ -34270,10 +34419,6 @@ feature {NONE} -- Constants
 	c_float: STRING = "float"
 	c_for: STRING = "for"
 	c_fprintf: STRING = "fprintf"
-	c_ge_alloc: STRING = "GE_alloc"
-	c_ge_alloc_atomic: STRING = "GE_alloc_atomic"
-	c_ge_alloc_cleared: STRING = "GE_alloc_cleared"
-	c_ge_alloc_atomic_cleared: STRING = "GE_alloc_atomic_cleared"
 	c_ge_argc: STRING = "GE_argc"
 	c_ge_argv: STRING = "GE_argv"
 	c_ge_attached_encoded_type: STRING = "GE_attached_encoded_type"
@@ -34358,6 +34503,10 @@ feature {NONE} -- Constants
 	c_ge_istr32_from_nstr: STRING = "GE_istr32_from_nstr"
 	c_ge_lock_marking: STRING = "GE_lock_marking"
 	c_ge_ma: STRING = "GE_ma"
+	c_ge_malloc: STRING = "GE_malloc"
+	c_ge_malloc_atomic: STRING = "GE_malloc_atomic"
+	c_ge_malloc_cleared: STRING = "GE_malloc_cleared"
+	c_ge_malloc_atomic_cleared: STRING = "GE_malloc_atomic_cleared"
 	c_ge_mark_object: STRING = "GE_mark_object"
 	c_ge_ms: STRING = "GE_ms"
 	c_ge_ms8: STRING = "GE_ms8"
@@ -34481,6 +34630,8 @@ feature {NONE} -- Constants
 	c_ge_use_attribute_offset: STRING = "GE_USE_ATTRIBUTE_OFFSET"
 	c_ge_use_attribute_type_id: STRING = "GE_USE_ATTRIBUTE_TYPE_ID"
 	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
+	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"
+	c_ge_use_threads: STRING = "GE_USE_THREADS"
 	c_ge_use_type_generator: STRING = "GE_USE_TYPE_GENERATOR"
 	c_ge_use_type_generic_parameters: STRING = "GE_USE_TYPE_GENERIC_PARAMETERS"
 	c_ge_use_type_name: STRING = "GE_USE_TYPE_NAME"

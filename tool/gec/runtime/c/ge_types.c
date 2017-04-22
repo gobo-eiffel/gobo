@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,9 +21,6 @@
 #endif
 #ifndef GE_STRING_H
 #include "ge_string.h"
-#endif
-#ifndef GE_EXCEPTION_H
-#include "ge_exception.h"
 #endif
 
 #ifdef __cplusplus
@@ -55,7 +52,6 @@ EIF_ENCODED_TYPE GE_encoded_type(EIF_TYPE a_type)
 	l_result = a_type.annotations;
 	l_result = (l_result << 16) | a_type.id;
 #endif
-
 	return l_result;
 }
 
@@ -78,7 +74,6 @@ EIF_TYPE GE_decoded_type(EIF_ENCODED_TYPE a_type)
 	l_result.id = a_type & 0x0000FFFF;
 	l_result.annotations = a_type >> 16;
 #endif
-
 	return l_result;
 }
 
@@ -256,7 +251,7 @@ EIF_ENCODED_TYPE GE_encoded_type_from_name(EIF_POINTER a_name)
 	int i;
 
 	for (i = 1; i <= GE_type_info_count; i++) {
-		if (strcmp((char*) a_name, GE_type_infos[i].name) == 0) {
+		if (strcmp((char*)a_name, GE_type_infos[i].name) == 0) {
 			return (EIF_INTEGER)GE_encoded_type(GE_new_type(i, 0x0));
 		}
 	}
@@ -435,7 +430,7 @@ EIF_NATURAL_64 GE_object_size(EIF_POINTER a_object)
 	EIF_TYPE_INDEX l_type_index = ((EIF_REFERENCE)(a_object))->id;
 	uint64_t l_size = GE_type_infos[l_type_index].object_size;
 #ifdef GE_USE_TYPE_GENERIC_PARAMETERS
-	if (GE_is_special_type_index (l_type_index)) {
+	if (GE_is_special_type_index(l_type_index)) {
 		EIF_TYPE_INDEX l_generic_parameter = GE_decoded_type(GE_type_infos[l_type_index].generic_parameters[0]).id;
 		uint32_t l_flags = GE_type_infos[l_generic_parameter].flags;
 		EIF_INTEGER l_capacity = ((EIF_SPECIAL*)a_object)->capacity;
