@@ -127,7 +127,7 @@ void GE_init_thread(GE_context* a_context)
 	EIF_TSD_CREATE(GE_thread_context_key, "Cannot create GE_thread_context_key");
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (l_thread_context) {
-		GE_init_thread_context(l_thread_context);
+		GE_init_thread_context(a_context, l_thread_context);
 		a_context->thread = l_thread_context;
 	} else {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
