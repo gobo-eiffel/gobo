@@ -29,35 +29,6 @@
 extern "C" {
 #endif
 
-#ifdef EIF_POSIX_THREADS
-#	define EIF_TSD_VAL_TYPE        void*
-#	define EIF_TSD_TYPE            pthread_key_t
-#	define EIF_TSD_CREATE(key,msg) \
-		if (pthread_key_create(&(key),NULL)) \
-	        GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_SET(key,val,msg) \
-		if (pthread_setspecific((key), (EIF_TSD_VAL_TYPE)(val))) \
-			GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_GET0(val_type,key,val) (val = pthread_getspecific(key))
-#	define EIF_TSD_GET(val_type,key,val,msg) \
-		if (EIF_TSD_GET0(val_type,key,val) == (void*) 0) GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key)) GE_raise_with_message(GE_EX_EXT, msg)
-#elif defined EIF_WINDOWS
-#	define EIF_TSD_VAL_TYPE        LPVOID
-#	define EIF_TSD_TYPE            DWORD
-#	define EIF_TSD_CREATE(key,msg) \
-		if ((key=TlsAlloc())==TLS_OUT_OF_INDEXES) GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_SET(key,val,msg) \
-		if (!TlsSetValue((key),(EIF_TSD_VAL_TYPE)(val))) GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_GET0(val_type,key,val) \
-		val=(val_type) TlsGetValue(key)
-#	define EIF_TSD_GET(val_type,key,val,msg) \
-		EIF_TSD_GET0(val_type,key,val); \
-		if (GetLastError() != NO_ERROR) GE_raise_with_message(GE_EX_EXT, msg)
-#	define EIF_TSD_DESTROY(key,msg) \
-		if (!TlsFree(key)) GE_raise_with_message(GE_EX_EXT, msg)
-#endif
-
 /* Key to access Thread Specific Data. */
 static EIF_TSD_TYPE GE_thread_context_key;
 
@@ -136,7 +107,7 @@ static void* GE_thread_routine(void* arg)
 	GE_init_exception(&l_context);
 	GE_init_thread_context(&l_context, l_thread_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
-	ge_thread_context->routine(l_thread_context->current);
+	l_thread_context->routine(l_thread_context->current);
 	GE_thread_exit();
 #ifdef EIF_WINDOWS
 	return 0;
