@@ -16,6 +16,9 @@
 #pragma once
 #endif
 
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
+#endif
 #ifndef EIF_THREADS_H
 #include "eif_threads.h"
 #endif
@@ -24,7 +27,13 @@
 extern "C" {
 #endif
 
+#ifdef GE_USE_THREADS
+#define EIF_GET_CONTEXT \
+	GE_context* eif_globals = GE_current_context();
+#else
 #define EIF_GET_CONTEXT
+#endif
+
 #define GTCX EIF_GET_CONTEXT
 
 #ifdef __cplusplus

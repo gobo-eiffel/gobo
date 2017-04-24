@@ -220,6 +220,24 @@ EIF_POINTER GE_last_thread_created(void)
 	return NULL;
 }
 
+#ifdef EIF_WINDOWS
+/*
+ * Support for Windows GUI that requires that all GUI operations are performed in the same thread.
+ * Allocate new structure of the given size `a_size', assign it to `wel_per_thread_data'.
+ * Return newly allocated memory block. It will be freed automatically on thread termination.
+ */
+void* GE_thread_create_wel_per_thread_data(size_t a_size)
+{
+	void* l_result;
+	GE_context* volatile l_context;
+
+	EIF_TSD_GET(GE_context*, GE_thread_context_key, l_context, "Cannot get execution context for current thread");
+	l_result = (void*)GE_calloc_uncollectable(1, a_size);
+	l_context->wel_per_thread_data = l_result;
+	return l_result;
+}
+#endif
+
 /*
  * Waits until a thread sets `terminated' from `Current' to True,
  * which means it is terminated. The calling thread must be the
@@ -271,6 +289,10 @@ void GE_thread_exit(void)
 	l_thread_id = l_context->thread->thread_id;
 	GE_free(l_context->thread);
 	GE_free_exception(l_context);
+	if (l_context->wel_per_thread_data) {
+		GE_free(l_context->wel_per_thread_data);
+		l_context->wel_per_thread_data = 0;
+	}
 #ifdef EIF_POSIX_THREADS
 	pthread_exit(NULL);
 #elif defined EIF_WINDOWS

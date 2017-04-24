@@ -137,6 +137,7 @@ struct GE_context_struct {
 	int pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef GE_USE_THREADS
 	GE_thread_context* thread; /* Thread context */
+	void* wel_per_thread_data; /* WEL private data */
 #endif
 };
 

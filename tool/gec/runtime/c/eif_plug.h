@@ -20,10 +20,8 @@
 extern "C" {
 #endif
 
-#ifndef GE_USE_THREADS
 extern int nstcall;	/* Nested call global variable: signals a nested call and
 					 * trigger an invariant check in generated C routines  */
-#endif
 
 #ifdef __cplusplus
 }

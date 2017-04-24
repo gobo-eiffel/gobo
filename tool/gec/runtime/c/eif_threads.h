@@ -22,6 +22,11 @@
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
+#ifdef GE_USE_THREADS
+#ifndef GE_THREAD_H
+#include "ge_thread.h"
+#endif
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,10 +90,6 @@ extern "C" {
 
 #else
 
-#ifndef GE_THREAD_H
-#include "ge_thread.h"
-#endif
-
 /* THREAD_ENVIRONMENT */
 #define eif_thr_thread_id() GE_thread_id()
 
@@ -138,6 +139,11 @@ extern "C" {
 #define eif_thr_rwl_destroy(an_item)
 
 #define eif_thr_sleep(nanoseconds)
+
+/* WEL */
+#ifdef EIF_WINDOWS
+#define eif_thr_create_wel_per_thread_data(a_size) GE_thread_create_wel_per_thread_data(a_size)
+#endif
 
 #endif
 

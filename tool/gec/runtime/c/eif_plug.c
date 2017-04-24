@@ -24,9 +24,7 @@
 extern "C" {
 #endif
 
-#ifndef GE_USE_THREADS
 int nstcall = 0;
-#endif
 
 #ifdef __cplusplus
 }

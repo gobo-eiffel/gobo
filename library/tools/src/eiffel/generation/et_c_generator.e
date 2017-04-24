@@ -723,6 +723,12 @@ feature {NONE} -- Compilation script generation
 								l_basename := l_external_filename.twin
 								l_basename.remove_tail (l_extension.count)
 								a_external_c_filenames.force_last (l_extension, l_basename)
+								if multithreaded_mode then
+									l_external_file.put_string (c_define)
+									l_external_file.put_character (' ')
+									l_external_file.put_line (c_ge_use_threads)
+									l_external_file.put_new_line
+								end
 								l_external_file.put_string (c_include)
 								l_external_file.put_character (' ')
 								l_external_file.put_character ('"')
@@ -32376,6 +32382,7 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("ge_eiffel.h", a_force, a_file)
 					l_c_filename := "eif_file.c"
 				elseif a_filename.same_string ("eif_globals.h") then
+					include_runtime_header_file ("ge_exception.h", a_force, a_file)
 					include_runtime_header_file ("eif_threads.h", a_force, a_file)
 				elseif a_filename.same_string ("eif_main.h") then
 					l_c_filename := "eif_main.c"

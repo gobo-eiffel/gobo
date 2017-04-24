@@ -24,8 +24,12 @@
 #ifndef GE_THREAD_TYPES_H
 #include "ge_thread_types.h"
 #endif
-#ifndef GE_exception_H
+#ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #ifdef EIF_POSIX_THREADS
@@ -90,6 +94,15 @@ extern EIF_POINTER GE_thread_id(void);
  * Last thread created.
  */
 extern EIF_POINTER GE_last_thread_created(void);
+
+#ifdef EIF_WINDOWS
+/*
+ * Support for Windows GUI that requires that all GUI operations are performed in the same thread.
+ * Allocate new structure of the given size `a_size', assign it to `wel_per_thread_data'.
+ * Return newly allocated memory block. It will be freed automatically on thread termination.
+ */
+extern void* GE_thread_create_wel_per_thread_data(size_t a_size);
+#endif
 
 /*
  * Waits until a child thread sets `terminated' from `obj' to True,
