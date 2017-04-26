@@ -69,6 +69,76 @@ extern "C" {
 #define EIF_MAX_THR_PRIORITY			255L
 
 /*
+ * Mutexes used to protect the calls to once-per-process features.
+ */
+typedef struct {
+	EIF_POINTER* boolean_mutex;
+	EIF_POINTER* character_8_mutex;
+	EIF_POINTER* character_32_mutex;
+	EIF_POINTER* integer_8_mutex;
+	EIF_POINTER* integer_16_mutex;
+	EIF_POINTER* integer_32_mutex;
+	EIF_POINTER* integer_64_mutex;
+	EIF_POINTER* natural_8_mutex;
+	EIF_POINTER* natural_16_mutex;
+	EIF_POINTER* natural_32_mutex;
+	EIF_POINTER* natural_64_mutex;
+	EIF_POINTER* pointer_mutex;
+	EIF_POINTER* real_32_mutex;
+	EIF_POINTER* real_64_mutex;
+	EIF_POINTER* reference_mutex;
+	EIF_POINTER* procedure_mutex;
+} GE_once_mutexes;
+
+/*
+ * Mutexes used to protect the calls to once-per-process features.
+ */
+extern GE_once_mutexes* GE_process_once_mutexes;
+
+/*
+ * Create a new 'GE_once_mutexes' struct which can deal with the
+ * numbers of once features passed as argument.
+ */
+extern GE_once_mutexes* GE_new_once_mutexes(
+	unsigned int a_boolean_count,
+	unsigned int a_character_8_count,
+	unsigned int a_character_32_count,
+	unsigned int a_integer_8_count,
+	unsigned int a_integer_16_count,
+	unsigned int a_integer_32_count,
+	unsigned int a_integer_64_count,
+	unsigned int a_natural_8_count,
+	unsigned int a_natural_16_count,
+	unsigned int a_natural_32_count,
+	unsigned int a_natural_64_count,
+	unsigned int a_pointer_count,
+	unsigned int a_real_32_count,
+	unsigned int a_real_64_count,
+	unsigned int a_reference_count,
+	unsigned int a_procedure_count);
+
+/*
+ * Keep track of the numbers of once-per-thread features.
+ */
+extern void GE_thread_onces_set_counts(
+	unsigned int a_boolean_count,
+	unsigned int a_character_8_count,
+	unsigned int a_character_32_count,
+	unsigned int a_integer_8_count,
+	unsigned int a_integer_16_count,
+	unsigned int a_integer_32_count,
+	unsigned int a_integer_64_count,
+	unsigned int a_natural_8_count,
+	unsigned int a_natural_16_count,
+	unsigned int a_natural_32_count,
+	unsigned int a_natural_64_count,
+	unsigned int a_pointer_count,
+	unsigned int a_real_32_count,
+	unsigned int a_real_64_count,
+	unsigned int a_reference_count,
+	unsigned int a_procedure_count);
+
+/*
  * Initialize data to handle threads.
  * To be called at the beginning of the main function.
  */
@@ -163,7 +233,7 @@ extern void GE_mutex_lock(EIF_POINTER a_mutex);
 /*
  * Try to lock mutex. Return True on success.
  */
-extern EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER a_mutex);
+extern EIF_BOOLEAN GE_mutex_try_lock(EIF_POINTER a_mutex);
 
 /*
  * Unlock mutex.

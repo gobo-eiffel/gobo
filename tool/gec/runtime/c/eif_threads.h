@@ -112,7 +112,7 @@ extern "C" {
 /* MUTEX */
 #define eif_thr_mutex_create() GE_mutex_create()
 #define eif_thr_mutex_lock(a_mutex_pointer) GE_mutex_lock(a_mutex_pointer)
-#define eif_thr_mutex_trylock(a_mutex_pointer) GE_mutex_trylock(a_mutex_pointer)
+#define eif_thr_mutex_trylock(a_mutex_pointer) GE_mutex_try_lock(a_mutex_pointer)
 #define eif_thr_mutex_unlock(a_mutex_pointer) GE_mutex_unlock(a_mutex_pointer)
 #define eif_thr_mutex_destroy(a_mutex_pointer) GE_mutex_destroy(a_mutex_pointer)
 

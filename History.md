@@ -8,6 +8,7 @@
   type (in particular for `STRING_32` manifest strings).
 * Made explicit the dependencies between C files in the runtime.
 * Made the runtime C files thread-safe.
+* Made once-per-process thread-safe.
 
 ### gedoc
 

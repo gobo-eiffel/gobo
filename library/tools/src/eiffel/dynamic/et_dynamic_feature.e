@@ -371,11 +371,20 @@ feature -- Status report
 		end
 
 	is_once: BOOLEAN
-			-- Is current feature a once-routine?
+			-- Is current feature a once routine?
 		do
 			Result := static_feature.is_once
 		ensure
 			definition: Result = static_feature.is_once
+		end
+
+	is_once_per_process: BOOLEAN
+			-- Is current feature a once-per-process routine?
+		do
+			Result := static_feature.is_once_per_process
+		ensure
+			definition: Result = static_feature.is_once_per_process
+			is_once: Result implies is_once
 		end
 
 	is_precursor: BOOLEAN

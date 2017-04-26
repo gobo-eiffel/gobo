@@ -19,6 +19,9 @@
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
+#ifndef GE_ONCE_H
+#include "ge_once.h"
+#endif
 #ifdef GE_USE_THREADS
 #ifndef GE_THREAD_TYPES_H
 #include "ge_thread_types.h"
@@ -137,6 +140,8 @@ struct GE_context_struct {
 	int pre_ecma_mapping_status; /* Do we map old names to new name? (i.e. STRING to STRING_8, INTEGER to INTEGER_32, ...). */
 #ifdef GE_USE_THREADS
 	GE_thread_context* thread; /* Thread context */
+	GE_onces* process_onces; /* Cache for status and results of onces-per-process */
+	GE_onces* thread_onces; /* Status and results of onces-per-thread */
 	void* wel_per_thread_data; /* WEL private data */
 #endif
 };

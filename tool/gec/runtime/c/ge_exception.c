@@ -335,9 +335,9 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	if (a_context == GE_main_context) {
 			/* Main thread. */
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (uint64_t)0, "(thread id)");
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Root thread", (unsigned long)0, "(thread id)");
 	} else {
-		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (uint64_t)a_context->thread->thread_id, "(thread id)");
+		sprintf(buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", "Child thread", (unsigned long)(uint64_t)a_context->thread->thread_id, "(thread id)");
 	}
 	GE_append_to_exception_trace_buffer(a_trace, buffer);
 	sprintf(buffer, "%s\n", "*******************************************************************************");
@@ -407,7 +407,7 @@ static void GE_print_exception_trace(GE_context* a_context, long a_code, const c
  */
 GE_context GE_default_context = {0, 0, 0, 0, 0, 0, '\1', 0, 0, {0, 0, 0}, {0, 0, 0}, 1
 #ifdef GE_USE_THREADS
-	, 0, 0
+	, 0, 0, 0, 0
 #endif
 	};
 

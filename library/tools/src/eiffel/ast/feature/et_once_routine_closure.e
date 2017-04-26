@@ -5,7 +5,7 @@ note
 		"Eiffel closures with components common to once routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,14 @@ deferred class ET_ONCE_ROUTINE_CLOSURE
 inherit
 
 	ET_INTERNAL_ROUTINE_CLOSURE
+
+feature -- Status report
+
+	is_once_per_process: BOOLEAN
+			-- Is current once routine a once-per-process?
+		do
+			Result := True
+		end
 
 feature -- Access
 

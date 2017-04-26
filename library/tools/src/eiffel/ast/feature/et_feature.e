@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #22 $"
@@ -344,6 +344,14 @@ feature -- Status report
 			-- Is current feature a once feature?
 		do
 			-- Result := False
+		end
+
+	is_once_per_process: BOOLEAN
+			-- Is current feature a once-per-process feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
 		end
 
 	is_infixable: BOOLEAN

@@ -374,10 +374,88 @@ feature -- Status report
 			Result := class_code = class_codes.boolean_class_code
 		end
 
+	is_character_8_class: BOOLEAN
+			-- Is current class the "CHARACTER_8" class?
+		do
+			Result := class_code = class_codes.character_8_class_code
+		end
+
+	is_character_32_class: BOOLEAN
+			-- Is current class the "CHARACTER_32" class?
+		do
+			Result := class_code = class_codes.character_32_class_code
+		end
+
+	is_integer_8_class: BOOLEAN
+			-- Is current class the "INTEGER_8" class?
+		do
+			Result := class_code = class_codes.integer_8_class_code
+		end
+
+	is_integer_16_class: BOOLEAN
+			-- Is current class the "INTEGER_16" class?
+		do
+			Result := class_code = class_codes.integer_16_class_code
+		end
+
+	is_integer_32_class: BOOLEAN
+			-- Is current class the "INTEGER_32" class?
+		do
+			Result := class_code = class_codes.integer_32_class_code
+		end
+
+	is_integer_64_class: BOOLEAN
+			-- Is current class the "INTEGER_64" class?
+		do
+			Result := class_code = class_codes.integer_64_class_code
+		end
+
+	is_natural_8_class: BOOLEAN
+			-- Is current class the "NATURAL_8" class?
+		do
+			Result := class_code = class_codes.natural_8_class_code
+		end
+
+	is_natural_16_class: BOOLEAN
+			-- Is current class the "NATURAL_16" class?
+		do
+			Result := class_code = class_codes.natural_16_class_code
+		end
+
+	is_natural_32_class: BOOLEAN
+			-- Is current class the "NATURAL_32" class?
+		do
+			Result := class_code = class_codes.natural_32_class_code
+		end
+
+	is_natural_64_class: BOOLEAN
+			-- Is current class the "NATURAL_64" class?
+		do
+			Result := class_code = class_codes.natural_64_class_code
+		end
+
+	is_pointer_class: BOOLEAN
+			-- Is current class the "POINTER" class?
+		do
+			Result := class_code = class_codes.pointer_class_code
+		end
+
 	is_disposable_class: BOOLEAN
 			-- Is current class the "DISPOSABLE" class?
 		do
 			Result := class_code = class_codes.disposable_class_code
+		end
+
+	is_real_32_class: BOOLEAN
+			-- Is current class the "REAL_32" class?
+		do
+			Result := class_code = class_codes.real_32_class_code
+		end
+
+	is_real_64_class: BOOLEAN
+			-- Is current class the "REAL_64" class?
+		do
+			Result := class_code = class_codes.real_64_class_code
 		end
 
 	is_function_class: BOOLEAN
@@ -1602,7 +1680,7 @@ feature -- Ancestors
 		end
 
 	add_base_class_of_parents_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_CLASS])
-			-- Add to `a_set' the base class of the parents which are exported 
+			-- Add to `a_set' the base class of the parents which are exported
 			-- to `a_client' (all conforming parents, and if `a_client' is "NONE"
 			-- then the non-conforming parents as well).
 		require

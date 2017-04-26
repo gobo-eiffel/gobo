@@ -5,7 +5,7 @@ note
 		"Eiffel once-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2012, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_INTERNAL_FUNCTION
 		undefine
-			is_once
+			is_once,
+			is_once_per_process
 		end
 
 	ET_ONCE_ROUTINE

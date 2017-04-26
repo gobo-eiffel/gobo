@@ -24,10 +24,243 @@
 #ifndef GE_GC_H
 #include "ge_gc.h"
 #endif
+#ifndef GE_ONCE_H
+#include "ge_once.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/*
+ * Numbers of once-per-thread features.
+ */
+static unsigned int GE_thread_onces_boolean_count;
+static unsigned int GE_thread_onces_character_8_count;
+static unsigned int GE_thread_onces_character_32_count;
+static unsigned int GE_thread_onces_integer_8_count;
+static unsigned int GE_thread_onces_integer_16_count;
+static unsigned int GE_thread_onces_integer_32_count;
+static unsigned int GE_thread_onces_integer_64_count;
+static unsigned int GE_thread_onces_natural_8_count;
+static unsigned int GE_thread_onces_natural_16_count;
+static unsigned int GE_thread_onces_natural_32_count;
+static unsigned int GE_thread_onces_natural_64_count;
+static unsigned int GE_thread_onces_pointer_count;
+static unsigned int GE_thread_onces_real_32_count;
+static unsigned int GE_thread_onces_real_64_count;
+static unsigned int GE_thread_onces_reference_count;
+static unsigned int GE_thread_onces_procedure_count;
+
+/*
+ * Mutexes used to protect the calls to once-per-process features.
+ */
+GE_once_mutexes* GE_process_once_mutexes;
+
+/*
+ * Create a new 'GE_once_mutexes' struct which can deal with the
+ * numbers of once features passed as argument.
+ */
+GE_once_mutexes* GE_new_once_mutexes(
+	unsigned int a_boolean_count,
+	unsigned int a_character_8_count,
+	unsigned int a_character_32_count,
+	unsigned int a_integer_8_count,
+	unsigned int a_integer_16_count,
+	unsigned int a_integer_32_count,
+	unsigned int a_integer_64_count,
+	unsigned int a_natural_8_count,
+	unsigned int a_natural_16_count,
+	unsigned int a_natural_32_count,
+	unsigned int a_natural_64_count,
+	unsigned int a_pointer_count,
+	unsigned int a_real_32_count,
+	unsigned int a_real_64_count,
+	unsigned int a_reference_count,
+	unsigned int a_procedure_count)
+{
+	GE_once_mutexes* l_once_mutexes;
+	unsigned int i;
+
+	l_once_mutexes = (GE_once_mutexes*)GE_calloc_atomic_uncollectable(1, sizeof(GE_once_mutexes));
+	if (a_boolean_count > 0) {
+		l_once_mutexes->boolean_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_boolean_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_boolean_count; i++) {
+			l_once_mutexes->boolean_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_character_8_count > 0) {
+		l_once_mutexes->character_8_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_character_8_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_character_8_count; i++) {
+			l_once_mutexes->character_8_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_character_32_count > 0) {
+		l_once_mutexes->character_32_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_character_32_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_character_32_count; i++) {
+			l_once_mutexes->character_32_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_integer_8_count > 0) {
+		l_once_mutexes->integer_8_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_integer_8_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_integer_8_count; i++) {
+			l_once_mutexes->integer_8_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_integer_16_count > 0) {
+		l_once_mutexes->integer_16_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_integer_16_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_integer_16_count; i++) {
+			l_once_mutexes->integer_16_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_integer_32_count > 0) {
+		l_once_mutexes->integer_32_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_integer_32_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_integer_32_count; i++) {
+			l_once_mutexes->integer_32_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_integer_64_count > 0) {
+		l_once_mutexes->integer_64_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_integer_64_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_integer_64_count; i++) {
+			l_once_mutexes->integer_64_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_natural_8_count > 0) {
+		l_once_mutexes->natural_8_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_natural_8_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_natural_8_count; i++) {
+			l_once_mutexes->natural_8_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_natural_16_count > 0) {
+		l_once_mutexes->natural_16_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_natural_16_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_natural_16_count; i++) {
+			l_once_mutexes->natural_16_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_natural_32_count > 0) {
+		l_once_mutexes->natural_32_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_natural_32_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_natural_32_count; i++) {
+			l_once_mutexes->natural_32_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_natural_64_count > 0) {
+		l_once_mutexes->natural_64_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_natural_64_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_natural_64_count; i++) {
+			l_once_mutexes->natural_64_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_pointer_count > 0) {
+		l_once_mutexes->pointer_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_pointer_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_pointer_count; i++) {
+			l_once_mutexes->pointer_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_real_32_count > 0) {
+		l_once_mutexes->real_32_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_real_32_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_real_32_count; i++) {
+			l_once_mutexes->real_32_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_real_64_count > 0) {
+		l_once_mutexes->real_64_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_real_64_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_real_64_count; i++) {
+			l_once_mutexes->real_64_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_reference_count > 0) {
+		l_once_mutexes->reference_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_reference_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_reference_count; i++) {
+			l_once_mutexes->reference_mutex[i] = GE_mutex_create();
+		}
+	}
+	if (a_procedure_count > 0) {
+		l_once_mutexes->procedure_mutex = (EIF_POINTER*)GE_malloc_atomic_uncollectable(a_procedure_count * sizeof(EIF_POINTER));
+		for (i = 0; i < a_procedure_count; i++) {
+			l_once_mutexes->procedure_mutex[i] = GE_mutex_create();
+		}
+	}
+	return l_once_mutexes;
+}
+
+/*
+ * Keep track of the numbers of once-per-thread features.
+ */
+void GE_thread_onces_set_counts(
+	unsigned int a_boolean_count,
+	unsigned int a_character_8_count,
+	unsigned int a_character_32_count,
+	unsigned int a_integer_8_count,
+	unsigned int a_integer_16_count,
+	unsigned int a_integer_32_count,
+	unsigned int a_integer_64_count,
+	unsigned int a_natural_8_count,
+	unsigned int a_natural_16_count,
+	unsigned int a_natural_32_count,
+	unsigned int a_natural_64_count,
+	unsigned int a_pointer_count,
+	unsigned int a_real_32_count,
+	unsigned int a_real_64_count,
+	unsigned int a_reference_count,
+	unsigned int a_procedure_count)
+{
+	GE_thread_onces_boolean_count = a_boolean_count;
+	GE_thread_onces_character_8_count = a_character_8_count;
+	GE_thread_onces_character_32_count = a_character_32_count;
+	GE_thread_onces_integer_8_count = a_integer_8_count;
+	GE_thread_onces_integer_16_count = a_integer_16_count;
+	GE_thread_onces_integer_32_count = a_integer_32_count;
+	GE_thread_onces_integer_64_count = a_integer_64_count;
+	GE_thread_onces_natural_8_count = a_natural_8_count;
+	GE_thread_onces_natural_16_count = a_natural_16_count;
+	GE_thread_onces_natural_32_count = a_natural_32_count;
+	GE_thread_onces_natural_64_count = a_natural_64_count;
+	GE_thread_onces_pointer_count = a_pointer_count;
+	GE_thread_onces_real_32_count = a_real_32_count;
+	GE_thread_onces_real_64_count = a_real_64_count;
+	GE_thread_onces_reference_count = a_reference_count;
+	GE_thread_onces_procedure_count = a_procedure_count;
+}
+
+/*
+ * Initialize `process_onces' and `thread_onces' in `a_context'.
+ */
+static void GE_thread_init_onces(GE_context* a_context)
+{
+	a_context->process_onces = GE_new_onces(
+		GE_process_onces->boolean_count,
+		GE_process_onces->character_8_count,
+		GE_process_onces->character_32_count,
+		GE_process_onces->integer_8_count,
+		GE_process_onces->integer_16_count,
+		GE_process_onces->integer_32_count,
+		GE_process_onces->integer_64_count,
+		GE_process_onces->natural_8_count,
+		GE_process_onces->natural_16_count,
+		GE_process_onces->natural_32_count,
+		GE_process_onces->natural_64_count,
+		GE_process_onces->pointer_count,
+		GE_process_onces->real_32_count,
+		GE_process_onces->real_64_count,
+		GE_process_onces->reference_count,
+		GE_process_onces->procedure_count);
+	a_context->thread_onces = GE_new_onces(
+		GE_thread_onces_boolean_count,
+		GE_thread_onces_character_8_count,
+		GE_thread_onces_character_32_count,
+		GE_thread_onces_integer_8_count,
+		GE_thread_onces_integer_16_count,
+		GE_thread_onces_integer_32_count,
+		GE_thread_onces_integer_64_count,
+		GE_thread_onces_natural_8_count,
+		GE_thread_onces_natural_16_count,
+		GE_thread_onces_natural_32_count,
+		GE_thread_onces_natural_64_count,
+		GE_thread_onces_pointer_count,
+		GE_thread_onces_real_32_count,
+		GE_thread_onces_real_64_count,
+		GE_thread_onces_reference_count,
+		GE_thread_onces_procedure_count);
+}
 
 /* Key to access Thread Specific Data. */
 static EIF_TSD_TYPE GE_thread_context_key;
@@ -104,6 +337,7 @@ static void* GE_thread_routine(void* arg)
 	GE_context l_context = GE_default_context;
 
 	l_context.thread = l_thread_context;
+	GE_thread_init_onces(&l_context);
 	GE_init_exception(&l_context);
 	GE_init_thread_context(&l_context, l_thread_context);
 	GE_thread_set_priority(l_thread_context->thread_id, l_thread_context->initial_priority);
@@ -127,8 +361,9 @@ void GE_init_thread(GE_context* a_context)
 	EIF_TSD_CREATE(GE_thread_context_key, "Cannot create GE_thread_context_key");
 	l_thread_context = (GE_thread_context*)GE_unprotected_calloc_uncollectable(1, sizeof(GE_thread_context));
 	if (l_thread_context) {
-		GE_init_thread_context(a_context, l_thread_context);
 		a_context->thread = l_thread_context;
+		GE_thread_init_onces(a_context);
+		GE_init_thread_context(a_context, l_thread_context);
 	} else {
 		GE_raise_with_message(GE_EX_EXT, "Cannot create thread context");
 	}
@@ -288,6 +523,8 @@ void GE_thread_exit(void)
 	EIF_TSD_GET(GE_context*, GE_thread_context_key, l_context, "Cannot get execution context for current thread");
 	l_thread_id = l_context->thread->thread_id;
 	GE_free(l_context->thread);
+	GE_free_onces(l_context->process_onces);
+	GE_free_onces(l_context->thread_onces);
 	GE_free_exception(l_context);
 	if (l_context->wel_per_thread_data) {
 		GE_free(l_context->wel_per_thread_data);
@@ -389,7 +626,7 @@ void GE_mutex_lock(EIF_POINTER l_mutex)
 /*
  * Try to lock mutex. Return True on success.
  */
-EIF_BOOLEAN GE_mutex_trylock(EIF_POINTER l_mutex)
+EIF_BOOLEAN GE_mutex_try_lock(EIF_POINTER l_mutex)
 {
 #ifdef EIF_POSIX_THREADS
 	int res;
