@@ -28,6 +28,10 @@
  *		http://www.hpl.hp.com/personal/Hans_Boehm/gc/
  */
 #define GC_IGNORE_WARN
+#ifdef GE_USE_THREADS
+#define GC_THREADS
+#undef GC_NO_THREAD_REDIRECTS
+#endif
 #include "gc.h"
 #endif
 
@@ -36,7 +40,16 @@
  */
 
 #ifdef GE_USE_BOEHM_GC
-#define GE_init_gc() GC_INIT(); GC_enable_incremental()
+#ifdef GE_USE_THREADS
+#define GE_init_gc() \
+	GC_INIT(); \
+	GC_allow_register_threads(); \
+	GC_enable_incremental()
+#else
+#define GE_init_gc() \
+	GC_INIT(); \
+	GC_enable_incremental()
+#endif
 #else /* No GC */
 #define GE_init_gc() /* do nothing */
 #endif

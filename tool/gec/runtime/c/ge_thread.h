@@ -140,7 +140,8 @@ extern void GE_thread_onces_set_counts(
 
 /*
  * Initialize data to handle threads.
- * To be called at the beginning of the main function.
+ * To be called at the beginning of the main function
+ * on the main thread.
  */
 extern void GE_init_thread(GE_context* a_context);
 

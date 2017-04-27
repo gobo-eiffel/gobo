@@ -352,7 +352,8 @@ static void* GE_thread_routine(void* arg)
 
 /*
  * Initialize data to handle threads.
- * To be called at the beginning of the main function.
+ * To be called at the beginning of the main function
+ * on the main thread.
  */
 void GE_init_thread(GE_context* a_context)
 {
@@ -521,7 +522,14 @@ void GE_thread_exit(void)
 	EIF_THR_TYPE l_thread_id;
 
 	EIF_TSD_GET(GE_context*, GE_thread_context_key, l_context, "Cannot get execution context for current thread");
+#ifdef EIF_POSIX_THREADS
+#elif defined EIF_WINDOWS
 	l_thread_id = l_context->thread->thread_id;
+	if (!CloseHandle(l_thread_id)) {
+		GE_raise_with_message(GE_EX_EXT, "Cannot close thread");
+	}
+#endif
+	EIF_TSD_SET(GE_thread_context_key, 0, "Cannot remove thread context to TSD.");
 	GE_free(l_context->thread);
 	GE_free_onces(l_context->process_onces);
 	GE_free_onces(l_context->thread_onces);
@@ -533,9 +541,6 @@ void GE_thread_exit(void)
 #ifdef EIF_POSIX_THREADS
 	pthread_exit(NULL);
 #elif defined EIF_WINDOWS
-	if (!CloseHandle(l_thread_id)) {
-		GE_raise_with_message(GE_EX_EXT, "Cannot close thread");
-	}
 	_endthreadex(0);
 #endif
 }
