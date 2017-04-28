@@ -23,6 +23,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
+			first_indexing,
 			implementation_feature
 		end
 

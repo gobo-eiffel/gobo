@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/23 $"
 	revision: "$Revision: #35 $"
@@ -6049,6 +6049,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_vvok1b_error (a_class: ET_CLASS; a_indexing_term1: ET_INDEXING_TERM; a_once_key2: ET_MANIFEST_STRING)
+			-- Report VVOK-1 error: `a_indexing_term1' and `a_once_key2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_once_key2_not_void: a_once_key2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok1_error (a_class) then
+				create an_error.make_vvok1b (a_class, a_indexing_term1, a_once_key2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vvok1c_error (a_class: ET_CLASS; a_indexing_term1, a_indexing_term2: ET_INDEXING_TERM)
+			-- Report VVOK-1 error: `a_indexing_term1' and `a_indexing_term2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_indexing_term2_not_void: a_indexing_term2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok1_error (a_class) then
+				create an_error.make_vvok1c (a_class, a_indexing_term1, a_indexing_term2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vvok2a_error (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
 			-- Report VVOK-2 error: `a_once_key' is not one of the supported
 			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
@@ -6063,6 +6103,24 @@ feature -- Validity errors
 		do
 			if reportable_vvok2_error (a_class) then
 				create an_error.make_vvok2a (a_class, a_once_key)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vvok2b_error (a_class: ET_CLASS; a_indexing_term: ET_INDEXING_TERM)
+			-- Report VVOK-2 error: `a_indexing_term' is not one of the supported
+			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term_not_void: a_indexing_term /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok2_error (a_class) then
+				create an_error.make_vvok2b (a_class, a_indexing_term)
 				report_validity_error (an_error)
 			end
 		end

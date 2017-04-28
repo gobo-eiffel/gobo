@@ -5,7 +5,7 @@ note
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -171,6 +171,8 @@ feature {NONE} -- Initialization
 			create current_attachment_scope.make
 			create attachment_scope_builder.make
 			create unused_attachment_scopes.make (40)
+				-- Indexing.
+			create indexing_term_list.make (10)
 				-- Default creation call.
 			create default_creation_call_name.make (tokens.default_create_feature_name.name)
 			default_creation_call_name.set_seed (current_system.default_create_seed)
@@ -1438,10 +1440,8 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if attached a_feature.keys as l_keys then
-				check_once_keys_validity (l_keys)
-				had_key_error := has_fatal_error
-			end
+			check_once_keys_validity (a_feature.keys, a_feature.first_indexing)
+			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
@@ -1531,10 +1531,8 @@ feature {NONE} -- Feature validity
 				check_locals_validity (l_locals, a_feature)
 				had_error := had_error or has_fatal_error
 			end
-			if attached a_feature.keys as l_keys then
-				check_once_keys_validity (l_keys)
-				had_key_error := has_fatal_error
-			end
+			check_once_keys_validity (a_feature.keys, a_feature.first_indexing)
+			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := a_feature.compound
 				l_rescue_compound := a_feature.rescue_clause
@@ -2299,62 +2297,112 @@ feature {NONE} -- Type checking
 
 feature {NONE} -- Once key validity
 
-	check_once_keys_validity (a_keys: ET_MANIFEST_STRING_LIST)
+	check_once_keys_validity (a_keys: detachable ET_MANIFEST_STRING_LIST; a_indexing_list: detachable ET_INDEXING_LIST)
 			-- Check validity of once keys `a_keys'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_keys_not_void: a_keys /= Void
 		local
+			l_indexing_term_list: like indexing_term_list
+			l_indexing_term: ET_INDEXING_TERM
 			l_object_key: detachable ET_MANIFEST_STRING
 			l_thread_key: detachable ET_MANIFEST_STRING
 			l_process_key: detachable ET_MANIFEST_STRING
+			l_thread_indexing: detachable ET_INDEXING_TERM
+			l_process_indexing: detachable ET_INDEXING_TERM
 			i, nb: INTEGER
 			l_key: ET_MANIFEST_STRING
 		do
 			has_fatal_error := False
-			nb := a_keys.count
-			from i := 1 until i > nb loop
-				l_key := a_keys.manifest_string (i)
-				if standard_once_keys.is_object_key (l_key) then
-					l_object_key := l_key
-					if l_thread_key /= Void then
-							-- Error: once keys "THREAD" and "OBJECT" cannot be combined.
+			if a_indexing_list /= Void then
+				l_indexing_term_list := indexing_term_list
+				a_indexing_list.append_tagged_indexing_terms_to_list (standard_once_keys.once_indexing_tag, l_indexing_term_list)
+				nb := l_indexing_term_list.count
+				from i := 1 until i > nb loop
+					l_indexing_term := l_indexing_term_list.item (i)
+					if l_indexing_term.has_indexing_term_value (standard_once_keys.global_once_indexing_value) then
+						l_process_indexing := l_indexing_term
+						if l_thread_indexing /= Void then
+								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1c_error (current_class, l_thread_indexing, l_indexing_term)
+						end
+					elseif l_indexing_term.has_indexing_term_value (standard_once_keys.thread_once_indexing_value) then
+						l_thread_indexing := l_indexing_term
+						if l_process_indexing /= Void then
+								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1c_error (current_class, l_process_indexing, l_indexing_term)
+						end
+					else
+							-- Error: this once key is not supported. The supported once keys
+							-- are "THREAD", "PROCESS" and "OBJECT".
 						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
-					elseif l_process_key /= Void then
-							-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
-						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
+						error_handler.report_vvok2b_error (current_class, l_indexing_term)
 					end
-				elseif standard_once_keys.is_thread_key (l_key) then
-					l_thread_key := l_key
-					if l_object_key /= Void then
-							-- Error: once keys "OBJECT" and "THREAD" cannot be combined.
-						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
-					elseif l_process_key /= Void then
-							-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
-						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
-					end
-				elseif standard_once_keys.is_process_key (l_key) then
-					l_process_key := l_key
-					if l_object_key /= Void then
-							-- Error: once keys "OBJECT" and "PROCESS" cannot be combined.
-						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
-					elseif l_thread_key /= Void then
-							-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
-						set_fatal_error
-						error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
-					end
-				else
-						-- Error: this once key is not supported. The supported once keys
-						-- are "THREAD", "PROCESS" and "OBJECT".
-					set_fatal_error
-					error_handler.report_vvok2a_error (current_class, l_key)
+					i := i + 1
 				end
-				i := i + 1
+				l_indexing_term_list.wipe_out
+			end
+			if a_keys /= Void then
+				nb := a_keys.count
+				from i := 1 until i > nb loop
+					l_key := a_keys.manifest_string (i)
+					if standard_once_keys.is_object_key (l_key) then
+						l_object_key := l_key
+						if l_thread_key /= Void then
+								-- Error: once keys "THREAD" and "OBJECT" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
+						elseif l_process_key /= Void then
+								-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
+						elseif l_thread_indexing /= Void then
+								-- Error: once keys "THREAD" and "OBJECT" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1b_error (current_class, l_thread_indexing, l_key)
+						elseif l_process_indexing /= Void then
+								-- Error: once keys "PROCESS" and "OBJECT" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1b_error (current_class, l_process_indexing, l_key)
+						end
+					elseif standard_once_keys.is_thread_key (l_key) then
+						l_thread_key := l_key
+						if l_object_key /= Void then
+								-- Error: once keys "OBJECT" and "THREAD" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
+						elseif l_process_key /= Void then
+								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_process_key, l_key)
+						elseif l_process_indexing /= Void then
+								-- Error: once keys "PROCESS" and "THREAD" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1b_error (current_class, l_process_indexing, l_key)
+						end
+					elseif standard_once_keys.is_process_key (l_key) then
+						l_process_key := l_key
+						if l_object_key /= Void then
+								-- Error: once keys "OBJECT" and "PROCESS" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_object_key, l_key)
+						elseif l_thread_key /= Void then
+								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1a_error (current_class, l_thread_key, l_key)
+						elseif l_thread_indexing /= Void then
+								-- Error: once keys "THREAD" and "PROCESS" cannot be combined.
+							set_fatal_error
+							error_handler.report_vvok1b_error (current_class, l_thread_indexing, l_key)
+						end
+					else
+							-- Error: this once key is not supported. The supported once keys
+							-- are "THREAD", "PROCESS" and "OBJECT".
+						set_fatal_error
+						error_handler.report_vvok2a_error (current_class, l_key)
+					end
+					i := i + 1
+				end
 			end
 		end
 
@@ -12283,10 +12331,8 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
-			if attached an_expression.keys as l_keys then
-				check_once_keys_validity (l_keys)
-				had_key_error := has_fatal_error
-			end
+			check_once_keys_validity (an_expression.keys, an_expression.first_indexing)
+			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
@@ -12424,10 +12470,8 @@ feature {NONE} -- Agent validity
 				check_inline_agent_locals_validity (l_locals, an_expression)
 				had_error := had_error or has_fatal_error
 			end
-			if attached an_expression.keys as l_keys then
-				check_once_keys_validity (l_keys)
-				had_key_error := has_fatal_error
-			end
+			check_once_keys_validity (an_expression.keys, an_expression.first_indexing)
+			had_key_error := has_fatal_error
 			if not had_error then
 				l_compound := an_expression.compound
 				l_rescue_compound := an_expression.rescue_clause
@@ -14798,6 +14842,11 @@ feature {NONE} -- Choice constants
 			integer_choice_constant_not_void: Result /= Void
 		end
 
+feature {NONE} -- Indexing
+
+	indexing_term_list: DS_ARRAYED_LIST [ET_INDEXING_TERM]
+			-- List to store indexing terms
+
 feature {NONE} -- Overloading (useful in .NET)
 
 	keep_best_overloaded_features (a_features: DS_ARRAYED_LIST [ET_FEATURE]; a_name: ET_CALL_NAME; an_actuals: detachable ET_ACTUAL_ARGUMENTS; a_target_context: ET_NESTED_TYPE_CONTEXT; a_is_static_call, a_is_creation_call: BOOLEAN)
@@ -15266,6 +15315,8 @@ invariant
 	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
 	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_feature_impl'
 	type_checker_not_void: type_checker /= Void
+	indexing_term_list_not_void: indexing_term_list /= Void
+	no_void_indexing_term: not indexing_term_list.has_void
 	unused_overloaded_procedures_list_not_void: unused_overloaded_procedures_list /= Void
 	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has_void
 	-- SE 1.2r7 crashes when compiling this line:

@@ -34,7 +34,8 @@ inherit
 	ET_STANDALONE_CLOSURE
 		redefine
 			is_feature,
-			as_feature
+			as_feature,
+			first_indexing
 		end
 
 	DEBUG_OUTPUT
@@ -348,6 +349,22 @@ feature -- Status report
 
 	is_once_per_process: BOOLEAN
 			-- Is current feature a once-per-process feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_thread: BOOLEAN
+			-- Is current feature a once-per-thread feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current feature a once-per-object feature?
 		do
 			-- Result := False
 		ensure

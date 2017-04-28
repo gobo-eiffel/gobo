@@ -17,7 +17,9 @@ inherit
 	ET_INTERNAL_FUNCTION
 		undefine
 			is_once,
-			is_once_per_process
+			is_once_per_process,
+			is_once_per_thread,
+			is_once_per_object
 		end
 
 	ET_ONCE_ROUTINE

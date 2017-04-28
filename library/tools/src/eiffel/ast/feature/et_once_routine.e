@@ -16,7 +16,9 @@ inherit
 
 	ET_INTERNAL_ROUTINE
 		undefine
-			is_once_per_process
+			is_once_per_process,
+			is_once_per_thread,
+			is_once_per_object
 		redefine
 			is_once
 		end
@@ -25,6 +27,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
+			first_indexing,
 			implementation_feature
 		end
 

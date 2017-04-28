@@ -5,7 +5,7 @@ note
 		"Eiffel standard once keys"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date:  $"
 	revision: "$Revision: $"
@@ -107,5 +107,14 @@ feature -- Standard once keys
 
 	object_once_key: STRING = "OBJECT"
 			-- "OBJECT" once key
+
+	once_indexing_tag: STRING = "once_status"
+			-- Tag in indexing clauses for once status
+
+	global_once_indexing_value: STRING = "global"
+			-- "global" indexing value for once status
+
+	thread_once_indexing_value: STRING = "thread"
+			-- "thread" indexing value for once status
 
 end

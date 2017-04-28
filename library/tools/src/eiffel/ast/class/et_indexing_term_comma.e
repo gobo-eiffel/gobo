@@ -5,7 +5,7 @@ note
 		"Eiffel note terms followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,12 @@ feature -- Access
 	comma: ET_SYMBOL
 			-- Comma separator
 
+	indexing_term_value: STRING
+			-- Value of current indexing term
+		do
+			Result := indexing_term.indexing_term_value
+		end
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -60,6 +66,15 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := comma
+		end
+
+feature -- Status report
+
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			Result := indexing_term.has_indexing_term_value (a_value)
 		end
 
 feature -- Processing

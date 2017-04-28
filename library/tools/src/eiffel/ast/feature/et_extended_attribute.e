@@ -5,7 +5,7 @@ note
 		"Eiffel variable attributes with extended syntax"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2009-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #5 $"
@@ -37,6 +37,7 @@ inherit
 			implementation_closure as implementation_feature
 		undefine
 			arguments,
+			first_indexing,
 			implementation_feature
 		end
 

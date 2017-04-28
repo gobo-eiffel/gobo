@@ -5,7 +5,7 @@ note
 		"Eiffel internal (do or once) routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2011/09/15 $"
 	revision: "$Revision: #11 $"
@@ -25,6 +25,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
+			first_indexing,
 			implementation_feature
 		end
 

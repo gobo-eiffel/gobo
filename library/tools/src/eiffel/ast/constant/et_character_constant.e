@@ -5,7 +5,7 @@ note
 		"Eiffel character constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,15 @@ feature -- Status report
 	is_character_constant: BOOLEAN = True
 			-- Is current constant a CHARACTER constant?
 
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			if a_value.count = 1 then
+				Result := value.as_lower = a_value.item (1).as_lower
+			end
+		end
+
 feature -- Access
 
 	value: CHARACTER_32
@@ -77,6 +86,12 @@ feature -- Access
 	type: detachable ET_CLASS_TYPE
 			-- Type of character constant;
 			-- Void if not determined yet
+
+	indexing_term_value: STRING
+			-- Value of current indexing term
+		do
+			Result := value.out
+		end
 
 	position: ET_POSITION
 			-- Position of first character of

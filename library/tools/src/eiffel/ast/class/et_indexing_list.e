@@ -5,7 +5,7 @@ note
 		"Eiffel lists of note clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 		redefine
 			make, make_with_capacity
 		end
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -72,6 +75,62 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	has_tagged_indexing_term_value (a_tag, a_value: STRING): BOOLEAN
+			-- Do current 'note' clauses contain one which has tag `a_tag'
+			-- and whose one of its terms has value `a_value'?
+		require
+			a_tag_not_void: a_tag /= Void
+			a_tag_not_empty: not a_tag.is_empty
+			a_value_not_void: a_value /= Void
+			a_value_not_empty: not a_value.is_empty
+		local
+			i: INTEGER
+			l_indexing_clause: ET_INDEXING
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_indexing_clause := storage.item (i).indexing_clause
+				if attached l_indexing_clause.tag as l_tag and then STRING_.same_case_insensitive (l_tag.identifier.name, a_tag) then
+					if l_indexing_clause.terms.has_indexing_term_value (a_value) then
+						Result := True
+							-- Jump out of the loop.
+						i := 0
+					end
+				end
+				i := i - 1
+			end
+		end
+
+	has_indexing_term_with_tag (a_tag: STRING): BOOLEAN
+			-- Do current 'note' clauses contain one which has tag `a_tag'
+			-- and which contains at least one term?
+		require
+			a_tag_not_void: a_tag /= Void
+			a_tag_not_empty: not a_tag.is_empty
+		local
+			i: INTEGER
+			l_indexing_clause: ET_INDEXING
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_indexing_clause := storage.item (i).indexing_clause
+				if attached l_indexing_clause.tag as l_tag and then STRING_.same_case_insensitive (l_tag.identifier.name, a_tag) and then not l_indexing_clause.terms.is_empty then
+					Result := True
+						-- Jump out of the loop.
+					i := 0
+				end
+				i := i - 1
+			end
+		end
+
 feature -- Setting
 
 	set_indexing_keyword (an_indexing: like indexing_keyword)
@@ -82,6 +141,31 @@ feature -- Setting
 			indexing_keyword := an_indexing
 		ensure
 			indexing_keyword_set: indexing_keyword = an_indexing
+		end
+
+feature -- Basic operations
+
+	append_tagged_indexing_terms_to_list (a_tag: STRING; a_list: DS_ARRAYED_LIST [ET_INDEXING_TERM])
+			-- Append indexing terms with tag `a_tag' to `a_list'.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_tag_not_empty: not a_tag.is_empty
+			a_list_not_void: a_list /= Void
+		local
+			i: INTEGER
+			l_indexing_clause: ET_INDEXING
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_indexing_clause := storage.item (i).indexing_clause
+				if attached l_indexing_clause.tag as l_tag and then STRING_.same_case_insensitive (l_tag.identifier.name, a_tag) then
+					l_indexing_clause.terms.append_indexing_terms_to_list (a_list)
+				end
+				i := i - 1
+			end
 		end
 
 feature -- Processing

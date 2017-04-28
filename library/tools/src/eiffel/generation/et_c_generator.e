@@ -112,9 +112,6 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
-	ET_SHARED_STANDARD_ONCE_KEYS
-		export {NONE} all end
-
 	ET_SHARED_IDENTIFIER_TESTER
 		export {NONE} all end
 
@@ -211,6 +208,7 @@ feature {NONE} -- Initialization
 			create manifest_tuple_types.make (100)
 			create once_features.make_map (10000)
 			create once_per_process_counts.make_filled (0, 1, once_kind_count)
+			create once_per_thread_counts.make_filled (0, 1, once_kind_count)
 			create constant_features.make_map (10000)
 			create inline_constants.make_map (10000)
 			create dispose_procedures.make_map (dynamic_types.count)
@@ -991,6 +989,7 @@ feature {NONE} -- C code Generation
 				included_runtime_c_files.wipe_out
 				once_features.wipe_out
 				once_per_process_counts.fill_with (0)
+				once_per_thread_counts.fill_with (0)
 				constant_features.wipe_out
 				inline_constants.wipe_out
 				dispose_procedures.wipe_out
@@ -5681,8 +5680,13 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				if once_features.found then
 					l_once_index := once_features.found_item
 				else
-					l_once_index := once_per_process_counts.item (l_once_kind)
-					once_per_process_counts.put (l_once_index + 1, l_once_kind)
+					if not multithreaded_mode or else l_is_once_per_process then
+						l_once_index := once_per_process_counts.item (l_once_kind)
+						once_per_process_counts.put (l_once_index + 1, l_once_kind)
+					else
+						l_once_index := once_per_thread_counts.item (l_once_kind)
+						once_per_thread_counts.put (l_once_index + 1, l_once_kind)
+					end
 					once_features.force_last (l_once_index, l_once_feature)
 				end
 				l_once_prefix := once_prefixes.item (l_once_kind)
@@ -6134,11 +6138,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			l_keys: detachable ET_MANIFEST_STRING_LIST
 		do
-			l_keys := a_feature.keys
-			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+			if a_feature.is_once_per_object then
 print ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.%N")
 			end
 			print_internal_function (a_feature)
@@ -6148,11 +6149,8 @@ print ("ET_C_GENERATOR.print_once_function: once key %"OBJECT%" not supported.%N
 			-- Print `a_feature' to `current_file' and its signature to `header_file'.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			l_keys: detachable ET_MANIFEST_STRING_LIST
 		do
-			l_keys := a_feature.keys
-			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+			if a_feature.is_once_per_object then
 print ("ET_C_GENERATOR.print_once_procedure: once key %"OBJECT%" not supported.%N")
 			end
 			print_internal_procedure (a_feature)
@@ -15054,11 +15052,8 @@ feature {NONE} -- Agent generation
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
-		local
-			l_keys: detachable ET_MANIFEST_STRING_LIST
 		do
-			l_keys := an_agent.keys
-			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+			if an_agent.is_once_per_object then
 print ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not supported.%N")
 			end
 			print_agent (an_agent)
@@ -15068,11 +15063,8 @@ print ("ET_C_GENERATOR.print_once_function_inline_agent: once key %"OBJECT%" not
 			-- Print `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
-		local
-			l_keys: detachable ET_MANIFEST_STRING_LIST
 		do
-			l_keys := an_agent.keys
-			if l_keys /= Void and then standard_once_keys.has_object_key (l_keys) then
+			if an_agent.is_once_per_object then
 print ("ET_C_GENERATOR.print_once_procedure_inline_agent: once key %"OBJECT%" not supported.%N")
 			end
 			print_agent (an_agent)
@@ -27458,12 +27450,6 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				if multithreaded_mode then
-						-- We need to call 'GE_init_thread' before 'GE_init_exception' because
-						-- 'GE_init_exception' will create once-per-thread objects.
-					print_indentation
-					current_file.put_line ("GE_init_thread(ac);")
-				end
-				if multithreaded_mode then
 					print_indentation
 					current_file.put_string (c_ge_thread_onces_set_counts)
 					current_file.put_character ('(')
@@ -27472,12 +27458,16 @@ feature {NONE} -- C function generation
 							current_file.put_character (',')
 							current_file.put_character (' ')
 						end
-						current_file.put_integer (0)
+						current_file.put_integer (once_per_thread_counts.item (i))
 						i := i + 1
 					end
 					current_file.put_character (')')
 					current_file.put_character (';')
 					current_file.put_new_line
+						-- We need to call 'GE_init_thread' before 'GE_init_exception' because
+						-- 'GE_init_exception' will create once-per-thread objects.
+					print_indentation
+					current_file.put_line ("GE_init_thread(ac);")
 				end
 				print_indentation
 				current_file.put_line ("GE_init_exception(ac);")
@@ -34005,6 +33995,10 @@ feature {NONE} -- Once features
 			-- Number of once-per-process features for each kind of onces,
 			-- in the same order as in 'GE_onces' C struct
 
+	once_per_thread_counts: ARRAY [INTEGER]
+			-- Number of once-per-thread features for each kind of onces,
+			-- in the same order as in 'GE_onces' C struct
+
 	once_prefixes: ARRAY [STRING]
 			-- Prefix to be used when accessing information about
 			-- once features in 'GE_onces' C struct, in the same
@@ -35334,7 +35328,11 @@ invariant
 	no_void_once_feature: not once_features.has_void
 	once_feature_constraint: across once_features as l_features all l_features.key = l_features.key.implementation_feature end
 	once_per_process_counts_not_void: once_per_process_counts /= Void
+	once_per_process_counts_bounds: once_per_process_counts.lower = 1 and once_per_process_counts.upper = once_kind_count
 	no_negative_once_per_process_count: across once_per_process_counts as l_once_per_process_counts all l_once_per_process_counts.item >= 0 end
+	once_per_thread_counts_not_void: once_per_thread_counts /= Void
+	once_per_thread_counts_bounds: once_per_thread_counts.lower = 1 and once_per_thread_counts.upper = once_kind_count
+	no_negative_once_per_thread_count: across once_per_thread_counts as l_once_per_thread_counts all l_once_per_thread_counts.item >= 0 end
 	constant_features_not_void: constant_features /= Void
 	no_void_constant_feature: not constant_features.has_void
 	constant_feature_constraint: across constant_features as l_features all l_features.key = l_features.key.implementation_feature end

@@ -5,7 +5,7 @@ note
 		"Eiffel for .NET custom attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,9 @@ feature -- Access
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
 
+	indexing_term_value: STRING = "create [...] end"
+			-- Value of current indexing term
+
 	position: ET_POSITION
 			-- Position of first character of
 			-- current node in source code
@@ -63,6 +66,15 @@ feature -- Access
 			-- Last leaf node in current node
 		do
 			Result := end_keyword
+		end
+
+feature -- Status report
+
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			-- Result := False
 		end
 
 feature -- Setting

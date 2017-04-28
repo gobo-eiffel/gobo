@@ -16,12 +16,43 @@ inherit
 
 	ET_INTERNAL_ROUTINE_CLOSURE
 
+	ET_SHARED_STANDARD_ONCE_KEYS
+		export {NONE} all end
+
 feature -- Status report
 
 	is_once_per_process: BOOLEAN
 			-- Is current once routine a once-per-process?
 		do
-			Result := True
+			if attached keys as l_keys then
+				Result := standard_once_keys.has_process_key (l_keys)
+			elseif attached first_indexing as l_indexing then
+				Result := l_indexing.has_tagged_indexing_term_value (standard_once_keys.once_indexing_tag, standard_once_keys.global_once_indexing_value)
+			end
+		end
+
+	is_once_per_thread: BOOLEAN
+			-- Is current once routine a once-per-thread?
+		do
+			if attached keys as l_keys then
+				Result := standard_once_keys.has_thread_key (l_keys)
+			elseif attached first_indexing as l_indexing then
+				if l_indexing.has_tagged_indexing_term_value (standard_once_keys.once_indexing_tag, standard_once_keys.thread_once_indexing_value) then
+					Result := True
+				elseif not l_indexing.has_indexing_term_with_tag (standard_once_keys.once_indexing_tag) then
+						-- Once-per-thread by default.
+					Result := True
+				end
+			else
+					-- Once-per-thread by default.
+				Result := True
+			end
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current once routine a once-per-object?
+		do
+			Result := attached keys as l_keys and then standard_once_keys.has_object_key (l_keys)
 		end
 
 feature -- Access

@@ -5,7 +5,7 @@ note
 		"Eiffel boolean constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,5 +42,20 @@ feature -- Status report
 
 	is_boolean_constant: BOOLEAN = True
 			-- Is current constant a BOOLEAN constant?
+
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			Result := STRING_.same_case_insensitive (text, a_value)
+		end
+
+feature -- Access
+
+	indexing_term_value: STRING
+			-- Value of current indexing term
+		do
+			Result := text
+		end
 
 end

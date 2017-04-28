@@ -273,6 +273,12 @@ feature -- Access
 			Result := Current
 		end
 
+	indexing_term_value: STRING
+			-- Value of current indexing term
+		do
+			Result := name
+		end
+
 feature -- Status report
 
 	is_identifier: BOOLEAN = True
@@ -337,6 +343,13 @@ feature -- Status report
 			-- Can current expression never be void?
 		do
 			Result := is_object_test_local
+		end
+
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			Result := STRING_.same_case_insensitive (name, a_value)
 		end
 
 feature -- Status setting

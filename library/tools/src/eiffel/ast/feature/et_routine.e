@@ -5,7 +5,7 @@ note
 		"Eiffel routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,7 @@ inherit
 		rename
 			implementation_closure as implementation_feature
 		undefine
+			first_indexing,
 			implementation_feature
 		end
 

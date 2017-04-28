@@ -235,11 +235,8 @@ inherit
 			new_formal_parameters,
 			new_from_compound,
 			new_if_instruction,
-			new_indexing,
 			new_indexing_semicolon,
-			new_indexing_terms,
 			new_indexing_term_comma,
-			new_indexings,
 			new_infix_and_name,
 			new_infix_and_then_name,
 			new_infix_and_then_operator,
@@ -316,7 +313,6 @@ inherit
 			new_static_call_instruction,
 			new_strip_expression,
 			new_tag,
-			new_tagged_indexing,
 			new_target_type,
 			new_then_compound,
 			new_type_comma,
@@ -2788,14 +2784,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_indexing (a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_INDEXING
-			-- New indexing clause
-		do
-			if a_terms /= Void then
-				create Result.make (a_terms)
-			end
-		end
-
 	new_indexing_semicolon (an_indexing: detachable ET_INDEXING_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_INDEXING_ITEM
 			-- New indexing-semicolon
 		do
@@ -2813,21 +2801,6 @@ feature -- AST nodes
 				Result := a_term
 			elseif a_term /= Void then
 				create {ET_INDEXING_TERM_COMMA} Result.make (a_term, a_comma)
-			end
-		end
-
-	new_indexing_terms (nb: INTEGER): detachable ET_INDEXING_TERM_LIST
-			-- New indexing terms with given capacity
-		do
-			create Result.make_with_capacity (nb)
-		end
-
-	new_indexings (an_indexing: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INDEXING_LIST
-			-- New indexing clause with given capacity
-		do
-			create Result.make_with_capacity (nb)
-			if an_indexing /= Void then
-				Result.set_indexing_keyword (an_indexing)
 			end
 		end
 
@@ -3836,14 +3809,6 @@ feature -- AST nodes
 				Result := a_name
 			elseif a_name /= Void then
 				create {ET_IDENTIFIER_COLON} Result.make (a_name, a_colon)
-			end
-		end
-
-	new_tagged_indexing (a_tag: detachable ET_TAG; a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_TAGGED_INDEXING
-			-- New tagged indexing clause
-		do
-			if a_tag /= Void and a_terms /= Void then
-				create Result.make (a_tag, a_terms)
 			end
 		end
 

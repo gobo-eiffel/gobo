@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2455,7 +2455,9 @@ feature -- AST nodes
 	new_indexing (a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_INDEXING
 			-- New indexing clause
 		do
-			-- Do nothing.
+			if a_terms /= Void then
+				create Result.make (a_terms)
+			end
 		end
 
 	new_indexing_semicolon (an_indexing: detachable ET_INDEXING_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_INDEXING_ITEM
@@ -2475,7 +2477,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			-- Do nothing.
+			create Result.make_with_capacity (nb)
 		end
 
 	new_indexings (an_indexing: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INDEXING_LIST
@@ -2483,7 +2485,10 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			-- Do nothing.
+			create Result.make_with_capacity (nb)
+			if an_indexing /= Void then
+				Result.set_indexing_keyword (an_indexing)
+			end
 		end
 
 	new_infix_and_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
@@ -3175,7 +3180,7 @@ feature -- AST nodes
 		do
 			create Result.make_with_capacity (nb)
 		end
-		
+
 	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SYMBOL): detachable ET_PARENT_ITEM
 			-- New parent-semicolon
 		do
@@ -3495,7 +3500,9 @@ feature -- AST nodes
 	new_tagged_indexing (a_tag: detachable ET_TAG; a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_TAGGED_INDEXING
 			-- New tagged indexing clause
 		do
-			-- Do nothing.
+			if a_tag /= Void and a_terms /= Void then
+				create Result.make (a_tag, a_terms)
+			end
 		end
 
 	new_target_type (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE; r: detachable ET_SYMBOL): detachable ET_TARGET_TYPE
