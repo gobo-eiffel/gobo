@@ -2858,7 +2858,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.catch' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -2909,7 +2909,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.ignore' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -3075,7 +3075,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.raise' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -3097,7 +3097,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.set_is_ignored' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
