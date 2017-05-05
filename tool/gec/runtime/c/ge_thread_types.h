@@ -19,12 +19,15 @@
 #ifdef GE_USE_THREADS
 
 #define EIF_THREADS
+#ifdef GE_USE_POSIX_THREADS
+#define EIF_POSIX_THREADS
+#endif
 
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
 #endif
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 #include <pthread.h>
 #elif defined EIF_WINDOWS
 #include <windows.h>
@@ -35,7 +38,7 @@
 extern "C" {
 #endif
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 
 #define EIF_THR_TYPE            pthread_t
 #define EIF_CS_TYPE				pthread_mutex_t

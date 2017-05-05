@@ -276,7 +276,7 @@ static EIF_TSD_TYPE GE_thread_context_key;
  */
 static EIF_POINTER GE_unprotected_mutex_create(uintptr_t a_spin_count)
 {
-#ifdef EIF_POSIX_THREAD
+#ifdef GE_USE_POSIX_THREADS
 	EIF_MUTEX_TYPE* l_mutex;
 
 	l_mutex = (EIF_MUTEX_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_MUTEX_TYPE));
@@ -329,7 +329,7 @@ EIF_POINTER GE_mutex_create(void)
  */
 static int GE_unprotected_mutex_lock(EIF_POINTER a_mutex)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (!pthread_mutex_lock((EIF_MUTEX_TYPE*)a_mutex)) {
 		return GE_THREAD_ERROR;
 	}
@@ -359,7 +359,7 @@ void GE_mutex_lock(EIF_POINTER a_mutex)
  */
 static int GE_unprotected_mutex_try_lock(EIF_POINTER a_mutex)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	switch (pthread_mutex_trylock((EIF_MUTEX_TYPE*)a_mutex)) {
 	case EBUSY:
 		return GE_THREAD_BUSY;
@@ -401,7 +401,7 @@ EIF_BOOLEAN GE_mutex_try_lock(EIF_POINTER a_mutex)
  */
 static int GE_unprotected_mutex_unlock(EIF_POINTER a_mutex)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (!pthread_mutex_unlock((EIF_MUTEX_TYPE*)a_mutex)) {
 		return GE_THREAD_ERROR;
 	}
@@ -430,7 +430,7 @@ void GE_mutex_unlock(EIF_POINTER a_mutex)
  */
 static int GE_unprotected_mutex_destroy(EIF_POINTER a_mutex)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	int l_result = GE_THREAD_OK;
 
 	if (a_mutex) {
@@ -467,7 +467,7 @@ static EIF_POINTER GE_unprotected_semaphore_create(EIF_INTEGER a_count)
 {
 	EIF_SEM_TYPE* l_semaphore;
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	l_semaphore = (EIF_SEM_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_SEM_TYPE));
 	if (l_semaphore) {
 		if (sem_init(l_semaphore, 0, a_count)) {
@@ -506,7 +506,7 @@ EIF_POINTER GE_semaphore_create(EIF_INTEGER a_count)
  */
 static int GE_unprotected_semaphore_wait(EIF_POINTER a_semaphore)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (sem_wait((EIF_SEM_TYPE*)a_semaphore)) {
 		return GE_THREAD_ERROR;
 	}
@@ -541,7 +541,7 @@ void GE_semaphore_wait(EIF_POINTER a_semaphore)
  */
 static int GE_unprotected_semaphore_try_wait(EIF_POINTER a_semaphore)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (sem_trywait((EIF_SEM_TYPE*)a_semaphore)) {
 		switch (errno) {
 		case EBUSY:
@@ -593,7 +593,7 @@ EIF_BOOLEAN GE_semaphore_try_wait(EIF_POINTER a_semaphore)
  */
 static int GE_unprotected_semaphore_post(EIF_POINTER a_semaphore)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (sem_post((EIF_SEM_TYPE*)a_semaphore)) {
 		return GE_THREAD_ERROR;
 	}
@@ -624,7 +624,7 @@ void GE_semaphore_post(EIF_POINTER a_semaphore)
  */
 static int GE_unprotected_semaphore_destroy(EIF_POINTER a_semaphore)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	int l_result = GE_THREAD_OK;
 
 	if (a_semaphore) {
@@ -664,7 +664,7 @@ static EIF_POINTER GE_unprotected_condition_variable_create(void)
 {
 	EIF_COND_TYPE* l_condition_variable;
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	l_condition_variable = (EIF_COND_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_COND_TYPE));
 	if (l_condition_variable) {
 		if (pthread_cond_init(l_condition_variable, NULL)) {
@@ -722,7 +722,7 @@ EIF_POINTER GE_condition_variable_create(void)
  */
 static int GE_unprotected_condition_variable_broadcast(EIF_POINTER a_condition_variable)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_cond_broadcast((EIF_COND_TYPE*)a_condition_variable)) {
 		return GE_THREAD_ERROR;
 	}
@@ -768,7 +768,7 @@ void GE_condition_variable_broadcast(EIF_POINTER a_condition_variable)
  */
 static int GE_unprotected_condition_variable_signal(EIF_POINTER a_condition_variable)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_cond_signal((EIF_COND_TYPE*)a_condition_variable)) {
 		return GE_THREAD_ERROR;
 	}
@@ -814,7 +814,7 @@ void GE_condition_variable_signal(EIF_POINTER a_condition_variable)
  */
 static int GE_unprotected_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_cond_wait((EIF_COND_TYPE*)a_condition_variable, (EIF_MUTEX_TYPE*)a_mutex)) {
 		return GE_THREAD_ERROR;
 	}
@@ -836,7 +836,7 @@ void GE_condition_variable_wait(EIF_POINTER a_condition_variable, EIF_POINTER a_
 	}
 }
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 /*
  * Given a timeout in milliseconds, computes a timespec structure equivalent.
  * `a_timeout': Timeout to convert in milliseconds.
@@ -868,7 +868,7 @@ static struct timespec GE_timeout_to_timespec(uintptr_t a_timeout)
  */
 static int GE_unprotected_condition_variable_wait_with_timeout(EIF_POINTER a_condition_variable, EIF_POINTER a_mutex, uintptr_t a_timeout)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	struct timespec l_tspec = GE_timeout_to_timespec(a_timeout);
 	switch (pthread_cond_timedwait((EIF_COND_TYPE*)a_condition_variable, (EIF_MUTEX_TYPE*)a_mutex, &l_tspec)) {
 	case 0:
@@ -949,7 +949,7 @@ EIF_INTEGER GE_condition_variable_wait_with_timeout(EIF_POINTER a_condition_vari
  */
 static int GE_unprotected_condition_variable_destroy(EIF_POINTER a_condition_variable)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	int l_result = GE_THREAD_OK;
 
 	if (a_condition_variable) {
@@ -999,7 +999,7 @@ static EIF_POINTER GE_unprotected_read_write_lock_create(void)
 {
 	EIF_RWL_TYPE* l_read_write_lock;
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	l_read_write_lock = (EIF_RWL_TYPE*)GE_unprotected_malloc_atomic_uncollectable(sizeof(EIF_RWL_TYPE));
 	if (l_read_write_lock) {
 		if (pthread_rwlock_init(l_read_write_lock, NULL)) {
@@ -1068,7 +1068,7 @@ EIF_POINTER GE_read_write_lock_create(void)
  */
 static int GE_unprotected_read_write_lock_read_lock(EIF_POINTER a_read_write_lock)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_rwlock_rdlock((EIF_RWL_TYPE*)a_read_write_lock)) {
 		return GE_THREAD_ERROR;
 	}
@@ -1110,7 +1110,7 @@ void GE_read_write_lock_read_lock(EIF_POINTER a_read_write_lock)
  */
 static int GE_unprotected_read_write_lock_write_lock(EIF_POINTER a_read_write_lock)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_rwlock_wrlock((EIF_RWL_TYPE*)a_read_write_lock)) {
 		return GE_THREAD_ERROR;
 	}
@@ -1154,7 +1154,7 @@ void GE_read_write_lock_write_lock(EIF_POINTER a_read_write_lock)
  */
 static int GE_unprotected_read_write_lock_unlock(EIF_POINTER a_read_write_lock)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	if (pthread_rwlock_unlock((EIF_RWL_TYPE*)a_read_write_lock)) {
 		return GE_THREAD_ERROR;
 	}
@@ -1211,7 +1211,7 @@ void GE_read_write_lock_unlock(EIF_POINTER a_read_write_lock)
  */
 static int GE_unprotected_read_write_lock_destroy(EIF_POINTER a_read_write_lock)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	int l_result = GE_THREAD_OK;
 
 	if (a_read_write_lock) {
@@ -1261,7 +1261,7 @@ void GE_read_write_lock_destroy(EIF_POINTER a_read_write_lock)
  */
 static EIF_THR_TYPE GE_current_thread(void)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	return pthread_self();
 #elif defined EIF_WINDOWS
 		/* On Windows, `GetCurrentThread' returns a pseudo handle to the Current thread, */
@@ -1284,7 +1284,7 @@ static void GE_init_thread_context(GE_context* a_context, GE_thread_context* a_t
  */
 static void GE_thread_set_priority(EIF_THR_TYPE a_thread_id, unsigned int a_priority)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 	struct sched_param l_param;
 	memset(&l_param, 0, sizeof(struct sched_param));
 	l_param.sched_priority = a_priority;
@@ -1410,7 +1410,7 @@ void GE_thread_create_with_attr(EIF_REFERENCE current, void (*routine)(EIF_REFER
 			GE_unprotected_mutex_unlock((EIF_POINTER)l_current_thread_context->children_mutex);
 			SIGRESUME;
 		}
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 		{
 			pthread_attr_t l_attr;
 			int res;
@@ -1577,7 +1577,7 @@ EIF_BOOLEAN GE_thread_wait_with_timeout(EIF_REFERENCE obj, EIF_BOOLEAN (*get_ter
  */
 void GE_thread_yield(void)
 {
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 #ifdef _POSIX_PRIORITY_SCHEDULING
 	sched_yield();
 #else
@@ -1677,7 +1677,7 @@ void GE_thread_exit(void)
 			}
 			GE_free(l_thread_context);
 		}
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 #elif defined EIF_WINDOWS
 		if (!CloseHandle(l_thread_id)) {
 			GE_raise_with_message(GE_EX_EXT, "Cannot close thread");
@@ -1691,7 +1691,7 @@ void GE_thread_exit(void)
 			GE_free(l_context->wel_per_thread_data);
 			l_context->wel_per_thread_data = 0;
 		}
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 		pthread_exit(NULL);
 #elif defined EIF_WINDOWS
 		_endthreadex(0);

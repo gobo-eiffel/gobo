@@ -155,7 +155,7 @@ int main(void)
 	cmd = GE_nstrdup(GetCommandLineW());
 	GE_get_argcargv(cmd, &argc, &argv);
 	code = GE_main(argc, argv);
-	GE_free(cmd);
+	free(cmd);
 	if (argc > 0) {
 		GE_free(argv[0]);
 	}

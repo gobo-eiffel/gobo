@@ -832,6 +832,12 @@ feature {NONE} -- C code Generation
 					header_file.put_character (' ')
 					header_file.put_line (c_ge_use_threads)
 					header_file.put_new_line
+					if not operating_system.is_windows then
+						header_file.put_string (c_define)
+						header_file.put_character (' ')
+						header_file.put_line (c_ge_use_posix_threads)
+						header_file.put_new_line
+					end
 				end
 				include_runtime_header_file ("ge_eiffel.h", True, header_file)
 				header_file.put_new_line
@@ -839,14 +845,14 @@ feature {NONE} -- C code Generation
 					include_runtime_header_file ("ge_thread_types.h", True, header_file)
 					header_file.put_new_line
 				end
+				include_runtime_header_file ("ge_once.h", True, header_file)
+				header_file.put_new_line
 				include_runtime_header_file ("ge_exception.h", True, header_file)
 				header_file.put_new_line
 				if multithreaded_mode then
 					include_runtime_header_file ("ge_thread.h", True, header_file)
 					header_file.put_new_line
 				end
-				include_runtime_header_file ("ge_once.h", True, header_file)
-				header_file.put_new_line
 				include_runtime_header_file ("ge_native_string.h", True, header_file)
 				header_file.put_new_line
 				include_runtime_header_file ("ge_arguments.h", True, header_file)
@@ -35196,6 +35202,7 @@ feature {NONE} -- Constants
 	c_ge_use_attribute_type_id: STRING = "GE_USE_ATTRIBUTE_TYPE_ID"
 	c_ge_use_attributes: STRING = "GE_USE_ATTRIBUTES"
 	c_ge_use_boehm_gc: STRING = "GE_USE_BOEHM_GC"
+	c_ge_use_posix_threads: STRING = "GE_USE_POSIX_THREADS"
 	c_ge_use_threads: STRING = "GE_USE_THREADS"
 	c_ge_use_type_generator: STRING = "GE_USE_TYPE_GENERATOR"
 	c_ge_use_type_generic_parameters: STRING = "GE_USE_TYPE_GENERIC_PARAMETERS"

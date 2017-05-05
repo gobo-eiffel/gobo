@@ -159,6 +159,7 @@ goto exit
 	goto c_compilation
 
 :c_compilation
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec5.c

@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#ifdef EIF_POSIX_THREADS
+#ifdef GE_USE_POSIX_THREADS
 #	define EIF_TSD_VAL_TYPE        void*
 #	define EIF_TSD_TYPE            pthread_key_t
 #	define EIF_TSD_CREATE(key,msg) \

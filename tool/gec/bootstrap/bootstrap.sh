@@ -41,6 +41,7 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 cd $BIN_DIR
 
 c_compilation() {
+	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec5.c
